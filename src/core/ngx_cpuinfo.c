@@ -9,13 +9,13 @@
 #include <ngx_core.h>
 
 
-#if (( __i386__ || __amd64__ ) && ( __GNUC__ || __INTEL_COMPILER ))
+#якщо (( __i386__ || __amd64__ ) && ( __GNUC__ || __INTEL_COMPILER ))
 
 
 static ngx_inline void ngx_cpuid(uint32_t i, uint32_t *buf);
 
 
-#if ( __i386__ )
+#якщо ( __i386__ )
 
 static ngx_inline void
 ngx_cpuid(uint32_t i, uint32_t *buf)
@@ -43,7 +43,7 @@ ngx_cpuid(uint32_t i, uint32_t *buf)
 }
 
 
-#else /* __amd64__ */
+#інакше /* __amd64__ */
 
 
 static ngx_inline void
@@ -85,13 +85,13 @@ ngx_cpuinfo(void)
 
     vendor = (u_char *) &vbuf[1];
 
-    if (vbuf[0] == 0) {
-        return;
+    якщо (vbuf[0] == 0) {
+        повернути;
     }
 
     ngx_cpuid(1, cpu);
 
-    if (ngx_strcmp(vendor, "GenuineIntel") == 0) {
+    якщо (ngx_strcmp(vendor, "GenuineIntel") == 0) {
 
         switch ((cpu[0] & 0xf00) >> 8) {
 
@@ -106,7 +106,7 @@ ngx_cpuinfo(void)
 
             model = ((cpu[0] & 0xf0000) >> 8) | (cpu[0] & 0xf0);
 
-            if (model >= 0xd0) {
+            якщо (model >= 0xd0) {
                 /* Intel Core, Core 2, Atom */
                 ngx_cacheline_size = 64;
             }
@@ -122,12 +122,12 @@ ngx_cpuinfo(void)
             break;
         }
 
-    } else if (ngx_strcmp(vendor, "AuthenticAMD") == 0) {
+    } інакше якщо (ngx_strcmp(vendor, "AuthenticAMD") == 0) {
         ngx_cacheline_size = 64;
     }
 }
 
-#else
+#інакше
 
 
 void

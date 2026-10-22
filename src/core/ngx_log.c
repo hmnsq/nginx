@@ -14,7 +14,7 @@ static char *ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log);
 static void ngx_log_insert(ngx_log_t *log, ngx_log_t *new_log);
 
 
-#if (NGX_DEBUG)
+#якщо (NGX_DEBUG)
 
 static void ngx_log_memory_writer(ngx_log_t *log, ngx_uint_t level,
     u_char *buf, size_t len);
@@ -90,13 +90,13 @@ static const char *debug_levels[] = {
 };
 
 
-#if (NGX_HAVE_VARIADIC_MACROS)
+#якщо (NGX_HAVE_VARIADIC_MACROS)
 
 void
 ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
     const char *fmt, ...)
 
-#else
+#інакше
 
 void
 ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
@@ -104,7 +104,7 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
 
 #endif
 {
-#if (NGX_HAVE_VARIADIC_MACROS)
+#якщо (NGX_HAVE_VARIADIC_MACROS)
     va_list      args;
 #endif
     u_char      *p, *last, *msg;
@@ -123,33 +123,33 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
     p = ngx_slprintf(p, last, "%P#" NGX_TID_T_FMT ": ",
                     ngx_log_pid, ngx_log_tid);
 
-    if (log->connection) {
+    якщо (log->connection) {
         p = ngx_slprintf(p, last, "*%uA ", log->connection);
     }
 
     msg = p;
 
-#if (NGX_HAVE_VARIADIC_MACROS)
+#якщо (NGX_HAVE_VARIADIC_MACROS)
 
     va_start(args, fmt);
     p = ngx_vslprintf(p, last, fmt, args);
     va_end(args);
 
-#else
+#інакше
 
     p = ngx_vslprintf(p, last, fmt, args);
 
 #endif
 
-    if (err) {
+    якщо (err) {
         p = ngx_log_errno(p, last, err);
     }
 
-    if (level != NGX_LOG_DEBUG && log->handler) {
+    якщо (level != NGX_LOG_DEBUG && log->handler) {
         p = log->handler(log, p, last - p);
     }
 
-    if (p > last - NGX_LINEFEED_SIZE) {
+    якщо (p > last - NGX_LINEFEED_SIZE) {
         p = last - NGX_LINEFEED_SIZE;
     }
 
@@ -158,18 +158,18 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
     wrote_stderr = 0;
     debug_connection = (log->log_level & NGX_LOG_DEBUG_CONNECTION) != 0;
 
-    while (log) {
+    поки (log) {
 
-        if (log->log_level < level && !debug_connection) {
+        якщо (log->log_level < level && !debug_connection) {
             break;
         }
 
-        if (log->writer) {
+        якщо (log->writer) {
             log->writer(log, level, errstr, p - errstr);
             goto next;
         }
 
-        if (ngx_time() == log->disk_full_time) {
+        якщо (ngx_time() == log->disk_full_time) {
 
             /*
              * on FreeBSD writing to a full filesystem with enabled softupdates
@@ -182,11 +182,11 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
 
         n = ngx_write_fd(log->file->fd, errstr, p - errstr);
 
-        if (n == -1 && ngx_errno == NGX_ENOSPC) {
+        якщо (n == -1 && ngx_errno == NGX_ENOSPC) {
             log->disk_full_time = ngx_time();
         }
 
-        if (log->file->fd == ngx_stderr) {
+        якщо (log->file->fd == ngx_stderr) {
             wrote_stderr = 1;
         }
 
@@ -195,11 +195,11 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
         log = log->next;
     }
 
-    if (!ngx_use_stderr
+    якщо (!ngx_use_stderr
         || level > NGX_LOG_WARN
         || wrote_stderr)
     {
-        return;
+        повернути;
     }
 
     msg -= (7 + err_levels[level].len + 3);
@@ -210,7 +210,7 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
 }
 
 
-#if !(NGX_HAVE_VARIADIC_MACROS)
+#якщо !(NGX_HAVE_VARIADIC_MACROS)
 
 void ngx_cdecl
 ngx_log_error(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
@@ -218,7 +218,7 @@ ngx_log_error(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
 {
     va_list  args;
 
-    if (log->log_level >= level) {
+    якщо (log->log_level >= level) {
         va_start(args, fmt);
         ngx_log_error_core(level, log, err, fmt, args);
         va_end(args);
@@ -270,11 +270,11 @@ ngx_log_stderr(ngx_err_t err, const char *fmt, ...)
     p = ngx_vslprintf(p, last, fmt, args);
     va_end(args);
 
-    if (err) {
+    якщо (err) {
         p = ngx_log_errno(p, last, err);
     }
 
-    if (p > last - NGX_LINEFEED_SIZE) {
+    якщо (p > last - NGX_LINEFEED_SIZE) {
         p = last - NGX_LINEFEED_SIZE;
     }
 
@@ -287,7 +287,7 @@ ngx_log_stderr(ngx_err_t err, const char *fmt, ...)
 u_char *
 ngx_log_errno(u_char *buf, u_char *last, ngx_err_t err)
 {
-    if (buf > last - 50) {
+    якщо (buf > last - 50) {
 
         /* leave a space for an error code */
 
@@ -297,20 +297,20 @@ ngx_log_errno(u_char *buf, u_char *last, ngx_err_t err)
         *buf++ = '.';
     }
 
-#if (NGX_WIN32)
+#якщо (NGX_WIN32)
     buf = ngx_slprintf(buf, last, ((unsigned) err < 0x80000000)
                                        ? " (%d: " : " (%Xd: ", err);
-#else
+#інакше
     buf = ngx_slprintf(buf, last, " (%d: ", err);
 #endif
 
     buf = ngx_strerror(err, buf, last - buf);
 
-    if (buf < last) {
+    якщо (buf < last) {
         *buf++ = ')';
     }
 
-    return buf;
+    повернути buf;
 }
 
 
@@ -323,47 +323,47 @@ ngx_log_init(u_char *prefix, u_char *error_log)
     ngx_log.file = &ngx_log_file;
     ngx_log.log_level = NGX_LOG_NOTICE;
 
-    if (error_log == NULL) {
+    якщо (error_log == NULL) {
         error_log = (u_char *) NGX_ERROR_LOG_PATH;
     }
 
     name = error_log;
     nlen = ngx_strlen(name);
 
-    if (nlen == 0) {
+    якщо (nlen == 0) {
         ngx_log_file.fd = ngx_stderr;
-        return &ngx_log;
+        повернути &ngx_log;
     }
 
     p = NULL;
 
-#if (NGX_WIN32)
-    if (name[1] != ':') {
-#else
-    if (name[0] != '/') {
+#якщо (NGX_WIN32)
+    якщо (name[1] != ':') {
+#інакше
+    якщо (name[0] != '/') {
 #endif
 
-        if (prefix) {
+        якщо (prefix) {
             plen = ngx_strlen(prefix);
 
-        } else {
+        } інакше {
 #ifdef NGX_PREFIX
             prefix = (u_char *) NGX_PREFIX;
             plen = ngx_strlen(prefix);
-#else
+#інакше
             plen = 0;
 #endif
         }
 
-        if (plen) {
+        якщо (plen) {
             name = malloc(plen + nlen + 2);
-            if (name == NULL) {
-                return NULL;
+            якщо (name == NULL) {
+                повернути NULL;
             }
 
             p = ngx_cpymem(name, prefix, plen);
 
-            if (!ngx_path_separator(*(p - 1))) {
+            якщо (!ngx_path_separator(*(p - 1))) {
                 *p++ = '/';
             }
 
@@ -377,11 +377,11 @@ ngx_log_init(u_char *prefix, u_char *error_log)
                                     NGX_FILE_CREATE_OR_OPEN,
                                     NGX_FILE_DEFAULT_ACCESS);
 
-    if (ngx_log_file.fd == NGX_INVALID_FILE) {
+    якщо (ngx_log_file.fd == NGX_INVALID_FILE) {
         ngx_log_stderr(ngx_errno,
                        "[alert] could not open error log file: "
                        ngx_open_file_n " \"%s\" failed", name);
-#if (NGX_WIN32)
+#якщо (NGX_WIN32)
         ngx_event_log(ngx_errno,
                        "could not open error log file: "
                        ngx_open_file_n " \"%s\" failed", name);
@@ -390,11 +390,11 @@ ngx_log_init(u_char *prefix, u_char *error_log)
         ngx_log_file.fd = ngx_stderr;
     }
 
-    if (p) {
+    якщо (p) {
         ngx_free(p);
     }
 
-    return &ngx_log;
+    повернути &ngx_log;
 }
 
 
@@ -403,19 +403,19 @@ ngx_log_open_default(ngx_cycle_t *cycle)
 {
     ngx_log_t  *log;
 
-    if (ngx_log_get_file_log(&cycle->new_log) != NULL) {
-        return NGX_OK;
+    якщо (ngx_log_get_file_log(&cycle->new_log) != NULL) {
+        повернути NGX_OK;
     }
 
-    if (cycle->new_log.log_level != 0) {
+    якщо (cycle->new_log.log_level != 0) {
         /* there are some error logs, but no files */
 
         log = ngx_pcalloc(cycle->pool, sizeof(ngx_log_t));
-        if (log == NULL) {
-            return NGX_ERROR;
+        якщо (log == NULL) {
+            повернути NGX_ERROR;
         }
 
-    } else {
+    } інакше {
         /* no error logs at all */
         log = &cycle->new_log;
     }
@@ -423,15 +423,15 @@ ngx_log_open_default(ngx_cycle_t *cycle)
     log->log_level = NGX_LOG_ERR;
 
     log->file = ngx_conf_open_file(cycle, &cycle->error_log);
-    if (log->file == NULL) {
-        return NGX_ERROR;
+    якщо (log->file == NULL) {
+        повернути NGX_ERROR;
     }
 
-    if (log != &cycle->new_log) {
+    якщо (log != &cycle->new_log) {
         ngx_log_insert(&cycle->new_log, log);
     }
 
-    return NGX_OK;
+    повернути NGX_OK;
 }
 
 
@@ -440,23 +440,23 @@ ngx_log_redirect_stderr(ngx_cycle_t *cycle)
 {
     ngx_fd_t  fd;
 
-    if (cycle->log_use_stderr) {
-        return NGX_OK;
+    якщо (cycle->log_use_stderr) {
+        повернути NGX_OK;
     }
 
     /* file log always exists when we are called */
     fd = ngx_log_get_file_log(cycle->log)->file->fd;
 
-    if (fd != ngx_stderr) {
-        if (ngx_set_stderr(fd) == NGX_FILE_ERROR) {
+    якщо (fd != ngx_stderr) {
+        якщо (ngx_set_stderr(fd) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
                           ngx_set_stderr_n " failed");
 
-            return NGX_ERROR;
+            повернути NGX_ERROR;
         }
     }
 
-    return NGX_OK;
+    повернути NGX_OK;
 }
 
 
@@ -465,13 +465,13 @@ ngx_log_get_file_log(ngx_log_t *head)
 {
     ngx_log_t  *log;
 
-    for (log = head; log; log = log->next) {
-        if (log->file != NULL) {
-            return log;
+    для (log = head; log; log = log->next) {
+        якщо (log->file != NULL) {
+            повернути log;
         }
     }
 
-    return NULL;
+    повернути NULL;
 }
 
 
@@ -481,24 +481,24 @@ ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log)
     ngx_uint_t   i, n, d, found;
     ngx_str_t   *value;
 
-    if (cf->args->nelts == 2) {
+    якщо (cf->args->nelts == 2) {
         log->log_level = NGX_LOG_ERR;
-        return NGX_CONF_OK;
+        повернути NGX_CONF_OK;
     }
 
     value = cf->args->elts;
 
-    for (i = 2; i < cf->args->nelts; i++) {
+    для (i = 2; i < cf->args->nelts; i++) {
         found = 0;
 
-        for (n = 1; n <= NGX_LOG_DEBUG; n++) {
-            if (ngx_strcmp(value[i].data, err_levels[n].data) == 0) {
+        для (n = 1; n <= NGX_LOG_DEBUG; n++) {
+            якщо (ngx_strcmp(value[i].data, err_levels[n].data) == 0) {
 
-                if (log->log_level != 0) {
+                якщо (log->log_level != 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "duplicate log level \"%V\"",
                                        &value[i]);
-                    return NGX_CONF_ERROR;
+                    повернути NGX_CONF_ERROR;
                 }
 
                 log->log_level = n;
@@ -507,13 +507,13 @@ ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log)
             }
         }
 
-        for (n = 0, d = NGX_LOG_DEBUG_FIRST; d <= NGX_LOG_DEBUG_LAST; d <<= 1) {
-            if (ngx_strcmp(value[i].data, debug_levels[n++]) == 0) {
-                if (log->log_level & ~NGX_LOG_DEBUG_ALL) {
+        для (n = 0, d = NGX_LOG_DEBUG_FIRST; d <= NGX_LOG_DEBUG_LAST; d <<= 1) {
+            якщо (ngx_strcmp(value[i].data, debug_levels[n++]) == 0) {
+                якщо (log->log_level & ~NGX_LOG_DEBUG_ALL) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "invalid log level \"%V\"",
                                        &value[i]);
-                    return NGX_CONF_ERROR;
+                    повернути NGX_CONF_ERROR;
                 }
 
                 log->log_level |= d;
@@ -523,18 +523,18 @@ ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log)
         }
 
 
-        if (!found) {
+        якщо (!found) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "invalid log level \"%V\"", &value[i]);
-            return NGX_CONF_ERROR;
+            повернути NGX_CONF_ERROR;
         }
     }
 
-    if (log->log_level == NGX_LOG_DEBUG) {
+    якщо (log->log_level == NGX_LOG_DEBUG) {
         log->log_level = NGX_LOG_DEBUG_ALL;
     }
 
-    return NGX_CONF_OK;
+    повернути NGX_CONF_OK;
 }
 
 
@@ -545,7 +545,7 @@ ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     dummy = &cf->cycle->new_log;
 
-    return ngx_log_set_log(cf, &dummy);
+    повернути ngx_log_set_log(cf, &dummy);
 }
 
 
@@ -556,35 +556,35 @@ ngx_log_set_log(ngx_conf_t *cf, ngx_log_t **head)
     ngx_str_t          *value, name;
     ngx_syslog_peer_t  *peer;
 
-    if (*head != NULL && (*head)->log_level == 0) {
+    якщо (*head != NULL && (*head)->log_level == 0) {
         new_log = *head;
 
-    } else {
+    } інакше {
 
         new_log = ngx_pcalloc(cf->pool, sizeof(ngx_log_t));
-        if (new_log == NULL) {
-            return NGX_CONF_ERROR;
+        якщо (new_log == NULL) {
+            повернути NGX_CONF_ERROR;
         }
 
-        if (*head == NULL) {
+        якщо (*head == NULL) {
             *head = new_log;
         }
     }
 
     value = cf->args->elts;
 
-    if (ngx_strcmp(value[1].data, "stderr") == 0) {
+    якщо (ngx_strcmp(value[1].data, "stderr") == 0) {
         ngx_str_null(&name);
         cf->cycle->log_use_stderr = 1;
 
         new_log->file = ngx_conf_open_file(cf->cycle, &name);
-        if (new_log->file == NULL) {
-            return NGX_CONF_ERROR;
+        якщо (new_log->file == NULL) {
+            повернути NGX_CONF_ERROR;
         }
 
-    } else if (ngx_strncmp(value[1].data, "memory:", 7) == 0) {
+    } інакше якщо (ngx_strncmp(value[1].data, "memory:", 7) == 0) {
 
-#if (NGX_DEBUG)
+#якщо (NGX_DEBUG)
         size_t                 size, needed;
         ngx_pool_cleanup_t    *cln;
         ngx_log_memory_buf_t  *buf;
@@ -600,20 +600,20 @@ ngx_log_set_log(ngx_conf_t *cf, ngx_log_t **head)
 
         size = ngx_parse_size(&value[1]);
 
-        if (size == (size_t) NGX_ERROR || size < needed) {
+        якщо (size == (size_t) NGX_ERROR || size < needed) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "invalid buffer size \"%V\"", &value[1]);
-            return NGX_CONF_ERROR;
+            повернути NGX_CONF_ERROR;
         }
 
         buf = ngx_pcalloc(cf->pool, sizeof(ngx_log_memory_buf_t));
-        if (buf == NULL) {
-            return NGX_CONF_ERROR;
+        якщо (buf == NULL) {
+            повернути NGX_CONF_ERROR;
         }
 
         buf->start = ngx_pnalloc(cf->pool, size);
-        if (buf->start == NULL) {
-            return NGX_CONF_ERROR;
+        якщо (buf->start == NULL) {
+            повернути NGX_CONF_ERROR;
         }
 
         buf->end = buf->start + size;
@@ -625,8 +625,8 @@ ngx_log_set_log(ngx_conf_t *cf, ngx_log_t **head)
         ngx_memset(buf->pos, ' ', buf->end - buf->pos);
 
         cln = ngx_pool_cleanup_add(cf->pool, 0);
-        if (cln == NULL) {
-            return NGX_CONF_ERROR;
+        якщо (cln == NULL) {
+            повернути NGX_CONF_ERROR;
         }
 
         cln->data = new_log;
@@ -635,41 +635,41 @@ ngx_log_set_log(ngx_conf_t *cf, ngx_log_t **head)
         new_log->writer = ngx_log_memory_writer;
         new_log->wdata = buf;
 
-#else
+#інакше
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "nginx was built without debug support");
-        return NGX_CONF_ERROR;
+        повернути NGX_CONF_ERROR;
 #endif
 
-    } else if (ngx_strncmp(value[1].data, "syslog:", 7) == 0) {
+    } інакше якщо (ngx_strncmp(value[1].data, "syslog:", 7) == 0) {
         peer = ngx_pcalloc(cf->pool, sizeof(ngx_syslog_peer_t));
-        if (peer == NULL) {
-            return NGX_CONF_ERROR;
+        якщо (peer == NULL) {
+            повернути NGX_CONF_ERROR;
         }
 
-        if (ngx_syslog_process_conf(cf, peer) != NGX_CONF_OK) {
-            return NGX_CONF_ERROR;
+        якщо (ngx_syslog_process_conf(cf, peer) != NGX_CONF_OK) {
+            повернути NGX_CONF_ERROR;
         }
 
         new_log->writer = ngx_syslog_writer;
         new_log->wdata = peer;
 
-    } else {
+    } інакше {
         new_log->file = ngx_conf_open_file(cf->cycle, &value[1]);
-        if (new_log->file == NULL) {
-            return NGX_CONF_ERROR;
+        якщо (new_log->file == NULL) {
+            повернути NGX_CONF_ERROR;
         }
     }
 
-    if (ngx_log_set_levels(cf, new_log) != NGX_CONF_OK) {
-        return NGX_CONF_ERROR;
+    якщо (ngx_log_set_levels(cf, new_log) != NGX_CONF_OK) {
+        повернути NGX_CONF_ERROR;
     }
 
-    if (*head != new_log) {
+    якщо (*head != new_log) {
         ngx_log_insert(*head, new_log);
     }
 
-    return NGX_CONF_OK;
+    повернути NGX_CONF_OK;
 }
 
 
@@ -678,7 +678,7 @@ ngx_log_insert(ngx_log_t *log, ngx_log_t *new_log)
 {
     ngx_log_t  tmp;
 
-    if (new_log->log_level > log->log_level) {
+    якщо (new_log->log_level > log->log_level) {
 
         /*
          * list head address is permanent, insert new log after
@@ -690,14 +690,14 @@ ngx_log_insert(ngx_log_t *log, ngx_log_t *new_log)
         *new_log = tmp;
 
         log->next = new_log;
-        return;
+        повернути;
     }
 
-    while (log->next) {
-        if (new_log->log_level > log->next->log_level) {
+    поки (log->next) {
+        якщо (new_log->log_level > log->next->log_level) {
             new_log->next = log->next;
             log->next = new_log;
-            return;
+            повернути;
         }
 
         log = log->next;
@@ -707,7 +707,7 @@ ngx_log_insert(ngx_log_t *log, ngx_log_t *new_log)
 }
 
 
-#if (NGX_DEBUG)
+#якщо (NGX_DEBUG)
 
 static void
 ngx_log_memory_writer(ngx_log_t *log, ngx_uint_t level, u_char *buf,
@@ -719,8 +719,8 @@ ngx_log_memory_writer(ngx_log_t *log, ngx_uint_t level, u_char *buf,
 
     mem = log->wdata;
 
-    if (mem == NULL) {
-        return;
+    якщо (mem == NULL) {
+        повернути;
     }
 
     written = ngx_atomic_fetch_add(&mem->written, len);
@@ -729,10 +729,10 @@ ngx_log_memory_writer(ngx_log_t *log, ngx_uint_t level, u_char *buf,
 
     avail = mem->end - p;
 
-    if (avail >= len) {
+    якщо (avail >= len) {
         ngx_memcpy(p, buf, len);
 
-    } else {
+    } інакше {
         ngx_memcpy(p, buf, avail);
         ngx_memcpy(mem->pos, buf + avail, len - avail);
     }
