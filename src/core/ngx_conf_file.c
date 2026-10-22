@@ -5,25 +5,25 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
-#define NGX_CONF_BUFFER  4096
+#وصف_ڪريو NGX_CONF_بفر  4096
 
-static ngx_int_t ngx_conf_add_dump(ngx_conf_t *cf, ngx_str_t *filename);
-static ngx_int_t ngx_conf_handler(ngx_conf_t *cf, ngx_int_t last);
-static ngx_int_t ngx_conf_read_token(ngx_conf_t *cf);
-static void ngx_conf_flush_files(ngx_cycle_t *cycle);
+ساكن ngx_int_t ngx_conf_جوڙيو_dump(ngx_conf_t *cf, ngx_str_t *filename);
+ساكن ngx_int_t ngx_conf_handler(ngx_conf_t *cf, ngx_int_t آخري);
+ساكن ngx_int_t ngx_conf_read_token(ngx_conf_t *cf);
+ساكن فراغ ngx_conf_flush_files(ngx_چڪر_t *چڪر);
 
 
-static ngx_command_t  ngx_conf_commands[] = {
+ساكن ngx_command_t  ngx_conf_commands[] = {
 
     { ngx_string("include"),
       NGX_ANY_CONF|NGX_CONF_TAKE1,
       ngx_conf_include,
       0,
       0,
-      NULL },
+      عدم },
 
       ngx_null_command
 };
@@ -31,23 +31,23 @@ static ngx_command_t  ngx_conf_commands[] = {
 
 ngx_module_t  ngx_conf_module = {
     NGX_MODULE_V1,
-    NULL,                                  /* module context */
+    عدم,                                  /* module context */
     ngx_conf_commands,                     /* module directives */
     NGX_CONF_MODULE,                       /* module type */
-    NULL,                                  /* init master */
-    NULL,                                  /* init module */
-    NULL,                                  /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
+    عدم,                                  /* init master */
+    عدم,                                  /* init module */
+    عدم,                                  /* init process */
+    عدم,                                  /* init thread */
+    عدم,                                  /* exit thread */
     ngx_conf_flush_files,                  /* exit process */
-    NULL,                                  /* exit master */
+    عدم,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
 /* The eight fixed arguments */
 
-static ngx_uint_t argument_number[] = {
+ساكن ngx_uint_t دليل_عدد[] = {
     NGX_CONF_NOARGS,
     NGX_CONF_TAKE1,
     NGX_CONF_TAKE2,
@@ -59,193 +59,193 @@ static ngx_uint_t argument_number[] = {
 };
 
 
-ngx_conf_post_t  ngx_conf_size_nonzero_post = { ngx_conf_check_size_nonzero };
+ngx_conf_post_t  ngx_conf_سائيز_nonzero_post = { ngx_conf_check_سائيز_nonzero };
 
 
-char *
+حرف *
 ngx_conf_param(ngx_conf_t *cf)
 {
-    char             *rv;
+    حرف             *rv;
     ngx_str_t        *param;
     ngx_buf_t         b;
     ngx_conf_file_t   conf_file;
 
-    param = &cf->cycle->conf_param;
+    param = &cf->چڪر->conf_param;
 
-    if (param->len == 0) {
-        return NGX_CONF_OK;
+    إذا (param->len == 0) {
+        أرجع NGX_CONF_OK;
     }
 
-    ngx_memzero(&conf_file, sizeof(ngx_conf_file_t));
+    ngx_memzero(&conf_file, حجم(ngx_conf_file_t));
 
-    ngx_memzero(&b, sizeof(ngx_buf_t));
+    ngx_memzero(&b, حجم(ngx_buf_t));
 
-    b.start = param->data;
-    b.pos = param->data;
-    b.last = param->data + param->len;
-    b.end = b.last;
+    b.شروعات = param->معلومات;
+    b.pos = param->معلومات;
+    b.آخري = param->معلومات + param->len;
+    b.پڇاڙي = b.آخري;
     b.temporary = 1;
 
     conf_file.file.fd = NGX_INVALID_FILE;
-    conf_file.file.name.data = NULL;
-    conf_file.line = 0;
+    conf_file.file.name.معلومات = عدم;
+    conf_file.سٽ = 0;
 
     cf->conf_file = &conf_file;
-    cf->conf_file->buffer = &b;
+    cf->conf_file->بفر = &b;
 
-    rv = ngx_conf_parse(cf, NULL);
+    rv = ngx_conf_parse(cf, عدم);
 
-    cf->conf_file = NULL;
+    cf->conf_file = عدم;
 
-    return rv;
+    أرجع rv;
 }
 
 
-static ngx_int_t
-ngx_conf_add_dump(ngx_conf_t *cf, ngx_str_t *filename)
+ساكن ngx_int_t
+ngx_conf_جوڙيو_dump(ngx_conf_t *cf, ngx_str_t *filename)
 {
-    off_t             size;
+    off_t             سائيز;
     u_char           *p;
     uint32_t          hash;
     ngx_buf_t        *buf;
-    ngx_str_node_t   *sn;
+    ngx_str_ڳنڍ_t   *sn;
     ngx_conf_dump_t  *cd;
 
-    hash = ngx_crc32_long(filename->data, filename->len);
+    hash = ngx_چڪري_جاچ_32_long(filename->معلومات, filename->len);
 
-    sn = ngx_str_rbtree_lookup(&cf->cycle->config_dump_rbtree, filename, hash);
+    sn = ngx_str_rbtree_lookup(&cf->چڪر->config_dump_rbtree, filename, hash);
 
-    if (sn) {
-        cf->conf_file->dump = NULL;
-        return NGX_OK;
+    إذا (sn) {
+        cf->conf_file->dump = عدم;
+        أرجع NGX_OK;
     }
 
-    p = ngx_pstrdup(cf->cycle->pool, filename);
-    if (p == NULL) {
-        return NGX_ERROR;
+    p = ngx_pstrdup(cf->چڪر->pool, filename);
+    إذا (p == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    cd = ngx_array_push(&cf->cycle->config_dump);
-    if (cd == NULL) {
-        return NGX_ERROR;
+    cd = ngx_array_ڌڪو(&cf->چڪر->config_dump);
+    إذا (cd == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    size = ngx_file_size(&cf->conf_file->file.info);
+    سائيز = ngx_file_سائيز(&cf->conf_file->file.info);
 
-    buf = ngx_create_temp_buf(cf->cycle->pool, (size_t) size);
-    if (buf == NULL) {
-        return NGX_ERROR;
+    buf = ngx_create_عارضي_buf(cf->چڪر->pool, (سائيز_t) سائيز);
+    إذا (buf == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    cd->name.data = p;
+    cd->name.معلومات = p;
     cd->name.len = filename->len;
-    cd->buffer = buf;
+    cd->بفر = buf;
 
     cf->conf_file->dump = buf;
 
-    sn = ngx_palloc(cf->temp_pool, sizeof(ngx_str_node_t));
-    if (sn == NULL) {
-        return NGX_ERROR;
+    sn = ngx_palloc(cf->عارضي_pool, حجم(ngx_str_ڳنڍ_t));
+    إذا (sn == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    sn->node.key = hash;
+    sn->ڳنڍ.ڪنجي = hash;
     sn->str = cd->name;
 
-    ngx_rbtree_insert(&cf->cycle->config_dump_rbtree, &sn->node);
+    ngx_rbtree_وجهو(&cf->چڪر->config_dump_rbtree, &sn->ڳنڍ);
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
-char *
+حرف *
 ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
 {
-    char             *rv;
+    حرف             *rv;
     ngx_fd_t          fd;
     ngx_int_t         rc;
     ngx_buf_t         buf;
     ngx_conf_file_t  *prev, conf_file;
-    enum {
+    تعداد {
         parse_file = 0,
-        parse_block,
+        parse_بلاڪ,
         parse_param
     } type;
 
-#if (NGX_SUPPRESS_WARN)
+#إذا (NGX_SUPPRESS_WARN)
     fd = NGX_INVALID_FILE;
-    prev = NULL;
-#endif
+    prev = عدم;
+#جيڪڏهن_پورو
 
-    if (filename) {
+    إذا (filename) {
 
         /* open configuration file */
 
-        fd = ngx_open_file(filename->data, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0);
+        fd = ngx_open_file(filename->معلومات, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0);
 
-        if (fd == NGX_INVALID_FILE) {
+        إذا (fd == NGX_INVALID_FILE) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
                                ngx_open_file_n " \"%s\" failed",
-                               filename->data);
-            return NGX_CONF_ERROR;
+                               filename->معلومات);
+            أرجع NGX_CONF_ERROR;
         }
 
         prev = cf->conf_file;
 
         cf->conf_file = &conf_file;
 
-        if (ngx_fd_info(fd, &cf->conf_file->file.info) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_EMERG, cf->log, ngx_errno,
-                          ngx_fd_info_n " \"%s\" failed", filename->data);
+        إذا (ngx_fd_info(fd, &cf->conf_file->file.info) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_EMERG, cf->لاگرٿم, ngx_errno,
+                          ngx_fd_info_n " \"%s\" failed", filename->معلومات);
         }
 
-        cf->conf_file->buffer = &buf;
+        cf->conf_file->بفر = &buf;
 
-        buf.start = ngx_alloc(NGX_CONF_BUFFER, cf->log);
-        if (buf.start == NULL) {
-            goto failed;
+        buf.شروعات = ngx_alloc(NGX_CONF_بفر, cf->لاگرٿم);
+        إذا (buf.شروعات == عدم) {
+            اذهب failed;
         }
 
-        buf.pos = buf.start;
-        buf.last = buf.start;
-        buf.end = buf.last + NGX_CONF_BUFFER;
+        buf.pos = buf.شروعات;
+        buf.آخري = buf.شروعات;
+        buf.پڇاڙي = buf.آخري + NGX_CONF_بفر;
         buf.temporary = 1;
 
         cf->conf_file->file.fd = fd;
         cf->conf_file->file.name.len = filename->len;
-        cf->conf_file->file.name.data = filename->data;
-        cf->conf_file->file.offset = 0;
-        cf->conf_file->file.log = cf->log;
-        cf->conf_file->line = 1;
+        cf->conf_file->file.name.معلومات = filename->معلومات;
+        cf->conf_file->file.وٿي = 0;
+        cf->conf_file->file.لاگرٿم = cf->لاگرٿم;
+        cf->conf_file->سٽ = 1;
 
         type = parse_file;
 
-        if (ngx_dump_config
-#if (NGX_CONTROL_API)
+        إذا (ngx_dump_config
+#إذا (NGX_CONTROL_API)
             || ngx_control_api_enabled
-#endif
-#if (NGX_DEBUG)
+#جيڪڏهن_پورو
+#إذا (NGX_DEBUG)
             || 1
-#endif
+#جيڪڏهن_پورو
            )
         {
-            if (ngx_conf_add_dump(cf, filename) != NGX_OK) {
-                goto failed;
+            إذا (ngx_conf_جوڙيو_dump(cf, filename) != NGX_OK) {
+                اذهب failed;
             }
 
-        } else {
-            cf->conf_file->dump = NULL;
+        } وإلا {
+            cf->conf_file->dump = عدم;
         }
 
-    } else if (cf->conf_file->file.fd != NGX_INVALID_FILE) {
+    } وإلا إذا (cf->conf_file->file.fd != NGX_INVALID_FILE) {
 
-        type = parse_block;
+        type = parse_بلاڪ;
 
-    } else {
+    } وإلا {
         type = parse_param;
     }
 
 
-    for ( ;; ) {
+    لكل ( ;; ) {
         rc = ngx_conf_read_token(cf);
 
         /*
@@ -258,74 +258,74 @@ ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
          *    NGX_CONF_FILE_DONE    the configuration file is done
          */
 
-        if (rc == NGX_ERROR) {
-            goto done;
+        إذا (rc == NGX_ERROR) {
+            اذهب پورو;
         }
 
-        if (rc == NGX_CONF_BLOCK_DONE) {
+        إذا (rc == NGX_CONF_بلاڪ_پورو) {
 
-            if (type != parse_block) {
+            إذا (type != parse_بلاڪ) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "unexpected \"}\"");
-                goto failed;
+                اذهب failed;
             }
 
-            goto done;
+            اذهب پورو;
         }
 
-        if (rc == NGX_CONF_FILE_DONE) {
+        إذا (rc == NGX_CONF_FILE_پورو) {
 
-            if (type == parse_block) {
+            إذا (type == parse_بلاڪ) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "unexpected end of file, expecting \"}\"");
-                goto failed;
+                اذهب failed;
             }
 
-            goto done;
+            اذهب پورو;
         }
 
-        if (rc == NGX_CONF_BLOCK_START) {
+        إذا (rc == NGX_CONF_بلاڪ_شروعات) {
 
-            if (type == parse_param) {
+            إذا (type == parse_param) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "block directives are not supported "
                                    "in -g option");
-                goto failed;
+                اذهب failed;
             }
         }
 
         /* rc == NGX_OK || rc == NGX_CONF_BLOCK_START */
 
-        if (cf->handler) {
+        إذا (cf->handler) {
 
             /*
              * the custom handler, i.e., that is used in the http's
              * "types { ... }" directive
              */
 
-            if (rc == NGX_CONF_BLOCK_START) {
+            إذا (rc == NGX_CONF_بلاڪ_شروعات) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "unexpected \"{\"");
-                goto failed;
+                اذهب failed;
             }
 
-            rv = (*cf->handler)(cf, NULL, cf->handler_conf);
-            if (rv == NGX_CONF_OK) {
-                continue;
+            rv = (*cf->handler)(cf, عدم, cf->handler_conf);
+            إذا (rv == NGX_CONF_OK) {
+                استمر;
             }
 
-            if (rv == NGX_CONF_ERROR) {
-                goto failed;
+            إذا (rv == NGX_CONF_ERROR) {
+                اذهب failed;
             }
 
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "%s", rv);
 
-            goto failed;
+            اذهب failed;
         }
 
 
         rc = ngx_conf_handler(cf, rc);
 
-        if (rc == NGX_ERROR) {
-            goto failed;
+        إذا (rc == NGX_ERROR) {
+            اذهب failed;
         }
     }
 
@@ -333,1123 +333,1123 @@ failed:
 
     rc = NGX_ERROR;
 
-done:
+پورو:
 
-    if (filename) {
-        if (cf->conf_file->buffer->start) {
-            ngx_free(cf->conf_file->buffer->start);
+    إذا (filename) {
+        إذا (cf->conf_file->بفر->شروعات) {
+            ngx_free(cf->conf_file->بفر->شروعات);
         }
 
-        if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
+        إذا (ngx_close_file(fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, cf->لاگرٿم, ngx_errno,
                           ngx_close_file_n " %s failed",
-                          filename->data);
+                          filename->معلومات);
             rc = NGX_ERROR;
         }
 
         cf->conf_file = prev;
     }
 
-    if (rc == NGX_ERROR) {
-        return NGX_CONF_ERROR;
+    إذا (rc == NGX_ERROR) {
+        أرجع NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-static ngx_int_t
-ngx_conf_handler(ngx_conf_t *cf, ngx_int_t last)
+ساكن ngx_int_t
+ngx_conf_handler(ngx_conf_t *cf, ngx_int_t آخري)
 {
-    char           *rv;
-    void           *conf, **confp;
-    ngx_uint_t      i, found;
+    حرف           *rv;
+    فراغ           *conf, **confp;
+    ngx_uint_t      i, مليو;
     ngx_str_t      *name;
     ngx_command_t  *cmd;
 
-    name = cf->args->elts;
+    name = cf->دليلون->elts;
 
-    found = 0;
+    مليو = 0;
 
-    for (i = 0; cf->cycle->modules[i]; i++) {
+    لكل (i = 0; cf->چڪر->modules[i]; i++) {
 
-        cmd = cf->cycle->modules[i]->commands;
-        if (cmd == NULL) {
-            continue;
+        cmd = cf->چڪر->modules[i]->commands;
+        إذا (cmd == عدم) {
+            استمر;
         }
 
-        for ( /* void */ ; cmd->name.len; cmd++) {
+        لكل ( /* void */ ; cmd->name.len; cmd++) {
 
-            if (name->len != cmd->name.len) {
-                continue;
+            إذا (name->len != cmd->name.len) {
+                استمر;
             }
 
-            if (ngx_strcmp(name->data, cmd->name.data) != 0) {
-                continue;
+            إذا (ngx_strcmp(name->معلومات, cmd->name.معلومات) != 0) {
+                استمر;
             }
 
-            found = 1;
+            مليو = 1;
 
-            if (cf->cycle->modules[i]->type != NGX_CONF_MODULE
-                && cf->cycle->modules[i]->type != cf->module_type)
+            إذا (cf->چڪر->modules[i]->type != NGX_CONF_MODULE
+                && cf->چڪر->modules[i]->type != cf->module_type)
             {
-                continue;
+                استمر;
             }
 
             /* is the directive's location right ? */
 
-            if (!(cmd->type & cf->cmd_type)) {
-                continue;
+            إذا (!(cmd->type & cf->cmd_type)) {
+                استمر;
             }
 
-            if (!(cmd->type & NGX_CONF_BLOCK) && last != NGX_OK) {
+            إذا (!(cmd->type & NGX_CONF_بلاڪ) && آخري != NGX_OK) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                   "directive \"%s\" is not terminated by \";\"",
-                                  name->data);
-                return NGX_ERROR;
+                                  name->معلومات);
+                أرجع NGX_ERROR;
             }
 
-            if ((cmd->type & NGX_CONF_BLOCK) && last != NGX_CONF_BLOCK_START) {
+            إذا ((cmd->type & NGX_CONF_بلاڪ) && آخري != NGX_CONF_بلاڪ_شروعات) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "directive \"%s\" has no opening \"{\"",
-                                   name->data);
-                return NGX_ERROR;
+                                   name->معلومات);
+                أرجع NGX_ERROR;
             }
 
             /* is the directive's argument count right ? */
 
-            if (!(cmd->type & NGX_CONF_ANY)) {
+            إذا (!(cmd->type & NGX_CONF_ANY)) {
 
-                if (cmd->type & NGX_CONF_FLAG) {
+                إذا (cmd->type & NGX_CONF_FLAG) {
 
-                    if (cf->args->nelts != 2) {
-                        goto invalid;
+                    إذا (cf->دليلون->nelts != 2) {
+                        اذهب invalid;
                     }
 
-                } else if (cmd->type & NGX_CONF_1MORE) {
+                } وإلا إذا (cmd->type & NGX_CONF_1_وڌيڪ) {
 
-                    if (cf->args->nelts < 2) {
-                        goto invalid;
+                    إذا (cf->دليلون->nelts < 2) {
+                        اذهب invalid;
                     }
 
-                } else if (cmd->type & NGX_CONF_2MORE) {
+                } وإلا إذا (cmd->type & NGX_CONF_2_وڌيڪ) {
 
-                    if (cf->args->nelts < 3) {
-                        goto invalid;
+                    إذا (cf->دليلون->nelts < 3) {
+                        اذهب invalid;
                     }
 
-                } else if (cf->args->nelts > NGX_CONF_MAX_ARGS) {
+                } وإلا إذا (cf->دليلون->nelts > NGX_CONF_MAX_دليلون) {
 
-                    goto invalid;
+                    اذهب invalid;
 
-                } else if (!(cmd->type & argument_number[cf->args->nelts - 1]))
+                } وإلا إذا (!(cmd->type & دليل_عدد[cf->دليلون->nelts - 1]))
                 {
-                    goto invalid;
+                    اذهب invalid;
                 }
             }
 
             /* set up the directive's configuration context */
 
-            conf = NULL;
+            conf = عدم;
 
-            if (cmd->type & NGX_DIRECT_CONF) {
-                conf = ((void **) cf->ctx)[cf->cycle->modules[i]->index];
+            إذا (cmd->type & NGX_سڌو_CONF) {
+                conf = ((فراغ **) cf->ctx)[cf->چڪر->modules[i]->اشاريو];
 
-            } else if (cmd->type & NGX_MAIN_CONF) {
-                conf = &(((void **) cf->ctx)[cf->cycle->modules[i]->index]);
+            } وإلا إذا (cmd->type & NGX_MAIN_CONF) {
+                conf = &(((فراغ **) cf->ctx)[cf->چڪر->modules[i]->اشاريو]);
 
-            } else if (cf->ctx) {
-                confp = *(void **) ((char *) cf->ctx + cmd->conf);
+            } وإلا إذا (cf->ctx) {
+                confp = *(فراغ **) ((حرف *) cf->ctx + cmd->conf);
 
-                if (confp) {
-                    conf = confp[cf->cycle->modules[i]->ctx_index];
+                إذا (confp) {
+                    conf = confp[cf->چڪر->modules[i]->ctx_اشاريو];
                 }
             }
 
-            rv = cmd->set(cf, cmd, conf);
+            rv = cmd->سيٽ(cf, cmd, conf);
 
-            if (rv == NGX_CONF_OK) {
-                return NGX_OK;
+            إذا (rv == NGX_CONF_OK) {
+                أرجع NGX_OK;
             }
 
-            if (rv == NGX_CONF_ERROR) {
-                return NGX_ERROR;
+            إذا (rv == NGX_CONF_ERROR) {
+                أرجع NGX_ERROR;
             }
 
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                               "\"%s\" directive %s", name->data, rv);
+                               "\"%s\" directive %s", name->معلومات, rv);
 
-            return NGX_ERROR;
+            أرجع NGX_ERROR;
         }
     }
 
-    if (found) {
+    إذا (مليو) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                           "\"%s\" directive is not allowed here", name->data);
+                           "\"%s\" directive is not allowed here", name->معلومات);
 
-        return NGX_ERROR;
+        أرجع NGX_ERROR;
     }
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                       "unknown directive \"%s\"", name->data);
+                       "unknown directive \"%s\"", name->معلومات);
 
-    return NGX_ERROR;
+    أرجع NGX_ERROR;
 
 invalid:
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                        "invalid number of arguments in \"%s\" directive",
-                       name->data);
+                       name->معلومات);
 
-    return NGX_ERROR;
+    أرجع NGX_ERROR;
 }
 
 
-static ngx_int_t
+ساكن ngx_int_t
 ngx_conf_read_token(ngx_conf_t *cf)
 {
-    u_char      *start, ch, *src, *dst;
-    off_t        file_size;
-    size_t       len;
-    ssize_t      n, size;
-    ngx_uint_t   found, need_space, last_space, sharp_comment, variable;
-    ngx_uint_t   quoted, s_quoted, d_quoted, start_line;
-    ngx_str_t   *word;
+    u_char      *شروعات, ch, *src, *dst;
+    off_t        file_سائيز;
+    سائيز_t       len;
+    ssize_t      n, سائيز;
+    ngx_uint_t   مليو, need_space, آخري_space, sharp_comment, variable;
+    ngx_uint_t   quoted, s_quoted, d_quoted, شروعات_سٽ;
+    ngx_str_t   *لفظ;
     ngx_buf_t   *b, *dump;
 
-    found = 0;
+    مليو = 0;
     need_space = 0;
-    last_space = 1;
+    آخري_space = 1;
     sharp_comment = 0;
     variable = 0;
     quoted = 0;
     s_quoted = 0;
     d_quoted = 0;
 
-    cf->args->nelts = 0;
-    b = cf->conf_file->buffer;
+    cf->دليلون->nelts = 0;
+    b = cf->conf_file->بفر;
     dump = cf->conf_file->dump;
-    start = b->pos;
-    start_line = cf->conf_file->line;
+    شروعات = b->pos;
+    شروعات_سٽ = cf->conf_file->سٽ;
 
-    file_size = ngx_file_size(&cf->conf_file->file.info);
+    file_سائيز = ngx_file_سائيز(&cf->conf_file->file.info);
 
-    for ( ;; ) {
+    لكل ( ;; ) {
 
-        if (b->pos >= b->last) {
+        إذا (b->pos >= b->آخري) {
 
-            if (cf->conf_file->file.offset >= file_size) {
+            إذا (cf->conf_file->file.وٿي >= file_سائيز) {
 
-                if (cf->args->nelts > 0 || !last_space) {
+                إذا (cf->دليلون->nelts > 0 || !آخري_space) {
 
-                    if (cf->conf_file->file.fd == NGX_INVALID_FILE) {
+                    إذا (cf->conf_file->file.fd == NGX_INVALID_FILE) {
                         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                            "unexpected end of parameter, "
                                            "expecting \";\"");
-                        return NGX_ERROR;
+                        أرجع NGX_ERROR;
                     }
 
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "unexpected end of file, "
                                        "expecting \";\" or \"}\"");
-                    return NGX_ERROR;
+                    أرجع NGX_ERROR;
                 }
 
-                return NGX_CONF_FILE_DONE;
+                أرجع NGX_CONF_FILE_پورو;
             }
 
-            len = b->pos - start;
+            len = b->pos - شروعات;
 
-            if (len == NGX_CONF_BUFFER) {
-                cf->conf_file->line = start_line;
+            إذا (len == NGX_CONF_بفر) {
+                cf->conf_file->سٽ = شروعات_سٽ;
 
-                if (d_quoted) {
+                إذا (d_quoted) {
                     ch = '"';
 
-                } else if (s_quoted) {
+                } وإلا إذا (s_quoted) {
                     ch = '\'';
 
-                } else {
+                } وإلا {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "too long parameter \"%*s...\" started",
-                                       (size_t) 10, start);
-                    return NGX_ERROR;
+                                       (سائيز_t) 10, شروعات);
+                    أرجع NGX_ERROR;
                 }
 
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "too long parameter, probably "
                                    "missing terminating \"%c\" character", ch);
-                return NGX_ERROR;
+                أرجع NGX_ERROR;
             }
 
-            if (len) {
-                ngx_memmove(b->start, start, len);
+            إذا (len) {
+                ngx_memmove(b->شروعات, شروعات, len);
             }
 
-            size = (ssize_t) (file_size - cf->conf_file->file.offset);
+            سائيز = (ssize_t) (file_سائيز - cf->conf_file->file.وٿي);
 
-            if (size > b->end - (b->start + len)) {
-                size = b->end - (b->start + len);
+            إذا (سائيز > b->پڇاڙي - (b->شروعات + len)) {
+                سائيز = b->پڇاڙي - (b->شروعات + len);
             }
 
-            n = ngx_read_file(&cf->conf_file->file, b->start + len, size,
-                              cf->conf_file->file.offset);
+            n = ngx_read_file(&cf->conf_file->file, b->شروعات + len, سائيز,
+                              cf->conf_file->file.وٿي);
 
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            إذا (n == NGX_ERROR) {
+                أرجع NGX_ERROR;
             }
 
-            if (n != size) {
+            إذا (n != سائيز) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    ngx_read_file_n " returned "
                                    "only %z bytes instead of %z",
-                                   n, size);
-                return NGX_ERROR;
+                                   n, سائيز);
+                أرجع NGX_ERROR;
             }
 
-            b->pos = b->start + len;
-            b->last = b->pos + n;
-            start = b->start;
+            b->pos = b->شروعات + len;
+            b->آخري = b->pos + n;
+            شروعات = b->شروعات;
 
-            if (dump) {
-                dump->last = ngx_cpymem(dump->last, b->pos, size);
+            إذا (dump) {
+                dump->آخري = ngx_cpymem(dump->آخري, b->pos, سائيز);
             }
         }
 
         ch = *b->pos++;
 
-        if (ch == LF) {
-            cf->conf_file->line++;
+        إذا (ch == LF) {
+            cf->conf_file->سٽ++;
 
-            if (sharp_comment) {
+            إذا (sharp_comment) {
                 sharp_comment = 0;
             }
         }
 
-        if (sharp_comment) {
-            continue;
+        إذا (sharp_comment) {
+            استمر;
         }
 
-        if (quoted) {
+        إذا (quoted) {
             quoted = 0;
-            continue;
+            استمر;
         }
 
-        if (need_space) {
-            if (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
-                last_space = 1;
+        إذا (need_space) {
+            إذا (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
+                آخري_space = 1;
                 need_space = 0;
-                continue;
+                استمر;
             }
 
-            if (ch == ';') {
-                return NGX_OK;
+            إذا (ch == ';') {
+                أرجع NGX_OK;
             }
 
-            if (ch == '{') {
-                return NGX_CONF_BLOCK_START;
+            إذا (ch == '{') {
+                أرجع NGX_CONF_بلاڪ_شروعات;
             }
 
-            if (ch == ')') {
-                last_space = 1;
+            إذا (ch == ')') {
+                آخري_space = 1;
                 need_space = 0;
 
-            } else {
+            } وإلا {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "unexpected \"%c\"", ch);
-                return NGX_ERROR;
+                أرجع NGX_ERROR;
             }
         }
 
-        if (last_space) {
+        إذا (آخري_space) {
 
-            start = b->pos - 1;
-            start_line = cf->conf_file->line;
+            شروعات = b->pos - 1;
+            شروعات_سٽ = cf->conf_file->سٽ;
 
-            if (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
-                continue;
+            إذا (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
+                استمر;
             }
 
-            switch (ch) {
+            بدل (ch) {
 
-            case ';':
-            case '{':
-                if (cf->args->nelts == 0) {
+            حالة ';':
+            حالة '{':
+                إذا (cf->دليلون->nelts == 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "unexpected \"%c\"", ch);
-                    return NGX_ERROR;
+                    أرجع NGX_ERROR;
                 }
 
-                if (ch == '{') {
-                    return NGX_CONF_BLOCK_START;
+                إذا (ch == '{') {
+                    أرجع NGX_CONF_بلاڪ_شروعات;
                 }
 
-                return NGX_OK;
+                أرجع NGX_OK;
 
-            case '}':
-                if (cf->args->nelts != 0) {
+            حالة '}':
+                إذا (cf->دليلون->nelts != 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "unexpected \"}\"");
-                    return NGX_ERROR;
+                    أرجع NGX_ERROR;
                 }
 
-                return NGX_CONF_BLOCK_DONE;
+                أرجع NGX_CONF_بلاڪ_پورو;
 
-            case '#':
+            حالة '#':
                 sharp_comment = 1;
-                continue;
+                استمر;
 
-            case '\\':
+            حالة '\\':
                 quoted = 1;
-                last_space = 0;
-                continue;
+                آخري_space = 0;
+                استمر;
 
-            case '"':
-                start++;
+            حالة '"':
+                شروعات++;
                 d_quoted = 1;
-                last_space = 0;
-                continue;
+                آخري_space = 0;
+                استمر;
 
-            case '\'':
-                start++;
+            حالة '\'':
+                شروعات++;
                 s_quoted = 1;
-                last_space = 0;
-                continue;
+                آخري_space = 0;
+                استمر;
 
-            case '$':
+            حالة '$':
                 variable = 1;
-                last_space = 0;
-                continue;
+                آخري_space = 0;
+                استمر;
 
-            default:
-                last_space = 0;
+            افتراضي:
+                آخري_space = 0;
             }
 
-        } else {
-            if (ch == '{' && variable) {
-                continue;
+        } وإلا {
+            إذا (ch == '{' && variable) {
+                استمر;
             }
 
             variable = 0;
 
-            if (ch == '\\') {
+            إذا (ch == '\\') {
                 quoted = 1;
-                continue;
+                استمر;
             }
 
-            if (ch == '$') {
+            إذا (ch == '$') {
                 variable = 1;
-                continue;
+                استمر;
             }
 
-            if (d_quoted) {
-                if (ch == '"') {
+            إذا (d_quoted) {
+                إذا (ch == '"') {
                     d_quoted = 0;
                     need_space = 1;
-                    found = 1;
+                    مليو = 1;
                 }
 
-            } else if (s_quoted) {
-                if (ch == '\'') {
+            } وإلا إذا (s_quoted) {
+                إذا (ch == '\'') {
                     s_quoted = 0;
                     need_space = 1;
-                    found = 1;
+                    مليو = 1;
                 }
 
-            } else if (ch == ' ' || ch == '\t' || ch == CR || ch == LF
+            } وإلا إذا (ch == ' ' || ch == '\t' || ch == CR || ch == LF
                        || ch == ';' || ch == '{')
             {
-                last_space = 1;
-                found = 1;
+                آخري_space = 1;
+                مليو = 1;
             }
 
-            if (found) {
-                word = ngx_array_push(cf->args);
-                if (word == NULL) {
-                    return NGX_ERROR;
+            إذا (مليو) {
+                لفظ = ngx_array_ڌڪو(cf->دليلون);
+                إذا (لفظ == عدم) {
+                    أرجع NGX_ERROR;
                 }
 
-                word->data = ngx_pnalloc(cf->pool, b->pos - 1 - start + 1);
-                if (word->data == NULL) {
-                    return NGX_ERROR;
+                لفظ->معلومات = ngx_pnalloc(cf->pool, b->pos - 1 - شروعات + 1);
+                إذا (لفظ->معلومات == عدم) {
+                    أرجع NGX_ERROR;
                 }
 
-                for (dst = word->data, src = start, len = 0;
+                لكل (dst = لفظ->معلومات, src = شروعات, len = 0;
                      src < b->pos - 1;
                      len++)
                 {
-                    if (*src == '\\') {
-                        switch (src[1]) {
-                        case '"':
-                        case '\'':
-                        case '\\':
+                    إذا (*src == '\\') {
+                        بدل (src[1]) {
+                        حالة '"':
+                        حالة '\'':
+                        حالة '\\':
                             src++;
-                            break;
+                            اكسر;
 
-                        case 't':
+                        حالة 't':
                             *dst++ = '\t';
                             src += 2;
-                            continue;
+                            استمر;
 
-                        case 'r':
+                        حالة 'r':
                             *dst++ = '\r';
                             src += 2;
-                            continue;
+                            استمر;
 
-                        case 'n':
+                        حالة 'n':
                             *dst++ = '\n';
                             src += 2;
-                            continue;
+                            استمر;
                         }
 
                     }
                     *dst++ = *src++;
                 }
                 *dst = '\0';
-                word->len = len;
+                لفظ->len = len;
 
-                if (ch == ';') {
-                    return NGX_OK;
+                إذا (ch == ';') {
+                    أرجع NGX_OK;
                 }
 
-                if (ch == '{') {
-                    return NGX_CONF_BLOCK_START;
+                إذا (ch == '{') {
+                    أرجع NGX_CONF_بلاڪ_شروعات;
                 }
 
-                found = 0;
+                مليو = 0;
             }
         }
     }
 }
 
 
-char *
-ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char        *rv;
+    حرف        *rv;
     ngx_int_t    n;
-    ngx_str_t   *value, file, name;
+    ngx_str_t   *قدر, file, name;
     ngx_glob_t   gl;
 
-    value = cf->args->elts;
-    file = value[1];
+    قدر = cf->دليلون->elts;
+    file = قدر[1];
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.data);
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->لاگرٿم, 0, "include %s", file.معلومات);
 
-    if (ngx_conf_full_name(cf->cycle, &file, 1) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    إذا (ngx_conf_ڀريل_name(cf->چڪر, &file, 1) != NGX_OK) {
+        أرجع NGX_CONF_ERROR;
     }
 
-    if (strpbrk((char *) file.data, "*?[") == NULL) {
+    إذا (strpbrk((حرف *) file.معلومات, "*?[") == عدم) {
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.data);
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->لاگرٿم, 0, "include %s", file.معلومات);
 
-        return ngx_conf_parse(cf, &file);
+        أرجع ngx_conf_parse(cf, &file);
     }
 
-    ngx_memzero(&gl, sizeof(ngx_glob_t));
+    ngx_memzero(&gl, حجم(ngx_glob_t));
 
-    gl.pattern = file.data;
-    gl.log = cf->log;
+    gl.نمونو = file.معلومات;
+    gl.لاگرٿم = cf->لاگرٿم;
     gl.test = 1;
 
-    if (ngx_open_glob(&gl) != NGX_OK) {
+    إذا (ngx_open_glob(&gl) != NGX_OK) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
-                           ngx_open_glob_n " \"%s\" failed", file.data);
-        return NGX_CONF_ERROR;
+                           ngx_open_glob_n " \"%s\" failed", file.معلومات);
+        أرجع NGX_CONF_ERROR;
     }
 
     rv = NGX_CONF_OK;
 
-    for ( ;; ) {
+    لكل ( ;; ) {
         n = ngx_read_glob(&gl, &name);
 
-        if (n != NGX_OK) {
-            break;
+        إذا (n != NGX_OK) {
+            اكسر;
         }
 
         file.len = name.len++;
-        file.data = ngx_pstrdup(cf->pool, &name);
-        if (file.data == NULL) {
-            return NGX_CONF_ERROR;
+        file.معلومات = ngx_pstrdup(cf->pool, &name);
+        إذا (file.معلومات == عدم) {
+            أرجع NGX_CONF_ERROR;
         }
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.data);
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->لاگرٿم, 0, "include %s", file.معلومات);
 
         rv = ngx_conf_parse(cf, &file);
 
-        if (rv != NGX_CONF_OK) {
-            break;
+        إذا (rv != NGX_CONF_OK) {
+            اكسر;
         }
     }
 
     ngx_close_glob(&gl);
 
-    return rv;
+    أرجع rv;
 }
 
 
 ngx_int_t
-ngx_conf_full_name(ngx_cycle_t *cycle, ngx_str_t *name, ngx_uint_t conf_prefix)
+ngx_conf_ڀريل_name(ngx_چڪر_t *چڪر, ngx_str_t *name, ngx_uint_t conf_اڳياڙي)
 {
-    ngx_str_t  *prefix;
+    ngx_str_t  *اڳياڙي;
 
-    prefix = conf_prefix ? &cycle->conf_prefix : &cycle->prefix;
+    اڳياڙي = conf_اڳياڙي ? &چڪر->conf_اڳياڙي : &چڪر->اڳياڙي;
 
-    return ngx_get_full_name(cycle->pool, prefix, name);
+    أرجع ngx_get_ڀريل_name(چڪر->pool, اڳياڙي, name);
 }
 
 
 ngx_open_file_t *
-ngx_conf_open_file(ngx_cycle_t *cycle, ngx_str_t *name)
+ngx_conf_open_file(ngx_چڪر_t *چڪر, ngx_str_t *name)
 {
-    ngx_str_t         full;
+    ngx_str_t         ڀريل;
     ngx_uint_t        i;
     ngx_list_part_t  *part;
     ngx_open_file_t  *file;
 
-#if (NGX_SUPPRESS_WARN)
-    ngx_str_null(&full);
-#endif
+#إذا (NGX_SUPPRESS_WARN)
+    ngx_str_null(&ڀريل);
+#جيڪڏهن_پورو
 
-    if (name->len) {
-        full = *name;
+    إذا (name->len) {
+        ڀريل = *name;
 
-        if (ngx_conf_full_name(cycle, &full, 0) != NGX_OK) {
-            return NULL;
+        إذا (ngx_conf_ڀريل_name(چڪر, &ڀريل, 0) != NGX_OK) {
+            أرجع عدم;
         }
 
-        part = &cycle->open_files.part;
+        part = &چڪر->open_files.part;
         file = part->elts;
 
-        for (i = 0; /* void */ ; i++) {
+        لكل (i = 0; /* void */ ; i++) {
 
-            if (i >= part->nelts) {
-                if (part->next == NULL) {
-                    break;
+            إذا (i >= part->nelts) {
+                إذا (part->ايندڙ == عدم) {
+                    اكسر;
                 }
-                part = part->next;
+                part = part->ايندڙ;
                 file = part->elts;
                 i = 0;
             }
 
-            if (full.len != file[i].name.len) {
-                continue;
+            إذا (ڀريل.len != file[i].name.len) {
+                استمر;
             }
 
-            if (ngx_strcmp(full.data, file[i].name.data) == 0) {
-                return &file[i];
+            إذا (ngx_strcmp(ڀريل.معلومات, file[i].name.معلومات) == 0) {
+                أرجع &file[i];
             }
         }
     }
 
-    file = ngx_list_push(&cycle->open_files);
-    if (file == NULL) {
-        return NULL;
+    file = ngx_list_ڌڪو(&چڪر->open_files);
+    إذا (file == عدم) {
+        أرجع عدم;
     }
 
-    if (name->len) {
+    إذا (name->len) {
         file->fd = NGX_INVALID_FILE;
-        file->name = full;
+        file->name = ڀريل;
 
-    } else {
+    } وإلا {
         file->fd = ngx_stderr;
         file->name = *name;
     }
 
-    file->flush = NULL;
-    file->data = NULL;
+    file->flush = عدم;
+    file->معلومات = عدم;
 
-    return file;
+    أرجع file;
 }
 
 
-static void
-ngx_conf_flush_files(ngx_cycle_t *cycle)
+ساكن فراغ
+ngx_conf_flush_files(ngx_چڪر_t *چڪر)
 {
     ngx_uint_t        i;
     ngx_list_part_t  *part;
     ngx_open_file_t  *file;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, cycle->log, 0, "flush files");
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, چڪر->لاگرٿم, 0, "flush files");
 
-    part = &cycle->open_files.part;
+    part = &چڪر->open_files.part;
     file = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    لكل (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        إذا (i >= part->nelts) {
+            إذا (part->ايندڙ == عدم) {
+                اكسر;
             }
-            part = part->next;
+            part = part->ايندڙ;
             file = part->elts;
             i = 0;
         }
 
-        if (file[i].flush) {
-            file[i].flush(&file[i], cycle->log);
+        إذا (file[i].flush) {
+            file[i].flush(&file[i], چڪر->لاگرٿم);
         }
     }
 }
 
 
-void ngx_cdecl
+فراغ ngx_cdecl
 ngx_conf_log_error(ngx_uint_t level, ngx_conf_t *cf, ngx_err_t err,
-    const char *fmt, ...)
+    ثابت حرف *fmt, ...)
 {
-    u_char   errstr[NGX_MAX_CONF_ERRSTR], *p, *last;
-    va_list  args;
+    u_char   errstr[NGX_MAX_CONF_ERRSTR], *p, *آخري;
+    va_list  دليلون;
 
-    last = errstr + NGX_MAX_CONF_ERRSTR;
+    آخري = errstr + NGX_MAX_CONF_ERRSTR;
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(errstr, last, fmt, args);
-    va_end(args);
+    va_شروعات(دليلون, fmt);
+    p = ngx_vslprintf(errstr, آخري, fmt, دليلون);
+    va_پڇاڙي(دليلون);
 
-    if (err) {
-        p = ngx_log_errno(p, last, err);
+    إذا (err) {
+        p = ngx_log_errno(p, آخري, err);
     }
 
-    if (cf->conf_file == NULL) {
-        ngx_log_error(level, cf->log, 0, "%*s", p - errstr, errstr);
-        return;
+    إذا (cf->conf_file == عدم) {
+        ngx_log_error(level, cf->لاگرٿم, 0, "%*s", p - errstr, errstr);
+        أرجع;
     }
 
-    if (cf->conf_file->file.fd == NGX_INVALID_FILE) {
-        ngx_log_error(level, cf->log, 0, "%*s in command line",
+    إذا (cf->conf_file->file.fd == NGX_INVALID_FILE) {
+        ngx_log_error(level, cf->لاگرٿم, 0, "%*s in command line",
                       p - errstr, errstr);
-        return;
+        أرجع;
     }
 
-    ngx_log_error(level, cf->log, 0, "%*s in %s:%ui",
+    ngx_log_error(level, cf->لاگرٿم, 0, "%*s in %s:%ui",
                   p - errstr, errstr,
-                  cf->conf_file->file.name.data, cf->conf_file->line);
+                  cf->conf_file->file.name.معلومات, cf->conf_file->سٽ);
 }
 
 
-char *
-ngx_conf_set_flag_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_flag_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
-    ngx_str_t        *value;
+    ngx_str_t        *قدر;
     ngx_flag_t       *fp;
     ngx_conf_post_t  *post;
 
-    fp = (ngx_flag_t *) (p + cmd->offset);
+    fp = (ngx_flag_t *) (p + cmd->وٿي);
 
-    if (*fp != NGX_CONF_UNSET) {
-        return "is duplicate";
+    إذا (*fp != NGX_CONF_UNSET) {
+        أرجع "is duplicate";
     }
 
-    value = cf->args->elts;
+    قدر = cf->دليلون->elts;
 
-    if (ngx_strcasecmp(value[1].data, (u_char *) "on") == 0) {
+    إذا (ngx_strcasecmp(قدر[1].معلومات, (u_char *) "on") == 0) {
         *fp = 1;
 
-    } else if (ngx_strcasecmp(value[1].data, (u_char *) "off") == 0) {
+    } وإلا إذا (ngx_strcasecmp(قدر[1].معلومات, (u_char *) "off") == 0) {
         *fp = 0;
 
-    } else {
+    } وإلا {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                      "invalid value \"%s\" in \"%s\" directive, "
                      "it must be \"on\" or \"off\"",
-                     value[1].data, cmd->name.data);
-        return NGX_CONF_ERROR;
+                     قدر[1].معلومات, cmd->name.معلومات);
+        أرجع NGX_CONF_ERROR;
     }
 
-    if (cmd->post) {
+    إذا (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, fp);
+        أرجع post->post_handler(cf, post, fp);
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_str_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_str_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
-    ngx_str_t        *field, *value;
+    ngx_str_t        *ميدان, *قدر;
     ngx_conf_post_t  *post;
 
-    field = (ngx_str_t *) (p + cmd->offset);
+    ميدان = (ngx_str_t *) (p + cmd->وٿي);
 
-    if (field->data) {
-        return "is duplicate";
+    إذا (ميدان->معلومات) {
+        أرجع "is duplicate";
     }
 
-    value = cf->args->elts;
+    قدر = cf->دليلون->elts;
 
-    *field = value[1];
+    *ميدان = قدر[1];
 
-    if (cmd->post) {
+    إذا (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, field);
+        أرجع post->post_handler(cf, post, ميدان);
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_str_array_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_str_array_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
-    ngx_str_t         *value, *s;
+    ngx_str_t         *قدر, *s;
     ngx_array_t      **a;
     ngx_conf_post_t   *post;
 
-    a = (ngx_array_t **) (p + cmd->offset);
+    a = (ngx_array_t **) (p + cmd->وٿي);
 
-    if (*a == NGX_CONF_UNSET_PTR) {
-        *a = ngx_array_create(cf->pool, 4, sizeof(ngx_str_t));
-        if (*a == NULL) {
-            return NGX_CONF_ERROR;
+    إذا (*a == NGX_CONF_UNSET_PTR) {
+        *a = ngx_array_create(cf->pool, 4, حجم(ngx_str_t));
+        إذا (*a == عدم) {
+            أرجع NGX_CONF_ERROR;
         }
     }
 
-    s = ngx_array_push(*a);
-    if (s == NULL) {
-        return NGX_CONF_ERROR;
+    s = ngx_array_ڌڪو(*a);
+    إذا (s == عدم) {
+        أرجع NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
+    قدر = cf->دليلون->elts;
 
-    *s = value[1];
+    *s = قدر[1];
 
-    if (cmd->post) {
+    إذا (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, s);
+        أرجع post->post_handler(cf, post, s);
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_keyval_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
-    ngx_str_t         *value;
+    ngx_str_t         *قدر;
     ngx_array_t      **a;
     ngx_keyval_t      *kv;
     ngx_conf_post_t   *post;
 
-    a = (ngx_array_t **) (p + cmd->offset);
+    a = (ngx_array_t **) (p + cmd->وٿي);
 
-    if (*a == NGX_CONF_UNSET_PTR || *a == NULL) {
-        *a = ngx_array_create(cf->pool, 4, sizeof(ngx_keyval_t));
-        if (*a == NULL) {
-            return NGX_CONF_ERROR;
+    إذا (*a == NGX_CONF_UNSET_PTR || *a == عدم) {
+        *a = ngx_array_create(cf->pool, 4, حجم(ngx_keyval_t));
+        إذا (*a == عدم) {
+            أرجع NGX_CONF_ERROR;
         }
     }
 
-    kv = ngx_array_push(*a);
-    if (kv == NULL) {
-        return NGX_CONF_ERROR;
+    kv = ngx_array_ڌڪو(*a);
+    إذا (kv == عدم) {
+        أرجع NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
+    قدر = cf->دليلون->elts;
 
-    kv->key = value[1];
-    kv->value = value[2];
+    kv->ڪنجي = قدر[1];
+    kv->قدر = قدر[2];
 
-    if (cmd->post) {
+    إذا (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, kv);
+        أرجع post->post_handler(cf, post, kv);
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_num_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_انگ_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
     ngx_int_t        *np;
-    ngx_str_t        *value;
+    ngx_str_t        *قدر;
     ngx_conf_post_t  *post;
 
 
-    np = (ngx_int_t *) (p + cmd->offset);
+    np = (ngx_int_t *) (p + cmd->وٿي);
 
-    if (*np != NGX_CONF_UNSET) {
-        return "is duplicate";
+    إذا (*np != NGX_CONF_UNSET) {
+        أرجع "is duplicate";
     }
 
-    value = cf->args->elts;
-    *np = ngx_atoi(value[1].data, value[1].len);
-    if (*np == NGX_ERROR) {
-        return "invalid number";
+    قدر = cf->دليلون->elts;
+    *np = ngx_atoi(قدر[1].معلومات, قدر[1].len);
+    إذا (*np == NGX_ERROR) {
+        أرجع "invalid number";
     }
 
-    if (cmd->post) {
+    إذا (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, np);
+        أرجع post->post_handler(cf, post, np);
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_size_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_سائيز_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
-    size_t           *sp;
-    ngx_str_t        *value;
+    سائيز_t           *sp;
+    ngx_str_t        *قدر;
     ngx_conf_post_t  *post;
 
 
-    sp = (size_t *) (p + cmd->offset);
-    if (*sp != NGX_CONF_UNSET_SIZE) {
-        return "is duplicate";
+    sp = (سائيز_t *) (p + cmd->وٿي);
+    إذا (*sp != NGX_CONF_UNSET_سائيز) {
+        أرجع "is duplicate";
     }
 
-    value = cf->args->elts;
+    قدر = cf->دليلون->elts;
 
-    *sp = ngx_parse_size(&value[1]);
-    if (*sp == (size_t) NGX_ERROR) {
-        return "invalid value";
+    *sp = ngx_parse_سائيز(&قدر[1]);
+    إذا (*sp == (سائيز_t) NGX_ERROR) {
+        أرجع "invalid value";
     }
 
-    if (cmd->post) {
+    إذا (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, sp);
+        أرجع post->post_handler(cf, post, sp);
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_off_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_off_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
     off_t            *op;
-    ngx_str_t        *value;
+    ngx_str_t        *قدر;
     ngx_conf_post_t  *post;
 
 
-    op = (off_t *) (p + cmd->offset);
-    if (*op != NGX_CONF_UNSET) {
-        return "is duplicate";
+    op = (off_t *) (p + cmd->وٿي);
+    إذا (*op != NGX_CONF_UNSET) {
+        أرجع "is duplicate";
     }
 
-    value = cf->args->elts;
+    قدر = cf->دليلون->elts;
 
-    *op = ngx_parse_offset(&value[1]);
-    if (*op == (off_t) NGX_ERROR) {
-        return "invalid value";
+    *op = ngx_parse_وٿي(&قدر[1]);
+    إذا (*op == (off_t) NGX_ERROR) {
+        أرجع "invalid value";
     }
 
-    if (cmd->post) {
+    إذا (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, op);
+        أرجع post->post_handler(cf, post, op);
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_msec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_msec_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
     ngx_msec_t       *msp;
-    ngx_str_t        *value;
+    ngx_str_t        *قدر;
     ngx_conf_post_t  *post;
 
 
-    msp = (ngx_msec_t *) (p + cmd->offset);
-    if (*msp != NGX_CONF_UNSET_MSEC) {
-        return "is duplicate";
+    msp = (ngx_msec_t *) (p + cmd->وٿي);
+    إذا (*msp != NGX_CONF_UNSET_MSEC) {
+        أرجع "is duplicate";
     }
 
-    value = cf->args->elts;
+    قدر = cf->دليلون->elts;
 
-    *msp = ngx_parse_time(&value[1], 0);
-    if (*msp == (ngx_msec_t) NGX_ERROR) {
-        return "invalid value";
+    *msp = ngx_parse_وقت(&قدر[1], 0);
+    إذا (*msp == (ngx_msec_t) NGX_ERROR) {
+        أرجع "invalid value";
     }
 
-    if (cmd->post) {
+    إذا (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, msp);
+        أرجع post->post_handler(cf, post, msp);
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_sec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_sec_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
-    time_t           *sp;
-    ngx_str_t        *value;
+    وقت_t           *sp;
+    ngx_str_t        *قدر;
     ngx_conf_post_t  *post;
 
 
-    sp = (time_t *) (p + cmd->offset);
-    if (*sp != NGX_CONF_UNSET) {
-        return "is duplicate";
+    sp = (وقت_t *) (p + cmd->وٿي);
+    إذا (*sp != NGX_CONF_UNSET) {
+        أرجع "is duplicate";
     }
 
-    value = cf->args->elts;
+    قدر = cf->دليلون->elts;
 
-    *sp = ngx_parse_time(&value[1], 1);
-    if (*sp == (time_t) NGX_ERROR) {
-        return "invalid value";
+    *sp = ngx_parse_وقت(&قدر[1], 1);
+    إذا (*sp == (وقت_t) NGX_ERROR) {
+        أرجع "invalid value";
     }
 
-    if (cmd->post) {
+    إذا (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, sp);
+        أرجع post->post_handler(cf, post, sp);
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_bufs_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_bufs_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char *p = conf;
+    حرف *p = conf;
 
-    ngx_str_t   *value;
+    ngx_str_t   *قدر;
     ngx_bufs_t  *bufs;
 
 
-    bufs = (ngx_bufs_t *) (p + cmd->offset);
-    if (bufs->num) {
-        return "is duplicate";
+    bufs = (ngx_bufs_t *) (p + cmd->وٿي);
+    إذا (bufs->انگ) {
+        أرجع "is duplicate";
     }
 
-    value = cf->args->elts;
+    قدر = cf->دليلون->elts;
 
-    bufs->num = ngx_atoi(value[1].data, value[1].len);
-    if (bufs->num == NGX_ERROR || bufs->num == 0) {
-        return "invalid value";
+    bufs->انگ = ngx_atoi(قدر[1].معلومات, قدر[1].len);
+    إذا (bufs->انگ == NGX_ERROR || bufs->انگ == 0) {
+        أرجع "invalid value";
     }
 
-    bufs->size = ngx_parse_size(&value[2]);
-    if (bufs->size == (size_t) NGX_ERROR || bufs->size == 0) {
-        return "invalid value";
+    bufs->سائيز = ngx_parse_سائيز(&قدر[2]);
+    إذا (bufs->سائيز == (سائيز_t) NGX_ERROR || bufs->سائيز == 0) {
+        أرجع "invalid value";
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_enum_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
     ngx_uint_t       *np, i;
-    ngx_str_t        *value;
+    ngx_str_t        *قدر;
     ngx_conf_enum_t  *e;
 
-    np = (ngx_uint_t *) (p + cmd->offset);
+    np = (ngx_uint_t *) (p + cmd->وٿي);
 
-    if (*np != NGX_CONF_UNSET_UINT) {
-        return "is duplicate";
+    إذا (*np != NGX_CONF_UNSET_UINT) {
+        أرجع "is duplicate";
     }
 
-    value = cf->args->elts;
+    قدر = cf->دليلون->elts;
     e = cmd->post;
 
-    for (i = 0; e[i].name.len != 0; i++) {
-        if (e[i].name.len != value[1].len
-            || ngx_strcasecmp(e[i].name.data, value[1].data) != 0)
+    لكل (i = 0; e[i].name.len != 0; i++) {
+        إذا (e[i].name.len != قدر[1].len
+            || ngx_strcasecmp(e[i].name.معلومات, قدر[1].معلومات) != 0)
         {
-            continue;
+            استمر;
         }
 
-        *np = e[i].value;
+        *np = e[i].قدر;
 
-        return NGX_CONF_OK;
+        أرجع NGX_CONF_OK;
     }
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                       "invalid value \"%s\"", value[1].data);
+                       "invalid value \"%s\"", قدر[1].معلومات);
 
-    return NGX_CONF_ERROR;
+    أرجع NGX_CONF_ERROR;
 }
 
 
-char *
-ngx_conf_set_bitmask_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_سيٽ_bitmask_جڳهه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
     ngx_uint_t          *np, i, m;
-    ngx_str_t           *value;
-    ngx_conf_bitmask_t  *mask;
+    ngx_str_t           *قدر;
+    ngx_conf_bitmask_t  *نقاب;
 
 
-    np = (ngx_uint_t *) (p + cmd->offset);
-    value = cf->args->elts;
-    mask = cmd->post;
+    np = (ngx_uint_t *) (p + cmd->وٿي);
+    قدر = cf->دليلون->elts;
+    نقاب = cmd->post;
 
-    for (i = 1; i < cf->args->nelts; i++) {
-        for (m = 0; mask[m].name.len != 0; m++) {
+    لكل (i = 1; i < cf->دليلون->nelts; i++) {
+        لكل (m = 0; نقاب[m].name.len != 0; m++) {
 
-            if (mask[m].name.len != value[i].len
-                || ngx_strcasecmp(mask[m].name.data, value[i].data) != 0)
+            إذا (نقاب[m].name.len != قدر[i].len
+                || ngx_strcasecmp(نقاب[m].name.معلومات, قدر[i].معلومات) != 0)
             {
-                continue;
+                استمر;
             }
 
-            if (*np & mask[m].mask) {
+            إذا (*np & نقاب[m].نقاب) {
                 ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
-                                   "duplicate value \"%s\"", value[i].data);
+                                   "duplicate value \"%s\"", قدر[i].معلومات);
 
-            } else {
-                *np |= mask[m].mask;
+            } وإلا {
+                *np |= نقاب[m].نقاب;
             }
 
-            break;
+            اكسر;
         }
 
-        if (mask[m].name.len == 0) {
+        إذا (نقاب[m].name.len == 0) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                               "invalid value \"%s\"", value[i].data);
+                               "invalid value \"%s\"", قدر[i].معلومات);
 
-            return NGX_CONF_ERROR;
+            أرجع NGX_CONF_ERROR;
         }
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-#if 0
+#إذا 0
 
-char *
-ngx_conf_unsupported(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_unsupported(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    return "unsupported on this platform";
+    أرجع "unsupported on this platform";
 }
 
-#endif
+#جيڪڏهن_پورو
 
 
-char *
-ngx_conf_deprecated(ngx_conf_t *cf, void *post, void *data)
+حرف *
+ngx_conf_deprecated(ngx_conf_t *cf, فراغ *post, فراغ *معلومات)
 {
     ngx_conf_deprecated_t  *d = post;
 
@@ -1458,48 +1458,48 @@ ngx_conf_deprecated(ngx_conf_t *cf, void *post, void *data)
                        "use the \"%s\" directive instead",
                        d->old_name, d->new_name);
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_check_num_bounds(ngx_conf_t *cf, void *post, void *data)
+حرف *
+ngx_conf_check_انگ_bounds(ngx_conf_t *cf, فراغ *post, فراغ *معلومات)
 {
-    ngx_conf_num_bounds_t  *bounds = post;
-    ngx_int_t  *np = data;
+    ngx_conf_انگ_bounds_t  *bounds = post;
+    ngx_int_t  *np = معلومات;
 
-    if (bounds->high == -1) {
-        if (*np >= bounds->low) {
-            return NGX_CONF_OK;
+    إذا (bounds->مٿاهون == -1) {
+        إذا (*np >= bounds->هيٺيون) {
+            أرجع NGX_CONF_OK;
         }
 
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "value must be equal to or greater than %i",
-                           bounds->low);
+                           bounds->هيٺيون);
 
-        return NGX_CONF_ERROR;
+        أرجع NGX_CONF_ERROR;
     }
 
-    if (*np >= bounds->low && *np <= bounds->high) {
-        return NGX_CONF_OK;
+    إذا (*np >= bounds->هيٺيون && *np <= bounds->مٿاهون) {
+        أرجع NGX_CONF_OK;
     }
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                        "value must be between %i and %i",
-                       bounds->low, bounds->high);
+                       bounds->هيٺيون, bounds->مٿاهون);
 
-    return NGX_CONF_ERROR;
+    أرجع NGX_CONF_ERROR;
 }
 
 
-char *
-ngx_conf_check_size_nonzero(ngx_conf_t *cf, void *post, void *data)
+حرف *
+ngx_conf_check_سائيز_nonzero(ngx_conf_t *cf, فراغ *post, فراغ *معلومات)
 {
-    size_t  *sp = data;
+    سائيز_t  *sp = معلومات;
 
-    if (*sp == 0) {
-        return "value must be nonzero";
+    إذا (*sp == 0) {
+        أرجع "value must be nonzero";
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }

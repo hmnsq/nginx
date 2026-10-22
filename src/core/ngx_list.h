@@ -5,50 +5,50 @@
  */
 
 
-#ifndef _NGX_LIST_H_INCLUDED_
-#define _NGX_LIST_H_INCLUDED_
+#جيڪڏهن_وصف_نه_ٿيل _NGX_LIST_H_INCLUDED_
+#وصف_ڪريو _NGX_LIST_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef struct ngx_list_part_s  ngx_list_part_t;
+تعريفنوع بنية ngx_list_part_s  ngx_list_part_t;
 
-struct ngx_list_part_s {
-    void             *elts;
+بنية ngx_list_part_s {
+    فراغ             *elts;
     ngx_uint_t        nelts;
-    ngx_list_part_t  *next;
+    ngx_list_part_t  *ايندڙ;
 };
 
 
-typedef struct {
-    ngx_list_part_t  *last;
+تعريفنوع بنية {
+    ngx_list_part_t  *آخري;
     ngx_list_part_t   part;
-    size_t            size;
+    سائيز_t            سائيز;
     ngx_uint_t        nalloc;
     ngx_pool_t       *pool;
 } ngx_list_t;
 
 
-ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size);
+ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, سائيز_t سائيز);
 
-static ngx_inline ngx_int_t
-ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
+ساكن ngx_inline ngx_int_t
+ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, سائيز_t سائيز)
 {
-    list->part.elts = ngx_palloc(pool, n * size);
-    if (list->part.elts == NULL) {
-        return NGX_ERROR;
+    list->part.elts = ngx_palloc(pool, n * سائيز);
+    إذا (list->part.elts == عدم) {
+        أرجع NGX_ERROR;
     }
 
     list->part.nelts = 0;
-    list->part.next = NULL;
-    list->last = &list->part;
-    list->size = size;
+    list->part.ايندڙ = عدم;
+    list->آخري = &list->part;
+    list->سائيز = سائيز;
     list->nalloc = n;
     list->pool = pool;
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
@@ -77,7 +77,7 @@ ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
  */
 
 
-void *ngx_list_push(ngx_list_t *list);
+فراغ *ngx_list_ڌڪو(ngx_list_t *list);
 
 
-#endif /* _NGX_LIST_H_INCLUDED_ */
+#جيڪڏهن_پورو /* _NGX_LIST_H_INCLUDED_ */

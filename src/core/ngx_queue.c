@@ -5,12 +5,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ساكن فراغ ngx_قطار_ملايو(ngx_قطار_t *قطار, ngx_قطار_t *پڇ,
+    ngx_int_t (*cmp)(ثابت ngx_قطار_t *, ثابت ngx_قطار_t *));
 
 
 /*
@@ -18,32 +18,32 @@ static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
  * or the first element of the queue's second part otherwise
  */
 
-ngx_queue_t *
-ngx_queue_middle(ngx_queue_t *queue)
+ngx_قطار_t *
+ngx_قطار_وچ(ngx_قطار_t *قطار)
 {
-    ngx_queue_t  *middle, *next;
+    ngx_قطار_t  *وچ, *ايندڙ;
 
-    middle = ngx_queue_head(queue);
+    وچ = ngx_قطار_سر(قطار);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    إذا (وچ == ngx_قطار_آخري(قطار)) {
+        أرجع وچ;
     }
 
-    next = ngx_queue_head(queue);
+    ايندڙ = ngx_قطار_سر(قطار);
 
-    for ( ;; ) {
-        middle = ngx_queue_next(middle);
+    لكل ( ;; ) {
+        وچ = ngx_قطار_ايندڙ(وچ);
 
-        next = ngx_queue_next(next);
+        ايندڙ = ngx_قطار_ايندڙ(ايندڙ);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        إذا (ايندڙ == ngx_قطار_آخري(قطار)) {
+            أرجع وچ;
         }
 
-        next = ngx_queue_next(next);
+        ايندڙ = ngx_قطار_ايندڙ(ايندڙ);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        إذا (ايندڙ == ngx_قطار_آخري(قطار)) {
+            أرجع وچ;
         }
     }
 }
@@ -51,56 +51,56 @@ ngx_queue_middle(ngx_queue_t *queue)
 
 /* the stable merge sort */
 
-void
-ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+فراغ
+ngx_قطار_ترتيب_ڏيو(ngx_قطار_t *قطار,
+    ngx_int_t (*cmp)(ثابت ngx_قطار_t *, ثابت ngx_قطار_t *))
 {
-    ngx_queue_t  *q, tail;
+    ngx_قطار_t  *q, پڇ;
 
-    q = ngx_queue_head(queue);
+    q = ngx_قطار_سر(قطار);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    إذا (q == ngx_قطار_آخري(قطار)) {
+        أرجع;
     }
 
-    q = ngx_queue_middle(queue);
+    q = ngx_قطار_وچ(قطار);
 
-    ngx_queue_split(queue, q, &tail);
+    ngx_قطار_ورهايو(قطار, q, &پڇ);
 
-    ngx_queue_sort(queue, cmp);
-    ngx_queue_sort(&tail, cmp);
+    ngx_قطار_ترتيب_ڏيو(قطار, cmp);
+    ngx_قطار_ترتيب_ڏيو(&پڇ, cmp);
 
-    ngx_queue_merge(queue, &tail, cmp);
+    ngx_قطار_ملايو(قطار, &پڇ, cmp);
 }
 
 
-static void
-ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+ساكن فراغ
+ngx_قطار_ملايو(ngx_قطار_t *قطار, ngx_قطار_t *پڇ,
+    ngx_int_t (*cmp)(ثابت ngx_قطار_t *, ثابت ngx_قطار_t *))
 {
-    ngx_queue_t  *q1, *q2;
+    ngx_قطار_t  *q1, *q2;
 
-    q1 = ngx_queue_head(queue);
-    q2 = ngx_queue_head(tail);
+    q1 = ngx_قطار_سر(قطار);
+    q2 = ngx_قطار_سر(پڇ);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
-            ngx_queue_add(queue, tail);
-            break;
+    لكل ( ;; ) {
+        إذا (q1 == ngx_قطار_sentinel(قطار)) {
+            ngx_قطار_جوڙيو(قطار, پڇ);
+            اكسر;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        إذا (q2 == ngx_قطار_sentinel(پڇ)) {
+            اكسر;
         }
 
-        if (cmp(q1, q2) <= 0) {
-            q1 = ngx_queue_next(q1);
-            continue;
+        إذا (cmp(q1, q2) <= 0) {
+            q1 = ngx_قطار_ايندڙ(q1);
+            استمر;
         }
 
-        ngx_queue_remove(q2);
-        ngx_queue_insert_before(q1, q2);
+        ngx_قطار_remove(q2);
+        ngx_قطار_وجهو_before(q1, q2);
 
-        q2 = ngx_queue_head(tail);
+        q2 = ngx_قطار_سر(پڇ);
     }
 }

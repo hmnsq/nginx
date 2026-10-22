@@ -5,68 +5,68 @@
  */
 
 
-#ifndef _NGX_SLAB_H_INCLUDED_
-#define _NGX_SLAB_H_INCLUDED_
+#جيڪڏهن_وصف_نه_ٿيل _NGX_SLAB_H_INCLUDED_
+#وصف_ڪريو _NGX_SLAB_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef struct ngx_slab_page_s  ngx_slab_page_t;
+تعريفنوع بنية ngx_slab_صفحو_s  ngx_slab_صفحو_t;
 
-struct ngx_slab_page_s {
+بنية ngx_slab_صفحو_s {
     uintptr_t         slab;
-    ngx_slab_page_t  *next;
+    ngx_slab_صفحو_t  *ايندڙ;
     uintptr_t         prev;
 };
 
 
-typedef struct {
-    ngx_uint_t        total;
-    ngx_uint_t        used;
+تعريفنوع بنية {
+    ngx_uint_t        ڪل;
+    ngx_uint_t        استعمال_ٿيل;
 
     ngx_uint_t        reqs;
     ngx_uint_t        fails;
 } ngx_slab_stat_t;
 
 
-typedef struct {
-    ngx_shmtx_sh_t    lock;
+تعريفنوع بنية {
+    ngx_shmtx_sh_t    تالو;
 
-    size_t            min_size;
-    size_t            min_shift;
+    سائيز_t            min_سائيز;
+    سائيز_t            min_سرڪايو;
 
-    ngx_slab_page_t  *pages;
-    ngx_slab_page_t  *last;
-    ngx_slab_page_t   free;
+    ngx_slab_صفحو_t  *صفحا;
+    ngx_slab_صفحو_t  *آخري;
+    ngx_slab_صفحو_t   حرر;
 
     ngx_slab_stat_t  *stats;
     ngx_uint_t        pfree;
 
-    u_char           *start;
-    u_char           *end;
+    u_char           *شروعات;
+    u_char           *پڇاڙي;
 
     ngx_shmtx_t       mutex;
 
     u_char           *log_ctx;
     u_char            zero;
 
-    unsigned          log_nomem:1;
+    بنانشان          log_nomem:1;
 
-    void             *data;
-    void             *addr;
+    فراغ             *معلومات;
+    فراغ             *addr;
 } ngx_slab_pool_t;
 
 
-void ngx_slab_sizes_init(void);
-void ngx_slab_init(ngx_slab_pool_t *pool);
-void *ngx_slab_alloc(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_calloc(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_calloc_locked(ngx_slab_pool_t *pool, size_t size);
-void ngx_slab_free(ngx_slab_pool_t *pool, void *p);
-void ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p);
+فراغ ngx_slab_sizes_init(فراغ);
+فراغ ngx_slab_init(ngx_slab_pool_t *pool);
+فراغ *ngx_slab_alloc(ngx_slab_pool_t *pool, سائيز_t سائيز);
+فراغ *ngx_slab_alloc_locked(ngx_slab_pool_t *pool, سائيز_t سائيز);
+فراغ *ngx_slab_calloc(ngx_slab_pool_t *pool, سائيز_t سائيز);
+فراغ *ngx_slab_calloc_locked(ngx_slab_pool_t *pool, سائيز_t سائيز);
+فراغ ngx_slab_free(ngx_slab_pool_t *pool, فراغ *p);
+فراغ ngx_slab_free_locked(ngx_slab_pool_t *pool, فراغ *p);
 
 
-#endif /* _NGX_SLAB_H_INCLUDED_ */
+#جيڪڏهن_پورو /* _NGX_SLAB_H_INCLUDED_ */

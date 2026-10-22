@@ -5,83 +5,83 @@
  */
 
 
-#ifndef _NGX_RBTREE_H_INCLUDED_
-#define _NGX_RBTREE_H_INCLUDED_
+#جيڪڏهن_وصف_نه_ٿيل _NGX_RBTREE_H_INCLUDED_
+#وصف_ڪريو _NGX_RBTREE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef ngx_uint_t  ngx_rbtree_key_t;
-typedef ngx_int_t   ngx_rbtree_key_int_t;
+تعريفنوع ngx_uint_t  ngx_rbtree_ڪنجي_t;
+تعريفنوع ngx_int_t   ngx_rbtree_ڪنجي_int_t;
 
 
-typedef struct ngx_rbtree_node_s  ngx_rbtree_node_t;
+تعريفنوع بنية ngx_rbtree_ڳنڍ_s  ngx_rbtree_ڳنڍ_t;
 
-struct ngx_rbtree_node_s {
-    ngx_rbtree_key_t       key;
-    ngx_rbtree_node_t     *left;
-    ngx_rbtree_node_t     *right;
-    ngx_rbtree_node_t     *parent;
+بنية ngx_rbtree_ڳنڍ_s {
+    ngx_rbtree_ڪنجي_t       ڪنجي;
+    ngx_rbtree_ڳنڍ_t     *کاٻو;
+    ngx_rbtree_ڳنڍ_t     *ساڄو;
+    ngx_rbtree_ڳنڍ_t     *والد;
     u_char                 color;
-    u_char                 data;
+    u_char                 معلومات;
 };
 
 
-typedef struct ngx_rbtree_s  ngx_rbtree_t;
+تعريفنوع بنية ngx_rbtree_s  ngx_rbtree_t;
 
-typedef void (*ngx_rbtree_insert_pt) (ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
+تعريفنوع فراغ (*ngx_rbtree_وجهو_pt) (ngx_rbtree_ڳنڍ_t *پاڙ,
+    ngx_rbtree_ڳنڍ_t *ڳنڍ, ngx_rbtree_ڳنڍ_t *sentinel);
 
-struct ngx_rbtree_s {
-    ngx_rbtree_node_t     *root;
-    ngx_rbtree_node_t     *sentinel;
-    ngx_rbtree_insert_pt   insert;
+بنية ngx_rbtree_s {
+    ngx_rbtree_ڳنڍ_t     *پاڙ;
+    ngx_rbtree_ڳنڍ_t     *sentinel;
+    ngx_rbtree_وجهو_pt   وجهو;
 };
 
 
-#define ngx_rbtree_init(tree, s, i)                                           \
+#وصف_ڪريو ngx_rbtree_init(وڻ, s, i)                                           \
     ngx_rbtree_sentinel_init(s);                                              \
-    (tree)->root = s;                                                         \
-    (tree)->sentinel = s;                                                     \
-    (tree)->insert = i
+    (وڻ)->پاڙ = s;                                                         \
+    (وڻ)->sentinel = s;                                                     \
+    (وڻ)->وجهو = i
 
-#define ngx_rbtree_data(node, type, link)                                     \
-    (type *) ((u_char *) (node) - offsetof(type, link))
-
-
-void ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_insert_value(ngx_rbtree_node_t *root, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel);
-void ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-ngx_rbtree_node_t *ngx_rbtree_next(ngx_rbtree_t *tree,
-    ngx_rbtree_node_t *node);
+#وصف_ڪريو ngx_rbtree_معلومات(ڳنڍ, type, link)                                     \
+    (type *) ((u_char *) (ڳنڍ) - offsetof(type, link))
 
 
-#define ngx_rbt_red(node)               ((node)->color = 1)
-#define ngx_rbt_black(node)             ((node)->color = 0)
-#define ngx_rbt_is_red(node)            ((node)->color)
-#define ngx_rbt_is_black(node)          (!ngx_rbt_is_red(node))
-#define ngx_rbt_copy_color(n1, n2)      (n1->color = n2->color)
+فراغ ngx_rbtree_وجهو(ngx_rbtree_t *وڻ, ngx_rbtree_ڳنڍ_t *ڳنڍ);
+فراغ ngx_rbtree_delete(ngx_rbtree_t *وڻ, ngx_rbtree_ڳنڍ_t *ڳنڍ);
+فراغ ngx_rbtree_وجهو_قدر(ngx_rbtree_ڳنڍ_t *پاڙ, ngx_rbtree_ڳنڍ_t *ڳنڍ,
+    ngx_rbtree_ڳنڍ_t *sentinel);
+فراغ ngx_rbtree_وجهو_timer_قدر(ngx_rbtree_ڳنڍ_t *پاڙ,
+    ngx_rbtree_ڳنڍ_t *ڳنڍ, ngx_rbtree_ڳنڍ_t *sentinel);
+ngx_rbtree_ڳنڍ_t *ngx_rbtree_ايندڙ(ngx_rbtree_t *وڻ,
+    ngx_rbtree_ڳنڍ_t *ڳنڍ);
+
+
+#وصف_ڪريو ngx_rbt_red(ڳنڍ)               ((ڳنڍ)->color = 1)
+#وصف_ڪريو ngx_rbt_black(ڳنڍ)             ((ڳنڍ)->color = 0)
+#وصف_ڪريو ngx_rbt_is_red(ڳنڍ)            ((ڳنڍ)->color)
+#وصف_ڪريو ngx_rbt_is_black(ڳنڍ)          (!ngx_rbt_is_red(ڳنڍ))
+#وصف_ڪريو ngx_rbt_copy_color(n1, n2)      (n1->color = n2->color)
 
 
 /* a sentinel must be black */
 
-#define ngx_rbtree_sentinel_init(node)  ngx_rbt_black(node)
+#وصف_ڪريو ngx_rbtree_sentinel_init(ڳنڍ)  ngx_rbt_black(ڳنڍ)
 
 
-static ngx_inline ngx_rbtree_node_t *
-ngx_rbtree_min(ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ساكن ngx_inline ngx_rbtree_ڳنڍ_t *
+ngx_rbtree_min(ngx_rbtree_ڳنڍ_t *ڳنڍ, ngx_rbtree_ڳنڍ_t *sentinel)
 {
-    while (node->left != sentinel) {
-        node = node->left;
+    طالما (ڳنڍ->کاٻو != sentinel) {
+        ڳنڍ = ڳنڍ->کاٻو;
     }
 
-    return node;
+    أرجع ڳنڍ;
 }
 
 
-#endif /* _NGX_RBTREE_H_INCLUDED_ */
+#جيڪڏهن_پورو /* _NGX_RBTREE_H_INCLUDED_ */

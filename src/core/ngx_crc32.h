@@ -5,114 +5,114 @@
  */
 
 
-#ifndef _NGX_CRC32_H_INCLUDED_
-#define _NGX_CRC32_H_INCLUDED_
+#جيڪڏهن_وصف_نه_ٿيل NGX_چڪري_جاچ_32_H_INCLUDED
+#وصف_ڪريو NGX_چڪري_جاچ_32_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-extern uint32_t  *ngx_crc32_table_short;
-extern uint32_t   ngx_crc32_table256[];
-extern uint32_t   ngx_crc32c_table256[];
+خارجي uint32_t  *ngx_چڪري_جاچ_32_جدول_short;
+خارجي uint32_t   ngx_چڪري_جاچ_32_table256[];
+خارجي uint32_t   ngx_crc32c_table256[];
 
 
-static ngx_inline uint32_t
-ngx_crc32_short(u_char *p, size_t len)
+ساكن ngx_inline uint32_t
+ngx_چڪري_جاچ_32_short(u_char *p, سائيز_t len)
 {
     u_char    c;
-    uint32_t  crc;
+    uint32_t  چڪري_جاچ;
 
-    crc = 0xffffffff;
+    چڪري_جاچ = 0xffffffff;
 
-    while (len--) {
+    طالما (len--) {
         c = *p++;
-        crc = ngx_crc32_table_short[(crc ^ (c & 0xf)) & 0xf] ^ (crc >> 4);
-        crc = ngx_crc32_table_short[(crc ^ (c >> 4)) & 0xf] ^ (crc >> 4);
+        چڪري_جاچ = ngx_چڪري_جاچ_32_جدول_short[(چڪري_جاچ ^ (c & 0xf)) & 0xf] ^ (چڪري_جاچ >> 4);
+        چڪري_جاچ = ngx_چڪري_جاچ_32_جدول_short[(چڪري_جاچ ^ (c >> 4)) & 0xf] ^ (چڪري_جاچ >> 4);
     }
 
-    return crc ^ 0xffffffff;
+    أرجع چڪري_جاچ ^ 0xffffffff;
 }
 
 
-static ngx_inline uint32_t
-ngx_crc32_long(u_char *p, size_t len)
+ساكن ngx_inline uint32_t
+ngx_چڪري_جاچ_32_long(u_char *p, سائيز_t len)
 {
-    uint32_t  crc;
+    uint32_t  چڪري_جاچ;
 
-    crc = 0xffffffff;
+    چڪري_جاچ = 0xffffffff;
 
-    while (len--) {
-        crc = ngx_crc32_table256[(crc ^ *p++) & 0xff] ^ (crc >> 8);
+    طالما (len--) {
+        چڪري_جاچ = ngx_چڪري_جاچ_32_table256[(چڪري_جاچ ^ *p++) & 0xff] ^ (چڪري_جاچ >> 8);
     }
 
-    return crc ^ 0xffffffff;
+    أرجع چڪري_جاچ ^ 0xffffffff;
 }
 
 
-#define ngx_crc32_init(crc)                                                   \
-    crc = 0xffffffff
+#وصف_ڪريو ngx_چڪري_جاچ_32_init(چڪري_جاچ)                                                   \
+    چڪري_جاچ = 0xffffffff
 
 
-static ngx_inline void
-ngx_crc32_update(uint32_t *crc, u_char *p, size_t len)
-{
-    uint32_t  c;
-
-    c = *crc;
-
-    while (len--) {
-        c = ngx_crc32_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
-    }
-
-    *crc = c;
-}
-
-
-#define ngx_crc32_final(crc)                                                  \
-    crc ^= 0xffffffff
-
-
-static ngx_inline uint32_t
-ngx_crc32c_long(u_char *p, size_t len)
-{
-    uint32_t  crc;
-
-    crc = 0xffffffff;
-
-    while (len--) {
-        crc = ngx_crc32c_table256[(crc ^ *p++) & 0xff] ^ (crc >> 8);
-    }
-
-    return crc ^ 0xffffffff;
-}
-
-
-#define ngx_crc32c_init(crc)                                                  \
-    crc = 0xffffffff
-
-
-static ngx_inline void
-ngx_crc32c_update(uint32_t *crc, u_char *p, size_t len)
+ساكن ngx_inline فراغ
+ngx_چڪري_جاچ_32_update(uint32_t *چڪري_جاچ, u_char *p, سائيز_t len)
 {
     uint32_t  c;
 
-    c = *crc;
+    c = *چڪري_جاچ;
 
-    while (len--) {
+    طالما (len--) {
+        c = ngx_چڪري_جاچ_32_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
+    }
+
+    *چڪري_جاچ = c;
+}
+
+
+#وصف_ڪريو ngx_چڪري_جاچ_32_final(چڪري_جاچ)                                                  \
+    چڪري_جاچ ^= 0xffffffff
+
+
+ساكن ngx_inline uint32_t
+ngx_crc32c_long(u_char *p, سائيز_t len)
+{
+    uint32_t  چڪري_جاچ;
+
+    چڪري_جاچ = 0xffffffff;
+
+    طالما (len--) {
+        چڪري_جاچ = ngx_crc32c_table256[(چڪري_جاچ ^ *p++) & 0xff] ^ (چڪري_جاچ >> 8);
+    }
+
+    أرجع چڪري_جاچ ^ 0xffffffff;
+}
+
+
+#وصف_ڪريو ngx_crc32c_init(چڪري_جاچ)                                                  \
+    چڪري_جاچ = 0xffffffff
+
+
+ساكن ngx_inline فراغ
+ngx_crc32c_update(uint32_t *چڪري_جاچ, u_char *p, سائيز_t len)
+{
+    uint32_t  c;
+
+    c = *چڪري_جاچ;
+
+    طالما (len--) {
         c = ngx_crc32c_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
     }
 
-    *crc = c;
+    *چڪري_جاچ = c;
 }
 
 
-#define ngx_crc32c_final(crc)                                                 \
-    crc ^= 0xffffffff
+#وصف_ڪريو ngx_crc32c_final(چڪري_جاچ)                                                 \
+    چڪري_جاچ ^= 0xffffffff
 
 
-ngx_int_t ngx_crc32_table_init(void);
+ngx_int_t ngx_چڪري_جاچ_32_جدول_init(فراغ);
 
 
-#endif /* _NGX_CRC32_H_INCLUDED_ */
+#جيڪڏهن_پورو /* _NGX_CRC32_H_INCLUDED_ */

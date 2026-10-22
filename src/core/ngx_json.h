@@ -4,15 +4,15 @@
  */
 
 
-#ifndef _NGX_JSON_H_INCLUDED_
-#define _NGX_JSON_H_INCLUDED_
+#جيڪڏهن_وصف_نه_ٿيل _NGX_JSON_H_INCLUDED_
+#وصف_ڪريو _NGX_JSON_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-ngx_buf_t *ngx_json_render(ngx_pool_t *pool, ngx_data_item_t *item);
+ngx_buf_t *ngx_json_render(ngx_pool_t *pool, ngx_معلومات_شي_t *شي);
 
 
-#endif /* _NGX_JSON_H_INCLUDED_ */
+#جيڪڏهن_پورو /* _NGX_JSON_H_INCLUDED_ */
