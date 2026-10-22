@@ -25,13 +25,13 @@ ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type)
 
     item = ngx_pcalloc(pool, offsetof(ngx_data_item_t, data)
                              + ngx_data_sizes[type]);
-    if (item == NULL) {
-        return NULL;
+    もし (item == NULL) {
+        戻る NULL;
     }
 
     item->type = type;
 
-    return item;
+    戻る item;
 }
 
 
@@ -40,17 +40,17 @@ ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name, ngx_data_item_t *item)
 {
     ngx_data_obj_t  *object;
 
-    if (obj->type != NGX_DATA_OBJECT_TYPE && obj->type != NGX_DATA_LIST_TYPE) {
-        return;
+    もし (obj->type != NGX_DATA_OBJECT_TYPE && obj->type != NGX_DATA_LIST_TYPE) {
+        戻る;
     }
 
     object = &obj->data.object;
 
-    if (name) {
+    もし (name) {
         item->name = *name;
     }
 
-    if (object->next == NULL) {
+    もし (object->next == NULL) {
         object->next = &object->item;
     }
 
@@ -66,27 +66,27 @@ ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
     ngx_data_decl_t  *decl;
 
     obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    もし (obj == NULL) {
+        戻る NULL;
     }
 
     decl = (ngx_data_decl_t *) data;
 
-    while (decl->name.len) {
+    ながら (decl->name.len) {
 
         item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        もし (item == NULL) {
+            戻る NULL;
         }
 
-        if (item != NGX_DATA_DECLINE) {
+        もし (item != NGX_DATA_DECLINE) {
             ngx_data_add_item(obj, &decl->name, item);
         }
 
         decl++;
     }
 
-    return obj;
+    戻る obj;
 }
 
 
@@ -100,20 +100,20 @@ ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
     ngx_data_decl_t  *decl;
 
     obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    もし (obj == NULL) {
+        戻る NULL;
     }
 
     decl = (ngx_data_decl_t *) data;
 
-    while (decl->name.len) {
+    ながら (decl->name.len) {
 
-        if (fields) {
+        もし (fields) {
             value = fields->elts;
 
-            for (i = 0; i < fields->nelts; i++) {
+            ために (i = 0; i < fields->nelts; i++) {
 
-                if (decl->name.len == value[i].len
+                もし (decl->name.len == value[i].len
                     && ngx_strncmp(decl->name.data, value[i].data,
                                    value[i].len)
                     == 0)
@@ -129,18 +129,18 @@ ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
 found:
 
         item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        もし (item == NULL) {
+            戻る NULL;
         }
 
-        if (item != NGX_DATA_DECLINE) {
+        もし (item != NGX_DATA_DECLINE) {
             ngx_data_add_item(obj, &decl->name, item);
         }
 
         decl++;
     }
 
-    return obj;
+    戻る obj;
 }
 
 
@@ -150,13 +150,13 @@ ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
     ngx_data_item_t  *item;
 
     item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    もし (item == NULL) {
+        戻る NULL;
     }
 
     item->data.integer = data;
 
-    return item;
+    戻る item;
 }
 
 
@@ -167,8 +167,8 @@ ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
     ngx_data_item_t  *item;
 
     item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    もし (item == NULL) {
+        戻る NULL;
     }
 
     value = &item->data.string;
@@ -178,11 +178,11 @@ ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
     value->len = src->len;
 
     value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    もし (value->data == NULL) {
+        戻る NULL;
     }
 
-    return item;
+    戻る item;
 }
 
 
@@ -192,13 +192,13 @@ ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
     ngx_data_item_t  *item;
 
     item = ngx_data_new_boolean(pool);
-    if (item == NULL) {
-        return NULL;
+    もし (item == NULL) {
+        戻る NULL;
     }
 
     item->data.boolean = data;
 
-    return item;
+    戻る item;
 }
 
 
@@ -219,7 +219,7 @@ ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
                     tm.ngx_tm_year, tm.ngx_tm_mon, tm.ngx_tm_mday,
                     tm.ngx_tm_hour, tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    if (tp->msec) {
+    もし (tp->msec) {
         p = ngx_sprintf(p, ".%03ui", tp->msec);
     }
 
@@ -228,7 +228,7 @@ ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
     src.data = iso8601;
     src.len = p - iso8601;
 
-    return ngx_data_string_handler((uintptr_t) &src, pool, NULL);
+    戻る ngx_data_string_handler((uintptr_t) &src, pool, NULL);
 }
 
 
@@ -238,13 +238,13 @@ ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
     ngx_data_item_t  *item;
 
     item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    もし (item == NULL) {
+        戻る NULL;
     }
 
     item->data.integer = *(int64_t *) ((u_char *) ctx + data);
 
-    return item;
+    戻る item;
 }
 
 
@@ -255,7 +255,7 @@ ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
 
     value = *(ngx_int_t *) ((u_char *) ctx + data);
 
-    return ngx_data_number_handler(value, pool, NULL);
+    戻る ngx_data_number_handler(value, pool, NULL);
 }
 
 
@@ -265,13 +265,13 @@ ngx_data_struct_atomic_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
     ngx_data_item_t  *item;
 
     item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    もし (item == NULL) {
+        戻る NULL;
     }
 
     item->data.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + data);
 
-    return item;
+    戻る item;
 }
 
 
@@ -282,8 +282,8 @@ ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
     ngx_data_item_t  *item;
 
     item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    もし (item == NULL) {
+        戻る NULL;
     }
 
     value = &item->data.string;
@@ -293,11 +293,11 @@ ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
     value->len = src->len;
 
     value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    もし (value->data == NULL) {
+        戻る NULL;
     }
 
-    return item;
+    戻る item;
 }
 
 
@@ -308,5 +308,5 @@ ngx_data_struct_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
 
     value = *(ngx_uint_t *) ((u_char *) ctx + data);
 
-    return ngx_data_boolean_handler(value, pool, NULL);
+    戻る ngx_data_boolean_handler(value, pool, NULL);
 }

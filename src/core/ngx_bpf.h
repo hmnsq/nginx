@@ -16,7 +16,7 @@
 
 typedef struct {
     char                *name;
-    int                  offset;
+    整数                  offset;
 } ngx_bpf_reloc_t;
 
 typedef struct {
@@ -30,14 +30,14 @@ typedef struct {
 
 
 void ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol,
-    int fd);
-int ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program);
+    整数 fd);
+整数 ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program);
 
-int ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags);
-int ngx_bpf_map_update(int fd, const void *key, const void *value,
+整数 ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, 整数 key_size,
+    整数 value_size, 整数 max_entries, uint32_t map_flags);
+整数 ngx_bpf_map_update(整数 fd, const void *key, const void *value,
     uint64_t flags);
-int ngx_bpf_map_delete(int fd, const void *key);
-int ngx_bpf_map_lookup(int fd, const void *key, void *value);
+整数 ngx_bpf_map_delete(整数 fd, const void *key);
+整数 ngx_bpf_map_lookup(整数 fd, const void *key, void *value);
 
 #endif /* _NGX_BPF_H_INCLUDED_ */

@@ -18,7 +18,7 @@
 #define NGX_RESOLVE_PTR       12
 #define NGX_RESOLVE_MX        15
 #define NGX_RESOLVE_TXT       16
-#if (NGX_HAVE_INET6)
+#もし (NGX_HAVE_INET6)
 #define NGX_RESOLVE_AAAA      28
 #endif
 #define NGX_RESOLVE_SRV       33
@@ -96,7 +96,7 @@ typedef struct {
     /* PTR: resolved name, A: name to resolve */
     u_char                   *name;
 
-#if (NGX_HAVE_INET6)
+#もし (NGX_HAVE_INET6)
     /* PTR: IPv6 address to resolve (IPv4 address is in rbtree node key) */
     struct in6_addr           addr6;
 #endif
@@ -105,7 +105,7 @@ typedef struct {
     u_short                   qlen;
 
     u_char                   *query;
-#if (NGX_HAVE_INET6)
+#もし (NGX_HAVE_INET6)
     u_char                   *query6;
 #endif
 
@@ -121,7 +121,7 @@ typedef struct {
     u_short                   nsrvs;
     u_short                   cnlen;
 
-#if (NGX_HAVE_INET6)
+#もし (NGX_HAVE_INET6)
     union {
         struct in6_addr       addr6;
         struct in6_addr      *addrs6;
@@ -135,7 +135,7 @@ typedef struct {
     uint32_t                  ttl;
 
     unsigned                  tcp:1;
-#if (NGX_HAVE_INET6)
+#もし (NGX_HAVE_INET6)
     unsigned                  tcp6:1;
 #endif
 
@@ -177,7 +177,7 @@ struct ngx_resolver_s {
 
     unsigned                  ipv4:1;
 
-#if (NGX_HAVE_INET6)
+#もし (NGX_HAVE_INET6)
     unsigned                  ipv6:1;
     ngx_rbtree_t              addr6_rbtree;
     ngx_rbtree_node_t         addr6_sentinel;

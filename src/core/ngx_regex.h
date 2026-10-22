@@ -13,7 +13,7 @@
 #include <ngx_core.h>
 
 
-#if (NGX_PCRE2)
+#もし (NGX_PCRE2)
 
 #define PCRE2_CODE_UNIT_WIDTH  8
 #include <pcre2.h>
@@ -22,7 +22,7 @@
 
 typedef pcre2_code  ngx_regex_t;
 
-#else
+#否则
 
 #include <pcre.h>
 
@@ -46,9 +46,9 @@ typedef struct {
     ngx_uint_t    options;
 
     ngx_regex_t  *regex;
-    int           captures;
-    int           named_captures;
-    int           name_size;
+    整数           captures;
+    整数           named_captures;
+    整数           name_size;
     u_char       *names;
     ngx_str_t     err;
 } ngx_regex_compile_t;
@@ -63,12 +63,12 @@ typedef struct {
 void ngx_regex_init(void);
 ngx_int_t ngx_regex_compile(ngx_regex_compile_t *rc);
 
-ngx_int_t ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures,
+ngx_int_t ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, 整数 *captures,
     ngx_uint_t size);
 
-#if (NGX_PCRE2)
+#もし (NGX_PCRE2)
 #define ngx_regex_exec_n       "pcre2_match()"
-#else
+#否则
 #define ngx_regex_exec_n       "pcre_exec()"
 #endif
 

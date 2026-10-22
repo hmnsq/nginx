@@ -62,13 +62,13 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
      * surrounding double quotes).
      */
 
-    if (src->len == 0) {
+    もし (src->len == 0) {
         dst->len = 0;
-        return NGX_OK;
+        戻る NGX_OK;
     }
 
-    if (dst->len < src->len) {
-        return NGX_ERROR;
+    もし (dst->len < src->len) {
+        戻る NGX_ERROR;
     }
 
     s = src->data;
@@ -81,25 +81,25 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
     high_surrogate = 0;
     hex_left = 0;
 
-    while (size--) {
+    ながら (size--) {
 
         ch = *s++;
 
         switch (state) {
         case sw_usual:
 
-            if (ch == '"') {
-                return NGX_ERROR;
+            もし (ch == '"') {
+                戻る NGX_ERROR;
             }
 
-            if (ch == '\\') {
+            もし (ch == '\\') {
                 state = sw_quoted;
                 break;
             }
 
-            if (ch < 0x20) {
+            もし (ch < 0x20) {
                 /* RFC 8259: control characters must be escaped */
-                return NGX_ERROR;
+                戻る NGX_ERROR;
             }
 
             *d++ = ch;
@@ -148,7 +148,7 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
                 break;
 
             default:
-                return NGX_ERROR;
+                戻る NGX_ERROR;
             }
 
             break;
@@ -156,19 +156,19 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
         case sw_hex:
 
             n = ngx_json_hex_digit(ch);
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            もし (n == NGX_ERROR) {
+                戻る NGX_ERROR;
             }
 
             codepoint = (codepoint << 4) | (uint32_t) n;
 
-            if (--hex_left > 0) {
+            もし (--hex_left > 0) {
                 break;
             }
 
-            if (high_surrogate) {
-                if (codepoint < 0xDC00 || codepoint > 0xDFFF) {
-                    return NGX_ERROR;
+            もし (high_surrogate) {
+                もし (codepoint < 0xDC00 || codepoint > 0xDFFF) {
+                    戻る NGX_ERROR;
                 }
 
                 codepoint = 0x10000
@@ -180,16 +180,16 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
                 break;
             }
 
-            if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+            もし (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
                 /* high surrogate - wait for the low surrogate */
                 high_surrogate = codepoint;
                 state = sw_surrogate_start;
                 break;
             }
 
-            if (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
+            もし (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_ERROR;
+                戻る NGX_ERROR;
             }
 
             d = ngx_json_utf8_encode(d, codepoint);
@@ -202,16 +202,16 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
              * Lone surrogates are not valid Unicode scalar values
              * (RFC 8259, Section 8.2).
              */
-            if (ch == '\\') {
+            もし (ch == '\\') {
                 state = sw_surrogate_u;
                 break;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            戻る NGX_ERROR;
 
         case sw_surrogate_u:
-            if (ch == 'u') {
+            もし (ch == 'u') {
                 codepoint = 0;
                 hex_left = 4;
                 state = sw_hex;
@@ -219,59 +219,59 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            戻る NGX_ERROR;
         }
     }
 
-    if (state != sw_usual) {
+    もし (state != sw_usual) {
         /* truncated escape sequence or unpaired high surrogate */
-        return NGX_ERROR;
+        戻る NGX_ERROR;
     }
 
     dst->len = d - dst->data;
 
-    return NGX_OK;
+    戻る NGX_OK;
 }
 
 
 static ngx_inline u_char *
 ngx_json_utf8_encode(u_char *dst, uint32_t codepoint)
 {
-    if (codepoint <= 0x7F) {
+    もし (codepoint <= 0x7F) {
         *dst++ = (u_char) codepoint;
 
-    } else if (codepoint <= 0x7FF) {
+    } 否则 もし (codepoint <= 0x7FF) {
         *dst++ = (u_char) (0xC0 | (codepoint >> 6));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else if (codepoint <= 0xFFFF) {
+    } 否则 もし (codepoint <= 0xFFFF) {
         *dst++ = (u_char) (0xE0 | (codepoint >> 12));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else {
+    } 否则 {
         *dst++ = (u_char) (0xF0 | (codepoint >> 18));
         *dst++ = (u_char) (0x80 | ((codepoint >> 12) & 0x3F));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
     }
 
-    return dst;
+    戻る dst;
 }
 
 
 ngx_int_t
 ngx_json_hex_digit(u_char ch)
 {
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0';
+    もし (ch >= '0' && ch <= '9') {
+        戻る ch - '0';
     }
 
     ch = (u_char) (ch | 0x20);
 
-    if (ch >= 'a' && ch <= 'f') {
-        return ch - 'a' + 10;
+    もし (ch >= 'a' && ch <= 'f') {
+        戻る ch - 'a' + 10;
     }
 
-    return NGX_ERROR;
+    戻る NGX_ERROR;
 }

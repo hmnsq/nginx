@@ -23,178 +23,178 @@
     ngx_value(NGX_SIG_ATOMIC_T_SIZE) ","                                      \
     ngx_value(NGX_TIME_T_SIZE) ","
 
-#if (NGX_HAVE_KQUEUE)
+#もし (NGX_HAVE_KQUEUE)
 #define NGX_MODULE_SIGNATURE_1   "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_1   "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_2   "0"
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#もし (NGX_HAVE_FILE_AIO || NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_3   "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_3   "0"
 #endif
 
-#if (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
+#もし (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_4   "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_4   "0"
 #endif
 
-#if (NGX_HAVE_EVENTFD)
+#もし (NGX_HAVE_EVENTFD)
 #define NGX_MODULE_SIGNATURE_5   "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_5   "0"
 #endif
 
-#if (NGX_HAVE_EPOLL)
+#もし (NGX_HAVE_EPOLL)
 #define NGX_MODULE_SIGNATURE_6   "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_6   "0"
 #endif
 
-#if (NGX_HAVE_KEEPALIVE_TUNABLE)
+#もし (NGX_HAVE_KEEPALIVE_TUNABLE)
 #define NGX_MODULE_SIGNATURE_7   "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_7   "0"
 #endif
 
-#if (NGX_HAVE_INET6)
+#もし (NGX_HAVE_INET6)
 #define NGX_MODULE_SIGNATURE_8   "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_8   "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_9   "1"
 #define NGX_MODULE_SIGNATURE_10  "1"
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+#もし (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
 #define NGX_MODULE_SIGNATURE_11  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_11  "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_12  "1"
 
-#if (NGX_HAVE_SETFIB)
+#もし (NGX_HAVE_SETFIB)
 #define NGX_MODULE_SIGNATURE_13  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_13  "0"
 #endif
 
-#if (NGX_HAVE_TCP_FASTOPEN)
+#もし (NGX_HAVE_TCP_FASTOPEN)
 #define NGX_MODULE_SIGNATURE_14  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_14  "0"
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#もし (NGX_HAVE_UNIX_DOMAIN)
 #define NGX_MODULE_SIGNATURE_15  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_15  "0"
 #endif
 
-#if (NGX_HAVE_VARIADIC_MACROS)
+#もし (NGX_HAVE_VARIADIC_MACROS)
 #define NGX_MODULE_SIGNATURE_16  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_16  "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_17  "0"
 
-#if (NGX_QUIC || NGX_COMPAT)
+#もし (NGX_QUIC || NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_18  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_18  "0"
 #endif
 
-#if (NGX_HAVE_OPENAT)
+#もし (NGX_HAVE_OPENAT)
 #define NGX_MODULE_SIGNATURE_19  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_19  "0"
 #endif
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#もし (NGX_HAVE_ATOMIC_OPS)
 #define NGX_MODULE_SIGNATURE_20  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_20  "0"
 #endif
 
-#if (NGX_HAVE_POSIX_SEM)
+#もし (NGX_HAVE_POSIX_SEM)
 #define NGX_MODULE_SIGNATURE_21  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_21  "0"
 #endif
 
-#if (NGX_THREADS || NGX_COMPAT)
+#もし (NGX_THREADS || NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_22  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_22  "0"
 #endif
 
-#if (NGX_PCRE)
+#もし (NGX_PCRE)
 #define NGX_MODULE_SIGNATURE_23  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_23  "0"
 #endif
 
-#if (NGX_HTTP_SSL || NGX_COMPAT)
+#もし (NGX_HTTP_SSL || NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_24  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_24  "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_25  "1"
 
-#if (NGX_HTTP_GZIP)
+#もし (NGX_HTTP_GZIP)
 #define NGX_MODULE_SIGNATURE_26  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_26  "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_27  "1"
 
-#if (NGX_HTTP_X_FORWARDED_FOR)
+#もし (NGX_HTTP_X_FORWARDED_FOR)
 #define NGX_MODULE_SIGNATURE_28  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_28  "0"
 #endif
 
-#if (NGX_HTTP_REALIP)
+#もし (NGX_HTTP_REALIP)
 #define NGX_MODULE_SIGNATURE_29  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_29  "0"
 #endif
 
-#if (NGX_HTTP_HEADERS)
+#もし (NGX_HTTP_HEADERS)
 #define NGX_MODULE_SIGNATURE_30  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_30  "0"
 #endif
 
-#if (NGX_HTTP_DAV)
+#もし (NGX_HTTP_DAV)
 #define NGX_MODULE_SIGNATURE_31  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_31  "0"
 #endif
 
-#if (NGX_HTTP_CACHE)
+#もし (NGX_HTTP_CACHE)
 #define NGX_MODULE_SIGNATURE_32  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_32  "0"
 #endif
 
-#if (NGX_HTTP_UPSTREAM_ZONE)
+#もし (NGX_HTTP_UPSTREAM_ZONE)
 #define NGX_MODULE_SIGNATURE_33  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_33  "0"
 #endif
 
-#if (NGX_COMPAT)
+#もし (NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_34  "1"
-#else
+#否则
 #define NGX_MODULE_SIGNATURE_34  "0"
 #endif
 

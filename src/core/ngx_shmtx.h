@@ -15,21 +15,21 @@
 
 typedef struct {
     ngx_atomic_t   lock;
-#if (NGX_HAVE_POSIX_SEM)
+#もし (NGX_HAVE_POSIX_SEM)
     ngx_atomic_t   wait;
 #endif
 } ngx_shmtx_sh_t;
 
 
 typedef struct {
-#if (NGX_HAVE_ATOMIC_OPS)
+#もし (NGX_HAVE_ATOMIC_OPS)
     ngx_atomic_t  *lock;
-#if (NGX_HAVE_POSIX_SEM)
+#もし (NGX_HAVE_POSIX_SEM)
     ngx_atomic_t  *wait;
     ngx_uint_t     semaphore;
     sem_t          sem;
 #endif
-#else
+#否则
     ngx_fd_t       fd;
     u_char        *name;
 #endif

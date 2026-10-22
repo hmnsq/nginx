@@ -23,16 +23,16 @@ struct ngx_listening_s {
     size_t              addr_text_max_len;
     ngx_str_t           addr_text;
 
-    int                 type;
-    int                 protocol;
+    整数                 type;
+    整数                 protocol;
 
-    int                 backlog;
-    int                 rcvbuf;
-    int                 sndbuf;
-#if (NGX_HAVE_KEEPALIVE_TUNABLE)
-    int                 keepidle;
-    int                 keepintvl;
-    int                 keepcnt;
+    整数                 backlog;
+    整数                 rcvbuf;
+    整数                 sndbuf;
+#もし (NGX_HAVE_KEEPALIVE_TUNABLE)
+    整数                 keepidle;
+    整数                 keepintvl;
+    整数                 keepcnt;
 #endif
 
     /* handler of accepted connection */
@@ -66,7 +66,7 @@ struct ngx_listening_s {
     unsigned            addr_ntop:1;
     unsigned            wildcard:1;
 
-#if (NGX_HAVE_INET6)
+#もし (NGX_HAVE_INET6)
     unsigned            ipv6only:1;
 #endif
     unsigned            reuseport:1;
@@ -79,15 +79,15 @@ struct ngx_listening_s {
     unsigned            deferred_accept:1;
     unsigned            delete_deferred:1;
     unsigned            add_deferred:1;
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+#もし (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
     char               *accept_filter;
 #endif
-#if (NGX_HAVE_SETFIB)
-    int                 setfib;
+#もし (NGX_HAVE_SETFIB)
+    整数                 setfib;
 #endif
 
-#if (NGX_HAVE_TCP_FASTOPEN)
-    int                 fastopen;
+#もし (NGX_HAVE_TCP_FASTOPEN)
+    整数                 fastopen;
 #endif
 
 };
@@ -142,7 +142,7 @@ struct ngx_connection_s {
 
     ngx_pool_t         *pool;
 
-    int                 type;
+    整数                 type;
 
     struct sockaddr    *sockaddr;
     socklen_t           socklen;
@@ -150,11 +150,11 @@ struct ngx_connection_s {
 
     ngx_proxy_protocol_t  *proxy_protocol;
 
-#if (NGX_QUIC || NGX_COMPAT)
+#もし (NGX_QUIC || NGX_COMPAT)
     ngx_quic_stream_t     *quic;
 #endif
 
-#if (NGX_SSL || NGX_COMPAT)
+#もし (NGX_SSL || NGX_COMPAT)
     ngx_ssl_connection_t  *ssl;
 #endif
 
@@ -194,13 +194,13 @@ struct ngx_connection_s {
     unsigned            need_last_buf:1;
     unsigned            need_flush_buf:1;
 
-#if (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
+#もし (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
     unsigned            busy_count:2;
 #endif
 
     unsigned            ktls_recv:1;
 
-#if (NGX_THREADS || NGX_COMPAT)
+#もし (NGX_THREADS || NGX_COMPAT)
     ngx_thread_task_t  *sendfile_task;
 #endif
 };
@@ -212,7 +212,7 @@ struct ngx_connection_s {
     c->log->next = l->next;                                                  \
     c->log->writer = l->writer;                                              \
     c->log->wdata = l->wdata;                                                \
-    if (!(c->log->log_level & NGX_LOG_DEBUG_CONNECTION)) {                   \
+    もし (!(c->log->log_level & NGX_LOG_DEBUG_CONNECTION)) {                   \
         c->log->log_level = l->log_level;                                    \
     }
 

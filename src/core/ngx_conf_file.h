@@ -182,89 +182,89 @@ extern ngx_conf_post_t  ngx_conf_size_nonzero_post;
 
 
 #define ngx_conf_init_value(conf, default)                                   \
-    if (conf == NGX_CONF_UNSET) {                                            \
+    もし (conf == NGX_CONF_UNSET) {                                            \
         conf = default;                                                      \
     }
 
 #define ngx_conf_init_ptr_value(conf, default)                               \
-    if (conf == NGX_CONF_UNSET_PTR) {                                        \
+    もし (conf == NGX_CONF_UNSET_PTR) {                                        \
         conf = default;                                                      \
     }
 
 #define ngx_conf_init_uint_value(conf, default)                              \
-    if (conf == NGX_CONF_UNSET_UINT) {                                       \
+    もし (conf == NGX_CONF_UNSET_UINT) {                                       \
         conf = default;                                                      \
     }
 
 #define ngx_conf_init_size_value(conf, default)                              \
-    if (conf == NGX_CONF_UNSET_SIZE) {                                       \
+    もし (conf == NGX_CONF_UNSET_SIZE) {                                       \
         conf = default;                                                      \
     }
 
 #define ngx_conf_init_msec_value(conf, default)                              \
-    if (conf == NGX_CONF_UNSET_MSEC) {                                       \
+    もし (conf == NGX_CONF_UNSET_MSEC) {                                       \
         conf = default;                                                      \
     }
 
 #define ngx_conf_merge_value(conf, prev, default)                            \
-    if (conf == NGX_CONF_UNSET) {                                            \
+    もし (conf == NGX_CONF_UNSET) {                                            \
         conf = (prev == NGX_CONF_UNSET) ? default : prev;                    \
     }
 
 #define ngx_conf_merge_ptr_value(conf, prev, default)                        \
-    if (conf == NGX_CONF_UNSET_PTR) {                                        \
+    もし (conf == NGX_CONF_UNSET_PTR) {                                        \
         conf = (prev == NGX_CONF_UNSET_PTR) ? default : prev;                \
     }
 
 #define ngx_conf_merge_uint_value(conf, prev, default)                       \
-    if (conf == NGX_CONF_UNSET_UINT) {                                       \
+    もし (conf == NGX_CONF_UNSET_UINT) {                                       \
         conf = (prev == NGX_CONF_UNSET_UINT) ? default : prev;               \
     }
 
 #define ngx_conf_merge_msec_value(conf, prev, default)                       \
-    if (conf == NGX_CONF_UNSET_MSEC) {                                       \
+    もし (conf == NGX_CONF_UNSET_MSEC) {                                       \
         conf = (prev == NGX_CONF_UNSET_MSEC) ? default : prev;               \
     }
 
 #define ngx_conf_merge_sec_value(conf, prev, default)                        \
-    if (conf == NGX_CONF_UNSET) {                                            \
+    もし (conf == NGX_CONF_UNSET) {                                            \
         conf = (prev == NGX_CONF_UNSET) ? default : prev;                    \
     }
 
 #define ngx_conf_merge_size_value(conf, prev, default)                       \
-    if (conf == NGX_CONF_UNSET_SIZE) {                                       \
+    もし (conf == NGX_CONF_UNSET_SIZE) {                                       \
         conf = (prev == NGX_CONF_UNSET_SIZE) ? default : prev;               \
     }
 
 #define ngx_conf_merge_off_value(conf, prev, default)                        \
-    if (conf == NGX_CONF_UNSET) {                                            \
+    もし (conf == NGX_CONF_UNSET) {                                            \
         conf = (prev == NGX_CONF_UNSET) ? default : prev;                    \
     }
 
 #define ngx_conf_merge_str_value(conf, prev, default)                        \
-    if (conf.data == NULL) {                                                 \
-        if (prev.data) {                                                     \
+    もし (conf.data == NULL) {                                                 \
+        もし (prev.data) {                                                     \
             conf.len = prev.len;                                             \
             conf.data = prev.data;                                           \
-        } else {                                                             \
+        } 否则 {                                                             \
             conf.len = sizeof(default) - 1;                                  \
             conf.data = (u_char *) default;                                  \
         }                                                                    \
     }
 
 #define ngx_conf_merge_bufs_value(conf, prev, default_num, default_size)     \
-    if (conf.num == 0) {                                                     \
-        if (prev.num) {                                                      \
+    もし (conf.num == 0) {                                                     \
+        もし (prev.num) {                                                      \
             conf.num = prev.num;                                             \
             conf.size = prev.size;                                           \
-        } else {                                                             \
+        } 否则 {                                                             \
             conf.num = default_num;                                          \
             conf.size = default_size;                                        \
         }                                                                    \
     }
 
 #define ngx_conf_merge_bitmask_value(conf, prev, default)                    \
-    if (conf == 0) {                                                         \
+    もし (conf == 0) {                                                         \
         conf = (prev == 0) ? default : prev;                                 \
     }
 

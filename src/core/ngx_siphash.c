@@ -26,7 +26,7 @@
         v0 += v3; v3 = ngx_siphash_rotl(v3, 21); v3 ^= v0;                    \
         v2 += v1; v1 = ngx_siphash_rotl(v1, 17); v1 ^= v2;                    \
         v2 = ngx_siphash_rotl(v2, 32);                                        \
-    } while (0)
+    } ながら (0)
 
 
 uint64_t
@@ -44,7 +44,7 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
     remainder = len & 7;
     end = data + len - remainder;
 
-    for ( /* void */ ; data != end; data += 8) {
+    ために ( /* void */ ; data != end; data += 8) {
         ngx_memcpy(&m, data, 8);
         v3 ^= m;
         ngx_sipround;
@@ -91,5 +91,5 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
     ngx_sipround;
     ngx_sipround;
 
-    return v0 ^ v1 ^ v2 ^ v3;
+    戻る v0 ^ v1 ^ v2 ^ v3;
 }

@@ -28,51 +28,51 @@ ngx_parse_http_time(u_char *value, size_t len)
     fmt = 0;
     end = value + len;
 
-#if (NGX_SUPPRESS_WARN)
+#もし (NGX_SUPPRESS_WARN)
     day = 32;
     year = 2038;
 #endif
 
-    for (p = value; p < end; p++) {
-        if (*p == ',') {
+    ために (p = value; p < end; p++) {
+        もし (*p == ',') {
             break;
         }
 
-        if (*p == ' ') {
+        もし (*p == ' ') {
             fmt = isoc;
             break;
         }
     }
 
-    for (p++; p < end; p++) {
-        if (*p != ' ') {
+    ために (p++; p < end; p++) {
+        もし (*p != ' ') {
             break;
         }
     }
 
-    if (end - p < 18) {
-        return NGX_ERROR;
+    もし (end - p < 18) {
+        戻る NGX_ERROR;
     }
 
-    if (fmt != isoc) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    もし (fmt != isoc) {
+        もし (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            戻る NGX_ERROR;
         }
 
         day = (*p - '0') * 10 + (*(p + 1) - '0');
         p += 2;
 
-        if (*p == ' ') {
-            if (end - p < 18) {
-                return NGX_ERROR;
+        もし (*p == ' ') {
+            もし (end - p < 18) {
+                戻る NGX_ERROR;
             }
             fmt = rfc822;
 
-        } else if (*p == '-') {
+        } 否则 もし (*p == '-') {
             fmt = rfc850;
 
-        } else {
-            return NGX_ERROR;
+        } 否则 {
+            戻る NGX_ERROR;
         }
 
         p++;
@@ -113,32 +113,32 @@ ngx_parse_http_time(u_char *value, size_t len)
         break;
 
     default:
-        return NGX_ERROR;
+        戻る NGX_ERROR;
     }
 
     p += 3;
 
-    if ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
-        return NGX_ERROR;
+    もし ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
+        戻る NGX_ERROR;
     }
 
     p++;
 
-    if (fmt == rfc822) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+    もし (fmt == rfc822) {
+        もし (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            戻る NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
         p += 4;
 
-    } else if (fmt == rfc850) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    } 否则 もし (fmt == rfc850) {
+        もし (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            戻る NGX_ERROR;
         }
 
         year = (*p - '0') * 10 + (*(p + 1) - '0');
@@ -146,91 +146,91 @@ ngx_parse_http_time(u_char *value, size_t len)
         p += 2;
     }
 
-    if (fmt == isoc) {
-        if (*p == ' ') {
+    もし (fmt == isoc) {
+        もし (*p == ' ') {
             p++;
         }
 
-        if (*p < '0' || *p > '9') {
-            return NGX_ERROR;
+        もし (*p < '0' || *p > '9') {
+            戻る NGX_ERROR;
         }
 
         day = *p++ - '0';
 
-        if (*p != ' ') {
-            if (*p < '0' || *p > '9') {
-                return NGX_ERROR;
+        もし (*p != ' ') {
+            もし (*p < '0' || *p > '9') {
+                戻る NGX_ERROR;
             }
 
             day = day * 10 + (*p++ - '0');
         }
 
-        if (end - p < 14) {
-            return NGX_ERROR;
+        もし (end - p < 14) {
+            戻る NGX_ERROR;
         }
     }
 
-    if (*p++ != ' ') {
-        return NGX_ERROR;
+    もし (*p++ != ' ') {
+        戻る NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    もし (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        戻る NGX_ERROR;
     }
 
     hour = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    もし (*p++ != ':') {
+        戻る NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    もし (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        戻る NGX_ERROR;
     }
 
     min = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    もし (*p++ != ':') {
+        戻る NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    もし (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        戻る NGX_ERROR;
     }
 
     sec = (*p - '0') * 10 + (*(p + 1) - '0');
 
-    if (fmt == isoc) {
+    もし (fmt == isoc) {
         p += 2;
 
-        if (*p++ != ' ') {
-            return NGX_ERROR;
+        もし (*p++ != ' ') {
+            戻る NGX_ERROR;
         }
 
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+        もし (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            戻る NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
     }
 
-    if (hour > 23 || min > 59 || sec > 59) {
-        return NGX_ERROR;
+    もし (hour > 23 || min > 59 || sec > 59) {
+        戻る NGX_ERROR;
     }
 
-    if (day == 29 && month == 1) {
-        if ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
-            return NGX_ERROR;
+    もし (day == 29 && month == 1) {
+        もし ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
+            戻る NGX_ERROR;
         }
 
-    } else if (day > mday[month]) {
-        return NGX_ERROR;
+    } 否则 もし (day > mday[month]) {
+        戻る NGX_ERROR;
     }
 
     /*
@@ -238,7 +238,7 @@ ngx_parse_http_time(u_char *value, size_t len)
      * it is needed for Gauss' formula
      */
 
-    if (--month <= 0) {
+    もし (--month <= 0) {
         month += 12;
         year -= 1;
     }
@@ -265,13 +265,13 @@ ngx_parse_http_time(u_char *value, size_t len)
 
             - 719527 + 31 + 28) * 86400 + hour * 3600 + min * 60 + sec;
 
-#if (NGX_TIME_T_SIZE <= 4)
+#もし (NGX_TIME_T_SIZE <= 4)
 
-    if (time > 0x7fffffff) {
-        return NGX_ERROR;
+    もし (time > 0x7fffffff) {
+        戻る NGX_ERROR;
     }
 
 #endif
 
-    return (time_t) time;
+    戻る (time_t) time;
 }
