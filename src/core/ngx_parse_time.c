@@ -18,7 +18,7 @@ ngx_parse_http_time(u_char *value, size_t len)
     ngx_int_t    month;
     ngx_uint_t   day, year, hour, min, sec;
     uint64_t     time;
-    enum {
+    ga_nanaa {
         no = 0,
         rfc822,   /* Tue, 10 Nov 2002 23:50:13   */
         rfc850,   /* Tuesday, 10-Dec-02 23:50:13 */
@@ -28,51 +28,51 @@ ngx_parse_http_time(u_char *value, size_t len)
     fmt = 0;
     end = value + len;
 
-#if (NGX_SUPPRESS_WARN)
+#ถ้า (NGX_SUPPRESS_WARN)
     day = 32;
     year = 2038;
 #endif
 
-    for (p = value; p < end; p++) {
-        if (*p == ',') {
-            break;
+    สำหรับ (p = value; p < end; p++) {
+        ถ้า (*p == ',') {
+            bha_nga;
         }
 
-        if (*p == ' ') {
+        ถ้า (*p == ' ') {
             fmt = isoc;
-            break;
+            bha_nga;
         }
     }
 
-    for (p++; p < end; p++) {
-        if (*p != ' ') {
-            break;
+    สำหรับ (p++; p < end; p++) {
+        ถ้า (*p != ' ') {
+            bha_nga;
         }
     }
 
-    if (end - p < 18) {
-        return NGX_ERROR;
+    ถ้า (end - p < 18) {
+        คืน NGX_ERROR;
     }
 
-    if (fmt != isoc) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    ถ้า (fmt != isoc) {
+        ถ้า (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            คืน NGX_ERROR;
         }
 
         day = (*p - '0') * 10 + (*(p + 1) - '0');
         p += 2;
 
-        if (*p == ' ') {
-            if (end - p < 18) {
-                return NGX_ERROR;
+        ถ้า (*p == ' ') {
+            ถ้า (end - p < 18) {
+                คืน NGX_ERROR;
             }
             fmt = rfc822;
 
-        } else if (*p == '-') {
+        } มิฉะนั้น ถ้า (*p == '-') {
             fmt = rfc850;
 
-        } else {
-            return NGX_ERROR;
+        } มิฉะนั้น {
+            คืน NGX_ERROR;
         }
 
         p++;
@@ -80,65 +80,65 @@ ngx_parse_http_time(u_char *value, size_t len)
 
     switch (*p) {
 
-    case 'J':
+    pak_sa 'J':
         month = *(p + 1) == 'a' ? 0 : *(p + 2) == 'n' ? 5 : 6;
-        break;
+        bha_nga;
 
-    case 'F':
+    pak_sa 'F':
         month = 1;
-        break;
+        bha_nga;
 
-    case 'M':
+    pak_sa 'M':
         month = *(p + 2) == 'r' ? 2 : 4;
-        break;
+        bha_nga;
 
-    case 'A':
+    pak_sa 'A':
         month = *(p + 1) == 'p' ? 3 : 7;
-        break;
+        bha_nga;
 
-    case 'S':
+    pak_sa 'S':
         month = 8;
-        break;
+        bha_nga;
 
-    case 'O':
+    pak_sa 'O':
         month = 9;
-        break;
+        bha_nga;
 
-    case 'N':
+    pak_sa 'N':
         month = 10;
-        break;
+        bha_nga;
 
-    case 'D':
+    pak_sa 'D':
         month = 11;
-        break;
+        bha_nga;
 
     default:
-        return NGX_ERROR;
+        คืน NGX_ERROR;
     }
 
     p += 3;
 
-    if ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
-        return NGX_ERROR;
+    ถ้า ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
+        คืน NGX_ERROR;
     }
 
     p++;
 
-    if (fmt == rfc822) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+    ถ้า (fmt == rfc822) {
+        ถ้า (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            คืน NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
         p += 4;
 
-    } else if (fmt == rfc850) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    } มิฉะนั้น ถ้า (fmt == rfc850) {
+        ถ้า (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            คืน NGX_ERROR;
         }
 
         year = (*p - '0') * 10 + (*(p + 1) - '0');
@@ -146,91 +146,91 @@ ngx_parse_http_time(u_char *value, size_t len)
         p += 2;
     }
 
-    if (fmt == isoc) {
-        if (*p == ' ') {
+    ถ้า (fmt == isoc) {
+        ถ้า (*p == ' ') {
             p++;
         }
 
-        if (*p < '0' || *p > '9') {
-            return NGX_ERROR;
+        ถ้า (*p < '0' || *p > '9') {
+            คืน NGX_ERROR;
         }
 
         day = *p++ - '0';
 
-        if (*p != ' ') {
-            if (*p < '0' || *p > '9') {
-                return NGX_ERROR;
+        ถ้า (*p != ' ') {
+            ถ้า (*p < '0' || *p > '9') {
+                คืน NGX_ERROR;
             }
 
             day = day * 10 + (*p++ - '0');
         }
 
-        if (end - p < 14) {
-            return NGX_ERROR;
+        ถ้า (end - p < 14) {
+            คืน NGX_ERROR;
         }
     }
 
-    if (*p++ != ' ') {
-        return NGX_ERROR;
+    ถ้า (*p++ != ' ') {
+        คืน NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ถ้า (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        คืน NGX_ERROR;
     }
 
     hour = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    ถ้า (*p++ != ':') {
+        คืน NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ถ้า (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        คืน NGX_ERROR;
     }
 
     min = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    ถ้า (*p++ != ':') {
+        คืน NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ถ้า (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        คืน NGX_ERROR;
     }
 
     sec = (*p - '0') * 10 + (*(p + 1) - '0');
 
-    if (fmt == isoc) {
+    ถ้า (fmt == isoc) {
         p += 2;
 
-        if (*p++ != ' ') {
-            return NGX_ERROR;
+        ถ้า (*p++ != ' ') {
+            คืน NGX_ERROR;
         }
 
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+        ถ้า (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            คืน NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
     }
 
-    if (hour > 23 || min > 59 || sec > 59) {
-        return NGX_ERROR;
+    ถ้า (hour > 23 || min > 59 || sec > 59) {
+        คืน NGX_ERROR;
     }
 
-    if (day == 29 && month == 1) {
-        if ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
-            return NGX_ERROR;
+    ถ้า (day == 29 && month == 1) {
+        ถ้า ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
+            คืน NGX_ERROR;
         }
 
-    } else if (day > mday[month]) {
-        return NGX_ERROR;
+    } มิฉะนั้น ถ้า (day > mday[month]) {
+        คืน NGX_ERROR;
     }
 
     /*
@@ -238,7 +238,7 @@ ngx_parse_http_time(u_char *value, size_t len)
      * it is needed for Gauss' formula
      */
 
-    if (--month <= 0) {
+    ถ้า (--month <= 0) {
         month += 12;
         year -= 1;
     }
@@ -265,13 +265,13 @@ ngx_parse_http_time(u_char *value, size_t len)
 
             - 719527 + 31 + 28) * 86400 + hour * 3600 + min * 60 + sec;
 
-#if (NGX_TIME_T_SIZE <= 4)
+#ถ้า (NGX_TIME_T_SIZE <= 4)
 
-    if (time > 0x7fffffff) {
-        return NGX_ERROR;
+    ถ้า (time > 0x7fffffff) {
+        คืน NGX_ERROR;
     }
 
 #endif
 
-    return (time_t) time;
+    คืน (time_t) time;
 }

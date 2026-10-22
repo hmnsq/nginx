@@ -31,33 +31,33 @@ ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
     root = &tree->root;
     sentinel = tree->sentinel;
 
-    if (*root == sentinel) {
+    ถ้า (*root == sentinel) {
         node->parent = NULL;
         node->left = sentinel;
         node->right = sentinel;
         ngx_rbt_black(node);
         *root = node;
 
-        return;
+        คืน;
     }
 
     tree->insert(*root, node, sentinel);
 
     /* re-balance tree */
 
-    while (node != *root && ngx_rbt_is_red(node->parent)) {
+    ขณะ (node != *root && ngx_rbt_is_red(node->parent)) {
 
-        if (node->parent == node->parent->parent->left) {
+        ถ้า (node->parent == node->parent->parent->left) {
             temp = node->parent->parent->right;
 
-            if (ngx_rbt_is_red(temp)) {
+            ถ้า (ngx_rbt_is_red(temp)) {
                 ngx_rbt_black(node->parent);
                 ngx_rbt_black(temp);
                 ngx_rbt_red(node->parent->parent);
                 node = node->parent->parent;
 
-            } else {
-                if (node == node->parent->right) {
+            } มิฉะนั้น {
+                ถ้า (node == node->parent->right) {
                     node = node->parent;
                     ngx_rbtree_left_rotate(root, sentinel, node);
                 }
@@ -67,17 +67,17 @@ ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
                 ngx_rbtree_right_rotate(root, sentinel, node->parent->parent);
             }
 
-        } else {
+        } มิฉะนั้น {
             temp = node->parent->parent->left;
 
-            if (ngx_rbt_is_red(temp)) {
+            ถ้า (ngx_rbt_is_red(temp)) {
                 ngx_rbt_black(node->parent);
                 ngx_rbt_black(temp);
                 ngx_rbt_red(node->parent->parent);
                 node = node->parent->parent;
 
-            } else {
-                if (node == node->parent->left) {
+            } มิฉะนั้น {
+                ถ้า (node == node->parent->left) {
                     node = node->parent;
                     ngx_rbtree_right_rotate(root, sentinel, node);
                 }
@@ -99,12 +99,12 @@ ngx_rbtree_insert_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 {
     ngx_rbtree_node_t  **p;
 
-    for ( ;; ) {
+    สำหรับ ( ;; ) {
 
         p = (node->key < temp->key) ? &temp->left : &temp->right;
 
-        if (*p == sentinel) {
-            break;
+        ถ้า (*p == sentinel) {
+            bha_nga;
         }
 
         temp = *p;
@@ -124,7 +124,7 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 {
     ngx_rbtree_node_t  **p;
 
-    for ( ;; ) {
+    สำหรับ ( ;; ) {
 
         /*
          * Timer values
@@ -138,8 +138,8 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
         p = ((ngx_rbtree_key_int_t) (node->key - temp->key) < 0)
             ? &temp->left : &temp->right;
 
-        if (*p == sentinel) {
-            break;
+        ถ้า (*p == sentinel) {
+            bha_nga;
         }
 
         temp = *p;
@@ -164,20 +164,20 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
     root = &tree->root;
     sentinel = tree->sentinel;
 
-    if (node->left == sentinel) {
+    ถ้า (node->left == sentinel) {
         temp = node->right;
         subst = node;
 
-    } else if (node->right == sentinel) {
+    } มิฉะนั้น ถ้า (node->right == sentinel) {
         temp = node->left;
         subst = node;
 
-    } else {
+    } มิฉะนั้น {
         subst = ngx_rbtree_min(node->right, sentinel);
         temp = subst->right;
     }
 
-    if (subst == *root) {
+    ถ้า (subst == *root) {
         *root = temp;
         ngx_rbt_black(temp);
 
@@ -187,28 +187,28 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
         node->parent = NULL;
         node->key = 0;
 
-        return;
+        คืน;
     }
 
     red = ngx_rbt_is_red(subst);
 
-    if (subst == subst->parent->left) {
+    ถ้า (subst == subst->parent->left) {
         subst->parent->left = temp;
 
-    } else {
+    } มิฉะนั้น {
         subst->parent->right = temp;
     }
 
-    if (subst == node) {
+    ถ้า (subst == node) {
 
         temp->parent = subst->parent;
 
-    } else {
+    } มิฉะนั้น {
 
-        if (subst->parent == node) {
+        ถ้า (subst->parent == node) {
             temp->parent = subst;
 
-        } else {
+        } มิฉะนั้น {
             temp->parent = subst->parent;
         }
 
@@ -217,22 +217,22 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
         subst->parent = node->parent;
         ngx_rbt_copy_color(subst, node);
 
-        if (node == *root) {
+        ถ้า (node == *root) {
             *root = subst;
 
-        } else {
-            if (node == node->parent->left) {
+        } มิฉะนั้น {
+            ถ้า (node == node->parent->left) {
                 node->parent->left = subst;
-            } else {
+            } มิฉะนั้น {
                 node->parent->right = subst;
             }
         }
 
-        if (subst->left != sentinel) {
+        ถ้า (subst->left != sentinel) {
             subst->left->parent = subst;
         }
 
-        if (subst->right != sentinel) {
+        ถ้า (subst->right != sentinel) {
             subst->right->parent = subst;
         }
     }
@@ -243,30 +243,30 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
     node->parent = NULL;
     node->key = 0;
 
-    if (red) {
-        return;
+    ถ้า (red) {
+        คืน;
     }
 
     /* a delete fixup */
 
-    while (temp != *root && ngx_rbt_is_black(temp)) {
+    ขณะ (temp != *root && ngx_rbt_is_black(temp)) {
 
-        if (temp == temp->parent->left) {
+        ถ้า (temp == temp->parent->left) {
             w = temp->parent->right;
 
-            if (ngx_rbt_is_red(w)) {
+            ถ้า (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
                 ngx_rbtree_left_rotate(root, sentinel, temp->parent);
                 w = temp->parent->right;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            ถ้า (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->right)) {
+            } มิฉะนั้น {
+                ถ้า (ngx_rbt_is_black(w->right)) {
                     ngx_rbt_black(w->left);
                     ngx_rbt_red(w);
                     ngx_rbtree_right_rotate(root, sentinel, w);
@@ -280,22 +280,22 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
                 temp = *root;
             }
 
-        } else {
+        } มิฉะนั้น {
             w = temp->parent->left;
 
-            if (ngx_rbt_is_red(w)) {
+            ถ้า (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
                 ngx_rbtree_right_rotate(root, sentinel, temp->parent);
                 w = temp->parent->left;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            ถ้า (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->left)) {
+            } มิฉะนั้น {
+                ถ้า (ngx_rbt_is_black(w->left)) {
                     ngx_rbt_black(w->right);
                     ngx_rbt_red(w);
                     ngx_rbtree_left_rotate(root, sentinel, w);
@@ -324,19 +324,19 @@ ngx_rbtree_left_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
     temp = node->right;
     node->right = temp->left;
 
-    if (temp->left != sentinel) {
+    ถ้า (temp->left != sentinel) {
         temp->left->parent = node;
     }
 
     temp->parent = node->parent;
 
-    if (node == *root) {
+    ถ้า (node == *root) {
         *root = temp;
 
-    } else if (node == node->parent->left) {
+    } มิฉะนั้น ถ้า (node == node->parent->left) {
         node->parent->left = temp;
 
-    } else {
+    } มิฉะนั้น {
         node->parent->right = temp;
     }
 
@@ -354,19 +354,19 @@ ngx_rbtree_right_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
     temp = node->left;
     node->left = temp->right;
 
-    if (temp->right != sentinel) {
+    ถ้า (temp->right != sentinel) {
         temp->right->parent = node;
     }
 
     temp->parent = node->parent;
 
-    if (node == *root) {
+    ถ้า (node == *root) {
         *root = temp;
 
-    } else if (node == node->parent->right) {
+    } มิฉะนั้น ถ้า (node == node->parent->right) {
         node->parent->right = temp;
 
-    } else {
+    } มิฉะนั้น {
         node->parent->left = temp;
     }
 
@@ -382,21 +382,21 @@ ngx_rbtree_next(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
 
     sentinel = tree->sentinel;
 
-    if (node->right != sentinel) {
-        return ngx_rbtree_min(node->right, sentinel);
+    ถ้า (node->right != sentinel) {
+        คืน ngx_rbtree_min(node->right, sentinel);
     }
 
     root = tree->root;
 
-    for ( ;; ) {
+    สำหรับ ( ;; ) {
         parent = node->parent;
 
-        if (node == root) {
-            return NULL;
+        ถ้า (node == root) {
+            คืน NULL;
         }
 
-        if (node == parent->left) {
-            return parent;
+        ถ้า (node == parent->left) {
+            คืน parent;
         }
 
         node = parent;
