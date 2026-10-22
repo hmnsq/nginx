@@ -5,50 +5,50 @@
  */
 
 
-#ifndef _NGX_RADIX_TREE_H_INCLUDED_
-#define _NGX_RADIX_TREE_H_INCLUDED_
+#ifndef NGX_RADIX_વૃક્ષ_H_INCLUDED
+#define NGX_RADIX_વૃક્ષ_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#અન્તર્ભાવ <ngx_config.h>
+#અન્તર્ભાવ <ngx_core.h>
 
 
-#define NGX_RADIX_NO_VALUE   (uintptr_t) -1
+#define NGX_RADIX_NO_કિંમત   (uintptr_t) -1
 
-typedef struct ngx_radix_node_s  ngx_radix_node_t;
+પ્રકારવ્યાખ્યા સંરચના ngx_radix_ગાંઠ_s  ngx_radix_ગાંઠ_t;
 
-struct ngx_radix_node_s {
-    ngx_radix_node_t  *right;
-    ngx_radix_node_t  *left;
-    ngx_radix_node_t  *parent;
-    uintptr_t          value;
+સંરચના ngx_radix_ગાંઠ_s {
+    ngx_radix_ગાંઠ_t  *જમણું;
+    ngx_radix_ગાંઠ_t  *ડાબું;
+    ngx_radix_ગાંઠ_t  *parent;
+    uintptr_t          કિંમત;
 };
 
 
-typedef struct {
-    ngx_radix_node_t  *root;
+પ્રકારવ્યાખ્યા સંરચના {
+    ngx_radix_ગાંઠ_t  *મૂળ;
     ngx_pool_t        *pool;
-    ngx_radix_node_t  *free;
-    char              *start;
+    ngx_radix_ગાંઠ_t  *મુક્ત;
+    અક્ષર              *start;
     size_t             size;
-} ngx_radix_tree_t;
+} ngx_radix_વૃક્ષ_t;
 
 
-ngx_radix_tree_t *ngx_radix_tree_create(ngx_pool_t *pool,
+ngx_radix_વૃક્ષ_t *ngx_radix_વૃક્ષ_create(ngx_pool_t *pool,
     ngx_int_t preallocate);
 
-ngx_int_t ngx_radix32tree_insert(ngx_radix_tree_t *tree,
-    uint32_t key, uint32_t mask, uintptr_t value);
-ngx_int_t ngx_radix32tree_delete(ngx_radix_tree_t *tree,
-    uint32_t key, uint32_t mask);
-uintptr_t ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key);
+ngx_int_t ngx_radix32tree_ઉમેરો(ngx_radix_વૃક્ષ_t *વૃક્ષ,
+    uint32_t ચાવી, uint32_t mask, uintptr_t કિંમત);
+ngx_int_t ngx_radix32tree_delete(ngx_radix_વૃક્ષ_t *વૃક્ષ,
+    uint32_t ચાવી, uint32_t mask);
+uintptr_t ngx_radix32tree_find(ngx_radix_વૃક્ષ_t *વૃક્ષ, uint32_t ચાવી);
 
-#if (NGX_HAVE_INET6)
-ngx_int_t ngx_radix128tree_insert(ngx_radix_tree_t *tree,
-    u_char *key, u_char *mask, uintptr_t value);
-ngx_int_t ngx_radix128tree_delete(ngx_radix_tree_t *tree,
-    u_char *key, u_char *mask);
-uintptr_t ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key);
+#જો (NGX_HAVE_INET6)
+ngx_int_t ngx_radix128tree_ઉમેરો(ngx_radix_વૃક્ષ_t *વૃક્ષ,
+    u_char *ચાવી, u_char *mask, uintptr_t કિંમત);
+ngx_int_t ngx_radix128tree_delete(ngx_radix_વૃક્ષ_t *વૃક્ષ,
+    u_char *ચાવી, u_char *mask);
+uintptr_t ngx_radix128tree_find(ngx_radix_વૃક્ષ_t *વૃક્ષ, u_char *ચાવી);
 #endif
 
 

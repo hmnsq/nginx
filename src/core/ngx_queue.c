@@ -5,12 +5,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#અન્તર્ભાવ <ngx_config.h>
+#અન્તર્ભાવ <ngx_core.h>
 
 
-static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+સ્થિર શૂન્ય ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
+    ngx_int_t (*cmp)(અચલ ngx_queue_t *, અચલ ngx_queue_t *));
 
 
 /*
@@ -19,31 +19,31 @@ static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
  */
 
 ngx_queue_t *
-ngx_queue_middle(ngx_queue_t *queue)
+ngx_queue_મધ્ય(ngx_queue_t *queue)
 {
-    ngx_queue_t  *middle, *next;
+    ngx_queue_t  *મધ્ય, *next;
 
-    middle = ngx_queue_head(queue);
+    મધ્ય = ngx_queue_head(queue);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    જો (મધ્ય == ngx_queue_last(queue)) {
+        પાછા મધ્ય;
     }
 
     next = ngx_queue_head(queue);
 
-    for ( ;; ) {
-        middle = ngx_queue_next(middle);
+    માટે ( ;; ) {
+        મધ્ય = ngx_queue_next(મધ્ય);
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        જો (next == ngx_queue_last(queue)) {
+            પાછા મધ્ય;
         }
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        જો (next == ngx_queue_last(queue)) {
+            પાછા મધ્ય;
         }
     }
 }
@@ -51,19 +51,19 @@ ngx_queue_middle(ngx_queue_t *queue)
 
 /* the stable merge sort */
 
-void
+શૂન્ય
 ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+    ngx_int_t (*cmp)(અચલ ngx_queue_t *, અચલ ngx_queue_t *))
 {
     ngx_queue_t  *q, tail;
 
     q = ngx_queue_head(queue);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    જો (q == ngx_queue_last(queue)) {
+        પાછા;
     }
 
-    q = ngx_queue_middle(queue);
+    q = ngx_queue_મધ્ય(queue);
 
     ngx_queue_split(queue, q, &tail);
 
@@ -74,32 +74,32 @@ ngx_queue_sort(ngx_queue_t *queue,
 }
 
 
-static void
+સ્થિર શૂન્ય
 ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+    ngx_int_t (*cmp)(અચલ ngx_queue_t *, અચલ ngx_queue_t *))
 {
     ngx_queue_t  *q1, *q2;
 
     q1 = ngx_queue_head(queue);
     q2 = ngx_queue_head(tail);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
+    માટે ( ;; ) {
+        જો (q1 == ngx_queue_sentinel(queue)) {
             ngx_queue_add(queue, tail);
-            break;
+            તોડો;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        જો (q2 == ngx_queue_sentinel(tail)) {
+            તોડો;
         }
 
-        if (cmp(q1, q2) <= 0) {
+        જો (cmp(q1, q2) <= 0) {
             q1 = ngx_queue_next(q1);
-            continue;
+            ચાલુ;
         }
 
         ngx_queue_remove(q2);
-        ngx_queue_insert_before(q1, q2);
+        ngx_queue_ઉમેરો_before(q1, q2);
 
         q2 = ngx_queue_head(tail);
     }

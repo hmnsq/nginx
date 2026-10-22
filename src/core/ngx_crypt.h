@@ -9,11 +9,11 @@
 #define _NGX_CRYPT_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#અન્તર્ભાવ <ngx_config.h>
+#અન્તર્ભાવ <ngx_core.h>
 
 
-ngx_int_t ngx_crypt(ngx_pool_t *pool, u_char *key, u_char *salt,
+ngx_int_t ngx_crypt(ngx_pool_t *pool, u_char *ચાવી, u_char *salt,
     u_char **encrypted);
 
 

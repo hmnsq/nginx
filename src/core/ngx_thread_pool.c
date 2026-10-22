@@ -6,27 +6,27 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_thread_pool.h>
+#અન્તર્ભાવ <ngx_config.h>
+#અન્તર્ભાવ <ngx_core.h>
+#અન્તર્ભાવ <ngx_thread_pool.h>
 
 
-typedef struct {
+પ્રકારવ્યાખ્યા સંરચના {
     ngx_array_t               pools;
 } ngx_thread_pool_conf_t;
 
 
-typedef struct {
+પ્રકારવ્યાખ્યા સંરચના {
     ngx_thread_task_t        *first;
     ngx_thread_task_t       **last;
 } ngx_thread_pool_queue_t;
 
 #define ngx_thread_pool_queue_init(q)                                         \
-    (q)->first = NULL;                                                        \
+    (q)->first = ખાલી;                                                        \
     (q)->last = &(q)->first
 
 
-struct ngx_thread_pool_s {
+સંરચના ngx_thread_pool_s {
     ngx_thread_mutex_t        mtx;
     ngx_thread_pool_queue_t   queue;
     ngx_int_t                 waiting;
@@ -39,41 +39,41 @@ struct ngx_thread_pool_s {
     ngx_int_t                 max_queue;
 
     u_char                   *file;
-    ngx_uint_t                line;
+    ngx_uint_t                લીટી;
 };
 
 
-static ngx_int_t ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *log,
+સ્થિર ngx_int_t ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *log,
     ngx_pool_t *pool);
-static void ngx_thread_pool_destroy(ngx_thread_pool_t *tp);
-static void ngx_thread_pool_exit_handler(void *data, ngx_log_t *log);
+સ્થિર શૂન્ય ngx_thread_pool_destroy(ngx_thread_pool_t *tp);
+સ્થિર શૂન્ય ngx_thread_pool_exit_handler(શૂન્ય *data, ngx_log_t *log);
 
-static void *ngx_thread_pool_cycle(void *data);
-static void ngx_thread_pool_handler(ngx_event_t *ev);
+સ્થિર શૂન્ય *ngx_thread_pool_cycle(શૂન્ય *data);
+સ્થિર શૂન્ય ngx_thread_pool_handler(ngx_event_t *ev);
 
-static char *ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+સ્થિર અક્ષર *ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, શૂન્ય *conf);
 
-static void *ngx_thread_pool_create_conf(ngx_cycle_t *cycle);
-static char *ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf);
+સ્થિર શૂન્ય *ngx_thread_pool_create_conf(ngx_cycle_t *cycle);
+સ્થિર અક્ષર *ngx_thread_pool_init_conf(ngx_cycle_t *cycle, શૂન્ય *conf);
 
-static ngx_int_t ngx_thread_pool_init_worker(ngx_cycle_t *cycle);
-static void ngx_thread_pool_exit_worker(ngx_cycle_t *cycle);
+સ્થિર ngx_int_t ngx_thread_pool_init_worker(ngx_cycle_t *cycle);
+સ્થિર શૂન્ય ngx_thread_pool_exit_worker(ngx_cycle_t *cycle);
 
 
-static ngx_command_t  ngx_thread_pool_commands[] = {
+સ્થિર ngx_command_t  ngx_thread_pool_commands[] = {
 
     { ngx_string("thread_pool"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE23,
       ngx_thread_pool,
       0,
       0,
-      NULL },
+      ખાલી },
 
       ngx_null_command
 };
 
 
-static ngx_core_module_t  ngx_thread_pool_module_ctx = {
+સ્થિર ngx_core_module_t  ngx_thread_pool_module_ctx = {
     ngx_string("thread_pool"),
     ngx_thread_pool_create_conf,
     ngx_thread_pool_init_conf
@@ -85,129 +85,129 @@ ngx_module_t  ngx_thread_pool_module = {
     &ngx_thread_pool_module_ctx,           /* module context */
     ngx_thread_pool_commands,              /* module directives */
     NGX_CORE_MODULE,                       /* module type */
-    NULL,                                  /* init master */
-    NULL,                                  /* init module */
+    ખાલી,                                  /* init master */
+    ખાલી,                                  /* init module */
     ngx_thread_pool_init_worker,           /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
+    ખાલી,                                  /* init thread */
+    ખાલી,                                  /* exit thread */
     ngx_thread_pool_exit_worker,           /* exit process */
-    NULL,                                  /* exit master */
+    ખાલી,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
-static ngx_str_t  ngx_thread_pool_default = ngx_string("default");
+સ્થિર ngx_str_t  ngx_thread_pool_default = ngx_string("default");
 
-static ngx_uint_t               ngx_thread_pool_task_id;
-static ngx_atomic_t             ngx_thread_pool_done_lock;
-static ngx_thread_pool_queue_t  ngx_thread_pool_done;
+સ્થિર ngx_uint_t               ngx_thread_pool_task_id;
+સ્થિર ngx_atomic_t             ngx_thread_pool_done_lock;
+સ્થિર ngx_thread_pool_queue_t  ngx_thread_pool_done;
 
 
-static ngx_int_t
+સ્થિર ngx_int_t
 ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *log, ngx_pool_t *pool)
 {
-    int             err;
+    પૂર્ણાંક             err;
     pthread_t       tid;
     ngx_uint_t      n;
     pthread_attr_t  attr;
 
-    if (ngx_notify == NULL) {
+    જો (ngx_notify == ખાલી) {
         ngx_log_error(NGX_LOG_ALERT, log, 0,
                "the configured event method cannot be used with thread pools");
-        return NGX_ERROR;
+        પાછા NGX_ERROR;
     }
 
     ngx_thread_pool_queue_init(&tp->queue);
 
-    if (ngx_thread_mutex_create(&tp->mtx, log) != NGX_OK) {
-        return NGX_ERROR;
+    જો (ngx_thread_mutex_create(&tp->mtx, log) != NGX_OK) {
+        પાછા NGX_ERROR;
     }
 
-    if (ngx_thread_cond_create(&tp->cond, log) != NGX_OK) {
-        (void) ngx_thread_mutex_destroy(&tp->mtx, log);
-        return NGX_ERROR;
+    જો (ngx_thread_cond_create(&tp->cond, log) != NGX_OK) {
+        (શૂન્ય) ngx_thread_mutex_destroy(&tp->mtx, log);
+        પાછા NGX_ERROR;
     }
 
     tp->log = log;
 
     err = pthread_attr_init(&attr);
-    if (err) {
+    જો (err) {
         ngx_log_error(NGX_LOG_ALERT, log, err,
                       "pthread_attr_init() failed");
-        return NGX_ERROR;
+        પાછા NGX_ERROR;
     }
 
     err = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    if (err) {
+    જો (err) {
         ngx_log_error(NGX_LOG_ALERT, log, err,
                       "pthread_attr_setdetachstate() failed");
-        return NGX_ERROR;
+        પાછા NGX_ERROR;
     }
 
-#if 0
-    err = pthread_attr_setstacksize(&attr, PTHREAD_STACK_MIN);
-    if (err) {
+#જો 0
+    err = pthread_attr_setstacksize(&attr, PTHREAD_ઢગલો_MIN);
+    જો (err) {
         ngx_log_error(NGX_LOG_ALERT, log, err,
                       "pthread_attr_setstacksize() failed");
-        return NGX_ERROR;
+        પાછા NGX_ERROR;
     }
 #endif
 
-    for (n = 0; n < tp->threads; n++) {
+    માટે (n = 0; n < tp->threads; n++) {
         err = pthread_create(&tid, &attr, ngx_thread_pool_cycle, tp);
-        if (err) {
+        જો (err) {
             ngx_log_error(NGX_LOG_ALERT, log, err,
                           "pthread_create() failed");
-            return NGX_ERROR;
+            પાછા NGX_ERROR;
         }
     }
 
-    (void) pthread_attr_destroy(&attr);
+    (શૂન્ય) pthread_attr_destroy(&attr);
 
-    return NGX_OK;
+    પાછા NGX_OK;
 }
 
 
-static void
+સ્થિર શૂન્ય
 ngx_thread_pool_destroy(ngx_thread_pool_t *tp)
 {
     ngx_uint_t           n;
     ngx_thread_task_t    task;
-    volatile ngx_uint_t  lock;
+    અસ્થિર ngx_uint_t  lock;
 
-    ngx_memzero(&task, sizeof(ngx_thread_task_t));
+    ngx_memzero(&task, કદ(ngx_thread_task_t));
 
     task.handler = ngx_thread_pool_exit_handler;
-    task.ctx = (void *) &lock;
+    task.ctx = (શૂન્ય *) &lock;
 
-    for (n = 0; n < tp->threads; n++) {
+    માટે (n = 0; n < tp->threads; n++) {
         lock = 1;
 
-        if (ngx_thread_task_post(tp, &task) != NGX_OK) {
-            return;
+        જો (ngx_thread_task_post(tp, &task) != NGX_OK) {
+            પાછા;
         }
 
-        while (lock) {
+        જ્યારે (lock) {
             ngx_sched_yield();
         }
 
         task.event.active = 0;
     }
 
-    (void) ngx_thread_cond_destroy(&tp->cond, tp->log);
+    (શૂન્ય) ngx_thread_cond_destroy(&tp->cond, tp->log);
 
-    (void) ngx_thread_mutex_destroy(&tp->mtx, tp->log);
+    (શૂન્ય) ngx_thread_mutex_destroy(&tp->mtx, tp->log);
 }
 
 
-static void
-ngx_thread_pool_exit_handler(void *data, ngx_log_t *log)
+સ્થિર શૂન્ય
+ngx_thread_pool_exit_handler(શૂન્ય *data, ngx_log_t *log)
 {
     ngx_uint_t *lock = data;
 
     *lock = 0;
 
-    pthread_exit(NULL);
+    pthread_exit(ખાલી);
 }
 
 
@@ -216,47 +216,47 @@ ngx_thread_task_alloc(ngx_pool_t *pool, size_t size)
 {
     ngx_thread_task_t  *task;
 
-    task = ngx_pcalloc(pool, sizeof(ngx_thread_task_t) + size);
-    if (task == NULL) {
-        return NULL;
+    task = ngx_pcalloc(pool, કદ(ngx_thread_task_t) + size);
+    જો (task == ખાલી) {
+        પાછા ખાલી;
     }
 
     task->ctx = task + 1;
 
-    return task;
+    પાછા task;
 }
 
 
 ngx_int_t
 ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
 {
-    if (task->event.active) {
+    જો (task->event.active) {
         ngx_log_error(NGX_LOG_ALERT, tp->log, 0,
                       "task #%ui already active", task->id);
-        return NGX_ERROR;
+        પાછા NGX_ERROR;
     }
 
-    if (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
-        return NGX_ERROR;
+    જો (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
+        પાછા NGX_ERROR;
     }
 
-    if (tp->waiting >= tp->max_queue) {
-        (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
+    જો (tp->waiting >= tp->max_queue) {
+        (શૂન્ય) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
 
         ngx_log_error(NGX_LOG_ERR, tp->log, 0,
                       "thread pool \"%V\" queue overflow: %i tasks waiting",
                       &tp->name, tp->waiting);
-        return NGX_ERROR;
+        પાછા NGX_ERROR;
     }
 
     task->event.active = 1;
 
     task->id = ngx_thread_pool_task_id++;
-    task->next = NULL;
+    task->next = ખાલી;
 
-    if (ngx_thread_cond_signal(&tp->cond, tp->log) != NGX_OK) {
-        (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
-        return NGX_ERROR;
+    જો (ngx_thread_cond_signal(&tp->cond, tp->log) != NGX_OK) {
+        (શૂન્ય) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
+        પાછા NGX_ERROR;
     }
 
     *tp->queue.last = task;
@@ -264,26 +264,26 @@ ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
 
     tp->waiting++;
 
-    (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
+    (શૂન્ય) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
 
     ngx_log_debug2(NGX_LOG_DEBUG_CORE, tp->log, 0,
                    "task #%ui added to thread pool \"%V\"",
                    task->id, &tp->name);
 
-    return NGX_OK;
+    પાછા NGX_OK;
 }
 
 
-static void *
-ngx_thread_pool_cycle(void *data)
+સ્થિર શૂન્ય *
+ngx_thread_pool_cycle(શૂન્ય *data)
 {
     ngx_thread_pool_t *tp = data;
 
-    int                 err;
+    પૂર્ણાંક                 err;
     sigset_t            set;
     ngx_thread_task_t  *task;
 
-#if 0
+#જો 0
     ngx_time_update();
 #endif
 
@@ -297,41 +297,41 @@ ngx_thread_pool_cycle(void *data)
     sigdelset(&set, SIGSEGV);
     sigdelset(&set, SIGBUS);
 
-    err = pthread_sigmask(SIG_BLOCK, &set, NULL);
-    if (err) {
+    err = pthread_sigmask(SIG_BLOCK, &set, ખાલી);
+    જો (err) {
         ngx_log_error(NGX_LOG_ALERT, tp->log, err, "pthread_sigmask() failed");
-        return NULL;
+        પાછા ખાલી;
     }
 
-    for ( ;; ) {
-        if (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
-            return NULL;
+    માટે ( ;; ) {
+        જો (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
+            પાછા ખાલી;
         }
 
         /* the number may become negative */
         tp->waiting--;
 
-        while (tp->queue.first == NULL) {
-            if (ngx_thread_cond_wait(&tp->cond, &tp->mtx, tp->log)
+        જ્યારે (tp->queue.first == ખાલી) {
+            જો (ngx_thread_cond_wait(&tp->cond, &tp->mtx, tp->log)
                 != NGX_OK)
             {
-                (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
-                return NULL;
+                (શૂન્ય) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
+                પાછા ખાલી;
             }
         }
 
         task = tp->queue.first;
         tp->queue.first = task->next;
 
-        if (tp->queue.first == NULL) {
+        જો (tp->queue.first == ખાલી) {
             tp->queue.last = &tp->queue.first;
         }
 
-        if (ngx_thread_mutex_unlock(&tp->mtx, tp->log) != NGX_OK) {
-            return NULL;
+        જો (ngx_thread_mutex_unlock(&tp->mtx, tp->log) != NGX_OK) {
+            પાછા ખાલી;
         }
 
-#if 0
+#જો 0
         ngx_time_update();
 #endif
 
@@ -345,7 +345,7 @@ ngx_thread_pool_cycle(void *data)
                        "complete task #%ui in thread pool \"%V\"",
                        task->id, &tp->name);
 
-        task->next = NULL;
+        task->next = ખાલી;
 
         ngx_spinlock(&ngx_thread_pool_done_lock, 1, 2048);
 
@@ -356,12 +356,12 @@ ngx_thread_pool_cycle(void *data)
 
         ngx_unlock(&ngx_thread_pool_done_lock);
 
-        (void) ngx_notify(ngx_thread_pool_handler);
+        (શૂન્ય) ngx_notify(ngx_thread_pool_handler);
     }
 }
 
 
-static void
+સ્થિર શૂન્ય
 ngx_thread_pool_handler(ngx_event_t *ev)
 {
     ngx_event_t        *event;
@@ -372,14 +372,14 @@ ngx_thread_pool_handler(ngx_event_t *ev)
     ngx_spinlock(&ngx_thread_pool_done_lock, 1, 2048);
 
     task = ngx_thread_pool_done.first;
-    ngx_thread_pool_done.first = NULL;
+    ngx_thread_pool_done.first = ખાલી;
     ngx_thread_pool_done.last = &ngx_thread_pool_done.first;
 
     ngx_memory_barrier();
 
     ngx_unlock(&ngx_thread_pool_done_lock);
 
-    while (task) {
+    જ્યારે (task) {
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, ev->log, 0,
                        "run completion handler for task #%ui", task->id);
 
@@ -394,29 +394,29 @@ ngx_thread_pool_handler(ngx_event_t *ev)
 }
 
 
-static void *
+સ્થિર શૂન્ય *
 ngx_thread_pool_create_conf(ngx_cycle_t *cycle)
 {
     ngx_thread_pool_conf_t  *tcf;
 
-    tcf = ngx_pcalloc(cycle->pool, sizeof(ngx_thread_pool_conf_t));
-    if (tcf == NULL) {
-        return NULL;
+    tcf = ngx_pcalloc(cycle->pool, કદ(ngx_thread_pool_conf_t));
+    જો (tcf == ખાલી) {
+        પાછા ખાલી;
     }
 
-    if (ngx_array_init(&tcf->pools, cycle->pool, 4,
-                       sizeof(ngx_thread_pool_t *))
+    જો (ngx_array_init(&tcf->pools, cycle->pool, 4,
+                       કદ(ngx_thread_pool_t *))
         != NGX_OK)
     {
-        return NULL;
+        પાછા ખાલી;
     }
 
-    return tcf;
+    પાછા tcf;
 }
 
 
-static char *
-ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
+સ્થિર અક્ષર *
+ngx_thread_pool_init_conf(ngx_cycle_t *cycle, શૂન્ય *conf)
 {
     ngx_thread_pool_conf_t *tcf = conf;
 
@@ -425,93 +425,93 @@ ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    માટે (i = 0; i < tcf->pools.nelts; i++) {
 
-        if (tpp[i]->threads) {
-            continue;
+        જો (tpp[i]->threads) {
+            ચાલુ;
         }
 
-        if (tpp[i]->name.len == ngx_thread_pool_default.len
+        જો (tpp[i]->name.len == ngx_thread_pool_default.len
             && ngx_strncmp(tpp[i]->name.data, ngx_thread_pool_default.data,
                            ngx_thread_pool_default.len)
                == 0)
         {
             tpp[i]->threads = 32;
             tpp[i]->max_queue = 65536;
-            continue;
+            ચાલુ;
         }
 
         ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
                       "unknown thread pool \"%V\" in %s:%ui",
-                      &tpp[i]->name, tpp[i]->file, tpp[i]->line);
+                      &tpp[i]->name, tpp[i]->file, tpp[i]->લીટી);
 
-        return NGX_CONF_ERROR;
+        પાછા NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    પાછા NGX_CONF_OK;
 }
 
 
-static char *
-ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+સ્થિર અક્ષર *
+ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, શૂન્ય *conf)
 {
-    ngx_str_t          *value;
+    ngx_str_t          *કિંમત;
     ngx_uint_t          i;
     ngx_thread_pool_t  *tp;
 
-    value = cf->args->elts;
+    કિંમત = cf->args->elts;
 
-    tp = ngx_thread_pool_add(cf, &value[1]);
+    tp = ngx_thread_pool_add(cf, &કિંમત[1]);
 
-    if (tp == NULL) {
-        return NGX_CONF_ERROR;
+    જો (tp == ખાલી) {
+        પાછા NGX_CONF_ERROR;
     }
 
-    if (tp->threads) {
+    જો (tp->threads) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "duplicate thread pool \"%V\"", &tp->name);
-        return NGX_CONF_ERROR;
+        પાછા NGX_CONF_ERROR;
     }
 
     tp->max_queue = 65536;
 
-    for (i = 2; i < cf->args->nelts; i++) {
+    માટે (i = 2; i < cf->args->nelts; i++) {
 
-        if (ngx_strncmp(value[i].data, "threads=", 8) == 0) {
+        જો (ngx_strncmp(કિંમત[i].data, "threads=", 8) == 0) {
 
-            tp->threads = ngx_atoi(value[i].data + 8, value[i].len - 8);
+            tp->threads = ngx_atoi(કિંમત[i].data + 8, કિંમત[i].len - 8);
 
-            if (tp->threads == (ngx_uint_t) NGX_ERROR || tp->threads == 0) {
+            જો (tp->threads == (ngx_uint_t) NGX_ERROR || tp->threads == 0) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                                   "invalid threads value \"%V\"", &value[i]);
-                return NGX_CONF_ERROR;
+                                   "invalid threads value \"%V\"", &કિંમત[i]);
+                પાછા NGX_CONF_ERROR;
             }
 
-            continue;
+            ચાલુ;
         }
 
-        if (ngx_strncmp(value[i].data, "max_queue=", 10) == 0) {
+        જો (ngx_strncmp(કિંમત[i].data, "max_queue=", 10) == 0) {
 
-            tp->max_queue = ngx_atoi(value[i].data + 10, value[i].len - 10);
+            tp->max_queue = ngx_atoi(કિંમત[i].data + 10, કિંમત[i].len - 10);
 
-            if (tp->max_queue == NGX_ERROR) {
+            જો (tp->max_queue == NGX_ERROR) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                                   "invalid max_queue value \"%V\"", &value[i]);
-                return NGX_CONF_ERROR;
+                                   "invalid max_queue value \"%V\"", &કિંમત[i]);
+                પાછા NGX_CONF_ERROR;
             }
 
-            continue;
+            ચાલુ;
         }
     }
 
-    if (tp->threads == 0) {
+    જો (tp->threads == 0) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "\"%V\" must have \"threads\" parameter",
                            &cmd->name);
-        return NGX_CONF_ERROR;
+        પાછા NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    પાછા NGX_CONF_OK;
 }
 
 
@@ -521,36 +521,36 @@ ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name)
     ngx_thread_pool_t       *tp, **tpp;
     ngx_thread_pool_conf_t  *tcf;
 
-    if (name == NULL) {
+    જો (name == ખાલી) {
         name = &ngx_thread_pool_default;
     }
 
     tp = ngx_thread_pool_get(cf->cycle, name);
 
-    if (tp) {
-        return tp;
+    જો (tp) {
+        પાછા tp;
     }
 
-    tp = ngx_pcalloc(cf->pool, sizeof(ngx_thread_pool_t));
-    if (tp == NULL) {
-        return NULL;
+    tp = ngx_pcalloc(cf->pool, કદ(ngx_thread_pool_t));
+    જો (tp == ખાલી) {
+        પાછા ખાલી;
     }
 
     tp->name = *name;
     tp->file = cf->conf_file->file.name.data;
-    tp->line = cf->conf_file->line;
+    tp->લીટી = cf->conf_file->લીટી;
 
     tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cf->cycle->conf_ctx,
                                                   ngx_thread_pool_module);
 
-    tpp = ngx_array_push(&tcf->pools);
-    if (tpp == NULL) {
-        return NULL;
+    tpp = ngx_array_ધકેલો(&tcf->pools);
+    જો (tpp == ખાલી) {
+        પાછા ખાલી;
     }
 
     *tpp = tp;
 
-    return tp;
+    પાછા tp;
 }
 
 
@@ -566,76 +566,76 @@ ngx_thread_pool_get(ngx_cycle_t *cycle, ngx_str_t *name)
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    માટે (i = 0; i < tcf->pools.nelts; i++) {
 
-        if (tpp[i]->name.len == name->len
+        જો (tpp[i]->name.len == name->len
             && ngx_strncmp(tpp[i]->name.data, name->data, name->len) == 0)
         {
-            return tpp[i];
+            પાછા tpp[i];
         }
     }
 
-    return NULL;
+    પાછા ખાલી;
 }
 
 
-static ngx_int_t
+સ્થિર ngx_int_t
 ngx_thread_pool_init_worker(ngx_cycle_t *cycle)
 {
     ngx_uint_t                i;
     ngx_thread_pool_t       **tpp;
     ngx_thread_pool_conf_t   *tcf;
 
-    if (ngx_process != NGX_PROCESS_WORKER
+    જો (ngx_process != NGX_PROCESS_WORKER
         && ngx_process != NGX_PROCESS_SINGLE)
     {
-        return NGX_OK;
+        પાછા NGX_OK;
     }
 
     tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cycle->conf_ctx,
                                                   ngx_thread_pool_module);
 
-    if (tcf == NULL) {
-        return NGX_OK;
+    જો (tcf == ખાલી) {
+        પાછા NGX_OK;
     }
 
     ngx_thread_pool_queue_init(&ngx_thread_pool_done);
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
-        if (ngx_thread_pool_init(tpp[i], cycle->log, cycle->pool) != NGX_OK) {
-            return NGX_ERROR;
+    માટે (i = 0; i < tcf->pools.nelts; i++) {
+        જો (ngx_thread_pool_init(tpp[i], cycle->log, cycle->pool) != NGX_OK) {
+            પાછા NGX_ERROR;
         }
     }
 
-    return NGX_OK;
+    પાછા NGX_OK;
 }
 
 
-static void
+સ્થિર શૂન્ય
 ngx_thread_pool_exit_worker(ngx_cycle_t *cycle)
 {
     ngx_uint_t                i;
     ngx_thread_pool_t       **tpp;
     ngx_thread_pool_conf_t   *tcf;
 
-    if (ngx_process != NGX_PROCESS_WORKER
+    જો (ngx_process != NGX_PROCESS_WORKER
         && ngx_process != NGX_PROCESS_SINGLE)
     {
-        return;
+        પાછા;
     }
 
     tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cycle->conf_ctx,
                                                   ngx_thread_pool_module);
 
-    if (tcf == NULL) {
-        return;
+    જો (tcf == ખાલી) {
+        પાછા;
     }
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    માટે (i = 0; i < tcf->pools.nelts; i++) {
         ngx_thread_pool_destroy(tpp[i]);
     }
 }

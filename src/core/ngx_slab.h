@@ -9,20 +9,20 @@
 #define _NGX_SLAB_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#અન્તર્ભાવ <ngx_config.h>
+#અન્તર્ભાવ <ngx_core.h>
 
 
-typedef struct ngx_slab_page_s  ngx_slab_page_t;
+પ્રકારવ્યાખ્યા સંરચના ngx_slab_page_s  ngx_slab_page_t;
 
-struct ngx_slab_page_s {
+સંરચના ngx_slab_page_s {
     uintptr_t         slab;
     ngx_slab_page_t  *next;
     uintptr_t         prev;
 };
 
 
-typedef struct {
+પ્રકારવ્યાખ્યા સંરચના {
     ngx_uint_t        total;
     ngx_uint_t        used;
 
@@ -31,7 +31,7 @@ typedef struct {
 } ngx_slab_stat_t;
 
 
-typedef struct {
+પ્રકારવ્યાખ્યા સંરચના {
     ngx_shmtx_sh_t    lock;
 
     size_t            min_size;
@@ -39,7 +39,7 @@ typedef struct {
 
     ngx_slab_page_t  *pages;
     ngx_slab_page_t  *last;
-    ngx_slab_page_t   free;
+    ngx_slab_page_t   મુક્ત;
 
     ngx_slab_stat_t  *stats;
     ngx_uint_t        pfree;
@@ -54,19 +54,19 @@ typedef struct {
 
     unsigned          log_nomem:1;
 
-    void             *data;
-    void             *addr;
+    શૂન્ય             *data;
+    શૂન્ય             *addr;
 } ngx_slab_pool_t;
 
 
-void ngx_slab_sizes_init(void);
-void ngx_slab_init(ngx_slab_pool_t *pool);
-void *ngx_slab_alloc(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_calloc(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_calloc_locked(ngx_slab_pool_t *pool, size_t size);
-void ngx_slab_free(ngx_slab_pool_t *pool, void *p);
-void ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p);
+શૂન્ય ngx_slab_sizes_init(શૂન્ય);
+શૂન્ય ngx_slab_init(ngx_slab_pool_t *pool);
+શૂન્ય *ngx_slab_alloc(ngx_slab_pool_t *pool, size_t size);
+શૂન્ય *ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size);
+શૂન્ય *ngx_slab_calloc(ngx_slab_pool_t *pool, size_t size);
+શૂન્ય *ngx_slab_calloc_locked(ngx_slab_pool_t *pool, size_t size);
+શૂન્ય ngx_slab_free(ngx_slab_pool_t *pool, શૂન્ય *p);
+શૂન્ય ngx_slab_free_locked(ngx_slab_pool_t *pool, શૂન્ય *p);
 
 
 #endif /* _NGX_SLAB_H_INCLUDED_ */

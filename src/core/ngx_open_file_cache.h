@@ -5,18 +5,18 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#અન્તર્ભાવ <ngx_config.h>
+#અન્તર્ભાવ <ngx_core.h>
 
 
 #ifndef _NGX_OPEN_FILE_CACHE_H_INCLUDED_
 #define _NGX_OPEN_FILE_CACHE_H_INCLUDED_
 
 
-#define NGX_OPEN_FILE_DIRECTIO_OFF  NGX_MAX_OFF_T_VALUE
+#define NGX_OPEN_FILE_DIRECTIO_OFF  NGX_MAX_OFF_T_કિંમત
 
 
-typedef struct {
+પ્રકારવ્યાખ્યા સંરચના {
     ngx_fd_t                 fd;
     ngx_file_uniq_t          uniq;
     time_t                   mtime;
@@ -26,13 +26,13 @@ typedef struct {
     size_t                   read_ahead;
 
     ngx_err_t                err;
-    char                    *failed;
+    અક્ષર                    *failed;
 
     time_t                   valid;
 
     ngx_uint_t               min_uses;
 
-#if (NGX_HAVE_OPENAT)
+#જો (NGX_HAVE_OPENAT)
     size_t                   disable_symlinks_from;
     unsigned                 disable_symlinks:2;
 #endif
@@ -51,10 +51,10 @@ typedef struct {
 } ngx_open_file_info_t;
 
 
-typedef struct ngx_cached_open_file_s  ngx_cached_open_file_t;
+પ્રકારવ્યાખ્યા સંરચના ngx_cached_open_file_s  ngx_cached_open_file_t;
 
-struct ngx_cached_open_file_s {
-    ngx_rbtree_node_t        node;
+સંરચના ngx_cached_open_file_s {
+    ngx_rbtree_ગાંઠ_t        ગાંઠ;
     ngx_queue_t              queue;
 
     u_char                  *name;
@@ -69,12 +69,12 @@ struct ngx_cached_open_file_s {
 
     uint32_t                 uses;
 
-#if (NGX_HAVE_OPENAT)
+#જો (NGX_HAVE_OPENAT)
     size_t                   disable_symlinks_from;
     unsigned                 disable_symlinks:2;
 #endif
 
-    unsigned                 count:24;
+    unsigned                 ગણતરી:24;
     unsigned                 close:1;
     unsigned                 use_event:1;
 
@@ -88,9 +88,9 @@ struct ngx_cached_open_file_s {
 };
 
 
-typedef struct {
+પ્રકારવ્યાખ્યા સંરચના {
     ngx_rbtree_t             rbtree;
-    ngx_rbtree_node_t        sentinel;
+    ngx_rbtree_ગાંઠ_t        sentinel;
     ngx_queue_t              expire_queue;
 
     ngx_uint_t               current;
@@ -99,7 +99,7 @@ typedef struct {
 } ngx_open_file_cache_t;
 
 
-typedef struct {
+પ્રકારવ્યાખ્યા સંરચના {
     ngx_open_file_cache_t   *cache;
     ngx_cached_open_file_t  *file;
     ngx_uint_t               min_uses;
@@ -107,12 +107,12 @@ typedef struct {
 } ngx_open_file_cache_cleanup_t;
 
 
-typedef struct {
+પ્રકારવ્યાખ્યા સંરચના {
 
     /* ngx_connection_t stub to allow use c->fd as event ident */
-    void                    *data;
-    ngx_event_t             *read;
-    ngx_event_t             *write;
+    શૂન્ય                    *data;
+    ngx_event_t             *પઠ;
+    ngx_event_t             *લિખ;
     ngx_fd_t                 fd;
 
     ngx_cached_open_file_t  *file;

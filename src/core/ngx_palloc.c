@@ -5,14 +5,14 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#અન્તર્ભાવ <ngx_config.h>
+#અન્તર્ભાવ <ngx_core.h>
 
 
-static ngx_inline void *ngx_palloc_small(ngx_pool_t *pool, size_t size,
+સ્થિર ngx_inline શૂન્ય *ngx_palloc_small(ngx_pool_t *pool, size_t size,
     ngx_uint_t align);
-static void *ngx_palloc_block(ngx_pool_t *pool, size_t size);
-static void *ngx_palloc_large(ngx_pool_t *pool, size_t size);
+સ્થિર શૂન્ય *ngx_palloc_block(ngx_pool_t *pool, size_t size);
+સ્થિર શૂન્ય *ngx_palloc_large(ngx_pool_t *pool, size_t size);
 
 
 ngx_pool_t *
@@ -21,131 +21,131 @@ ngx_create_pool(size_t size, ngx_log_t *log)
     ngx_pool_t  *p;
 
     p = ngx_memalign(NGX_POOL_ALIGNMENT, size, log);
-    if (p == NULL) {
-        return NULL;
+    જો (p == ખાલી) {
+        પાછા ખાલી;
     }
 
-    p->d.last = (u_char *) p + sizeof(ngx_pool_t);
+    p->d.last = (u_char *) p + કદ(ngx_pool_t);
     p->d.end = (u_char *) p + size;
-    p->d.next = NULL;
+    p->d.next = ખાલી;
     p->d.failed = 0;
 
-    size = size - sizeof(ngx_pool_t);
+    size = size - કદ(ngx_pool_t);
     p->max = (size < NGX_MAX_ALLOC_FROM_POOL) ? size : NGX_MAX_ALLOC_FROM_POOL;
 
     p->current = p;
-    p->chain = NULL;
-    p->large = NULL;
-    p->cleanup = NULL;
+    p->chain = ખાલી;
+    p->large = ખાલી;
+    p->cleanup = ખાલી;
     p->log = log;
 
-    return p;
+    પાછા p;
 }
 
 
-void
+શૂન્ય
 ngx_destroy_pool(ngx_pool_t *pool)
 {
     ngx_pool_t          *p, *n;
     ngx_pool_large_t    *l;
     ngx_pool_cleanup_t  *c;
 
-    for (c = pool->cleanup; c; c = c->next) {
-        if (c->handler) {
+    માટે (c = pool->cleanup; c; c = c->next) {
+        જો (c->handler) {
             ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
                            "run cleanup: %p", c);
             c->handler(c->data);
         }
     }
 
-#if (NGX_DEBUG)
+#જો (NGX_DEBUG)
 
     /*
      * we could allocate the pool->log from this pool
      * so we cannot use this log while free()ing the pool
      */
 
-    for (l = pool->large; l; l = l->next) {
+    માટે (l = pool->large; l; l = l->next) {
         ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0, "free: %p", l->alloc);
     }
 
-    for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
+    માટે (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
         ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
                        "free: %p, unused: %uz", p, p->d.end - p->d.last);
 
-        if (n == NULL) {
-            break;
+        જો (n == ખાલી) {
+            તોડો;
         }
     }
 
 #endif
 
-    for (l = pool->large; l; l = l->next) {
-        if (l->alloc) {
+    માટે (l = pool->large; l; l = l->next) {
+        જો (l->alloc) {
             ngx_free(l->alloc);
         }
     }
 
-    for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
+    માટે (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
         ngx_free(p);
 
-        if (n == NULL) {
-            break;
+        જો (n == ખાલી) {
+            તોડો;
         }
     }
 }
 
 
-void
+શૂન્ય
 ngx_reset_pool(ngx_pool_t *pool)
 {
     ngx_pool_t        *p;
     ngx_pool_large_t  *l;
 
-    for (l = pool->large; l; l = l->next) {
-        if (l->alloc) {
+    માટે (l = pool->large; l; l = l->next) {
+        જો (l->alloc) {
             ngx_free(l->alloc);
         }
     }
 
-    for (p = pool; p; p = p->d.next) {
-        p->d.last = (u_char *) p + sizeof(ngx_pool_t);
+    માટે (p = pool; p; p = p->d.next) {
+        p->d.last = (u_char *) p + કદ(ngx_pool_t);
         p->d.failed = 0;
     }
 
     pool->current = pool;
-    pool->chain = NULL;
-    pool->large = NULL;
+    pool->chain = ખાલી;
+    pool->large = ખાલી;
 }
 
 
-void *
+શૂન્ય *
 ngx_palloc(ngx_pool_t *pool, size_t size)
 {
-#if !(NGX_DEBUG_PALLOC)
-    if (size <= pool->max) {
-        return ngx_palloc_small(pool, size, 1);
+#જો !(NGX_DEBUG_PALLOC)
+    જો (size <= pool->max) {
+        પાછા ngx_palloc_small(pool, size, 1);
     }
 #endif
 
-    return ngx_palloc_large(pool, size);
+    પાછા ngx_palloc_large(pool, size);
 }
 
 
-void *
+શૂન્ય *
 ngx_pnalloc(ngx_pool_t *pool, size_t size)
 {
-#if !(NGX_DEBUG_PALLOC)
-    if (size <= pool->max) {
-        return ngx_palloc_small(pool, size, 0);
+#જો !(NGX_DEBUG_PALLOC)
+    જો (size <= pool->max) {
+        પાછા ngx_palloc_small(pool, size, 0);
     }
 #endif
 
-    return ngx_palloc_large(pool, size);
+    પાછા ngx_palloc_large(pool, size);
 }
 
 
-static ngx_inline void *
+સ્થિર ngx_inline શૂન્ય *
 ngx_palloc_small(ngx_pool_t *pool, size_t size, ngx_uint_t align)
 {
     u_char      *m;
@@ -153,28 +153,28 @@ ngx_palloc_small(ngx_pool_t *pool, size_t size, ngx_uint_t align)
 
     p = pool->current;
 
-    do {
+    કરો {
         m = p->d.last;
 
-        if (align) {
+        જો (align) {
             m = ngx_align_ptr(m, NGX_ALIGNMENT);
         }
 
-        if ((size_t) (p->d.end - m) >= size) {
+        જો ((size_t) (p->d.end - m) >= size) {
             p->d.last = m + size;
 
-            return m;
+            પાછા m;
         }
 
         p = p->d.next;
 
-    } while (p);
+    } જ્યારે (p);
 
-    return ngx_palloc_block(pool, size);
+    પાછા ngx_palloc_block(pool, size);
 }
 
 
-static void *
+સ્થિર શૂન્ય *
 ngx_palloc_block(ngx_pool_t *pool, size_t size)
 {
     u_char      *m;
@@ -184,127 +184,127 @@ ngx_palloc_block(ngx_pool_t *pool, size_t size)
     psize = (size_t) (pool->d.end - (u_char *) pool);
 
     m = ngx_memalign(NGX_POOL_ALIGNMENT, psize, pool->log);
-    if (m == NULL) {
-        return NULL;
+    જો (m == ખાલી) {
+        પાછા ખાલી;
     }
 
     new = (ngx_pool_t *) m;
 
     new->d.end = m + psize;
-    new->d.next = NULL;
+    new->d.next = ખાલી;
     new->d.failed = 0;
 
-    m += sizeof(ngx_pool_data_t);
+    m += કદ(ngx_pool_data_t);
     m = ngx_align_ptr(m, NGX_ALIGNMENT);
     new->d.last = m + size;
 
-    for (p = pool->current; p->d.next; p = p->d.next) {
-        if (p->d.failed++ > 4) {
+    માટે (p = pool->current; p->d.next; p = p->d.next) {
+        જો (p->d.failed++ > 4) {
             pool->current = p->d.next;
         }
     }
 
     p->d.next = new;
 
-    return m;
+    પાછા m;
 }
 
 
-static void *
+સ્થિર શૂન્ય *
 ngx_palloc_large(ngx_pool_t *pool, size_t size)
 {
-    void              *p;
+    શૂન્ય              *p;
     ngx_uint_t         n;
     ngx_pool_large_t  *large;
 
     p = ngx_alloc(size, pool->log);
-    if (p == NULL) {
-        return NULL;
+    જો (p == ખાલી) {
+        પાછા ખાલી;
     }
 
     n = 0;
 
-    for (large = pool->large; large; large = large->next) {
-        if (large->alloc == NULL) {
+    માટે (large = pool->large; large; large = large->next) {
+        જો (large->alloc == ખાલી) {
             large->alloc = p;
-            return p;
+            પાછા p;
         }
 
-        if (n++ > 3) {
-            break;
+        જો (n++ > 3) {
+            તોડો;
         }
     }
 
-    large = ngx_palloc_small(pool, sizeof(ngx_pool_large_t), 1);
-    if (large == NULL) {
+    large = ngx_palloc_small(pool, કદ(ngx_pool_large_t), 1);
+    જો (large == ખાલી) {
         ngx_free(p);
-        return NULL;
+        પાછા ખાલી;
     }
 
     large->alloc = p;
     large->next = pool->large;
     pool->large = large;
 
-    return p;
+    પાછા p;
 }
 
 
-void *
+શૂન્ય *
 ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment)
 {
-    void              *p;
+    શૂન્ય              *p;
     ngx_pool_large_t  *large;
 
     p = ngx_memalign(alignment, size, pool->log);
-    if (p == NULL) {
-        return NULL;
+    જો (p == ખાલી) {
+        પાછા ખાલી;
     }
 
-    large = ngx_palloc_small(pool, sizeof(ngx_pool_large_t), 1);
-    if (large == NULL) {
+    large = ngx_palloc_small(pool, કદ(ngx_pool_large_t), 1);
+    જો (large == ખાલી) {
         ngx_free(p);
-        return NULL;
+        પાછા ખાલી;
     }
 
     large->alloc = p;
     large->next = pool->large;
     pool->large = large;
 
-    return p;
+    પાછા p;
 }
 
 
 ngx_int_t
-ngx_pfree(ngx_pool_t *pool, void *p)
+ngx_pfree(ngx_pool_t *pool, શૂન્ય *p)
 {
     ngx_pool_large_t  *l;
 
-    for (l = pool->large; l; l = l->next) {
-        if (p == l->alloc) {
+    માટે (l = pool->large; l; l = l->next) {
+        જો (p == l->alloc) {
             ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
                            "free: %p", l->alloc);
             ngx_free(l->alloc);
-            l->alloc = NULL;
+            l->alloc = ખાલી;
 
-            return NGX_OK;
+            પાછા NGX_OK;
         }
     }
 
-    return NGX_DECLINED;
+    પાછા NGX_DECLINED;
 }
 
 
-void *
+શૂન્ય *
 ngx_pcalloc(ngx_pool_t *pool, size_t size)
 {
-    void *p;
+    શૂન્ય *p;
 
     p = ngx_palloc(pool, size);
-    if (p) {
+    જો (p) {
         ngx_memzero(p, size);
     }
 
-    return p;
+    પાછા p;
 }
 
 
@@ -313,70 +313,70 @@ ngx_pool_cleanup_add(ngx_pool_t *p, size_t size)
 {
     ngx_pool_cleanup_t  *c;
 
-    c = ngx_palloc(p, sizeof(ngx_pool_cleanup_t));
-    if (c == NULL) {
-        return NULL;
+    c = ngx_palloc(p, કદ(ngx_pool_cleanup_t));
+    જો (c == ખાલી) {
+        પાછા ખાલી;
     }
 
-    if (size) {
+    જો (size) {
         c->data = ngx_palloc(p, size);
-        if (c->data == NULL) {
-            return NULL;
+        જો (c->data == ખાલી) {
+            પાછા ખાલી;
         }
 
-    } else {
-        c->data = NULL;
+    } નહીંતર {
+        c->data = ખાલી;
     }
 
-    c->handler = NULL;
+    c->handler = ખાલી;
     c->next = p->cleanup;
 
     p->cleanup = c;
 
     ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, p->log, 0, "add cleanup: %p", c);
 
-    return c;
+    પાછા c;
 }
 
 
-void
+શૂન્ય
 ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd)
 {
     ngx_pool_cleanup_t       *c;
     ngx_pool_cleanup_file_t  *cf;
 
-    for (c = p->cleanup; c; c = c->next) {
-        if (c->handler == ngx_pool_cleanup_file) {
+    માટે (c = p->cleanup; c; c = c->next) {
+        જો (c->handler == ngx_pool_cleanup_file) {
 
             cf = c->data;
 
-            if (cf->fd == fd) {
+            જો (cf->fd == fd) {
                 c->handler(cf);
-                c->handler = NULL;
-                return;
+                c->handler = ખાલી;
+                પાછા;
             }
         }
     }
 }
 
 
-void
-ngx_pool_cleanup_file(void *data)
+શૂન્ય
+ngx_pool_cleanup_file(શૂન્ય *data)
 {
     ngx_pool_cleanup_file_t  *c = data;
 
     ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, c->log, 0, "file cleanup: fd:%d",
                    c->fd);
 
-    if (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
+    જો (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ALERT, c->log, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", c->name);
     }
 }
 
 
-void
-ngx_pool_delete_file(void *data)
+શૂન્ય
+ngx_pool_delete_file(શૂન્ય *data)
 {
     ngx_pool_cleanup_file_t  *c = data;
 
@@ -385,46 +385,46 @@ ngx_pool_delete_file(void *data)
     ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, c->log, 0, "file cleanup: fd:%d %s",
                    c->fd, c->name);
 
-    if (ngx_delete_file(c->name) == NGX_FILE_ERROR) {
+    જો (ngx_delete_file(c->name) == NGX_FILE_ERROR) {
         err = ngx_errno;
 
-        if (err != NGX_ENOENT) {
+        જો (err != NGX_ENOENT) {
             ngx_log_error(NGX_LOG_CRIT, c->log, err,
                           ngx_delete_file_n " \"%s\" failed", c->name);
         }
     }
 
-    if (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
+    જો (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ALERT, c->log, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", c->name);
     }
 }
 
 
-#if 0
+#જો 0
 
-static void *
+સ્થિર શૂન્ય *
 ngx_get_cached_block(size_t size)
 {
-    void                     *p;
+    શૂન્ય                     *p;
     ngx_cached_block_slot_t  *slot;
 
-    if (ngx_cycle->cache == NULL) {
-        return NULL;
+    જો (ngx_cycle->cache == ખાલી) {
+        પાછા ખાલી;
     }
 
     slot = &ngx_cycle->cache[(size + ngx_pagesize - 1) / ngx_pagesize];
 
     slot->tries++;
 
-    if (slot->number) {
+    જો (slot->સંખ્યા) {
         p = slot->block;
         slot->block = slot->block->next;
-        slot->number--;
-        return p;
+        slot->સંખ્યા--;
+        પાછા p;
     }
 
-    return NULL;
+    પાછા ખાલી;
 }
 
 #endif
