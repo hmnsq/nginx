@@ -9,31 +9,31 @@
 #define _NGX_CORE_H_INCLUDED_
 
 
-#include <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
 
 
-typedef struct ngx_module_s          ngx_module_t;
-typedef struct ngx_conf_s            ngx_conf_t;
-typedef struct ngx_cycle_s           ngx_cycle_t;
-typedef struct ngx_pool_s            ngx_pool_t;
-typedef struct ngx_chain_s           ngx_chain_t;
-typedef struct ngx_log_s             ngx_log_t;
-typedef struct ngx_open_file_s       ngx_open_file_t;
-typedef struct ngx_command_s         ngx_command_t;
-typedef struct ngx_file_s            ngx_file_t;
-typedef struct ngx_event_s           ngx_event_t;
-typedef struct ngx_event_aio_s       ngx_event_aio_t;
-typedef struct ngx_connection_s      ngx_connection_t;
-typedef struct ngx_thread_task_s     ngx_thread_task_t;
-typedef struct ngx_ssl_s             ngx_ssl_t;
-typedef struct ngx_ssl_cache_s       ngx_ssl_cache_t;
-typedef struct ngx_proxy_protocol_s  ngx_proxy_protocol_t;
-typedef struct ngx_quic_stream_s     ngx_quic_stream_t;
-typedef struct ngx_ssl_connection_s  ngx_ssl_connection_t;
-typedef struct ngx_udp_connection_s  ngx_udp_connection_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_module_s          ngx_module_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_conf_s            ngx_conf_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_cycle_s           ngx_cycle_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_pool_s            ngx_pool_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_chain_s           ngx_chain_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_log_s             ngx_log_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_open_file_s       ngx_open_file_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_command_s         ngx_command_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_file_s            ngx_file_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_event_s           ngx_event_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_event_aio_s       ngx_event_aio_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_connection_s      ngx_connection_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_thread_task_s     ngx_thread_task_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_ssl_s             ngx_ssl_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_ssl_cache_s       ngx_ssl_cache_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_proxy_protocol_s  ngx_proxy_protocol_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_quic_stream_s     ngx_quic_stream_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_ssl_connection_s  ngx_ssl_connection_t;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ngx_udp_connection_s  ngx_udp_connection_t;
 
-typedef void (*ngx_event_handler_pt)(ngx_event_t *ev);
-typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
+ಪ್ರಕಾರನಿರ್ದೇಶ ಶೂನ್ಯ (*ngx_event_handler_pt)(ngx_event_t *ev);
+ಪ್ರಕಾರನಿರ್ದೇಶ ಶೂನ್ಯ (*ngx_connection_handler_pt)(ngx_connection_t *c);
 
 
 #define  NGX_OK          0
@@ -45,65 +45,65 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 #define  NGX_ABORT      -6
 
 
-#include <ngx_errno.h>
-#include <ngx_atomic.h>
-#include <ngx_thread.h>
-#include <ngx_rbtree.h>
-#include <ngx_time.h>
-#include <ngx_socket.h>
-#include <ngx_string.h>
-#include <ngx_files.h>
-#include <ngx_shmem.h>
-#include <ngx_process.h>
-#include <ngx_user.h>
-#include <ngx_dlopen.h>
-#include <ngx_parse.h>
-#include <ngx_parse_time.h>
-#include <ngx_log.h>
-#include <ngx_alloc.h>
-#include <ngx_palloc.h>
-#include <ngx_buf.h>
-#include <ngx_queue.h>
-#include <ngx_array.h>
-#include <ngx_list.h>
-#include <ngx_hash.h>
-#include <ngx_file.h>
-#include <ngx_crc.h>
-#include <ngx_crc32.h>
-#include <ngx_murmurhash.h>
-#include <ngx_siphash.h>
-#if (NGX_PCRE)
-#include <ngx_regex.h>
+#ಅನ್ತರ್ಭಾವ <ngx_errno.h>
+#ಅನ್ತರ್ಭಾವ <ngx_atomic.h>
+#ಅನ್ತರ್ಭಾವ <ngx_thread.h>
+#ಅನ್ತರ್ಭಾವ <ngx_rbtree.h>
+#ಅನ್ತರ್ಭಾವ <ngx_time.h>
+#ಅನ್ತರ್ಭಾವ <ngx_socket.h>
+#ಅನ್ತರ್ಭಾವ <ngx_string.h>
+#ಅನ್ತರ್ಭಾವ <ngx_files.h>
+#ಅನ್ತರ್ಭಾವ <ngx_shmem.h>
+#ಅನ್ತರ್ಭಾವ <ngx_process.h>
+#ಅನ್ತರ್ಭಾವ <ngx_user.h>
+#ಅನ್ತರ್ಭಾವ <ngx_dlopen.h>
+#ಅನ್ತರ್ಭಾವ <ngx_parse.h>
+#ಅನ್ತರ್ಭಾವ <ngx_parse_time.h>
+#ಅನ್ತರ್ಭಾವ <ngx_log.h>
+#ಅನ್ತರ್ಭಾವ <ngx_alloc.h>
+#ಅನ್ತರ್ಭಾವ <ngx_palloc.h>
+#ಅನ್ತರ್ಭಾವ <ngx_buf.h>
+#ಅನ್ತರ್ಭಾವ <ngx_queue.h>
+#ಅನ್ತರ್ಭಾವ <ngx_array.h>
+#ಅನ್ತರ್ಭಾವ <ngx_list.h>
+#ಅನ್ತರ್ಭಾವ <ngx_hash.h>
+#ಅನ್ತರ್ಭಾವ <ngx_file.h>
+#ಅನ್ತರ್ಭಾವ <ngx_crc.h>
+#ಅನ್ತರ್ಭಾವ <ngx_crc32.h>
+#ಅನ್ತರ್ಭಾವ <ngx_murmurhash.h>
+#ಅನ್ತರ್ಭಾವ <ngx_siphash.h>
+#ಯದಿ (NGX_PCRE)
+#ಅನ್ತರ್ಭಾವ <ngx_regex.h>
 #endif
-#include <ngx_radix_tree.h>
-#include <ngx_times.h>
-#include <ngx_rwlock.h>
-#include <ngx_shmtx.h>
-#include <ngx_data.h>
-#include <ngx_json.h>
-#include <ngx_slab.h>
-#include <ngx_inet.h>
-#include <ngx_cycle.h>
-#include <ngx_resolver.h>
-#if (NGX_OPENSSL)
-#include <ngx_event_openssl.h>
-#if (NGX_QUIC)
-#include <ngx_event_quic.h>
+#ಅನ್ತರ್ಭಾವ <ngx_radix_tree.h>
+#ಅನ್ತರ್ಭಾವ <ngx_times.h>
+#ಅನ್ತರ್ಭಾವ <ngx_rwlock.h>
+#ಅನ್ತರ್ಭಾವ <ngx_shmtx.h>
+#ಅನ್ತರ್ಭಾವ <ngx_data.h>
+#ಅನ್ತರ್ಭಾವ <ngx_json.h>
+#ಅನ್ತರ್ಭಾವ <ngx_slab.h>
+#ಅನ್ತರ್ಭಾವ <ngx_inet.h>
+#ಅನ್ತರ್ಭಾವ <ngx_cycle.h>
+#ಅನ್ತರ್ಭಾವ <ngx_resolver.h>
+#ಯದಿ (NGX_OPENSSL)
+#ಅನ್ತರ್ಭಾವ <ngx_event_openssl.h>
+#ಯದಿ (NGX_QUIC)
+#ಅನ್ತರ್ಭಾವ <ngx_event_quic.h>
 #endif
 #endif
-#include <ngx_process_cycle.h>
-#if (NGX_CONTROL_API)
-#include <ngx_control.h>
+#ಅನ್ತರ್ಭಾವ <ngx_process_cycle.h>
+#ಯದಿ (NGX_CONTROL_API)
+#ಅನ್ತರ್ಭಾವ <ngx_control.h>
 #endif
-#include <ngx_conf_file.h>
-#include <ngx_module.h>
-#include <ngx_open_file_cache.h>
-#include <ngx_os.h>
-#include <ngx_connection.h>
-#include <ngx_syslog.h>
-#include <ngx_proxy_protocol.h>
-#if (NGX_HAVE_BPF)
-#include <ngx_bpf.h>
+#ಅನ್ತರ್ಭಾವ <ngx_conf_file.h>
+#ಅನ್ತರ್ಭಾವ <ngx_module.h>
+#ಅನ್ತರ್ಭಾವ <ngx_open_file_cache.h>
+#ಅನ್ತರ್ಭಾವ <ngx_os.h>
+#ಅನ್ತರ್ಭಾವ <ngx_connection.h>
+#ಅನ್ತರ್ಭಾವ <ngx_syslog.h>
+#ಅನ್ತರ್ಭಾವ <ngx_proxy_protocol.h>
+#ಯದಿ (NGX_HAVE_BPF)
+#ಅನ್ತರ್ಭಾವ <ngx_bpf.h>
 #endif
 
 
@@ -112,13 +112,13 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 #define CRLF   "\r\n"
 
 
-#define ngx_abs(value)       (((value) >= 0) ? (value) : - (value))
+#define ngx_abs(ಮೌಲ್ಯ)       (((ಮೌಲ್ಯ) >= 0) ? (ಮೌಲ್ಯ) : - (ಮೌಲ್ಯ))
 #define ngx_max(val1, val2)  ((val1 < val2) ? (val2) : (val1))
 #define ngx_min(val1, val2)  ((val1 > val2) ? (val2) : (val1))
 
-void ngx_cpuinfo(void);
+ಶೂನ್ಯ ngx_cpuinfo(ಶೂನ್ಯ);
 
-#if (NGX_HAVE_OPENAT)
+#ಯದಿ (NGX_HAVE_OPENAT)
 #define NGX_DISABLE_SYMLINKS_OFF        0
 #define NGX_DISABLE_SYMLINKS_ON         1
 #define NGX_DISABLE_SYMLINKS_NOTOWNER   2
