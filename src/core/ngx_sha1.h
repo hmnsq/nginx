@@ -9,20 +9,20 @@
 #define _NGX_SHA1_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     uint64_t  bytes;
     uint32_t  a, b, c, d, e, f;
     u_char    buffer[64];
 } ngx_sha1_t;
 
 
-void ngx_sha1_init(ngx_sha1_t *ctx);
-void ngx_sha1_update(ngx_sha1_t *ctx, const void *data, size_t size);
-void ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx);
+ശൂന്യം ngx_sha1_init(ngx_sha1_t *ctx);
+ശൂന്യം ngx_sha1_update(ngx_sha1_t *ctx, സ്ഥിരം ശൂന്യം *data, size_t size);
+ശൂന്യം ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx);
 
 
 #endif /* _NGX_SHA1_H_INCLUDED_ */

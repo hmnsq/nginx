@@ -4,8 +4,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 
 uint32_t
@@ -15,7 +15,7 @@ ngx_murmur_hash2(u_char *data, size_t len)
 
     h = 0 ^ len;
 
-    while (len >= 4) {
+    ആകുമ്പോൾ (len >= 4) {
         k  = data[0];
         k |= data[1] << 8;
         k |= data[2] << 16;
@@ -32,14 +32,14 @@ ngx_murmur_hash2(u_char *data, size_t len)
         len -= 4;
     }
 
-    switch (len) {
-    case 3:
+    തിരഞ്ഞെടുപ്പ് (len) {
+    അവസ്ഥ 3:
         h ^= data[2] << 16;
         /* fall through */
-    case 2:
+    അവസ്ഥ 2:
         h ^= data[1] << 8;
         /* fall through */
-    case 1:
+    അവസ്ഥ 1:
         h ^= data[0];
         h *= 0x5bd1e995;
     }
@@ -48,5 +48,5 @@ ngx_murmur_hash2(u_char *data, size_t len)
     h *= 0x5bd1e995;
     h ^= h >> 15;
 
-    return h;
+    തിരികെ h;
 }

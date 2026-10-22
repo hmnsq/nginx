@@ -9,8 +9,8 @@
 #define _NGX_MURMURHASH_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 
 uint32_t ngx_murmur_hash2(u_char *data, size_t len);

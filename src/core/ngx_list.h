@@ -9,20 +9,20 @@
 #define _NGX_LIST_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 
-typedef struct ngx_list_part_s  ngx_list_part_t;
+തരനിർവചനം ഘടന ngx_list_part_s  ngx_list_part_t;
 
-struct ngx_list_part_s {
-    void             *elts;
+ഘടന ngx_list_part_s {
+    ശൂന്യം             *elts;
     ngx_uint_t        nelts;
     ngx_list_part_t  *next;
 };
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     ngx_list_part_t  *last;
     ngx_list_part_t   part;
     size_t            size;
@@ -33,22 +33,22 @@ typedef struct {
 
 ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size);
 
-static ngx_inline ngx_int_t
+സ്ഥിതം ngx_inline ngx_int_t
 ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
 {
     list->part.elts = ngx_palloc(pool, n * size);
-    if (list->part.elts == NULL) {
-        return NGX_ERROR;
+    എങ്കിൽ (list->part.elts == ശൂന്യ) {
+        തിരികെ NGX_ERROR;
     }
 
     list->part.nelts = 0;
-    list->part.next = NULL;
+    list->part.next = ശൂന്യ;
     list->last = &list->part;
     list->size = size;
     list->nalloc = n;
     list->pool = pool;
 
-    return NGX_OK;
+    തിരികെ NGX_OK;
 }
 
 
@@ -77,7 +77,7 @@ ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
  */
 
 
-void *ngx_list_push(ngx_list_t *list);
+ശൂന്യം *ngx_list_തള്ളുക(ngx_list_t *list);
 
 
 #endif /* _NGX_LIST_H_INCLUDED_ */

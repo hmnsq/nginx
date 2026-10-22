@@ -9,8 +9,8 @@
 #define _NGX_PALLOC_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 
 /*
@@ -23,30 +23,30 @@
 
 #define NGX_POOL_ALIGNMENT       16
 #define NGX_MIN_POOL_SIZE                                                     \
-    ngx_align((sizeof(ngx_pool_t) + 2 * sizeof(ngx_pool_large_t)),            \
+    ngx_align((വലുപ്പം(ngx_pool_t) + 2 * വലുപ്പം(ngx_pool_large_t)),            \
               NGX_POOL_ALIGNMENT)
 
 
-typedef void (*ngx_pool_cleanup_pt)(void *data);
+തരനിർവചനം ശൂന്യം (*ngx_pool_cleanup_pt)(ശൂന്യം *data);
 
-typedef struct ngx_pool_cleanup_s  ngx_pool_cleanup_t;
+തരനിർവചനം ഘടന ngx_pool_cleanup_s  ngx_pool_cleanup_t;
 
-struct ngx_pool_cleanup_s {
+ഘടന ngx_pool_cleanup_s {
     ngx_pool_cleanup_pt   handler;
-    void                 *data;
+    ശൂന്യം                 *data;
     ngx_pool_cleanup_t   *next;
 };
 
 
-typedef struct ngx_pool_large_s  ngx_pool_large_t;
+തരനിർവചനം ഘടന ngx_pool_large_s  ngx_pool_large_t;
 
-struct ngx_pool_large_s {
+ഘടന ngx_pool_large_s {
     ngx_pool_large_t     *next;
-    void                 *alloc;
+    ശൂന്യം                 *alloc;
 };
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     u_char               *last;
     u_char               *end;
     ngx_pool_t           *next;
@@ -54,7 +54,7 @@ typedef struct {
 } ngx_pool_data_t;
 
 
-struct ngx_pool_s {
+ഘടന ngx_pool_s {
     ngx_pool_data_t       d;
     size_t                max;
     ngx_pool_t           *current;
@@ -65,7 +65,7 @@ struct ngx_pool_s {
 };
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     ngx_fd_t              fd;
     u_char               *name;
     ngx_log_t            *log;
@@ -73,20 +73,20 @@ typedef struct {
 
 
 ngx_pool_t *ngx_create_pool(size_t size, ngx_log_t *log);
-void ngx_destroy_pool(ngx_pool_t *pool);
-void ngx_reset_pool(ngx_pool_t *pool);
+ശൂന്യം ngx_destroy_pool(ngx_pool_t *pool);
+ശൂന്യം ngx_reset_pool(ngx_pool_t *pool);
 
-void *ngx_palloc(ngx_pool_t *pool, size_t size);
-void *ngx_pnalloc(ngx_pool_t *pool, size_t size);
-void *ngx_pcalloc(ngx_pool_t *pool, size_t size);
-void *ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment);
-ngx_int_t ngx_pfree(ngx_pool_t *pool, void *p);
+ശൂന്യം *ngx_palloc(ngx_pool_t *pool, size_t size);
+ശൂന്യം *ngx_pnalloc(ngx_pool_t *pool, size_t size);
+ശൂന്യം *ngx_pcalloc(ngx_pool_t *pool, size_t size);
+ശൂന്യം *ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment);
+ngx_int_t ngx_pfree(ngx_pool_t *pool, ശൂന്യം *p);
 
 
 ngx_pool_cleanup_t *ngx_pool_cleanup_add(ngx_pool_t *p, size_t size);
-void ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd);
-void ngx_pool_cleanup_file(void *data);
-void ngx_pool_delete_file(void *data);
+ശൂന്യം ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd);
+ശൂന്യം ngx_pool_cleanup_file(ശൂന്യം *data);
+ശൂന്യം ngx_pool_delete_file(ശൂന്യം *data);
 
 
 #endif /* _NGX_PALLOC_H_INCLUDED_ */

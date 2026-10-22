@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 
 #define NGX_PROXY_PROTOCOL_V2_MAX_HEADER    52
@@ -31,7 +31,7 @@
 #define NGX_PROXY_PROTOCOL_TLV_SSL_CN       0x22
 #define NGX_PROXY_PROTOCOL_TLV_SSL_CIPHER   0x23
 #define NGX_PROXY_PROTOCOL_TLV_SSL_SIG_ALG  0x24
-#define NGX_PROXY_PROTOCOL_TLV_SSL_KEY_ALG  0x25
+#define NGX_PROXY_PROTOCOL_TLV_SSL_താക്കോൽ_ALG  0x25
 #define NGX_PROXY_PROTOCOL_TLV_NETNS        0x30
 
 #define NGX_PROXY_PROTOCOL_V2_CLIENT_SSL          0x01
@@ -50,7 +50,7 @@
     + (           (p)[3]) )
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     u_char                                  signature[12];
     u_char                                  version_command;
     u_char                                  family_transport;
@@ -58,7 +58,7 @@ typedef struct {
 } ngx_proxy_protocol_header_t;
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     u_char                                  src_addr[4];
     u_char                                  dst_addr[4];
     u_char                                  src_port[2];
@@ -66,7 +66,7 @@ typedef struct {
 } ngx_proxy_protocol_inet_addrs_t;
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     u_char                                  src_addr[16];
     u_char                                  dst_addr[16];
     u_char                                  src_port[2];
@@ -74,66 +74,66 @@ typedef struct {
 } ngx_proxy_protocol_inet6_addrs_t;
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     u_char                                  type;
     u_char                                  len[2];
 } ngx_proxy_protocol_tlv_t;
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     u_char                                  client;
     u_char                                  verify[4];
 } ngx_proxy_protocol_tlv_ssl_t;
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     ngx_str_t                               name;
     ngx_uint_t                              type;
 } ngx_proxy_protocol_tlv_entry_t;
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     ngx_uint_t                              type;
-    ngx_str_t                               value;
-} ngx_proxy_protocol_tlv_value_t;
+    ngx_str_t                               മൂല്യം;
+} ngx_proxy_protocol_tlv_മൂല്യം_t;
 
 
-static u_char *ngx_proxy_protocol_read_addr(ngx_connection_t *c, u_char *p,
+സ്ഥിതം u_char *ngx_proxy_protocol_read_addr(ngx_connection_t *c, u_char *p,
     u_char *last, ngx_str_t *addr);
-static u_char *ngx_proxy_protocol_read_port(u_char *p, u_char *last,
+സ്ഥിതം u_char *ngx_proxy_protocol_read_port(u_char *p, u_char *last,
     in_port_t *port, u_char sep);
-static u_char *ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf,
+സ്ഥിതം u_char *ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf,
     u_char *last);
-static ngx_int_t ngx_proxy_protocol_lookup_tlv(ngx_connection_t *c,
-    ngx_str_t *tlvs, ngx_uint_t type, ngx_str_t *value);
-#if (NGX_OPENSSL)
-static ngx_int_t ngx_proxy_protocol_v2_eval_ssl(ngx_connection_t *c,
+സ്ഥിതം ngx_int_t ngx_proxy_protocol_lookup_tlv(ngx_connection_t *c,
+    ngx_str_t *tlvs, ngx_uint_t type, ngx_str_t *മൂല്യം);
+#എങ്കിൽ (NGX_OPENSSL)
+സ്ഥിതം ngx_int_t ngx_proxy_protocol_v2_eval_ssl(ngx_connection_t *c,
     ngx_array_t *tlvs, ngx_array_t *ssl_tlvs, ngx_uint_t *client,
     uint32_t *verify);
-static ngx_int_t ngx_proxy_protocol_v2_authority(ngx_connection_t *c,
+സ്ഥിതം ngx_int_t ngx_proxy_protocol_v2_authority(ngx_connection_t *c,
     ngx_str_t *out);
-static ngx_int_t ngx_proxy_protocol_v2_alpn(ngx_connection_t *c,
+സ്ഥിതം ngx_int_t ngx_proxy_protocol_v2_alpn(ngx_connection_t *c,
     ngx_str_t *out);
-static ngx_int_t ngx_proxy_protocol_v2_ssl_sub(ngx_connection_t *c,
+സ്ഥിതം ngx_int_t ngx_proxy_protocol_v2_ssl_sub(ngx_connection_t *c,
     ngx_uint_t type, ngx_str_t *out);
 #endif
-static u_char *ngx_proxy_protocol_v2_write_header(ngx_connection_t *c,
+സ്ഥിതം u_char *ngx_proxy_protocol_v2_write_header(ngx_connection_t *c,
     u_char *buf, u_char *last);
-static u_char ngx_proxy_protocol_v2_family(ngx_uint_t family);
-static void ngx_proxy_protocol_v2_write_ipv4(struct sockaddr *sa, u_char *addr,
+സ്ഥിതം u_char ngx_proxy_protocol_v2_family(ngx_uint_t family);
+സ്ഥിതം ശൂന്യം ngx_proxy_protocol_v2_write_ipv4(ഘടന sockaddr *sa, u_char *addr,
     u_char *port);
-static void ngx_proxy_protocol_v2_write_ipv6(struct sockaddr *sa, u_char *addr,
+സ്ഥിതം ശൂന്യം ngx_proxy_protocol_v2_write_ipv6(ഘടന sockaddr *sa, u_char *addr,
     u_char *port);
-static u_char *ngx_proxy_protocol_v2_write_tlv(ngx_connection_t *c, u_char *p,
-    u_char *last, ngx_uint_t type, ngx_str_t *value);
-static u_char *ngx_proxy_protocol_v2_write_ssl(ngx_connection_t *c, u_char *p,
+സ്ഥിതം u_char *ngx_proxy_protocol_v2_write_tlv(ngx_connection_t *c, u_char *p,
+    u_char *last, ngx_uint_t type, ngx_str_t *മൂല്യം);
+സ്ഥിതം u_char *ngx_proxy_protocol_v2_write_ssl(ngx_connection_t *c, u_char *p,
     u_char *last, ngx_array_t *ssl_tlvs, ngx_uint_t client, uint32_t verify);
-static void ngx_proxy_protocol_v2_set_len(u_char *buf, u_char *p);
-static u_char *ngx_proxy_protocol_v2_write_crc32c(ngx_connection_t *c,
+സ്ഥിതം ശൂന്യം ngx_proxy_protocol_v2_set_len(u_char *buf, u_char *p);
+സ്ഥിതം u_char *ngx_proxy_protocol_v2_write_crc32c(ngx_connection_t *c,
     u_char *buf, u_char *p, u_char *last);
 
 
-static ngx_proxy_protocol_tlv_entry_t  ngx_proxy_protocol_tlv_entries[] = {
+സ്ഥിതം ngx_proxy_protocol_tlv_entry_t  ngx_proxy_protocol_tlv_entries[] = {
     { ngx_string("alpn"),       NGX_PROXY_PROTOCOL_TLV_ALPN },
     { ngx_string("authority"),  NGX_PROXY_PROTOCOL_TLV_AUTHORITY },
     { ngx_string("unique_id"),  NGX_PROXY_PROTOCOL_TLV_UNIQUE_ID },
@@ -143,17 +143,17 @@ static ngx_proxy_protocol_tlv_entry_t  ngx_proxy_protocol_tlv_entries[] = {
 };
 
 
-static ngx_proxy_protocol_tlv_entry_t  ngx_proxy_protocol_tlv_ssl_entries[] = {
+സ്ഥിതം ngx_proxy_protocol_tlv_entry_t  ngx_proxy_protocol_tlv_ssl_entries[] = {
     { ngx_string("version"),    NGX_PROXY_PROTOCOL_TLV_SSL_VERSION },
     { ngx_string("cn"),         NGX_PROXY_PROTOCOL_TLV_SSL_CN },
     { ngx_string("cipher"),     NGX_PROXY_PROTOCOL_TLV_SSL_CIPHER },
     { ngx_string("sig_alg"),    NGX_PROXY_PROTOCOL_TLV_SSL_SIG_ALG },
-    { ngx_string("key_alg"),    NGX_PROXY_PROTOCOL_TLV_SSL_KEY_ALG },
+    { ngx_string("key_alg"),    NGX_PROXY_PROTOCOL_TLV_SSL_താക്കോൽ_ALG },
     { ngx_null_string,          0x00 }
 };
 
 
-static const u_char  ngx_proxy_protocol_signature[] = "\r\n\r\n\0\r\nQUIT\n";
+സ്ഥിതം സ്ഥിരം u_char  ngx_proxy_protocol_signature[] = "\r\n\r\n\0\r\nQUIT\n";
 
 
 u_char *
@@ -166,67 +166,67 @@ ngx_proxy_protocol_read(ngx_connection_t *c, u_char *buf, u_char *last)
     p = buf;
     len = last - buf;
 
-    if (len >= sizeof(ngx_proxy_protocol_header_t)
+    എങ്കിൽ (len >= വലുപ്പം(ngx_proxy_protocol_header_t)
         && ngx_memcmp(p, ngx_proxy_protocol_signature,
-                      sizeof(ngx_proxy_protocol_signature) - 1)
+                      വലുപ്പം(ngx_proxy_protocol_signature) - 1)
            == 0)
     {
-        return ngx_proxy_protocol_v2_read(c, buf, last);
+        തിരികെ ngx_proxy_protocol_v2_read(c, buf, last);
     }
 
-    if (len < 8 || ngx_strncmp(p, "PROXY ", 6) != 0) {
-        goto invalid;
+    എങ്കിൽ (len < 8 || ngx_strncmp(p, "PROXY ", 6) != 0) {
+        പോകുക invalid;
     }
 
     p += 6;
     len -= 6;
 
-    if (len >= 7 && ngx_strncmp(p, "UNKNOWN", 7) == 0) {
+    എങ്കിൽ (len >= 7 && ngx_strncmp(p, "UNKNOWN", 7) == 0) {
         ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->log, 0,
                        "PROXY protocol unknown protocol");
         p += 7;
-        goto skip;
+        പോകുക skip;
     }
 
-    if (len < 5 || ngx_strncmp(p, "TCP", 3) != 0
+    എങ്കിൽ (len < 5 || ngx_strncmp(p, "TCP", 3) != 0
         || (p[3] != '4' && p[3] != '6') || p[4] != ' ')
     {
-        goto invalid;
+        പോകുക invalid;
     }
 
     p += 5;
 
-    pp = ngx_pcalloc(c->pool, sizeof(ngx_proxy_protocol_t));
-    if (pp == NULL) {
-        return NULL;
+    pp = ngx_pcalloc(c->pool, വലുപ്പം(ngx_proxy_protocol_t));
+    എങ്കിൽ (pp == ശൂന്യ) {
+        തിരികെ ശൂന്യ;
     }
 
     p = ngx_proxy_protocol_read_addr(c, p, last, &pp->src_addr);
-    if (p == NULL) {
-        goto invalid;
+    എങ്കിൽ (p == ശൂന്യ) {
+        പോകുക invalid;
     }
 
     p = ngx_proxy_protocol_read_addr(c, p, last, &pp->dst_addr);
-    if (p == NULL) {
-        goto invalid;
+    എങ്കിൽ (p == ശൂന്യ) {
+        പോകുക invalid;
     }
 
     p = ngx_proxy_protocol_read_port(p, last, &pp->src_port, ' ');
-    if (p == NULL) {
-        goto invalid;
+    എങ്കിൽ (p == ശൂന്യ) {
+        പോകുക invalid;
     }
 
     p = ngx_proxy_protocol_read_port(p, last, &pp->dst_port, CR);
-    if (p == NULL) {
-        goto invalid;
+    എങ്കിൽ (p == ശൂന്യ) {
+        പോകുക invalid;
     }
 
-    if (p == last) {
-        goto invalid;
+    എങ്കിൽ (p == last) {
+        പോകുക invalid;
     }
 
-    if (*p++ != LF) {
-        goto invalid;
+    എങ്കിൽ (*p++ != LF) {
+        പോകുക invalid;
     }
 
     ngx_log_debug4(NGX_LOG_DEBUG_CORE, c->log, 0,
@@ -235,32 +235,32 @@ ngx_proxy_protocol_read(ngx_connection_t *c, u_char *buf, u_char *last)
 
     c->proxy_protocol = pp;
 
-    return p;
+    തിരികെ p;
 
 skip:
 
-    for ( /* void */ ; p < last - 1; p++) {
-        if (p[0] == CR && p[1] == LF) {
-            return p + 2;
+    വേണ്ടി ( /* void */ ; p < last - 1; p++) {
+        എങ്കിൽ (p[0] == CR && p[1] == LF) {
+            തിരികെ p + 2;
         }
     }
 
 invalid:
 
-    for (p = buf; p < last; p++) {
-        if (*p == CR || *p == LF) {
-            break;
+    വേണ്ടി (p = buf; p < last; p++) {
+        എങ്കിൽ (*p == CR || *p == LF) {
+            നിർത്തുക;
         }
     }
 
     ngx_log_error(NGX_LOG_ERR, c->log, 0,
                   "broken header: \"%*s\"", (size_t) (p - buf), buf);
 
-    return NULL;
+    തിരികെ ശൂന്യ;
 }
 
 
-static u_char *
+സ്ഥിതം u_char *
 ngx_proxy_protocol_read_addr(ngx_connection_t *c, u_char *p, u_char *last,
     ngx_str_t *addr)
 {
@@ -269,41 +269,41 @@ ngx_proxy_protocol_read_addr(ngx_connection_t *c, u_char *p, u_char *last,
 
     pos = p;
 
-    for ( ;; ) {
-        if (p == last) {
-            return NULL;
+    വേണ്ടി ( ;; ) {
+        എങ്കിൽ (p == last) {
+            തിരികെ ശൂന്യ;
         }
 
         ch = *p++;
 
-        if (ch == ' ') {
-            break;
+        എങ്കിൽ (ch == ' ') {
+            നിർത്തുക;
         }
 
-        if (ch != ':' && ch != '.'
+        എങ്കിൽ (ch != ':' && ch != '.'
             && (ch < 'a' || ch > 'f')
             && (ch < 'A' || ch > 'F')
             && (ch < '0' || ch > '9'))
         {
-            return NULL;
+            തിരികെ ശൂന്യ;
         }
     }
 
     len = p - pos - 1;
 
     addr->data = ngx_pnalloc(c->pool, len);
-    if (addr->data == NULL) {
-        return NULL;
+    എങ്കിൽ (addr->data == ശൂന്യ) {
+        തിരികെ ശൂന്യ;
     }
 
     ngx_memcpy(addr->data, pos, len);
     addr->len = len;
 
-    return p;
+    തിരികെ p;
 }
 
 
-static u_char *
+സ്ഥിതം u_char *
 ngx_proxy_protocol_read_port(u_char *p, u_char *last, in_port_t *port,
     u_char sep)
 {
@@ -313,26 +313,26 @@ ngx_proxy_protocol_read_port(u_char *p, u_char *last, in_port_t *port,
 
     pos = p;
 
-    for ( ;; ) {
-        if (p == last) {
-            return NULL;
+    വേണ്ടി ( ;; ) {
+        എങ്കിൽ (p == last) {
+            തിരികെ ശൂന്യ;
         }
 
-        if (*p++ == sep) {
-            break;
+        എങ്കിൽ (*p++ == sep) {
+            നിർത്തുക;
         }
     }
 
     len = p - pos - 1;
 
     n = ngx_atoi(pos, len);
-    if (n < 0 || n > 65535) {
-        return NULL;
+    എങ്കിൽ (n < 0 || n > 65535) {
+        തിരികെ ശൂന്യ;
     }
 
     *port = (in_port_t) n;
 
-    return p;
+    തിരികെ p;
 }
 
 
@@ -341,31 +341,31 @@ ngx_proxy_protocol_write(ngx_connection_t *c, u_char *buf, u_char *last)
 {
     ngx_uint_t  port, lport;
 
-    if (last - buf < NGX_PROXY_PROTOCOL_V1_MAX_HEADER) {
+    എങ്കിൽ (last - buf < NGX_PROXY_PROTOCOL_V1_MAX_HEADER) {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0,
                       "too small buffer for PROXY protocol");
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
-    if (ngx_connection_local_sockaddr(c, NULL, 0) != NGX_OK) {
-        return NULL;
+    എങ്കിൽ (ngx_connection_local_sockaddr(c, ശൂന്യ, 0) != NGX_OK) {
+        തിരികെ ശൂന്യ;
     }
 
-    switch (c->sockaddr->sa_family) {
+    തിരഞ്ഞെടുപ്പ് (c->sockaddr->sa_family) {
 
-    case AF_INET:
-        buf = ngx_cpymem(buf, "PROXY TCP4 ", sizeof("PROXY TCP4 ") - 1);
-        break;
+    അവസ്ഥ AF_INET:
+        buf = ngx_cpymem(buf, "PROXY TCP4 ", വലുപ്പം("PROXY TCP4 ") - 1);
+        നിർത്തുക;
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        buf = ngx_cpymem(buf, "PROXY TCP6 ", sizeof("PROXY TCP6 ") - 1);
-        break;
+#എങ്കിൽ (NGX_HAVE_INET6)
+    അവസ്ഥ AF_INET6:
+        buf = ngx_cpymem(buf, "PROXY TCP6 ", വലുപ്പം("PROXY TCP6 ") - 1);
+        നിർത്തുക;
 #endif
 
-    default:
-        return ngx_cpymem(buf, "PROXY UNKNOWN" CRLF,
-                          sizeof("PROXY UNKNOWN" CRLF) - 1);
+    സ്ഥിരസ്ഥിതി:
+        തിരികെ ngx_cpymem(buf, "PROXY UNKNOWN" CRLF,
+                          വലുപ്പം("PROXY UNKNOWN" CRLF) - 1);
     }
 
     buf += ngx_sock_ntop(c->sockaddr, c->socklen, buf, last - buf, 0);
@@ -378,11 +378,11 @@ ngx_proxy_protocol_write(ngx_connection_t *c, u_char *buf, u_char *last)
     port = ngx_inet_get_port(c->sockaddr);
     lport = ngx_inet_get_port(c->local_sockaddr);
 
-    return ngx_slprintf(buf, last, " %ui %ui" CRLF, port, lport);
+    തിരികെ ngx_slprintf(buf, last, " %ui %ui" CRLF, port, lport);
 }
 
 
-static u_char *
+സ്ഥിതം u_char *
 ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
 {
     u_char                             *end;
@@ -393,27 +393,27 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
     ngx_proxy_protocol_t               *pp;
     ngx_proxy_protocol_header_t        *header;
     ngx_proxy_protocol_inet_addrs_t    *in;
-#if (NGX_HAVE_INET6)
+#എങ്കിൽ (NGX_HAVE_INET6)
     ngx_proxy_protocol_inet6_addrs_t   *in6;
 #endif
 
     header = (ngx_proxy_protocol_header_t *) buf;
 
-    buf += sizeof(ngx_proxy_protocol_header_t);
+    buf += വലുപ്പം(ngx_proxy_protocol_header_t);
 
     version = header->version_command >> 4;
 
-    if (version != 2) {
+    എങ്കിൽ (version != 2) {
         ngx_log_error(NGX_LOG_ERR, c->log, 0,
                       "unknown PROXY protocol version: %ui", version);
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
     len = ngx_proxy_protocol_parse_uint16(header->len);
 
-    if ((size_t) (last - buf) < len) {
+    എങ്കിൽ ((size_t) (last - buf) < len) {
         ngx_log_error(NGX_LOG_ERR, c->log, 0, "header is too large");
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
     end = buf + len;
@@ -421,35 +421,35 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
     command = header->version_command & 0x0f;
 
     /* only PROXY is supported */
-    if (command != NGX_PROXY_PROTOCOL_CMD_PROXY) {
+    എങ്കിൽ (command != NGX_PROXY_PROTOCOL_CMD_PROXY) {
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
                        "PROXY protocol v2 unsupported command %ui", command);
-        return end;
+        തിരികെ end;
     }
 
     transport = header->family_transport & 0x0f;
 
     /* only STREAM is supported */
-    if (transport != NGX_PROXY_PROTOCOL_TYPE_STREAM) {
+    എങ്കിൽ (transport != NGX_PROXY_PROTOCOL_TYPE_STREAM) {
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
                        "PROXY protocol v2 unsupported transport %ui",
                        transport);
-        return end;
+        തിരികെ end;
     }
 
-    pp = ngx_pcalloc(c->pool, sizeof(ngx_proxy_protocol_t));
-    if (pp == NULL) {
-        return NULL;
+    pp = ngx_pcalloc(c->pool, വലുപ്പം(ngx_proxy_protocol_t));
+    എങ്കിൽ (pp == ശൂന്യ) {
+        തിരികെ ശൂന്യ;
     }
 
     family = header->family_transport >> 4;
 
-    switch (family) {
+    തിരഞ്ഞെടുപ്പ് (family) {
 
-    case NGX_PROXY_PROTOCOL_AF_INET:
+    അവസ്ഥ NGX_PROXY_PROTOCOL_AF_INET:
 
-        if ((size_t) (end - buf) < sizeof(ngx_proxy_protocol_inet_addrs_t)) {
-            return NULL;
+        എങ്കിൽ ((size_t) (end - buf) < വലുപ്പം(ngx_proxy_protocol_inet_addrs_t)) {
+            തിരികെ ശൂന്യ;
         }
 
         in = (ngx_proxy_protocol_inet_addrs_t *) buf;
@@ -465,18 +465,18 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
         pp->src_port = ngx_proxy_protocol_parse_uint16(in->src_port);
         pp->dst_port = ngx_proxy_protocol_parse_uint16(in->dst_port);
 
-        socklen = sizeof(struct sockaddr_in);
+        socklen = വലുപ്പം(ഘടന sockaddr_in);
 
-        buf += sizeof(ngx_proxy_protocol_inet_addrs_t);
+        buf += വലുപ്പം(ngx_proxy_protocol_inet_addrs_t);
 
-        break;
+        നിർത്തുക;
 
-#if (NGX_HAVE_INET6)
+#എങ്കിൽ (NGX_HAVE_INET6)
 
-    case NGX_PROXY_PROTOCOL_AF_INET6:
+    അവസ്ഥ NGX_PROXY_PROTOCOL_AF_INET6:
 
-        if ((size_t) (end - buf) < sizeof(ngx_proxy_protocol_inet6_addrs_t)) {
-            return NULL;
+        എങ്കിൽ ((size_t) (end - buf) < വലുപ്പം(ngx_proxy_protocol_inet6_addrs_t)) {
+            തിരികെ ശൂന്യ;
         }
 
         in6 = (ngx_proxy_protocol_inet6_addrs_t *) buf;
@@ -492,32 +492,32 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
         pp->src_port = ngx_proxy_protocol_parse_uint16(in6->src_port);
         pp->dst_port = ngx_proxy_protocol_parse_uint16(in6->dst_port);
 
-        socklen = sizeof(struct sockaddr_in6);
+        socklen = വലുപ്പം(ഘടന sockaddr_in6);
 
-        buf += sizeof(ngx_proxy_protocol_inet6_addrs_t);
+        buf += വലുപ്പം(ngx_proxy_protocol_inet6_addrs_t);
 
-        break;
+        നിർത്തുക;
 
 #endif
 
-    default:
+    സ്ഥിരസ്ഥിതി:
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
                        "PROXY protocol v2 unsupported address family %ui",
                        family);
-        return end;
+        തിരികെ end;
     }
 
     pp->src_addr.data = ngx_pnalloc(c->pool, NGX_SOCKADDR_STRLEN);
-    if (pp->src_addr.data == NULL) {
-        return NULL;
+    എങ്കിൽ (pp->src_addr.data == ശൂന്യ) {
+        തിരികെ ശൂന്യ;
     }
 
     pp->src_addr.len = ngx_sock_ntop(&src_sockaddr.sockaddr, socklen,
                                      pp->src_addr.data, NGX_SOCKADDR_STRLEN, 0);
 
     pp->dst_addr.data = ngx_pnalloc(c->pool, NGX_SOCKADDR_STRLEN);
-    if (pp->dst_addr.data == NULL) {
-        return NULL;
+    എങ്കിൽ (pp->dst_addr.data == ശൂന്യ) {
+        തിരികെ ശൂന്യ;
     }
 
     pp->dst_addr.len = ngx_sock_ntop(&dst_sockaddr.sockaddr, socklen,
@@ -527,10 +527,10 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
                    "PROXY protocol v2 src: %V %d, dst: %V %d",
                    &pp->src_addr, pp->src_port, &pp->dst_addr, pp->dst_port);
 
-    if (buf < end) {
+    എങ്കിൽ (buf < end) {
         pp->tlvs.data = ngx_pnalloc(c->pool, end - buf);
-        if (pp->tlvs.data == NULL) {
-            return NULL;
+        എങ്കിൽ (pp->tlvs.data == ശൂന്യ) {
+            തിരികെ ശൂന്യ;
         }
 
         ngx_memcpy(pp->tlvs.data, buf, end - buf);
@@ -539,13 +539,13 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
 
     c->proxy_protocol = pp;
 
-    return end;
+    തിരികെ end;
 }
 
 
 ngx_int_t
 ngx_proxy_protocol_get_tlv(ngx_connection_t *c, ngx_str_t *name,
-    ngx_str_t *value)
+    ngx_str_t *മൂല്യം)
 {
     u_char                          *p;
     size_t                           n;
@@ -555,8 +555,8 @@ ngx_proxy_protocol_get_tlv(ngx_connection_t *c, ngx_str_t *name,
     ngx_proxy_protocol_tlv_ssl_t    *tlv_ssl;
     ngx_proxy_protocol_tlv_entry_t  *te;
 
-    if (c->proxy_protocol == NULL) {
-        return NGX_DECLINED;
+    എങ്കിൽ (c->proxy_protocol == ശൂന്യ) {
+        തിരികെ NGX_DECLINED;
     }
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
@@ -568,71 +568,71 @@ ngx_proxy_protocol_get_tlv(ngx_connection_t *c, ngx_str_t *name,
     p = name->data;
     n = name->len;
 
-    if (n >= 4 && p[0] == 's' && p[1] == 's' && p[2] == 'l' && p[3] == '_') {
+    എങ്കിൽ (n >= 4 && p[0] == 's' && p[1] == 's' && p[2] == 'l' && p[3] == '_') {
 
         rc = ngx_proxy_protocol_lookup_tlv(c, tlvs,
                                            NGX_PROXY_PROTOCOL_TLV_SSL, &ssl);
-        if (rc != NGX_OK) {
-            return rc;
+        എങ്കിൽ (rc != NGX_OK) {
+            തിരികെ rc;
         }
 
-        if (ssl.len < sizeof(ngx_proxy_protocol_tlv_ssl_t)) {
-            return NGX_ERROR;
+        എങ്കിൽ (ssl.len < വലുപ്പം(ngx_proxy_protocol_tlv_ssl_t)) {
+            തിരികെ NGX_ERROR;
         }
 
         p += 4;
         n -= 4;
 
-        if (n == 6 && ngx_strncmp(p, "verify", 6) == 0) {
+        എങ്കിൽ (n == 6 && ngx_strncmp(p, "verify", 6) == 0) {
 
             tlv_ssl = (ngx_proxy_protocol_tlv_ssl_t *) ssl.data;
             verify = ngx_proxy_protocol_parse_uint32(tlv_ssl->verify);
 
-            value->data = ngx_pnalloc(c->pool, NGX_INT32_LEN);
-            if (value->data == NULL) {
-                return NGX_ERROR;
+            മൂല്യം->data = ngx_pnalloc(c->pool, NGX_INT32_LEN);
+            എങ്കിൽ (മൂല്യം->data == ശൂന്യ) {
+                തിരികെ NGX_ERROR;
             }
 
-            value->len = ngx_sprintf(value->data, "%uD", verify)
-                         - value->data;
-            return NGX_OK;
+            മൂല്യം->len = ngx_sprintf(മൂല്യം->data, "%uD", verify)
+                         - മൂല്യം->data;
+            തിരികെ NGX_OK;
         }
 
-        ssl.data += sizeof(ngx_proxy_protocol_tlv_ssl_t);
-        ssl.len -= sizeof(ngx_proxy_protocol_tlv_ssl_t);
+        ssl.data += വലുപ്പം(ngx_proxy_protocol_tlv_ssl_t);
+        ssl.len -= വലുപ്പം(ngx_proxy_protocol_tlv_ssl_t);
 
         te = ngx_proxy_protocol_tlv_ssl_entries;
         tlvs = &ssl;
     }
 
-    if (n >= 2 && p[0] == '0' && p[1] == 'x') {
+    എങ്കിൽ (n >= 2 && p[0] == '0' && p[1] == 'x') {
 
         type = ngx_hextoi(p + 2, n - 2);
-        if (type == NGX_ERROR) {
+        എങ്കിൽ (type == NGX_ERROR) {
             ngx_log_error(NGX_LOG_ERR, c->log, 0,
                           "invalid PROXY protocol TLV \"%V\"", name);
-            return NGX_ERROR;
+            തിരികെ NGX_ERROR;
         }
 
-        return ngx_proxy_protocol_lookup_tlv(c, tlvs, type, value);
+        തിരികെ ngx_proxy_protocol_lookup_tlv(c, tlvs, type, മൂല്യം);
     }
 
-    for ( /* void */ ; te->type; te++) {
-        if (te->name.len == n && ngx_strncmp(te->name.data, p, n) == 0) {
-            return ngx_proxy_protocol_lookup_tlv(c, tlvs, te->type, value);
+    വേണ്ടി ( /* void */ ; te->type; te++) {
+        എങ്കിൽ (te->name.len == n && ngx_strncmp(te->name.data, p, n) == 0) {
+            തിരികെ ngx_proxy_protocol_lookup_tlv(c, tlvs, te->type, മൂല്യം);
         }
     }
 
     ngx_log_error(NGX_LOG_ERR, c->log, 0,
                   "unknown PROXY protocol TLV \"%V\"", name);
 
-    return NGX_DECLINED;
+    തിരികെ NGX_DECLINED;
 }
 
 
-static ngx_int_t
+സ്ഥിതം ngx_int_t
 ngx_proxy_protocol_lookup_tlv(ngx_connection_t *c, ngx_str_t *tlvs,
-    ngx_uint_t type, ngx_str_t *value)
+    ngx_uint_t type, ngx_str_t *മൂല്യം)
 {
     u_char                    *p;
     size_t                     n, len;
@@ -644,34 +644,34 @@ ngx_proxy_protocol_lookup_tlv(ngx_connection_t *c, ngx_str_t *tlvs,
     p = tlvs->data;
     n = tlvs->len;
 
-    while (n) {
-        if (n < sizeof(ngx_proxy_protocol_tlv_t)) {
+    ആകുമ്പോൾ (n) {
+        എങ്കിൽ (n < വലുപ്പം(ngx_proxy_protocol_tlv_t)) {
             ngx_log_error(NGX_LOG_ERR, c->log, 0, "broken PROXY protocol TLV");
-            return NGX_ERROR;
+            തിരികെ NGX_ERROR;
         }
 
         tlv = (ngx_proxy_protocol_tlv_t *) p;
         len = ngx_proxy_protocol_parse_uint16(tlv->len);
 
-        p += sizeof(ngx_proxy_protocol_tlv_t);
-        n -= sizeof(ngx_proxy_protocol_tlv_t);
+        p += വലുപ്പം(ngx_proxy_protocol_tlv_t);
+        n -= വലുപ്പം(ngx_proxy_protocol_tlv_t);
 
-        if (n < len) {
+        എങ്കിൽ (n < len) {
             ngx_log_error(NGX_LOG_ERR, c->log, 0, "broken PROXY protocol TLV");
-            return NGX_ERROR;
+            തിരികെ NGX_ERROR;
         }
 
-        if (tlv->type == type) {
-            value->data = p;
-            value->len = len;
-            return NGX_OK;
+        എങ്കിൽ (tlv->type == type) {
+            മൂല്യം->data = p;
+            മൂല്യം->len = len;
+            തിരികെ NGX_OK;
         }
 
         p += len;
         n -= len;
     }
 
-    return NGX_DECLINED;
+    തിരികെ NGX_DECLINED;
 }
 
 
@@ -683,126 +683,126 @@ ngx_proxy_protocol_v2_write(ngx_connection_t *c, u_char *buf, u_char *last,
     uint32_t                         verify;
     ngx_uint_t                       i, client;
     ngx_array_t                      base_tlvs, ssl_tlvs;
-    ngx_proxy_protocol_tlv_value_t  *tlv;
+    ngx_proxy_protocol_tlv_മൂല്യം_t  *tlv;
 
     client = 0;
     verify = 0;
 
-    ngx_memzero(&base_tlvs, sizeof(ngx_array_t));
-    ngx_memzero(&ssl_tlvs, sizeof(ngx_array_t));
+    ngx_memzero(&base_tlvs, വലുപ്പം(ngx_array_t));
+    ngx_memzero(&ssl_tlvs, വലുപ്പം(ngx_array_t));
 
-#if (NGX_OPENSSL)
+#എങ്കിൽ (NGX_OPENSSL)
 
-    if (c->ssl != NULL) {
-        if (ngx_array_init(&base_tlvs, c->pool, 2,
-                           sizeof(ngx_proxy_protocol_tlv_value_t))
+    എങ്കിൽ (c->ssl != ശൂന്യ) {
+        എങ്കിൽ (ngx_array_init(&base_tlvs, c->pool, 2,
+                           വലുപ്പം(ngx_proxy_protocol_tlv_മൂല്യം_t))
             != NGX_OK)
         {
-            return NULL;
+            തിരികെ ശൂന്യ;
         }
 
-        if (ngx_array_init(&ssl_tlvs, c->pool, 5,
-                           sizeof(ngx_proxy_protocol_tlv_value_t))
+        എങ്കിൽ (ngx_array_init(&ssl_tlvs, c->pool, 5,
+                           വലുപ്പം(ngx_proxy_protocol_tlv_മൂല്യം_t))
             != NGX_OK)
         {
-            return NULL;
+            തിരികെ ശൂന്യ;
         }
 
-        if (ngx_proxy_protocol_v2_eval_ssl(c, &base_tlvs, &ssl_tlvs, &client,
+        എങ്കിൽ (ngx_proxy_protocol_v2_eval_ssl(c, &base_tlvs, &ssl_tlvs, &client,
                                            &verify)
             != NGX_OK)
         {
-            return NULL;
+            തിരികെ ശൂന്യ;
         }
     }
 
 #endif
 
     p = ngx_proxy_protocol_v2_write_header(c, buf, last);
-    if (p == NULL) {
-        return NULL;
+    എങ്കിൽ (p == ശൂന്യ) {
+        തിരികെ ശൂന്യ;
     }
 
     tlv = base_tlvs.elts;
 
-    for (i = 0; i < base_tlvs.nelts; i++) {
+    വേണ്ടി (i = 0; i < base_tlvs.nelts; i++) {
         p = ngx_proxy_protocol_v2_write_tlv(c, p, last, tlv[i].type,
-                                           &tlv[i].value);
-        if (p == NULL) {
-            return NULL;
+                                           &tlv[i].മൂല്യം);
+        എങ്കിൽ (p == ശൂന്യ) {
+            തിരികെ ശൂന്യ;
         }
     }
 
-    if (client) {
+    എങ്കിൽ (client) {
         p = ngx_proxy_protocol_v2_write_ssl(c, p, last, &ssl_tlvs, client,
                                             verify);
-        if (p == NULL) {
-            return NULL;
+        എങ്കിൽ (p == ശൂന്യ) {
+            തിരികെ ശൂന്യ;
         }
     }
 
     ngx_proxy_protocol_v2_set_len(buf,
-                                  p + sizeof(ngx_proxy_protocol_tlv_t) + 4);
+                                  p + വലുപ്പം(ngx_proxy_protocol_tlv_t) + 4);
 
-    return ngx_proxy_protocol_v2_write_crc32c(c, buf, p, last);
+    തിരികെ ngx_proxy_protocol_v2_write_crc32c(c, buf, p, last);
 }
 
 
-#if (NGX_OPENSSL)
+#എങ്കിൽ (NGX_OPENSSL)
 
-static ngx_int_t
+സ്ഥിതം ngx_int_t
 ngx_proxy_protocol_v2_eval_ssl(ngx_connection_t *c, ngx_array_t *tlvs,
     ngx_array_t *ssl_tlvs, ngx_uint_t *client, uint32_t *verify)
 {
     X509                            *cert;
     long                             n;
     ngx_int_t                        rc;
-    ngx_str_t                        value;
+    ngx_str_t                        മൂല്യം;
     ngx_uint_t                       type;
-    const char                      *s;
-    ngx_proxy_protocol_tlv_value_t  *tlv;
+    സ്ഥിരം അക്ഷരം                      *s;
+    ngx_proxy_protocol_tlv_മൂല്യം_t  *tlv;
 
-    if (ngx_proxy_protocol_v2_authority(c, &value) == NGX_OK) {
-        tlv = ngx_array_push(tlvs);
-        if (tlv == NULL) {
-            return NGX_ERROR;
+    എങ്കിൽ (ngx_proxy_protocol_v2_authority(c, &മൂല്യം) == NGX_OK) {
+        tlv = ngx_array_തള്ളുക(tlvs);
+        എങ്കിൽ (tlv == ശൂന്യ) {
+            തിരികെ NGX_ERROR;
         }
 
         tlv->type = NGX_PROXY_PROTOCOL_TLV_AUTHORITY;
-        tlv->value = value;
+        tlv->മൂല്യം = മൂല്യം;
     }
 
-    if (ngx_proxy_protocol_v2_alpn(c, &value) == NGX_OK) {
-        tlv = ngx_array_push(tlvs);
-        if (tlv == NULL) {
-            return NGX_ERROR;
+    എങ്കിൽ (ngx_proxy_protocol_v2_alpn(c, &മൂല്യം) == NGX_OK) {
+        tlv = ngx_array_തള്ളുക(tlvs);
+        എങ്കിൽ (tlv == ശൂന്യ) {
+            തിരികെ NGX_ERROR;
         }
 
         tlv->type = NGX_PROXY_PROTOCOL_TLV_ALPN;
-        tlv->value = value;
+        tlv->മൂല്യം = മൂല്യം;
     }
 
-    for (type = NGX_PROXY_PROTOCOL_TLV_SSL_VERSION;
-         type <= NGX_PROXY_PROTOCOL_TLV_SSL_KEY_ALG;
+    വേണ്ടി (type = NGX_PROXY_PROTOCOL_TLV_SSL_VERSION;
+         type <= NGX_PROXY_PROTOCOL_TLV_SSL_താക്കോൽ_ALG;
          type++)
     {
-        rc = ngx_proxy_protocol_v2_ssl_sub(c, type, &value);
+        rc = ngx_proxy_protocol_v2_ssl_sub(c, type, &മൂല്യം);
 
-        if (rc == NGX_ERROR) {
-            return NGX_ERROR;
+        എങ്കിൽ (rc == NGX_ERROR) {
+            തിരികെ NGX_ERROR;
         }
 
-        if (rc != NGX_OK) {
-            continue;
+        എങ്കിൽ (rc != NGX_OK) {
+            തുടരുക;
         }
 
-        tlv = ngx_array_push(ssl_tlvs);
-        if (tlv == NULL) {
-            return NGX_ERROR;
+        tlv = ngx_array_തള്ളുക(ssl_tlvs);
+        എങ്കിൽ (tlv == ശൂന്യ) {
+            തിരികെ NGX_ERROR;
         }
 
         tlv->type = type;
-        tlv->value = value;
+        tlv->മൂല്യം = മൂല്യം;
     }
 
     *client = NGX_PROXY_PROTOCOL_V2_CLIENT_SSL;
@@ -810,20 +810,20 @@ ngx_proxy_protocol_v2_eval_ssl(ngx_connection_t *c, ngx_array_t *tlvs,
 
     cert = SSL_get_peer_certificate(c->ssl->connection);
 
-    if (cert != NULL) {
+    എങ്കിൽ (cert != ശൂന്യ) {
         X509_free(cert);
 
         *client |= NGX_PROXY_PROTOCOL_V2_CLIENT_CERT_SESS;
 
-        if (!SSL_session_reused(c->ssl->connection)) {
+        എങ്കിൽ (!SSL_session_reused(c->ssl->connection)) {
             *client |= NGX_PROXY_PROTOCOL_V2_CLIENT_CERT_CONN;
         }
 
         n = SSL_get_verify_result(c->ssl->connection);
 
-        if (n == X509_V_OK) {
+        എങ്കിൽ (n == X509_V_OK) {
 
-            if (ngx_ssl_ocsp_get_status(c, &s) != NGX_OK) {
+            എങ്കിൽ (ngx_ssl_ocsp_get_status(c, &s) != NGX_OK) {
                 n = X509_V_ERR_CERT_REVOKED;
             }
         }
@@ -831,168 +831,168 @@ ngx_proxy_protocol_v2_eval_ssl(ngx_connection_t *c, ngx_array_t *tlvs,
         *verify = (uint32_t) n;
     }
 
-    return NGX_OK;
+    തിരികെ NGX_OK;
 }
 
 
-static ngx_int_t
+സ്ഥിതം ngx_int_t
 ngx_proxy_protocol_v2_authority(ngx_connection_t *c, ngx_str_t *out)
 {
 #ifdef SSL_CTRL_SET_TLSEXT_HOSTNAME
 
-    const char  *sni;
+    സ്ഥിരം അക്ഷരം  *sni;
 
     sni = SSL_get_servername(c->ssl->connection, TLSEXT_NAMETYPE_host_name);
-    if (sni == NULL) {
-        return NGX_DECLINED;
+    എങ്കിൽ (sni == ശൂന്യ) {
+        തിരികെ NGX_DECLINED;
     }
 
     out->data = (u_char *) sni;
     out->len = ngx_strlen(sni);
-    return NGX_OK;
+    തിരികെ NGX_OK;
 
-#else
-    return NGX_DECLINED;
+#അല്ലെങ്കിൽ
+    തിരികെ NGX_DECLINED;
 #endif
 }
 
 
-static ngx_int_t
+സ്ഥിതം ngx_int_t
 ngx_proxy_protocol_v2_alpn(ngx_connection_t *c, ngx_str_t *out)
 {
 #ifdef TLSEXT_TYPE_application_layer_protocol_negotiation
 
-    unsigned int          alpnlen;
-    const unsigned char  *alpn;
+    unsigned പൂർണ്ണസംഖ്യ          alpnlen;
+    സ്ഥിരം unsigned അക്ഷരം  *alpn;
 
     SSL_get0_alpn_selected(c->ssl->connection, &alpn, &alpnlen);
-    if (alpn == NULL || alpnlen == 0) {
-        return NGX_DECLINED;
+    എങ്കിൽ (alpn == ശൂന്യ || alpnlen == 0) {
+        തിരികെ NGX_DECLINED;
     }
 
     out->data = (u_char *) alpn;
     out->len = alpnlen;
-    return NGX_OK;
+    തിരികെ NGX_OK;
 
-#else
-    return NGX_DECLINED;
+#അല്ലെങ്കിൽ
+    തിരികെ NGX_DECLINED;
 #endif
 }
 
 
-static ngx_int_t
+സ്ഥിതം ngx_int_t
 ngx_proxy_protocol_v2_ssl_sub(ngx_connection_t *c, ngx_uint_t type,
     ngx_str_t *out)
 {
-    int               i, len;
+    പൂർണ്ണസംഖ്യ               i, len;
     X509             *cert;
     u_char           *alg, *s;
     EVP_PKEY         *pkey;
-#if (OPENSSL_VERSION_NUMBER >= 0x40000000L)
-    const
+#എങ്കിൽ (OPENSSL_VERSION_സംഖ്യ >= 0x40000000L)
+    സ്ഥിരം
 #endif
     X509_NAME        *subject;
-#if (OPENSSL_VERSION_NUMBER >= 0x40000000L)
-    const
+#എങ്കിൽ (OPENSSL_VERSION_സംഖ്യ >= 0x40000000L)
+    സ്ഥിരം
 #endif
     X509_NAME_ENTRY  *entry;
 
-    switch (type) {
+    തിരഞ്ഞെടുപ്പ് (type) {
 
-    case NGX_PROXY_PROTOCOL_TLV_SSL_VERSION:
+    അവസ്ഥ NGX_PROXY_PROTOCOL_TLV_SSL_VERSION:
         out->data = (u_char *) SSL_get_version(c->ssl->connection);
         out->len = ngx_strlen(out->data);
-        return NGX_OK;
+        തിരികെ NGX_OK;
 
-    case NGX_PROXY_PROTOCOL_TLV_SSL_CIPHER:
+    അവസ്ഥ NGX_PROXY_PROTOCOL_TLV_SSL_CIPHER:
         out->data = (u_char *) SSL_get_cipher_name(c->ssl->connection);
         out->len = ngx_strlen(out->data);
-        return NGX_OK;
+        തിരികെ NGX_OK;
 
-    case NGX_PROXY_PROTOCOL_TLV_SSL_CN:
+    അവസ്ഥ NGX_PROXY_PROTOCOL_TLV_SSL_CN:
         cert = SSL_get_peer_certificate(c->ssl->connection);
-        if (cert == NULL) {
-            return NGX_DECLINED;
+        എങ്കിൽ (cert == ശൂന്യ) {
+            തിരികെ NGX_DECLINED;
         }
 
         subject = X509_get_subject_name(cert);
-        if (subject == NULL) {
+        എങ്കിൽ (subject == ശൂന്യ) {
             X509_free(cert);
-            return NGX_ERROR;
+            തിരികെ NGX_ERROR;
         }
 
         i = X509_NAME_get_index_by_NID(subject, NID_commonName, -1);
-        if (i < 0) {
+        എങ്കിൽ (i < 0) {
             X509_free(cert);
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
         }
 
         entry = X509_NAME_get_entry(subject, i);
 
         len = ASN1_STRING_to_UTF8(&s, X509_NAME_ENTRY_get_data(entry));
-        if (len < 0) {
+        എങ്കിൽ (len < 0) {
             ngx_ssl_error(NGX_LOG_ALERT, c->log, 0,
                           "ASN1_STRING_to_UTF8() failed");
             X509_free(cert);
-            return NGX_ERROR;
+            തിരികെ NGX_ERROR;
         }
 
         out->len = len;
         out->data = ngx_pnalloc(c->pool, len);
-        if (out->data == NULL) {
+        എങ്കിൽ (out->data == ശൂന്യ) {
             OPENSSL_free(s);
             X509_free(cert);
-            return NGX_ERROR;
+            തിരികെ NGX_ERROR;
         }
 
         ngx_memcpy(out->data, s, len);
 
         OPENSSL_free(s);
         X509_free(cert);
-        return NGX_OK;
+        തിരികെ NGX_OK;
 
-    case NGX_PROXY_PROTOCOL_TLV_SSL_SIG_ALG:
+    അവസ്ഥ NGX_PROXY_PROTOCOL_TLV_SSL_SIG_ALG:
         cert = SSL_get_certificate(c->ssl->connection);
 
         out->data = (u_char *) OBJ_nid2sn(X509_get_signature_nid(cert));
         out->len = ngx_strlen(out->data);
-        return NGX_OK;
+        തിരികെ NGX_OK;
 
-    case NGX_PROXY_PROTOCOL_TLV_SSL_KEY_ALG:
+    അവസ്ഥ NGX_PROXY_PROTOCOL_TLV_SSL_താക്കോൽ_ALG:
         cert = SSL_get_certificate(c->ssl->connection);
 
         pkey = X509_get_pubkey(cert);
-        if (pkey == NULL) {
-            return NGX_ERROR;
+        എങ്കിൽ (pkey == ശൂന്യ) {
+            തിരികെ NGX_ERROR;
         }
 
-        switch (EVP_PKEY_base_id(pkey)) {
+        തിരഞ്ഞെടുപ്പ് (EVP_PKEY_base_id(pkey)) {
 
-        case EVP_PKEY_RSA:
+        അവസ്ഥ EVP_PKEY_RSA:
 #ifdef EVP_PKEY_RSA_PSS
-        case EVP_PKEY_RSA_PSS:
+        അവസ്ഥ EVP_PKEY_RSA_PSS:
 #endif
             alg = (u_char *) "RSA";
-            break;
+            നിർത്തുക;
 
-        case EVP_PKEY_EC:
+        അവസ്ഥ EVP_PKEY_EC:
             alg = (u_char *) "EC";
-            break;
+            നിർത്തുക;
 
-        case EVP_PKEY_DSA:
+        അവസ്ഥ EVP_PKEY_DSA:
             alg = (u_char *) "DSA";
-            break;
+            നിർത്തുക;
 
-        default:
+        സ്ഥിരസ്ഥിതി:
             EVP_PKEY_free(pkey);
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
         }
 
-        out->len = sizeof("RSA16384") - 1;
+        out->len = വലുപ്പം("RSA16384") - 1;
         out->data = ngx_pnalloc(c->pool, out->len);
-        if (out->data == NULL) {
+        എങ്കിൽ (out->data == ശൂന്യ) {
             EVP_PKEY_free(pkey);
-            return NGX_ERROR;
+            തിരികെ NGX_ERROR;
         }
 
         out->len = ngx_snprintf(out->data, out->len, "%s%d",
@@ -1001,16 +1001,16 @@ ngx_proxy_protocol_v2_ssl_sub(ngx_connection_t *c, ngx_uint_t type,
 
         EVP_PKEY_free(pkey);
 
-        return NGX_OK;
+        തിരികെ NGX_OK;
     }
 
-    return NGX_DECLINED;
+    തിരികെ NGX_DECLINED;
 }
 
 #endif
 
 
-static u_char *
+സ്ഥിതം u_char *
 ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
     u_char *last)
 {
@@ -1019,20 +1019,20 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
     ngx_uint_t                         src_fam, dst_fam;
     ngx_proxy_protocol_header_t       *header;
     ngx_proxy_protocol_inet_addrs_t   *in;
-#if (NGX_HAVE_INET6)
+#എങ്കിൽ (NGX_HAVE_INET6)
     ngx_uint_t                         port, lport;
-    struct in6_addr                   *src6, *dst6;
+    ഘടന in6_addr                   *src6, *dst6;
     ngx_proxy_protocol_inet6_addrs_t  *in6;
 #endif
 
-    if (last - buf < NGX_PROXY_PROTOCOL_V2_MAX_HEADER) {
+    എങ്കിൽ (last - buf < NGX_PROXY_PROTOCOL_V2_MAX_HEADER) {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0,
                       "too small buffer for PROXY protocol v2");
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
-    if (ngx_connection_local_sockaddr(c, NULL, 0) != NGX_OK) {
-        return NULL;
+    എങ്കിൽ (ngx_connection_local_sockaddr(c, ശൂന്യ, 0) != NGX_OK) {
+        തിരികെ ശൂന്യ;
     }
 
     /* the length field is set by the caller once all TLVs are written */
@@ -1040,9 +1040,9 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
     header = (ngx_proxy_protocol_header_t *) buf;
 
     ngx_memcpy(header->signature, ngx_proxy_protocol_signature,
-               sizeof(ngx_proxy_protocol_signature) - 1);
+               വലുപ്പം(ngx_proxy_protocol_signature) - 1);
 
-    p = buf + sizeof(ngx_proxy_protocol_header_t);
+    p = buf + വലുപ്പം(ngx_proxy_protocol_header_t);
 
     src_fam = c->sockaddr->sa_family;
     dst_fam = c->local_sockaddr->sa_family;
@@ -1052,36 +1052,36 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
 
     /* promote to the highest address family present on either side */
 
-    if (src_af == NGX_PROXY_PROTOCOL_AF_UNSPEC
+    എങ്കിൽ (src_af == NGX_PROXY_PROTOCOL_AF_UNSPEC
         || dst_af == NGX_PROXY_PROTOCOL_AF_UNSPEC)
     {
         command = NGX_PROXY_PROTOCOL_CMD_LOCAL;
         family = NGX_PROXY_PROTOCOL_AF_UNSPEC;
         transport = NGX_PROXY_PROTOCOL_TYPE_UNSPEC;
 
-    } else {
+    } അല്ലെങ്കിൽ {
         command = NGX_PROXY_PROTOCOL_CMD_PROXY;
         family = ngx_max(src_af, dst_af);
 
-        switch (c->type) {
-        case SOCK_STREAM:
+        തിരഞ്ഞെടുപ്പ് (c->type) {
+        അവസ്ഥ SOCK_STREAM:
             transport = NGX_PROXY_PROTOCOL_TYPE_STREAM;
-            break;
-        case SOCK_DGRAM:
+            നിർത്തുക;
+        അവസ്ഥ SOCK_DGRAM:
             transport = NGX_PROXY_PROTOCOL_TYPE_DGRAM;
-            break;
-        default:
+            നിർത്തുക;
+        സ്ഥിരസ്ഥിതി:
             transport = NGX_PROXY_PROTOCOL_TYPE_UNSPEC;
-            break;
+            നിർത്തുക;
         }
     }
 
     header->version_command = 0x20 | command;
     header->family_transport = (family << 4) | transport;
 
-    switch (family) {
+    തിരഞ്ഞെടുപ്പ് (family) {
 
-    case NGX_PROXY_PROTOCOL_AF_INET:
+    അവസ്ഥ NGX_PROXY_PROTOCOL_AF_INET:
 
         in = (ngx_proxy_protocol_inet_addrs_t *) p;
 
@@ -1090,19 +1090,19 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
         ngx_proxy_protocol_v2_write_ipv4(c->local_sockaddr,
                                          in->dst_addr, in->dst_port);
 
-        p += sizeof(ngx_proxy_protocol_inet_addrs_t);
+        p += വലുപ്പം(ngx_proxy_protocol_inet_addrs_t);
 
-        break;
+        നിർത്തുക;
 
-#if (NGX_HAVE_INET6)
+#എങ്കിൽ (NGX_HAVE_INET6)
 
-    case NGX_PROXY_PROTOCOL_AF_INET6:
+    അവസ്ഥ NGX_PROXY_PROTOCOL_AF_INET6:
 
-        if (src_fam == AF_INET6 && dst_fam == AF_INET6) {
-            src6 = &((struct sockaddr_in6 *) c->sockaddr)->sin6_addr;
-            dst6 = &((struct sockaddr_in6 *) c->local_sockaddr)->sin6_addr;
+        എങ്കിൽ (src_fam == AF_INET6 && dst_fam == AF_INET6) {
+            src6 = &((ഘടന sockaddr_in6 *) c->sockaddr)->sin6_addr;
+            dst6 = &((ഘടന sockaddr_in6 *) c->local_sockaddr)->sin6_addr;
 
-            if (IN6_IS_ADDR_V4MAPPED(src6) && IN6_IS_ADDR_V4MAPPED(dst6)) {
+            എങ്കിൽ (IN6_IS_ADDR_V4MAPPED(src6) && IN6_IS_ADDR_V4MAPPED(dst6)) {
 
                 /* both v4-mapped: demote to AF_INET */
 
@@ -1122,8 +1122,8 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
                 in->dst_port[0] = (u_char) (lport >> 8);
                 in->dst_port[1] = (u_char)  lport;
 
-                p += sizeof(ngx_proxy_protocol_inet_addrs_t);
-                break;
+                p += വലുപ്പം(ngx_proxy_protocol_inet_addrs_t);
+                നിർത്തുക;
             }
         }
 
@@ -1134,75 +1134,75 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
         ngx_proxy_protocol_v2_write_ipv6(c->local_sockaddr,
                                          in6->dst_addr, in6->dst_port);
 
-        p += sizeof(ngx_proxy_protocol_inet6_addrs_t);
+        p += വലുപ്പം(ngx_proxy_protocol_inet6_addrs_t);
 
-        break;
+        നിർത്തുക;
 
 #endif
 
-    default:  /* NGX_PROXY_PROTOCOL_AF_UNSPEC */
-        break;
+    സ്ഥിരസ്ഥിതി:  /* NGX_PROXY_PROTOCOL_AF_UNSPEC */
+        നിർത്തുക;
     }
 
-    return p;
+    തിരികെ p;
 }
 
 
-static u_char
+സ്ഥിതം u_char
 ngx_proxy_protocol_v2_family(ngx_uint_t family)
 {
-    switch (family) {
+    തിരഞ്ഞെടുപ്പ് (family) {
 
-    case AF_INET:
-        return NGX_PROXY_PROTOCOL_AF_INET;
+    അവസ്ഥ AF_INET:
+        തിരികെ NGX_PROXY_PROTOCOL_AF_INET;
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        return NGX_PROXY_PROTOCOL_AF_INET6;
+#എങ്കിൽ (NGX_HAVE_INET6)
+    അവസ്ഥ AF_INET6:
+        തിരികെ NGX_PROXY_PROTOCOL_AF_INET6;
 #endif
 
-    default:
-        return NGX_PROXY_PROTOCOL_AF_UNSPEC;
+    സ്ഥിരസ്ഥിതി:
+        തിരികെ NGX_PROXY_PROTOCOL_AF_UNSPEC;
     }
 }
 
 
-static void
-ngx_proxy_protocol_v2_write_ipv4(struct sockaddr *sa, u_char *addr,
+സ്ഥിതം ശൂന്യം
+ngx_proxy_protocol_v2_write_ipv4(ഘടന sockaddr *sa, u_char *addr,
     u_char *port)
 {
-    struct sockaddr_in  *sin;
+    ഘടന sockaddr_in  *sin;
 
-    sin = (struct sockaddr_in *) sa;
+    sin = (ഘടന sockaddr_in *) sa;
     ngx_memcpy(addr, &sin->sin_addr, 4);
     ngx_memcpy(port, &sin->sin_port, 2);
 }
 
 
-#if (NGX_HAVE_INET6)
+#എങ്കിൽ (NGX_HAVE_INET6)
 
-static void
-ngx_proxy_protocol_v2_write_ipv6(struct sockaddr *sa, u_char *addr,
+സ്ഥിതം ശൂന്യം
+ngx_proxy_protocol_v2_write_ipv6(ഘടന sockaddr *sa, u_char *addr,
     u_char *port)
 {
-    struct sockaddr_in   *sin;
-    struct sockaddr_in6  *sin6;
+    ഘടന sockaddr_in   *sin;
+    ഘടന sockaddr_in6  *sin6;
 
     /* IPv4-mapped prefix: 80 zero bits + 16 one bits */
-    static const u_char  mapped[]   = { 0x00, 0x00, 0x00, 0x00,
+    സ്ഥിതം സ്ഥിരം u_char  mapped[]   = { 0x00, 0x00, 0x00, 0x00,
                                         0x00, 0x00, 0x00, 0x00,
                                         0x00, 0x00, 0xff, 0xff };
 
-    if (sa->sa_family == AF_INET6) {
-        sin6 = (struct sockaddr_in6 *) sa;
+    എങ്കിൽ (sa->sa_family == AF_INET6) {
+        sin6 = (ഘടന sockaddr_in6 *) sa;
         ngx_memcpy(addr, &sin6->sin6_addr, 16);
         ngx_memcpy(port, &sin6->sin6_port, 2);
 
-    } else {
+    } അല്ലെങ്കിൽ {
         /* promote AF_INET to ::ffff:a.b.c.d */
-        sin = (struct sockaddr_in *) sa;
-        ngx_memcpy(addr, mapped, sizeof(mapped));
-        ngx_memcpy(addr + sizeof(mapped), &sin->sin_addr, 4);
+        sin = (ഘടന sockaddr_in *) sa;
+        ngx_memcpy(addr, mapped, വലുപ്പം(mapped));
+        ngx_memcpy(addr + വലുപ്പം(mapped), &sin->sin_addr, 4);
         ngx_memcpy(port, &sin->sin_port, 2);
     }
 }
@@ -1210,30 +1210,30 @@ ngx_proxy_protocol_v2_write_ipv6(struct sockaddr *sa, u_char *addr,
 #endif
 
 
-static u_char *
+സ്ഥിതം u_char *
 ngx_proxy_protocol_v2_write_tlv(ngx_connection_t *c, u_char *p, u_char *last,
-    ngx_uint_t type, ngx_str_t *value)
+    ngx_uint_t type, ngx_str_t *മൂല്യം)
 {
     ngx_proxy_protocol_tlv_t  *tlv;
 
-    if ((size_t) (last - p) < sizeof(ngx_proxy_protocol_tlv_t) + value->len) {
+    എങ്കിൽ ((size_t) (last - p) < വലുപ്പം(ngx_proxy_protocol_tlv_t) + മൂല്യം->len) {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0,
                       "too small buffer for PROXY protocol v2 TLV");
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
     tlv = (ngx_proxy_protocol_tlv_t *) p;
     tlv->type = (u_char) type;
-    tlv->len[0] = (u_char) (value->len >> 8);
-    tlv->len[1] = (u_char)  value->len;
+    tlv->len[0] = (u_char) (മൂല്യം->len >> 8);
+    tlv->len[1] = (u_char)  മൂല്യം->len;
 
-    p += sizeof(ngx_proxy_protocol_tlv_t);
+    p += വലുപ്പം(ngx_proxy_protocol_tlv_t);
 
-    return ngx_cpymem(p, value->data, value->len);
+    തിരികെ ngx_cpymem(p, മൂല്യം->data, മൂല്യം->len);
 }
 
 
-static u_char *
+സ്ഥിതം u_char *
 ngx_proxy_protocol_v2_write_ssl(ngx_connection_t *c, u_char *p, u_char *last,
     ngx_array_t *ssl_tlvs, ngx_uint_t client, uint32_t verify)
 {
@@ -1242,18 +1242,18 @@ ngx_proxy_protocol_v2_write_ssl(ngx_connection_t *c, u_char *p, u_char *last,
     ngx_uint_t                       i;
     ngx_proxy_protocol_tlv_t        *tlv;
     ngx_proxy_protocol_tlv_ssl_t    *tlv_ssl;
-    ngx_proxy_protocol_tlv_value_t  *sub;
+    ngx_proxy_protocol_tlv_മൂല്യം_t  *sub;
 
-    if ((size_t) (last - p) < sizeof(ngx_proxy_protocol_tlv_t)
-                              + sizeof(ngx_proxy_protocol_tlv_ssl_t))
+    എങ്കിൽ ((size_t) (last - p) < വലുപ്പം(ngx_proxy_protocol_tlv_t)
+                              + വലുപ്പം(ngx_proxy_protocol_tlv_ssl_t))
     {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0,
                       "too small buffer for PROXY protocol v2 SSL TLV");
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
     start = p;
-    p += sizeof(ngx_proxy_protocol_tlv_t);
+    p += വലുപ്പം(ngx_proxy_protocol_tlv_t);
 
     tlv_ssl = (ngx_proxy_protocol_tlv_ssl_t *) p;
     tlv_ssl->client = (u_char) client;
@@ -1262,36 +1262,36 @@ ngx_proxy_protocol_v2_write_ssl(ngx_connection_t *c, u_char *p, u_char *last,
     tlv_ssl->verify[2] = (u_char) (verify >> 8);
     tlv_ssl->verify[3] = (u_char)  verify;
 
-    p += sizeof(ngx_proxy_protocol_tlv_ssl_t);
+    p += വലുപ്പം(ngx_proxy_protocol_tlv_ssl_t);
 
     sub = ssl_tlvs->elts;
 
-    for (i = 0; i < ssl_tlvs->nelts; i++) {
+    വേണ്ടി (i = 0; i < ssl_tlvs->nelts; i++) {
         p = ngx_proxy_protocol_v2_write_tlv(c, p, last, sub[i].type,
-                                            &sub[i].value);
-        if (p == NULL) {
-            return NULL;
+                                            &sub[i].മൂല്യം);
+        എങ്കിൽ (p == ശൂന്യ) {
+            തിരികെ ശൂന്യ;
         }
     }
 
-    len = (uint16_t) (p - start - sizeof(ngx_proxy_protocol_tlv_t));
+    len = (uint16_t) (p - start - വലുപ്പം(ngx_proxy_protocol_tlv_t));
 
     tlv = (ngx_proxy_protocol_tlv_t *) start;
     tlv->type = NGX_PROXY_PROTOCOL_TLV_SSL;
     tlv->len[0] = (u_char) (len >> 8);
     tlv->len[1] = (u_char)  len;
 
-    return p;
+    തിരികെ p;
 }
 
 
-static void
+സ്ഥിതം ശൂന്യം
 ngx_proxy_protocol_v2_set_len(u_char *buf, u_char *p)
 {
     uint16_t                      len;
     ngx_proxy_protocol_header_t  *header;
 
-    len = (uint16_t) (p - buf - sizeof(ngx_proxy_protocol_header_t));
+    len = (uint16_t) (p - buf - വലുപ്പം(ngx_proxy_protocol_header_t));
 
     header = (ngx_proxy_protocol_header_t *) buf;
     header->len[0] = (u_char) (len >> 8);
@@ -1299,18 +1299,18 @@ ngx_proxy_protocol_v2_set_len(u_char *buf, u_char *p)
 }
 
 
-static u_char *
+സ്ഥിതം u_char *
 ngx_proxy_protocol_v2_write_crc32c(ngx_connection_t *c, u_char *buf,
     u_char *p, u_char *last)
 {
-    u_char                    *value;
+    u_char                    *മൂല്യം;
     uint32_t                   crc;
     ngx_proxy_protocol_tlv_t  *tlv;
 
-    if ((size_t) (last - p) < sizeof(ngx_proxy_protocol_tlv_t) + 4) {
+    എങ്കിൽ ((size_t) (last - p) < വലുപ്പം(ngx_proxy_protocol_tlv_t) + 4) {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0,
                       "too small buffer for PROXY protocol v2 CRC32c TLV");
-        return NULL;
+        തിരികെ ശൂന്യ;
     }
 
     /* append the CRC32c TLV with a zeroed value field */
@@ -1320,20 +1320,20 @@ ngx_proxy_protocol_v2_write_crc32c(ngx_connection_t *c, u_char *buf,
     tlv->len[0] = 0;
     tlv->len[1] = 4;
 
-    value = p + sizeof(ngx_proxy_protocol_tlv_t);
+    മൂല്യം = p + വലുപ്പം(ngx_proxy_protocol_tlv_t);
 
-    ngx_memzero(value, 4);
+    ngx_memzero(മൂല്യം, 4);
 
-    p = value + 4;
+    p = മൂല്യം + 4;
 
     /* the checksum covers the entire header with the zeroed value */
 
     crc = ngx_crc32c_long(buf, p - buf);
 
-    value[0] = (u_char) (crc >> 24);
-    value[1] = (u_char) (crc >> 16);
-    value[2] = (u_char) (crc >> 8);
-    value[3] = (u_char) crc;
+    മൂല്യം[0] = (u_char) (crc >> 24);
+    മൂല്യം[1] = (u_char) (crc >> 16);
+    മൂല്യം[2] = (u_char) (crc >> 8);
+    മൂല്യം[3] = (u_char) crc;
 
-    return p;
+    തിരികെ p;
 }

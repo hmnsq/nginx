@@ -12,9 +12,9 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_json_parse.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
+#അന്തര്ഭാവ <ngx_json_parse.h>
 
 
 #define NGX_JSON_NOT_SKIPPING  (ngx_uint_t) -1
@@ -22,26 +22,26 @@
 #define ngx_json_ws(c)  ((c) == ' ' || (c) == '\t' || (c) == CR || (c) == LF)
 
 
-static ngx_inline ngx_int_t ngx_json_end_number(ngx_json_ctx_t *ctx,
+സ്ഥിതം ngx_inline ngx_int_t ngx_json_end_സംഖ്യ(ngx_json_ctx_t *ctx,
     u_char *start, u_char *end, ngx_json_state_e *state);
-static ngx_inline ngx_int_t ngx_json_emit(ngx_json_ctx_t *ctx,
+സ്ഥിതം ngx_inline ngx_int_t ngx_json_emit(ngx_json_ctx_t *ctx,
     ngx_json_event_e event, u_char *data, size_t len);
-static ngx_inline ngx_json_state_e ngx_json_after_value(ngx_json_ctx_t *ctx);
-static ngx_inline ngx_int_t ngx_json_close(ngx_json_ctx_t *ctx,
+സ്ഥിതം ngx_inline ngx_json_state_e ngx_json_after_മൂല്യം(ngx_json_ctx_t *ctx);
+സ്ഥിതം ngx_inline ngx_int_t ngx_json_close(ngx_json_ctx_t *ctx,
     ngx_json_event_e event, ngx_json_state_e *state, u_char *p);
-static ngx_int_t ngx_json_push_state(ngx_json_ctx_t *ctx,
+സ്ഥിതം ngx_int_t ngx_json_തള്ളുക_state(ngx_json_ctx_t *ctx,
     ngx_json_container_e container);
 
 
-void
+ശൂന്യം
 ngx_json_ctx_init(ngx_json_ctx_t *ctx, ngx_pool_t *pool)
 {
     ctx->state = ngx_json_start;
     ctx->pool = pool;
-    ctx->handler = NULL;
-    ctx->data = NULL;
+    ctx->handler = ശൂന്യ;
+    ctx->data = ശൂന്യ;
     ctx->codepoint = 0;
-    ctx->hex_left = 0;
+    ctx->hex_ഇടത് = 0;
 
     ctx->depth = 0;
     ctx->skip_until_depth = NGX_JSON_NOT_SKIPPING;
@@ -49,9 +49,9 @@ ngx_json_ctx_init(ngx_json_ctx_t *ctx, ngx_pool_t *pool)
 
     /* stack is allocated lazily on first push, sized to max_depth */
 
-    ctx->stack = NULL;
+    ctx->അട്ടി = ശൂന്യ;
 
-    ctx->in_key = 0;
+    ctx->in_താക്കോൽ = 0;
     ctx->escaped = 0;
 }
 
@@ -65,585 +65,585 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
     ngx_json_event_e   event;
     ngx_json_state_e   state;
 
-    if (len == 0) {
-        return NGX_DECLINED;
+    എങ്കിൽ (len == 0) {
+        തിരികെ NGX_DECLINED;
     }
 
-    if (data == NULL) {
-        return NGX_ERROR;
+    എങ്കിൽ (data == ശൂന്യ) {
+        തിരികെ NGX_ERROR;
     }
 
-    if (ctx->state == ngx_json_done) {
-        return NGX_DECLINED;
+    എങ്കിൽ (ctx->state == ngx_json_done) {
+        തിരികെ NGX_DECLINED;
     }
 
     last = data + len;
     state = ctx->state;
     skip_depth = ctx->skip_until_depth;
-    start = NULL;
+    start = ശൂന്യ;
 
-    for (p = data; p < last; p++) {
+    വേണ്ടി (p = data; p < last; p++) {
 
         /* skipping suppresses emission only; the machine still validates */
 
-        if (ngx_json_skipping(skip_depth) && ctx->depth <= skip_depth
-            && (state == ngx_json_object_value_separator
-                || state == ngx_json_array_value_separator
+        എങ്കിൽ (ngx_json_skipping(skip_depth) && ctx->depth <= skip_depth
+            && (state == ngx_json_object_മൂല്യം_separator
+                || state == ngx_json_array_മൂല്യം_separator
                 || state == ngx_json_done))
         {
             skip_depth = NGX_JSON_NOT_SKIPPING;
             ctx->skip_until_depth = NGX_JSON_NOT_SKIPPING;
             p--;
 
-            continue;
+            തുടരുക;
         }
 
-        switch (state) {
+        തിരഞ്ഞെടുപ്പ് (state) {
 
-        case ngx_json_start:
-            if (ngx_json_ws(*p)) {
-                break;
+        അവസ്ഥ ngx_json_start:
+            എങ്കിൽ (ngx_json_ws(*p)) {
+                നിർത്തുക;
             }
 
             p--;
-            state = ngx_json_value;
-            break;
+            state = ngx_json_മൂല്യം;
+            നിർത്തുക;
 
-        case ngx_json_object:
-            if (ngx_json_ws(*p)) {
-                break;
+        അവസ്ഥ ngx_json_object:
+            എങ്കിൽ (ngx_json_ws(*p)) {
+                നിർത്തുക;
             }
 
-            if (*p == '}') {
+            എങ്കിൽ (*p == '}') {
                 rc = ngx_json_close(ctx, NGX_JSON_OBJECT_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                എങ്കിൽ (rc != NGX_OK) {
+                    തിരികെ rc;
                 }
 
-                break;
+                നിർത്തുക;
             }
 
             /* fall through */
 
-        case ngx_json_object_next:
-            if (ngx_json_ws(*p)) {
-                break;
+        അവസ്ഥ ngx_json_object_next:
+            എങ്കിൽ (ngx_json_ws(*p)) {
+                നിർത്തുക;
             }
 
-            if (*p == '"') {
-                ctx->in_key = 1;
+            എങ്കിൽ (*p == '"') {
+                ctx->in_താക്കോൽ = 1;
                 ctx->escaped = 0;
                 start = p + 1;
                 state = ngx_json_string;
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_object_name_separator:
-            if (ngx_json_ws(*p)) {
-                break;
+        അവസ്ഥ ngx_json_object_name_separator:
+            എങ്കിൽ (ngx_json_ws(*p)) {
+                നിർത്തുക;
             }
 
-            if (*p == ':') {
-                state = ngx_json_value;
-                break;
+            എങ്കിൽ (*p == ':') {
+                state = ngx_json_മൂല്യം;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_object_value_separator:
-            if (ngx_json_ws(*p)) {
-                break;
+        അവസ്ഥ ngx_json_object_മൂല്യം_separator:
+            എങ്കിൽ (ngx_json_ws(*p)) {
+                നിർത്തുക;
             }
 
-            if (*p == ',') {
+            എങ്കിൽ (*p == ',') {
                 state = ngx_json_object_next;
-                break;
+                നിർത്തുക;
             }
 
-            if (*p == '}') {
+            എങ്കിൽ (*p == '}') {
                 rc = ngx_json_close(ctx, NGX_JSON_OBJECT_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                എങ്കിൽ (rc != NGX_OK) {
+                    തിരികെ rc;
                 }
 
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_array_value_separator:
-            if (ngx_json_ws(*p)) {
-                break;
+        അവസ്ഥ ngx_json_array_മൂല്യം_separator:
+            എങ്കിൽ (ngx_json_ws(*p)) {
+                നിർത്തുക;
             }
 
-            if (*p == ',') {
-                state = ngx_json_value;
-                break;
+            എങ്കിൽ (*p == ',') {
+                state = ngx_json_മൂല്യം;
+                നിർത്തുക;
             }
 
-            if (*p == ']') {
+            എങ്കിൽ (*p == ']') {
                 rc = ngx_json_close(ctx, NGX_JSON_ARRAY_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                എങ്കിൽ (rc != NGX_OK) {
+                    തിരികെ rc;
                 }
 
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_array:
-            if (ngx_json_ws(*p)) {
-                break;
+        അവസ്ഥ ngx_json_array:
+            എങ്കിൽ (ngx_json_ws(*p)) {
+                നിർത്തുക;
             }
 
-            if (*p == ']') {
+            എങ്കിൽ (*p == ']') {
                 rc = ngx_json_close(ctx, NGX_JSON_ARRAY_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                എങ്കിൽ (rc != NGX_OK) {
+                    തിരികെ rc;
                 }
 
-                break;
+                നിർത്തുക;
             }
 
             /* fall through */
 
-        case ngx_json_value:
-            if (ngx_json_ws(*p)) {
-                break;
+        അവസ്ഥ ngx_json_മൂല്യം:
+            എങ്കിൽ (ngx_json_ws(*p)) {
+                നിർത്തുക;
             }
 
             start = p;
 
-            if (*p == '"') {
-                ctx->in_key = 0;
+            എങ്കിൽ (*p == '"') {
+                ctx->in_താക്കോൽ = 0;
                 ctx->escaped = 0;
                 start = p + 1;
                 state = ngx_json_string;
-                break;
+                നിർത്തുക;
             }
 
-            if (*p == '{') {
+            എങ്കിൽ (*p == '{') {
                 rc = ngx_json_emit(ctx, NGX_JSON_OBJECT_OPEN, p, 1);
-                if (rc != NGX_OK) {
-                    return rc;
+                എങ്കിൽ (rc != NGX_OK) {
+                    തിരികെ rc;
                 }
 
-                rc = ngx_json_push_state(ctx, ngx_json_ctx_object);
-                if (rc != NGX_OK) {
-                    return rc;
+                rc = ngx_json_തള്ളുക_state(ctx, ngx_json_ctx_object);
+                എങ്കിൽ (rc != NGX_OK) {
+                    തിരികെ rc;
                 }
 
                 state = ngx_json_object;
-                break;
+                നിർത്തുക;
             }
 
-            if (*p == '[') {
+            എങ്കിൽ (*p == '[') {
                 rc = ngx_json_emit(ctx, NGX_JSON_ARRAY_OPEN, p, 1);
-                if (rc != NGX_OK) {
-                    return rc;
+                എങ്കിൽ (rc != NGX_OK) {
+                    തിരികെ rc;
                 }
 
-                rc = ngx_json_push_state(ctx, ngx_json_ctx_array);
-                if (rc != NGX_OK) {
-                    return rc;
+                rc = ngx_json_തള്ളുക_state(ctx, ngx_json_ctx_array);
+                എങ്കിൽ (rc != NGX_OK) {
+                    തിരികെ rc;
                 }
 
                 state = ngx_json_array;
-                break;
+                നിർത്തുക;
             }
 
-            if (*p == '-') {
-                state = ngx_json_number_minus;
-                break;
+            എങ്കിൽ (*p == '-') {
+                state = ngx_json_സംഖ്യ_minus;
+                നിർത്തുക;
             }
 
-            if (*p == '0') {
-                state = ngx_json_number_int_zero;
-                break;
+            എങ്കിൽ (*p == '0') {
+                state = ngx_json_സംഖ്യ_int_zero;
+                നിർത്തുക;
             }
 
-            if (*p >= '1' && *p <= '9') {
-                state = ngx_json_number_int;
-                break;
+            എങ്കിൽ (*p >= '1' && *p <= '9') {
+                state = ngx_json_സംഖ്യ_int;
+                നിർത്തുക;
             }
 
-            if (*p == 't') {
+            എങ്കിൽ (*p == 't') {
                 state = ngx_json_true_t;
-                break;
+                നിർത്തുക;
             }
 
-            if (*p == 'f') {
+            എങ്കിൽ (*p == 'f') {
                 state = ngx_json_false_f;
-                break;
+                നിർത്തുക;
             }
 
-            if (*p == 'n') {
+            എങ്കിൽ (*p == 'n') {
                 state = ngx_json_null_n;
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_string:
-            if (*p == '"') {
+        അവസ്ഥ ngx_json_string:
+            എങ്കിൽ (*p == '"') {
 
-                if (ctx->in_key) {
-                    event = ctx->escaped ? NGX_JSON_KEY_ESCAPED
-                                         : NGX_JSON_KEY;
+                എങ്കിൽ (ctx->in_താക്കോൽ) {
+                    event = ctx->escaped ? NGX_JSON_താക്കോൽ_ESCAPED
+                                         : NGX_JSON_താക്കോൽ;
 
                     rc = ngx_json_emit(ctx, event, start, p - start);
-                    if (rc != NGX_OK) {
-                        return rc;
+                    എങ്കിൽ (rc != NGX_OK) {
+                        തിരികെ rc;
                     }
 
-                    ctx->in_key = 0;
+                    ctx->in_താക്കോൽ = 0;
                     state = ngx_json_object_name_separator;
 
-                } else {
-                    event = ctx->escaped ? NGX_JSON_VALUE_STRING_ESCAPED
-                                         : NGX_JSON_VALUE_STRING;
+                } അല്ലെങ്കിൽ {
+                    event = ctx->escaped ? NGX_JSON_മൂല്യം_STRING_ESCAPED
+                                         : NGX_JSON_മൂല്യം_STRING;
 
                     rc = ngx_json_emit(ctx, event, start, p - start);
-                    if (rc != NGX_OK) {
-                        return rc;
+                    എങ്കിൽ (rc != NGX_OK) {
+                        തിരികെ rc;
                     }
 
-                    state = ngx_json_after_value(ctx);
+                    state = ngx_json_after_മൂല്യം(ctx);
                 }
 
-                break;
+                നിർത്തുക;
             }
 
-            if (*p == '\\') {
+            എങ്കിൽ (*p == '\\') {
                 ctx->escaped = 1;
                 state = ngx_json_escaped;
-                break;
+                നിർത്തുക;
             }
 
-            if (*p < ' ') {
-                return NGX_DECLINED;
+            എങ്കിൽ (*p < ' ') {
+                തിരികെ NGX_DECLINED;
             }
 
-            break;
+            നിർത്തുക;
 
-        case ngx_json_escaped:
-            if (*p == '"' || *p == '\\' || *p == '/' || *p == 'b'
+        അവസ്ഥ ngx_json_escaped:
+            എങ്കിൽ (*p == '"' || *p == '\\' || *p == '/' || *p == 'b'
                 || *p == 'f' || *p == 'n' || *p == 'r' || *p == 't')
             {
                 state = ngx_json_string;
-                break;
+                നിർത്തുക;
             }
 
-            if (*p == 'u') {
+            എങ്കിൽ (*p == 'u') {
                 ctx->codepoint = 0;
-                ctx->hex_left = 4;
+                ctx->hex_ഇടത് = 4;
                 state = ngx_json_escaped_hex;
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_escaped_hex:
+        അവസ്ഥ ngx_json_escaped_hex:
 
             /* accumulate the four hex digits of the first \uXXXX escape */
 
             hd = ngx_json_hex_digit(*p);
-            if (hd == NGX_ERROR) {
-                return NGX_DECLINED;
+            എങ്കിൽ (hd == NGX_ERROR) {
+                തിരികെ NGX_DECLINED;
             }
 
             ctx->codepoint = (ctx->codepoint << 4) | (uint32_t) hd;
 
-            if (--ctx->hex_left > 0) {
-                break;
+            എങ്കിൽ (--ctx->hex_ഇടത് > 0) {
+                നിർത്തുക;
             }
 
-            if (ctx->codepoint >= 0xD800 && ctx->codepoint <= 0xDBFF) {
+            എങ്കിൽ (ctx->codepoint >= 0xD800 && ctx->codepoint <= 0xDBFF) {
                 /* high surrogate - must be followed by \uDC00..\uDFFF */
                 state = ngx_json_surrogate_start;
-                break;
+                നിർത്തുക;
             }
 
-            if (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
+            എങ്കിൽ (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_DECLINED;
+                തിരികെ NGX_DECLINED;
             }
 
             state = ngx_json_string;
-            break;
+            നിർത്തുക;
 
-        case ngx_json_surrogate_start:
-            if (*p == '\\') {
+        അവസ്ഥ ngx_json_surrogate_start:
+            എങ്കിൽ (*p == '\\') {
                 state = ngx_json_surrogate_u;
-                break;
+                നിർത്തുക;
             }
 
             /* high surrogate not followed by \uXXXX */
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_surrogate_u:
-            if (*p == 'u') {
+        അവസ്ഥ ngx_json_surrogate_u:
+            എങ്കിൽ (*p == 'u') {
                 ctx->codepoint = 0;
-                ctx->hex_left = 4;
+                ctx->hex_ഇടത് = 4;
                 state = ngx_json_surrogate_hex;
-                break;
+                നിർത്തുക;
             }
 
             /* high surrogate followed by non-\u escape */
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_surrogate_hex:
+        അവസ്ഥ ngx_json_surrogate_hex:
 
             /* accumulate the four hex digits of the low \uXXXX escape */
 
             hd = ngx_json_hex_digit(*p);
-            if (hd == NGX_ERROR) {
-                return NGX_DECLINED;
+            എങ്കിൽ (hd == NGX_ERROR) {
+                തിരികെ NGX_DECLINED;
             }
 
             ctx->codepoint = (ctx->codepoint << 4) | (uint32_t) hd;
 
-            if (--ctx->hex_left > 0) {
-                break;
+            എങ്കിൽ (--ctx->hex_ഇടത് > 0) {
+                നിർത്തുക;
             }
 
-            if (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
+            എങ്കിൽ (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
                 /* valid surrogate pair */
                 state = ngx_json_string;
-                break;
+                നിർത്തുക;
             }
 
             /* high surrogate not followed by low surrogate */
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_number_minus:
-            if (*p >= '1' && *p <= '9') {
-                state = ngx_json_number_int;
-                break;
+        അവസ്ഥ ngx_json_സംഖ്യ_minus:
+            എങ്കിൽ (*p >= '1' && *p <= '9') {
+                state = ngx_json_സംഖ്യ_int;
+                നിർത്തുക;
             }
 
-            if (*p == '0') {
-                state = ngx_json_number_int_zero;
-                break;
+            എങ്കിൽ (*p == '0') {
+                state = ngx_json_സംഖ്യ_int_zero;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_number_int_zero:
-            if (*p == '.') {
-                state = ngx_json_number_frac;
-                break;
+        അവസ്ഥ ngx_json_സംഖ്യ_int_zero:
+            എങ്കിൽ (*p == '.') {
+                state = ngx_json_സംഖ്യ_frac;
+                നിർത്തുക;
             }
 
-            if (*p == 'e' || *p == 'E') {
+            എങ്കിൽ (*p == 'e' || *p == 'E') {
                 /* No sense, but permitted by RFC */
-                state = ngx_json_number_exp;
-                break;
+                state = ngx_json_സംഖ്യ_exp;
+                നിർത്തുക;
             }
 
             p--;
 
-            rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc != NGX_OK) {
-                return rc;
+            rc = ngx_json_end_സംഖ്യ(ctx, start, p + 1, &state);
+            എങ്കിൽ (rc != NGX_OK) {
+                തിരികെ rc;
             }
 
-            break;
+            നിർത്തുക;
 
-        case ngx_json_number_int:
-            if (*p >= '0' && *p <= '9') {
-                break;
+        അവസ്ഥ ngx_json_സംഖ്യ_int:
+            എങ്കിൽ (*p >= '0' && *p <= '9') {
+                നിർത്തുക;
             }
 
-            if (*p == '.') {
-                state = ngx_json_number_frac;
-                break;
+            എങ്കിൽ (*p == '.') {
+                state = ngx_json_സംഖ്യ_frac;
+                നിർത്തുക;
             }
 
-            if (*p == 'e' || *p == 'E') {
+            എങ്കിൽ (*p == 'e' || *p == 'E') {
                 /* No sense, but permitted by RFC */
-                state = ngx_json_number_exp;
-                break;
+                state = ngx_json_സംഖ്യ_exp;
+                നിർത്തുക;
             }
 
             p--;
 
-            rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc!= NGX_OK) {
-                return rc;
+            rc = ngx_json_end_സംഖ്യ(ctx, start, p + 1, &state);
+            എങ്കിൽ (rc!= NGX_OK) {
+                തിരികെ rc;
             }
 
-            break;
+            നിർത്തുക;
 
-        case ngx_json_number_frac:
-            if (*p >= '0' && *p <= '9') {
-                state = ngx_json_number_frac_digit;
-                break;
+        അവസ്ഥ ngx_json_സംഖ്യ_frac:
+            എങ്കിൽ (*p >= '0' && *p <= '9') {
+                state = ngx_json_സംഖ്യ_frac_digit;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_number_frac_digit:
-            if (*p >= '0' && *p <= '9') {
-                break;
+        അവസ്ഥ ngx_json_സംഖ്യ_frac_digit:
+            എങ്കിൽ (*p >= '0' && *p <= '9') {
+                നിർത്തുക;
             }
 
-            if (*p == 'e' || *p == 'E') {
-                state = ngx_json_number_exp;
-                break;
-            }
-
-            p--;
-
-            rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc != NGX_OK) {
-                return rc;
-            }
-
-            break;
-
-        case ngx_json_number_exp:
-            if (*p == '-' || *p == '+') {
-                state = ngx_json_number_exp_plusminus;
-                break;
-            }
-
-            if (*p >= '0' && *p <= '9') {
-                state = ngx_json_number_exp_digit;
-                break;
-            }
-
-            return NGX_DECLINED;
-
-        case ngx_json_number_exp_plusminus:
-            if (*p >= '0' && *p <= '9') {
-                state = ngx_json_number_exp_digit;
-                break;
-            }
-
-            return NGX_DECLINED;
-
-        case ngx_json_number_exp_digit:
-            if (*p >= '0' && *p <= '9') {
-                break;
+            എങ്കിൽ (*p == 'e' || *p == 'E') {
+                state = ngx_json_സംഖ്യ_exp;
+                നിർത്തുക;
             }
 
             p--;
 
-            rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc != NGX_OK) {
-                return rc;
+            rc = ngx_json_end_സംഖ്യ(ctx, start, p + 1, &state);
+            എങ്കിൽ (rc != NGX_OK) {
+                തിരികെ rc;
             }
 
-            break;
+            നിർത്തുക;
 
-        case ngx_json_true_t:
-            if (*p == 'r') {
+        അവസ്ഥ ngx_json_സംഖ്യ_exp:
+            എങ്കിൽ (*p == '-' || *p == '+') {
+                state = ngx_json_സംഖ്യ_exp_plusminus;
+                നിർത്തുക;
+            }
+
+            എങ്കിൽ (*p >= '0' && *p <= '9') {
+                state = ngx_json_സംഖ്യ_exp_digit;
+                നിർത്തുക;
+            }
+
+            തിരികെ NGX_DECLINED;
+
+        അവസ്ഥ ngx_json_സംഖ്യ_exp_plusminus:
+            എങ്കിൽ (*p >= '0' && *p <= '9') {
+                state = ngx_json_സംഖ്യ_exp_digit;
+                നിർത്തുക;
+            }
+
+            തിരികെ NGX_DECLINED;
+
+        അവസ്ഥ ngx_json_സംഖ്യ_exp_digit:
+            എങ്കിൽ (*p >= '0' && *p <= '9') {
+                നിർത്തുക;
+            }
+
+            p--;
+
+            rc = ngx_json_end_സംഖ്യ(ctx, start, p + 1, &state);
+            എങ്കിൽ (rc != NGX_OK) {
+                തിരികെ rc;
+            }
+
+            നിർത്തുക;
+
+        അവസ്ഥ ngx_json_true_t:
+            എങ്കിൽ (*p == 'r') {
                 state = ngx_json_true_tr;
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_true_tr:
-            if (*p == 'u') {
+        അവസ്ഥ ngx_json_true_tr:
+            എങ്കിൽ (*p == 'u') {
                 state = ngx_json_true_tru;
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_true_tru:
-            if (*p == 'e') {
-                rc = ngx_json_emit(ctx, NGX_JSON_VALUE_BOOL, start,
+        അവസ്ഥ ngx_json_true_tru:
+            എങ്കിൽ (*p == 'e') {
+                rc = ngx_json_emit(ctx, NGX_JSON_മൂല്യം_BOOL, start,
                                   p + 1 - start);
-                if (rc != NGX_OK) {
-                    return rc;
+                എങ്കിൽ (rc != NGX_OK) {
+                    തിരികെ rc;
                 }
 
-                state = ngx_json_after_value(ctx);
-                break;
+                state = ngx_json_after_മൂല്യം(ctx);
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_false_f:
-            if (*p == 'a') {
+        അവസ്ഥ ngx_json_false_f:
+            എങ്കിൽ (*p == 'a') {
                 state = ngx_json_false_fa;
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_false_fa:
-            if (*p == 'l') {
+        അവസ്ഥ ngx_json_false_fa:
+            എങ്കിൽ (*p == 'l') {
                 state = ngx_json_false_fal;
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_false_fal:
-            if (*p == 's') {
+        അവസ്ഥ ngx_json_false_fal:
+            എങ്കിൽ (*p == 's') {
                 state = ngx_json_false_fals;
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_false_fals:
-            if (*p == 'e') {
-                rc = ngx_json_emit(ctx, NGX_JSON_VALUE_BOOL, start,
+        അവസ്ഥ ngx_json_false_fals:
+            എങ്കിൽ (*p == 'e') {
+                rc = ngx_json_emit(ctx, NGX_JSON_മൂല്യം_BOOL, start,
                                   p + 1 - start);
-                if (rc != NGX_OK) {
-                    return rc;
+                എങ്കിൽ (rc != NGX_OK) {
+                    തിരികെ rc;
                 }
 
-                state = ngx_json_after_value(ctx);
-                break;
+                state = ngx_json_after_മൂല്യം(ctx);
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_null_n:
-            if (*p == 'u') {
+        അവസ്ഥ ngx_json_null_n:
+            എങ്കിൽ (*p == 'u') {
                 state = ngx_json_null_nu;
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_null_nu:
-            if (*p == 'l') {
+        അവസ്ഥ ngx_json_null_nu:
+            എങ്കിൽ (*p == 'l') {
                 state = ngx_json_null_nul;
-                break;
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_null_nul:
-            if (*p == 'l') {
-                rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NULL, start,
+        അവസ്ഥ ngx_json_null_nul:
+            എങ്കിൽ (*p == 'l') {
+                rc = ngx_json_emit(ctx, NGX_JSON_മൂല്യം_NULL, start,
                                   p + 1 - start);
-                if (rc != NGX_OK) {
-                    return rc;
+                എങ്കിൽ (rc != NGX_OK) {
+                    തിരികെ rc;
                 }
 
-                state = ngx_json_after_value(ctx);
-                break;
+                state = ngx_json_after_മൂല്യം(ctx);
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
 
-        case ngx_json_done:
-            if (ngx_json_ws(*p)) {
-                break;
+        അവസ്ഥ ngx_json_done:
+            എങ്കിൽ (ngx_json_ws(*p)) {
+                നിർത്തുക;
             }
 
-            return NGX_DECLINED;
+            തിരികെ NGX_DECLINED;
         }
 
         skip_depth = ctx->skip_until_depth;
@@ -651,15 +651,15 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
     /* a bare top-level number is not self-delimited; emit it at end of input */
 
-    if (ctx->depth == 0
-        && (state == ngx_json_number_int_zero
-            || state == ngx_json_number_int
-            || state == ngx_json_number_frac_digit
-            || state == ngx_json_number_exp_digit))
+    എങ്കിൽ (ctx->depth == 0
+        && (state == ngx_json_സംഖ്യ_int_zero
+            || state == ngx_json_സംഖ്യ_int
+            || state == ngx_json_സംഖ്യ_frac_digit
+            || state == ngx_json_സംഖ്യ_exp_digit))
     {
-        rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NUMBER, start, last - start);
-        if (rc != NGX_OK) {
-            return rc;
+        rc = ngx_json_emit(ctx, NGX_JSON_മൂല്യം_സംഖ്യ, start, last - start);
+        എങ്കിൽ (rc != NGX_OK) {
+            തിരികെ rc;
         }
 
         state = ngx_json_done;
@@ -667,17 +667,17 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
     ctx->state = state;
 
-    if (state == ngx_json_done) {
-        return NGX_OK;
+    എങ്കിൽ (state == ngx_json_done) {
+        തിരികെ NGX_OK;
     }
 
-    return NGX_DECLINED;
+    തിരികെ NGX_DECLINED;
 }
 
 
 ngx_int_t
 ngx_json_parse(ngx_pool_t *pool, ngx_str_t *json, ngx_json_handler_pt handler,
-    void *data)
+    ശൂന്യം *data)
 {
     ngx_json_ctx_t  jctx;
 
@@ -686,47 +686,47 @@ ngx_json_parse(ngx_pool_t *pool, ngx_str_t *json, ngx_json_handler_pt handler,
     jctx.data = data;
     jctx.handler = handler;
 
-    return ngx_json_parse_ctx(&jctx, json->data, json->len);
+    തിരികെ ngx_json_parse_ctx(&jctx, json->data, json->len);
 }
 
 
-static ngx_inline ngx_int_t
-ngx_json_end_number(ngx_json_ctx_t *ctx, u_char *start, u_char *end,
+സ്ഥിതം ngx_inline ngx_int_t
+ngx_json_end_സംഖ്യ(ngx_json_ctx_t *ctx, u_char *start, u_char *end,
     ngx_json_state_e *state)
 {
     ngx_int_t  rc;
 
-    rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NUMBER, start, end - start);
-    if (rc != NGX_OK) {
-        return rc;
+    rc = ngx_json_emit(ctx, NGX_JSON_മൂല്യം_സംഖ്യ, start, end - start);
+    എങ്കിൽ (rc != NGX_OK) {
+        തിരികെ rc;
     }
 
-    *state = ngx_json_after_value(ctx);
+    *state = ngx_json_after_മൂല്യം(ctx);
 
-    return NGX_OK;
+    തിരികെ NGX_OK;
 }
 
 
-static ngx_inline ngx_int_t
+സ്ഥിതം ngx_inline ngx_int_t
 ngx_json_emit(ngx_json_ctx_t *ctx, ngx_json_event_e event, u_char *data,
     size_t len)
 {
     ngx_int_t  rc;
     ngx_str_t  token;
 
-    if (ngx_json_skipping(ctx->skip_until_depth)) {
-        return NGX_OK;
+    എങ്കിൽ (ngx_json_skipping(ctx->skip_until_depth)) {
+        തിരികെ NGX_OK;
     }
 
-    if (ctx->handler == NULL) {
-        return NGX_OK;
+    എങ്കിൽ (ctx->handler == ശൂന്യ) {
+        തിരികെ NGX_OK;
     }
 
     token.data = data;
     token.len = len;
     rc = ctx->handler(ctx, event, &token);
 
-    if (rc == NGX_JSON_SKIP) {
+    എങ്കിൽ (rc == NGX_JSON_SKIP) {
 
         /*
          * NGX_JSON_SKIP prunes the rest of the current container.  It is
@@ -741,54 +741,54 @@ ngx_json_emit(ngx_json_ctx_t *ctx, ngx_json_event_e event, u_char *data,
          * and a CLOSE fires after the container is already complete.
          */
 
-        switch (event) {
+        തിരഞ്ഞെടുപ്പ് (event) {
 
-        case NGX_JSON_KEY:
-        case NGX_JSON_KEY_ESCAPED:
-        case NGX_JSON_OBJECT_OPEN:
-        case NGX_JSON_ARRAY_OPEN:
+        അവസ്ഥ NGX_JSON_താക്കോൽ:
+        അവസ്ഥ NGX_JSON_താക്കോൽ_ESCAPED:
+        അവസ്ഥ NGX_JSON_OBJECT_OPEN:
+        അവസ്ഥ NGX_JSON_ARRAY_OPEN:
             ctx->skip_until_depth = ctx->depth;
-            break;
+            നിർത്തുക;
 
-        case NGX_JSON_VALUE_STRING:
-        case NGX_JSON_VALUE_STRING_ESCAPED:
-        case NGX_JSON_VALUE_NUMBER:
-        case NGX_JSON_VALUE_BOOL:
-        case NGX_JSON_VALUE_NULL:
-            if (ctx->depth > 0
-                && ctx->stack[ctx->depth - 1] == ngx_json_ctx_array
+        അവസ്ഥ NGX_JSON_മൂല്യം_STRING:
+        അവസ്ഥ NGX_JSON_മൂല്യം_STRING_ESCAPED:
+        അവസ്ഥ NGX_JSON_മൂല്യം_സംഖ്യ:
+        അവസ്ഥ NGX_JSON_മൂല്യം_BOOL:
+        അവസ്ഥ NGX_JSON_മൂല്യം_NULL:
+            എങ്കിൽ (ctx->depth > 0
+                && ctx->അട്ടി[ctx->depth - 1] == ngx_json_ctx_array
             ) {
                 ctx->skip_until_depth = ctx->depth - 1;
             }
-            break;
+            നിർത്തുക;
 
-        default:
-            break;
+        സ്ഥിരസ്ഥിതി:
+            നിർത്തുക;
         }
 
-        return NGX_OK;
+        തിരികെ NGX_OK;
     }
 
-    return rc;
+    തിരികെ rc;
 }
 
 
-static ngx_inline ngx_json_state_e
-ngx_json_after_value(ngx_json_ctx_t *ctx)
+സ്ഥിതം ngx_inline ngx_json_state_e
+ngx_json_after_മൂല്യം(ngx_json_ctx_t *ctx)
 {
-    if (ctx->depth == 0) {
-        return ngx_json_done;
+    എങ്കിൽ (ctx->depth == 0) {
+        തിരികെ ngx_json_done;
     }
 
-    if (ctx->stack[ctx->depth - 1] == ngx_json_ctx_object) {
-        return ngx_json_object_value_separator;
+    എങ്കിൽ (ctx->അട്ടി[ctx->depth - 1] == ngx_json_ctx_object) {
+        തിരികെ ngx_json_object_മൂല്യം_separator;
     }
 
-    return ngx_json_array_value_separator;
+    തിരികെ ngx_json_array_മൂല്യം_separator;
 }
 
 
-static ngx_inline ngx_int_t
+സ്ഥിതം ngx_inline ngx_int_t
 ngx_json_close(ngx_json_ctx_t *ctx, ngx_json_event_e event,
     ngx_json_state_e *state, u_char *p)
 {
@@ -797,37 +797,37 @@ ngx_json_close(ngx_json_ctx_t *ctx, ngx_json_event_e event,
     ctx->depth--;
 
     rc = ngx_json_emit(ctx, event, p, 1);
-    if (rc != NGX_OK) {
-        return rc;
+    എങ്കിൽ (rc != NGX_OK) {
+        തിരികെ rc;
     }
 
-    *state = ngx_json_after_value(ctx);
+    *state = ngx_json_after_മൂല്യം(ctx);
 
-    return NGX_OK;
+    തിരികെ NGX_OK;
 }
 
 
-static ngx_int_t
-ngx_json_push_state(ngx_json_ctx_t *ctx, ngx_json_container_e container)
+സ്ഥിതം ngx_int_t
+ngx_json_തള്ളുക_state(ngx_json_ctx_t *ctx, ngx_json_container_e container)
 {
-    ngx_json_container_e  *stack;
+    ngx_json_container_e  *അട്ടി;
 
-    if (ctx->depth >= ctx->max_depth) {
-        return NGX_DECLINED;
+    എങ്കിൽ (ctx->depth >= ctx->max_depth) {
+        തിരികെ NGX_DECLINED;
     }
 
-    if (ctx->stack == NULL) {
-        stack = ngx_palloc(ctx->pool,
-                           ctx->max_depth * sizeof(ngx_json_container_e));
-        if (stack == NULL) {
-            return NGX_ERROR;
+    എങ്കിൽ (ctx->അട്ടി == ശൂന്യ) {
+        അട്ടി = ngx_palloc(ctx->pool,
+                           ctx->max_depth * വലുപ്പം(ngx_json_container_e));
+        എങ്കിൽ (അട്ടി == ശൂന്യ) {
+            തിരികെ NGX_ERROR;
         }
 
-        ctx->stack = stack;
+        ctx->അട്ടി = അട്ടി;
     }
 
-    ctx->stack[ctx->depth] = container;
+    ctx->അട്ടി[ctx->depth] = container;
     ctx->depth++;
 
-    return NGX_OK;
+    തിരികെ NGX_OK;
 }

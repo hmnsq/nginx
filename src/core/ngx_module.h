@@ -10,191 +10,191 @@
 #define _NGX_MODULE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <nginx.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
+#അന്തര്ഭാവ <nginx.h>
 
 
 #define NGX_MODULE_UNSET_INDEX  (ngx_uint_t) -1
 
 
 #define NGX_MODULE_SIGNATURE_0                                                \
-    ngx_value(NGX_PTR_SIZE) ","                                               \
-    ngx_value(NGX_SIG_ATOMIC_T_SIZE) ","                                      \
-    ngx_value(NGX_TIME_T_SIZE) ","
+    ngx_മൂല്യം(NGX_PTR_SIZE) ","                                               \
+    ngx_മൂല്യം(NGX_SIG_ATOMIC_T_SIZE) ","                                      \
+    ngx_മൂല്യം(NGX_TIME_T_SIZE) ","
 
-#if (NGX_HAVE_KQUEUE)
+#എങ്കിൽ (NGX_HAVE_KQUEUE)
 #define NGX_MODULE_SIGNATURE_1   "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_1   "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_2   "0"
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#എങ്കിൽ (NGX_HAVE_FILE_AIO || NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_3   "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_3   "0"
 #endif
 
-#if (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
+#എങ്കിൽ (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_4   "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_4   "0"
 #endif
 
-#if (NGX_HAVE_EVENTFD)
+#എങ്കിൽ (NGX_HAVE_EVENTFD)
 #define NGX_MODULE_SIGNATURE_5   "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_5   "0"
 #endif
 
-#if (NGX_HAVE_EPOLL)
+#എങ്കിൽ (NGX_HAVE_EPOLL)
 #define NGX_MODULE_SIGNATURE_6   "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_6   "0"
 #endif
 
-#if (NGX_HAVE_KEEPALIVE_TUNABLE)
+#എങ്കിൽ (NGX_HAVE_KEEPALIVE_TUNABLE)
 #define NGX_MODULE_SIGNATURE_7   "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_7   "0"
 #endif
 
-#if (NGX_HAVE_INET6)
+#എങ്കിൽ (NGX_HAVE_INET6)
 #define NGX_MODULE_SIGNATURE_8   "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_8   "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_9   "1"
 #define NGX_MODULE_SIGNATURE_10  "1"
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+#എങ്കിൽ (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
 #define NGX_MODULE_SIGNATURE_11  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_11  "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_12  "1"
 
-#if (NGX_HAVE_SETFIB)
+#എങ്കിൽ (NGX_HAVE_SETFIB)
 #define NGX_MODULE_SIGNATURE_13  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_13  "0"
 #endif
 
-#if (NGX_HAVE_TCP_FASTOPEN)
+#എങ്കിൽ (NGX_HAVE_TCP_FASTOPEN)
 #define NGX_MODULE_SIGNATURE_14  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_14  "0"
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#എങ്കിൽ (NGX_HAVE_UNIX_DOMAIN)
 #define NGX_MODULE_SIGNATURE_15  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_15  "0"
 #endif
 
-#if (NGX_HAVE_VARIADIC_MACROS)
+#എങ്കിൽ (NGX_HAVE_VARIADIC_MACROS)
 #define NGX_MODULE_SIGNATURE_16  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_16  "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_17  "0"
 
-#if (NGX_QUIC || NGX_COMPAT)
+#എങ്കിൽ (NGX_QUIC || NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_18  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_18  "0"
 #endif
 
-#if (NGX_HAVE_OPENAT)
+#എങ്കിൽ (NGX_HAVE_OPENAT)
 #define NGX_MODULE_SIGNATURE_19  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_19  "0"
 #endif
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#എങ്കിൽ (NGX_HAVE_ATOMIC_OPS)
 #define NGX_MODULE_SIGNATURE_20  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_20  "0"
 #endif
 
-#if (NGX_HAVE_POSIX_SEM)
+#എങ്കിൽ (NGX_HAVE_POSIX_SEM)
 #define NGX_MODULE_SIGNATURE_21  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_21  "0"
 #endif
 
-#if (NGX_THREADS || NGX_COMPAT)
+#എങ്കിൽ (NGX_THREADS || NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_22  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_22  "0"
 #endif
 
-#if (NGX_PCRE)
+#എങ്കിൽ (NGX_PCRE)
 #define NGX_MODULE_SIGNATURE_23  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_23  "0"
 #endif
 
-#if (NGX_HTTP_SSL || NGX_COMPAT)
+#എങ്കിൽ (NGX_HTTP_SSL || NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_24  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_24  "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_25  "1"
 
-#if (NGX_HTTP_GZIP)
+#എങ്കിൽ (NGX_HTTP_GZIP)
 #define NGX_MODULE_SIGNATURE_26  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_26  "0"
 #endif
 
 #define NGX_MODULE_SIGNATURE_27  "1"
 
-#if (NGX_HTTP_X_FORWARDED_FOR)
+#എങ്കിൽ (NGX_HTTP_X_FORWARDED_FOR)
 #define NGX_MODULE_SIGNATURE_28  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_28  "0"
 #endif
 
-#if (NGX_HTTP_REALIP)
+#എങ്കിൽ (NGX_HTTP_REALIP)
 #define NGX_MODULE_SIGNATURE_29  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_29  "0"
 #endif
 
-#if (NGX_HTTP_HEADERS)
+#എങ്കിൽ (NGX_HTTP_HEADERS)
 #define NGX_MODULE_SIGNATURE_30  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_30  "0"
 #endif
 
-#if (NGX_HTTP_DAV)
+#എങ്കിൽ (NGX_HTTP_DAV)
 #define NGX_MODULE_SIGNATURE_31  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_31  "0"
 #endif
 
-#if (NGX_HTTP_CACHE)
+#എങ്കിൽ (NGX_HTTP_CACHE)
 #define NGX_MODULE_SIGNATURE_32  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_32  "0"
 #endif
 
-#if (NGX_HTTP_UPSTREAM_ZONE)
+#എങ്കിൽ (NGX_HTTP_UPSTREAM_ZONE)
 #define NGX_MODULE_SIGNATURE_33  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_33  "0"
 #endif
 
-#if (NGX_COMPAT)
+#എങ്കിൽ (NGX_COMPAT)
 #define NGX_MODULE_SIGNATURE_34  "1"
-#else
+#അല്ലെങ്കിൽ
 #define NGX_MODULE_SIGNATURE_34  "0"
 #endif
 
@@ -215,24 +215,24 @@
 
 #define NGX_MODULE_V1                                                         \
     NGX_MODULE_UNSET_INDEX, NGX_MODULE_UNSET_INDEX,                           \
-    NULL, 0, 0, nginx_version, NGX_MODULE_SIGNATURE
+    ശൂന്യ, 0, 0, nginx_version, NGX_MODULE_SIGNATURE
 
 #define NGX_MODULE_V1_PADDING  0, 0, 0, 0, 0, 0, 0, 0
 
 
-struct ngx_module_s {
+ഘടന ngx_module_s {
     ngx_uint_t            ctx_index;
     ngx_uint_t            index;
 
-    char                 *name;
+    അക്ഷരം                 *name;
 
     ngx_uint_t            spare0;
     ngx_uint_t            spare1;
 
     ngx_uint_t            version;
-    const char           *signature;
+    സ്ഥിരം അക്ഷരം           *signature;
 
-    void                 *ctx;
+    ശൂന്യം                 *ctx;
     ngx_command_t        *commands;
     ngx_uint_t            type;
 
@@ -242,10 +242,10 @@ struct ngx_module_s {
 
     ngx_int_t           (*init_process)(ngx_cycle_t *cycle);
     ngx_int_t           (*init_thread)(ngx_cycle_t *cycle);
-    void                (*exit_thread)(ngx_cycle_t *cycle);
-    void                (*exit_process)(ngx_cycle_t *cycle);
+    ശൂന്യം                (*exit_thread)(ngx_cycle_t *cycle);
+    ശൂന്യം                (*exit_process)(ngx_cycle_t *cycle);
 
-    void                (*exit_master)(ngx_cycle_t *cycle);
+    ശൂന്യം                (*exit_master)(ngx_cycle_t *cycle);
 
     uintptr_t             spare_hook0;
     uintptr_t             spare_hook1;
@@ -258,27 +258,27 @@ struct ngx_module_s {
 };
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
     ngx_str_t             name;
-    void               *(*create_conf)(ngx_cycle_t *cycle);
-    char               *(*init_conf)(ngx_cycle_t *cycle, void *conf);
+    ശൂന്യം               *(*create_conf)(ngx_cycle_t *cycle);
+    അക്ഷരം               *(*init_conf)(ngx_cycle_t *cycle, ശൂന്യം *conf);
 } ngx_core_module_t;
 
 
-ngx_int_t ngx_preinit_modules(void);
+ngx_int_t ngx_preinit_modules(ശൂന്യം);
 ngx_int_t ngx_cycle_modules(ngx_cycle_t *cycle);
 ngx_int_t ngx_init_modules(ngx_cycle_t *cycle);
-ngx_int_t ngx_count_modules(ngx_cycle_t *cycle, ngx_uint_t type);
+ngx_int_t ngx_എണ്ണം_modules(ngx_cycle_t *cycle, ngx_uint_t type);
 
 
 ngx_int_t ngx_add_module(ngx_conf_t *cf, ngx_str_t *file,
-    ngx_module_t *module, char **order);
+    ngx_module_t *module, അക്ഷരം **order);
 
 
-extern ngx_module_t  *ngx_modules[];
-extern ngx_uint_t     ngx_max_module;
+ബാഹ്യ ngx_module_t  *ngx_modules[];
+ബാഹ്യ ngx_uint_t     ngx_max_module;
 
-extern char          *ngx_module_names[];
+ബാഹ്യ അക്ഷരം          *ngx_module_names[];
 
 
 #endif /* _NGX_MODULE_H_INCLUDED_ */

@@ -6,16 +6,16 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_md5.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
+#അന്തര്ഭാവ <ngx_md5.h>
 
 
-static const u_char *ngx_md5_body(ngx_md5_t *ctx, const u_char *data,
+സ്ഥിതം സ്ഥിരം u_char *ngx_md5_body(ngx_md5_t *ctx, സ്ഥിരം u_char *data,
     size_t size);
 
 
-void
+ശൂന്യം
 ngx_md5_init(ngx_md5_t *ctx)
 {
     ctx->a = 0x67452301;
@@ -27,29 +27,29 @@ ngx_md5_init(ngx_md5_t *ctx)
 }
 
 
-void
-ngx_md5_update(ngx_md5_t *ctx, const void *data, size_t size)
+ശൂന്യം
+ngx_md5_update(ngx_md5_t *ctx, സ്ഥിരം ശൂന്യം *data, size_t size)
 {
-    size_t  used, free;
+    size_t  used, സ്വതന്ത്രം;
 
     used = (size_t) (ctx->bytes & 0x3f);
     ctx->bytes += size;
 
-    if (used) {
-        free = 64 - used;
+    എങ്കിൽ (used) {
+        സ്വതന്ത്രം = 64 - used;
 
-        if (size < free) {
+        എങ്കിൽ (size < സ്വതന്ത്രം) {
             ngx_memcpy(&ctx->buffer[used], data, size);
-            return;
+            തിരികെ;
         }
 
-        ngx_memcpy(&ctx->buffer[used], data, free);
-        data = (u_char *) data + free;
-        size -= free;
-        (void) ngx_md5_body(ctx, ctx->buffer, 64);
+        ngx_memcpy(&ctx->buffer[used], data, സ്വതന്ത്രം);
+        data = (u_char *) data + സ്വതന്ത്രം;
+        size -= സ്വതന്ത്രം;
+        (ശൂന്യം) ngx_md5_body(ctx, ctx->buffer, 64);
     }
 
-    if (size >= 64) {
+    എങ്കിൽ (size >= 64) {
         data = ngx_md5_body(ctx, data, size & ~(size_t) 0x3f);
         size &= 0x3f;
     }
@@ -58,25 +58,25 @@ ngx_md5_update(ngx_md5_t *ctx, const void *data, size_t size)
 }
 
 
-void
+ശൂന്യം
 ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
 {
-    size_t  used, free;
+    size_t  used, സ്വതന്ത്രം;
 
     used = (size_t) (ctx->bytes & 0x3f);
 
     ctx->buffer[used++] = 0x80;
 
-    free = 64 - used;
+    സ്വതന്ത്രം = 64 - used;
 
-    if (free < 8) {
-        ngx_memzero(&ctx->buffer[used], free);
-        (void) ngx_md5_body(ctx, ctx->buffer, 64);
+    എങ്കിൽ (സ്വതന്ത്രം < 8) {
+        ngx_memzero(&ctx->buffer[used], സ്വതന്ത്രം);
+        (ശൂന്യം) ngx_md5_body(ctx, ctx->buffer, 64);
         used = 0;
-        free = 64;
+        സ്വതന്ത്രം = 64;
     }
 
-    ngx_memzero(&ctx->buffer[used], free - 8);
+    ngx_memzero(&ctx->buffer[used], സ്വതന്ത്രം - 8);
 
     ctx->bytes <<= 3;
     ctx->buffer[56] = (u_char) ctx->bytes;
@@ -88,7 +88,7 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
     ctx->buffer[62] = (u_char) (ctx->bytes >> 48);
     ctx->buffer[63] = (u_char) (ctx->bytes >> 56);
 
-    (void) ngx_md5_body(ctx, ctx->buffer, 64);
+    (ശൂന്യം) ngx_md5_body(ctx, ctx->buffer, 64);
 
     result[0] = (u_char) ctx->a;
     result[1] = (u_char) (ctx->a >> 8);
@@ -107,7 +107,7 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
     result[14] = (u_char) (ctx->d >> 16);
     result[15] = (u_char) (ctx->d >> 24);
 
-    ngx_memzero(ctx, sizeof(*ctx));
+    ngx_memzero(ctx, വലുപ്പം(*ctx));
 }
 
 
@@ -142,12 +142,12 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
  * does not work.
  */
 
-#if (NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
+#എങ്കിൽ (NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
 
 #define SET(n)      (*(uint32_t *) &p[n * 4])
 #define GET(n)      (*(uint32_t *) &p[n * 4])
 
-#else
+#അല്ലെങ്കിൽ
 
 #define SET(n)                                                                \
     (block[n] =                                                               \
@@ -166,13 +166,13 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
  * the bit counters.  There are no alignment requirements.
  */
 
-static const u_char *
-ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
+സ്ഥിതം സ്ഥിരം u_char *
+ngx_md5_body(ngx_md5_t *ctx, സ്ഥിരം u_char *data, size_t size)
 {
     uint32_t       a, b, c, d;
     uint32_t       saved_a, saved_b, saved_c, saved_d;
-    const u_char  *p;
-#if !(NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
+    സ്ഥിരം u_char  *p;
+#എങ്കിൽ !(NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
     uint32_t       block[16];
 #endif
 
@@ -183,7 +183,7 @@ ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
     c = ctx->c;
     d = ctx->d;
 
-    do {
+    ചെയ്യുക {
         saved_a = a;
         saved_b = b;
         saved_c = c;
@@ -272,12 +272,12 @@ ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
 
         p += 64;
 
-    } while (size -= 64);
+    } ആകുമ്പോൾ (size -= 64);
 
     ctx->a = a;
     ctx->b = b;
     ctx->c = c;
     ctx->d = d;
 
-    return p;
+    തിരികെ p;
 }

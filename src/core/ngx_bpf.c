@@ -4,29 +4,29 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 #define NGX_BPF_LOGBUF_SIZE  (32 * 1024)
 
 
-static ngx_inline int
-ngx_bpf(enum bpf_cmd cmd, union bpf_attr *attr, unsigned int size)
+സ്ഥിതം ngx_inline പൂർണ്ണസംഖ്യ
+ngx_bpf(എണ്ണൽ bpf_cmd cmd, സംഘം bpf_attr *attr, unsigned പൂർണ്ണസംഖ്യ size)
 {
-    return syscall(__NR_bpf, cmd, attr, size);
+    തിരികെ syscall(__NR_bpf, cmd, attr, size);
 }
 
 
-void
-ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol, int fd)
+ശൂന്യം
+ngx_bpf_program_link(ngx_bpf_program_t *program, സ്ഥിരം അക്ഷരം *ചിഹ്നം, പൂർണ്ണസംഖ്യ fd)
 {
     ngx_uint_t        i;
     ngx_bpf_reloc_t  *rl;
 
     rl = program->relocs;
 
-    for (i = 0; i < program->nrelocs; i++) {
-        if (ngx_strcmp(rl[i].name, symbol) == 0) {
+    വേണ്ടി (i = 0; i < program->nrelocs; i++) {
+        എങ്കിൽ (ngx_strcmp(rl[i].name, ചിഹ്നം) == 0) {
             program->ins[rl[i].offset].src_reg = 1;
             program->ins[rl[i].offset].imm = fd;
         }
@@ -34,110 +34,110 @@ ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol, int fd)
 }
 
 
-int
+പൂർണ്ണസംഖ്യ
 ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program)
 {
-    int             fd;
-    union bpf_attr  attr;
-#if (NGX_DEBUG)
-    char            buf[NGX_BPF_LOGBUF_SIZE];
+    പൂർണ്ണസംഖ്യ             fd;
+    സംഘം bpf_attr  attr;
+#എങ്കിൽ (NGX_DEBUG)
+    അക്ഷരം            buf[NGX_BPF_LOGBUF_SIZE];
 #endif
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, വലുപ്പം(സംഘം bpf_attr));
 
     attr.license = (uintptr_t) program->license;
     attr.prog_type = program->type;
     attr.insns = (uintptr_t) program->ins;
     attr.insn_cnt = program->nins;
 
-#if (NGX_DEBUG)
+#എങ്കിൽ (NGX_DEBUG)
     /* for verifier errors */
     attr.log_buf = (uintptr_t) buf;
     attr.log_size = NGX_BPF_LOGBUF_SIZE;
     attr.log_level = 1;
 #endif
 
-    fd = ngx_bpf(BPF_PROG_LOAD, &attr, sizeof(attr));
-    if (fd < 0) {
+    fd = ngx_bpf(BPF_PROG_LOAD, &attr, വലുപ്പം(attr));
+    എങ്കിൽ (fd < 0) {
         ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
                       "failed to load BPF program");
 
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0,
                        "bpf verifier: %s", buf);
 
-        return -1;
+        തിരികെ -1;
     }
 
-    return fd;
+    തിരികെ fd;
 }
 
 
-int
-ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags)
+പൂർണ്ണസംഖ്യ
+ngx_bpf_map_create(ngx_log_t *log, എണ്ണൽ bpf_map_type type, പൂർണ്ണസംഖ്യ താക്കോൽ_size,
+    പൂർണ്ണസംഖ്യ മൂല്യം_size, പൂർണ്ണസംഖ്യ max_entries, uint32_t map_flags)
 {
-    int             fd;
-    union bpf_attr  attr;
+    പൂർണ്ണസംഖ്യ             fd;
+    സംഘം bpf_attr  attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, വലുപ്പം(സംഘം bpf_attr));
 
     attr.map_type = type;
-    attr.key_size = key_size;
-    attr.value_size = value_size;
+    attr.താക്കോൽ_size = താക്കോൽ_size;
+    attr.മൂല്യം_size = മൂല്യം_size;
     attr.max_entries = max_entries;
     attr.map_flags = map_flags;
 
-    fd = ngx_bpf(BPF_MAP_CREATE, &attr, sizeof(attr));
-    if (fd < 0) {
+    fd = ngx_bpf(BPF_MAP_CREATE, &attr, വലുപ്പം(attr));
+    എങ്കിൽ (fd < 0) {
         ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
                       "failed to create BPF map");
-        return NGX_ERROR;
+        തിരികെ NGX_ERROR;
     }
 
-    return fd;
+    തിരികെ fd;
 }
 
 
-int
-ngx_bpf_map_update(int fd, const void *key, const void *value, uint64_t flags)
+പൂർണ്ണസംഖ്യ
+ngx_bpf_map_update(പൂർണ്ണസംഖ്യ fd, സ്ഥിരം ശൂന്യം *താക്കോൽ, സ്ഥിരം ശൂന്യം *മൂല്യം, uint64_t flags)
 {
-    union bpf_attr attr;
+    സംഘം bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, വലുപ്പം(സംഘം bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.താക്കോൽ = (uintptr_t) താക്കോൽ;
+    attr.മൂല്യം = (uintptr_t) മൂല്യം;
     attr.flags = flags;
 
-    return ngx_bpf(BPF_MAP_UPDATE_ELEM, &attr, sizeof(attr));
+    തിരികെ ngx_bpf(BPF_MAP_UPDATE_ELEM, &attr, വലുപ്പം(attr));
 }
 
 
-int
-ngx_bpf_map_delete(int fd, const void *key)
+പൂർണ്ണസംഖ്യ
+ngx_bpf_map_delete(പൂർണ്ണസംഖ്യ fd, സ്ഥിരം ശൂന്യം *താക്കോൽ)
 {
-    union bpf_attr attr;
+    സംഘം bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, വലുപ്പം(സംഘം bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
+    attr.താക്കോൽ = (uintptr_t) താക്കോൽ;
 
-    return ngx_bpf(BPF_MAP_DELETE_ELEM, &attr, sizeof(attr));
+    തിരികെ ngx_bpf(BPF_MAP_DELETE_ELEM, &attr, വലുപ്പം(attr));
 }
 
 
-int
-ngx_bpf_map_lookup(int fd, const void *key, void *value)
+പൂർണ്ണസംഖ്യ
+ngx_bpf_map_lookup(പൂർണ്ണസംഖ്യ fd, സ്ഥിരം ശൂന്യം *താക്കോൽ, ശൂന്യം *മൂല്യം)
 {
-    union bpf_attr attr;
+    സംഘം bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, വലുപ്പം(സംഘം bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.താക്കോൽ = (uintptr_t) താക്കോൽ;
+    attr.മൂല്യം = (uintptr_t) മൂല്യം;
 
-    return ngx_bpf(BPF_MAP_LOOKUP_ELEM, &attr, sizeof(attr));
+    തിരികെ ngx_bpf(BPF_MAP_LOOKUP_ELEM, &attr, വലുപ്പം(attr));
 }

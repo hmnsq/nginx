@@ -5,24 +5,24 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 
-static u_char *ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64,
+സ്ഥിതം u_char *ngx_sprintf_അക്കം(u_char *buf, u_char *last, uint64_t ui64,
     u_char zero, ngx_uint_t hexadecimal, ngx_uint_t width);
-static u_char *ngx_sprintf_str(u_char *buf, u_char *last, u_char *src,
+സ്ഥിതം u_char *ngx_sprintf_str(u_char *buf, u_char *last, u_char *src,
     size_t len, ngx_uint_t hexadecimal);
-static void ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src,
-    const u_char *basis, ngx_uint_t padding);
-static ngx_int_t ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src,
-    const u_char *basis);
+സ്ഥിതം ശൂന്യം ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src,
+    സ്ഥിരം u_char *basis, ngx_uint_t padding);
+സ്ഥിതം ngx_int_t ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src,
+    സ്ഥിരം u_char *basis);
 
 
-void
+ശൂന്യം
 ngx_strlow(u_char *dst, u_char *src, size_t n)
 {
-    while (n) {
+    ആകുമ്പോൾ (n) {
         *dst = ngx_tolower(*src);
         dst++;
         src++;
@@ -36,29 +36,29 @@ ngx_strnlen(u_char *p, size_t n)
 {
     size_t  i;
 
-    for (i = 0; i < n; i++) {
+    വേണ്ടി (i = 0; i < n; i++) {
 
-        if (p[i] == '\0') {
-            return i;
+        എങ്കിൽ (p[i] == '\0') {
+            തിരികെ i;
         }
     }
 
-    return n;
+    തിരികെ n;
 }
 
 
 u_char *
 ngx_cpystrn(u_char *dst, u_char *src, size_t n)
 {
-    if (n == 0) {
-        return dst;
+    എങ്കിൽ (n == 0) {
+        തിരികെ dst;
     }
 
-    while (--n) {
+    ആകുമ്പോൾ (--n) {
         *dst = *src;
 
-        if (*dst == '\0') {
-            return dst;
+        എങ്കിൽ (*dst == '\0') {
+            തിരികെ dst;
         }
 
         dst++;
@@ -67,7 +67,7 @@ ngx_cpystrn(u_char *dst, u_char *src, size_t n)
 
     *dst = '\0';
 
-    return dst;
+    തിരികെ dst;
 }
 
 
@@ -77,13 +77,13 @@ ngx_pstrdup(ngx_pool_t *pool, ngx_str_t *src)
     u_char  *dst;
 
     dst = ngx_pnalloc(pool, src->len);
-    if (dst == NULL) {
-        return NULL;
+    എങ്കിൽ (dst == ശൂന്യ) {
+        തിരികെ ശൂന്യ;
     }
 
     ngx_memcpy(dst, src->data, src->len);
 
-    return dst;
+    തിരികെ dst;
 }
 
 
@@ -120,21 +120,21 @@ ngx_pstrdup(ngx_pool_t *pool, ngx_str_t *src)
 
 
 u_char * ngx_cdecl
-ngx_sprintf(u_char *buf, const char *fmt, ...)
+ngx_sprintf(u_char *buf, സ്ഥിരം അക്ഷരം *fmt, ...)
 {
     u_char   *p;
     va_list   args;
 
     va_start(args, fmt);
-    p = ngx_vslprintf(buf, (void *) -1, fmt, args);
+    p = ngx_vslprintf(buf, (ശൂന്യം *) -1, fmt, args);
     va_end(args);
 
-    return p;
+    തിരികെ p;
 }
 
 
 u_char * ngx_cdecl
-ngx_snprintf(u_char *buf, size_t max, const char *fmt, ...)
+ngx_snprintf(u_char *buf, size_t max, സ്ഥിരം അക്ഷരം *fmt, ...)
 {
     u_char   *p;
     va_list   args;
@@ -143,12 +143,12 @@ ngx_snprintf(u_char *buf, size_t max, const char *fmt, ...)
     p = ngx_vslprintf(buf, buf + max, fmt, args);
     va_end(args);
 
-    return p;
+    തിരികെ p;
 }
 
 
 u_char * ngx_cdecl
-ngx_slprintf(u_char *buf, u_char *last, const char *fmt, ...)
+ngx_slprintf(u_char *buf, u_char *last, സ്ഥിരം അക്ഷരം *fmt, ...)
 {
     u_char   *p;
     va_list   args;
@@ -157,32 +157,32 @@ ngx_slprintf(u_char *buf, u_char *last, const char *fmt, ...)
     p = ngx_vslprintf(buf, last, fmt, args);
     va_end(args);
 
-    return p;
+    തിരികെ p;
 }
 
 
 u_char *
-ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
+ngx_vslprintf(u_char *buf, u_char *last, സ്ഥിരം അക്ഷരം *fmt, va_list args)
 {
     u_char                *p, zero;
-    int                    d;
-    double                 f;
+    പൂർണ്ണസംഖ്യ                    d;
+    ഇരട്ട                 f;
     size_t                 slen;
     int64_t                i64;
     uint64_t               ui64, frac;
     ngx_msec_t             ms;
     ngx_uint_t             width, sign, hex, max_width, frac_width, scale, n;
     ngx_str_t             *v;
-    ngx_variable_value_t  *vv;
+    ngx_variable_മൂല്യം_t  *vv;
 
-    while (*fmt && buf < last) {
+    ആകുമ്പോൾ (*fmt && buf < last) {
 
         /*
          * "buf < last" means that we could copy at least one character:
          * the plain character, "%%", "%c", and minus without the checking
          */
 
-        if (*fmt == '%') {
+        എങ്കിൽ (*fmt == '%') {
 
             i64 = 0;
             ui64 = 0;
@@ -195,180 +195,180 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
             frac_width = 0;
             slen = (size_t) -1;
 
-            while (*fmt >= '0' && *fmt <= '9') {
+            ആകുമ്പോൾ (*fmt >= '0' && *fmt <= '9') {
                 width = width * 10 + (*fmt++ - '0');
             }
 
 
-            for ( ;; ) {
-                switch (*fmt) {
+            വേണ്ടി ( ;; ) {
+                തിരഞ്ഞെടുപ്പ് (*fmt) {
 
-                case 'u':
+                അവസ്ഥ 'u':
                     sign = 0;
                     fmt++;
-                    continue;
+                    തുടരുക;
 
-                case 'm':
+                അവസ്ഥ 'm':
                     max_width = 1;
                     fmt++;
-                    continue;
+                    തുടരുക;
 
-                case 'X':
+                അവസ്ഥ 'X':
                     hex = 2;
                     sign = 0;
                     fmt++;
-                    continue;
+                    തുടരുക;
 
-                case 'x':
+                അവസ്ഥ 'x':
                     hex = 1;
                     sign = 0;
                     fmt++;
-                    continue;
+                    തുടരുക;
 
-                case '.':
+                അവസ്ഥ '.':
                     fmt++;
 
-                    while (*fmt >= '0' && *fmt <= '9') {
+                    ആകുമ്പോൾ (*fmt >= '0' && *fmt <= '9') {
                         frac_width = frac_width * 10 + (*fmt++ - '0');
                     }
 
-                    break;
+                    നിർത്തുക;
 
-                case '*':
+                അവസ്ഥ '*':
                     slen = va_arg(args, size_t);
                     fmt++;
-                    continue;
+                    തുടരുക;
 
-                default:
-                    break;
+                സ്ഥിരസ്ഥിതി:
+                    നിർത്തുക;
                 }
 
-                break;
+                നിർത്തുക;
             }
 
 
-            switch (*fmt) {
+            തിരഞ്ഞെടുപ്പ് (*fmt) {
 
-            case 'V':
+            അവസ്ഥ 'V':
                 v = va_arg(args, ngx_str_t *);
 
                 buf = ngx_sprintf_str(buf, last, v->data, v->len, hex);
                 fmt++;
 
-                continue;
+                തുടരുക;
 
-            case 'v':
-                vv = va_arg(args, ngx_variable_value_t *);
+            അവസ്ഥ 'v':
+                vv = va_arg(args, ngx_variable_മൂല്യം_t *);
 
                 buf = ngx_sprintf_str(buf, last, vv->data, vv->len, hex);
                 fmt++;
 
-                continue;
+                തുടരുക;
 
-            case 's':
+            അവസ്ഥ 's':
                 p = va_arg(args, u_char *);
 
                 buf = ngx_sprintf_str(buf, last, p, slen, hex);
                 fmt++;
 
-                continue;
+                തുടരുക;
 
-            case 'O':
+            അവസ്ഥ 'O':
                 i64 = (int64_t) va_arg(args, off_t);
                 sign = 1;
-                break;
+                നിർത്തുക;
 
-            case 'P':
+            അവസ്ഥ 'P':
                 i64 = (int64_t) va_arg(args, ngx_pid_t);
                 sign = 1;
-                break;
+                നിർത്തുക;
 
-            case 'T':
+            അവസ്ഥ 'T':
                 i64 = (int64_t) va_arg(args, time_t);
                 sign = 1;
-                break;
+                നിർത്തുക;
 
-            case 'M':
+            അവസ്ഥ 'M':
                 ms = (ngx_msec_t) va_arg(args, ngx_msec_t);
-                if ((ngx_msec_int_t) ms == -1) {
+                എങ്കിൽ ((ngx_msec_int_t) ms == -1) {
                     sign = 1;
                     i64 = -1;
-                } else {
+                } അല്ലെങ്കിൽ {
                     sign = 0;
                     ui64 = (uint64_t) ms;
                 }
-                break;
+                നിർത്തുക;
 
-            case 'z':
-                if (sign) {
+            അവസ്ഥ 'z':
+                എങ്കിൽ (sign) {
                     i64 = (int64_t) va_arg(args, ssize_t);
-                } else {
+                } അല്ലെങ്കിൽ {
                     ui64 = (uint64_t) va_arg(args, size_t);
                 }
-                break;
+                നിർത്തുക;
 
-            case 'i':
-                if (sign) {
+            അവസ്ഥ 'i':
+                എങ്കിൽ (sign) {
                     i64 = (int64_t) va_arg(args, ngx_int_t);
-                } else {
+                } അല്ലെങ്കിൽ {
                     ui64 = (uint64_t) va_arg(args, ngx_uint_t);
                 }
 
-                if (max_width) {
+                എങ്കിൽ (max_width) {
                     width = NGX_INT_T_LEN;
                 }
 
-                break;
+                നിർത്തുക;
 
-            case 'd':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, int);
-                } else {
+            അവസ്ഥ 'd':
+                എങ്കിൽ (sign) {
+                    i64 = (int64_t) va_arg(args, പൂർണ്ണസംഖ്യ);
+                } അല്ലെങ്കിൽ {
                     ui64 = (uint64_t) va_arg(args, u_int);
                 }
-                break;
+                നിർത്തുക;
 
-            case 'l':
-                if (sign) {
+            അവസ്ഥ 'l':
+                എങ്കിൽ (sign) {
                     i64 = (int64_t) va_arg(args, long);
-                } else {
+                } അല്ലെങ്കിൽ {
                     ui64 = (uint64_t) va_arg(args, u_long);
                 }
-                break;
+                നിർത്തുക;
 
-            case 'D':
-                if (sign) {
+            അവസ്ഥ 'D':
+                എങ്കിൽ (sign) {
                     i64 = (int64_t) va_arg(args, int32_t);
-                } else {
+                } അല്ലെങ്കിൽ {
                     ui64 = (uint64_t) va_arg(args, uint32_t);
                 }
-                break;
+                നിർത്തുക;
 
-            case 'L':
-                if (sign) {
+            അവസ്ഥ 'L':
+                എങ്കിൽ (sign) {
                     i64 = va_arg(args, int64_t);
-                } else {
+                } അല്ലെങ്കിൽ {
                     ui64 = va_arg(args, uint64_t);
                 }
-                break;
+                നിർത്തുക;
 
-            case 'A':
-                if (sign) {
+            അവസ്ഥ 'A':
+                എങ്കിൽ (sign) {
                     i64 = (int64_t) va_arg(args, ngx_atomic_int_t);
-                } else {
+                } അല്ലെങ്കിൽ {
                     ui64 = (uint64_t) va_arg(args, ngx_atomic_uint_t);
                 }
 
-                if (max_width) {
+                എങ്കിൽ (max_width) {
                     width = NGX_ATOMIC_T_LEN;
                 }
 
-                break;
+                നിർത്തുക;
 
-            case 'f':
-                f = va_arg(args, double);
+            അവസ്ഥ 'f':
+                f = va_arg(args, ഇരട്ട);
 
-                if (f < 0) {
+                എങ്കിൽ (f < 0) {
                     *buf++ = '-';
                     f = -f;
                 }
@@ -376,113 +376,113 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
                 ui64 = (int64_t) f;
                 frac = 0;
 
-                if (frac_width) {
+                എങ്കിൽ (frac_width) {
 
                     scale = 1;
-                    for (n = frac_width; n; n--) {
+                    വേണ്ടി (n = frac_width; n; n--) {
                         scale *= 10;
                     }
 
-                    frac = (uint64_t) ((f - (double) ui64) * scale + 0.5);
+                    frac = (uint64_t) ((f - (ഇരട്ട) ui64) * scale + 0.5);
 
-                    if (frac == scale) {
+                    എങ്കിൽ (frac == scale) {
                         ui64++;
                         frac = 0;
                     }
                 }
 
-                buf = ngx_sprintf_num(buf, last, ui64, zero, 0, width);
+                buf = ngx_sprintf_അക്കം(buf, last, ui64, zero, 0, width);
 
-                if (frac_width) {
-                    if (buf < last) {
+                എങ്കിൽ (frac_width) {
+                    എങ്കിൽ (buf < last) {
                         *buf++ = '.';
                     }
 
-                    buf = ngx_sprintf_num(buf, last, frac, '0', 0, frac_width);
+                    buf = ngx_sprintf_അക്കം(buf, last, frac, '0', 0, frac_width);
                 }
 
                 fmt++;
 
-                continue;
+                തുടരുക;
 
-#if !(NGX_WIN32)
-            case 'r':
+#എങ്കിൽ !(NGX_WIN32)
+            അവസ്ഥ 'r':
                 i64 = (int64_t) va_arg(args, rlim_t);
                 sign = 1;
-                break;
+                നിർത്തുക;
 #endif
 
-            case 'p':
-                ui64 = (uintptr_t) va_arg(args, void *);
+            അവസ്ഥ 'p':
+                ui64 = (uintptr_t) va_arg(args, ശൂന്യം *);
                 hex = 2;
                 sign = 0;
                 zero = '0';
-                width = 2 * sizeof(void *);
-                break;
+                width = 2 * വലുപ്പം(ശൂന്യം *);
+                നിർത്തുക;
 
-            case 'c':
-                d = va_arg(args, int);
+            അവസ്ഥ 'c':
+                d = va_arg(args, പൂർണ്ണസംഖ്യ);
                 *buf++ = (u_char) (d & 0xff);
                 fmt++;
 
-                continue;
+                തുടരുക;
 
-            case 'Z':
+            അവസ്ഥ 'Z':
                 *buf++ = '\0';
                 fmt++;
 
-                continue;
+                തുടരുക;
 
-            case 'N':
-#if (NGX_WIN32)
+            അവസ്ഥ 'N':
+#എങ്കിൽ (NGX_WIN32)
                 *buf++ = CR;
-                if (buf < last) {
+                എങ്കിൽ (buf < last) {
                     *buf++ = LF;
                 }
-#else
+#അല്ലെങ്കിൽ
                 *buf++ = LF;
 #endif
                 fmt++;
 
-                continue;
+                തുടരുക;
 
-            case '%':
+            അവസ്ഥ '%':
                 *buf++ = '%';
                 fmt++;
 
-                continue;
+                തുടരുക;
 
-            default:
+            സ്ഥിരസ്ഥിതി:
                 *buf++ = *fmt++;
 
-                continue;
+                തുടരുക;
             }
 
-            if (sign) {
-                if (i64 < 0) {
+            എങ്കിൽ (sign) {
+                എങ്കിൽ (i64 < 0) {
                     *buf++ = '-';
                     ui64 = (uint64_t) -i64;
 
-                } else {
+                } അല്ലെങ്കിൽ {
                     ui64 = (uint64_t) i64;
                 }
             }
 
-            buf = ngx_sprintf_num(buf, last, ui64, zero, hex, width);
+            buf = ngx_sprintf_അക്കം(buf, last, ui64, zero, hex, width);
 
             fmt++;
 
-        } else {
+        } അല്ലെങ്കിൽ {
             *buf++ = *fmt++;
         }
     }
 
-    return buf;
+    തിരികെ buf;
 }
 
 
-static u_char *
-ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
+സ്ഥിതം u_char *
+ngx_sprintf_അക്കം(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
     ngx_uint_t hexadecimal, ngx_uint_t width)
 {
     u_char         *p, temp[NGX_INT64_LEN + 1];
@@ -492,14 +492,14 @@ ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
                         */
     size_t          len;
     uint32_t        ui32;
-    static u_char   hex[] = "0123456789abcdef";
-    static u_char   HEX[] = "0123456789ABCDEF";
+    സ്ഥിതം u_char   hex[] = "0123456789abcdef";
+    സ്ഥിതം u_char   HEX[] = "0123456789ABCDEF";
 
     p = temp + NGX_INT64_LEN;
 
-    if (hexadecimal == 0) {
+    എങ്കിൽ (hexadecimal == 0) {
 
-        if (ui64 <= (uint64_t) NGX_MAX_UINT32_VALUE) {
+        എങ്കിൽ (ui64 <= (uint64_t) NGX_MAX_UINT32_മൂല്യം) {
 
             /*
              * To divide 64-bit numbers and to find remainders
@@ -518,40 +518,40 @@ ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
 
             ui32 = (uint32_t) ui64;
 
-            do {
+            ചെയ്യുക {
                 *--p = (u_char) (ui32 % 10 + '0');
-            } while (ui32 /= 10);
+            } ആകുമ്പോൾ (ui32 /= 10);
 
-        } else {
-            do {
+        } അല്ലെങ്കിൽ {
+            ചെയ്യുക {
                 *--p = (u_char) (ui64 % 10 + '0');
-            } while (ui64 /= 10);
+            } ആകുമ്പോൾ (ui64 /= 10);
         }
 
-    } else if (hexadecimal == 1) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (hexadecimal == 1) {
 
-        do {
+        ചെയ്യുക {
 
             /* the "(uint32_t)" cast disables the BCC's warning */
             *--p = hex[(uint32_t) (ui64 & 0xf)];
 
-        } while (ui64 >>= 4);
+        } ആകുമ്പോൾ (ui64 >>= 4);
 
-    } else { /* hexadecimal == 2 */
+    } അല്ലെങ്കിൽ { /* hexadecimal == 2 */
 
-        do {
+        ചെയ്യുക {
 
             /* the "(uint32_t)" cast disables the BCC's warning */
             *--p = HEX[(uint32_t) (ui64 & 0xf)];
 
-        } while (ui64 >>= 4);
+        } ആകുമ്പോൾ (ui64 >>= 4);
     }
 
     /* zero or space padding */
 
     len = (temp + NGX_INT64_LEN) - p;
 
-    while (len++ < width && buf < last) {
+    ആകുമ്പോൾ (len++ < width && buf < last) {
         *buf++ = zero;
     }
 
@@ -559,69 +559,69 @@ ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
 
     len = (temp + NGX_INT64_LEN) - p;
 
-    if (buf + len > last) {
+    എങ്കിൽ (buf + len > last) {
         len = last - buf;
     }
 
-    return ngx_cpymem(buf, p, len);
+    തിരികെ ngx_cpymem(buf, p, len);
 }
 
 
-static u_char *
+സ്ഥിതം u_char *
 ngx_sprintf_str(u_char *buf, u_char *last, u_char *src, size_t len,
     ngx_uint_t hexadecimal)
 {
-    static u_char   hex[] = "0123456789abcdef";
-    static u_char   HEX[] = "0123456789ABCDEF";
+    സ്ഥിതം u_char   hex[] = "0123456789abcdef";
+    സ്ഥിതം u_char   HEX[] = "0123456789ABCDEF";
 
-    if (hexadecimal == 0) {
+    എങ്കിൽ (hexadecimal == 0) {
 
-        if (len == (size_t) -1) {
-            while (*src && buf < last) {
+        എങ്കിൽ (len == (size_t) -1) {
+            ആകുമ്പോൾ (*src && buf < last) {
                 *buf++ = *src++;
             }
 
-        } else {
+        } അല്ലെങ്കിൽ {
             len = ngx_min((size_t) (last - buf), len);
             buf = ngx_cpymem(buf, src, len);
         }
 
-    } else if (hexadecimal == 1) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (hexadecimal == 1) {
 
-        if (len == (size_t) -1) {
+        എങ്കിൽ (len == (size_t) -1) {
 
-            while (*src && buf < last - 1) {
+            ആകുമ്പോൾ (*src && buf < last - 1) {
                 *buf++ = hex[*src >> 4];
                 *buf++ = hex[*src++ & 0xf];
             }
 
-        } else {
+        } അല്ലെങ്കിൽ {
 
-            while (len-- && buf < last - 1) {
+            ആകുമ്പോൾ (len-- && buf < last - 1) {
                 *buf++ = hex[*src >> 4];
                 *buf++ = hex[*src++ & 0xf];
             }
         }
 
-    } else { /* hexadecimal == 2 */
+    } അല്ലെങ്കിൽ { /* hexadecimal == 2 */
 
-        if (len == (size_t) -1) {
+        എങ്കിൽ (len == (size_t) -1) {
 
-            while (*src && buf < last - 1) {
+            ആകുമ്പോൾ (*src && buf < last - 1) {
                 *buf++ = HEX[*src >> 4];
                 *buf++ = HEX[*src++ & 0xf];
             }
 
-        } else {
+        } അല്ലെങ്കിൽ {
 
-            while (len-- && buf < last - 1) {
+            ആകുമ്പോൾ (len-- && buf < last - 1) {
                 *buf++ = HEX[*src >> 4];
                 *buf++ = HEX[*src++ & 0xf];
             }
         }
     }
 
-    return buf;
+    തിരികെ buf;
 }
 
 
@@ -637,23 +637,23 @@ ngx_strcasecmp(u_char *s1, u_char *s2)
 {
     ngx_uint_t  c1, c2;
 
-    for ( ;; ) {
+    വേണ്ടി ( ;; ) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        എങ്കിൽ (c1 == c2) {
 
-            if (c1) {
-                continue;
+            എങ്കിൽ (c1) {
+                തുടരുക;
             }
 
-            return 0;
+            തിരികെ 0;
         }
 
-        return c1 - c2;
+        തിരികെ c1 - c2;
     }
 }
 
@@ -663,32 +663,32 @@ ngx_strncasecmp(u_char *s1, u_char *s2, size_t n)
 {
     ngx_uint_t  c1, c2;
 
-    while (n) {
+    ആകുമ്പോൾ (n) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        എങ്കിൽ (c1 == c2) {
 
-            if (c1) {
+            എങ്കിൽ (c1) {
                 n--;
-                continue;
+                തുടരുക;
             }
 
-            return 0;
+            തിരികെ 0;
         }
 
-        return c1 - c2;
+        തിരികെ c1 - c2;
     }
 
-    return 0;
+    തിരികെ 0;
 }
 
 
 u_char *
-ngx_strnstr(u_char *s1, char *s2, size_t len)
+ngx_strnstr(u_char *s1, അക്ഷരം *s2, size_t len)
 {
     u_char  c1, c2;
     size_t  n;
@@ -697,27 +697,27 @@ ngx_strnstr(u_char *s1, char *s2, size_t len)
 
     n = ngx_strlen(s2);
 
-    do {
-        do {
-            if (len-- == 0) {
-                return NULL;
+    ചെയ്യുക {
+        ചെയ്യുക {
+            എങ്കിൽ (len-- == 0) {
+                തിരികെ ശൂന്യ;
             }
 
             c1 = *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            എങ്കിൽ (c1 == 0) {
+                തിരികെ ശൂന്യ;
             }
 
-        } while (c1 != c2);
+        } ആകുമ്പോൾ (c1 != c2);
 
-        if (n > len) {
-            return NULL;
+        എങ്കിൽ (n > len) {
+            തിരികെ ശൂന്യ;
         }
 
-    } while (ngx_strncmp(s1, (u_char *) s2, n) != 0);
+    } ആകുമ്പോൾ (ngx_strncmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    തിരികെ --s1;
 }
 
 
@@ -728,51 +728,51 @@ ngx_strnstr(u_char *s1, char *s2, size_t len)
  */
 
 u_char *
-ngx_strstrn(u_char *s1, char *s2, size_t n)
+ngx_strstrn(u_char *s1, അക്ഷരം *s2, size_t n)
 {
     u_char  c1, c2;
 
     c2 = *(u_char *) s2++;
 
-    do {
-        do {
+    ചെയ്യുക {
+        ചെയ്യുക {
             c1 = *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            എങ്കിൽ (c1 == 0) {
+                തിരികെ ശൂന്യ;
             }
 
-        } while (c1 != c2);
+        } ആകുമ്പോൾ (c1 != c2);
 
-    } while (ngx_strncmp(s1, (u_char *) s2, n) != 0);
+    } ആകുമ്പോൾ (ngx_strncmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    തിരികെ --s1;
 }
 
 
 u_char *
-ngx_strcasestrn(u_char *s1, char *s2, size_t n)
+ngx_strcasestrn(u_char *s1, അക്ഷരം *s2, size_t n)
 {
     ngx_uint_t  c1, c2;
 
     c2 = (ngx_uint_t) *s2++;
     c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-    do {
-        do {
+    ചെയ്യുക {
+        ചെയ്യുക {
             c1 = (ngx_uint_t) *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            എങ്കിൽ (c1 == 0) {
+                തിരികെ ശൂന്യ;
             }
 
             c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
 
-        } while (c1 != c2);
+        } ആകുമ്പോൾ (c1 != c2);
 
-    } while (ngx_strncasecmp(s1, (u_char *) s2, n) != 0);
+    } ആകുമ്പോൾ (ngx_strncasecmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    തിരികെ --s1;
 }
 
 
@@ -791,40 +791,40 @@ ngx_strlcasestrn(u_char *s1, u_char *last, u_char *s2, size_t n)
     c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
     last -= n;
 
-    do {
-        do {
-            if (s1 >= last) {
-                return NULL;
+    ചെയ്യുക {
+        ചെയ്യുക {
+            എങ്കിൽ (s1 >= last) {
+                തിരികെ ശൂന്യ;
             }
 
             c1 = (ngx_uint_t) *s1++;
 
             c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
 
-        } while (c1 != c2);
+        } ആകുമ്പോൾ (c1 != c2);
 
-    } while (ngx_strncasecmp(s1, s2, n) != 0);
+    } ആകുമ്പോൾ (ngx_strncasecmp(s1, s2, n) != 0);
 
-    return --s1;
+    തിരികെ --s1;
 }
 
 
 ngx_int_t
 ngx_rstrncmp(u_char *s1, u_char *s2, size_t n)
 {
-    if (n == 0) {
-        return 0;
+    എങ്കിൽ (n == 0) {
+        തിരികെ 0;
     }
 
     n--;
 
-    for ( ;; ) {
-        if (s1[n] != s2[n]) {
-            return s1[n] - s2[n];
+    വേണ്ടി ( ;; ) {
+        എങ്കിൽ (s1[n] != s2[n]) {
+            തിരികെ s1[n] - s2[n];
         }
 
-        if (n == 0) {
-            return 0;
+        എങ്കിൽ (n == 0) {
+            തിരികെ 0;
         }
 
         n--;
@@ -837,29 +837,29 @@ ngx_rstrncasecmp(u_char *s1, u_char *s2, size_t n)
 {
     u_char  c1, c2;
 
-    if (n == 0) {
-        return 0;
+    എങ്കിൽ (n == 0) {
+        തിരികെ 0;
     }
 
     n--;
 
-    for ( ;; ) {
+    വേണ്ടി ( ;; ) {
         c1 = s1[n];
-        if (c1 >= 'a' && c1 <= 'z') {
+        എങ്കിൽ (c1 >= 'a' && c1 <= 'z') {
             c1 -= 'a' - 'A';
         }
 
         c2 = s2[n];
-        if (c2 >= 'a' && c2 <= 'z') {
+        എങ്കിൽ (c2 >= 'a' && c2 <= 'z') {
             c2 -= 'a' - 'A';
         }
 
-        if (c1 != c2) {
-            return c1 - c2;
+        എങ്കിൽ (c1 != c2) {
+            തിരികെ c1 - c2;
         }
 
-        if (n == 0) {
-            return 0;
+        എങ്കിൽ (n == 0) {
+            തിരികെ 0;
         }
 
         n--;
@@ -873,22 +873,22 @@ ngx_memn2cmp(u_char *s1, u_char *s2, size_t n1, size_t n2)
     size_t     n;
     ngx_int_t  m, z;
 
-    if (n1 <= n2) {
+    എങ്കിൽ (n1 <= n2) {
         n = n1;
         z = -1;
 
-    } else {
+    } അല്ലെങ്കിൽ {
         n = n2;
         z = 1;
     }
 
     m = ngx_memcmp(s1, s2, n);
 
-    if (m || n1 == n2) {
-        return m;
+    എങ്കിൽ (m || n1 == n2) {
+        തിരികെ m;
     }
 
-    return z;
+    തിരികെ z;
 }
 
 
@@ -897,20 +897,20 @@ ngx_dns_strcmp(u_char *s1, u_char *s2)
 {
     ngx_uint_t  c1, c2;
 
-    for ( ;; ) {
+    വേണ്ടി ( ;; ) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        എങ്കിൽ (c1 == c2) {
 
-            if (c1) {
-                continue;
+            എങ്കിൽ (c1) {
+                തുടരുക;
             }
 
-            return 0;
+            തിരികെ 0;
         }
 
         /* in ASCII '.' > '-', but we need '.' to be the lowest character */
@@ -918,7 +918,7 @@ ngx_dns_strcmp(u_char *s1, u_char *s2)
         c1 = (c1 == '.') ? ' ' : c1;
         c2 = (c2 == '.') ? ' ' : c2;
 
-        return c1 - c2;
+        തിരികെ c1 - c2;
     }
 }
 
@@ -928,283 +928,283 @@ ngx_filename_cmp(u_char *s1, u_char *s2, size_t n)
 {
     ngx_uint_t  c1, c2;
 
-    while (n) {
+    ആകുമ്പോൾ (n) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
-#if (NGX_HAVE_CASELESS_FILESYSTEM)
+#എങ്കിൽ (NGX_HAVE_CASELESS_FILESYSTEM)
         c1 = tolower(c1);
         c2 = tolower(c2);
 #endif
 
-        if (c1 == c2) {
+        എങ്കിൽ (c1 == c2) {
 
-            if (c1) {
+            എങ്കിൽ (c1) {
                 n--;
-                continue;
+                തുടരുക;
             }
 
-            return 0;
+            തിരികെ 0;
         }
 
         /* we need '/' to be the lowest character */
 
-        if (c1 == 0 || c2 == 0) {
-            return c1 - c2;
+        എങ്കിൽ (c1 == 0 || c2 == 0) {
+            തിരികെ c1 - c2;
         }
 
         c1 = (c1 == '/') ? 0 : c1;
         c2 = (c2 == '/') ? 0 : c2;
 
-        return c1 - c2;
+        തിരികെ c1 - c2;
     }
 
-    return 0;
+    തിരികെ 0;
 }
 
 
 ngx_int_t
-ngx_atoi(u_char *line, size_t n)
+ngx_atoi(u_char *വരി, size_t n)
 {
-    ngx_int_t  value, cutoff, cutlim;
+    ngx_int_t  മൂല്യം, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    എങ്കിൽ (n == 0) {
+        തിരികെ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_INT_T_VALUE / 10;
-    cutlim = NGX_MAX_INT_T_VALUE % 10;
+    cutoff = NGX_MAX_INT_T_മൂല്യം / 10;
+    cutlim = NGX_MAX_INT_T_മൂല്യം % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    വേണ്ടി (മൂല്യം = 0; n--; വരി++) {
+        എങ്കിൽ (*വരി < '0' || *വരി > '9') {
+            തിരികെ NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        എങ്കിൽ (മൂല്യം >= cutoff && (മൂല്യം > cutoff || *വരി - '0' > cutlim)) {
+            തിരികെ NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        മൂല്യം = മൂല്യം * 10 + (*വരി - '0');
     }
 
-    return value;
+    തിരികെ മൂല്യം;
 }
 
 
 /* parse a fixed point number, e.g., ngx_atofp("10.5", 4, 2) returns 1050 */
 
 ngx_int_t
-ngx_atofp(u_char *line, size_t n, size_t point)
+ngx_atofp(u_char *വരി, size_t n, size_t point)
 {
-    ngx_int_t   value, cutoff, cutlim;
+    ngx_int_t   മൂല്യം, cutoff, cutlim;
     ngx_uint_t  dot;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    എങ്കിൽ (n == 0) {
+        തിരികെ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_INT_T_VALUE / 10;
-    cutlim = NGX_MAX_INT_T_VALUE % 10;
+    cutoff = NGX_MAX_INT_T_മൂല്യം / 10;
+    cutlim = NGX_MAX_INT_T_മൂല്യം % 10;
 
     dot = 0;
 
-    for (value = 0; n--; line++) {
+    വേണ്ടി (മൂല്യം = 0; n--; വരി++) {
 
-        if (point == 0) {
-            return NGX_ERROR;
+        എങ്കിൽ (point == 0) {
+            തിരികെ NGX_ERROR;
         }
 
-        if (*line == '.') {
-            if (dot) {
-                return NGX_ERROR;
+        എങ്കിൽ (*വരി == '.') {
+            എങ്കിൽ (dot) {
+                തിരികെ NGX_ERROR;
             }
 
             dot = 1;
-            continue;
+            തുടരുക;
         }
 
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+        എങ്കിൽ (*വരി < '0' || *വരി > '9') {
+            തിരികെ NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        എങ്കിൽ (മൂല്യം >= cutoff && (മൂല്യം > cutoff || *വരി - '0' > cutlim)) {
+            തിരികെ NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        മൂല്യം = മൂല്യം * 10 + (*വരി - '0');
         point -= dot;
     }
 
-    while (point--) {
-        if (value > cutoff) {
-            return NGX_ERROR;
+    ആകുമ്പോൾ (point--) {
+        എങ്കിൽ (മൂല്യം > cutoff) {
+            തിരികെ NGX_ERROR;
         }
 
-        value = value * 10;
+        മൂല്യം = മൂല്യം * 10;
     }
 
-    return value;
+    തിരികെ മൂല്യം;
 }
 
 
 ssize_t
-ngx_atosz(u_char *line, size_t n)
+ngx_atosz(u_char *വരി, size_t n)
 {
-    ssize_t  value, cutoff, cutlim;
+    ssize_t  മൂല്യം, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    എങ്കിൽ (n == 0) {
+        തിരികെ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_SIZE_T_VALUE / 10;
-    cutlim = NGX_MAX_SIZE_T_VALUE % 10;
+    cutoff = NGX_MAX_SIZE_T_മൂല്യം / 10;
+    cutlim = NGX_MAX_SIZE_T_മൂല്യം % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    വേണ്ടി (മൂല്യം = 0; n--; വരി++) {
+        എങ്കിൽ (*വരി < '0' || *വരി > '9') {
+            തിരികെ NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        എങ്കിൽ (മൂല്യം >= cutoff && (മൂല്യം > cutoff || *വരി - '0' > cutlim)) {
+            തിരികെ NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        മൂല്യം = മൂല്യം * 10 + (*വരി - '0');
     }
 
-    return value;
+    തിരികെ മൂല്യം;
 }
 
 
 off_t
-ngx_atoof(u_char *line, size_t n)
+ngx_atoof(u_char *വരി, size_t n)
 {
-    off_t  value, cutoff, cutlim;
+    off_t  മൂല്യം, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    എങ്കിൽ (n == 0) {
+        തിരികെ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_OFF_T_VALUE / 10;
-    cutlim = NGX_MAX_OFF_T_VALUE % 10;
+    cutoff = NGX_MAX_OFF_T_മൂല്യം / 10;
+    cutlim = NGX_MAX_OFF_T_മൂല്യം % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    വേണ്ടി (മൂല്യം = 0; n--; വരി++) {
+        എങ്കിൽ (*വരി < '0' || *വരി > '9') {
+            തിരികെ NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        എങ്കിൽ (മൂല്യം >= cutoff && (മൂല്യം > cutoff || *വരി - '0' > cutlim)) {
+            തിരികെ NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        മൂല്യം = മൂല്യം * 10 + (*വരി - '0');
     }
 
-    return value;
+    തിരികെ മൂല്യം;
 }
 
 
 time_t
-ngx_atotm(u_char *line, size_t n)
+ngx_atotm(u_char *വരി, size_t n)
 {
-    time_t  value, cutoff, cutlim;
+    time_t  മൂല്യം, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    എങ്കിൽ (n == 0) {
+        തിരികെ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_TIME_T_VALUE / 10;
-    cutlim = NGX_MAX_TIME_T_VALUE % 10;
+    cutoff = NGX_MAX_TIME_T_മൂല്യം / 10;
+    cutlim = NGX_MAX_TIME_T_മൂല്യം % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    വേണ്ടി (മൂല്യം = 0; n--; വരി++) {
+        എങ്കിൽ (*വരി < '0' || *വരി > '9') {
+            തിരികെ NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        എങ്കിൽ (മൂല്യം >= cutoff && (മൂല്യം > cutoff || *വരി - '0' > cutlim)) {
+            തിരികെ NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        മൂല്യം = മൂല്യം * 10 + (*വരി - '0');
     }
 
-    return value;
+    തിരികെ മൂല്യം;
 }
 
 
 ngx_int_t
-ngx_hextoi(u_char *line, size_t n)
+ngx_hextoi(u_char *വരി, size_t n)
 {
     u_char     c, ch;
-    ngx_int_t  value, cutoff;
+    ngx_int_t  മൂല്യം, cutoff;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    എങ്കിൽ (n == 0) {
+        തിരികെ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_INT_T_VALUE / 16;
+    cutoff = NGX_MAX_INT_T_മൂല്യം / 16;
 
-    for (value = 0; n--; line++) {
-        if (value > cutoff) {
-            return NGX_ERROR;
+    വേണ്ടി (മൂല്യം = 0; n--; വരി++) {
+        എങ്കിൽ (മൂല്യം > cutoff) {
+            തിരികെ NGX_ERROR;
         }
 
-        ch = *line;
+        ch = *വരി;
 
-        if (ch >= '0' && ch <= '9') {
-            value = value * 16 + (ch - '0');
-            continue;
+        എങ്കിൽ (ch >= '0' && ch <= '9') {
+            മൂല്യം = മൂല്യം * 16 + (ch - '0');
+            തുടരുക;
         }
 
         c = (u_char) (ch | 0x20);
 
-        if (c >= 'a' && c <= 'f') {
-            value = value * 16 + (c - 'a' + 10);
-            continue;
+        എങ്കിൽ (c >= 'a' && c <= 'f') {
+            മൂല്യം = മൂല്യം * 16 + (c - 'a' + 10);
+            തുടരുക;
         }
 
-        return NGX_ERROR;
+        തിരികെ NGX_ERROR;
     }
 
-    return value;
+    തിരികെ മൂല്യം;
 }
 
 
 u_char *
 ngx_hex_dump(u_char *dst, u_char *src, size_t len)
 {
-    static u_char  hex[] = "0123456789abcdef";
+    സ്ഥിതം u_char  hex[] = "0123456789abcdef";
 
-    while (len--) {
+    ആകുമ്പോൾ (len--) {
         *dst++ = hex[*src >> 4];
         *dst++ = hex[*src++ & 0xf];
     }
 
-    return dst;
+    തിരികെ dst;
 }
 
 
-void
+ശൂന്യം
 ngx_encode_base64(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] =
+    സ്ഥിതം u_char   basis64[] =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     ngx_encode_base64_internal(dst, src, basis64, 1);
 }
 
 
-void
+ശൂന്യം
 ngx_encode_base64url(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] =
+    സ്ഥിതം u_char   basis64[] =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
     ngx_encode_base64_internal(dst, src, basis64, 0);
 }
 
 
-static void
-ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis,
+സ്ഥിതം ശൂന്യം
+ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, സ്ഥിരം u_char *basis,
     ngx_uint_t padding)
 {
     u_char         *d, *s;
@@ -1214,7 +1214,7 @@ ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis,
     s = src->data;
     d = dst->data;
 
-    while (len > 2) {
+    ആകുമ്പോൾ (len > 2) {
         *d++ = basis[(s[0] >> 2) & 0x3f];
         *d++ = basis[((s[0] & 3) << 4) | (s[1] >> 4)];
         *d++ = basis[((s[1] & 0x0f) << 2) | (s[2] >> 6)];
@@ -1224,21 +1224,21 @@ ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis,
         len -= 3;
     }
 
-    if (len) {
+    എങ്കിൽ (len) {
         *d++ = basis[(s[0] >> 2) & 0x3f];
 
-        if (len == 1) {
+        എങ്കിൽ (len == 1) {
             *d++ = basis[(s[0] & 3) << 4];
-            if (padding) {
+            എങ്കിൽ (padding) {
                 *d++ = '=';
             }
 
-        } else {
+        } അല്ലെങ്കിൽ {
             *d++ = basis[((s[0] & 3) << 4) | (s[1] >> 4)];
             *d++ = basis[(s[1] & 0x0f) << 2];
         }
 
-        if (padding) {
+        എങ്കിൽ (padding) {
             *d++ = '=';
         }
     }
@@ -1250,7 +1250,7 @@ ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis,
 ngx_int_t
 ngx_decode_base64(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] = {
+    സ്ഥിതം u_char   basis64[] = {
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 62, 77, 77, 77, 63,
@@ -1270,14 +1270,14 @@ ngx_decode_base64(ngx_str_t *dst, ngx_str_t *src)
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
     };
 
-    return ngx_decode_base64_internal(dst, src, basis64);
+    തിരികെ ngx_decode_base64_internal(dst, src, basis64);
 }
 
 
 ngx_int_t
 ngx_decode_base64url(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] = {
+    സ്ഥിതം u_char   basis64[] = {
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 62, 77, 77,
@@ -1297,34 +1297,34 @@ ngx_decode_base64url(ngx_str_t *dst, ngx_str_t *src)
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
     };
 
-    return ngx_decode_base64_internal(dst, src, basis64);
+    തിരികെ ngx_decode_base64_internal(dst, src, basis64);
 }
 
 
-static ngx_int_t
-ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
+സ്ഥിതം ngx_int_t
+ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, സ്ഥിരം u_char *basis)
 {
     size_t          len;
     u_char         *d, *s;
 
-    for (len = 0; len < src->len; len++) {
-        if (src->data[len] == '=') {
-            break;
+    വേണ്ടി (len = 0; len < src->len; len++) {
+        എങ്കിൽ (src->data[len] == '=') {
+            നിർത്തുക;
         }
 
-        if (basis[src->data[len]] == 77) {
-            return NGX_ERROR;
+        എങ്കിൽ (basis[src->data[len]] == 77) {
+            തിരികെ NGX_ERROR;
         }
     }
 
-    if (len % 4 == 1) {
-        return NGX_ERROR;
+    എങ്കിൽ (len % 4 == 1) {
+        തിരികെ NGX_ERROR;
     }
 
     s = src->data;
     d = dst->data;
 
-    while (len > 3) {
+    ആകുമ്പോൾ (len > 3) {
         *d++ = (u_char) (basis[s[0]] << 2 | basis[s[1]] >> 4);
         *d++ = (u_char) (basis[s[1]] << 4 | basis[s[2]] >> 2);
         *d++ = (u_char) (basis[s[2]] << 6 | basis[s[3]]);
@@ -1333,17 +1333,17 @@ ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
         len -= 4;
     }
 
-    if (len > 1) {
+    എങ്കിൽ (len > 1) {
         *d++ = (u_char) (basis[s[0]] << 2 | basis[s[1]] >> 4);
     }
 
-    if (len > 2) {
+    എങ്കിൽ (len > 2) {
         *d++ = (u_char) (basis[s[1]] << 4 | basis[s[2]] >> 2);
     }
 
     dst->len = d - dst->data;
 
-    return NGX_OK;
+    തിരികെ NGX_OK;
 }
 
 
@@ -1364,45 +1364,45 @@ ngx_utf8_decode(u_char **p, size_t n)
 
     u = **p;
 
-    if (u >= 0xf8) {
+    എങ്കിൽ (u >= 0xf8) {
 
         (*p)++;
-        return 0xffffffff;
+        തിരികെ 0xffffffff;
 
-    } else if (u >= 0xf0) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (u >= 0xf0) {
 
         u &= 0x07;
         valid = 0xffff;
         len = 3;
 
-    } else if (u >= 0xe0) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (u >= 0xe0) {
 
         u &= 0x0f;
         valid = 0x7ff;
         len = 2;
 
-    } else if (u >= 0xc2) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (u >= 0xc2) {
 
         u &= 0x1f;
         valid = 0x7f;
         len = 1;
 
-    } else {
+    } അല്ലെങ്കിൽ {
         (*p)++;
-        return 0xffffffff;
+        തിരികെ 0xffffffff;
     }
 
-    if (n - 1 < len) {
-        return 0xfffffffe;
+    എങ്കിൽ (n - 1 < len) {
+        തിരികെ 0xfffffffe;
     }
 
     (*p)++;
 
-    while (len) {
+    ആകുമ്പോൾ (len) {
         i = *(*p)++;
 
-        if (i < 0x80) {
-            return 0xffffffff;
+        എങ്കിൽ (i < 0x80) {
+            തിരികെ 0xffffffff;
         }
 
         u = (u << 6) | (i & 0x3f);
@@ -1410,11 +1410,11 @@ ngx_utf8_decode(u_char **p, size_t n)
         len--;
     }
 
-    if (u > valid) {
-        return u;
+    എങ്കിൽ (u > valid) {
+        തിരികെ u;
     }
 
-    return 0xffffffff;
+    തിരികെ 0xffffffff;
 }
 
 
@@ -1426,22 +1426,22 @@ ngx_utf8_length(u_char *p, size_t n)
 
     last = p + n;
 
-    for (len = 0; p < last; len++) {
+    വേണ്ടി (len = 0; p < last; len++) {
 
         c = *p;
 
-        if (c < 0x80) {
+        എങ്കിൽ (c < 0x80) {
             p++;
-            continue;
+            തുടരുക;
         }
 
-        if (ngx_utf8_decode(&p, last - p) > 0x10ffff) {
+        എങ്കിൽ (ngx_utf8_decode(&p, last - p) > 0x10ffff) {
             /* invalid UTF-8 */
-            return n;
+            തിരികെ n;
         }
     }
 
-    return len;
+    തിരികെ len;
 }
 
 
@@ -1450,36 +1450,36 @@ ngx_utf8_cpystrn(u_char *dst, u_char *src, size_t n, size_t len)
 {
     u_char  c, *next;
 
-    if (n == 0) {
-        return dst;
+    എങ്കിൽ (n == 0) {
+        തിരികെ dst;
     }
 
-    while (--n) {
+    ആകുമ്പോൾ (--n) {
 
         c = *src;
         *dst = c;
 
-        if (c < 0x80) {
+        എങ്കിൽ (c < 0x80) {
 
-            if (c != '\0') {
+            എങ്കിൽ (c != '\0') {
                 dst++;
                 src++;
                 len--;
 
-                continue;
+                തുടരുക;
             }
 
-            return dst;
+            തിരികെ dst;
         }
 
         next = src;
 
-        if (ngx_utf8_decode(&next, len) > 0x10ffff) {
+        എങ്കിൽ (ngx_utf8_decode(&next, len) > 0x10ffff) {
             /* invalid UTF-8 */
-            break;
+            നിർത്തുക;
         }
 
-        while (src < next) {
+        ആകുമ്പോൾ (src < next) {
             *dst++ = *src++;
             len--;
         }
@@ -1487,7 +1487,7 @@ ngx_utf8_cpystrn(u_char *dst, u_char *src, size_t n, size_t len)
 
     *dst = '\0';
 
-    return dst;
+    തിരികെ dst;
 }
 
 
@@ -1497,7 +1497,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
     u_char          prefix;
     uint32_t       *escape;
     ngx_uint_t      n;
-    static u_char   hex[] = "0123456789ABCDEF";
+    സ്ഥിതം u_char   hex[] = "0123456789ABCDEF";
 
     /*
      * Per RFC 3986 only the following chars are allowed in URIs unescaped:
@@ -1514,7 +1514,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "#", "%", "?", not allowed */
 
-    static uint32_t   uri[] = {
+    സ്ഥിതം uint32_t   uri[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1534,7 +1534,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "#", "%", "&", "+", ";", "?", not allowed */
 
-    static uint32_t   args[] = {
+    സ്ഥിതം uint32_t   args[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1554,7 +1554,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* not ALPHA, DIGIT, "-", ".", "_", "~" */
 
-    static uint32_t   uri_component[] = {
+    സ്ഥിതം uint32_t   uri_component[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1574,7 +1574,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "#", """, "%", "'", not allowed */
 
-    static uint32_t   html[] = {
+    സ്ഥിതം uint32_t   html[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1594,7 +1594,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", """, "'", not allowed */
 
-    static uint32_t   refresh[] = {
+    സ്ഥിതം uint32_t   refresh[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1614,7 +1614,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "%", %00-%1F */
 
-    static uint32_t   memcached[] = {
+    സ്ഥിതം uint32_t   memcached[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1636,7 +1636,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "+", "=", not allowed */
 
-    static uint32_t   mail_xtext[] = {
+    സ്ഥിതം uint32_t   mail_xtext[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1654,56 +1654,56 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
     };
 
-    static uint32_t  *map[] =
+    സ്ഥിതം uint32_t  *map[] =
         { uri, args, uri_component, html, refresh, memcached, memcached,
           mail_xtext };
 
-    static u_char  map_char[] =
+    സ്ഥിതം u_char  map_char[] =
         { '%', '%', '%', '%', '%', '%', '%', '+' };
 
 
     escape = map[type];
     prefix = map_char[type];
 
-    if (dst == NULL) {
+    എങ്കിൽ (dst == ശൂന്യ) {
 
         /* find the number of the characters to be escaped */
 
         n = 0;
 
-        while (size) {
-            if (escape[*src >> 5] & (1U << (*src & 0x1f))) {
+        ആകുമ്പോൾ (size) {
+            എങ്കിൽ (escape[*src >> 5] & (1U << (*src & 0x1f))) {
                 n++;
             }
             src++;
             size--;
         }
 
-        return (uintptr_t) n;
+        തിരികെ (uintptr_t) n;
     }
 
-    while (size) {
-        if (escape[*src >> 5] & (1U << (*src & 0x1f))) {
+    ആകുമ്പോൾ (size) {
+        എങ്കിൽ (escape[*src >> 5] & (1U << (*src & 0x1f))) {
             *dst++ = prefix;
             *dst++ = hex[*src >> 4];
             *dst++ = hex[*src & 0xf];
             src++;
 
-        } else {
+        } അല്ലെങ്കിൽ {
             *dst++ = *src++;
         }
         size--;
     }
 
-    return (uintptr_t) dst;
+    തിരികെ (uintptr_t) dst;
 }
 
 
-void
+ശൂന്യം
 ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
 {
     u_char  *d, *s, ch, c, decoded;
-    enum {
+    എണ്ണൽ {
         sw_usual = 0,
         sw_quoted,
         sw_quoted_second
@@ -1715,40 +1715,40 @@ ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
     state = 0;
     decoded = 0;
 
-    while (size--) {
+    ആകുമ്പോൾ (size--) {
 
         ch = *s++;
 
-        switch (state) {
-        case sw_usual:
-            if (ch == '?'
+        തിരഞ്ഞെടുപ്പ് (state) {
+        അവസ്ഥ sw_usual:
+            എങ്കിൽ (ch == '?'
                 && (type & (NGX_UNESCAPE_URI|NGX_UNESCAPE_REDIRECT)))
             {
                 *d++ = ch;
-                goto done;
+                പോകുക done;
             }
 
-            if (ch == '%') {
+            എങ്കിൽ (ch == '%') {
                 state = sw_quoted;
-                break;
+                നിർത്തുക;
             }
 
             *d++ = ch;
-            break;
+            നിർത്തുക;
 
-        case sw_quoted:
+        അവസ്ഥ sw_quoted:
 
-            if (ch >= '0' && ch <= '9') {
+            എങ്കിൽ (ch >= '0' && ch <= '9') {
                 decoded = (u_char) (ch - '0');
                 state = sw_quoted_second;
-                break;
+                നിർത്തുക;
             }
 
             c = (u_char) (ch | 0x20);
-            if (c >= 'a' && c <= 'f') {
+            എങ്കിൽ (c >= 'a' && c <= 'f') {
                 decoded = (u_char) (c - 'a' + 10);
                 state = sw_quoted_second;
-                break;
+                നിർത്തുക;
             }
 
             /* the invalid quoted character */
@@ -1757,68 +1757,68 @@ ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
 
             *d++ = ch;
 
-            break;
+            നിർത്തുക;
 
-        case sw_quoted_second:
+        അവസ്ഥ sw_quoted_second:
 
             state = sw_usual;
 
-            if (ch >= '0' && ch <= '9') {
+            എങ്കിൽ (ch >= '0' && ch <= '9') {
                 ch = (u_char) ((decoded << 4) + (ch - '0'));
 
-                if (type & NGX_UNESCAPE_REDIRECT) {
-                    if (ch > '%' && ch < 0x7f) {
+                എങ്കിൽ (type & NGX_UNESCAPE_REDIRECT) {
+                    എങ്കിൽ (ch > '%' && ch < 0x7f) {
                         *d++ = ch;
-                        break;
+                        നിർത്തുക;
                     }
 
                     *d++ = '%'; *d++ = *(s - 2); *d++ = *(s - 1);
 
-                    break;
+                    നിർത്തുക;
                 }
 
                 *d++ = ch;
 
-                break;
+                നിർത്തുക;
             }
 
             c = (u_char) (ch | 0x20);
-            if (c >= 'a' && c <= 'f') {
+            എങ്കിൽ (c >= 'a' && c <= 'f') {
                 ch = (u_char) ((decoded << 4) + (c - 'a') + 10);
 
-                if (type & NGX_UNESCAPE_URI) {
-                    if (ch == '?') {
+                എങ്കിൽ (type & NGX_UNESCAPE_URI) {
+                    എങ്കിൽ (ch == '?') {
                         *d++ = ch;
-                        goto done;
+                        പോകുക done;
                     }
 
                     *d++ = ch;
-                    break;
+                    നിർത്തുക;
                 }
 
-                if (type & NGX_UNESCAPE_REDIRECT) {
-                    if (ch == '?') {
+                എങ്കിൽ (type & NGX_UNESCAPE_REDIRECT) {
+                    എങ്കിൽ (ch == '?') {
                         *d++ = ch;
-                        goto done;
+                        പോകുക done;
                     }
 
-                    if (ch > '%' && ch < 0x7f) {
+                    എങ്കിൽ (ch > '%' && ch < 0x7f) {
                         *d++ = ch;
-                        break;
+                        നിർത്തുക;
                     }
 
                     *d++ = '%'; *d++ = *(s - 2); *d++ = *(s - 1);
-                    break;
+                    നിർത്തുക;
                 }
 
                 *d++ = ch;
 
-                break;
+                നിർത്തുക;
             }
 
             /* the invalid quoted character */
 
-            break;
+            നിർത്തുക;
         }
     }
 
@@ -1835,69 +1835,69 @@ ngx_escape_html(u_char *dst, u_char *src, size_t size)
     u_char      ch;
     ngx_uint_t  len;
 
-    if (dst == NULL) {
+    എങ്കിൽ (dst == ശൂന്യ) {
 
         len = 0;
 
-        while (size) {
-            switch (*src++) {
+        ആകുമ്പോൾ (size) {
+            തിരഞ്ഞെടുപ്പ് (*src++) {
 
-            case '<':
-                len += sizeof("&lt;") - 2;
-                break;
+            അവസ്ഥ '<':
+                len += വലുപ്പം("&lt;") - 2;
+                നിർത്തുക;
 
-            case '>':
-                len += sizeof("&gt;") - 2;
-                break;
+            അവസ്ഥ '>':
+                len += വലുപ്പം("&gt;") - 2;
+                നിർത്തുക;
 
-            case '&':
-                len += sizeof("&amp;") - 2;
-                break;
+            അവസ്ഥ '&':
+                len += വലുപ്പം("&amp;") - 2;
+                നിർത്തുക;
 
-            case '"':
-                len += sizeof("&quot;") - 2;
-                break;
+            അവസ്ഥ '"':
+                len += വലുപ്പം("&quot;") - 2;
+                നിർത്തുക;
 
-            default:
-                break;
+            സ്ഥിരസ്ഥിതി:
+                നിർത്തുക;
             }
             size--;
         }
 
-        return (uintptr_t) len;
+        തിരികെ (uintptr_t) len;
     }
 
-    while (size) {
+    ആകുമ്പോൾ (size) {
         ch = *src++;
 
-        switch (ch) {
+        തിരഞ്ഞെടുപ്പ് (ch) {
 
-        case '<':
+        അവസ്ഥ '<':
             *dst++ = '&'; *dst++ = 'l'; *dst++ = 't'; *dst++ = ';';
-            break;
+            നിർത്തുക;
 
-        case '>':
+        അവസ്ഥ '>':
             *dst++ = '&'; *dst++ = 'g'; *dst++ = 't'; *dst++ = ';';
-            break;
+            നിർത്തുക;
 
-        case '&':
+        അവസ്ഥ '&':
             *dst++ = '&'; *dst++ = 'a'; *dst++ = 'm'; *dst++ = 'p';
             *dst++ = ';';
-            break;
+            നിർത്തുക;
 
-        case '"':
+        അവസ്ഥ '"':
             *dst++ = '&'; *dst++ = 'q'; *dst++ = 'u'; *dst++ = 'o';
             *dst++ = 't'; *dst++ = ';';
-            break;
+            നിർത്തുക;
 
-        default:
+        സ്ഥിരസ്ഥിതി:
             *dst++ = ch;
-            break;
+            നിർത്തുക;
         }
         size--;
     }
 
-    return (uintptr_t) dst;
+    തിരികെ (uintptr_t) dst;
 }
 
 
@@ -1907,73 +1907,73 @@ ngx_escape_json(u_char *dst, u_char *src, size_t size)
     u_char      ch;
     ngx_uint_t  len;
 
-    if (dst == NULL) {
+    എങ്കിൽ (dst == ശൂന്യ) {
         len = 0;
 
-        while (size) {
+        ആകുമ്പോൾ (size) {
             ch = *src++;
 
-            if (ch == '\\' || ch == '"') {
+            എങ്കിൽ (ch == '\\' || ch == '"') {
                 len++;
 
-            } else if (ch <= 0x1f) {
+            } അല്ലെങ്കിൽ എങ്കിൽ (ch <= 0x1f) {
 
-                switch (ch) {
-                case '\n':
-                case '\r':
-                case '\t':
-                case '\b':
-                case '\f':
+                തിരഞ്ഞെടുപ്പ് (ch) {
+                അവസ്ഥ '\n':
+                അവസ്ഥ '\r':
+                അവസ്ഥ '\t':
+                അവസ്ഥ '\b':
+                അവസ്ഥ '\f':
                     len++;
-                    break;
+                    നിർത്തുക;
 
-                default:
-                    len += sizeof("\\u001F") - 2;
+                സ്ഥിരസ്ഥിതി:
+                    len += വലുപ്പം("\\u001F") - 2;
                 }
             }
 
             size--;
         }
 
-        return (uintptr_t) len;
+        തിരികെ (uintptr_t) len;
     }
 
-    while (size) {
+    ആകുമ്പോൾ (size) {
         ch = *src++;
 
-        if (ch > 0x1f) {
+        എങ്കിൽ (ch > 0x1f) {
 
-            if (ch == '\\' || ch == '"') {
+            എങ്കിൽ (ch == '\\' || ch == '"') {
                 *dst++ = '\\';
             }
 
             *dst++ = ch;
 
-        } else {
+        } അല്ലെങ്കിൽ {
             *dst++ = '\\';
 
-            switch (ch) {
-            case '\n':
+            തിരഞ്ഞെടുപ്പ് (ch) {
+            അവസ്ഥ '\n':
                 *dst++ = 'n';
-                break;
+                നിർത്തുക;
 
-            case '\r':
+            അവസ്ഥ '\r':
                 *dst++ = 'r';
-                break;
+                നിർത്തുക;
 
-            case '\t':
+            അവസ്ഥ '\t':
                 *dst++ = 't';
-                break;
+                നിർത്തുക;
 
-            case '\b':
+            അവസ്ഥ '\b':
                 *dst++ = 'b';
-                break;
+                നിർത്തുക;
 
-            case '\f':
+            അവസ്ഥ '\f':
                 *dst++ = 'f';
-                break;
+                നിർത്തുക;
 
-            default:
+            സ്ഥിരസ്ഥിതി:
                 *dst++ = 'u'; *dst++ = '0'; *dst++ = '0';
                 *dst++ = '0' + (ch >> 4);
 
@@ -1986,113 +1986,113 @@ ngx_escape_json(u_char *dst, u_char *src, size_t size)
         size--;
     }
 
-    return (uintptr_t) dst;
+    തിരികെ (uintptr_t) dst;
 }
 
 
-void
-ngx_str_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ശൂന്യം
+ngx_str_rbtree_തിരുകുക_മൂല്യം(ngx_rbtree_കണ്ണി_t *temp,
+    ngx_rbtree_കണ്ണി_t *കണ്ണി, ngx_rbtree_കണ്ണി_t *sentinel)
 {
-    ngx_str_node_t      *n, *t;
-    ngx_rbtree_node_t  **p;
+    ngx_str_കണ്ണി_t      *n, *t;
+    ngx_rbtree_കണ്ണി_t  **p;
 
-    for ( ;; ) {
+    വേണ്ടി ( ;; ) {
 
-        n = (ngx_str_node_t *) node;
-        t = (ngx_str_node_t *) temp;
+        n = (ngx_str_കണ്ണി_t *) കണ്ണി;
+        t = (ngx_str_കണ്ണി_t *) temp;
 
-        if (node->key != temp->key) {
+        എങ്കിൽ (കണ്ണി->താക്കോൽ != temp->താക്കോൽ) {
 
-            p = (node->key < temp->key) ? &temp->left : &temp->right;
+            p = (കണ്ണി->താക്കോൽ < temp->താക്കോൽ) ? &temp->ഇടത് : &temp->വലത്;
 
-        } else if (n->str.len != t->str.len) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (n->str.len != t->str.len) {
 
-            p = (n->str.len < t->str.len) ? &temp->left : &temp->right;
+            p = (n->str.len < t->str.len) ? &temp->ഇടത് : &temp->വലത്;
 
-        } else {
+        } അല്ലെങ്കിൽ {
             p = (ngx_memcmp(n->str.data, t->str.data, n->str.len) < 0)
-                 ? &temp->left : &temp->right;
+                 ? &temp->ഇടത് : &temp->വലത്;
         }
 
-        if (*p == sentinel) {
-            break;
+        എങ്കിൽ (*p == sentinel) {
+            നിർത്തുക;
         }
 
         temp = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = കണ്ണി;
+    കണ്ണി->parent = temp;
+    കണ്ണി->ഇടത് = sentinel;
+    കണ്ണി->വലത് = sentinel;
+    ngx_rbt_red(കണ്ണി);
 }
 
 
-ngx_str_node_t *
+ngx_str_കണ്ണി_t *
 ngx_str_rbtree_lookup(ngx_rbtree_t *rbtree, ngx_str_t *val, uint32_t hash)
 {
     ngx_int_t           rc;
-    ngx_str_node_t     *n;
-    ngx_rbtree_node_t  *node, *sentinel;
+    ngx_str_കണ്ണി_t     *n;
+    ngx_rbtree_കണ്ണി_t  *കണ്ണി, *sentinel;
 
-    node = rbtree->root;
+    കണ്ണി = rbtree->വേര്;
     sentinel = rbtree->sentinel;
 
-    while (node != sentinel) {
+    ആകുമ്പോൾ (കണ്ണി != sentinel) {
 
-        n = (ngx_str_node_t *) node;
+        n = (ngx_str_കണ്ണി_t *) കണ്ണി;
 
-        if (hash != node->key) {
-            node = (hash < node->key) ? node->left : node->right;
-            continue;
+        എങ്കിൽ (hash != കണ്ണി->താക്കോൽ) {
+            കണ്ണി = (hash < കണ്ണി->താക്കോൽ) ? കണ്ണി->ഇടത് : കണ്ണി->വലത്;
+            തുടരുക;
         }
 
-        if (val->len != n->str.len) {
-            node = (val->len < n->str.len) ? node->left : node->right;
-            continue;
+        എങ്കിൽ (val->len != n->str.len) {
+            കണ്ണി = (val->len < n->str.len) ? കണ്ണി->ഇടത് : കണ്ണി->വലത്;
+            തുടരുക;
         }
 
         rc = ngx_memcmp(val->data, n->str.data, val->len);
 
-        if (rc < 0) {
-            node = node->left;
-            continue;
+        എങ്കിൽ (rc < 0) {
+            കണ്ണി = കണ്ണി->ഇടത്;
+            തുടരുക;
         }
 
-        if (rc > 0) {
-            node = node->right;
-            continue;
+        എങ്കിൽ (rc > 0) {
+            കണ്ണി = കണ്ണി->വലത്;
+            തുടരുക;
         }
 
-        return n;
+        തിരികെ n;
     }
 
-    return NULL;
+    തിരികെ ശൂന്യ;
 }
 
 
 /* ngx_sort() is implemented as insertion sort because we need stable sort */
 
-void
-ngx_sort(void *base, size_t n, size_t size,
-    ngx_int_t (*cmp)(const void *, const void *))
+ശൂന്യം
+ngx_sort(ശൂന്യം *base, size_t n, size_t size,
+    ngx_int_t (*cmp)(സ്ഥിരം ശൂന്യം *, സ്ഥിരം ശൂന്യം *))
 {
     u_char  *p1, *p2, *p;
 
     p = ngx_alloc(size, ngx_cycle->log);
-    if (p == NULL) {
-        return;
+    എങ്കിൽ (p == ശൂന്യ) {
+        തിരികെ;
     }
 
-    for (p1 = (u_char *) base + size;
+    വേണ്ടി (p1 = (u_char *) base + size;
          p1 < (u_char *) base + n * size;
          p1 += size)
     {
         ngx_memcpy(p, p1, size);
 
-        for (p2 = p1;
+        വേണ്ടി (p2 = p1;
              p2 > (u_char *) base && cmp(p2 - size, p) > 0;
              p2 -= size)
         {
@@ -2106,25 +2106,25 @@ ngx_sort(void *base, size_t n, size_t size,
 }
 
 
-void
-ngx_explicit_memzero(void *buf, size_t n)
+ശൂന്യം
+ngx_explicit_memzero(ശൂന്യം *buf, size_t n)
 {
     ngx_memzero(buf, n);
     ngx_memory_barrier();
 }
 
 
-#if (NGX_MEMCPY_LIMIT)
+#എങ്കിൽ (NGX_MEMCPY_LIMIT)
 
-void *
-ngx_memcpy(void *dst, const void *src, size_t n)
+ശൂന്യം *
+ngx_memcpy(ശൂന്യം *dst, സ്ഥിരം ശൂന്യം *src, size_t n)
 {
-    if (n > NGX_MEMCPY_LIMIT) {
+    എങ്കിൽ (n > NGX_MEMCPY_LIMIT) {
         ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "memcpy %uz bytes", n);
         ngx_debug_point();
     }
 
-    return memcpy(dst, src, n);
+    തിരികെ memcpy(dst, src, n);
 }
 
 #endif

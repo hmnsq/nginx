@@ -5,12 +5,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 
-static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+സ്ഥിതം ശൂന്യം ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
+    ngx_int_t (*cmp)(സ്ഥിരം ngx_queue_t *, സ്ഥിരം ngx_queue_t *));
 
 
 /*
@@ -19,31 +19,31 @@ static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
  */
 
 ngx_queue_t *
-ngx_queue_middle(ngx_queue_t *queue)
+ngx_queue_നടുവ്(ngx_queue_t *queue)
 {
-    ngx_queue_t  *middle, *next;
+    ngx_queue_t  *നടുവ്, *next;
 
-    middle = ngx_queue_head(queue);
+    നടുവ് = ngx_queue_head(queue);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    എങ്കിൽ (നടുവ് == ngx_queue_last(queue)) {
+        തിരികെ നടുവ്;
     }
 
     next = ngx_queue_head(queue);
 
-    for ( ;; ) {
-        middle = ngx_queue_next(middle);
+    വേണ്ടി ( ;; ) {
+        നടുവ് = ngx_queue_next(നടുവ്);
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        എങ്കിൽ (next == ngx_queue_last(queue)) {
+            തിരികെ നടുവ്;
         }
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        എങ്കിൽ (next == ngx_queue_last(queue)) {
+            തിരികെ നടുവ്;
         }
     }
 }
@@ -51,19 +51,19 @@ ngx_queue_middle(ngx_queue_t *queue)
 
 /* the stable merge sort */
 
-void
+ശൂന്യം
 ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+    ngx_int_t (*cmp)(സ്ഥിരം ngx_queue_t *, സ്ഥിരം ngx_queue_t *))
 {
     ngx_queue_t  *q, tail;
 
     q = ngx_queue_head(queue);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    എങ്കിൽ (q == ngx_queue_last(queue)) {
+        തിരികെ;
     }
 
-    q = ngx_queue_middle(queue);
+    q = ngx_queue_നടുവ്(queue);
 
     ngx_queue_split(queue, q, &tail);
 
@@ -74,32 +74,32 @@ ngx_queue_sort(ngx_queue_t *queue,
 }
 
 
-static void
+സ്ഥിതം ശൂന്യം
 ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+    ngx_int_t (*cmp)(സ്ഥിരം ngx_queue_t *, സ്ഥിരം ngx_queue_t *))
 {
     ngx_queue_t  *q1, *q2;
 
     q1 = ngx_queue_head(queue);
     q2 = ngx_queue_head(tail);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
+    വേണ്ടി ( ;; ) {
+        എങ്കിൽ (q1 == ngx_queue_sentinel(queue)) {
             ngx_queue_add(queue, tail);
-            break;
+            നിർത്തുക;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        എങ്കിൽ (q2 == ngx_queue_sentinel(tail)) {
+            നിർത്തുക;
         }
 
-        if (cmp(q1, q2) <= 0) {
+        എങ്കിൽ (cmp(q1, q2) <= 0) {
             q1 = ngx_queue_next(q1);
-            continue;
+            തുടരുക;
         }
 
         ngx_queue_remove(q2);
-        ngx_queue_insert_before(q1, q2);
+        ngx_queue_തിരുകുക_before(q1, q2);
 
         q2 = ngx_queue_head(tail);
     }

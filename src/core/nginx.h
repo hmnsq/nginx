@@ -15,7 +15,7 @@
 
 #ifdef NGX_BUILD
 #define NGINX_VER_BUILD    NGINX_VER " (" NGX_BUILD ")"
-#else
+#അല്ലെങ്കിൽ
 #define NGINX_VER_BUILD    NGINX_VER
 #endif
 

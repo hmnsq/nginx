@@ -5,50 +5,50 @@
  */
 
 
-#ifndef _NGX_RADIX_TREE_H_INCLUDED_
-#define _NGX_RADIX_TREE_H_INCLUDED_
+#ifndef NGX_RADIX_വൃക്ഷം_H_INCLUDED
+#define NGX_RADIX_വൃക്ഷം_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 
-#define NGX_RADIX_NO_VALUE   (uintptr_t) -1
+#define NGX_RADIX_NO_മൂല്യം   (uintptr_t) -1
 
-typedef struct ngx_radix_node_s  ngx_radix_node_t;
+തരനിർവചനം ഘടന ngx_radix_കണ്ണി_s  ngx_radix_കണ്ണി_t;
 
-struct ngx_radix_node_s {
-    ngx_radix_node_t  *right;
-    ngx_radix_node_t  *left;
-    ngx_radix_node_t  *parent;
-    uintptr_t          value;
+ഘടന ngx_radix_കണ്ണി_s {
+    ngx_radix_കണ്ണി_t  *വലത്;
+    ngx_radix_കണ്ണി_t  *ഇടത്;
+    ngx_radix_കണ്ണി_t  *parent;
+    uintptr_t          മൂല്യം;
 };
 
 
-typedef struct {
-    ngx_radix_node_t  *root;
+തരനിർവചനം ഘടന {
+    ngx_radix_കണ്ണി_t  *വേര്;
     ngx_pool_t        *pool;
-    ngx_radix_node_t  *free;
-    char              *start;
+    ngx_radix_കണ്ണി_t  *സ്വതന്ത്രം;
+    അക്ഷരം              *start;
     size_t             size;
-} ngx_radix_tree_t;
+} ngx_radix_വൃക്ഷം_t;
 
 
-ngx_radix_tree_t *ngx_radix_tree_create(ngx_pool_t *pool,
+ngx_radix_വൃക്ഷം_t *ngx_radix_വൃക്ഷം_create(ngx_pool_t *pool,
     ngx_int_t preallocate);
 
-ngx_int_t ngx_radix32tree_insert(ngx_radix_tree_t *tree,
-    uint32_t key, uint32_t mask, uintptr_t value);
-ngx_int_t ngx_radix32tree_delete(ngx_radix_tree_t *tree,
-    uint32_t key, uint32_t mask);
-uintptr_t ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key);
+ngx_int_t ngx_radix32tree_തിരുകുക(ngx_radix_വൃക്ഷം_t *വൃക്ഷം,
+    uint32_t താക്കോൽ, uint32_t mask, uintptr_t മൂല്യം);
+ngx_int_t ngx_radix32tree_delete(ngx_radix_വൃക്ഷം_t *വൃക്ഷം,
+    uint32_t താക്കോൽ, uint32_t mask);
+uintptr_t ngx_radix32tree_find(ngx_radix_വൃക്ഷം_t *വൃക്ഷം, uint32_t താക്കോൽ);
 
-#if (NGX_HAVE_INET6)
-ngx_int_t ngx_radix128tree_insert(ngx_radix_tree_t *tree,
-    u_char *key, u_char *mask, uintptr_t value);
-ngx_int_t ngx_radix128tree_delete(ngx_radix_tree_t *tree,
-    u_char *key, u_char *mask);
-uintptr_t ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key);
+#എങ്കിൽ (NGX_HAVE_INET6)
+ngx_int_t ngx_radix128tree_തിരുകുക(ngx_radix_വൃക്ഷം_t *വൃക്ഷം,
+    u_char *താക്കോൽ, u_char *mask, uintptr_t മൂല്യം);
+ngx_int_t ngx_radix128tree_delete(ngx_radix_വൃക്ഷം_t *വൃക്ഷം,
+    u_char *താക്കോൽ, u_char *mask);
+uintptr_t ngx_radix128tree_find(ngx_radix_വൃക്ഷം_t *വൃക്ഷം, u_char *താക്കോൽ);
 #endif
 
 

@@ -5,19 +5,19 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 
-#if (( __i386__ || __amd64__ ) && ( __GNUC__ || __INTEL_COMPILER ))
+#എങ്കിൽ (( __i386__ || __amd64__ ) && ( __GNUC__ || __INTEL_COMPILER ))
 
 
-static ngx_inline void ngx_cpuid(uint32_t i, uint32_t *buf);
+സ്ഥിതം ngx_inline ശൂന്യം ngx_cpuid(uint32_t i, uint32_t *buf);
 
 
-#if ( __i386__ )
+#എങ്കിൽ ( __i386__ )
 
-static ngx_inline void
+സ്ഥിതം ngx_inline ശൂന്യം
 ngx_cpuid(uint32_t i, uint32_t *buf)
 {
 
@@ -43,10 +43,10 @@ ngx_cpuid(uint32_t i, uint32_t *buf)
 }
 
 
-#else /* __amd64__ */
+#അല്ലെങ്കിൽ /* __amd64__ */
 
 
-static ngx_inline void
+സ്ഥിതം ngx_inline ശൂന്യം
 ngx_cpuid(uint32_t i, uint32_t *buf)
 {
     uint32_t  eax, ebx, ecx, edx;
@@ -69,8 +69,8 @@ ngx_cpuid(uint32_t i, uint32_t *buf)
 
 /* auto detect the L2 cache line size of modern and widespread CPUs */
 
-void
-ngx_cpuinfo(void)
+ശൂന്യം
+ngx_cpuinfo(ശൂന്യം)
 {
     u_char    *vendor;
     uint32_t   vbuf[5], cpu[4], model;
@@ -85,53 +85,53 @@ ngx_cpuinfo(void)
 
     vendor = (u_char *) &vbuf[1];
 
-    if (vbuf[0] == 0) {
-        return;
+    എങ്കിൽ (vbuf[0] == 0) {
+        തിരികെ;
     }
 
     ngx_cpuid(1, cpu);
 
-    if (ngx_strcmp(vendor, "GenuineIntel") == 0) {
+    എങ്കിൽ (ngx_strcmp(vendor, "GenuineIntel") == 0) {
 
-        switch ((cpu[0] & 0xf00) >> 8) {
+        തിരഞ്ഞെടുപ്പ് ((cpu[0] & 0xf00) >> 8) {
 
         /* Pentium */
-        case 5:
+        അവസ്ഥ 5:
             ngx_cacheline_size = 32;
-            break;
+            നിർത്തുക;
 
         /* Pentium Pro, II, III */
-        case 6:
+        അവസ്ഥ 6:
             ngx_cacheline_size = 32;
 
             model = ((cpu[0] & 0xf0000) >> 8) | (cpu[0] & 0xf0);
 
-            if (model >= 0xd0) {
+            എങ്കിൽ (model >= 0xd0) {
                 /* Intel Core, Core 2, Atom */
                 ngx_cacheline_size = 64;
             }
 
-            break;
+            നിർത്തുക;
 
         /*
          * Pentium 4, although its cache line size is 64 bytes,
          * it prefetches up to two cache lines during memory read
          */
-        case 15:
+        അവസ്ഥ 15:
             ngx_cacheline_size = 128;
-            break;
+            നിർത്തുക;
         }
 
-    } else if (ngx_strcmp(vendor, "AuthenticAMD") == 0) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (ngx_strcmp(vendor, "AuthenticAMD") == 0) {
         ngx_cacheline_size = 64;
     }
 }
 
-#else
+#അല്ലെങ്കിൽ
 
 
-void
-ngx_cpuinfo(void)
+ശൂന്യം
+ngx_cpuinfo(ശൂന്യം)
 {
 }
 

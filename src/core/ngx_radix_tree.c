@@ -5,41 +5,41 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#അന്തര്ഭാവ <ngx_config.h>
+#അന്തര്ഭാവ <ngx_core.h>
 
 
-static ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
+സ്ഥിതം ngx_radix_കണ്ണി_t *ngx_radix_alloc(ngx_radix_വൃക്ഷം_t *വൃക്ഷം);
 
 
-ngx_radix_tree_t *
-ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
+ngx_radix_വൃക്ഷം_t *
+ngx_radix_വൃക്ഷം_create(ngx_pool_t *pool, ngx_int_t preallocate)
 {
-    uint32_t           key, mask, inc;
-    ngx_radix_tree_t  *tree;
+    uint32_t           താക്കോൽ, mask, inc;
+    ngx_radix_വൃക്ഷം_t  *വൃക്ഷം;
 
-    tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
-        return NULL;
+    വൃക്ഷം = ngx_palloc(pool, വലുപ്പം(ngx_radix_വൃക്ഷം_t));
+    എങ്കിൽ (വൃക്ഷം == ശൂന്യ) {
+        തിരികെ ശൂന്യ;
     }
 
-    tree->pool = pool;
-    tree->free = NULL;
-    tree->start = NULL;
-    tree->size = 0;
+    വൃക്ഷം->pool = pool;
+    വൃക്ഷം->സ്വതന്ത്രം = ശൂന്യ;
+    വൃക്ഷം->start = ശൂന്യ;
+    വൃക്ഷം->size = 0;
 
-    tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
-        return NULL;
+    വൃക്ഷം->വേര് = ngx_radix_alloc(വൃക്ഷം);
+    എങ്കിൽ (വൃക്ഷം->വേര് == ശൂന്യ) {
+        തിരികെ ശൂന്യ;
     }
 
-    tree->root->right = NULL;
-    tree->root->left = NULL;
-    tree->root->parent = NULL;
-    tree->root->value = NGX_RADIX_NO_VALUE;
+    വൃക്ഷം->വേര്->വലത് = ശൂന്യ;
+    വൃക്ഷം->വേര്->ഇടത് = ശൂന്യ;
+    വൃക്ഷം->വേര്->parent = ശൂന്യ;
+    വൃക്ഷം->വേര്->മൂല്യം = NGX_RADIX_NO_മൂല്യം;
 
-    if (preallocate == 0) {
-        return tree;
+    എങ്കിൽ (preallocate == 0) {
+        തിരികെ വൃക്ഷം;
     }
 
     /*
@@ -59,21 +59,21 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      *     8 bits on sparc64 in 32-bit mode (8K pages)
      */
 
-    if (preallocate == -1) {
-        switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
+    എങ്കിൽ (preallocate == -1) {
+        തിരഞ്ഞെടുപ്പ് (ngx_pagesize / വലുപ്പം(ngx_radix_കണ്ണി_t)) {
 
         /* amd64 */
-        case 128:
+        അവസ്ഥ 128:
             preallocate = 6;
-            break;
+            നിർത്തുക;
 
         /* i386, sparc64 */
-        case 256:
+        അവസ്ഥ 256:
             preallocate = 7;
-            break;
+            നിർത്തുക;
 
         /* sparc64 in 32-bit mode */
-        default:
+        സ്ഥിരസ്ഥിതി:
             preallocate = 8;
         }
     }
@@ -81,408 +81,408 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     mask = 0;
     inc = 0x80000000;
 
-    while (preallocate--) {
+    ആകുമ്പോൾ (preallocate--) {
 
-        key = 0;
+        താക്കോൽ = 0;
         mask >>= 1;
         mask |= 0x80000000;
 
-        do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+        ചെയ്യുക {
+            എങ്കിൽ (ngx_radix32tree_തിരുകുക(വൃക്ഷം, താക്കോൽ, mask, NGX_RADIX_NO_മൂല്യം)
                 != NGX_OK)
             {
-                return NULL;
+                തിരികെ ശൂന്യ;
             }
 
-            key += inc;
+            താക്കോൽ += inc;
 
-        } while (key);
+        } ആകുമ്പോൾ (താക്കോൽ);
 
         inc >>= 1;
     }
 
-    return tree;
+    തിരികെ വൃക്ഷം;
 }
 
 
 ngx_int_t
-ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
-    uintptr_t value)
+ngx_radix32tree_തിരുകുക(ngx_radix_വൃക്ഷം_t *വൃക്ഷം, uint32_t താക്കോൽ, uint32_t mask,
+    uintptr_t മൂല്യം)
 {
     uint32_t           bit;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_കണ്ണി_t  *കണ്ണി, *next;
 
     bit = 0x80000000;
 
-    node = tree->root;
-    next = tree->root;
+    കണ്ണി = വൃക്ഷം->വേര്;
+    next = വൃക്ഷം->വേര്;
 
-    while (bit & mask) {
-        if (key & bit) {
-            next = node->right;
+    ആകുമ്പോൾ (bit & mask) {
+        എങ്കിൽ (താക്കോൽ & bit) {
+            next = കണ്ണി->വലത്;
 
-        } else {
-            next = node->left;
+        } അല്ലെങ്കിൽ {
+            next = കണ്ണി->ഇടത്;
         }
 
-        if (next == NULL) {
-            break;
-        }
-
-        bit >>= 1;
-        node = next;
-    }
-
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
-        }
-
-        node->value = value;
-        return NGX_OK;
-    }
-
-    while (bit & mask) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
-        }
-
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
-
-        if (key & bit) {
-            node->right = next;
-
-        } else {
-            node->left = next;
+        എങ്കിൽ (next == ശൂന്യ) {
+            നിർത്തുക;
         }
 
         bit >>= 1;
-        node = next;
+        കണ്ണി = next;
     }
 
-    node->value = value;
+    എങ്കിൽ (next) {
+        എങ്കിൽ (കണ്ണി->മൂല്യം != NGX_RADIX_NO_മൂല്യം) {
+            തിരികെ NGX_BUSY;
+        }
 
-    return NGX_OK;
+        കണ്ണി->മൂല്യം = മൂല്യം;
+        തിരികെ NGX_OK;
+    }
+
+    ആകുമ്പോൾ (bit & mask) {
+        next = ngx_radix_alloc(വൃക്ഷം);
+        എങ്കിൽ (next == ശൂന്യ) {
+            തിരികെ NGX_ERROR;
+        }
+
+        next->വലത് = ശൂന്യ;
+        next->ഇടത് = ശൂന്യ;
+        next->parent = കണ്ണി;
+        next->മൂല്യം = NGX_RADIX_NO_മൂല്യം;
+
+        എങ്കിൽ (താക്കോൽ & bit) {
+            കണ്ണി->വലത് = next;
+
+        } അല്ലെങ്കിൽ {
+            കണ്ണി->ഇടത് = next;
+        }
+
+        bit >>= 1;
+        കണ്ണി = next;
+    }
+
+    കണ്ണി->മൂല്യം = മൂല്യം;
+
+    തിരികെ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
+ngx_radix32tree_delete(ngx_radix_വൃക്ഷം_t *വൃക്ഷം, uint32_t താക്കോൽ, uint32_t mask)
 {
     uint32_t           bit;
-    ngx_radix_node_t  *node;
+    ngx_radix_കണ്ണി_t  *കണ്ണി;
 
     bit = 0x80000000;
-    node = tree->root;
+    കണ്ണി = വൃക്ഷം->വേര്;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
-            node = node->right;
+    ആകുമ്പോൾ (കണ്ണി && (bit & mask)) {
+        എങ്കിൽ (താക്കോൽ & bit) {
+            കണ്ണി = കണ്ണി->വലത്;
 
-        } else {
-            node = node->left;
+        } അല്ലെങ്കിൽ {
+            കണ്ണി = കണ്ണി->ഇടത്;
         }
 
         bit >>= 1;
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    എങ്കിൽ (കണ്ണി == ശൂന്യ) {
+        തിരികെ NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    എങ്കിൽ (കണ്ണി->വലത് || കണ്ണി->ഇടത്) {
+        എങ്കിൽ (കണ്ണി->മൂല്യം != NGX_RADIX_NO_മൂല്യം) {
+            കണ്ണി->മൂല്യം = NGX_RADIX_NO_മൂല്യം;
+            തിരികെ NGX_OK;
         }
 
-        return NGX_ERROR;
+        തിരികെ NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    വേണ്ടി ( ;; ) {
+        എങ്കിൽ (കണ്ണി->parent->വലത് == കണ്ണി) {
+            കണ്ണി->parent->വലത് = ശൂന്യ;
 
-        } else {
-            node->parent->left = NULL;
+        } അല്ലെങ്കിൽ {
+            കണ്ണി->parent->ഇടത് = ശൂന്യ;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        കണ്ണി->വലത് = വൃക്ഷം->സ്വതന്ത്രം;
+        വൃക്ഷം->സ്വതന്ത്രം = കണ്ണി;
 
-        node = node->parent;
+        കണ്ണി = കണ്ണി->parent;
 
-        if (node->right || node->left) {
-            break;
+        എങ്കിൽ (കണ്ണി->വലത് || കണ്ണി->ഇടത്) {
+            നിർത്തുക;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        എങ്കിൽ (കണ്ണി->മൂല്യം != NGX_RADIX_NO_മൂല്യം) {
+            നിർത്തുക;
         }
 
-        if (node->parent == NULL) {
-            break;
+        എങ്കിൽ (കണ്ണി->parent == ശൂന്യ) {
+            നിർത്തുക;
         }
     }
 
-    return NGX_OK;
+    തിരികെ NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
+ngx_radix32tree_find(ngx_radix_വൃക്ഷം_t *വൃക്ഷം, uint32_t താക്കോൽ)
 {
     uint32_t           bit;
-    uintptr_t          value;
-    ngx_radix_node_t  *node;
+    uintptr_t          മൂല്യം;
+    ngx_radix_കണ്ണി_t  *കണ്ണി;
 
     bit = 0x80000000;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    മൂല്യം = NGX_RADIX_NO_മൂല്യം;
+    കണ്ണി = വൃക്ഷം->വേര്;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    ആകുമ്പോൾ (കണ്ണി) {
+        എങ്കിൽ (കണ്ണി->മൂല്യം != NGX_RADIX_NO_മൂല്യം) {
+            മൂല്യം = കണ്ണി->മൂല്യം;
         }
 
-        if (key & bit) {
-            node = node->right;
+        എങ്കിൽ (താക്കോൽ & bit) {
+            കണ്ണി = കണ്ണി->വലത്;
 
-        } else {
-            node = node->left;
+        } അല്ലെങ്കിൽ {
+            കണ്ണി = കണ്ണി->ഇടത്;
         }
 
         bit >>= 1;
     }
 
-    return value;
+    തിരികെ മൂല്യം;
 }
 
 
-#if (NGX_HAVE_INET6)
+#എങ്കിൽ (NGX_HAVE_INET6)
 
 ngx_int_t
-ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
-    uintptr_t value)
+ngx_radix128tree_തിരുകുക(ngx_radix_വൃക്ഷം_t *വൃക്ഷം, u_char *താക്കോൽ, u_char *mask,
+    uintptr_t മൂല്യം)
 {
     u_char             bit;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_കണ്ണി_t  *കണ്ണി, *next;
 
     i = 0;
     bit = 0x80;
 
-    node = tree->root;
-    next = tree->root;
+    കണ്ണി = വൃക്ഷം->വേര്;
+    next = വൃക്ഷം->വേര്;
 
-    while (bit & mask[i]) {
-        if (key[i] & bit) {
-            next = node->right;
+    ആകുമ്പോൾ (bit & mask[i]) {
+        എങ്കിൽ (താക്കോൽ[i] & bit) {
+            next = കണ്ണി->വലത്;
 
-        } else {
-            next = node->left;
+        } അല്ലെങ്കിൽ {
+            next = കണ്ണി->ഇടത്;
         }
 
-        if (next == NULL) {
-            break;
+        എങ്കിൽ (next == ശൂന്യ) {
+            നിർത്തുക;
         }
 
         bit >>= 1;
-        node = next;
+        കണ്ണി = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        എങ്കിൽ (bit == 0) {
+            എങ്കിൽ (++i == 16) {
+                നിർത്തുക;
             }
 
             bit = 0x80;
         }
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    എങ്കിൽ (next) {
+        എങ്കിൽ (കണ്ണി->മൂല്യം != NGX_RADIX_NO_മൂല്യം) {
+            തിരികെ NGX_BUSY;
         }
 
-        node->value = value;
-        return NGX_OK;
+        കണ്ണി->മൂല്യം = മൂല്യം;
+        തിരികെ NGX_OK;
     }
 
-    while (bit & mask[i]) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+    ആകുമ്പോൾ (bit & mask[i]) {
+        next = ngx_radix_alloc(വൃക്ഷം);
+        എങ്കിൽ (next == ശൂന്യ) {
+            തിരികെ NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
+        next->വലത് = ശൂന്യ;
+        next->ഇടത് = ശൂന്യ;
+        next->parent = കണ്ണി;
+        next->മൂല്യം = NGX_RADIX_NO_മൂല്യം;
 
-        if (key[i] & bit) {
-            node->right = next;
+        എങ്കിൽ (താക്കോൽ[i] & bit) {
+            കണ്ണി->വലത് = next;
 
-        } else {
-            node->left = next;
+        } അല്ലെങ്കിൽ {
+            കണ്ണി->ഇടത് = next;
         }
 
         bit >>= 1;
-        node = next;
+        കണ്ണി = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        എങ്കിൽ (bit == 0) {
+            എങ്കിൽ (++i == 16) {
+                നിർത്തുക;
             }
 
             bit = 0x80;
         }
     }
 
-    node->value = value;
+    കണ്ണി->മൂല്യം = മൂല്യം;
 
-    return NGX_OK;
+    തിരികെ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
+ngx_radix128tree_delete(ngx_radix_വൃക്ഷം_t *വൃക്ഷം, u_char *താക്കോൽ, u_char *mask)
 {
     u_char             bit;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_കണ്ണി_t  *കണ്ണി;
 
     i = 0;
     bit = 0x80;
-    node = tree->root;
+    കണ്ണി = വൃക്ഷം->വേര്;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
-            node = node->right;
+    ആകുമ്പോൾ (കണ്ണി && (bit & mask[i])) {
+        എങ്കിൽ (താക്കോൽ[i] & bit) {
+            കണ്ണി = കണ്ണി->വലത്;
 
-        } else {
-            node = node->left;
+        } അല്ലെങ്കിൽ {
+            കണ്ണി = കണ്ണി->ഇടത്;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        എങ്കിൽ (bit == 0) {
+            എങ്കിൽ (++i == 16) {
+                നിർത്തുക;
             }
 
             bit = 0x80;
         }
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    എങ്കിൽ (കണ്ണി == ശൂന്യ) {
+        തിരികെ NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    എങ്കിൽ (കണ്ണി->വലത് || കണ്ണി->ഇടത്) {
+        എങ്കിൽ (കണ്ണി->മൂല്യം != NGX_RADIX_NO_മൂല്യം) {
+            കണ്ണി->മൂല്യം = NGX_RADIX_NO_മൂല്യം;
+            തിരികെ NGX_OK;
         }
 
-        return NGX_ERROR;
+        തിരികെ NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    വേണ്ടി ( ;; ) {
+        എങ്കിൽ (കണ്ണി->parent->വലത് == കണ്ണി) {
+            കണ്ണി->parent->വലത് = ശൂന്യ;
 
-        } else {
-            node->parent->left = NULL;
+        } അല്ലെങ്കിൽ {
+            കണ്ണി->parent->ഇടത് = ശൂന്യ;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        കണ്ണി->വലത് = വൃക്ഷം->സ്വതന്ത്രം;
+        വൃക്ഷം->സ്വതന്ത്രം = കണ്ണി;
 
-        node = node->parent;
+        കണ്ണി = കണ്ണി->parent;
 
-        if (node->right || node->left) {
-            break;
+        എങ്കിൽ (കണ്ണി->വലത് || കണ്ണി->ഇടത്) {
+            നിർത്തുക;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        എങ്കിൽ (കണ്ണി->മൂല്യം != NGX_RADIX_NO_മൂല്യം) {
+            നിർത്തുക;
         }
 
-        if (node->parent == NULL) {
-            break;
+        എങ്കിൽ (കണ്ണി->parent == ശൂന്യ) {
+            നിർത്തുക;
         }
     }
 
-    return NGX_OK;
+    തിരികെ NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
+ngx_radix128tree_find(ngx_radix_വൃക്ഷം_t *വൃക്ഷം, u_char *താക്കോൽ)
 {
     u_char             bit;
-    uintptr_t          value;
+    uintptr_t          മൂല്യം;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_കണ്ണി_t  *കണ്ണി;
 
     i = 0;
     bit = 0x80;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    മൂല്യം = NGX_RADIX_NO_മൂല്യം;
+    കണ്ണി = വൃക്ഷം->വേര്;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    ആകുമ്പോൾ (കണ്ണി) {
+        എങ്കിൽ (കണ്ണി->മൂല്യം != NGX_RADIX_NO_മൂല്യം) {
+            മൂല്യം = കണ്ണി->മൂല്യം;
         }
 
-        if (key[i] & bit) {
-            node = node->right;
+        എങ്കിൽ (താക്കോൽ[i] & bit) {
+            കണ്ണി = കണ്ണി->വലത്;
 
-        } else {
-            node = node->left;
+        } അല്ലെങ്കിൽ {
+            കണ്ണി = കണ്ണി->ഇടത്;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
+        എങ്കിൽ (bit == 0) {
             i++;
             bit = 0x80;
         }
     }
 
-    return value;
+    തിരികെ മൂല്യം;
 }
 
 #endif
 
 
-static ngx_radix_node_t *
-ngx_radix_alloc(ngx_radix_tree_t *tree)
+സ്ഥിതം ngx_radix_കണ്ണി_t *
+ngx_radix_alloc(ngx_radix_വൃക്ഷം_t *വൃക്ഷം)
 {
-    ngx_radix_node_t  *p;
+    ngx_radix_കണ്ണി_t  *p;
 
-    if (tree->free) {
-        p = tree->free;
-        tree->free = tree->free->right;
-        return p;
+    എങ്കിൽ (വൃക്ഷം->സ്വതന്ത്രം) {
+        p = വൃക്ഷം->സ്വതന്ത്രം;
+        വൃക്ഷം->സ്വതന്ത്രം = വൃക്ഷം->സ്വതന്ത്രം->വലത്;
+        തിരികെ p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
-        tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
-            return NULL;
+    എങ്കിൽ (വൃക്ഷം->size < വലുപ്പം(ngx_radix_കണ്ണി_t)) {
+        വൃക്ഷം->start = ngx_pmemalign(വൃക്ഷം->pool, ngx_pagesize, ngx_pagesize);
+        എങ്കിൽ (വൃക്ഷം->start == ശൂന്യ) {
+            തിരികെ ശൂന്യ;
         }
 
-        tree->size = ngx_pagesize;
+        വൃക്ഷം->size = ngx_pagesize;
     }
 
-    p = (ngx_radix_node_t *) tree->start;
-    tree->start += sizeof(ngx_radix_node_t);
-    tree->size -= sizeof(ngx_radix_node_t);
+    p = (ngx_radix_കണ്ണി_t *) വൃക്ഷം->start;
+    വൃക്ഷം->start += വലുപ്പം(ngx_radix_കണ്ണി_t);
+    വൃക്ഷം->size -= വലുപ്പം(ngx_radix_കണ്ണി_t);
 
-    return p;
+    തിരികെ p;
 }
