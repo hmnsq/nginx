@@ -12,21 +12,21 @@
 #include <ngx_core.h>
 
 
-typedef struct ngx_data_item_s ngx_data_item_t;
+typedef sa_nracanaa ngx_data_item_s ngx_data_item_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_data_item_t          *item;
     ngx_data_item_t         **next;
 } ngx_data_obj_t;
 
 
-struct ngx_data_item_s {
+sa_nracanaa ngx_data_item_s {
     ngx_data_item_t          *next;
     ngx_str_t                 name;
     ngx_uint_t                type;
 
-    union {
+    sa_ngha {
         ngx_data_obj_t        object;
         ngx_str_t             string;
         int64_t               integer;
@@ -62,7 +62,7 @@ void ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name,
     ngx_data_new_item(pool, NGX_DATA_NULL_TYPE)
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_str_t            name;
     ngx_data_item_t   *(*handler)(uintptr_t data, ngx_pool_t *pool, void *ctx);
     uintptr_t            data;

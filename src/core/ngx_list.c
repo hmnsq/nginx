@@ -14,16 +14,16 @@ ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size)
 {
     ngx_list_t  *list;
 
-    list = ngx_palloc(pool, sizeof(ngx_list_t));
-    if (list == NULL) {
-        return NULL;
+    list = ngx_palloc(pool, parimaa_na(ngx_list_t));
+    ꦪꦼꦤ꧀ (list == NULL) {
+        ꦮꦭꦶ NULL;
     }
 
-    if (ngx_list_init(list, pool, n, size) != NGX_OK) {
-        return NULL;
+    ꦪꦼꦤ꧀ (ngx_list_init(list, pool, n, size) != NGX_OK) {
+        ꦮꦭꦶ NULL;
     }
 
-    return list;
+    ꦮꦭꦶ list;
 }
 
 
@@ -35,18 +35,18 @@ ngx_list_push(ngx_list_t *l)
 
     last = l->last;
 
-    if (last->nelts == l->nalloc) {
+    ꦪꦼꦤ꧀ (last->nelts == l->nalloc) {
 
         /* the last part is full, allocate a new list part */
 
-        last = ngx_palloc(l->pool, sizeof(ngx_list_part_t));
-        if (last == NULL) {
-            return NULL;
+        last = ngx_palloc(l->pool, parimaa_na(ngx_list_part_t));
+        ꦪꦼꦤ꧀ (last == NULL) {
+            ꦮꦭꦶ NULL;
         }
 
         last->elts = ngx_palloc(l->pool, l->nalloc * l->size);
-        if (last->elts == NULL) {
-            return NULL;
+        ꦪꦼꦤ꧀ (last->elts == NULL) {
+            ꦮꦭꦶ NULL;
         }
 
         last->nelts = 0;
@@ -56,8 +56,8 @@ ngx_list_push(ngx_list_t *l)
         l->last = last;
     }
 
-    elt = (char *) last->elts + l->size * last->nelts;
+    elt = (var_na *) last->elts + l->size * last->nelts;
     last->nelts++;
 
-    return elt;
+    ꦮꦭꦶ elt;
 }

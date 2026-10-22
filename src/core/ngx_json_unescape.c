@@ -28,7 +28,7 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
     ngx_int_t    n;
     ngx_uint_t   hex_left;
 
-    enum {
+    ga_nanaa {
         sw_usual = 0,
         sw_quoted,
         sw_hex,
@@ -62,13 +62,13 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
      * surrounding double quotes).
      */
 
-    if (src->len == 0) {
+    ꦪꦼꦤ꧀ (src->len == 0) {
         dst->len = 0;
-        return NGX_OK;
+        ꦮꦭꦶ NGX_OK;
     }
 
-    if (dst->len < src->len) {
-        return NGX_ERROR;
+    ꦪꦼꦤ꧀ (dst->len < src->len) {
+        ꦮꦭꦶ NGX_ERROR;
     }
 
     s = src->data;
@@ -81,94 +81,94 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
     high_surrogate = 0;
     hex_left = 0;
 
-    while (size--) {
+    ꦱꦼꦢꦼꦭ (size--) {
 
         ch = *s++;
 
         switch (state) {
-        case sw_usual:
+        pak_sa sw_usual:
 
-            if (ch == '"') {
-                return NGX_ERROR;
+            ꦪꦼꦤ꧀ (ch == '"') {
+                ꦮꦭꦶ NGX_ERROR;
             }
 
-            if (ch == '\\') {
+            ꦪꦼꦤ꧀ (ch == '\\') {
                 state = sw_quoted;
-                break;
+                bha_nga;
             }
 
-            if (ch < 0x20) {
+            ꦪꦼꦤ꧀ (ch < 0x20) {
                 /* RFC 8259: control characters must be escaped */
-                return NGX_ERROR;
+                ꦮꦭꦶ NGX_ERROR;
             }
 
             *d++ = ch;
-            break;
+            bha_nga;
 
-        case sw_quoted:
+        pak_sa sw_quoted:
 
             switch (ch) {
 
-            case 'u':
+            pak_sa 'u':
                 codepoint = 0;
                 hex_left = 4;
                 state = sw_hex;
-                break;
+                bha_nga;
 
-            case '"':
-            case '/':
-            case '\\':
+            pak_sa '"':
+            pak_sa '/':
+            pak_sa '\\':
                 *d++ = ch;
                 state = sw_usual;
-                break;
+                bha_nga;
 
-            case 'b':
+            pak_sa 'b':
                 *d++ = '\b';
                 state = sw_usual;
-                break;
+                bha_nga;
 
-            case 'f':
+            pak_sa 'f':
                 *d++ = '\f';
                 state = sw_usual;
-                break;
+                bha_nga;
 
-            case 'n':
+            pak_sa 'n':
                 *d++ = '\n';
                 state = sw_usual;
-                break;
+                bha_nga;
 
-            case 'r':
+            pak_sa 'r':
                 *d++ = '\r';
                 state = sw_usual;
-                break;
+                bha_nga;
 
-            case 't':
+            pak_sa 't':
                 *d++ = '\t';
                 state = sw_usual;
-                break;
+                bha_nga;
 
             default:
-                return NGX_ERROR;
+                ꦮꦭꦶ NGX_ERROR;
             }
 
-            break;
+            bha_nga;
 
-        case sw_hex:
+        pak_sa sw_hex:
 
             n = ngx_json_hex_digit(ch);
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            ꦪꦼꦤ꧀ (n == NGX_ERROR) {
+                ꦮꦭꦶ NGX_ERROR;
             }
 
             codepoint = (codepoint << 4) | (uint32_t) n;
 
-            if (--hex_left > 0) {
-                break;
+            ꦪꦼꦤ꧀ (--hex_left > 0) {
+                bha_nga;
             }
 
-            if (high_surrogate) {
-                if (codepoint < 0xDC00 || codepoint > 0xDFFF) {
-                    return NGX_ERROR;
+            ꦪꦼꦤ꧀ (high_surrogate) {
+                ꦪꦼꦤ꧀ (codepoint < 0xDC00 || codepoint > 0xDFFF) {
+                    ꦮꦭꦶ NGX_ERROR;
                 }
 
                 codepoint = 0x10000
@@ -177,101 +177,101 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
                 d = ngx_json_utf8_encode(d, codepoint);
                 high_surrogate = 0;
                 state = sw_usual;
-                break;
+                bha_nga;
             }
 
-            if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+            ꦪꦼꦤ꧀ (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
                 /* high surrogate - wait for the low surrogate */
                 high_surrogate = codepoint;
                 state = sw_surrogate_start;
-                break;
+                bha_nga;
             }
 
-            if (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
+            ꦪꦼꦤ꧀ (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_ERROR;
+                ꦮꦭꦶ NGX_ERROR;
             }
 
             d = ngx_json_utf8_encode(d, codepoint);
             state = sw_usual;
-            break;
+            bha_nga;
 
-        case sw_surrogate_start:
+        pak_sa sw_surrogate_start:
             /*
              * Expect '\' to begin the low-surrogate escape.
              * Lone surrogates are not valid Unicode scalar values
              * (RFC 8259, Section 8.2).
              */
-            if (ch == '\\') {
+            ꦪꦼꦤ꧀ (ch == '\\') {
                 state = sw_surrogate_u;
-                break;
+                bha_nga;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            ꦮꦭꦶ NGX_ERROR;
 
-        case sw_surrogate_u:
-            if (ch == 'u') {
+        pak_sa sw_surrogate_u:
+            ꦪꦼꦤ꧀ (ch == 'u') {
                 codepoint = 0;
                 hex_left = 4;
                 state = sw_hex;
-                break;
+                bha_nga;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            ꦮꦭꦶ NGX_ERROR;
         }
     }
 
-    if (state != sw_usual) {
+    ꦪꦼꦤ꧀ (state != sw_usual) {
         /* truncated escape sequence or unpaired high surrogate */
-        return NGX_ERROR;
+        ꦮꦭꦶ NGX_ERROR;
     }
 
     dst->len = d - dst->data;
 
-    return NGX_OK;
+    ꦮꦭꦶ NGX_OK;
 }
 
 
 static ngx_inline u_char *
 ngx_json_utf8_encode(u_char *dst, uint32_t codepoint)
 {
-    if (codepoint <= 0x7F) {
+    ꦪꦼꦤ꧀ (codepoint <= 0x7F) {
         *dst++ = (u_char) codepoint;
 
-    } else if (codepoint <= 0x7FF) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀ (codepoint <= 0x7FF) {
         *dst++ = (u_char) (0xC0 | (codepoint >> 6));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else if (codepoint <= 0xFFFF) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀ (codepoint <= 0xFFFF) {
         *dst++ = (u_char) (0xE0 | (codepoint >> 12));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else {
+    } ꦭꦶꦪ {
         *dst++ = (u_char) (0xF0 | (codepoint >> 18));
         *dst++ = (u_char) (0x80 | ((codepoint >> 12) & 0x3F));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
     }
 
-    return dst;
+    ꦮꦭꦶ dst;
 }
 
 
 ngx_int_t
 ngx_json_hex_digit(u_char ch)
 {
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0';
+    ꦪꦼꦤ꧀ (ch >= '0' && ch <= '9') {
+        ꦮꦭꦶ ch - '0';
     }
 
     ch = (u_char) (ch | 0x20);
 
-    if (ch >= 'a' && ch <= 'f') {
-        return ch - 'a' + 10;
+    ꦪꦼꦤ꧀ (ch >= 'a' && ch <= 'f') {
+        ꦮꦭꦶ ch - 'a' + 10;
     }
 
-    return NGX_ERROR;
+    ꦮꦭꦶ NGX_ERROR;
 }
