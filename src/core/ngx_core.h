@@ -9,31 +9,31 @@
 #define _NGX_CORE_H_INCLUDED_
 
 
-#include <ngx_config.h>
+#شامل <ngx_config.h>
 
 
-typedef struct ngx_module_s          ngx_module_t;
-typedef struct ngx_conf_s            ngx_conf_t;
-typedef struct ngx_cycle_s           ngx_cycle_t;
-typedef struct ngx_pool_s            ngx_pool_t;
-typedef struct ngx_chain_s           ngx_chain_t;
-typedef struct ngx_log_s             ngx_log_t;
-typedef struct ngx_open_file_s       ngx_open_file_t;
-typedef struct ngx_command_s         ngx_command_t;
-typedef struct ngx_file_s            ngx_file_t;
-typedef struct ngx_event_s           ngx_event_t;
-typedef struct ngx_event_aio_s       ngx_event_aio_t;
-typedef struct ngx_connection_s      ngx_connection_t;
-typedef struct ngx_thread_task_s     ngx_thread_task_t;
-typedef struct ngx_ssl_s             ngx_ssl_t;
-typedef struct ngx_ssl_cache_s       ngx_ssl_cache_t;
-typedef struct ngx_proxy_protocol_s  ngx_proxy_protocol_t;
-typedef struct ngx_quic_stream_s     ngx_quic_stream_t;
-typedef struct ngx_ssl_connection_s  ngx_ssl_connection_t;
-typedef struct ngx_udp_connection_s  ngx_udp_connection_t;
+تعریفنوع ساختار ngx_module_s          ngx_module_t;
+تعریفنوع ساختار ngx_conf_s            ngx_conf_t;
+تعریفنوع ساختار ngx_cycle_s           ngx_cycle_t;
+تعریفنوع ساختار ngx_pool_s            ngx_pool_t;
+تعریفنوع ساختار ngx_chain_s           ngx_chain_t;
+تعریفنوع ساختار ngx_log_s             ngx_log_t;
+تعریفنوع ساختار ngx_open_file_s       ngx_open_file_t;
+تعریفنوع ساختار ngx_command_s         ngx_command_t;
+تعریفنوع ساختار ngx_file_s            ngx_file_t;
+تعریفنوع ساختار ngx_event_s           ngx_event_t;
+تعریفنوع ساختار ngx_event_aio_s       ngx_event_aio_t;
+تعریفنوع ساختار ngx_connection_s      ngx_connection_t;
+تعریفنوع ساختار ngx_thread_task_s     ngx_thread_task_t;
+تعریفنوع ساختار ngx_ssl_s             ngx_ssl_t;
+تعریفنوع ساختار ngx_ssl_cache_s       ngx_ssl_cache_t;
+تعریفنوع ساختار ngx_proxy_protocol_s  ngx_proxy_protocol_t;
+تعریفنوع ساختار ngx_quic_stream_s     ngx_quic_stream_t;
+تعریفنوع ساختار ngx_ssl_connection_s  ngx_ssl_connection_t;
+تعریفنوع ساختار ngx_udp_connection_s  ngx_udp_connection_t;
 
-typedef void (*ngx_event_handler_pt)(ngx_event_t *ev);
-typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
+تعریفنوع تهی (*ngx_event_handler_pt)(ngx_event_t *ev);
+تعریفنوع تهی (*ngx_connection_handler_pt)(ngx_connection_t *c);
 
 
 #define  NGX_OK          0
@@ -45,65 +45,65 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 #define  NGX_ABORT      -6
 
 
-#include <ngx_errno.h>
-#include <ngx_atomic.h>
-#include <ngx_thread.h>
-#include <ngx_rbtree.h>
-#include <ngx_time.h>
-#include <ngx_socket.h>
-#include <ngx_string.h>
-#include <ngx_files.h>
-#include <ngx_shmem.h>
-#include <ngx_process.h>
-#include <ngx_user.h>
-#include <ngx_dlopen.h>
-#include <ngx_parse.h>
-#include <ngx_parse_time.h>
-#include <ngx_log.h>
-#include <ngx_alloc.h>
-#include <ngx_palloc.h>
-#include <ngx_buf.h>
-#include <ngx_queue.h>
-#include <ngx_array.h>
-#include <ngx_list.h>
-#include <ngx_hash.h>
-#include <ngx_file.h>
-#include <ngx_crc.h>
-#include <ngx_crc32.h>
-#include <ngx_murmurhash.h>
-#include <ngx_siphash.h>
-#if (NGX_PCRE)
-#include <ngx_regex.h>
+#شامل <ngx_errno.h>
+#شامل <ngx_atomic.h>
+#شامل <ngx_thread.h>
+#شامل <ngx_rbtree.h>
+#شامل <ngx_time.h>
+#شامل <ngx_socket.h>
+#شامل <ngx_string.h>
+#شامل <ngx_files.h>
+#شامل <ngx_shmem.h>
+#شامل <ngx_process.h>
+#شامل <ngx_user.h>
+#شامل <ngx_dlopen.h>
+#شامل <ngx_parse.h>
+#شامل <ngx_parse_time.h>
+#شامل <ngx_log.h>
+#شامل <ngx_alloc.h>
+#شامل <ngx_palloc.h>
+#شامل <ngx_buf.h>
+#شامل <ngx_queue.h>
+#شامل <ngx_array.h>
+#شامل <ngx_list.h>
+#شامل <ngx_hash.h>
+#شامل <ngx_file.h>
+#شامل <ngx_crc.h>
+#شامل <ngx_crc32.h>
+#شامل <ngx_murmurhash.h>
+#شامل <ngx_siphash.h>
+#اگر (NGX_PCRE)
+#شامل <ngx_regex.h>
 #endif
-#include <ngx_radix_tree.h>
-#include <ngx_times.h>
-#include <ngx_rwlock.h>
-#include <ngx_shmtx.h>
-#include <ngx_data.h>
-#include <ngx_json.h>
-#include <ngx_slab.h>
-#include <ngx_inet.h>
-#include <ngx_cycle.h>
-#include <ngx_resolver.h>
-#if (NGX_OPENSSL)
-#include <ngx_event_openssl.h>
-#if (NGX_QUIC)
-#include <ngx_event_quic.h>
+#شامل <ngx_radix_tree.h>
+#شامل <ngx_times.h>
+#شامل <ngx_rwlock.h>
+#شامل <ngx_shmtx.h>
+#شامل <ngx_data.h>
+#شامل <ngx_json.h>
+#شامل <ngx_slab.h>
+#شامل <ngx_inet.h>
+#شامل <ngx_cycle.h>
+#شامل <ngx_resolver.h>
+#اگر (NGX_OPENSSL)
+#شامل <ngx_event_openssl.h>
+#اگر (NGX_QUIC)
+#شامل <ngx_event_quic.h>
 #endif
 #endif
-#include <ngx_process_cycle.h>
-#if (NGX_CONTROL_API)
-#include <ngx_control.h>
+#شامل <ngx_process_cycle.h>
+#اگر (NGX_CONTROL_API)
+#شامل <ngx_control.h>
 #endif
-#include <ngx_conf_file.h>
-#include <ngx_module.h>
-#include <ngx_open_file_cache.h>
-#include <ngx_os.h>
-#include <ngx_connection.h>
-#include <ngx_syslog.h>
-#include <ngx_proxy_protocol.h>
-#if (NGX_HAVE_BPF)
-#include <ngx_bpf.h>
+#شامل <ngx_conf_file.h>
+#شامل <ngx_module.h>
+#شامل <ngx_open_file_cache.h>
+#شامل <ngx_os.h>
+#شامل <ngx_connection.h>
+#شامل <ngx_syslog.h>
+#شامل <ngx_proxy_protocol.h>
+#اگر (NGX_HAVE_BPF)
+#شامل <ngx_bpf.h>
 #endif
 
 
@@ -112,13 +112,13 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 #define CRLF   "\r\n"
 
 
-#define ngx_abs(value)       (((value) >= 0) ? (value) : - (value))
+#define ngx_abs(مقدار)       (((مقدار) >= 0) ? (مقدار) : - (مقدار))
 #define ngx_max(val1, val2)  ((val1 < val2) ? (val2) : (val1))
 #define ngx_min(val1, val2)  ((val1 > val2) ? (val2) : (val1))
 
-void ngx_cpuinfo(void);
+تهی ngx_cpuinfo(تهی);
 
-#if (NGX_HAVE_OPENAT)
+#اگر (NGX_HAVE_OPENAT)
 #define NGX_DISABLE_SYMLINKS_OFF        0
 #define NGX_DISABLE_SYMLINKS_ON         1
 #define NGX_DISABLE_SYMLINKS_NOTOWNER   2

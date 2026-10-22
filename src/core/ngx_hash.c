@@ -5,87 +5,87 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-void *
-ngx_hash_find(ngx_hash_t *hash, ngx_uint_t key, u_char *name, size_t len)
+تهی *
+ngx_hash_find(ngx_hash_t *hash, ngx_uint_t کلید, u_char *name, size_t len)
 {
     ngx_uint_t       i;
     ngx_hash_elt_t  *elt;
 
-#if 0
+#اگر 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "hf:\"%*s\"", len, name);
 #endif
 
-    elt = hash->buckets[key % hash->size];
+    elt = hash->buckets[کلید % hash->size];
 
-    if (elt == NULL) {
-        return NULL;
+    اگر (elt == پوچ) {
+        بازگشت پوچ;
     }
 
-    while (elt->value) {
-        if (len != (size_t) elt->len) {
-            goto next;
+    وقتی (elt->مقدار) {
+        اگر (len != (size_t) elt->len) {
+            برو next;
         }
 
-        for (i = 0; i < len; i++) {
-            if (name[i] != elt->name[i]) {
-                goto next;
+        برای (i = 0; i < len; i++) {
+            اگر (name[i] != elt->name[i]) {
+                برو next;
             }
         }
 
-        return elt->value;
+        بازگشت elt->مقدار;
 
     next:
 
         elt = (ngx_hash_elt_t *) ngx_align_ptr(&elt->name[0] + elt->len,
-                                               sizeof(void *));
-        continue;
+                                               اندازه(تهی *));
+        ادامه;
     }
 
-    return NULL;
+    بازگشت پوچ;
 }
 
 
-void *
+تهی *
 ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
 {
-    void        *value;
-    ngx_uint_t   i, n, key;
+    تهی        *مقدار;
+    ngx_uint_t   i, n, کلید;
 
-#if 0
+#اگر 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "wch:\"%*s\"", len, name);
 #endif
 
     n = len;
 
-    while (n) {
-        if (name[n - 1] == '.') {
-            break;
+    وقتی (n) {
+        اگر (name[n - 1] == '.') {
+            بشکن;
         }
 
         n--;
     }
 
-    key = 0;
+    کلید = 0;
 
-    for (i = n; i < len; i++) {
-        key = ngx_hash(key, name[i]);
+    برای (i = n; i < len; i++) {
+        کلید = ngx_hash(کلید, name[i]);
     }
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", key);
+#اگر 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", کلید);
 #endif
 
-    value = ngx_hash_find(&hwc->hash, key, &name[n], len - n);
+    مقدار = ngx_hash_find(&hwc->hash, کلید, &name[n], len - n);
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", value);
+#اگر 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", مقدار);
 #endif
 
-    if (value) {
+    اگر (مقدار) {
 
         /*
          * the 2 low bits of value have the special meaning:
@@ -98,86 +98,86 @@ ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
          *          "*.example.com" only.
          */
 
-        if ((uintptr_t) value & 2) {
+        اگر ((uintptr_t) مقدار & 2) {
 
-            if (n == 0) {
+            اگر (n == 0) {
 
                 /* "example.com" */
 
-                if ((uintptr_t) value & 1) {
-                    return NULL;
+                اگر ((uintptr_t) مقدار & 1) {
+                    بازگشت پوچ;
                 }
 
                 hwc = (ngx_hash_wildcard_t *)
-                                          ((uintptr_t) value & (uintptr_t) ~3);
-                return hwc->value;
+                                          ((uintptr_t) مقدار & (uintptr_t) ~3);
+                بازگشت hwc->مقدار;
             }
 
-            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) value & (uintptr_t) ~3);
+            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) مقدار & (uintptr_t) ~3);
 
-            value = ngx_hash_find_wc_head(hwc, name, n - 1);
+            مقدار = ngx_hash_find_wc_head(hwc, name, n - 1);
 
-            if (value) {
-                return value;
+            اگر (مقدار) {
+                بازگشت مقدار;
             }
 
-            return hwc->value;
+            بازگشت hwc->مقدار;
         }
 
-        if ((uintptr_t) value & 1) {
+        اگر ((uintptr_t) مقدار & 1) {
 
-            if (n == 0) {
+            اگر (n == 0) {
 
                 /* "example.com" */
 
-                return NULL;
+                بازگشت پوچ;
             }
 
-            return (void *) ((uintptr_t) value & (uintptr_t) ~3);
+            بازگشت (تهی *) ((uintptr_t) مقدار & (uintptr_t) ~3);
         }
 
-        return value;
+        بازگشت مقدار;
     }
 
-    return hwc->value;
+    بازگشت hwc->مقدار;
 }
 
 
-void *
+تهی *
 ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
 {
-    void        *value;
-    ngx_uint_t   i, key;
+    تهی        *مقدار;
+    ngx_uint_t   i, کلید;
 
-#if 0
+#اگر 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "wct:\"%*s\"", len, name);
 #endif
 
-    key = 0;
+    کلید = 0;
 
-    for (i = 0; i < len; i++) {
-        if (name[i] == '.') {
-            break;
+    برای (i = 0; i < len; i++) {
+        اگر (name[i] == '.') {
+            بشکن;
         }
 
-        key = ngx_hash(key, name[i]);
+        کلید = ngx_hash(کلید, name[i]);
     }
 
-    if (i == len) {
-        return NULL;
+    اگر (i == len) {
+        بازگشت پوچ;
     }
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", key);
+#اگر 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", کلید);
 #endif
 
-    value = ngx_hash_find(&hwc->hash, key, name, i);
+    مقدار = ngx_hash_find(&hwc->hash, کلید, name, i);
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", value);
+#اگر 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", مقدار);
 #endif
 
-    if (value) {
+    اگر (مقدار) {
 
         /*
          * the 2 low bits of value have the special meaning:
@@ -185,153 +185,153 @@ ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
          *     11 - value is pointer to wildcard hash allowing "example.*".
          */
 
-        if ((uintptr_t) value & 2) {
+        اگر ((uintptr_t) مقدار & 2) {
 
             i++;
 
-            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) value & (uintptr_t) ~3);
+            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) مقدار & (uintptr_t) ~3);
 
-            value = ngx_hash_find_wc_tail(hwc, &name[i], len - i);
+            مقدار = ngx_hash_find_wc_tail(hwc, &name[i], len - i);
 
-            if (value) {
-                return value;
+            اگر (مقدار) {
+                بازگشت مقدار;
             }
 
-            return hwc->value;
+            بازگشت hwc->مقدار;
         }
 
-        return value;
+        بازگشت مقدار;
     }
 
-    return hwc->value;
+    بازگشت hwc->مقدار;
 }
 
 
-void *
-ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t key, u_char *name,
+تهی *
+ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t کلید, u_char *name,
     size_t len)
 {
-    void  *value;
+    تهی  *مقدار;
 
-    if (hash->hash.buckets) {
-        value = ngx_hash_find(&hash->hash, key, name, len);
+    اگر (hash->hash.buckets) {
+        مقدار = ngx_hash_find(&hash->hash, کلید, name, len);
 
-        if (value) {
-            return value;
+        اگر (مقدار) {
+            بازگشت مقدار;
         }
     }
 
-    if (len == 0) {
-        return NULL;
+    اگر (len == 0) {
+        بازگشت پوچ;
     }
 
-    if (hash->wc_head && hash->wc_head->hash.buckets) {
-        value = ngx_hash_find_wc_head(hash->wc_head, name, len);
+    اگر (hash->wc_head && hash->wc_head->hash.buckets) {
+        مقدار = ngx_hash_find_wc_head(hash->wc_head, name, len);
 
-        if (value) {
-            return value;
+        اگر (مقدار) {
+            بازگشت مقدار;
         }
     }
 
-    if (hash->wc_tail && hash->wc_tail->hash.buckets) {
-        value = ngx_hash_find_wc_tail(hash->wc_tail, name, len);
+    اگر (hash->wc_tail && hash->wc_tail->hash.buckets) {
+        مقدار = ngx_hash_find_wc_tail(hash->wc_tail, name, len);
 
-        if (value) {
-            return value;
+        اگر (مقدار) {
+            بازگشت مقدار;
         }
     }
 
-    return NULL;
+    بازگشت پوچ;
 }
 
 
 #define NGX_HASH_ELT_SIZE(name)                                               \
-    (sizeof(void *) + ngx_align((name)->key.len + 2, sizeof(void *)))
+    (اندازه(تهی *) + ngx_align((name)->کلید.len + 2, اندازه(تهی *)))
 
 ngx_int_t
-ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names, ngx_uint_t nelts)
+ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_کلید_t *names, ngx_uint_t nelts)
 {
     u_char          *elts;
     size_t           len;
     u_short         *test;
-    ngx_uint_t       i, n, key, size, start, bucket_size;
+    ngx_uint_t       i, n, کلید, size, start, bucket_size;
     ngx_hash_elt_t  *elt, **buckets;
 
-    if (hinit->max_size == 0) {
+    اگر (hinit->max_size == 0) {
         ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                       "could not build %s, you should "
                       "increase %s_max_size: %i",
                       hinit->name, hinit->name, hinit->max_size);
-        return NGX_ERROR;
+        بازگشت NGX_ERROR;
     }
 
-    if (hinit->bucket_size > 65536 - ngx_cacheline_size) {
+    اگر (hinit->bucket_size > 65536 - ngx_cacheline_size) {
         ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                       "could not build %s, too large "
                       "%s_bucket_size: %i",
                       hinit->name, hinit->name, hinit->bucket_size);
-        return NGX_ERROR;
+        بازگشت NGX_ERROR;
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    برای (n = 0; n < nelts; n++) {
+        اگر (names[n].کلید.data == پوچ) {
+            ادامه;
         }
 
-        if (hinit->bucket_size < NGX_HASH_ELT_SIZE(&names[n]) + sizeof(void *))
+        اگر (hinit->bucket_size < NGX_HASH_ELT_SIZE(&names[n]) + اندازه(تهی *))
         {
             ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                           "could not build %s, you should "
                           "increase %s_bucket_size: %i",
                           hinit->name, hinit->name, hinit->bucket_size);
-            return NGX_ERROR;
+            بازگشت NGX_ERROR;
         }
     }
 
-    test = ngx_alloc(hinit->max_size * sizeof(u_short), hinit->pool->log);
-    if (test == NULL) {
-        return NGX_ERROR;
+    test = ngx_alloc(hinit->max_size * اندازه(u_short), hinit->pool->log);
+    اگر (test == پوچ) {
+        بازگشت NGX_ERROR;
     }
 
-    bucket_size = hinit->bucket_size - sizeof(void *);
+    bucket_size = hinit->bucket_size - اندازه(تهی *);
 
-    start = nelts / (bucket_size / (2 * sizeof(void *)));
+    start = nelts / (bucket_size / (2 * اندازه(تهی *)));
     start = start ? start : 1;
 
-    if (hinit->max_size > 10000 && nelts && hinit->max_size / nelts < 100) {
+    اگر (hinit->max_size > 10000 && nelts && hinit->max_size / nelts < 100) {
         start = hinit->max_size - 1000;
     }
 
-    for (size = start; size <= hinit->max_size; size++) {
+    برای (size = start; size <= hinit->max_size; size++) {
 
-        ngx_memzero(test, size * sizeof(u_short));
+        ngx_memzero(test, size * اندازه(u_short));
 
-        for (n = 0; n < nelts; n++) {
-            if (names[n].key.data == NULL) {
-                continue;
+        برای (n = 0; n < nelts; n++) {
+            اگر (names[n].کلید.data == پوچ) {
+                ادامه;
             }
 
-            key = names[n].key_hash % size;
-            len = test[key] + NGX_HASH_ELT_SIZE(&names[n]);
+            کلید = names[n].کلید_hash % size;
+            len = test[کلید] + NGX_HASH_ELT_SIZE(&names[n]);
 
-#if 0
+#اگر 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "%ui: %ui %uz \"%V\"",
-                          size, key, len, &names[n].key);
+                          size, کلید, len, &names[n].کلید);
 #endif
 
-            if (len > bucket_size) {
-                goto next;
+            اگر (len > bucket_size) {
+                برو next;
             }
 
-            test[key] = (u_short) len;
+            test[کلید] = (u_short) len;
         }
 
-        goto found;
+        برو found;
 
     next:
 
-        continue;
+        ادامه;
     }
 
     size = hinit->max_size;
@@ -345,35 +345,35 @@ ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names, ngx_uint_t nelts)
 
 found:
 
-    for (i = 0; i < size; i++) {
-        test[i] = sizeof(void *);
+    برای (i = 0; i < size; i++) {
+        test[i] = اندازه(تهی *);
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    برای (n = 0; n < nelts; n++) {
+        اگر (names[n].کلید.data == پوچ) {
+            ادامه;
         }
 
-        key = names[n].key_hash % size;
-        len = test[key] + NGX_HASH_ELT_SIZE(&names[n]);
+        کلید = names[n].کلید_hash % size;
+        len = test[کلید] + NGX_HASH_ELT_SIZE(&names[n]);
 
-        if (len > 65536 - ngx_cacheline_size) {
+        اگر (len > 65536 - ngx_cacheline_size) {
             ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                           "could not build %s, you should "
                           "increase %s_max_size: %i",
                           hinit->name, hinit->name, hinit->max_size);
             ngx_free(test);
-            return NGX_ERROR;
+            بازگشت NGX_ERROR;
         }
 
-        test[key] = (u_short) len;
+        test[کلید] = (u_short) len;
     }
 
     len = 0;
 
-    for (i = 0; i < size; i++) {
-        if (test[i] == sizeof(void *)) {
-            continue;
+    برای (i = 0; i < size; i++) {
+        اگر (test[i] == اندازه(تهی *)) {
+            ادامه;
         }
 
         test[i] = (u_short) (ngx_align(test[i], ngx_cacheline_size));
@@ -381,70 +381,70 @@ found:
         len += test[i];
     }
 
-    if (hinit->hash == NULL) {
-        hinit->hash = ngx_pcalloc(hinit->pool, sizeof(ngx_hash_wildcard_t)
-                                             + size * sizeof(ngx_hash_elt_t *));
-        if (hinit->hash == NULL) {
+    اگر (hinit->hash == پوچ) {
+        hinit->hash = ngx_pcalloc(hinit->pool, اندازه(ngx_hash_wildcard_t)
+                                             + size * اندازه(ngx_hash_elt_t *));
+        اگر (hinit->hash == پوچ) {
             ngx_free(test);
-            return NGX_ERROR;
+            بازگشت NGX_ERROR;
         }
 
         buckets = (ngx_hash_elt_t **)
-                      ((u_char *) hinit->hash + sizeof(ngx_hash_wildcard_t));
+                      ((u_char *) hinit->hash + اندازه(ngx_hash_wildcard_t));
 
-    } else {
-        buckets = ngx_pcalloc(hinit->pool, size * sizeof(ngx_hash_elt_t *));
-        if (buckets == NULL) {
+    } وگرنه {
+        buckets = ngx_pcalloc(hinit->pool, size * اندازه(ngx_hash_elt_t *));
+        اگر (buckets == پوچ) {
             ngx_free(test);
-            return NGX_ERROR;
+            بازگشت NGX_ERROR;
         }
     }
 
     elts = ngx_palloc(hinit->pool, len + ngx_cacheline_size);
-    if (elts == NULL) {
+    اگر (elts == پوچ) {
         ngx_free(test);
-        return NGX_ERROR;
+        بازگشت NGX_ERROR;
     }
 
     elts = ngx_align_ptr(elts, ngx_cacheline_size);
 
-    for (i = 0; i < size; i++) {
-        if (test[i] == sizeof(void *)) {
-            continue;
+    برای (i = 0; i < size; i++) {
+        اگر (test[i] == اندازه(تهی *)) {
+            ادامه;
         }
 
         buckets[i] = (ngx_hash_elt_t *) elts;
         elts += test[i];
     }
 
-    for (i = 0; i < size; i++) {
+    برای (i = 0; i < size; i++) {
         test[i] = 0;
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    برای (n = 0; n < nelts; n++) {
+        اگر (names[n].کلید.data == پوچ) {
+            ادامه;
         }
 
-        key = names[n].key_hash % size;
-        elt = (ngx_hash_elt_t *) ((u_char *) buckets[key] + test[key]);
+        کلید = names[n].کلید_hash % size;
+        elt = (ngx_hash_elt_t *) ((u_char *) buckets[کلید] + test[کلید]);
 
-        elt->value = names[n].value;
-        elt->len = (u_short) names[n].key.len;
+        elt->مقدار = names[n].مقدار;
+        elt->len = (u_short) names[n].کلید.len;
 
-        ngx_strlow(elt->name, names[n].key.data, names[n].key.len);
+        ngx_strlow(elt->name, names[n].کلید.data, names[n].کلید.len);
 
-        test[key] = (u_short) (test[key] + NGX_HASH_ELT_SIZE(&names[n]));
+        test[کلید] = (u_short) (test[کلید] + NGX_HASH_ELT_SIZE(&names[n]));
     }
 
-    for (i = 0; i < size; i++) {
-        if (buckets[i] == NULL) {
-            continue;
+    برای (i = 0; i < size; i++) {
+        اگر (buckets[i] == پوچ) {
+            ادامه;
         }
 
         elt = (ngx_hash_elt_t *) ((u_char *) buckets[i] + test[i]);
 
-        elt->value = NULL;
+        elt->مقدار = پوچ;
     }
 
     ngx_free(test);
@@ -452,302 +452,302 @@ found:
     hinit->hash->buckets = buckets;
     hinit->hash->size = size;
 
-#if 0
+#اگر 0
 
-    for (i = 0; i < size; i++) {
+    برای (i = 0; i < size; i++) {
         ngx_str_t   val;
-        ngx_uint_t  key;
+        ngx_uint_t  کلید;
 
         elt = buckets[i];
 
-        if (elt == NULL) {
+        اگر (elt == پوچ) {
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "%ui: NULL", i);
-            continue;
+            ادامه;
         }
 
-        while (elt->value) {
+        وقتی (elt->مقدار) {
             val.len = elt->len;
             val.data = &elt->name[0];
 
-            key = hinit->key(val.data, val.len);
+            کلید = hinit->کلید(val.data, val.len);
 
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                          "%ui: %p \"%V\" %ui", i, elt, &val, key);
+                          "%ui: %p \"%V\" %ui", i, elt, &val, کلید);
 
             elt = (ngx_hash_elt_t *) ngx_align_ptr(&elt->name[0] + elt->len,
-                                                   sizeof(void *));
+                                                   اندازه(تهی *));
         }
     }
 
 #endif
 
-    return NGX_OK;
+    بازگشت NGX_OK;
 }
 
 
 ngx_int_t
-ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
+ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_کلید_t *names,
     ngx_uint_t nelts)
 {
     size_t                len, dot_len;
     ngx_uint_t            i, n, dot;
     ngx_array_t           curr_names, next_names;
-    ngx_hash_key_t       *name, *next_name;
+    ngx_hash_کلید_t       *name, *next_name;
     ngx_hash_init_t       h;
     ngx_hash_wildcard_t  *wdc;
 
-    if (ngx_array_init(&curr_names, hinit->temp_pool, nelts,
-                       sizeof(ngx_hash_key_t))
+    اگر (ngx_array_init(&curr_names, hinit->temp_pool, nelts,
+                       اندازه(ngx_hash_کلید_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        بازگشت NGX_ERROR;
     }
 
-    if (ngx_array_init(&next_names, hinit->temp_pool, nelts,
-                       sizeof(ngx_hash_key_t))
+    اگر (ngx_array_init(&next_names, hinit->temp_pool, nelts,
+                       اندازه(ngx_hash_کلید_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        بازگشت NGX_ERROR;
     }
 
-    for (n = 0; n < nelts; n = i) {
+    برای (n = 0; n < nelts; n = i) {
 
-#if 0
+#اگر 0
         ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                      "wc0: \"%V\"", &names[n].key);
+                      "wc0: \"%V\"", &names[n].کلید);
 #endif
 
         dot = 0;
 
-        for (len = 0; len < names[n].key.len; len++) {
-            if (names[n].key.data[len] == '.') {
+        برای (len = 0; len < names[n].کلید.len; len++) {
+            اگر (names[n].کلید.data[len] == '.') {
                 dot = 1;
-                break;
+                بشکن;
             }
         }
 
-        name = ngx_array_push(&curr_names);
-        if (name == NULL) {
-            return NGX_ERROR;
+        name = ngx_array_افزودن(&curr_names);
+        اگر (name == پوچ) {
+            بازگشت NGX_ERROR;
         }
 
-        name->key.len = len;
-        name->key.data = names[n].key.data;
-        name->key_hash = hinit->key(name->key.data, name->key.len);
-        name->value = names[n].value;
+        name->کلید.len = len;
+        name->کلید.data = names[n].کلید.data;
+        name->کلید_hash = hinit->کلید(name->کلید.data, name->کلید.len);
+        name->مقدار = names[n].مقدار;
 
-#if 0
+#اگر 0
         ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                      "wc1: \"%V\" %ui", &name->key, dot);
+                      "wc1: \"%V\" %ui", &name->کلید, dot);
 #endif
 
         dot_len = len + 1;
 
-        if (dot) {
+        اگر (dot) {
             len++;
         }
 
         next_names.nelts = 0;
 
-        if (names[n].key.len != len) {
-            next_name = ngx_array_push(&next_names);
-            if (next_name == NULL) {
-                return NGX_ERROR;
+        اگر (names[n].کلید.len != len) {
+            next_name = ngx_array_افزودن(&next_names);
+            اگر (next_name == پوچ) {
+                بازگشت NGX_ERROR;
             }
 
-            next_name->key.len = names[n].key.len - len;
-            next_name->key.data = names[n].key.data + len;
-            next_name->key_hash = 0;
-            next_name->value = names[n].value;
+            next_name->کلید.len = names[n].کلید.len - len;
+            next_name->کلید.data = names[n].کلید.data + len;
+            next_name->کلید_hash = 0;
+            next_name->مقدار = names[n].مقدار;
 
-#if 0
+#اگر 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                          "wc2: \"%V\"", &next_name->key);
+                          "wc2: \"%V\"", &next_name->کلید);
 #endif
         }
 
-        for (i = n + 1; i < nelts; i++) {
-            if (ngx_strncmp(names[n].key.data, names[i].key.data, len) != 0) {
-                break;
+        برای (i = n + 1; i < nelts; i++) {
+            اگر (ngx_strncmp(names[n].کلید.data, names[i].کلید.data, len) != 0) {
+                بشکن;
             }
 
-            if (!dot
-                && names[i].key.len > len
-                && names[i].key.data[len] != '.')
+            اگر (!dot
+                && names[i].کلید.len > len
+                && names[i].کلید.data[len] != '.')
             {
-                break;
+                بشکن;
             }
 
-            next_name = ngx_array_push(&next_names);
-            if (next_name == NULL) {
-                return NGX_ERROR;
+            next_name = ngx_array_افزودن(&next_names);
+            اگر (next_name == پوچ) {
+                بازگشت NGX_ERROR;
             }
 
-            next_name->key.len = names[i].key.len - dot_len;
-            next_name->key.data = names[i].key.data + dot_len;
-            next_name->key_hash = 0;
-            next_name->value = names[i].value;
+            next_name->کلید.len = names[i].کلید.len - dot_len;
+            next_name->کلید.data = names[i].کلید.data + dot_len;
+            next_name->کلید_hash = 0;
+            next_name->مقدار = names[i].مقدار;
 
-#if 0
+#اگر 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                          "wc3: \"%V\"", &next_name->key);
+                          "wc3: \"%V\"", &next_name->کلید);
 #endif
         }
 
-        if (next_names.nelts) {
+        اگر (next_names.nelts) {
 
             h = *hinit;
-            h.hash = NULL;
+            h.hash = پوچ;
 
-            if (ngx_hash_wildcard_init(&h, (ngx_hash_key_t *) next_names.elts,
+            اگر (ngx_hash_wildcard_init(&h, (ngx_hash_کلید_t *) next_names.elts,
                                        next_names.nelts)
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                بازگشت NGX_ERROR;
             }
 
             wdc = (ngx_hash_wildcard_t *) h.hash;
 
-            if (names[n].key.len == len) {
-                wdc->value = names[n].value;
+            اگر (names[n].کلید.len == len) {
+                wdc->مقدار = names[n].مقدار;
             }
 
-            name->value = (void *) ((uintptr_t) wdc | (dot ? 3 : 2));
+            name->مقدار = (تهی *) ((uintptr_t) wdc | (dot ? 3 : 2));
 
-        } else if (dot) {
-            name->value = (void *) ((uintptr_t) name->value | 1);
+        } وگرنه اگر (dot) {
+            name->مقدار = (تهی *) ((uintptr_t) name->مقدار | 1);
         }
     }
 
-    if (ngx_hash_init(hinit, (ngx_hash_key_t *) curr_names.elts,
+    اگر (ngx_hash_init(hinit, (ngx_hash_کلید_t *) curr_names.elts,
                       curr_names.nelts)
         != NGX_OK)
     {
-        return NGX_ERROR;
+        بازگشت NGX_ERROR;
     }
 
-    return NGX_OK;
+    بازگشت NGX_OK;
 }
 
 
 ngx_uint_t
-ngx_hash_key(u_char *data, size_t len)
+ngx_hash_کلید(u_char *data, size_t len)
 {
-    ngx_uint_t  i, key;
+    ngx_uint_t  i, کلید;
 
-    key = 0;
+    کلید = 0;
 
-    for (i = 0; i < len; i++) {
-        key = ngx_hash(key, data[i]);
+    برای (i = 0; i < len; i++) {
+        کلید = ngx_hash(کلید, data[i]);
     }
 
-    return key;
+    بازگشت کلید;
 }
 
 
 ngx_uint_t
-ngx_hash_key_lc(u_char *data, size_t len)
+ngx_hash_کلید_lc(u_char *data, size_t len)
 {
-    ngx_uint_t  i, key;
+    ngx_uint_t  i, کلید;
 
-    key = 0;
+    کلید = 0;
 
-    for (i = 0; i < len; i++) {
-        key = ngx_hash(key, ngx_tolower(data[i]));
+    برای (i = 0; i < len; i++) {
+        کلید = ngx_hash(کلید, ngx_tolower(data[i]));
     }
 
-    return key;
+    بازگشت کلید;
 }
 
 
 ngx_uint_t
 ngx_hash_strlow(u_char *dst, u_char *src, size_t n)
 {
-    ngx_uint_t  key;
+    ngx_uint_t  کلید;
 
-    key = 0;
+    کلید = 0;
 
-    while (n--) {
+    وقتی (n--) {
         *dst = ngx_tolower(*src);
-        key = ngx_hash(key, *dst);
+        کلید = ngx_hash(کلید, *dst);
         dst++;
         src++;
     }
 
-    return key;
+    بازگشت کلید;
 }
 
 
 ngx_int_t
-ngx_hash_keys_array_init(ngx_hash_keys_arrays_t *ha, ngx_uint_t type)
+ngx_hash_کلیدها_array_init(ngx_hash_کلیدها_arrays_t *ha, ngx_uint_t type)
 {
     ngx_uint_t  asize;
 
-    if (type == NGX_HASH_SMALL) {
+    اگر (type == NGX_HASH_SMALL) {
         asize = 4;
         ha->hsize = 107;
 
-    } else {
+    } وگرنه {
         asize = NGX_HASH_LARGE_ASIZE;
         ha->hsize = NGX_HASH_LARGE_HSIZE;
     }
 
-    if (ngx_array_init(&ha->keys, ha->temp_pool, asize, sizeof(ngx_hash_key_t))
+    اگر (ngx_array_init(&ha->کلیدها, ha->temp_pool, asize, اندازه(ngx_hash_کلید_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        بازگشت NGX_ERROR;
     }
 
-    if (ngx_array_init(&ha->dns_wc_head, ha->temp_pool, asize,
-                       sizeof(ngx_hash_key_t))
+    اگر (ngx_array_init(&ha->dns_wc_head, ha->temp_pool, asize,
+                       اندازه(ngx_hash_کلید_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        بازگشت NGX_ERROR;
     }
 
-    if (ngx_array_init(&ha->dns_wc_tail, ha->temp_pool, asize,
-                       sizeof(ngx_hash_key_t))
+    اگر (ngx_array_init(&ha->dns_wc_tail, ha->temp_pool, asize,
+                       اندازه(ngx_hash_کلید_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        بازگشت NGX_ERROR;
     }
 
-    ha->keys_hash = ngx_pcalloc(ha->temp_pool, sizeof(ngx_array_t) * ha->hsize);
-    if (ha->keys_hash == NULL) {
-        return NGX_ERROR;
+    ha->کلیدها_hash = ngx_pcalloc(ha->temp_pool, اندازه(ngx_array_t) * ha->hsize);
+    اگر (ha->کلیدها_hash == پوچ) {
+        بازگشت NGX_ERROR;
     }
 
     ha->dns_wc_head_hash = ngx_pcalloc(ha->temp_pool,
-                                       sizeof(ngx_array_t) * ha->hsize);
-    if (ha->dns_wc_head_hash == NULL) {
-        return NGX_ERROR;
+                                       اندازه(ngx_array_t) * ha->hsize);
+    اگر (ha->dns_wc_head_hash == پوچ) {
+        بازگشت NGX_ERROR;
     }
 
     ha->dns_wc_tail_hash = ngx_pcalloc(ha->temp_pool,
-                                       sizeof(ngx_array_t) * ha->hsize);
-    if (ha->dns_wc_tail_hash == NULL) {
-        return NGX_ERROR;
+                                       اندازه(ngx_array_t) * ha->hsize);
+    اگر (ha->dns_wc_tail_hash == پوچ) {
+        بازگشت NGX_ERROR;
     }
 
-    return NGX_OK;
+    بازگشت NGX_OK;
 }
 
 
 ngx_int_t
-ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
+ngx_hash_add_کلید(ngx_hash_کلیدها_arrays_t *ha, ngx_str_t *کلید, تهی *مقدار,
     ngx_uint_t flags)
 {
     size_t           len;
     u_char          *p;
     ngx_str_t       *name;
     ngx_uint_t       i, k, n, skip, last;
-    ngx_array_t     *keys, *hwc;
-    ngx_hash_key_t  *hk;
+    ngx_array_t     *کلیدها, *hwc;
+    ngx_hash_کلید_t  *hk;
 
-    last = key->len;
+    last = کلید->len;
 
-    if (flags & NGX_HASH_WILDCARD_KEY) {
+    اگر (flags & NGX_HASH_WILDCARD_کلید) {
 
         /*
          * supported wildcards:
@@ -756,44 +756,44 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
         n = 0;
 
-        for (i = 0; i < key->len; i++) {
+        برای (i = 0; i < کلید->len; i++) {
 
-            if (key->data[i] == '*') {
-                if (++n > 1) {
-                    return NGX_DECLINED;
+            اگر (کلید->data[i] == '*') {
+                اگر (++n > 1) {
+                    بازگشت NGX_DECLINED;
                 }
             }
 
-            if (key->data[i] == '.' && key->data[i + 1] == '.') {
-                return NGX_DECLINED;
+            اگر (کلید->data[i] == '.' && کلید->data[i + 1] == '.') {
+                بازگشت NGX_DECLINED;
             }
 
-            if (key->data[i] == '\0') {
-                return NGX_DECLINED;
+            اگر (کلید->data[i] == '\0') {
+                بازگشت NGX_DECLINED;
             }
         }
 
-        if (key->len > 1 && key->data[0] == '.') {
+        اگر (کلید->len > 1 && کلید->data[0] == '.') {
             skip = 1;
-            goto wildcard;
+            برو wildcard;
         }
 
-        if (key->len > 2) {
+        اگر (کلید->len > 2) {
 
-            if (key->data[0] == '*' && key->data[1] == '.') {
+            اگر (کلید->data[0] == '*' && کلید->data[1] == '.') {
                 skip = 2;
-                goto wildcard;
+                برو wildcard;
             }
 
-            if (key->data[i - 2] == '.' && key->data[i - 1] == '*') {
+            اگر (کلید->data[i - 2] == '.' && کلید->data[i - 1] == '*') {
                 skip = 0;
                 last -= 2;
-                goto wildcard;
+                برو wildcard;
             }
         }
 
-        if (n) {
-            return NGX_DECLINED;
+        اگر (n) {
+            بازگشت NGX_DECLINED;
         }
     }
 
@@ -801,110 +801,110 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
     k = 0;
 
-    for (i = 0; i < last; i++) {
-        if (!(flags & NGX_HASH_READONLY_KEY)) {
-            key->data[i] = ngx_tolower(key->data[i]);
+    برای (i = 0; i < last; i++) {
+        اگر (!(flags & NGX_HASH_READONLY_کلید)) {
+            کلید->data[i] = ngx_tolower(کلید->data[i]);
         }
-        k = ngx_hash(k, key->data[i]);
+        k = ngx_hash(k, کلید->data[i]);
     }
 
     k %= ha->hsize;
 
     /* check conflicts in exact hash */
 
-    name = ha->keys_hash[k].elts;
+    name = ha->کلیدها_hash[k].elts;
 
-    if (name) {
-        for (i = 0; i < ha->keys_hash[k].nelts; i++) {
-            if (last != name[i].len) {
-                continue;
+    اگر (name) {
+        برای (i = 0; i < ha->کلیدها_hash[k].nelts; i++) {
+            اگر (last != name[i].len) {
+                ادامه;
             }
 
-            if (ngx_strncmp(key->data, name[i].data, last) == 0) {
-                return NGX_BUSY;
+            اگر (ngx_strncmp(کلید->data, name[i].data, last) == 0) {
+                بازگشت NGX_BUSY;
             }
         }
 
-    } else {
-        if (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
-                           sizeof(ngx_str_t))
+    } وگرنه {
+        اگر (ngx_array_init(&ha->کلیدها_hash[k], ha->temp_pool, 4,
+                           اندازه(ngx_str_t))
             != NGX_OK)
         {
-            return NGX_ERROR;
+            بازگشت NGX_ERROR;
         }
     }
 
-    name = ngx_array_push(&ha->keys_hash[k]);
-    if (name == NULL) {
-        return NGX_ERROR;
+    name = ngx_array_افزودن(&ha->کلیدها_hash[k]);
+    اگر (name == پوچ) {
+        بازگشت NGX_ERROR;
     }
 
-    *name = *key;
+    *name = *کلید;
 
-    hk = ngx_array_push(&ha->keys);
-    if (hk == NULL) {
-        return NGX_ERROR;
+    hk = ngx_array_افزودن(&ha->کلیدها);
+    اگر (hk == پوچ) {
+        بازگشت NGX_ERROR;
     }
 
-    hk->key = *key;
-    hk->key_hash = ngx_hash_key(key->data, last);
-    hk->value = value;
+    hk->کلید = *کلید;
+    hk->کلید_hash = ngx_hash_کلید(کلید->data, last);
+    hk->مقدار = مقدار;
 
-    return NGX_OK;
+    بازگشت NGX_OK;
 
 
 wildcard:
 
     /* wildcard hash */
 
-    k = ngx_hash_strlow(&key->data[skip], &key->data[skip], last - skip);
+    k = ngx_hash_strlow(&کلید->data[skip], &کلید->data[skip], last - skip);
 
     k %= ha->hsize;
 
-    if (skip == 1) {
+    اگر (skip == 1) {
 
         /* check conflicts in exact hash for ".example.com" */
 
-        name = ha->keys_hash[k].elts;
+        name = ha->کلیدها_hash[k].elts;
 
-        if (name) {
+        اگر (name) {
             len = last - skip;
 
-            for (i = 0; i < ha->keys_hash[k].nelts; i++) {
-                if (len != name[i].len) {
-                    continue;
+            برای (i = 0; i < ha->کلیدها_hash[k].nelts; i++) {
+                اگر (len != name[i].len) {
+                    ادامه;
                 }
 
-                if (ngx_strncmp(&key->data[1], name[i].data, len) == 0) {
-                    return NGX_BUSY;
+                اگر (ngx_strncmp(&کلید->data[1], name[i].data, len) == 0) {
+                    بازگشت NGX_BUSY;
                 }
             }
 
-        } else {
-            if (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
-                               sizeof(ngx_str_t))
+        } وگرنه {
+            اگر (ngx_array_init(&ha->کلیدها_hash[k], ha->temp_pool, 4,
+                               اندازه(ngx_str_t))
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                بازگشت NGX_ERROR;
             }
         }
 
-        name = ngx_array_push(&ha->keys_hash[k]);
-        if (name == NULL) {
-            return NGX_ERROR;
+        name = ngx_array_افزودن(&ha->کلیدها_hash[k]);
+        اگر (name == پوچ) {
+            بازگشت NGX_ERROR;
         }
 
         name->len = last - 1;
         name->data = ngx_pnalloc(ha->temp_pool, name->len);
-        if (name->data == NULL) {
-            return NGX_ERROR;
+        اگر (name->data == پوچ) {
+            بازگشت NGX_ERROR;
         }
 
-        ngx_memcpy(name->data, &key->data[1], name->len);
+        ngx_memcpy(name->data, &کلید->data[1], name->len);
     }
 
 
-    if (skip) {
+    اگر (skip) {
 
         /*
          * convert "*.example.com" to "com.example.\0"
@@ -912,102 +912,102 @@ wildcard:
          */
 
         p = ngx_pnalloc(ha->temp_pool, last);
-        if (p == NULL) {
-            return NGX_ERROR;
+        اگر (p == پوچ) {
+            بازگشت NGX_ERROR;
         }
 
         len = 0;
         n = 0;
 
-        for (i = last - 1; i; i--) {
-            if (key->data[i] == '.') {
-                ngx_memcpy(&p[n], &key->data[i + 1], len);
+        برای (i = last - 1; i; i--) {
+            اگر (کلید->data[i] == '.') {
+                ngx_memcpy(&p[n], &کلید->data[i + 1], len);
                 n += len;
                 p[n++] = '.';
                 len = 0;
-                continue;
+                ادامه;
             }
 
             len++;
         }
 
-        if (len) {
-            ngx_memcpy(&p[n], &key->data[1], len);
+        اگر (len) {
+            ngx_memcpy(&p[n], &کلید->data[1], len);
             n += len;
         }
 
         p[n] = '\0';
 
         hwc = &ha->dns_wc_head;
-        keys = &ha->dns_wc_head_hash[k];
+        کلیدها = &ha->dns_wc_head_hash[k];
 
-    } else {
+    } وگرنه {
 
         /* convert "www.example.*" to "www.example\0" */
 
         last++;
 
         p = ngx_pnalloc(ha->temp_pool, last);
-        if (p == NULL) {
-            return NGX_ERROR;
+        اگر (p == پوچ) {
+            بازگشت NGX_ERROR;
         }
 
-        ngx_cpystrn(p, key->data, last);
+        ngx_cpystrn(p, کلید->data, last);
 
         hwc = &ha->dns_wc_tail;
-        keys = &ha->dns_wc_tail_hash[k];
+        کلیدها = &ha->dns_wc_tail_hash[k];
     }
 
 
     /* check conflicts in wildcard hash */
 
-    name = keys->elts;
+    name = کلیدها->elts;
 
-    if (name) {
+    اگر (name) {
         len = last - skip;
 
-        for (i = 0; i < keys->nelts; i++) {
-            if (len != name[i].len) {
-                continue;
+        برای (i = 0; i < کلیدها->nelts; i++) {
+            اگر (len != name[i].len) {
+                ادامه;
             }
 
-            if (ngx_strncmp(key->data + skip, name[i].data, len) == 0) {
-                return NGX_BUSY;
+            اگر (ngx_strncmp(کلید->data + skip, name[i].data, len) == 0) {
+                بازگشت NGX_BUSY;
             }
         }
 
-    } else {
-        if (ngx_array_init(keys, ha->temp_pool, 4, sizeof(ngx_str_t)) != NGX_OK)
+    } وگرنه {
+        اگر (ngx_array_init(کلیدها, ha->temp_pool, 4, اندازه(ngx_str_t)) != NGX_OK)
         {
-            return NGX_ERROR;
+            بازگشت NGX_ERROR;
         }
     }
 
-    name = ngx_array_push(keys);
-    if (name == NULL) {
-        return NGX_ERROR;
+    name = ngx_array_افزودن(کلیدها);
+    اگر (name == پوچ) {
+        بازگشت NGX_ERROR;
     }
 
     name->len = last - skip;
     name->data = ngx_pnalloc(ha->temp_pool, name->len);
-    if (name->data == NULL) {
-        return NGX_ERROR;
+    اگر (name->data == پوچ) {
+        بازگشت NGX_ERROR;
     }
 
-    ngx_memcpy(name->data, key->data + skip, name->len);
+    ngx_memcpy(name->data, کلید->data + skip, name->len);
 
 
     /* add to wildcard hash */
 
-    hk = ngx_array_push(hwc);
-    if (hk == NULL) {
-        return NGX_ERROR;
+    hk = ngx_array_افزودن(hwc);
+    اگر (hk == پوچ) {
+        بازگشت NGX_ERROR;
     }
 
-    hk->key.len = last - 1;
-    hk->key.data = p;
-    hk->key_hash = 0;
-    hk->value = value;
+    hk->کلید.len = last - 1;
+    hk->کلید.data = p;
+    hk->کلید_hash = 0;
+    hk->مقدار = مقدار;
 
-    return NGX_OK;
+    بازگشت NGX_OK;
 }

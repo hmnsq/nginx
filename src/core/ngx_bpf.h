@@ -8,36 +8,36 @@
 #define _NGX_BPF_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
-#include <linux/bpf.h>
+#شامل <linux/bpf.h>
 
 
-typedef struct {
-    char                *name;
-    int                  offset;
+تعریفنوع ساختار {
+    نویسه                *name;
+    صحیح                  offset;
 } ngx_bpf_reloc_t;
 
-typedef struct {
-    char                *license;
-    enum bpf_prog_type   type;
-    struct bpf_insn     *ins;
+تعریفنوع ساختار {
+    نویسه                *license;
+    شمارش bpf_prog_type   type;
+    ساختار bpf_insn     *ins;
     size_t               nins;
     ngx_bpf_reloc_t     *relocs;
     size_t               nrelocs;
 } ngx_bpf_program_t;
 
 
-void ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol,
-    int fd);
-int ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program);
+تهی ngx_bpf_program_link(ngx_bpf_program_t *program, ثابت نویسه *نماد,
+    صحیح fd);
+صحیح ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program);
 
-int ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags);
-int ngx_bpf_map_update(int fd, const void *key, const void *value,
+صحیح ngx_bpf_map_create(ngx_log_t *log, شمارش bpf_map_type type, صحیح کلید_size,
+    صحیح مقدار_size, صحیح max_entries, uint32_t map_flags);
+صحیح ngx_bpf_map_update(صحیح fd, ثابت تهی *کلید, ثابت تهی *مقدار,
     uint64_t flags);
-int ngx_bpf_map_delete(int fd, const void *key);
-int ngx_bpf_map_lookup(int fd, const void *key, void *value);
+صحیح ngx_bpf_map_delete(صحیح fd, ثابت تهی *کلید);
+صحیح ngx_bpf_map_lookup(صحیح fd, ثابت تهی *کلید, تهی *مقدار);
 
 #endif /* _NGX_BPF_H_INCLUDED_ */

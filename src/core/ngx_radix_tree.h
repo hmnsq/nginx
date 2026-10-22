@@ -5,50 +5,50 @@
  */
 
 
-#ifndef _NGX_RADIX_TREE_H_INCLUDED_
-#define _NGX_RADIX_TREE_H_INCLUDED_
+#ifndef NGX_RADIX_درخت_H_INCLUDED
+#define NGX_RADIX_درخت_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-#define NGX_RADIX_NO_VALUE   (uintptr_t) -1
+#define NGX_RADIX_NO_مقدار   (uintptr_t) -1
 
-typedef struct ngx_radix_node_s  ngx_radix_node_t;
+تعریفنوع ساختار ngx_radix_گره_s  ngx_radix_گره_t;
 
-struct ngx_radix_node_s {
-    ngx_radix_node_t  *right;
-    ngx_radix_node_t  *left;
-    ngx_radix_node_t  *parent;
-    uintptr_t          value;
+ساختار ngx_radix_گره_s {
+    ngx_radix_گره_t  *راست;
+    ngx_radix_گره_t  *چپ;
+    ngx_radix_گره_t  *parent;
+    uintptr_t          مقدار;
 };
 
 
-typedef struct {
-    ngx_radix_node_t  *root;
+تعریفنوع ساختار {
+    ngx_radix_گره_t  *ریشه;
     ngx_pool_t        *pool;
-    ngx_radix_node_t  *free;
-    char              *start;
+    ngx_radix_گره_t  *آزاد;
+    نویسه              *start;
     size_t             size;
-} ngx_radix_tree_t;
+} ngx_radix_درخت_t;
 
 
-ngx_radix_tree_t *ngx_radix_tree_create(ngx_pool_t *pool,
+ngx_radix_درخت_t *ngx_radix_درخت_create(ngx_pool_t *pool,
     ngx_int_t preallocate);
 
-ngx_int_t ngx_radix32tree_insert(ngx_radix_tree_t *tree,
-    uint32_t key, uint32_t mask, uintptr_t value);
-ngx_int_t ngx_radix32tree_delete(ngx_radix_tree_t *tree,
-    uint32_t key, uint32_t mask);
-uintptr_t ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key);
+ngx_int_t ngx_radix32tree_درج(ngx_radix_درخت_t *درخت,
+    uint32_t کلید, uint32_t mask, uintptr_t مقدار);
+ngx_int_t ngx_radix32tree_delete(ngx_radix_درخت_t *درخت,
+    uint32_t کلید, uint32_t mask);
+uintptr_t ngx_radix32tree_find(ngx_radix_درخت_t *درخت, uint32_t کلید);
 
-#if (NGX_HAVE_INET6)
-ngx_int_t ngx_radix128tree_insert(ngx_radix_tree_t *tree,
-    u_char *key, u_char *mask, uintptr_t value);
-ngx_int_t ngx_radix128tree_delete(ngx_radix_tree_t *tree,
-    u_char *key, u_char *mask);
-uintptr_t ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key);
+#اگر (NGX_HAVE_INET6)
+ngx_int_t ngx_radix128tree_درج(ngx_radix_درخت_t *درخت,
+    u_char *کلید, u_char *mask, uintptr_t مقدار);
+ngx_int_t ngx_radix128tree_delete(ngx_radix_درخت_t *درخت,
+    u_char *کلید, u_char *mask);
+uintptr_t ngx_radix128tree_find(ngx_radix_درخت_t *درخت, u_char *کلید);
 #endif
 
 

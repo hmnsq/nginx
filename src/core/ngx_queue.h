@@ -5,17 +5,17 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
 #ifndef _NGX_QUEUE_H_INCLUDED_
 #define _NGX_QUEUE_H_INCLUDED_
 
 
-typedef struct ngx_queue_s  ngx_queue_t;
+تعریفنوع ساختار ngx_queue_s  ngx_queue_t;
 
-struct ngx_queue_s {
+ساختار ngx_queue_s {
     ngx_queue_t  *prev;
     ngx_queue_t  *next;
 };
@@ -30,24 +30,24 @@ struct ngx_queue_s {
     (h == (h)->prev)
 
 
-#define ngx_queue_insert_head(h, x)                                           \
+#define ngx_queue_درج_head(h, x)                                           \
     (x)->next = (h)->next;                                                    \
     (x)->next->prev = x;                                                      \
     (x)->prev = h;                                                            \
     (h)->next = x
 
 
-#define ngx_queue_insert_after   ngx_queue_insert_head
+#define ngx_queue_درج_after   ngx_queue_درج_head
 
 
-#define ngx_queue_insert_tail(h, x)                                           \
+#define ngx_queue_درج_tail(h, x)                                           \
     (x)->prev = (h)->prev;                                                    \
     (x)->prev->next = x;                                                      \
     (x)->next = h;                                                            \
     (h)->prev = x
 
 
-#define ngx_queue_insert_before   ngx_queue_insert_tail
+#define ngx_queue_درج_before   ngx_queue_درج_tail
 
 
 #define ngx_queue_head(h)                                                     \
@@ -70,15 +70,15 @@ struct ngx_queue_s {
     (q)->prev
 
 
-#if (NGX_DEBUG)
+#اگر (NGX_DEBUG)
 
 #define ngx_queue_remove(x)                                                   \
     (x)->next->prev = (x)->prev;                                              \
     (x)->prev->next = (x)->next;                                              \
-    (x)->prev = NULL;                                                         \
-    (x)->next = NULL
+    (x)->prev = پوچ;                                                         \
+    (x)->next = پوچ
 
-#else
+#وگرنه
 
 #define ngx_queue_remove(x)                                                   \
     (x)->next->prev = (x)->prev;                                              \
@@ -107,9 +107,9 @@ struct ngx_queue_s {
     (type *) ((u_char *) q - offsetof(type, link))
 
 
-ngx_queue_t *ngx_queue_middle(ngx_queue_t *queue);
-void ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ngx_queue_t *ngx_queue_میانه(ngx_queue_t *queue);
+تهی ngx_queue_sort(ngx_queue_t *queue,
+    ngx_int_t (*cmp)(ثابت ngx_queue_t *, ثابت ngx_queue_t *));
 
 
 #endif /* _NGX_QUEUE_H_INCLUDED_ */

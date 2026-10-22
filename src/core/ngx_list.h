@@ -9,20 +9,20 @@
 #define _NGX_LIST_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-typedef struct ngx_list_part_s  ngx_list_part_t;
+تعریفنوع ساختار ngx_list_part_s  ngx_list_part_t;
 
-struct ngx_list_part_s {
-    void             *elts;
+ساختار ngx_list_part_s {
+    تهی             *elts;
     ngx_uint_t        nelts;
     ngx_list_part_t  *next;
 };
 
 
-typedef struct {
+تعریفنوع ساختار {
     ngx_list_part_t  *last;
     ngx_list_part_t   part;
     size_t            size;
@@ -33,22 +33,22 @@ typedef struct {
 
 ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size);
 
-static ngx_inline ngx_int_t
+ایستا ngx_inline ngx_int_t
 ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
 {
     list->part.elts = ngx_palloc(pool, n * size);
-    if (list->part.elts == NULL) {
-        return NGX_ERROR;
+    اگر (list->part.elts == پوچ) {
+        بازگشت NGX_ERROR;
     }
 
     list->part.nelts = 0;
-    list->part.next = NULL;
+    list->part.next = پوچ;
     list->last = &list->part;
     list->size = size;
     list->nalloc = n;
     list->pool = pool;
 
-    return NGX_OK;
+    بازگشت NGX_OK;
 }
 
 
@@ -77,7 +77,7 @@ ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
  */
 
 
-void *ngx_list_push(ngx_list_t *list);
+تهی *ngx_list_افزودن(ngx_list_t *list);
 
 
 #endif /* _NGX_LIST_H_INCLUDED_ */

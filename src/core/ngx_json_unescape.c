@@ -10,12 +10,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_json_unescape.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
+#شامل <ngx_json_unescape.h>
 
 
-static ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
+ایستا ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
     uint32_t codepoint);
 
 
@@ -24,11 +24,11 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 {
     size_t       size;
     u_char      *d, *s, ch;
-    uint32_t     codepoint, high_surrogate;
+    uint32_t     codepoint, بالا_surrogate;
     ngx_int_t    n;
-    ngx_uint_t   hex_left;
+    ngx_uint_t   hex_چپ;
 
-    enum {
+    شمارش {
         sw_usual = 0,
         sw_quoted,
         sw_hex,
@@ -62,13 +62,13 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
      * surrounding double quotes).
      */
 
-    if (src->len == 0) {
+    اگر (src->len == 0) {
         dst->len = 0;
-        return NGX_OK;
+        بازگشت NGX_OK;
     }
 
-    if (dst->len < src->len) {
-        return NGX_ERROR;
+    اگر (dst->len < src->len) {
+        بازگشت NGX_ERROR;
     }
 
     s = src->data;
@@ -78,200 +78,200 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 
     state = sw_usual;
     codepoint = 0;
-    high_surrogate = 0;
-    hex_left = 0;
+    بالا_surrogate = 0;
+    hex_چپ = 0;
 
-    while (size--) {
+    وقتی (size--) {
 
         ch = *s++;
 
-        switch (state) {
-        case sw_usual:
+        انتخاب (state) {
+        حالت sw_usual:
 
-            if (ch == '"') {
-                return NGX_ERROR;
+            اگر (ch == '"') {
+                بازگشت NGX_ERROR;
             }
 
-            if (ch == '\\') {
+            اگر (ch == '\\') {
                 state = sw_quoted;
-                break;
+                بشکن;
             }
 
-            if (ch < 0x20) {
+            اگر (ch < 0x20) {
                 /* RFC 8259: control characters must be escaped */
-                return NGX_ERROR;
+                بازگشت NGX_ERROR;
             }
 
             *d++ = ch;
-            break;
+            بشکن;
 
-        case sw_quoted:
+        حالت sw_quoted:
 
-            switch (ch) {
+            انتخاب (ch) {
 
-            case 'u':
+            حالت 'u':
                 codepoint = 0;
-                hex_left = 4;
+                hex_چپ = 4;
                 state = sw_hex;
-                break;
+                بشکن;
 
-            case '"':
-            case '/':
-            case '\\':
+            حالت '"':
+            حالت '/':
+            حالت '\\':
                 *d++ = ch;
                 state = sw_usual;
-                break;
+                بشکن;
 
-            case 'b':
+            حالت 'b':
                 *d++ = '\b';
                 state = sw_usual;
-                break;
+                بشکن;
 
-            case 'f':
+            حالت 'f':
                 *d++ = '\f';
                 state = sw_usual;
-                break;
+                بشکن;
 
-            case 'n':
+            حالت 'n':
                 *d++ = '\n';
                 state = sw_usual;
-                break;
+                بشکن;
 
-            case 'r':
+            حالت 'r':
                 *d++ = '\r';
                 state = sw_usual;
-                break;
+                بشکن;
 
-            case 't':
+            حالت 't':
                 *d++ = '\t';
                 state = sw_usual;
-                break;
+                بشکن;
 
-            default:
-                return NGX_ERROR;
+            پیشفرض:
+                بازگشت NGX_ERROR;
             }
 
-            break;
+            بشکن;
 
-        case sw_hex:
+        حالت sw_hex:
 
             n = ngx_json_hex_digit(ch);
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            اگر (n == NGX_ERROR) {
+                بازگشت NGX_ERROR;
             }
 
             codepoint = (codepoint << 4) | (uint32_t) n;
 
-            if (--hex_left > 0) {
-                break;
+            اگر (--hex_چپ > 0) {
+                بشکن;
             }
 
-            if (high_surrogate) {
-                if (codepoint < 0xDC00 || codepoint > 0xDFFF) {
-                    return NGX_ERROR;
+            اگر (بالا_surrogate) {
+                اگر (codepoint < 0xDC00 || codepoint > 0xDFFF) {
+                    بازگشت NGX_ERROR;
                 }
 
                 codepoint = 0x10000
-                            + ((high_surrogate - 0xD800) << 10)
+                            + ((بالا_surrogate - 0xD800) << 10)
                             + (codepoint - 0xDC00);
                 d = ngx_json_utf8_encode(d, codepoint);
-                high_surrogate = 0;
+                بالا_surrogate = 0;
                 state = sw_usual;
-                break;
+                بشکن;
             }
 
-            if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+            اگر (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
                 /* high surrogate - wait for the low surrogate */
-                high_surrogate = codepoint;
+                بالا_surrogate = codepoint;
                 state = sw_surrogate_start;
-                break;
+                بشکن;
             }
 
-            if (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
+            اگر (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_ERROR;
+                بازگشت NGX_ERROR;
             }
 
             d = ngx_json_utf8_encode(d, codepoint);
             state = sw_usual;
-            break;
+            بشکن;
 
-        case sw_surrogate_start:
+        حالت sw_surrogate_start:
             /*
              * Expect '\' to begin the low-surrogate escape.
              * Lone surrogates are not valid Unicode scalar values
              * (RFC 8259, Section 8.2).
              */
-            if (ch == '\\') {
+            اگر (ch == '\\') {
                 state = sw_surrogate_u;
-                break;
+                بشکن;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            بازگشت NGX_ERROR;
 
-        case sw_surrogate_u:
-            if (ch == 'u') {
+        حالت sw_surrogate_u:
+            اگر (ch == 'u') {
                 codepoint = 0;
-                hex_left = 4;
+                hex_چپ = 4;
                 state = sw_hex;
-                break;
+                بشکن;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            بازگشت NGX_ERROR;
         }
     }
 
-    if (state != sw_usual) {
+    اگر (state != sw_usual) {
         /* truncated escape sequence or unpaired high surrogate */
-        return NGX_ERROR;
+        بازگشت NGX_ERROR;
     }
 
     dst->len = d - dst->data;
 
-    return NGX_OK;
+    بازگشت NGX_OK;
 }
 
 
-static ngx_inline u_char *
+ایستا ngx_inline u_char *
 ngx_json_utf8_encode(u_char *dst, uint32_t codepoint)
 {
-    if (codepoint <= 0x7F) {
+    اگر (codepoint <= 0x7F) {
         *dst++ = (u_char) codepoint;
 
-    } else if (codepoint <= 0x7FF) {
+    } وگرنه اگر (codepoint <= 0x7FF) {
         *dst++ = (u_char) (0xC0 | (codepoint >> 6));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else if (codepoint <= 0xFFFF) {
+    } وگرنه اگر (codepoint <= 0xFFFF) {
         *dst++ = (u_char) (0xE0 | (codepoint >> 12));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else {
+    } وگرنه {
         *dst++ = (u_char) (0xF0 | (codepoint >> 18));
         *dst++ = (u_char) (0x80 | ((codepoint >> 12) & 0x3F));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
     }
 
-    return dst;
+    بازگشت dst;
 }
 
 
 ngx_int_t
 ngx_json_hex_digit(u_char ch)
 {
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0';
+    اگر (ch >= '0' && ch <= '9') {
+        بازگشت ch - '0';
     }
 
     ch = (u_char) (ch | 0x20);
 
-    if (ch >= 'a' && ch <= 'f') {
-        return ch - 'a' + 10;
+    اگر (ch >= 'a' && ch <= 'f') {
+        بازگشت ch - 'a' + 10;
     }
 
-    return NGX_ERROR;
+    بازگشت NGX_ERROR;
 }
