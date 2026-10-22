@@ -25,8 +25,8 @@ ngx_queue_middle(ngx_queue_t *queue)
 
     middle = ngx_queue_head(queue);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    ᮚᮦᮔ᮪ (middle == ngx_queue_last(queue)) {
+        ᮝᮜᮤ middle;
     }
 
     next = ngx_queue_head(queue);
@@ -36,14 +36,14 @@ ngx_queue_middle(ngx_queue_t *queue)
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ᮚᮦᮔ᮪ (next == ngx_queue_last(queue)) {
+            ᮝᮜᮤ middle;
         }
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ᮚᮦᮔ᮪ (next == ngx_queue_last(queue)) {
+            ᮝᮜᮤ middle;
         }
     }
 }
@@ -59,8 +59,8 @@ ngx_queue_sort(ngx_queue_t *queue,
 
     q = ngx_queue_head(queue);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    ᮚᮦᮔ᮪ (q == ngx_queue_last(queue)) {
+        ᮝᮜᮤ;
     }
 
     q = ngx_queue_middle(queue);
@@ -84,16 +84,16 @@ ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
     q2 = ngx_queue_head(tail);
 
     for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
+        ᮚᮦᮔ᮪ (q1 == ngx_queue_sentinel(queue)) {
             ngx_queue_add(queue, tail);
-            break;
+            bha_nga;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        ᮚᮦᮔ᮪ (q2 == ngx_queue_sentinel(tail)) {
+            bha_nga;
         }
 
-        if (cmp(q1, q2) <= 0) {
+        ᮚᮦᮔ᮪ (cmp(q1, q2) <= 0) {
             q1 = ngx_queue_next(q1);
             continue;
         }

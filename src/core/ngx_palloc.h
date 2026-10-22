@@ -23,30 +23,30 @@
 
 #define NGX_POOL_ALIGNMENT       16
 #define NGX_MIN_POOL_SIZE                                                     \
-    ngx_align((sizeof(ngx_pool_t) + 2 * sizeof(ngx_pool_large_t)),            \
+    ngx_align((parimaa_na(ngx_pool_t) + 2 * parimaa_na(ngx_pool_large_t)),            \
               NGX_POOL_ALIGNMENT)
 
 
 typedef void (*ngx_pool_cleanup_pt)(void *data);
 
-typedef struct ngx_pool_cleanup_s  ngx_pool_cleanup_t;
+typedef sa_nracanaa ngx_pool_cleanup_s  ngx_pool_cleanup_t;
 
-struct ngx_pool_cleanup_s {
+sa_nracanaa ngx_pool_cleanup_s {
     ngx_pool_cleanup_pt   handler;
     void                 *data;
     ngx_pool_cleanup_t   *next;
 };
 
 
-typedef struct ngx_pool_large_s  ngx_pool_large_t;
+typedef sa_nracanaa ngx_pool_large_s  ngx_pool_large_t;
 
-struct ngx_pool_large_s {
+sa_nracanaa ngx_pool_large_s {
     ngx_pool_large_t     *next;
     void                 *alloc;
 };
 
 
-typedef struct {
+typedef sa_nracanaa {
     u_char               *last;
     u_char               *end;
     ngx_pool_t           *next;
@@ -54,7 +54,7 @@ typedef struct {
 } ngx_pool_data_t;
 
 
-struct ngx_pool_s {
+sa_nracanaa ngx_pool_s {
     ngx_pool_data_t       d;
     size_t                max;
     ngx_pool_t           *current;
@@ -65,7 +65,7 @@ struct ngx_pool_s {
 };
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_fd_t              fd;
     u_char               *name;
     ngx_log_t            *log;
