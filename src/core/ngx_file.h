@@ -5,160 +5,160 @@
  */
 
 
-#ifndef _NGX_FILE_H_INCLUDED_
-#define _NGX_FILE_H_INCLUDED_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ _NGX_FILE_H_INCLUDED_
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NGX_FILE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-struct ngx_file_s {
+ਬਣਤਰ ngx_file_s {
     ngx_fd_t                   fd;
     ngx_str_t                  name;
     ngx_file_info_t            info;
 
-    off_t                      offset;
-    off_t                      sys_offset;
+    off_t                      ਵਿੱਥ;
+    off_t                      sys_ਵਿੱਥ;
 
-    ngx_log_t                 *log;
+    ngx_log_t                 *ਲਘੂਗਣਕ;
 
-#if (NGX_THREADS || NGX_COMPAT)
+#ਜੇ (NGX_ਧਾਗੇ || NGX_COMPAT)
     ngx_int_t                (*thread_handler)(ngx_thread_task_t *task,
                                                ngx_file_t *file);
-    void                      *thread_ctx;
+    ਖਾਲੀ                      *thread_ctx;
     ngx_thread_task_t         *thread_task;
-#endif
+#ਜੇ_ਅੰਤ
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#ਜੇ (NGX_HAVE_FILE_AIO || NGX_COMPAT)
     ngx_event_aio_t           *aio;
-#endif
+#ਜੇ_ਅੰਤ
 
-    unsigned                   valid_info:1;
-    unsigned                   directio:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                   valid_info:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                   directio:1;
 };
 
 
-#define NGX_MAX_PATH_LEVEL  3
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_MAX_ਰਸਤਾ_LEVEL  3
 
 
-typedef ngx_msec_t (*ngx_path_manager_pt) (void *data);
-typedef ngx_msec_t (*ngx_path_purger_pt) (void *data);
-typedef void (*ngx_path_loader_pt) (void *data);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ngx_msec_t (*ngx_ਰਸਤਾ_manager_pt) (ਖਾਲੀ *ਅੰਕੜੇ);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ngx_msec_t (*ngx_ਰਸਤਾ_purger_pt) (ਖਾਲੀ *ਅੰਕੜੇ);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ (*ngx_ਰਸਤਾ_loader_pt) (ਖਾਲੀ *ਅੰਕੜੇ);
 
 
-typedef struct {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
     ngx_str_t                  name;
-    size_t                     len;
-    size_t                     level[NGX_MAX_PATH_LEVEL];
+    ਮਾਪ_t                     len;
+    ਮਾਪ_t                     level[NGX_MAX_ਰਸਤਾ_LEVEL];
 
-    ngx_path_manager_pt        manager;
-    ngx_path_purger_pt         purger;
-    ngx_path_loader_pt         loader;
-    void                      *data;
+    ngx_ਰਸਤਾ_manager_pt        manager;
+    ngx_ਰਸਤਾ_purger_pt         purger;
+    ngx_ਰਸਤਾ_loader_pt         loader;
+    ਖਾਲੀ                      *ਅੰਕੜੇ;
 
     u_char                    *conf_file;
-    ngx_uint_t                 line;
-} ngx_path_t;
+    ngx_uint_t                 ਸਤਰ;
+} ngx_ਰਸਤਾ_t;
 
 
-typedef struct {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
     ngx_str_t                  name;
-    size_t                     level[NGX_MAX_PATH_LEVEL];
-} ngx_path_init_t;
+    ਮਾਪ_t                     level[NGX_MAX_ਰਸਤਾ_LEVEL];
+} ngx_ਰਸਤਾ_init_t;
 
 
-typedef struct {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
     ngx_file_t                 file;
-    off_t                      offset;
-    ngx_path_t                *path;
+    off_t                      ਵਿੱਥ;
+    ngx_ਰਸਤਾ_t                *ਰਸਤਾ;
     ngx_pool_t                *pool;
-    char                      *warn;
+    ਅੱਖਰ                      *warn;
 
     ngx_uint_t                 access;
 
-    unsigned                   log_level:8;
-    unsigned                   persistent:1;
-    unsigned                   clean:1;
-    unsigned                   thread_write:1;
-} ngx_temp_file_t;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                   log_level:8;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                   persistent:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                   clean:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                   thread_write:1;
+} ngx_ਆਰਜ਼ੀ_file_t;
 
 
-typedef struct {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
     ngx_uint_t                 access;
-    ngx_uint_t                 path_access;
-    time_t                     time;
+    ngx_uint_t                 ਰਸਤਾ_access;
+    ਸਮਾਂ_t                     ਸਮਾਂ;
     ngx_fd_t                   fd;
 
-    unsigned                   create_path:1;
-    unsigned                   delete_file:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                   create_ਰਸਤਾ:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                   delete_file:1;
 
-    ngx_log_t                 *log;
+    ngx_log_t                 *ਲਘੂਗਣਕ;
 } ngx_ext_rename_file_t;
 
 
-typedef struct {
-    off_t                      size;
-    size_t                     buf_size;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    off_t                      ਮਾਪ;
+    ਮਾਪ_t                     buf_ਮਾਪ;
 
     ngx_uint_t                 access;
-    time_t                     time;
+    ਸਮਾਂ_t                     ਸਮਾਂ;
 
-    ngx_log_t                 *log;
+    ngx_log_t                 *ਲਘੂਗਣਕ;
 } ngx_copy_file_t;
 
 
-typedef struct ngx_tree_ctx_s  ngx_tree_ctx_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_ਰੁੱਖ_ctx_s  ngx_ਰੁੱਖ_ctx_t;
 
-typedef ngx_int_t (*ngx_tree_init_handler_pt) (void *ctx, void *prev);
-typedef ngx_int_t (*ngx_tree_handler_pt) (ngx_tree_ctx_t *ctx, ngx_str_t *name);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ngx_int_t (*ngx_ਰੁੱਖ_init_handler_pt) (ਖਾਲੀ *ctx, ਖਾਲੀ *prev);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ngx_int_t (*ngx_ਰੁੱਖ_handler_pt) (ngx_ਰੁੱਖ_ctx_t *ctx, ngx_str_t *name);
 
-struct ngx_tree_ctx_s {
-    off_t                      size;
-    off_t                      fs_size;
+ਬਣਤਰ ngx_ਰੁੱਖ_ctx_s {
+    off_t                      ਮਾਪ;
+    off_t                      fs_ਮਾਪ;
     ngx_uint_t                 access;
-    time_t                     mtime;
+    ਸਮਾਂ_t                     mtime;
 
-    ngx_tree_init_handler_pt   init_handler;
-    ngx_tree_handler_pt        file_handler;
-    ngx_tree_handler_pt        pre_tree_handler;
-    ngx_tree_handler_pt        post_tree_handler;
-    ngx_tree_handler_pt        spec_handler;
+    ngx_ਰੁੱਖ_init_handler_pt   init_handler;
+    ngx_ਰੁੱਖ_handler_pt        file_handler;
+    ngx_ਰੁੱਖ_handler_pt        pre_ਰੁੱਖ_handler;
+    ngx_ਰੁੱਖ_handler_pt        post_ਰੁੱਖ_handler;
+    ngx_ਰੁੱਖ_handler_pt        spec_handler;
 
-    void                      *data;
-    size_t                     alloc;
+    ਖਾਲੀ                      *ਅੰਕੜੇ;
+    ਮਾਪ_t                     alloc;
 
-    ngx_log_t                 *log;
+    ngx_log_t                 *ਲਘੂਗਣਕ;
 };
 
 
-ngx_int_t ngx_get_full_name(ngx_pool_t *pool, ngx_str_t *prefix,
+ngx_int_t ngx_get_ਭਰਿਆ_name(ngx_pool_t *pool, ngx_str_t *ਅਗੇਤਰ,
     ngx_str_t *name);
 
-ssize_t ngx_write_chain_to_temp_file(ngx_temp_file_t *tf, ngx_chain_t *chain);
-ngx_int_t ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path,
+ssize_t ngx_write_chain_ਮੰਜ਼ਿਲ_ਆਰਜ਼ੀ_file(ngx_ਆਰਜ਼ੀ_file_t *tf, ngx_chain_t *chain);
+ngx_int_t ngx_create_ਆਰਜ਼ੀ_file(ngx_file_t *file, ngx_ਰਸਤਾ_t *ਰਸਤਾ,
     ngx_pool_t *pool, ngx_uint_t persistent, ngx_uint_t clean,
     ngx_uint_t access);
-void ngx_create_hashed_filename(ngx_path_t *path, u_char *file, size_t len);
-ngx_int_t ngx_create_path(ngx_file_t *file, ngx_path_t *path);
-ngx_err_t ngx_create_full_path(u_char *dir, ngx_uint_t access);
-ngx_int_t ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot);
-ngx_int_t ngx_create_paths(ngx_cycle_t *cycle, ngx_uid_t user);
-ngx_int_t ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to,
+ਖਾਲੀ ngx_create_hashed_filename(ngx_ਰਸਤਾ_t *ਰਸਤਾ, u_char *file, ਮਾਪ_t len);
+ngx_int_t ngx_create_ਰਸਤਾ(ngx_file_t *file, ngx_ਰਸਤਾ_t *ਰਸਤਾ);
+ngx_err_t ngx_create_ਭਰਿਆ_ਰਸਤਾ(u_char *dir, ngx_uint_t access);
+ngx_int_t ngx_ਜੋੜੋ_ਰਸਤਾ(ngx_conf_t *cf, ngx_ਰਸਤਾ_t **ਥਾਂ);
+ngx_int_t ngx_create_paths(ngx_ਚੱਕਰ_t *ਚੱਕਰ, ngx_uid_t user);
+ngx_int_t ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *ਮੰਜ਼ਿਲ,
     ngx_ext_rename_file_t *ext);
-ngx_int_t ngx_copy_file(u_char *from, u_char *to, ngx_copy_file_t *cf);
-ngx_int_t ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree);
+ngx_int_t ngx_copy_file(u_char *from, u_char *ਮੰਜ਼ਿਲ, ngx_copy_file_t *cf);
+ngx_int_t ngx_walk_ਰੁੱਖ(ngx_ਰੁੱਖ_ctx_t *ctx, ngx_str_t *ਰੁੱਖ);
 
-ngx_atomic_uint_t ngx_next_temp_number(ngx_uint_t collision);
+ngx_atomic_uint_t ngx_ਅਗਲਾ_ਆਰਜ਼ੀ_ਸੰਖਿਆ(ngx_uint_t collision);
 
-char *ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_merge_path_value(ngx_conf_t *cf, ngx_path_t **path,
-    ngx_path_t *prev, ngx_path_init_t *init);
-char *ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-
-
-extern ngx_atomic_t      *ngx_temp_number;
-extern ngx_atomic_int_t   ngx_random_number;
+ਅੱਖਰ *ngx_conf_ਸੈੱਟ_ਰਸਤਾ_ਥਾਂ(ngx_conf_t *cf, ngx_command_t *cmd, ਖਾਲੀ *conf);
+ਅੱਖਰ *ngx_conf_ਮਿਲਾਓ_ਰਸਤਾ_ਮੁੱਲ(ngx_conf_t *cf, ngx_ਰਸਤਾ_t **ਰਸਤਾ,
+    ngx_ਰਸਤਾ_t *prev, ngx_ਰਸਤਾ_init_t *init);
+ਅੱਖਰ *ngx_conf_ਸੈੱਟ_access_ਥਾਂ(ngx_conf_t *cf, ngx_command_t *cmd, ਖਾਲੀ *conf);
 
 
-#endif /* _NGX_FILE_H_INCLUDED_ */
+ਬਾਹਰੀ ngx_atomic_t      *ngx_ਆਰਜ਼ੀ_ਸੰਖਿਆ;
+ਬਾਹਰੀ ngx_atomic_int_t   ngx_random_ਸੰਖਿਆ;
+
+
+#ਜੇ_ਅੰਤ /* _NGX_FILE_H_INCLUDED_ */

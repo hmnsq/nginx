@@ -5,20 +5,20 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-static ngx_uint_t  mday[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+ਸਥਿਰ ngx_uint_t  mday[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-time_t
-ngx_parse_http_time(u_char *value, size_t len)
+ਸਮਾਂ_t
+ngx_parse_http_ਸਮਾਂ(u_char *ਮੁੱਲ, ਮਾਪ_t len)
 {
-    u_char      *p, *end;
+    u_char      *p, *ਸਿਰਾ;
     ngx_int_t    month;
     ngx_uint_t   day, year, hour, min, sec;
-    uint64_t     time;
-    enum {
+    uint64_t     ਸਮਾਂ;
+    ਗਿਣਤੀ {
         no = 0,
         rfc822,   /* Tue, 10 Nov 2002 23:50:13   */
         rfc850,   /* Tuesday, 10-Dec-02 23:50:13 */
@@ -26,119 +26,119 @@ ngx_parse_http_time(u_char *value, size_t len)
     } fmt;
 
     fmt = 0;
-    end = value + len;
+    ਸਿਰਾ = ਮੁੱਲ + len;
 
-#if (NGX_SUPPRESS_WARN)
+#ਜੇ (NGX_SUPPRESS_WARN)
     day = 32;
     year = 2038;
-#endif
+#ਜੇ_ਅੰਤ
 
-    for (p = value; p < end; p++) {
-        if (*p == ',') {
-            break;
+    ਲਈ (p = ਮੁੱਲ; p < ਸਿਰਾ; p++) {
+        ਜੇ (*p == ',') {
+            ਰੋਕੋ;
         }
 
-        if (*p == ' ') {
+        ਜੇ (*p == ' ') {
             fmt = isoc;
-            break;
+            ਰੋਕੋ;
         }
     }
 
-    for (p++; p < end; p++) {
-        if (*p != ' ') {
-            break;
+    ਲਈ (p++; p < ਸਿਰਾ; p++) {
+        ਜੇ (*p != ' ') {
+            ਰੋਕੋ;
         }
     }
 
-    if (end - p < 18) {
-        return NGX_ERROR;
+    ਜੇ (ਸਿਰਾ - p < 18) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    if (fmt != isoc) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    ਜੇ (fmt != isoc) {
+        ਜੇ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            ਵਾਪਸ NGX_ERROR;
         }
 
         day = (*p - '0') * 10 + (*(p + 1) - '0');
         p += 2;
 
-        if (*p == ' ') {
-            if (end - p < 18) {
-                return NGX_ERROR;
+        ਜੇ (*p == ' ') {
+            ਜੇ (ਸਿਰਾ - p < 18) {
+                ਵਾਪਸ NGX_ERROR;
             }
             fmt = rfc822;
 
-        } else if (*p == '-') {
+        } ਨਹੀਂਤਾਂ ਜੇ (*p == '-') {
             fmt = rfc850;
 
-        } else {
-            return NGX_ERROR;
+        } ਨਹੀਂਤਾਂ {
+            ਵਾਪਸ NGX_ERROR;
         }
 
         p++;
     }
 
-    switch (*p) {
+    ਚੋਣ (*p) {
 
-    case 'J':
+    ਹਾਲਤ 'J':
         month = *(p + 1) == 'a' ? 0 : *(p + 2) == 'n' ? 5 : 6;
-        break;
+        ਰੋਕੋ;
 
-    case 'F':
+    ਹਾਲਤ 'F':
         month = 1;
-        break;
+        ਰੋਕੋ;
 
-    case 'M':
+    ਹਾਲਤ 'M':
         month = *(p + 2) == 'r' ? 2 : 4;
-        break;
+        ਰੋਕੋ;
 
-    case 'A':
+    ਹਾਲਤ 'A':
         month = *(p + 1) == 'p' ? 3 : 7;
-        break;
+        ਰੋਕੋ;
 
-    case 'S':
+    ਹਾਲਤ 'S':
         month = 8;
-        break;
+        ਰੋਕੋ;
 
-    case 'O':
+    ਹਾਲਤ 'O':
         month = 9;
-        break;
+        ਰੋਕੋ;
 
-    case 'N':
+    ਹਾਲਤ 'N':
         month = 10;
-        break;
+        ਰੋਕੋ;
 
-    case 'D':
+    ਹਾਲਤ 'D':
         month = 11;
-        break;
+        ਰੋਕੋ;
 
-    default:
-        return NGX_ERROR;
+    ਮੂਲ:
+        ਵਾਪਸ NGX_ERROR;
     }
 
     p += 3;
 
-    if ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
-        return NGX_ERROR;
+    ਜੇ ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
     p++;
 
-    if (fmt == rfc822) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+    ਜੇ (fmt == rfc822) {
+        ਜੇ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            ਵਾਪਸ NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
         p += 4;
 
-    } else if (fmt == rfc850) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    } ਨਹੀਂਤਾਂ ਜੇ (fmt == rfc850) {
+        ਜੇ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            ਵਾਪਸ NGX_ERROR;
         }
 
         year = (*p - '0') * 10 + (*(p + 1) - '0');
@@ -146,91 +146,91 @@ ngx_parse_http_time(u_char *value, size_t len)
         p += 2;
     }
 
-    if (fmt == isoc) {
-        if (*p == ' ') {
+    ਜੇ (fmt == isoc) {
+        ਜੇ (*p == ' ') {
             p++;
         }
 
-        if (*p < '0' || *p > '9') {
-            return NGX_ERROR;
+        ਜੇ (*p < '0' || *p > '9') {
+            ਵਾਪਸ NGX_ERROR;
         }
 
         day = *p++ - '0';
 
-        if (*p != ' ') {
-            if (*p < '0' || *p > '9') {
-                return NGX_ERROR;
+        ਜੇ (*p != ' ') {
+            ਜੇ (*p < '0' || *p > '9') {
+                ਵਾਪਸ NGX_ERROR;
             }
 
             day = day * 10 + (*p++ - '0');
         }
 
-        if (end - p < 14) {
-            return NGX_ERROR;
+        ਜੇ (ਸਿਰਾ - p < 14) {
+            ਵਾਪਸ NGX_ERROR;
         }
     }
 
-    if (*p++ != ' ') {
-        return NGX_ERROR;
+    ਜੇ (*p++ != ' ') {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ਜੇ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        ਵਾਪਸ NGX_ERROR;
     }
 
     hour = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    ਜੇ (*p++ != ':') {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ਜੇ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        ਵਾਪਸ NGX_ERROR;
     }
 
     min = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    ਜੇ (*p++ != ':') {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ਜੇ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        ਵਾਪਸ NGX_ERROR;
     }
 
     sec = (*p - '0') * 10 + (*(p + 1) - '0');
 
-    if (fmt == isoc) {
+    ਜੇ (fmt == isoc) {
         p += 2;
 
-        if (*p++ != ' ') {
-            return NGX_ERROR;
+        ਜੇ (*p++ != ' ') {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+        ਜੇ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            ਵਾਪਸ NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
     }
 
-    if (hour > 23 || min > 59 || sec > 59) {
-        return NGX_ERROR;
+    ਜੇ (hour > 23 || min > 59 || sec > 59) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    if (day == 29 && month == 1) {
-        if ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
-            return NGX_ERROR;
+    ਜੇ (day == 29 && month == 1) {
+        ਜੇ ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-    } else if (day > mday[month]) {
-        return NGX_ERROR;
+    } ਨਹੀਂਤਾਂ ਜੇ (day > mday[month]) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
     /*
@@ -238,14 +238,14 @@ ngx_parse_http_time(u_char *value, size_t len)
      * it is needed for Gauss' formula
      */
 
-    if (--month <= 0) {
+    ਜੇ (--month <= 0) {
         month += 12;
         year -= 1;
     }
 
     /* Gauss' formula for Gregorian days since March 1, 1 BC */
 
-    time = (uint64_t) (
+    ਸਮਾਂ = (uint64_t) (
             /* days in years including leap years since March 1, 1 BC */
 
             365 * year + year / 4 - year / 100 + year / 400
@@ -265,13 +265,13 @@ ngx_parse_http_time(u_char *value, size_t len)
 
             - 719527 + 31 + 28) * 86400 + hour * 3600 + min * 60 + sec;
 
-#if (NGX_TIME_T_SIZE <= 4)
+#ਜੇ (NGX_ਸਮਾਂ_T_ਮਾਪ <= 4)
 
-    if (time > 0x7fffffff) {
-        return NGX_ERROR;
+    ਜੇ (ਸਮਾਂ > 0x7fffffff) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-#endif
+#ਜੇ_ਅੰਤ
 
-    return (time_t) time;
+    ਵਾਪਸ (ਸਮਾਂ_t) ਸਮਾਂ;
 }

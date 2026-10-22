@@ -4,160 +4,160 @@
  * Copyright (C) Nginx, Inc.
  */
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-#define NGX_SLAB_PAGE_MASK   3
-#define NGX_SLAB_PAGE        0
-#define NGX_SLAB_BIG         1
-#define NGX_SLAB_EXACT       2
-#define NGX_SLAB_SMALL       3
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_ਪੰਨਾ_ਨਕਾਬ   3
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_ਪੰਨਾ        0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_BIG         1
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_EXACT       2
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_SMALL       3
 
-#if (NGX_PTR_SIZE == 4)
+#ਜੇ (NGX_PTR_ਮਾਪ == 4)
 
-#define NGX_SLAB_PAGE_FREE   0
-#define NGX_SLAB_PAGE_BUSY   0xffffffff
-#define NGX_SLAB_PAGE_START  0x80000000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_ਪੰਨਾ_FREE   0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_ਪੰਨਾ_BUSY   0xffffffff
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_ਪੰਨਾ_ਸ਼ੁਰੂ  0x80000000
 
-#define NGX_SLAB_SHIFT_MASK  0x0000000f
-#define NGX_SLAB_MAP_MASK    0xffff0000
-#define NGX_SLAB_MAP_SHIFT   16
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_ਖਿਸਕਾਓ_ਨਕਾਬ  0x0000000f
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_MAP_ਨਕਾਬ    0xffff0000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_MAP_ਖਿਸਕਾਓ   16
 
-#define NGX_SLAB_BUSY        0xffffffff
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_BUSY        0xffffffff
 
-#else /* (NGX_PTR_SIZE == 8) */
+#ਨਹੀਂਤਾਂ /* (NGX_PTR_SIZE == 8) */
 
-#define NGX_SLAB_PAGE_FREE   0
-#define NGX_SLAB_PAGE_BUSY   0xffffffffffffffff
-#define NGX_SLAB_PAGE_START  0x8000000000000000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_ਪੰਨਾ_FREE   0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_ਪੰਨਾ_BUSY   0xffffffffffffffff
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_ਪੰਨਾ_ਸ਼ੁਰੂ  0x8000000000000000
 
-#define NGX_SLAB_SHIFT_MASK  0x000000000000000f
-#define NGX_SLAB_MAP_MASK    0xffffffff00000000
-#define NGX_SLAB_MAP_SHIFT   32
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_ਖਿਸਕਾਓ_ਨਕਾਬ  0x000000000000000f
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_MAP_ਨਕਾਬ    0xffffffff00000000
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_MAP_ਖਿਸਕਾਓ   32
 
-#define NGX_SLAB_BUSY        0xffffffffffffffff
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SLAB_BUSY        0xffffffffffffffff
 
-#endif
-
-
-#define ngx_slab_slots(pool)                                                  \
-    (ngx_slab_page_t *) ((u_char *) (pool) + sizeof(ngx_slab_pool_t))
-
-#define ngx_slab_page_type(page)   ((page)->prev & NGX_SLAB_PAGE_MASK)
-
-#define ngx_slab_page_prev(page)                                              \
-    (ngx_slab_page_t *) ((page)->prev & ~NGX_SLAB_PAGE_MASK)
-
-#define ngx_slab_page_addr(pool, page)                                        \
-    ((((page) - (pool)->pages) << ngx_pagesize_shift)                         \
-     + (uintptr_t) (pool)->start)
+#ਜੇ_ਅੰਤ
 
 
-#if (NGX_DEBUG_MALLOC)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_slab_slots(pool)                                                  \
+    (ngx_slab_ਪੰਨਾ_t *) ((u_char *) (pool) + ਆਕਾਰ(ngx_slab_pool_t))
 
-#define ngx_slab_junk(p, size)     ngx_memset(p, 0xA5, size)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_slab_ਪੰਨਾ_type(ਪੰਨਾ)   ((ਪੰਨਾ)->prev & NGX_SLAB_ਪੰਨਾ_ਨਕਾਬ)
 
-#elif (NGX_HAVE_DEBUG_MALLOC)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_slab_ਪੰਨਾ_prev(ਪੰਨਾ)                                              \
+    (ngx_slab_ਪੰਨਾ_t *) ((ਪੰਨਾ)->prev & ~NGX_SLAB_ਪੰਨਾ_ਨਕਾਬ)
 
-#define ngx_slab_junk(p, size)                                                \
-    if (ngx_debug_malloc)          ngx_memset(p, 0xA5, size)
-
-#else
-
-#define ngx_slab_junk(p, size)
-
-#endif
-
-static ngx_slab_page_t *ngx_slab_alloc_pages(ngx_slab_pool_t *pool,
-    ngx_uint_t pages);
-static void ngx_slab_free_pages(ngx_slab_pool_t *pool, ngx_slab_page_t *page,
-    ngx_uint_t pages);
-static void ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level,
-    char *text);
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_slab_ਪੰਨਾ_addr(pool, ਪੰਨਾ)                                        \
+    ((((ਪੰਨਾ) - (pool)->ਪੰਨੇ) << ngx_pagesize_ਖਿਸਕਾਓ)                         \
+     + (uintptr_t) (pool)->ਸ਼ੁਰੂ)
 
 
-static ngx_uint_t  ngx_slab_max_size;
-static ngx_uint_t  ngx_slab_exact_size;
-static ngx_uint_t  ngx_slab_exact_shift;
+#ਜੇ (NGX_DEBUG_MALLOC)
+
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_slab_junk(p, ਮਾਪ)     ngx_memset(p, 0xA5, ਮਾਪ)
+
+#ਜਾਂਜੇ (NGX_HAVE_DEBUG_MALLOC)
+
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_slab_junk(p, ਮਾਪ)                                                \
+    ਜੇ (ngx_debug_malloc)          ngx_memset(p, 0xA5, ਮਾਪ)
+
+#ਨਹੀਂਤਾਂ
+
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_slab_junk(p, ਮਾਪ)
+
+#ਜੇ_ਅੰਤ
+
+ਸਥਿਰ ngx_slab_ਪੰਨਾ_t *ngx_slab_alloc_ਪੰਨੇ(ngx_slab_pool_t *pool,
+    ngx_uint_t ਪੰਨੇ);
+ਸਥਿਰ ਖਾਲੀ ngx_slab_free_ਪੰਨੇ(ngx_slab_pool_t *pool, ngx_slab_ਪੰਨਾ_t *ਪੰਨਾ,
+    ngx_uint_t ਪੰਨੇ);
+ਸਥਿਰ ਖਾਲੀ ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level,
+    ਅੱਖਰ *ਪਾਠ);
 
 
-void
-ngx_slab_sizes_init(void)
+ਸਥਿਰ ngx_uint_t  ngx_slab_max_ਮਾਪ;
+ਸਥਿਰ ngx_uint_t  ngx_slab_exact_ਮਾਪ;
+ਸਥਿਰ ngx_uint_t  ngx_slab_exact_ਖਿਸਕਾਓ;
+
+
+ਖਾਲੀ
+ngx_slab_sizes_init(ਖਾਲੀ)
 {
     ngx_uint_t  n;
 
-    ngx_slab_max_size = ngx_pagesize / 2;
-    ngx_slab_exact_size = ngx_pagesize / (8 * sizeof(uintptr_t));
-    for (n = ngx_slab_exact_size; n >>= 1; ngx_slab_exact_shift++) {
+    ngx_slab_max_ਮਾਪ = ngx_pagesize / 2;
+    ngx_slab_exact_ਮਾਪ = ngx_pagesize / (8 * ਆਕਾਰ(uintptr_t));
+    ਲਈ (n = ngx_slab_exact_ਮਾਪ; n >>= 1; ngx_slab_exact_ਖਿਸਕਾਓ++) {
         /* void */
     }
 }
 
 
-void
+ਖਾਲੀ
 ngx_slab_init(ngx_slab_pool_t *pool)
 {
     u_char           *p;
-    size_t            size;
+    ਮਾਪ_t            ਮਾਪ;
     ngx_int_t         m;
-    ngx_uint_t        i, n, pages;
-    ngx_slab_page_t  *slots, *page;
+    ngx_uint_t        i, n, ਪੰਨੇ;
+    ngx_slab_ਪੰਨਾ_t  *slots, *ਪੰਨਾ;
 
-    pool->min_size = (size_t) 1 << pool->min_shift;
+    pool->min_ਮਾਪ = (ਮਾਪ_t) 1 << pool->min_ਖਿਸਕਾਓ;
 
     slots = ngx_slab_slots(pool);
 
     p = (u_char *) slots;
-    size = pool->end - p;
+    ਮਾਪ = pool->ਸਿਰਾ - p;
 
-    ngx_slab_junk(p, size);
+    ngx_slab_junk(p, ਮਾਪ);
 
-    n = ngx_pagesize_shift - pool->min_shift;
+    n = ngx_pagesize_ਖਿਸਕਾਓ - pool->min_ਖਿਸਕਾਓ;
 
-    for (i = 0; i < n; i++) {
+    ਲਈ (i = 0; i < n; i++) {
         /* only "next" is used in list head */
         slots[i].slab = 0;
-        slots[i].next = &slots[i];
+        slots[i].ਅਗਲਾ = &slots[i];
         slots[i].prev = 0;
     }
 
-    p += n * sizeof(ngx_slab_page_t);
+    p += n * ਆਕਾਰ(ngx_slab_ਪੰਨਾ_t);
 
     pool->stats = (ngx_slab_stat_t *) p;
-    ngx_memzero(pool->stats, n * sizeof(ngx_slab_stat_t));
+    ngx_memzero(pool->stats, n * ਆਕਾਰ(ngx_slab_stat_t));
 
-    p += n * sizeof(ngx_slab_stat_t);
+    p += n * ਆਕਾਰ(ngx_slab_stat_t);
 
-    size -= n * (sizeof(ngx_slab_page_t) + sizeof(ngx_slab_stat_t));
+    ਮਾਪ -= n * (ਆਕਾਰ(ngx_slab_ਪੰਨਾ_t) + ਆਕਾਰ(ngx_slab_stat_t));
 
-    pages = (ngx_uint_t) (size / (ngx_pagesize + sizeof(ngx_slab_page_t)));
+    ਪੰਨੇ = (ngx_uint_t) (ਮਾਪ / (ngx_pagesize + ਆਕਾਰ(ngx_slab_ਪੰਨਾ_t)));
 
-    pool->pages = (ngx_slab_page_t *) p;
-    ngx_memzero(pool->pages, pages * sizeof(ngx_slab_page_t));
+    pool->ਪੰਨੇ = (ngx_slab_ਪੰਨਾ_t *) p;
+    ngx_memzero(pool->ਪੰਨੇ, ਪੰਨੇ * ਆਕਾਰ(ngx_slab_ਪੰਨਾ_t));
 
-    page = pool->pages;
+    ਪੰਨਾ = pool->ਪੰਨੇ;
 
     /* only "next" is used in list head */
-    pool->free.slab = 0;
-    pool->free.next = page;
-    pool->free.prev = 0;
+    pool->ਮੁਕਤ.slab = 0;
+    pool->ਮੁਕਤ.ਅਗਲਾ = ਪੰਨਾ;
+    pool->ਮੁਕਤ.prev = 0;
 
-    page->slab = pages;
-    page->next = &pool->free;
-    page->prev = (uintptr_t) &pool->free;
+    ਪੰਨਾ->slab = ਪੰਨੇ;
+    ਪੰਨਾ->ਅਗਲਾ = &pool->ਮੁਕਤ;
+    ਪੰਨਾ->prev = (uintptr_t) &pool->ਮੁਕਤ;
 
-    pool->start = ngx_align_ptr(p + pages * sizeof(ngx_slab_page_t),
+    pool->ਸ਼ੁਰੂ = ngx_align_ptr(p + ਪੰਨੇ * ਆਕਾਰ(ngx_slab_ਪੰਨਾ_t),
                                 ngx_pagesize);
 
-    m = pages - (pool->end - pool->start) / ngx_pagesize;
-    if (m > 0) {
-        pages -= m;
-        page->slab = pages;
+    m = ਪੰਨੇ - (pool->ਸਿਰਾ - pool->ਸ਼ੁਰੂ) / ngx_pagesize;
+    ਜੇ (m > 0) {
+        ਪੰਨੇ -= m;
+        ਪੰਨਾ->slab = ਪੰਨੇ;
     }
 
-    pool->last = pool->pages + pages;
-    pool->pfree = pages;
+    pool->ਆਖਰੀ = pool->ਪੰਨੇ + ਪੰਨੇ;
+    pool->pfree = ਪੰਨੇ;
 
     pool->log_nomem = 1;
     pool->log_ctx = &pool->zero;
@@ -165,291 +165,291 @@ ngx_slab_init(ngx_slab_pool_t *pool)
 }
 
 
-void *
-ngx_slab_alloc(ngx_slab_pool_t *pool, size_t size)
+ਖਾਲੀ *
+ngx_slab_alloc(ngx_slab_pool_t *pool, ਮਾਪ_t ਮਾਪ)
 {
-    void  *p;
+    ਖਾਲੀ  *p;
 
-    ngx_shmtx_lock(&pool->mutex);
+    ngx_shmtx_ਤਾਲਾ(&pool->mutex);
 
-    p = ngx_slab_alloc_locked(pool, size);
+    p = ngx_slab_alloc_locked(pool, ਮਾਪ);
 
     ngx_shmtx_unlock(&pool->mutex);
 
-    return p;
+    ਵਾਪਸ p;
 }
 
 
-void *
-ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
+ਖਾਲੀ *
+ngx_slab_alloc_locked(ngx_slab_pool_t *pool, ਮਾਪ_t ਮਾਪ)
 {
-    size_t            s;
-    uintptr_t         p, m, mask, *bitmap;
-    ngx_uint_t        i, n, slot, shift, map;
-    ngx_slab_page_t  *page, *prev, *slots;
+    ਮਾਪ_t            s;
+    uintptr_t         p, m, ਨਕਾਬ, *bitmap;
+    ngx_uint_t        i, n, ਥਾਂ, ਖਿਸਕਾਓ, map;
+    ngx_slab_ਪੰਨਾ_t  *ਪੰਨਾ, *prev, *slots;
 
-    if (size > ngx_slab_max_size) {
+    ਜੇ (ਮਾਪ > ngx_slab_max_ਮਾਪ) {
 
-        ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0,
-                       "slab alloc: %uz", size);
+        ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_ਚੱਕਰ->ਲਘੂਗਣਕ, 0,
+                       "slab alloc: %uz", ਮਾਪ);
 
-        page = ngx_slab_alloc_pages(pool, (size >> ngx_pagesize_shift)
-                                          + ((size % ngx_pagesize) ? 1 : 0));
-        if (page) {
-            p = ngx_slab_page_addr(pool, page);
+        ਪੰਨਾ = ngx_slab_alloc_ਪੰਨੇ(pool, (ਮਾਪ >> ngx_pagesize_ਖਿਸਕਾਓ)
+                                          + ((ਮਾਪ % ngx_pagesize) ? 1 : 0));
+        ਜੇ (ਪੰਨਾ) {
+            p = ngx_slab_ਪੰਨਾ_addr(pool, ਪੰਨਾ);
 
-        } else {
+        } ਨਹੀਂਤਾਂ {
             p = 0;
         }
 
-        goto done;
+        ਜਾਓ ਪੂਰਾ;
     }
 
-    if (size > pool->min_size) {
-        shift = 1;
-        for (s = size - 1; s >>= 1; shift++) { /* void */ }
-        slot = shift - pool->min_shift;
+    ਜੇ (ਮਾਪ > pool->min_ਮਾਪ) {
+        ਖਿਸਕਾਓ = 1;
+        ਲਈ (s = ਮਾਪ - 1; s >>= 1; ਖਿਸਕਾਓ++) { /* void */ }
+        ਥਾਂ = ਖਿਸਕਾਓ - pool->min_ਖਿਸਕਾਓ;
 
-    } else {
-        shift = pool->min_shift;
-        slot = 0;
+    } ਨਹੀਂਤਾਂ {
+        ਖਿਸਕਾਓ = pool->min_ਖਿਸਕਾਓ;
+        ਥਾਂ = 0;
     }
 
-    pool->stats[slot].reqs++;
+    pool->stats[ਥਾਂ].reqs++;
 
-    ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0,
-                   "slab alloc: %uz slot: %ui", size, slot);
+    ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, ngx_ਚੱਕਰ->ਲਘੂਗਣਕ, 0,
+                   "slab alloc: %uz slot: %ui", ਮਾਪ, ਥਾਂ);
 
     slots = ngx_slab_slots(pool);
-    page = slots[slot].next;
+    ਪੰਨਾ = slots[ਥਾਂ].ਅਗਲਾ;
 
-    if (page->next != page) {
+    ਜੇ (ਪੰਨਾ->ਅਗਲਾ != ਪੰਨਾ) {
 
-        if (shift < ngx_slab_exact_shift) {
+        ਜੇ (ਖਿਸਕਾਓ < ngx_slab_exact_ਖਿਸਕਾਓ) {
 
-            bitmap = (uintptr_t *) ngx_slab_page_addr(pool, page);
+            bitmap = (uintptr_t *) ngx_slab_ਪੰਨਾ_addr(pool, ਪੰਨਾ);
 
-            map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
+            map = (ngx_pagesize >> ਖਿਸਕਾਓ) / (8 * ਆਕਾਰ(uintptr_t));
 
-            for (n = 0; n < map; n++) {
+            ਲਈ (n = 0; n < map; n++) {
 
-                if (bitmap[n] != NGX_SLAB_BUSY) {
+                ਜੇ (bitmap[n] != NGX_SLAB_BUSY) {
 
-                    for (m = 1, i = 0; m; m <<= 1, i++) {
-                        if (bitmap[n] & m) {
-                            continue;
+                    ਲਈ (m = 1, i = 0; m; m <<= 1, i++) {
+                        ਜੇ (bitmap[n] & m) {
+                            ਜਾਰੀ;
                         }
 
                         bitmap[n] |= m;
 
-                        i = (n * 8 * sizeof(uintptr_t) + i) << shift;
+                        i = (n * 8 * ਆਕਾਰ(uintptr_t) + i) << ਖਿਸਕਾਓ;
 
                         p = (uintptr_t) bitmap + i;
 
-                        pool->stats[slot].used++;
+                        pool->stats[ਥਾਂ].ਵਰਤਿਆ++;
 
-                        if (bitmap[n] == NGX_SLAB_BUSY) {
-                            for (n = n + 1; n < map; n++) {
-                                if (bitmap[n] != NGX_SLAB_BUSY) {
-                                    goto done;
+                        ਜੇ (bitmap[n] == NGX_SLAB_BUSY) {
+                            ਲਈ (n = n + 1; n < map; n++) {
+                                ਜੇ (bitmap[n] != NGX_SLAB_BUSY) {
+                                    ਜਾਓ ਪੂਰਾ;
                                 }
                             }
 
-                            prev = ngx_slab_page_prev(page);
-                            prev->next = page->next;
-                            page->next->prev = page->prev;
+                            prev = ngx_slab_ਪੰਨਾ_prev(ਪੰਨਾ);
+                            prev->ਅਗਲਾ = ਪੰਨਾ->ਅਗਲਾ;
+                            ਪੰਨਾ->ਅਗਲਾ->prev = ਪੰਨਾ->prev;
 
-                            page->next = NULL;
-                            page->prev = NGX_SLAB_SMALL;
+                            ਪੰਨਾ->ਅਗਲਾ = ਨਿਰਾ;
+                            ਪੰਨਾ->prev = NGX_SLAB_SMALL;
                         }
 
-                        goto done;
+                        ਜਾਓ ਪੂਰਾ;
                     }
                 }
             }
 
-        } else if (shift == ngx_slab_exact_shift) {
+        } ਨਹੀਂਤਾਂ ਜੇ (ਖਿਸਕਾਓ == ngx_slab_exact_ਖਿਸਕਾਓ) {
 
-            for (m = 1, i = 0; m; m <<= 1, i++) {
-                if (page->slab & m) {
-                    continue;
+            ਲਈ (m = 1, i = 0; m; m <<= 1, i++) {
+                ਜੇ (ਪੰਨਾ->slab & m) {
+                    ਜਾਰੀ;
                 }
 
-                page->slab |= m;
+                ਪੰਨਾ->slab |= m;
 
-                if (page->slab == NGX_SLAB_BUSY) {
-                    prev = ngx_slab_page_prev(page);
-                    prev->next = page->next;
-                    page->next->prev = page->prev;
+                ਜੇ (ਪੰਨਾ->slab == NGX_SLAB_BUSY) {
+                    prev = ngx_slab_ਪੰਨਾ_prev(ਪੰਨਾ);
+                    prev->ਅਗਲਾ = ਪੰਨਾ->ਅਗਲਾ;
+                    ਪੰਨਾ->ਅਗਲਾ->prev = ਪੰਨਾ->prev;
 
-                    page->next = NULL;
-                    page->prev = NGX_SLAB_EXACT;
+                    ਪੰਨਾ->ਅਗਲਾ = ਨਿਰਾ;
+                    ਪੰਨਾ->prev = NGX_SLAB_EXACT;
                 }
 
-                p = ngx_slab_page_addr(pool, page) + (i << shift);
+                p = ngx_slab_ਪੰਨਾ_addr(pool, ਪੰਨਾ) + (i << ਖਿਸਕਾਓ);
 
-                pool->stats[slot].used++;
+                pool->stats[ਥਾਂ].ਵਰਤਿਆ++;
 
-                goto done;
+                ਜਾਓ ਪੂਰਾ;
             }
 
-        } else { /* shift > ngx_slab_exact_shift */
+        } ਨਹੀਂਤਾਂ { /* shift > ngx_slab_exact_shift */
 
-            mask = ((uintptr_t) 1 << (ngx_pagesize >> shift)) - 1;
-            mask <<= NGX_SLAB_MAP_SHIFT;
+            ਨਕਾਬ = ((uintptr_t) 1 << (ngx_pagesize >> ਖਿਸਕਾਓ)) - 1;
+            ਨਕਾਬ <<= NGX_SLAB_MAP_ਖਿਸਕਾਓ;
 
-            for (m = (uintptr_t) 1 << NGX_SLAB_MAP_SHIFT, i = 0;
-                 m & mask;
+            ਲਈ (m = (uintptr_t) 1 << NGX_SLAB_MAP_ਖਿਸਕਾਓ, i = 0;
+                 m & ਨਕਾਬ;
                  m <<= 1, i++)
             {
-                if (page->slab & m) {
-                    continue;
+                ਜੇ (ਪੰਨਾ->slab & m) {
+                    ਜਾਰੀ;
                 }
 
-                page->slab |= m;
+                ਪੰਨਾ->slab |= m;
 
-                if ((page->slab & NGX_SLAB_MAP_MASK) == mask) {
-                    prev = ngx_slab_page_prev(page);
-                    prev->next = page->next;
-                    page->next->prev = page->prev;
+                ਜੇ ((ਪੰਨਾ->slab & NGX_SLAB_MAP_ਨਕਾਬ) == ਨਕਾਬ) {
+                    prev = ngx_slab_ਪੰਨਾ_prev(ਪੰਨਾ);
+                    prev->ਅਗਲਾ = ਪੰਨਾ->ਅਗਲਾ;
+                    ਪੰਨਾ->ਅਗਲਾ->prev = ਪੰਨਾ->prev;
 
-                    page->next = NULL;
-                    page->prev = NGX_SLAB_BIG;
+                    ਪੰਨਾ->ਅਗਲਾ = ਨਿਰਾ;
+                    ਪੰਨਾ->prev = NGX_SLAB_BIG;
                 }
 
-                p = ngx_slab_page_addr(pool, page) + (i << shift);
+                p = ngx_slab_ਪੰਨਾ_addr(pool, ਪੰਨਾ) + (i << ਖਿਸਕਾਓ);
 
-                pool->stats[slot].used++;
+                pool->stats[ਥਾਂ].ਵਰਤਿਆ++;
 
-                goto done;
+                ਜਾਓ ਪੂਰਾ;
             }
         }
 
         ngx_slab_error(pool, NGX_LOG_ALERT, "ngx_slab_alloc(): page is busy");
-        ngx_debug_point();
+        ngx_debug_ਬਿੰਦੂ();
     }
 
-    page = ngx_slab_alloc_pages(pool, 1);
+    ਪੰਨਾ = ngx_slab_alloc_ਪੰਨੇ(pool, 1);
 
-    if (page) {
-        if (shift < ngx_slab_exact_shift) {
-            bitmap = (uintptr_t *) ngx_slab_page_addr(pool, page);
+    ਜੇ (ਪੰਨਾ) {
+        ਜੇ (ਖਿਸਕਾਓ < ngx_slab_exact_ਖਿਸਕਾਓ) {
+            bitmap = (uintptr_t *) ngx_slab_ਪੰਨਾ_addr(pool, ਪੰਨਾ);
 
-            n = (ngx_pagesize >> shift) / ((1 << shift) * 8);
+            n = (ngx_pagesize >> ਖਿਸਕਾਓ) / ((1 << ਖਿਸਕਾਓ) * 8);
 
-            if (n == 0) {
+            ਜੇ (n == 0) {
                 n = 1;
             }
 
             /* "n" elements for bitmap, plus one requested */
 
-            for (i = 0; i < (n + 1) / (8 * sizeof(uintptr_t)); i++) {
+            ਲਈ (i = 0; i < (n + 1) / (8 * ਆਕਾਰ(uintptr_t)); i++) {
                 bitmap[i] = NGX_SLAB_BUSY;
             }
 
-            m = ((uintptr_t) 1 << ((n + 1) % (8 * sizeof(uintptr_t)))) - 1;
+            m = ((uintptr_t) 1 << ((n + 1) % (8 * ਆਕਾਰ(uintptr_t)))) - 1;
             bitmap[i] = m;
 
-            map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
+            map = (ngx_pagesize >> ਖਿਸਕਾਓ) / (8 * ਆਕਾਰ(uintptr_t));
 
-            for (i = i + 1; i < map; i++) {
+            ਲਈ (i = i + 1; i < map; i++) {
                 bitmap[i] = 0;
             }
 
-            page->slab = shift;
-            page->next = &slots[slot];
-            page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_SMALL;
+            ਪੰਨਾ->slab = ਖਿਸਕਾਓ;
+            ਪੰਨਾ->ਅਗਲਾ = &slots[ਥਾਂ];
+            ਪੰਨਾ->prev = (uintptr_t) &slots[ਥਾਂ] | NGX_SLAB_SMALL;
 
-            slots[slot].next = page;
+            slots[ਥਾਂ].ਅਗਲਾ = ਪੰਨਾ;
 
-            pool->stats[slot].total += (ngx_pagesize >> shift) - n;
+            pool->stats[ਥਾਂ].ਕੁੱਲ += (ngx_pagesize >> ਖਿਸਕਾਓ) - n;
 
-            p = ngx_slab_page_addr(pool, page) + (n << shift);
+            p = ngx_slab_ਪੰਨਾ_addr(pool, ਪੰਨਾ) + (n << ਖਿਸਕਾਓ);
 
-            pool->stats[slot].used++;
+            pool->stats[ਥਾਂ].ਵਰਤਿਆ++;
 
-            goto done;
+            ਜਾਓ ਪੂਰਾ;
 
-        } else if (shift == ngx_slab_exact_shift) {
+        } ਨਹੀਂਤਾਂ ਜੇ (ਖਿਸਕਾਓ == ngx_slab_exact_ਖਿਸਕਾਓ) {
 
-            page->slab = 1;
-            page->next = &slots[slot];
-            page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_EXACT;
+            ਪੰਨਾ->slab = 1;
+            ਪੰਨਾ->ਅਗਲਾ = &slots[ਥਾਂ];
+            ਪੰਨਾ->prev = (uintptr_t) &slots[ਥਾਂ] | NGX_SLAB_EXACT;
 
-            slots[slot].next = page;
+            slots[ਥਾਂ].ਅਗਲਾ = ਪੰਨਾ;
 
-            pool->stats[slot].total += 8 * sizeof(uintptr_t);
+            pool->stats[ਥਾਂ].ਕੁੱਲ += 8 * ਆਕਾਰ(uintptr_t);
 
-            p = ngx_slab_page_addr(pool, page);
+            p = ngx_slab_ਪੰਨਾ_addr(pool, ਪੰਨਾ);
 
-            pool->stats[slot].used++;
+            pool->stats[ਥਾਂ].ਵਰਤਿਆ++;
 
-            goto done;
+            ਜਾਓ ਪੂਰਾ;
 
-        } else { /* shift > ngx_slab_exact_shift */
+        } ਨਹੀਂਤਾਂ { /* shift > ngx_slab_exact_shift */
 
-            page->slab = ((uintptr_t) 1 << NGX_SLAB_MAP_SHIFT) | shift;
-            page->next = &slots[slot];
-            page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_BIG;
+            ਪੰਨਾ->slab = ((uintptr_t) 1 << NGX_SLAB_MAP_ਖਿਸਕਾਓ) | ਖਿਸਕਾਓ;
+            ਪੰਨਾ->ਅਗਲਾ = &slots[ਥਾਂ];
+            ਪੰਨਾ->prev = (uintptr_t) &slots[ਥਾਂ] | NGX_SLAB_BIG;
 
-            slots[slot].next = page;
+            slots[ਥਾਂ].ਅਗਲਾ = ਪੰਨਾ;
 
-            pool->stats[slot].total += ngx_pagesize >> shift;
+            pool->stats[ਥਾਂ].ਕੁੱਲ += ngx_pagesize >> ਖਿਸਕਾਓ;
 
-            p = ngx_slab_page_addr(pool, page);
+            p = ngx_slab_ਪੰਨਾ_addr(pool, ਪੰਨਾ);
 
-            pool->stats[slot].used++;
+            pool->stats[ਥਾਂ].ਵਰਤਿਆ++;
 
-            goto done;
+            ਜਾਓ ਪੂਰਾ;
         }
     }
 
     p = 0;
 
-    pool->stats[slot].fails++;
+    pool->stats[ਥਾਂ].fails++;
 
-done:
+ਪੂਰਾ:
 
-    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0,
-                   "slab alloc: %p", (void *) p);
+    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_ਚੱਕਰ->ਲਘੂਗਣਕ, 0,
+                   "slab alloc: %p", (ਖਾਲੀ *) p);
 
-    return (void *) p;
+    ਵਾਪਸ (ਖਾਲੀ *) p;
 }
 
 
-void *
-ngx_slab_calloc(ngx_slab_pool_t *pool, size_t size)
+ਖਾਲੀ *
+ngx_slab_calloc(ngx_slab_pool_t *pool, ਮਾਪ_t ਮਾਪ)
 {
-    void  *p;
+    ਖਾਲੀ  *p;
 
-    ngx_shmtx_lock(&pool->mutex);
+    ngx_shmtx_ਤਾਲਾ(&pool->mutex);
 
-    p = ngx_slab_calloc_locked(pool, size);
+    p = ngx_slab_calloc_locked(pool, ਮਾਪ);
 
     ngx_shmtx_unlock(&pool->mutex);
 
-    return p;
+    ਵਾਪਸ p;
 }
 
 
-void *
-ngx_slab_calloc_locked(ngx_slab_pool_t *pool, size_t size)
+ਖਾਲੀ *
+ngx_slab_calloc_locked(ngx_slab_pool_t *pool, ਮਾਪ_t ਮਾਪ)
 {
-    void  *p;
+    ਖਾਲੀ  *p;
 
-    p = ngx_slab_alloc_locked(pool, size);
-    if (p) {
-        ngx_memzero(p, size);
+    p = ngx_slab_alloc_locked(pool, ਮਾਪ);
+    ਜੇ (p) {
+        ngx_memzero(p, ਮਾਪ);
     }
 
-    return p;
+    ਵਾਪਸ p;
 }
 
 
-void
-ngx_slab_free(ngx_slab_pool_t *pool, void *p)
+ਖਾਲੀ
+ngx_slab_free(ngx_slab_pool_t *pool, ਖਾਲੀ *p)
 {
-    ngx_shmtx_lock(&pool->mutex);
+    ngx_shmtx_ਤਾਲਾ(&pool->mutex);
 
     ngx_slab_free_locked(pool, p);
 
@@ -457,211 +457,211 @@ ngx_slab_free(ngx_slab_pool_t *pool, void *p)
 }
 
 
-void
-ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
+ਖਾਲੀ
+ngx_slab_free_locked(ngx_slab_pool_t *pool, ਖਾਲੀ *p)
 {
-    size_t            size;
+    ਮਾਪ_t            ਮਾਪ;
     uintptr_t         slab, m, *bitmap;
-    ngx_uint_t        i, n, type, slot, shift, map;
-    ngx_slab_page_t  *slots, *page;
+    ngx_uint_t        i, n, type, ਥਾਂ, ਖਿਸਕਾਓ, map;
+    ngx_slab_ਪੰਨਾ_t  *slots, *ਪੰਨਾ;
 
-    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0, "slab free: %p", p);
+    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_ਚੱਕਰ->ਲਘੂਗਣਕ, 0, "slab free: %p", p);
 
-    if ((u_char *) p < pool->start || (u_char *) p > pool->end) {
+    ਜੇ ((u_char *) p < pool->ਸ਼ੁਰੂ || (u_char *) p > pool->ਸਿਰਾ) {
         ngx_slab_error(pool, NGX_LOG_ALERT, "ngx_slab_free(): outside of pool");
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    n = ((u_char *) p - pool->start) >> ngx_pagesize_shift;
-    page = &pool->pages[n];
-    slab = page->slab;
-    type = ngx_slab_page_type(page);
+    n = ((u_char *) p - pool->ਸ਼ੁਰੂ) >> ngx_pagesize_ਖਿਸਕਾਓ;
+    ਪੰਨਾ = &pool->ਪੰਨੇ[n];
+    slab = ਪੰਨਾ->slab;
+    type = ngx_slab_ਪੰਨਾ_type(ਪੰਨਾ);
 
-    switch (type) {
+    ਚੋਣ (type) {
 
-    case NGX_SLAB_SMALL:
+    ਹਾਲਤ NGX_SLAB_SMALL:
 
-        shift = slab & NGX_SLAB_SHIFT_MASK;
-        size = (size_t) 1 << shift;
+        ਖਿਸਕਾਓ = slab & NGX_SLAB_ਖਿਸਕਾਓ_ਨਕਾਬ;
+        ਮਾਪ = (ਮਾਪ_t) 1 << ਖਿਸਕਾਓ;
 
-        if ((uintptr_t) p & (size - 1)) {
-            goto wrong_chunk;
+        ਜੇ ((uintptr_t) p & (ਮਾਪ - 1)) {
+            ਜਾਓ wrong_chunk;
         }
 
-        n = ((uintptr_t) p & (ngx_pagesize - 1)) >> shift;
-        m = (uintptr_t) 1 << (n % (8 * sizeof(uintptr_t)));
-        n /= 8 * sizeof(uintptr_t);
+        n = ((uintptr_t) p & (ngx_pagesize - 1)) >> ਖਿਸਕਾਓ;
+        m = (uintptr_t) 1 << (n % (8 * ਆਕਾਰ(uintptr_t)));
+        n /= 8 * ਆਕਾਰ(uintptr_t);
         bitmap = (uintptr_t *)
                              ((uintptr_t) p & ~((uintptr_t) ngx_pagesize - 1));
 
-        if (bitmap[n] & m) {
-            slot = shift - pool->min_shift;
+        ਜੇ (bitmap[n] & m) {
+            ਥਾਂ = ਖਿਸਕਾਓ - pool->min_ਖਿਸਕਾਓ;
 
-            if (page->next == NULL) {
+            ਜੇ (ਪੰਨਾ->ਅਗਲਾ == ਨਿਰਾ) {
                 slots = ngx_slab_slots(pool);
 
-                page->next = slots[slot].next;
-                slots[slot].next = page;
+                ਪੰਨਾ->ਅਗਲਾ = slots[ਥਾਂ].ਅਗਲਾ;
+                slots[ਥਾਂ].ਅਗਲਾ = ਪੰਨਾ;
 
-                page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_SMALL;
-                page->next->prev = (uintptr_t) page | NGX_SLAB_SMALL;
+                ਪੰਨਾ->prev = (uintptr_t) &slots[ਥਾਂ] | NGX_SLAB_SMALL;
+                ਪੰਨਾ->ਅਗਲਾ->prev = (uintptr_t) ਪੰਨਾ | NGX_SLAB_SMALL;
             }
 
             bitmap[n] &= ~m;
 
-            n = (ngx_pagesize >> shift) / ((1 << shift) * 8);
+            n = (ngx_pagesize >> ਖਿਸਕਾਓ) / ((1 << ਖਿਸਕਾਓ) * 8);
 
-            if (n == 0) {
+            ਜੇ (n == 0) {
                 n = 1;
             }
 
-            i = n / (8 * sizeof(uintptr_t));
-            m = ((uintptr_t) 1 << (n % (8 * sizeof(uintptr_t)))) - 1;
+            i = n / (8 * ਆਕਾਰ(uintptr_t));
+            m = ((uintptr_t) 1 << (n % (8 * ਆਕਾਰ(uintptr_t)))) - 1;
 
-            if (bitmap[i] & ~m) {
-                goto done;
+            ਜੇ (bitmap[i] & ~m) {
+                ਜਾਓ ਪੂਰਾ;
             }
 
-            map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
+            map = (ngx_pagesize >> ਖਿਸਕਾਓ) / (8 * ਆਕਾਰ(uintptr_t));
 
-            for (i = i + 1; i < map; i++) {
-                if (bitmap[i]) {
-                    goto done;
+            ਲਈ (i = i + 1; i < map; i++) {
+                ਜੇ (bitmap[i]) {
+                    ਜਾਓ ਪੂਰਾ;
                 }
             }
 
-            ngx_slab_free_pages(pool, page, 1);
+            ngx_slab_free_ਪੰਨੇ(pool, ਪੰਨਾ, 1);
 
-            pool->stats[slot].total -= (ngx_pagesize >> shift) - n;
+            pool->stats[ਥਾਂ].ਕੁੱਲ -= (ngx_pagesize >> ਖਿਸਕਾਓ) - n;
 
-            goto done;
+            ਜਾਓ ਪੂਰਾ;
         }
 
-        goto chunk_already_free;
+        ਜਾਓ chunk_already_free;
 
-    case NGX_SLAB_EXACT:
+    ਹਾਲਤ NGX_SLAB_EXACT:
 
         m = (uintptr_t) 1 <<
-                (((uintptr_t) p & (ngx_pagesize - 1)) >> ngx_slab_exact_shift);
-        size = ngx_slab_exact_size;
+                (((uintptr_t) p & (ngx_pagesize - 1)) >> ngx_slab_exact_ਖਿਸਕਾਓ);
+        ਮਾਪ = ngx_slab_exact_ਮਾਪ;
 
-        if ((uintptr_t) p & (size - 1)) {
-            goto wrong_chunk;
+        ਜੇ ((uintptr_t) p & (ਮਾਪ - 1)) {
+            ਜਾਓ wrong_chunk;
         }
 
-        if (slab & m) {
-            slot = ngx_slab_exact_shift - pool->min_shift;
+        ਜੇ (slab & m) {
+            ਥਾਂ = ngx_slab_exact_ਖਿਸਕਾਓ - pool->min_ਖਿਸਕਾਓ;
 
-            if (slab == NGX_SLAB_BUSY) {
+            ਜੇ (slab == NGX_SLAB_BUSY) {
                 slots = ngx_slab_slots(pool);
 
-                page->next = slots[slot].next;
-                slots[slot].next = page;
+                ਪੰਨਾ->ਅਗਲਾ = slots[ਥਾਂ].ਅਗਲਾ;
+                slots[ਥਾਂ].ਅਗਲਾ = ਪੰਨਾ;
 
-                page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_EXACT;
-                page->next->prev = (uintptr_t) page | NGX_SLAB_EXACT;
+                ਪੰਨਾ->prev = (uintptr_t) &slots[ਥਾਂ] | NGX_SLAB_EXACT;
+                ਪੰਨਾ->ਅਗਲਾ->prev = (uintptr_t) ਪੰਨਾ | NGX_SLAB_EXACT;
             }
 
-            page->slab &= ~m;
+            ਪੰਨਾ->slab &= ~m;
 
-            if (page->slab) {
-                goto done;
+            ਜੇ (ਪੰਨਾ->slab) {
+                ਜਾਓ ਪੂਰਾ;
             }
 
-            ngx_slab_free_pages(pool, page, 1);
+            ngx_slab_free_ਪੰਨੇ(pool, ਪੰਨਾ, 1);
 
-            pool->stats[slot].total -= 8 * sizeof(uintptr_t);
+            pool->stats[ਥਾਂ].ਕੁੱਲ -= 8 * ਆਕਾਰ(uintptr_t);
 
-            goto done;
+            ਜਾਓ ਪੂਰਾ;
         }
 
-        goto chunk_already_free;
+        ਜਾਓ chunk_already_free;
 
-    case NGX_SLAB_BIG:
+    ਹਾਲਤ NGX_SLAB_BIG:
 
-        shift = slab & NGX_SLAB_SHIFT_MASK;
-        size = (size_t) 1 << shift;
+        ਖਿਸਕਾਓ = slab & NGX_SLAB_ਖਿਸਕਾਓ_ਨਕਾਬ;
+        ਮਾਪ = (ਮਾਪ_t) 1 << ਖਿਸਕਾਓ;
 
-        if ((uintptr_t) p & (size - 1)) {
-            goto wrong_chunk;
+        ਜੇ ((uintptr_t) p & (ਮਾਪ - 1)) {
+            ਜਾਓ wrong_chunk;
         }
 
-        m = (uintptr_t) 1 << ((((uintptr_t) p & (ngx_pagesize - 1)) >> shift)
-                              + NGX_SLAB_MAP_SHIFT);
+        m = (uintptr_t) 1 << ((((uintptr_t) p & (ngx_pagesize - 1)) >> ਖਿਸਕਾਓ)
+                              + NGX_SLAB_MAP_ਖਿਸਕਾਓ);
 
-        if (slab & m) {
-            slot = shift - pool->min_shift;
+        ਜੇ (slab & m) {
+            ਥਾਂ = ਖਿਸਕਾਓ - pool->min_ਖਿਸਕਾਓ;
 
-            if (page->next == NULL) {
+            ਜੇ (ਪੰਨਾ->ਅਗਲਾ == ਨਿਰਾ) {
                 slots = ngx_slab_slots(pool);
 
-                page->next = slots[slot].next;
-                slots[slot].next = page;
+                ਪੰਨਾ->ਅਗਲਾ = slots[ਥਾਂ].ਅਗਲਾ;
+                slots[ਥਾਂ].ਅਗਲਾ = ਪੰਨਾ;
 
-                page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_BIG;
-                page->next->prev = (uintptr_t) page | NGX_SLAB_BIG;
+                ਪੰਨਾ->prev = (uintptr_t) &slots[ਥਾਂ] | NGX_SLAB_BIG;
+                ਪੰਨਾ->ਅਗਲਾ->prev = (uintptr_t) ਪੰਨਾ | NGX_SLAB_BIG;
             }
 
-            page->slab &= ~m;
+            ਪੰਨਾ->slab &= ~m;
 
-            if (page->slab & NGX_SLAB_MAP_MASK) {
-                goto done;
+            ਜੇ (ਪੰਨਾ->slab & NGX_SLAB_MAP_ਨਕਾਬ) {
+                ਜਾਓ ਪੂਰਾ;
             }
 
-            ngx_slab_free_pages(pool, page, 1);
+            ngx_slab_free_ਪੰਨੇ(pool, ਪੰਨਾ, 1);
 
-            pool->stats[slot].total -= ngx_pagesize >> shift;
+            pool->stats[ਥਾਂ].ਕੁੱਲ -= ngx_pagesize >> ਖਿਸਕਾਓ;
 
-            goto done;
+            ਜਾਓ ਪੂਰਾ;
         }
 
-        goto chunk_already_free;
+        ਜਾਓ chunk_already_free;
 
-    case NGX_SLAB_PAGE:
+    ਹਾਲਤ NGX_SLAB_ਪੰਨਾ:
 
-        if ((uintptr_t) p & (ngx_pagesize - 1)) {
-            goto wrong_chunk;
+        ਜੇ ((uintptr_t) p & (ngx_pagesize - 1)) {
+            ਜਾਓ wrong_chunk;
         }
 
-        if (!(slab & NGX_SLAB_PAGE_START)) {
+        ਜੇ (!(slab & NGX_SLAB_ਪੰਨਾ_ਸ਼ੁਰੂ)) {
             ngx_slab_error(pool, NGX_LOG_ALERT,
                            "ngx_slab_free(): page is already free");
-            goto fail;
+            ਜਾਓ fail;
         }
 
-        if (slab == NGX_SLAB_PAGE_BUSY) {
+        ਜੇ (slab == NGX_SLAB_ਪੰਨਾ_BUSY) {
             ngx_slab_error(pool, NGX_LOG_ALERT,
                            "ngx_slab_free(): pointer to wrong page");
-            goto fail;
+            ਜਾਓ fail;
         }
 
-        size = slab & ~NGX_SLAB_PAGE_START;
+        ਮਾਪ = slab & ~NGX_SLAB_ਪੰਨਾ_ਸ਼ੁਰੂ;
 
-        ngx_slab_free_pages(pool, page, size);
+        ngx_slab_free_ਪੰਨੇ(pool, ਪੰਨਾ, ਮਾਪ);
 
-        ngx_slab_junk(p, size << ngx_pagesize_shift);
+        ngx_slab_junk(p, ਮਾਪ << ngx_pagesize_ਖਿਸਕਾਓ);
 
-        return;
+        ਵਾਪਸ;
     }
 
     /* not reached */
 
-    return;
+    ਵਾਪਸ;
 
-done:
+ਪੂਰਾ:
 
-    pool->stats[slot].used--;
+    pool->stats[ਥਾਂ].ਵਰਤਿਆ--;
 
-    ngx_slab_junk(p, size);
+    ngx_slab_junk(p, ਮਾਪ);
 
-    return;
+    ਵਾਪਸ;
 
 wrong_chunk:
 
     ngx_slab_error(pool, NGX_LOG_ALERT,
                    "ngx_slab_free(): pointer to wrong chunk");
 
-    goto fail;
+    ਜਾਓ fail;
 
 chunk_already_free:
 
@@ -670,148 +670,148 @@ chunk_already_free:
 
 fail:
 
-    return;
+    ਵਾਪਸ;
 }
 
 
-static ngx_slab_page_t *
-ngx_slab_alloc_pages(ngx_slab_pool_t *pool, ngx_uint_t pages)
+ਸਥਿਰ ngx_slab_ਪੰਨਾ_t *
+ngx_slab_alloc_ਪੰਨੇ(ngx_slab_pool_t *pool, ngx_uint_t ਪੰਨੇ)
 {
-    ngx_slab_page_t  *page, *p;
+    ngx_slab_ਪੰਨਾ_t  *ਪੰਨਾ, *p;
 
-    for (page = pool->free.next; page != &pool->free; page = page->next) {
+    ਲਈ (ਪੰਨਾ = pool->ਮੁਕਤ.ਅਗਲਾ; ਪੰਨਾ != &pool->ਮੁਕਤ; ਪੰਨਾ = ਪੰਨਾ->ਅਗਲਾ) {
 
-        if (page->slab >= pages) {
+        ਜੇ (ਪੰਨਾ->slab >= ਪੰਨੇ) {
 
-            if (page->slab > pages) {
-                page[page->slab - 1].prev = (uintptr_t) &page[pages];
+            ਜੇ (ਪੰਨਾ->slab > ਪੰਨੇ) {
+                ਪੰਨਾ[ਪੰਨਾ->slab - 1].prev = (uintptr_t) &ਪੰਨਾ[ਪੰਨੇ];
 
-                page[pages].slab = page->slab - pages;
-                page[pages].next = page->next;
-                page[pages].prev = page->prev;
+                ਪੰਨਾ[ਪੰਨੇ].slab = ਪੰਨਾ->slab - ਪੰਨੇ;
+                ਪੰਨਾ[ਪੰਨੇ].ਅਗਲਾ = ਪੰਨਾ->ਅਗਲਾ;
+                ਪੰਨਾ[ਪੰਨੇ].prev = ਪੰਨਾ->prev;
 
-                p = (ngx_slab_page_t *) page->prev;
-                p->next = &page[pages];
-                page->next->prev = (uintptr_t) &page[pages];
+                p = (ngx_slab_ਪੰਨਾ_t *) ਪੰਨਾ->prev;
+                p->ਅਗਲਾ = &ਪੰਨਾ[ਪੰਨੇ];
+                ਪੰਨਾ->ਅਗਲਾ->prev = (uintptr_t) &ਪੰਨਾ[ਪੰਨੇ];
 
-            } else {
-                p = (ngx_slab_page_t *) page->prev;
-                p->next = page->next;
-                page->next->prev = page->prev;
+            } ਨਹੀਂਤਾਂ {
+                p = (ngx_slab_ਪੰਨਾ_t *) ਪੰਨਾ->prev;
+                p->ਅਗਲਾ = ਪੰਨਾ->ਅਗਲਾ;
+                ਪੰਨਾ->ਅਗਲਾ->prev = ਪੰਨਾ->prev;
             }
 
-            page->slab = pages | NGX_SLAB_PAGE_START;
-            page->next = NULL;
-            page->prev = NGX_SLAB_PAGE;
+            ਪੰਨਾ->slab = ਪੰਨੇ | NGX_SLAB_ਪੰਨਾ_ਸ਼ੁਰੂ;
+            ਪੰਨਾ->ਅਗਲਾ = ਨਿਰਾ;
+            ਪੰਨਾ->prev = NGX_SLAB_ਪੰਨਾ;
 
-            pool->pfree -= pages;
+            pool->pfree -= ਪੰਨੇ;
 
-            if (--pages == 0) {
-                return page;
+            ਜੇ (--ਪੰਨੇ == 0) {
+                ਵਾਪਸ ਪੰਨਾ;
             }
 
-            for (p = page + 1; pages; pages--) {
-                p->slab = NGX_SLAB_PAGE_BUSY;
-                p->next = NULL;
-                p->prev = NGX_SLAB_PAGE;
+            ਲਈ (p = ਪੰਨਾ + 1; ਪੰਨੇ; ਪੰਨੇ--) {
+                p->slab = NGX_SLAB_ਪੰਨਾ_BUSY;
+                p->ਅਗਲਾ = ਨਿਰਾ;
+                p->prev = NGX_SLAB_ਪੰਨਾ;
                 p++;
             }
 
-            return page;
+            ਵਾਪਸ ਪੰਨਾ;
         }
     }
 
-    if (pool->log_nomem) {
+    ਜੇ (pool->log_nomem) {
         ngx_slab_error(pool, NGX_LOG_CRIT,
                        "ngx_slab_alloc() failed: no memory");
     }
 
-    return NULL;
+    ਵਾਪਸ ਨਿਰਾ;
 }
 
 
-static void
-ngx_slab_free_pages(ngx_slab_pool_t *pool, ngx_slab_page_t *page,
-    ngx_uint_t pages)
+ਸਥਿਰ ਖਾਲੀ
+ngx_slab_free_ਪੰਨੇ(ngx_slab_pool_t *pool, ngx_slab_ਪੰਨਾ_t *ਪੰਨਾ,
+    ngx_uint_t ਪੰਨੇ)
 {
-    ngx_slab_page_t  *prev, *join;
+    ngx_slab_ਪੰਨਾ_t  *prev, *join;
 
-    pool->pfree += pages;
+    pool->pfree += ਪੰਨੇ;
 
-    page->slab = pages--;
+    ਪੰਨਾ->slab = ਪੰਨੇ--;
 
-    if (pages) {
-        ngx_memzero(&page[1], pages * sizeof(ngx_slab_page_t));
+    ਜੇ (ਪੰਨੇ) {
+        ngx_memzero(&ਪੰਨਾ[1], ਪੰਨੇ * ਆਕਾਰ(ngx_slab_ਪੰਨਾ_t));
     }
 
-    if (page->next) {
-        prev = ngx_slab_page_prev(page);
-        prev->next = page->next;
-        page->next->prev = page->prev;
+    ਜੇ (ਪੰਨਾ->ਅਗਲਾ) {
+        prev = ngx_slab_ਪੰਨਾ_prev(ਪੰਨਾ);
+        prev->ਅਗਲਾ = ਪੰਨਾ->ਅਗਲਾ;
+        ਪੰਨਾ->ਅਗਲਾ->prev = ਪੰਨਾ->prev;
     }
 
-    join = page + page->slab;
+    join = ਪੰਨਾ + ਪੰਨਾ->slab;
 
-    if (join < pool->last) {
+    ਜੇ (join < pool->ਆਖਰੀ) {
 
-        if (ngx_slab_page_type(join) == NGX_SLAB_PAGE) {
+        ਜੇ (ngx_slab_ਪੰਨਾ_type(join) == NGX_SLAB_ਪੰਨਾ) {
 
-            if (join->next != NULL) {
-                pages += join->slab;
-                page->slab += join->slab;
+            ਜੇ (join->ਅਗਲਾ != ਨਿਰਾ) {
+                ਪੰਨੇ += join->slab;
+                ਪੰਨਾ->slab += join->slab;
 
-                prev = ngx_slab_page_prev(join);
-                prev->next = join->next;
-                join->next->prev = join->prev;
+                prev = ngx_slab_ਪੰਨਾ_prev(join);
+                prev->ਅਗਲਾ = join->ਅਗਲਾ;
+                join->ਅਗਲਾ->prev = join->prev;
 
-                join->slab = NGX_SLAB_PAGE_FREE;
-                join->next = NULL;
-                join->prev = NGX_SLAB_PAGE;
+                join->slab = NGX_SLAB_ਪੰਨਾ_FREE;
+                join->ਅਗਲਾ = ਨਿਰਾ;
+                join->prev = NGX_SLAB_ਪੰਨਾ;
             }
         }
     }
 
-    if (page > pool->pages) {
-        join = page - 1;
+    ਜੇ (ਪੰਨਾ > pool->ਪੰਨੇ) {
+        join = ਪੰਨਾ - 1;
 
-        if (ngx_slab_page_type(join) == NGX_SLAB_PAGE) {
+        ਜੇ (ngx_slab_ਪੰਨਾ_type(join) == NGX_SLAB_ਪੰਨਾ) {
 
-            if (join->slab == NGX_SLAB_PAGE_FREE) {
-                join = ngx_slab_page_prev(join);
+            ਜੇ (join->slab == NGX_SLAB_ਪੰਨਾ_FREE) {
+                join = ngx_slab_ਪੰਨਾ_prev(join);
             }
 
-            if (join->next != NULL) {
-                pages += join->slab;
-                join->slab += page->slab;
+            ਜੇ (join->ਅਗਲਾ != ਨਿਰਾ) {
+                ਪੰਨੇ += join->slab;
+                join->slab += ਪੰਨਾ->slab;
 
-                prev = ngx_slab_page_prev(join);
-                prev->next = join->next;
-                join->next->prev = join->prev;
+                prev = ngx_slab_ਪੰਨਾ_prev(join);
+                prev->ਅਗਲਾ = join->ਅਗਲਾ;
+                join->ਅਗਲਾ->prev = join->prev;
 
-                page->slab = NGX_SLAB_PAGE_FREE;
-                page->next = NULL;
-                page->prev = NGX_SLAB_PAGE;
+                ਪੰਨਾ->slab = NGX_SLAB_ਪੰਨਾ_FREE;
+                ਪੰਨਾ->ਅਗਲਾ = ਨਿਰਾ;
+                ਪੰਨਾ->prev = NGX_SLAB_ਪੰਨਾ;
 
-                page = join;
+                ਪੰਨਾ = join;
             }
         }
     }
 
-    if (pages) {
-        page[pages].prev = (uintptr_t) page;
+    ਜੇ (ਪੰਨੇ) {
+        ਪੰਨਾ[ਪੰਨੇ].prev = (uintptr_t) ਪੰਨਾ;
     }
 
-    page->prev = (uintptr_t) &pool->free;
-    page->next = pool->free.next;
+    ਪੰਨਾ->prev = (uintptr_t) &pool->ਮੁਕਤ;
+    ਪੰਨਾ->ਅਗਲਾ = pool->ਮੁਕਤ.ਅਗਲਾ;
 
-    page->next->prev = (uintptr_t) page;
+    ਪੰਨਾ->ਅਗਲਾ->prev = (uintptr_t) ਪੰਨਾ;
 
-    pool->free.next = page;
+    pool->ਮੁਕਤ.ਅਗਲਾ = ਪੰਨਾ;
 }
 
 
-static void
-ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level, char *text)
+ਸਥਿਰ ਖਾਲੀ
+ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level, ਅੱਖਰ *ਪਾਠ)
 {
-    ngx_log_error(level, ngx_cycle->log, 0, "%s%s", text, pool->log_ctx);
+    ngx_log_error(level, ngx_ਚੱਕਰ->ਲਘੂਗਣਕ, 0, "%s%s", ਪਾਠ, pool->log_ctx);
 }

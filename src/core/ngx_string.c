@@ -5,24 +5,24 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-static u_char *ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64,
-    u_char zero, ngx_uint_t hexadecimal, ngx_uint_t width);
-static u_char *ngx_sprintf_str(u_char *buf, u_char *last, u_char *src,
-    size_t len, ngx_uint_t hexadecimal);
-static void ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src,
-    const u_char *basis, ngx_uint_t padding);
-static ngx_int_t ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src,
-    const u_char *basis);
+ਸਥਿਰ u_char *ngx_sprintf_ਅੰਕ(u_char *buf, u_char *ਆਖਰੀ, uint64_t ui64,
+    u_char zero, ngx_uint_t hexadecimal, ngx_uint_t ਚੌੜਾਈ);
+ਸਥਿਰ u_char *ngx_sprintf_str(u_char *buf, u_char *ਆਖਰੀ, u_char *src,
+    ਮਾਪ_t len, ngx_uint_t hexadecimal);
+ਸਥਿਰ ਖਾਲੀ ngx_encode_base64_ਅੰਦਰੂਨੀ(ngx_str_t *dst, ngx_str_t *src,
+    ਅਚਲ u_char *basis, ngx_uint_t padding);
+ਸਥਿਰ ngx_int_t ngx_decode_base64_ਅੰਦਰੂਨੀ(ngx_str_t *dst, ngx_str_t *src,
+    ਅਚਲ u_char *basis);
 
 
-void
-ngx_strlow(u_char *dst, u_char *src, size_t n)
+ਖਾਲੀ
+ngx_strlow(u_char *dst, u_char *src, ਮਾਪ_t n)
 {
-    while (n) {
+    ਜਦੋਂ (n) {
         *dst = ngx_tolower(*src);
         dst++;
         src++;
@@ -31,34 +31,34 @@ ngx_strlow(u_char *dst, u_char *src, size_t n)
 }
 
 
-size_t
-ngx_strnlen(u_char *p, size_t n)
+ਮਾਪ_t
+ngx_strnlen(u_char *p, ਮਾਪ_t n)
 {
-    size_t  i;
+    ਮਾਪ_t  i;
 
-    for (i = 0; i < n; i++) {
+    ਲਈ (i = 0; i < n; i++) {
 
-        if (p[i] == '\0') {
-            return i;
+        ਜੇ (p[i] == '\0') {
+            ਵਾਪਸ i;
         }
     }
 
-    return n;
+    ਵਾਪਸ n;
 }
 
 
 u_char *
-ngx_cpystrn(u_char *dst, u_char *src, size_t n)
+ngx_cpystrn(u_char *dst, u_char *src, ਮਾਪ_t n)
 {
-    if (n == 0) {
-        return dst;
+    ਜੇ (n == 0) {
+        ਵਾਪਸ dst;
     }
 
-    while (--n) {
+    ਜਦੋਂ (--n) {
         *dst = *src;
 
-        if (*dst == '\0') {
-            return dst;
+        ਜੇ (*dst == '\0') {
+            ਵਾਪਸ dst;
         }
 
         dst++;
@@ -67,7 +67,7 @@ ngx_cpystrn(u_char *dst, u_char *src, size_t n)
 
     *dst = '\0';
 
-    return dst;
+    ਵਾਪਸ dst;
 }
 
 
@@ -77,13 +77,13 @@ ngx_pstrdup(ngx_pool_t *pool, ngx_str_t *src)
     u_char  *dst;
 
     dst = ngx_pnalloc(pool, src->len);
-    if (dst == NULL) {
-        return NULL;
+    ਜੇ (dst == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    ngx_memcpy(dst, src->data, src->len);
+    ngx_memcpy(dst, src->ਅੰਕੜੇ, src->len);
 
-    return dst;
+    ਵਾਪਸ dst;
 }
 
 
@@ -120,255 +120,255 @@ ngx_pstrdup(ngx_pool_t *pool, ngx_str_t *src)
 
 
 u_char * ngx_cdecl
-ngx_sprintf(u_char *buf, const char *fmt, ...)
+ngx_sprintf(u_char *buf, ਅਚਲ ਅੱਖਰ *fmt, ...)
 {
     u_char   *p;
-    va_list   args;
+    va_list   ਦਲੀਲਾਂ;
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(buf, (void *) -1, fmt, args);
-    va_end(args);
+    va_ਸ਼ੁਰੂ(ਦਲੀਲਾਂ, fmt);
+    p = ngx_vslprintf(buf, (ਖਾਲੀ *) -1, fmt, ਦਲੀਲਾਂ);
+    va_ਸਿਰਾ(ਦਲੀਲਾਂ);
 
-    return p;
+    ਵਾਪਸ p;
 }
 
 
 u_char * ngx_cdecl
-ngx_snprintf(u_char *buf, size_t max, const char *fmt, ...)
+ngx_snprintf(u_char *buf, ਮਾਪ_t max, ਅਚਲ ਅੱਖਰ *fmt, ...)
 {
     u_char   *p;
-    va_list   args;
+    va_list   ਦਲੀਲਾਂ;
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(buf, buf + max, fmt, args);
-    va_end(args);
+    va_ਸ਼ੁਰੂ(ਦਲੀਲਾਂ, fmt);
+    p = ngx_vslprintf(buf, buf + max, fmt, ਦਲੀਲਾਂ);
+    va_ਸਿਰਾ(ਦਲੀਲਾਂ);
 
-    return p;
+    ਵਾਪਸ p;
 }
 
 
 u_char * ngx_cdecl
-ngx_slprintf(u_char *buf, u_char *last, const char *fmt, ...)
+ngx_slprintf(u_char *buf, u_char *ਆਖਰੀ, ਅਚਲ ਅੱਖਰ *fmt, ...)
 {
     u_char   *p;
-    va_list   args;
+    va_list   ਦਲੀਲਾਂ;
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(buf, last, fmt, args);
-    va_end(args);
+    va_ਸ਼ੁਰੂ(ਦਲੀਲਾਂ, fmt);
+    p = ngx_vslprintf(buf, ਆਖਰੀ, fmt, ਦਲੀਲਾਂ);
+    va_ਸਿਰਾ(ਦਲੀਲਾਂ);
 
-    return p;
+    ਵਾਪਸ p;
 }
 
 
 u_char *
-ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
+ngx_vslprintf(u_char *buf, u_char *ਆਖਰੀ, ਅਚਲ ਅੱਖਰ *fmt, va_list ਦਲੀਲਾਂ)
 {
     u_char                *p, zero;
-    int                    d;
-    double                 f;
-    size_t                 slen;
+    ਪੂਰਨ                    d;
+    ਦੁੱਗਣਾ                 f;
+    ਮਾਪ_t                 slen;
     int64_t                i64;
     uint64_t               ui64, frac;
     ngx_msec_t             ms;
-    ngx_uint_t             width, sign, hex, max_width, frac_width, scale, n;
+    ngx_uint_t             ਚੌੜਾਈ, sign, hex, max_ਚੌੜਾਈ, frac_ਚੌੜਾਈ, scale, n;
     ngx_str_t             *v;
-    ngx_variable_value_t  *vv;
+    ngx_variable_ਮੁੱਲ_t  *vv;
 
-    while (*fmt && buf < last) {
+    ਜਦੋਂ (*fmt && buf < ਆਖਰੀ) {
 
         /*
          * "buf < last" means that we could copy at least one character:
          * the plain character, "%%", "%c", and minus without the checking
          */
 
-        if (*fmt == '%') {
+        ਜੇ (*fmt == '%') {
 
             i64 = 0;
             ui64 = 0;
 
             zero = (u_char) ((*++fmt == '0') ? '0' : ' ');
-            width = 0;
+            ਚੌੜਾਈ = 0;
             sign = 1;
             hex = 0;
-            max_width = 0;
-            frac_width = 0;
-            slen = (size_t) -1;
+            max_ਚੌੜਾਈ = 0;
+            frac_ਚੌੜਾਈ = 0;
+            slen = (ਮਾਪ_t) -1;
 
-            while (*fmt >= '0' && *fmt <= '9') {
-                width = width * 10 + (*fmt++ - '0');
+            ਜਦੋਂ (*fmt >= '0' && *fmt <= '9') {
+                ਚੌੜਾਈ = ਚੌੜਾਈ * 10 + (*fmt++ - '0');
             }
 
 
-            for ( ;; ) {
-                switch (*fmt) {
+            ਲਈ ( ;; ) {
+                ਚੋਣ (*fmt) {
 
-                case 'u':
+                ਹਾਲਤ 'u':
                     sign = 0;
                     fmt++;
-                    continue;
+                    ਜਾਰੀ;
 
-                case 'm':
-                    max_width = 1;
+                ਹਾਲਤ 'm':
+                    max_ਚੌੜਾਈ = 1;
                     fmt++;
-                    continue;
+                    ਜਾਰੀ;
 
-                case 'X':
+                ਹਾਲਤ 'X':
                     hex = 2;
                     sign = 0;
                     fmt++;
-                    continue;
+                    ਜਾਰੀ;
 
-                case 'x':
+                ਹਾਲਤ 'x':
                     hex = 1;
                     sign = 0;
                     fmt++;
-                    continue;
+                    ਜਾਰੀ;
 
-                case '.':
+                ਹਾਲਤ '.':
                     fmt++;
 
-                    while (*fmt >= '0' && *fmt <= '9') {
-                        frac_width = frac_width * 10 + (*fmt++ - '0');
+                    ਜਦੋਂ (*fmt >= '0' && *fmt <= '9') {
+                        frac_ਚੌੜਾਈ = frac_ਚੌੜਾਈ * 10 + (*fmt++ - '0');
                     }
 
-                    break;
+                    ਰੋਕੋ;
 
-                case '*':
-                    slen = va_arg(args, size_t);
+                ਹਾਲਤ '*':
+                    slen = va_arg(ਦਲੀਲਾਂ, ਮਾਪ_t);
                     fmt++;
-                    continue;
+                    ਜਾਰੀ;
 
-                default:
-                    break;
+                ਮੂਲ:
+                    ਰੋਕੋ;
                 }
 
-                break;
+                ਰੋਕੋ;
             }
 
 
-            switch (*fmt) {
+            ਚੋਣ (*fmt) {
 
-            case 'V':
-                v = va_arg(args, ngx_str_t *);
+            ਹਾਲਤ 'V':
+                v = va_arg(ਦਲੀਲਾਂ, ngx_str_t *);
 
-                buf = ngx_sprintf_str(buf, last, v->data, v->len, hex);
+                buf = ngx_sprintf_str(buf, ਆਖਰੀ, v->ਅੰਕੜੇ, v->len, hex);
                 fmt++;
 
-                continue;
+                ਜਾਰੀ;
 
-            case 'v':
-                vv = va_arg(args, ngx_variable_value_t *);
+            ਹਾਲਤ 'v':
+                vv = va_arg(ਦਲੀਲਾਂ, ngx_variable_ਮੁੱਲ_t *);
 
-                buf = ngx_sprintf_str(buf, last, vv->data, vv->len, hex);
+                buf = ngx_sprintf_str(buf, ਆਖਰੀ, vv->ਅੰਕੜੇ, vv->len, hex);
                 fmt++;
 
-                continue;
+                ਜਾਰੀ;
 
-            case 's':
-                p = va_arg(args, u_char *);
+            ਹਾਲਤ 's':
+                p = va_arg(ਦਲੀਲਾਂ, u_char *);
 
-                buf = ngx_sprintf_str(buf, last, p, slen, hex);
+                buf = ngx_sprintf_str(buf, ਆਖਰੀ, p, slen, hex);
                 fmt++;
 
-                continue;
+                ਜਾਰੀ;
 
-            case 'O':
-                i64 = (int64_t) va_arg(args, off_t);
+            ਹਾਲਤ 'O':
+                i64 = (int64_t) va_arg(ਦਲੀਲਾਂ, off_t);
                 sign = 1;
-                break;
+                ਰੋਕੋ;
 
-            case 'P':
-                i64 = (int64_t) va_arg(args, ngx_pid_t);
+            ਹਾਲਤ 'P':
+                i64 = (int64_t) va_arg(ਦਲੀਲਾਂ, ngx_pid_t);
                 sign = 1;
-                break;
+                ਰੋਕੋ;
 
-            case 'T':
-                i64 = (int64_t) va_arg(args, time_t);
+            ਹਾਲਤ 'T':
+                i64 = (int64_t) va_arg(ਦਲੀਲਾਂ, ਸਮਾਂ_t);
                 sign = 1;
-                break;
+                ਰੋਕੋ;
 
-            case 'M':
-                ms = (ngx_msec_t) va_arg(args, ngx_msec_t);
-                if ((ngx_msec_int_t) ms == -1) {
+            ਹਾਲਤ 'M':
+                ms = (ngx_msec_t) va_arg(ਦਲੀਲਾਂ, ngx_msec_t);
+                ਜੇ ((ngx_msec_int_t) ms == -1) {
                     sign = 1;
                     i64 = -1;
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     sign = 0;
                     ui64 = (uint64_t) ms;
                 }
-                break;
+                ਰੋਕੋ;
 
-            case 'z':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, ssize_t);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, size_t);
+            ਹਾਲਤ 'z':
+                ਜੇ (sign) {
+                    i64 = (int64_t) va_arg(ਦਲੀਲਾਂ, ssize_t);
+                } ਨਹੀਂਤਾਂ {
+                    ui64 = (uint64_t) va_arg(ਦਲੀਲਾਂ, ਮਾਪ_t);
                 }
-                break;
+                ਰੋਕੋ;
 
-            case 'i':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, ngx_int_t);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, ngx_uint_t);
-                }
-
-                if (max_width) {
-                    width = NGX_INT_T_LEN;
+            ਹਾਲਤ 'i':
+                ਜੇ (sign) {
+                    i64 = (int64_t) va_arg(ਦਲੀਲਾਂ, ngx_int_t);
+                } ਨਹੀਂਤਾਂ {
+                    ui64 = (uint64_t) va_arg(ਦਲੀਲਾਂ, ngx_uint_t);
                 }
 
-                break;
-
-            case 'd':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, int);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, u_int);
-                }
-                break;
-
-            case 'l':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, long);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, u_long);
-                }
-                break;
-
-            case 'D':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, int32_t);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, uint32_t);
-                }
-                break;
-
-            case 'L':
-                if (sign) {
-                    i64 = va_arg(args, int64_t);
-                } else {
-                    ui64 = va_arg(args, uint64_t);
-                }
-                break;
-
-            case 'A':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, ngx_atomic_int_t);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, ngx_atomic_uint_t);
+                ਜੇ (max_ਚੌੜਾਈ) {
+                    ਚੌੜਾਈ = NGX_INT_T_LEN;
                 }
 
-                if (max_width) {
-                    width = NGX_ATOMIC_T_LEN;
+                ਰੋਕੋ;
+
+            ਹਾਲਤ 'd':
+                ਜੇ (sign) {
+                    i64 = (int64_t) va_arg(ਦਲੀਲਾਂ, ਪੂਰਨ);
+                } ਨਹੀਂਤਾਂ {
+                    ui64 = (uint64_t) va_arg(ਦਲੀਲਾਂ, u_int);
+                }
+                ਰੋਕੋ;
+
+            ਹਾਲਤ 'l':
+                ਜੇ (sign) {
+                    i64 = (int64_t) va_arg(ਦਲੀਲਾਂ, ਲੰਮਾ);
+                } ਨਹੀਂਤਾਂ {
+                    ui64 = (uint64_t) va_arg(ਦਲੀਲਾਂ, u_long);
+                }
+                ਰੋਕੋ;
+
+            ਹਾਲਤ 'D':
+                ਜੇ (sign) {
+                    i64 = (int64_t) va_arg(ਦਲੀਲਾਂ, int32_t);
+                } ਨਹੀਂਤਾਂ {
+                    ui64 = (uint64_t) va_arg(ਦਲੀਲਾਂ, uint32_t);
+                }
+                ਰੋਕੋ;
+
+            ਹਾਲਤ 'L':
+                ਜੇ (sign) {
+                    i64 = va_arg(ਦਲੀਲਾਂ, int64_t);
+                } ਨਹੀਂਤਾਂ {
+                    ui64 = va_arg(ਦਲੀਲਾਂ, uint64_t);
+                }
+                ਰੋਕੋ;
+
+            ਹਾਲਤ 'A':
+                ਜੇ (sign) {
+                    i64 = (int64_t) va_arg(ਦਲੀਲਾਂ, ngx_atomic_int_t);
+                } ਨਹੀਂਤਾਂ {
+                    ui64 = (uint64_t) va_arg(ਦਲੀਲਾਂ, ngx_atomic_uint_t);
                 }
 
-                break;
+                ਜੇ (max_ਚੌੜਾਈ) {
+                    ਚੌੜਾਈ = NGX_ATOMIC_T_LEN;
+                }
 
-            case 'f':
-                f = va_arg(args, double);
+                ਰੋਕੋ;
 
-                if (f < 0) {
+            ਹਾਲਤ 'f':
+                f = va_arg(ਦਲੀਲਾਂ, ਦੁੱਗਣਾ);
+
+                ਜੇ (f < 0) {
                     *buf++ = '-';
                     f = -f;
                 }
@@ -376,130 +376,130 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
                 ui64 = (int64_t) f;
                 frac = 0;
 
-                if (frac_width) {
+                ਜੇ (frac_ਚੌੜਾਈ) {
 
                     scale = 1;
-                    for (n = frac_width; n; n--) {
+                    ਲਈ (n = frac_ਚੌੜਾਈ; n; n--) {
                         scale *= 10;
                     }
 
-                    frac = (uint64_t) ((f - (double) ui64) * scale + 0.5);
+                    frac = (uint64_t) ((f - (ਦੁੱਗਣਾ) ui64) * scale + 0.5);
 
-                    if (frac == scale) {
+                    ਜੇ (frac == scale) {
                         ui64++;
                         frac = 0;
                     }
                 }
 
-                buf = ngx_sprintf_num(buf, last, ui64, zero, 0, width);
+                buf = ngx_sprintf_ਅੰਕ(buf, ਆਖਰੀ, ui64, zero, 0, ਚੌੜਾਈ);
 
-                if (frac_width) {
-                    if (buf < last) {
+                ਜੇ (frac_ਚੌੜਾਈ) {
+                    ਜੇ (buf < ਆਖਰੀ) {
                         *buf++ = '.';
                     }
 
-                    buf = ngx_sprintf_num(buf, last, frac, '0', 0, frac_width);
+                    buf = ngx_sprintf_ਅੰਕ(buf, ਆਖਰੀ, frac, '0', 0, frac_ਚੌੜਾਈ);
                 }
 
                 fmt++;
 
-                continue;
+                ਜਾਰੀ;
 
-#if !(NGX_WIN32)
-            case 'r':
-                i64 = (int64_t) va_arg(args, rlim_t);
+#ਜੇ !(NGX_WIN32)
+            ਹਾਲਤ 'r':
+                i64 = (int64_t) va_arg(ਦਲੀਲਾਂ, rlim_t);
                 sign = 1;
-                break;
-#endif
+                ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
 
-            case 'p':
-                ui64 = (uintptr_t) va_arg(args, void *);
+            ਹਾਲਤ 'p':
+                ui64 = (uintptr_t) va_arg(ਦਲੀਲਾਂ, ਖਾਲੀ *);
                 hex = 2;
                 sign = 0;
                 zero = '0';
-                width = 2 * sizeof(void *);
-                break;
+                ਚੌੜਾਈ = 2 * ਆਕਾਰ(ਖਾਲੀ *);
+                ਰੋਕੋ;
 
-            case 'c':
-                d = va_arg(args, int);
+            ਹਾਲਤ 'c':
+                d = va_arg(ਦਲੀਲਾਂ, ਪੂਰਨ);
                 *buf++ = (u_char) (d & 0xff);
                 fmt++;
 
-                continue;
+                ਜਾਰੀ;
 
-            case 'Z':
+            ਹਾਲਤ 'Z':
                 *buf++ = '\0';
                 fmt++;
 
-                continue;
+                ਜਾਰੀ;
 
-            case 'N':
-#if (NGX_WIN32)
+            ਹਾਲਤ 'N':
+#ਜੇ (NGX_WIN32)
                 *buf++ = CR;
-                if (buf < last) {
+                ਜੇ (buf < ਆਖਰੀ) {
                     *buf++ = LF;
                 }
-#else
+#ਨਹੀਂਤਾਂ
                 *buf++ = LF;
-#endif
+#ਜੇ_ਅੰਤ
                 fmt++;
 
-                continue;
+                ਜਾਰੀ;
 
-            case '%':
+            ਹਾਲਤ '%':
                 *buf++ = '%';
                 fmt++;
 
-                continue;
+                ਜਾਰੀ;
 
-            default:
+            ਮੂਲ:
                 *buf++ = *fmt++;
 
-                continue;
+                ਜਾਰੀ;
             }
 
-            if (sign) {
-                if (i64 < 0) {
+            ਜੇ (sign) {
+                ਜੇ (i64 < 0) {
                     *buf++ = '-';
                     ui64 = (uint64_t) -i64;
 
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     ui64 = (uint64_t) i64;
                 }
             }
 
-            buf = ngx_sprintf_num(buf, last, ui64, zero, hex, width);
+            buf = ngx_sprintf_ਅੰਕ(buf, ਆਖਰੀ, ui64, zero, hex, ਚੌੜਾਈ);
 
             fmt++;
 
-        } else {
+        } ਨਹੀਂਤਾਂ {
             *buf++ = *fmt++;
         }
     }
 
-    return buf;
+    ਵਾਪਸ buf;
 }
 
 
-static u_char *
-ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
-    ngx_uint_t hexadecimal, ngx_uint_t width)
+ਸਥਿਰ u_char *
+ngx_sprintf_ਅੰਕ(u_char *buf, u_char *ਆਖਰੀ, uint64_t ui64, u_char zero,
+    ngx_uint_t hexadecimal, ngx_uint_t ਚੌੜਾਈ)
 {
-    u_char         *p, temp[NGX_INT64_LEN + 1];
+    u_char         *p, ਆਰਜ਼ੀ[NGX_INT64_LEN + 1];
                        /*
                         * we need temp[NGX_INT64_LEN] only,
                         * but icc issues the warning
                         */
-    size_t          len;
+    ਮਾਪ_t          len;
     uint32_t        ui32;
-    static u_char   hex[] = "0123456789abcdef";
-    static u_char   HEX[] = "0123456789ABCDEF";
+    ਸਥਿਰ u_char   hex[] = "0123456789abcdef";
+    ਸਥਿਰ u_char   HEX[] = "0123456789ABCDEF";
 
-    p = temp + NGX_INT64_LEN;
+    p = ਆਰਜ਼ੀ + NGX_INT64_LEN;
 
-    if (hexadecimal == 0) {
+    ਜੇ (hexadecimal == 0) {
 
-        if (ui64 <= (uint64_t) NGX_MAX_UINT32_VALUE) {
+        ਜੇ (ui64 <= (uint64_t) NGX_MAX_UINT32_ਮੁੱਲ) {
 
             /*
              * To divide 64-bit numbers and to find remainders
@@ -518,110 +518,110 @@ ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
 
             ui32 = (uint32_t) ui64;
 
-            do {
+            ਕਰੋ {
                 *--p = (u_char) (ui32 % 10 + '0');
-            } while (ui32 /= 10);
+            } ਜਦੋਂ (ui32 /= 10);
 
-        } else {
-            do {
+        } ਨਹੀਂਤਾਂ {
+            ਕਰੋ {
                 *--p = (u_char) (ui64 % 10 + '0');
-            } while (ui64 /= 10);
+            } ਜਦੋਂ (ui64 /= 10);
         }
 
-    } else if (hexadecimal == 1) {
+    } ਨਹੀਂਤਾਂ ਜੇ (hexadecimal == 1) {
 
-        do {
+        ਕਰੋ {
 
             /* the "(uint32_t)" cast disables the BCC's warning */
             *--p = hex[(uint32_t) (ui64 & 0xf)];
 
-        } while (ui64 >>= 4);
+        } ਜਦੋਂ (ui64 >>= 4);
 
-    } else { /* hexadecimal == 2 */
+    } ਨਹੀਂਤਾਂ { /* hexadecimal == 2 */
 
-        do {
+        ਕਰੋ {
 
             /* the "(uint32_t)" cast disables the BCC's warning */
             *--p = HEX[(uint32_t) (ui64 & 0xf)];
 
-        } while (ui64 >>= 4);
+        } ਜਦੋਂ (ui64 >>= 4);
     }
 
     /* zero or space padding */
 
-    len = (temp + NGX_INT64_LEN) - p;
+    len = (ਆਰਜ਼ੀ + NGX_INT64_LEN) - p;
 
-    while (len++ < width && buf < last) {
+    ਜਦੋਂ (len++ < ਚੌੜਾਈ && buf < ਆਖਰੀ) {
         *buf++ = zero;
     }
 
     /* number safe copy */
 
-    len = (temp + NGX_INT64_LEN) - p;
+    len = (ਆਰਜ਼ੀ + NGX_INT64_LEN) - p;
 
-    if (buf + len > last) {
-        len = last - buf;
+    ਜੇ (buf + len > ਆਖਰੀ) {
+        len = ਆਖਰੀ - buf;
     }
 
-    return ngx_cpymem(buf, p, len);
+    ਵਾਪਸ ngx_cpymem(buf, p, len);
 }
 
 
-static u_char *
-ngx_sprintf_str(u_char *buf, u_char *last, u_char *src, size_t len,
+ਸਥਿਰ u_char *
+ngx_sprintf_str(u_char *buf, u_char *ਆਖਰੀ, u_char *src, ਮਾਪ_t len,
     ngx_uint_t hexadecimal)
 {
-    static u_char   hex[] = "0123456789abcdef";
-    static u_char   HEX[] = "0123456789ABCDEF";
+    ਸਥਿਰ u_char   hex[] = "0123456789abcdef";
+    ਸਥਿਰ u_char   HEX[] = "0123456789ABCDEF";
 
-    if (hexadecimal == 0) {
+    ਜੇ (hexadecimal == 0) {
 
-        if (len == (size_t) -1) {
-            while (*src && buf < last) {
+        ਜੇ (len == (ਮਾਪ_t) -1) {
+            ਜਦੋਂ (*src && buf < ਆਖਰੀ) {
                 *buf++ = *src++;
             }
 
-        } else {
-            len = ngx_min((size_t) (last - buf), len);
+        } ਨਹੀਂਤਾਂ {
+            len = ngx_min((ਮਾਪ_t) (ਆਖਰੀ - buf), len);
             buf = ngx_cpymem(buf, src, len);
         }
 
-    } else if (hexadecimal == 1) {
+    } ਨਹੀਂਤਾਂ ਜੇ (hexadecimal == 1) {
 
-        if (len == (size_t) -1) {
+        ਜੇ (len == (ਮਾਪ_t) -1) {
 
-            while (*src && buf < last - 1) {
+            ਜਦੋਂ (*src && buf < ਆਖਰੀ - 1) {
                 *buf++ = hex[*src >> 4];
                 *buf++ = hex[*src++ & 0xf];
             }
 
-        } else {
+        } ਨਹੀਂਤਾਂ {
 
-            while (len-- && buf < last - 1) {
+            ਜਦੋਂ (len-- && buf < ਆਖਰੀ - 1) {
                 *buf++ = hex[*src >> 4];
                 *buf++ = hex[*src++ & 0xf];
             }
         }
 
-    } else { /* hexadecimal == 2 */
+    } ਨਹੀਂਤਾਂ { /* hexadecimal == 2 */
 
-        if (len == (size_t) -1) {
+        ਜੇ (len == (ਮਾਪ_t) -1) {
 
-            while (*src && buf < last - 1) {
+            ਜਦੋਂ (*src && buf < ਆਖਰੀ - 1) {
                 *buf++ = HEX[*src >> 4];
                 *buf++ = HEX[*src++ & 0xf];
             }
 
-        } else {
+        } ਨਹੀਂਤਾਂ {
 
-            while (len-- && buf < last - 1) {
+            ਜਦੋਂ (len-- && buf < ਆਖਰੀ - 1) {
                 *buf++ = HEX[*src >> 4];
                 *buf++ = HEX[*src++ & 0xf];
             }
         }
     }
 
-    return buf;
+    ਵਾਪਸ buf;
 }
 
 
@@ -637,87 +637,87 @@ ngx_strcasecmp(u_char *s1, u_char *s2)
 {
     ngx_uint_t  c1, c2;
 
-    for ( ;; ) {
+    ਲਈ ( ;; ) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        ਜੇ (c1 == c2) {
 
-            if (c1) {
-                continue;
+            ਜੇ (c1) {
+                ਜਾਰੀ;
             }
 
-            return 0;
+            ਵਾਪਸ 0;
         }
 
-        return c1 - c2;
+        ਵਾਪਸ c1 - c2;
     }
 }
 
 
 ngx_int_t
-ngx_strncasecmp(u_char *s1, u_char *s2, size_t n)
+ngx_strncasecmp(u_char *s1, u_char *s2, ਮਾਪ_t n)
 {
     ngx_uint_t  c1, c2;
 
-    while (n) {
+    ਜਦੋਂ (n) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        ਜੇ (c1 == c2) {
 
-            if (c1) {
+            ਜੇ (c1) {
                 n--;
-                continue;
+                ਜਾਰੀ;
             }
 
-            return 0;
+            ਵਾਪਸ 0;
         }
 
-        return c1 - c2;
+        ਵਾਪਸ c1 - c2;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
 
 u_char *
-ngx_strnstr(u_char *s1, char *s2, size_t len)
+ngx_strnstr(u_char *s1, ਅੱਖਰ *s2, ਮਾਪ_t len)
 {
     u_char  c1, c2;
-    size_t  n;
+    ਮਾਪ_t  n;
 
     c2 = *(u_char *) s2++;
 
     n = ngx_strlen(s2);
 
-    do {
-        do {
-            if (len-- == 0) {
-                return NULL;
+    ਕਰੋ {
+        ਕਰੋ {
+            ਜੇ (len-- == 0) {
+                ਵਾਪਸ ਨਿਰਾ;
             }
 
             c1 = *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            ਜੇ (c1 == 0) {
+                ਵਾਪਸ ਨਿਰਾ;
             }
 
-        } while (c1 != c2);
+        } ਜਦੋਂ (c1 != c2);
 
-        if (n > len) {
-            return NULL;
+        ਜੇ (n > len) {
+            ਵਾਪਸ ਨਿਰਾ;
         }
 
-    } while (ngx_strncmp(s1, (u_char *) s2, n) != 0);
+    } ਜਦੋਂ (ngx_strncmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    ਵਾਪਸ --s1;
 }
 
 
@@ -728,51 +728,51 @@ ngx_strnstr(u_char *s1, char *s2, size_t len)
  */
 
 u_char *
-ngx_strstrn(u_char *s1, char *s2, size_t n)
+ngx_strstrn(u_char *s1, ਅੱਖਰ *s2, ਮਾਪ_t n)
 {
     u_char  c1, c2;
 
     c2 = *(u_char *) s2++;
 
-    do {
-        do {
+    ਕਰੋ {
+        ਕਰੋ {
             c1 = *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            ਜੇ (c1 == 0) {
+                ਵਾਪਸ ਨਿਰਾ;
             }
 
-        } while (c1 != c2);
+        } ਜਦੋਂ (c1 != c2);
 
-    } while (ngx_strncmp(s1, (u_char *) s2, n) != 0);
+    } ਜਦੋਂ (ngx_strncmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    ਵਾਪਸ --s1;
 }
 
 
 u_char *
-ngx_strcasestrn(u_char *s1, char *s2, size_t n)
+ngx_strcasestrn(u_char *s1, ਅੱਖਰ *s2, ਮਾਪ_t n)
 {
     ngx_uint_t  c1, c2;
 
     c2 = (ngx_uint_t) *s2++;
     c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-    do {
-        do {
+    ਕਰੋ {
+        ਕਰੋ {
             c1 = (ngx_uint_t) *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            ਜੇ (c1 == 0) {
+                ਵਾਪਸ ਨਿਰਾ;
             }
 
             c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
 
-        } while (c1 != c2);
+        } ਜਦੋਂ (c1 != c2);
 
-    } while (ngx_strncasecmp(s1, (u_char *) s2, n) != 0);
+    } ਜਦੋਂ (ngx_strncasecmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    ਵਾਪਸ --s1;
 }
 
 
@@ -783,48 +783,48 @@ ngx_strcasestrn(u_char *s1, char *s2, size_t n)
  */
 
 u_char *
-ngx_strlcasestrn(u_char *s1, u_char *last, u_char *s2, size_t n)
+ngx_strlcasestrn(u_char *s1, u_char *ਆਖਰੀ, u_char *s2, ਮਾਪ_t n)
 {
     ngx_uint_t  c1, c2;
 
     c2 = (ngx_uint_t) *s2++;
     c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
-    last -= n;
+    ਆਖਰੀ -= n;
 
-    do {
-        do {
-            if (s1 >= last) {
-                return NULL;
+    ਕਰੋ {
+        ਕਰੋ {
+            ਜੇ (s1 >= ਆਖਰੀ) {
+                ਵਾਪਸ ਨਿਰਾ;
             }
 
             c1 = (ngx_uint_t) *s1++;
 
             c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
 
-        } while (c1 != c2);
+        } ਜਦੋਂ (c1 != c2);
 
-    } while (ngx_strncasecmp(s1, s2, n) != 0);
+    } ਜਦੋਂ (ngx_strncasecmp(s1, s2, n) != 0);
 
-    return --s1;
+    ਵਾਪਸ --s1;
 }
 
 
 ngx_int_t
-ngx_rstrncmp(u_char *s1, u_char *s2, size_t n)
+ngx_rstrncmp(u_char *s1, u_char *s2, ਮਾਪ_t n)
 {
-    if (n == 0) {
-        return 0;
+    ਜੇ (n == 0) {
+        ਵਾਪਸ 0;
     }
 
     n--;
 
-    for ( ;; ) {
-        if (s1[n] != s2[n]) {
-            return s1[n] - s2[n];
+    ਲਈ ( ;; ) {
+        ਜੇ (s1[n] != s2[n]) {
+            ਵਾਪਸ s1[n] - s2[n];
         }
 
-        if (n == 0) {
-            return 0;
+        ਜੇ (n == 0) {
+            ਵਾਪਸ 0;
         }
 
         n--;
@@ -833,33 +833,33 @@ ngx_rstrncmp(u_char *s1, u_char *s2, size_t n)
 
 
 ngx_int_t
-ngx_rstrncasecmp(u_char *s1, u_char *s2, size_t n)
+ngx_rstrncasecmp(u_char *s1, u_char *s2, ਮਾਪ_t n)
 {
     u_char  c1, c2;
 
-    if (n == 0) {
-        return 0;
+    ਜੇ (n == 0) {
+        ਵਾਪਸ 0;
     }
 
     n--;
 
-    for ( ;; ) {
+    ਲਈ ( ;; ) {
         c1 = s1[n];
-        if (c1 >= 'a' && c1 <= 'z') {
+        ਜੇ (c1 >= 'a' && c1 <= 'z') {
             c1 -= 'a' - 'A';
         }
 
         c2 = s2[n];
-        if (c2 >= 'a' && c2 <= 'z') {
+        ਜੇ (c2 >= 'a' && c2 <= 'z') {
             c2 -= 'a' - 'A';
         }
 
-        if (c1 != c2) {
-            return c1 - c2;
+        ਜੇ (c1 != c2) {
+            ਵਾਪਸ c1 - c2;
         }
 
-        if (n == 0) {
-            return 0;
+        ਜੇ (n == 0) {
+            ਵਾਪਸ 0;
         }
 
         n--;
@@ -868,27 +868,27 @@ ngx_rstrncasecmp(u_char *s1, u_char *s2, size_t n)
 
 
 ngx_int_t
-ngx_memn2cmp(u_char *s1, u_char *s2, size_t n1, size_t n2)
+ngx_memn2cmp(u_char *s1, u_char *s2, ਮਾਪ_t n1, ਮਾਪ_t n2)
 {
-    size_t     n;
+    ਮਾਪ_t     n;
     ngx_int_t  m, z;
 
-    if (n1 <= n2) {
+    ਜੇ (n1 <= n2) {
         n = n1;
         z = -1;
 
-    } else {
+    } ਨਹੀਂਤਾਂ {
         n = n2;
         z = 1;
     }
 
     m = ngx_memcmp(s1, s2, n);
 
-    if (m || n1 == n2) {
-        return m;
+    ਜੇ (m || n1 == n2) {
+        ਵਾਪਸ m;
     }
 
-    return z;
+    ਵਾਪਸ z;
 }
 
 
@@ -897,20 +897,20 @@ ngx_dns_strcmp(u_char *s1, u_char *s2)
 {
     ngx_uint_t  c1, c2;
 
-    for ( ;; ) {
+    ਲਈ ( ;; ) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        ਜੇ (c1 == c2) {
 
-            if (c1) {
-                continue;
+            ਜੇ (c1) {
+                ਜਾਰੀ;
             }
 
-            return 0;
+            ਵਾਪਸ 0;
         }
 
         /* in ASCII '.' > '-', but we need '.' to be the lowest character */
@@ -918,303 +918,303 @@ ngx_dns_strcmp(u_char *s1, u_char *s2)
         c1 = (c1 == '.') ? ' ' : c1;
         c2 = (c2 == '.') ? ' ' : c2;
 
-        return c1 - c2;
+        ਵਾਪਸ c1 - c2;
     }
 }
 
 
 ngx_int_t
-ngx_filename_cmp(u_char *s1, u_char *s2, size_t n)
+ngx_filename_cmp(u_char *s1, u_char *s2, ਮਾਪ_t n)
 {
     ngx_uint_t  c1, c2;
 
-    while (n) {
+    ਜਦੋਂ (n) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
-#if (NGX_HAVE_CASELESS_FILESYSTEM)
+#ਜੇ (NGX_HAVE_CASELESS_FILESYSTEM)
         c1 = tolower(c1);
         c2 = tolower(c2);
-#endif
+#ਜੇ_ਅੰਤ
 
-        if (c1 == c2) {
+        ਜੇ (c1 == c2) {
 
-            if (c1) {
+            ਜੇ (c1) {
                 n--;
-                continue;
+                ਜਾਰੀ;
             }
 
-            return 0;
+            ਵਾਪਸ 0;
         }
 
         /* we need '/' to be the lowest character */
 
-        if (c1 == 0 || c2 == 0) {
-            return c1 - c2;
+        ਜੇ (c1 == 0 || c2 == 0) {
+            ਵਾਪਸ c1 - c2;
         }
 
         c1 = (c1 == '/') ? 0 : c1;
         c2 = (c2 == '/') ? 0 : c2;
 
-        return c1 - c2;
+        ਵਾਪਸ c1 - c2;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
 
 ngx_int_t
-ngx_atoi(u_char *line, size_t n)
+ngx_atoi(u_char *ਸਤਰ, ਮਾਪ_t n)
 {
-    ngx_int_t  value, cutoff, cutlim;
+    ngx_int_t  ਮੁੱਲ, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ਜੇ (n == 0) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_INT_T_VALUE / 10;
-    cutlim = NGX_MAX_INT_T_VALUE % 10;
+    cutoff = NGX_MAX_INT_T_ਮੁੱਲ / 10;
+    cutlim = NGX_MAX_INT_T_ਮੁੱਲ % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    ਲਈ (ਮੁੱਲ = 0; n--; ਸਤਰ++) {
+        ਜੇ (*ਸਤਰ < '0' || *ਸਤਰ > '9') {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        ਜੇ (ਮੁੱਲ >= cutoff && (ਮੁੱਲ > cutoff || *ਸਤਰ - '0' > cutlim)) {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        ਮੁੱਲ = ਮੁੱਲ * 10 + (*ਸਤਰ - '0');
     }
 
-    return value;
+    ਵਾਪਸ ਮੁੱਲ;
 }
 
 
 /* parse a fixed point number, e.g., ngx_atofp("10.5", 4, 2) returns 1050 */
 
 ngx_int_t
-ngx_atofp(u_char *line, size_t n, size_t point)
+ngx_atofp(u_char *ਸਤਰ, ਮਾਪ_t n, ਮਾਪ_t ਬਿੰਦੂ)
 {
-    ngx_int_t   value, cutoff, cutlim;
+    ngx_int_t   ਮੁੱਲ, cutoff, cutlim;
     ngx_uint_t  dot;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ਜੇ (n == 0) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_INT_T_VALUE / 10;
-    cutlim = NGX_MAX_INT_T_VALUE % 10;
+    cutoff = NGX_MAX_INT_T_ਮੁੱਲ / 10;
+    cutlim = NGX_MAX_INT_T_ਮੁੱਲ % 10;
 
     dot = 0;
 
-    for (value = 0; n--; line++) {
+    ਲਈ (ਮੁੱਲ = 0; n--; ਸਤਰ++) {
 
-        if (point == 0) {
-            return NGX_ERROR;
+        ਜੇ (ਬਿੰਦੂ == 0) {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        if (*line == '.') {
-            if (dot) {
-                return NGX_ERROR;
+        ਜੇ (*ਸਤਰ == '.') {
+            ਜੇ (dot) {
+                ਵਾਪਸ NGX_ERROR;
             }
 
             dot = 1;
-            continue;
+            ਜਾਰੀ;
         }
 
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+        ਜੇ (*ਸਤਰ < '0' || *ਸਤਰ > '9') {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        ਜੇ (ਮੁੱਲ >= cutoff && (ਮੁੱਲ > cutoff || *ਸਤਰ - '0' > cutlim)) {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
-        point -= dot;
+        ਮੁੱਲ = ਮੁੱਲ * 10 + (*ਸਤਰ - '0');
+        ਬਿੰਦੂ -= dot;
     }
 
-    while (point--) {
-        if (value > cutoff) {
-            return NGX_ERROR;
+    ਜਦੋਂ (ਬਿੰਦੂ--) {
+        ਜੇ (ਮੁੱਲ > cutoff) {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        value = value * 10;
+        ਮੁੱਲ = ਮੁੱਲ * 10;
     }
 
-    return value;
+    ਵਾਪਸ ਮੁੱਲ;
 }
 
 
 ssize_t
-ngx_atosz(u_char *line, size_t n)
+ngx_atosz(u_char *ਸਤਰ, ਮਾਪ_t n)
 {
-    ssize_t  value, cutoff, cutlim;
+    ssize_t  ਮੁੱਲ, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ਜੇ (n == 0) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_SIZE_T_VALUE / 10;
-    cutlim = NGX_MAX_SIZE_T_VALUE % 10;
+    cutoff = NGX_MAX_ਮਾਪ_T_ਮੁੱਲ / 10;
+    cutlim = NGX_MAX_ਮਾਪ_T_ਮੁੱਲ % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    ਲਈ (ਮੁੱਲ = 0; n--; ਸਤਰ++) {
+        ਜੇ (*ਸਤਰ < '0' || *ਸਤਰ > '9') {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        ਜੇ (ਮੁੱਲ >= cutoff && (ਮੁੱਲ > cutoff || *ਸਤਰ - '0' > cutlim)) {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        ਮੁੱਲ = ਮੁੱਲ * 10 + (*ਸਤਰ - '0');
     }
 
-    return value;
+    ਵਾਪਸ ਮੁੱਲ;
 }
 
 
 off_t
-ngx_atoof(u_char *line, size_t n)
+ngx_atoof(u_char *ਸਤਰ, ਮਾਪ_t n)
 {
-    off_t  value, cutoff, cutlim;
+    off_t  ਮੁੱਲ, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ਜੇ (n == 0) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_OFF_T_VALUE / 10;
-    cutlim = NGX_MAX_OFF_T_VALUE % 10;
+    cutoff = NGX_MAX_OFF_T_ਮੁੱਲ / 10;
+    cutlim = NGX_MAX_OFF_T_ਮੁੱਲ % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    ਲਈ (ਮੁੱਲ = 0; n--; ਸਤਰ++) {
+        ਜੇ (*ਸਤਰ < '0' || *ਸਤਰ > '9') {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        ਜੇ (ਮੁੱਲ >= cutoff && (ਮੁੱਲ > cutoff || *ਸਤਰ - '0' > cutlim)) {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        ਮੁੱਲ = ਮੁੱਲ * 10 + (*ਸਤਰ - '0');
     }
 
-    return value;
+    ਵਾਪਸ ਮੁੱਲ;
 }
 
 
-time_t
-ngx_atotm(u_char *line, size_t n)
+ਸਮਾਂ_t
+ngx_atotm(u_char *ਸਤਰ, ਮਾਪ_t n)
 {
-    time_t  value, cutoff, cutlim;
+    ਸਮਾਂ_t  ਮੁੱਲ, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ਜੇ (n == 0) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_TIME_T_VALUE / 10;
-    cutlim = NGX_MAX_TIME_T_VALUE % 10;
+    cutoff = NGX_MAX_ਸਮਾਂ_T_ਮੁੱਲ / 10;
+    cutlim = NGX_MAX_ਸਮਾਂ_T_ਮੁੱਲ % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    ਲਈ (ਮੁੱਲ = 0; n--; ਸਤਰ++) {
+        ਜੇ (*ਸਤਰ < '0' || *ਸਤਰ > '9') {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        ਜੇ (ਮੁੱਲ >= cutoff && (ਮੁੱਲ > cutoff || *ਸਤਰ - '0' > cutlim)) {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        ਮੁੱਲ = ਮੁੱਲ * 10 + (*ਸਤਰ - '0');
     }
 
-    return value;
+    ਵਾਪਸ ਮੁੱਲ;
 }
 
 
 ngx_int_t
-ngx_hextoi(u_char *line, size_t n)
+ngx_hextoi(u_char *ਸਤਰ, ਮਾਪ_t n)
 {
     u_char     c, ch;
-    ngx_int_t  value, cutoff;
+    ngx_int_t  ਮੁੱਲ, cutoff;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ਜੇ (n == 0) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_INT_T_VALUE / 16;
+    cutoff = NGX_MAX_INT_T_ਮੁੱਲ / 16;
 
-    for (value = 0; n--; line++) {
-        if (value > cutoff) {
-            return NGX_ERROR;
+    ਲਈ (ਮੁੱਲ = 0; n--; ਸਤਰ++) {
+        ਜੇ (ਮੁੱਲ > cutoff) {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-        ch = *line;
+        ch = *ਸਤਰ;
 
-        if (ch >= '0' && ch <= '9') {
-            value = value * 16 + (ch - '0');
-            continue;
+        ਜੇ (ch >= '0' && ch <= '9') {
+            ਮੁੱਲ = ਮੁੱਲ * 16 + (ch - '0');
+            ਜਾਰੀ;
         }
 
         c = (u_char) (ch | 0x20);
 
-        if (c >= 'a' && c <= 'f') {
-            value = value * 16 + (c - 'a' + 10);
-            continue;
+        ਜੇ (c >= 'a' && c <= 'f') {
+            ਮੁੱਲ = ਮੁੱਲ * 16 + (c - 'a' + 10);
+            ਜਾਰੀ;
         }
 
-        return NGX_ERROR;
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    return value;
+    ਵਾਪਸ ਮੁੱਲ;
 }
 
 
 u_char *
-ngx_hex_dump(u_char *dst, u_char *src, size_t len)
+ngx_hex_dump(u_char *dst, u_char *src, ਮਾਪ_t len)
 {
-    static u_char  hex[] = "0123456789abcdef";
+    ਸਥਿਰ u_char  hex[] = "0123456789abcdef";
 
-    while (len--) {
+    ਜਦੋਂ (len--) {
         *dst++ = hex[*src >> 4];
         *dst++ = hex[*src++ & 0xf];
     }
 
-    return dst;
+    ਵਾਪਸ dst;
 }
 
 
-void
+ਖਾਲੀ
 ngx_encode_base64(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] =
+    ਸਥਿਰ u_char   basis64[] =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    ngx_encode_base64_internal(dst, src, basis64, 1);
+    ngx_encode_base64_ਅੰਦਰੂਨੀ(dst, src, basis64, 1);
 }
 
 
-void
+ਖਾਲੀ
 ngx_encode_base64url(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] =
+    ਸਥਿਰ u_char   basis64[] =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
-    ngx_encode_base64_internal(dst, src, basis64, 0);
+    ngx_encode_base64_ਅੰਦਰੂਨੀ(dst, src, basis64, 0);
 }
 
 
-static void
-ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis,
+ਸਥਿਰ ਖਾਲੀ
+ngx_encode_base64_ਅੰਦਰੂਨੀ(ngx_str_t *dst, ngx_str_t *src, ਅਚਲ u_char *basis,
     ngx_uint_t padding)
 {
     u_char         *d, *s;
-    size_t          len;
+    ਮਾਪ_t          len;
 
     len = src->len;
-    s = src->data;
-    d = dst->data;
+    s = src->ਅੰਕੜੇ;
+    d = dst->ਅੰਕੜੇ;
 
-    while (len > 2) {
+    ਜਦੋਂ (len > 2) {
         *d++ = basis[(s[0] >> 2) & 0x3f];
         *d++ = basis[((s[0] & 3) << 4) | (s[1] >> 4)];
         *d++ = basis[((s[1] & 0x0f) << 2) | (s[2] >> 6)];
@@ -1224,33 +1224,33 @@ ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis,
         len -= 3;
     }
 
-    if (len) {
+    ਜੇ (len) {
         *d++ = basis[(s[0] >> 2) & 0x3f];
 
-        if (len == 1) {
+        ਜੇ (len == 1) {
             *d++ = basis[(s[0] & 3) << 4];
-            if (padding) {
+            ਜੇ (padding) {
                 *d++ = '=';
             }
 
-        } else {
+        } ਨਹੀਂਤਾਂ {
             *d++ = basis[((s[0] & 3) << 4) | (s[1] >> 4)];
             *d++ = basis[(s[1] & 0x0f) << 2];
         }
 
-        if (padding) {
+        ਜੇ (padding) {
             *d++ = '=';
         }
     }
 
-    dst->len = d - dst->data;
+    dst->len = d - dst->ਅੰਕੜੇ;
 }
 
 
 ngx_int_t
 ngx_decode_base64(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] = {
+    ਸਥਿਰ u_char   basis64[] = {
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 62, 77, 77, 77, 63,
@@ -1270,14 +1270,14 @@ ngx_decode_base64(ngx_str_t *dst, ngx_str_t *src)
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
     };
 
-    return ngx_decode_base64_internal(dst, src, basis64);
+    ਵਾਪਸ ngx_decode_base64_ਅੰਦਰੂਨੀ(dst, src, basis64);
 }
 
 
 ngx_int_t
 ngx_decode_base64url(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] = {
+    ਸਥਿਰ u_char   basis64[] = {
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 62, 77, 77,
@@ -1297,34 +1297,34 @@ ngx_decode_base64url(ngx_str_t *dst, ngx_str_t *src)
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
     };
 
-    return ngx_decode_base64_internal(dst, src, basis64);
+    ਵਾਪਸ ngx_decode_base64_ਅੰਦਰੂਨੀ(dst, src, basis64);
 }
 
 
-static ngx_int_t
-ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
+ਸਥਿਰ ngx_int_t
+ngx_decode_base64_ਅੰਦਰੂਨੀ(ngx_str_t *dst, ngx_str_t *src, ਅਚਲ u_char *basis)
 {
-    size_t          len;
+    ਮਾਪ_t          len;
     u_char         *d, *s;
 
-    for (len = 0; len < src->len; len++) {
-        if (src->data[len] == '=') {
-            break;
+    ਲਈ (len = 0; len < src->len; len++) {
+        ਜੇ (src->ਅੰਕੜੇ[len] == '=') {
+            ਰੋਕੋ;
         }
 
-        if (basis[src->data[len]] == 77) {
-            return NGX_ERROR;
+        ਜੇ (basis[src->ਅੰਕੜੇ[len]] == 77) {
+            ਵਾਪਸ NGX_ERROR;
         }
     }
 
-    if (len % 4 == 1) {
-        return NGX_ERROR;
+    ਜੇ (len % 4 == 1) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    s = src->data;
-    d = dst->data;
+    s = src->ਅੰਕੜੇ;
+    d = dst->ਅੰਕੜੇ;
 
-    while (len > 3) {
+    ਜਦੋਂ (len > 3) {
         *d++ = (u_char) (basis[s[0]] << 2 | basis[s[1]] >> 4);
         *d++ = (u_char) (basis[s[1]] << 4 | basis[s[2]] >> 2);
         *d++ = (u_char) (basis[s[2]] << 6 | basis[s[3]]);
@@ -1333,17 +1333,17 @@ ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
         len -= 4;
     }
 
-    if (len > 1) {
+    ਜੇ (len > 1) {
         *d++ = (u_char) (basis[s[0]] << 2 | basis[s[1]] >> 4);
     }
 
-    if (len > 2) {
+    ਜੇ (len > 2) {
         *d++ = (u_char) (basis[s[1]] << 4 | basis[s[2]] >> 2);
     }
 
-    dst->len = d - dst->data;
+    dst->len = d - dst->ਅੰਕੜੇ;
 
-    return NGX_OK;
+    ਵਾਪਸ NGX_OK;
 }
 
 
@@ -1357,52 +1357,52 @@ ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
  */
 
 uint32_t
-ngx_utf8_decode(u_char **p, size_t n)
+ngx_utf8_decode(u_char **p, ਮਾਪ_t n)
 {
-    size_t    len;
+    ਮਾਪ_t    len;
     uint32_t  u, i, valid;
 
     u = **p;
 
-    if (u >= 0xf8) {
+    ਜੇ (u >= 0xf8) {
 
         (*p)++;
-        return 0xffffffff;
+        ਵਾਪਸ 0xffffffff;
 
-    } else if (u >= 0xf0) {
+    } ਨਹੀਂਤਾਂ ਜੇ (u >= 0xf0) {
 
         u &= 0x07;
         valid = 0xffff;
         len = 3;
 
-    } else if (u >= 0xe0) {
+    } ਨਹੀਂਤਾਂ ਜੇ (u >= 0xe0) {
 
         u &= 0x0f;
         valid = 0x7ff;
         len = 2;
 
-    } else if (u >= 0xc2) {
+    } ਨਹੀਂਤਾਂ ਜੇ (u >= 0xc2) {
 
         u &= 0x1f;
         valid = 0x7f;
         len = 1;
 
-    } else {
+    } ਨਹੀਂਤਾਂ {
         (*p)++;
-        return 0xffffffff;
+        ਵਾਪਸ 0xffffffff;
     }
 
-    if (n - 1 < len) {
-        return 0xfffffffe;
+    ਜੇ (n - 1 < len) {
+        ਵਾਪਸ 0xfffffffe;
     }
 
     (*p)++;
 
-    while (len) {
+    ਜਦੋਂ (len) {
         i = *(*p)++;
 
-        if (i < 0x80) {
-            return 0xffffffff;
+        ਜੇ (i < 0x80) {
+            ਵਾਪਸ 0xffffffff;
         }
 
         u = (u << 6) | (i & 0x3f);
@@ -1410,76 +1410,76 @@ ngx_utf8_decode(u_char **p, size_t n)
         len--;
     }
 
-    if (u > valid) {
-        return u;
+    ਜੇ (u > valid) {
+        ਵਾਪਸ u;
     }
 
-    return 0xffffffff;
+    ਵਾਪਸ 0xffffffff;
 }
 
 
-size_t
-ngx_utf8_length(u_char *p, size_t n)
+ਮਾਪ_t
+ngx_utf8_ਲੰਮਾਈ(u_char *p, ਮਾਪ_t n)
 {
-    u_char  c, *last;
-    size_t  len;
+    u_char  c, *ਆਖਰੀ;
+    ਮਾਪ_t  len;
 
-    last = p + n;
+    ਆਖਰੀ = p + n;
 
-    for (len = 0; p < last; len++) {
+    ਲਈ (len = 0; p < ਆਖਰੀ; len++) {
 
         c = *p;
 
-        if (c < 0x80) {
+        ਜੇ (c < 0x80) {
             p++;
-            continue;
+            ਜਾਰੀ;
         }
 
-        if (ngx_utf8_decode(&p, last - p) > 0x10ffff) {
+        ਜੇ (ngx_utf8_decode(&p, ਆਖਰੀ - p) > 0x10ffff) {
             /* invalid UTF-8 */
-            return n;
+            ਵਾਪਸ n;
         }
     }
 
-    return len;
+    ਵਾਪਸ len;
 }
 
 
 u_char *
-ngx_utf8_cpystrn(u_char *dst, u_char *src, size_t n, size_t len)
+ngx_utf8_cpystrn(u_char *dst, u_char *src, ਮਾਪ_t n, ਮਾਪ_t len)
 {
-    u_char  c, *next;
+    u_char  c, *ਅਗਲਾ;
 
-    if (n == 0) {
-        return dst;
+    ਜੇ (n == 0) {
+        ਵਾਪਸ dst;
     }
 
-    while (--n) {
+    ਜਦੋਂ (--n) {
 
         c = *src;
         *dst = c;
 
-        if (c < 0x80) {
+        ਜੇ (c < 0x80) {
 
-            if (c != '\0') {
+            ਜੇ (c != '\0') {
                 dst++;
                 src++;
                 len--;
 
-                continue;
+                ਜਾਰੀ;
             }
 
-            return dst;
+            ਵਾਪਸ dst;
         }
 
-        next = src;
+        ਅਗਲਾ = src;
 
-        if (ngx_utf8_decode(&next, len) > 0x10ffff) {
+        ਜੇ (ngx_utf8_decode(&ਅਗਲਾ, len) > 0x10ffff) {
             /* invalid UTF-8 */
-            break;
+            ਰੋਕੋ;
         }
 
-        while (src < next) {
+        ਜਦੋਂ (src < ਅਗਲਾ) {
             *dst++ = *src++;
             len--;
         }
@@ -1487,17 +1487,17 @@ ngx_utf8_cpystrn(u_char *dst, u_char *src, size_t n, size_t len)
 
     *dst = '\0';
 
-    return dst;
+    ਵਾਪਸ dst;
 }
 
 
 uintptr_t
-ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
+ngx_escape_uri(u_char *dst, u_char *src, ਮਾਪ_t ਮਾਪ, ngx_uint_t type)
 {
-    u_char          prefix;
+    u_char          ਅਗੇਤਰ;
     uint32_t       *escape;
     ngx_uint_t      n;
-    static u_char   hex[] = "0123456789ABCDEF";
+    ਸਥਿਰ u_char   hex[] = "0123456789ABCDEF";
 
     /*
      * Per RFC 3986 only the following chars are allowed in URIs unescaped:
@@ -1514,7 +1514,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "#", "%", "?", not allowed */
 
-    static uint32_t   uri[] = {
+    ਸਥਿਰ uint32_t   uri[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1534,7 +1534,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "#", "%", "&", "+", ";", "?", not allowed */
 
-    static uint32_t   args[] = {
+    ਸਥਿਰ uint32_t   ਦਲੀਲਾਂ[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1554,7 +1554,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* not ALPHA, DIGIT, "-", ".", "_", "~" */
 
-    static uint32_t   uri_component[] = {
+    ਸਥਿਰ uint32_t   uri_component[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1574,7 +1574,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "#", """, "%", "'", not allowed */
 
-    static uint32_t   html[] = {
+    ਸਥਿਰ uint32_t   html[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1594,7 +1594,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", """, "'", not allowed */
 
-    static uint32_t   refresh[] = {
+    ਸਥਿਰ uint32_t   refresh[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1614,7 +1614,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "%", %00-%1F */
 
-    static uint32_t   memcached[] = {
+    ਸਥਿਰ uint32_t   memcached[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1636,7 +1636,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "+", "=", not allowed */
 
-    static uint32_t   mail_xtext[] = {
+    ਸਥਿਰ uint32_t   mail_xtext[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1654,59 +1654,59 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
     };
 
-    static uint32_t  *map[] =
-        { uri, args, uri_component, html, refresh, memcached, memcached,
+    ਸਥਿਰ uint32_t  *map[] =
+        { uri, ਦਲੀਲਾਂ, uri_component, html, refresh, memcached, memcached,
           mail_xtext };
 
-    static u_char  map_char[] =
+    ਸਥਿਰ u_char  map_char[] =
         { '%', '%', '%', '%', '%', '%', '%', '+' };
 
 
     escape = map[type];
-    prefix = map_char[type];
+    ਅਗੇਤਰ = map_char[type];
 
-    if (dst == NULL) {
+    ਜੇ (dst == ਨਿਰਾ) {
 
         /* find the number of the characters to be escaped */
 
         n = 0;
 
-        while (size) {
-            if (escape[*src >> 5] & (1U << (*src & 0x1f))) {
+        ਜਦੋਂ (ਮਾਪ) {
+            ਜੇ (escape[*src >> 5] & (1U << (*src & 0x1f))) {
                 n++;
             }
             src++;
-            size--;
+            ਮਾਪ--;
         }
 
-        return (uintptr_t) n;
+        ਵਾਪਸ (uintptr_t) n;
     }
 
-    while (size) {
-        if (escape[*src >> 5] & (1U << (*src & 0x1f))) {
-            *dst++ = prefix;
+    ਜਦੋਂ (ਮਾਪ) {
+        ਜੇ (escape[*src >> 5] & (1U << (*src & 0x1f))) {
+            *dst++ = ਅਗੇਤਰ;
             *dst++ = hex[*src >> 4];
             *dst++ = hex[*src & 0xf];
             src++;
 
-        } else {
+        } ਨਹੀਂਤਾਂ {
             *dst++ = *src++;
         }
-        size--;
+        ਮਾਪ--;
     }
 
-    return (uintptr_t) dst;
+    ਵਾਪਸ (uintptr_t) dst;
 }
 
 
-void
-ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
+ਖਾਲੀ
+ngx_unescape_uri(u_char **dst, u_char **src, ਮਾਪ_t ਮਾਪ, ngx_uint_t type)
 {
     u_char  *d, *s, ch, c, decoded;
-    enum {
+    ਗਿਣਤੀ {
         sw_usual = 0,
         sw_quoted,
-        sw_quoted_second
+        sw_quoted_ਦੂਜਾ
     } state;
 
     d = *dst;
@@ -1715,40 +1715,40 @@ ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
     state = 0;
     decoded = 0;
 
-    while (size--) {
+    ਜਦੋਂ (ਮਾਪ--) {
 
         ch = *s++;
 
-        switch (state) {
-        case sw_usual:
-            if (ch == '?'
+        ਚੋਣ (state) {
+        ਹਾਲਤ sw_usual:
+            ਜੇ (ch == '?'
                 && (type & (NGX_UNESCAPE_URI|NGX_UNESCAPE_REDIRECT)))
             {
                 *d++ = ch;
-                goto done;
+                ਜਾਓ ਪੂਰਾ;
             }
 
-            if (ch == '%') {
+            ਜੇ (ch == '%') {
                 state = sw_quoted;
-                break;
+                ਰੋਕੋ;
             }
 
             *d++ = ch;
-            break;
+            ਰੋਕੋ;
 
-        case sw_quoted:
+        ਹਾਲਤ sw_quoted:
 
-            if (ch >= '0' && ch <= '9') {
+            ਜੇ (ch >= '0' && ch <= '9') {
                 decoded = (u_char) (ch - '0');
-                state = sw_quoted_second;
-                break;
+                state = sw_quoted_ਦੂਜਾ;
+                ਰੋਕੋ;
             }
 
             c = (u_char) (ch | 0x20);
-            if (c >= 'a' && c <= 'f') {
+            ਜੇ (c >= 'a' && c <= 'f') {
                 decoded = (u_char) (c - 'a' + 10);
-                state = sw_quoted_second;
-                break;
+                state = sw_quoted_ਦੂਜਾ;
+                ਰੋਕੋ;
             }
 
             /* the invalid quoted character */
@@ -1757,72 +1757,72 @@ ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
 
             *d++ = ch;
 
-            break;
+            ਰੋਕੋ;
 
-        case sw_quoted_second:
+        ਹਾਲਤ sw_quoted_ਦੂਜਾ:
 
             state = sw_usual;
 
-            if (ch >= '0' && ch <= '9') {
+            ਜੇ (ch >= '0' && ch <= '9') {
                 ch = (u_char) ((decoded << 4) + (ch - '0'));
 
-                if (type & NGX_UNESCAPE_REDIRECT) {
-                    if (ch > '%' && ch < 0x7f) {
+                ਜੇ (type & NGX_UNESCAPE_REDIRECT) {
+                    ਜੇ (ch > '%' && ch < 0x7f) {
                         *d++ = ch;
-                        break;
+                        ਰੋਕੋ;
                     }
 
                     *d++ = '%'; *d++ = *(s - 2); *d++ = *(s - 1);
 
-                    break;
+                    ਰੋਕੋ;
                 }
 
                 *d++ = ch;
 
-                break;
+                ਰੋਕੋ;
             }
 
             c = (u_char) (ch | 0x20);
-            if (c >= 'a' && c <= 'f') {
+            ਜੇ (c >= 'a' && c <= 'f') {
                 ch = (u_char) ((decoded << 4) + (c - 'a') + 10);
 
-                if (type & NGX_UNESCAPE_URI) {
-                    if (ch == '?') {
+                ਜੇ (type & NGX_UNESCAPE_URI) {
+                    ਜੇ (ch == '?') {
                         *d++ = ch;
-                        goto done;
+                        ਜਾਓ ਪੂਰਾ;
                     }
 
                     *d++ = ch;
-                    break;
+                    ਰੋਕੋ;
                 }
 
-                if (type & NGX_UNESCAPE_REDIRECT) {
-                    if (ch == '?') {
+                ਜੇ (type & NGX_UNESCAPE_REDIRECT) {
+                    ਜੇ (ch == '?') {
                         *d++ = ch;
-                        goto done;
+                        ਜਾਓ ਪੂਰਾ;
                     }
 
-                    if (ch > '%' && ch < 0x7f) {
+                    ਜੇ (ch > '%' && ch < 0x7f) {
                         *d++ = ch;
-                        break;
+                        ਰੋਕੋ;
                     }
 
                     *d++ = '%'; *d++ = *(s - 2); *d++ = *(s - 1);
-                    break;
+                    ਰੋਕੋ;
                 }
 
                 *d++ = ch;
 
-                break;
+                ਰੋਕੋ;
             }
 
             /* the invalid quoted character */
 
-            break;
+            ਰੋਕੋ;
         }
     }
 
-done:
+ਪੂਰਾ:
 
     *dst = d;
     *src = s;
@@ -1830,150 +1830,150 @@ done:
 
 
 uintptr_t
-ngx_escape_html(u_char *dst, u_char *src, size_t size)
+ngx_escape_html(u_char *dst, u_char *src, ਮਾਪ_t ਮਾਪ)
 {
     u_char      ch;
     ngx_uint_t  len;
 
-    if (dst == NULL) {
+    ਜੇ (dst == ਨਿਰਾ) {
 
         len = 0;
 
-        while (size) {
-            switch (*src++) {
+        ਜਦੋਂ (ਮਾਪ) {
+            ਚੋਣ (*src++) {
 
-            case '<':
-                len += sizeof("&lt;") - 2;
-                break;
+            ਹਾਲਤ '<':
+                len += ਆਕਾਰ("&lt;") - 2;
+                ਰੋਕੋ;
 
-            case '>':
-                len += sizeof("&gt;") - 2;
-                break;
+            ਹਾਲਤ '>':
+                len += ਆਕਾਰ("&gt;") - 2;
+                ਰੋਕੋ;
 
-            case '&':
-                len += sizeof("&amp;") - 2;
-                break;
+            ਹਾਲਤ '&':
+                len += ਆਕਾਰ("&amp;") - 2;
+                ਰੋਕੋ;
 
-            case '"':
-                len += sizeof("&quot;") - 2;
-                break;
+            ਹਾਲਤ '"':
+                len += ਆਕਾਰ("&quot;") - 2;
+                ਰੋਕੋ;
 
-            default:
-                break;
+            ਮੂਲ:
+                ਰੋਕੋ;
             }
-            size--;
+            ਮਾਪ--;
         }
 
-        return (uintptr_t) len;
+        ਵਾਪਸ (uintptr_t) len;
     }
 
-    while (size) {
+    ਜਦੋਂ (ਮਾਪ) {
         ch = *src++;
 
-        switch (ch) {
+        ਚੋਣ (ch) {
 
-        case '<':
+        ਹਾਲਤ '<':
             *dst++ = '&'; *dst++ = 'l'; *dst++ = 't'; *dst++ = ';';
-            break;
+            ਰੋਕੋ;
 
-        case '>':
+        ਹਾਲਤ '>':
             *dst++ = '&'; *dst++ = 'g'; *dst++ = 't'; *dst++ = ';';
-            break;
+            ਰੋਕੋ;
 
-        case '&':
+        ਹਾਲਤ '&':
             *dst++ = '&'; *dst++ = 'a'; *dst++ = 'm'; *dst++ = 'p';
             *dst++ = ';';
-            break;
+            ਰੋਕੋ;
 
-        case '"':
+        ਹਾਲਤ '"':
             *dst++ = '&'; *dst++ = 'q'; *dst++ = 'u'; *dst++ = 'o';
             *dst++ = 't'; *dst++ = ';';
-            break;
+            ਰੋਕੋ;
 
-        default:
+        ਮੂਲ:
             *dst++ = ch;
-            break;
+            ਰੋਕੋ;
         }
-        size--;
+        ਮਾਪ--;
     }
 
-    return (uintptr_t) dst;
+    ਵਾਪਸ (uintptr_t) dst;
 }
 
 
 uintptr_t
-ngx_escape_json(u_char *dst, u_char *src, size_t size)
+ngx_escape_json(u_char *dst, u_char *src, ਮਾਪ_t ਮਾਪ)
 {
     u_char      ch;
     ngx_uint_t  len;
 
-    if (dst == NULL) {
+    ਜੇ (dst == ਨਿਰਾ) {
         len = 0;
 
-        while (size) {
+        ਜਦੋਂ (ਮਾਪ) {
             ch = *src++;
 
-            if (ch == '\\' || ch == '"') {
+            ਜੇ (ch == '\\' || ch == '"') {
                 len++;
 
-            } else if (ch <= 0x1f) {
+            } ਨਹੀਂਤਾਂ ਜੇ (ch <= 0x1f) {
 
-                switch (ch) {
-                case '\n':
-                case '\r':
-                case '\t':
-                case '\b':
-                case '\f':
+                ਚੋਣ (ch) {
+                ਹਾਲਤ '\n':
+                ਹਾਲਤ '\r':
+                ਹਾਲਤ '\t':
+                ਹਾਲਤ '\b':
+                ਹਾਲਤ '\f':
                     len++;
-                    break;
+                    ਰੋਕੋ;
 
-                default:
-                    len += sizeof("\\u001F") - 2;
+                ਮੂਲ:
+                    len += ਆਕਾਰ("\\u001F") - 2;
                 }
             }
 
-            size--;
+            ਮਾਪ--;
         }
 
-        return (uintptr_t) len;
+        ਵਾਪਸ (uintptr_t) len;
     }
 
-    while (size) {
+    ਜਦੋਂ (ਮਾਪ) {
         ch = *src++;
 
-        if (ch > 0x1f) {
+        ਜੇ (ch > 0x1f) {
 
-            if (ch == '\\' || ch == '"') {
+            ਜੇ (ch == '\\' || ch == '"') {
                 *dst++ = '\\';
             }
 
             *dst++ = ch;
 
-        } else {
+        } ਨਹੀਂਤਾਂ {
             *dst++ = '\\';
 
-            switch (ch) {
-            case '\n':
+            ਚੋਣ (ch) {
+            ਹਾਲਤ '\n':
                 *dst++ = 'n';
-                break;
+                ਰੋਕੋ;
 
-            case '\r':
+            ਹਾਲਤ '\r':
                 *dst++ = 'r';
-                break;
+                ਰੋਕੋ;
 
-            case '\t':
+            ਹਾਲਤ '\t':
                 *dst++ = 't';
-                break;
+                ਰੋਕੋ;
 
-            case '\b':
+            ਹਾਲਤ '\b':
                 *dst++ = 'b';
-                break;
+                ਰੋਕੋ;
 
-            case '\f':
+            ਹਾਲਤ '\f':
                 *dst++ = 'f';
-                break;
+                ਰੋਕੋ;
 
-            default:
+            ਮੂਲ:
                 *dst++ = 'u'; *dst++ = '0'; *dst++ = '0';
                 *dst++ = '0' + (ch >> 4);
 
@@ -1983,148 +1983,148 @@ ngx_escape_json(u_char *dst, u_char *src, size_t size)
             }
         }
 
-        size--;
+        ਮਾਪ--;
     }
 
-    return (uintptr_t) dst;
+    ਵਾਪਸ (uintptr_t) dst;
 }
 
 
-void
-ngx_str_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ਖਾਲੀ
+ngx_str_rbtree_ਪਾਓ_ਮੁੱਲ(ngx_rbtree_ਗੰਢ_t *ਆਰਜ਼ੀ,
+    ngx_rbtree_ਗੰਢ_t *ਗੰਢ, ngx_rbtree_ਗੰਢ_t *sentinel)
 {
-    ngx_str_node_t      *n, *t;
-    ngx_rbtree_node_t  **p;
+    ngx_str_ਗੰਢ_t      *n, *t;
+    ngx_rbtree_ਗੰਢ_t  **p;
 
-    for ( ;; ) {
+    ਲਈ ( ;; ) {
 
-        n = (ngx_str_node_t *) node;
-        t = (ngx_str_node_t *) temp;
+        n = (ngx_str_ਗੰਢ_t *) ਗੰਢ;
+        t = (ngx_str_ਗੰਢ_t *) ਆਰਜ਼ੀ;
 
-        if (node->key != temp->key) {
+        ਜੇ (ਗੰਢ->ਕੁੰਜੀ != ਆਰਜ਼ੀ->ਕੁੰਜੀ) {
 
-            p = (node->key < temp->key) ? &temp->left : &temp->right;
+            p = (ਗੰਢ->ਕੁੰਜੀ < ਆਰਜ਼ੀ->ਕੁੰਜੀ) ? &ਆਰਜ਼ੀ->ਖੱਬਾ : &ਆਰਜ਼ੀ->ਸੱਜਾ;
 
-        } else if (n->str.len != t->str.len) {
+        } ਨਹੀਂਤਾਂ ਜੇ (n->str.len != t->str.len) {
 
-            p = (n->str.len < t->str.len) ? &temp->left : &temp->right;
+            p = (n->str.len < t->str.len) ? &ਆਰਜ਼ੀ->ਖੱਬਾ : &ਆਰਜ਼ੀ->ਸੱਜਾ;
 
-        } else {
-            p = (ngx_memcmp(n->str.data, t->str.data, n->str.len) < 0)
-                 ? &temp->left : &temp->right;
+        } ਨਹੀਂਤਾਂ {
+            p = (ngx_memcmp(n->str.ਅੰਕੜੇ, t->str.ਅੰਕੜੇ, n->str.len) < 0)
+                 ? &ਆਰਜ਼ੀ->ਖੱਬਾ : &ਆਰਜ਼ੀ->ਸੱਜਾ;
         }
 
-        if (*p == sentinel) {
-            break;
+        ਜੇ (*p == sentinel) {
+            ਰੋਕੋ;
         }
 
-        temp = *p;
+        ਆਰਜ਼ੀ = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = ਗੰਢ;
+    ਗੰਢ->ਮਾਪਾ = ਆਰਜ਼ੀ;
+    ਗੰਢ->ਖੱਬਾ = sentinel;
+    ਗੰਢ->ਸੱਜਾ = sentinel;
+    ngx_rbt_red(ਗੰਢ);
 }
 
 
-ngx_str_node_t *
+ngx_str_ਗੰਢ_t *
 ngx_str_rbtree_lookup(ngx_rbtree_t *rbtree, ngx_str_t *val, uint32_t hash)
 {
     ngx_int_t           rc;
-    ngx_str_node_t     *n;
-    ngx_rbtree_node_t  *node, *sentinel;
+    ngx_str_ਗੰਢ_t     *n;
+    ngx_rbtree_ਗੰਢ_t  *ਗੰਢ, *sentinel;
 
-    node = rbtree->root;
+    ਗੰਢ = rbtree->ਜੜ੍ਹ;
     sentinel = rbtree->sentinel;
 
-    while (node != sentinel) {
+    ਜਦੋਂ (ਗੰਢ != sentinel) {
 
-        n = (ngx_str_node_t *) node;
+        n = (ngx_str_ਗੰਢ_t *) ਗੰਢ;
 
-        if (hash != node->key) {
-            node = (hash < node->key) ? node->left : node->right;
-            continue;
+        ਜੇ (hash != ਗੰਢ->ਕੁੰਜੀ) {
+            ਗੰਢ = (hash < ਗੰਢ->ਕੁੰਜੀ) ? ਗੰਢ->ਖੱਬਾ : ਗੰਢ->ਸੱਜਾ;
+            ਜਾਰੀ;
         }
 
-        if (val->len != n->str.len) {
-            node = (val->len < n->str.len) ? node->left : node->right;
-            continue;
+        ਜੇ (val->len != n->str.len) {
+            ਗੰਢ = (val->len < n->str.len) ? ਗੰਢ->ਖੱਬਾ : ਗੰਢ->ਸੱਜਾ;
+            ਜਾਰੀ;
         }
 
-        rc = ngx_memcmp(val->data, n->str.data, val->len);
+        rc = ngx_memcmp(val->ਅੰਕੜੇ, n->str.ਅੰਕੜੇ, val->len);
 
-        if (rc < 0) {
-            node = node->left;
-            continue;
+        ਜੇ (rc < 0) {
+            ਗੰਢ = ਗੰਢ->ਖੱਬਾ;
+            ਜਾਰੀ;
         }
 
-        if (rc > 0) {
-            node = node->right;
-            continue;
+        ਜੇ (rc > 0) {
+            ਗੰਢ = ਗੰਢ->ਸੱਜਾ;
+            ਜਾਰੀ;
         }
 
-        return n;
+        ਵਾਪਸ n;
     }
 
-    return NULL;
+    ਵਾਪਸ ਨਿਰਾ;
 }
 
 
 /* ngx_sort() is implemented as insertion sort because we need stable sort */
 
-void
-ngx_sort(void *base, size_t n, size_t size,
-    ngx_int_t (*cmp)(const void *, const void *))
+ਖਾਲੀ
+ngx_ਛਾਂਟੋ(ਖਾਲੀ *ਅਧਾਰ, ਮਾਪ_t n, ਮਾਪ_t ਮਾਪ,
+    ngx_int_t (*cmp)(ਅਚਲ ਖਾਲੀ *, ਅਚਲ ਖਾਲੀ *))
 {
     u_char  *p1, *p2, *p;
 
-    p = ngx_alloc(size, ngx_cycle->log);
-    if (p == NULL) {
-        return;
+    p = ngx_alloc(ਮਾਪ, ngx_ਚੱਕਰ->ਲਘੂਗਣਕ);
+    ਜੇ (p == ਨਿਰਾ) {
+        ਵਾਪਸ;
     }
 
-    for (p1 = (u_char *) base + size;
-         p1 < (u_char *) base + n * size;
-         p1 += size)
+    ਲਈ (p1 = (u_char *) ਅਧਾਰ + ਮਾਪ;
+         p1 < (u_char *) ਅਧਾਰ + n * ਮਾਪ;
+         p1 += ਮਾਪ)
     {
-        ngx_memcpy(p, p1, size);
+        ngx_memcpy(p, p1, ਮਾਪ);
 
-        for (p2 = p1;
-             p2 > (u_char *) base && cmp(p2 - size, p) > 0;
-             p2 -= size)
+        ਲਈ (p2 = p1;
+             p2 > (u_char *) ਅਧਾਰ && cmp(p2 - ਮਾਪ, p) > 0;
+             p2 -= ਮਾਪ)
         {
-            ngx_memcpy(p2, p2 - size, size);
+            ngx_memcpy(p2, p2 - ਮਾਪ, ਮਾਪ);
         }
 
-        ngx_memcpy(p2, p, size);
+        ngx_memcpy(p2, p, ਮਾਪ);
     }
 
     ngx_free(p);
 }
 
 
-void
-ngx_explicit_memzero(void *buf, size_t n)
+ਖਾਲੀ
+ngx_explicit_memzero(ਖਾਲੀ *buf, ਮਾਪ_t n)
 {
     ngx_memzero(buf, n);
-    ngx_memory_barrier();
+    ngx_ਸਮ੍ਰਿਤੀ_barrier();
 }
 
 
-#if (NGX_MEMCPY_LIMIT)
+#ਜੇ (NGX_MEMCPY_ਹੱਦਬੰਦੀ)
 
-void *
-ngx_memcpy(void *dst, const void *src, size_t n)
+ਖਾਲੀ *
+ngx_memcpy(ਖਾਲੀ *dst, ਅਚਲ ਖਾਲੀ *src, ਮਾਪ_t n)
 {
-    if (n > NGX_MEMCPY_LIMIT) {
-        ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "memcpy %uz bytes", n);
-        ngx_debug_point();
+    ਜੇ (n > NGX_MEMCPY_ਹੱਦਬੰਦੀ) {
+        ngx_log_error(NGX_LOG_ALERT, ngx_ਚੱਕਰ->ਲਘੂਗਣਕ, 0, "memcpy %uz bytes", n);
+        ngx_debug_ਬਿੰਦੂ();
     }
 
-    return memcpy(dst, src, n);
+    ਵਾਪਸ ਸਮ੍ਰਿਤੀ_ਨਕਲ(dst, src, n);
 }
 
-#endif
+#ਜੇ_ਅੰਤ

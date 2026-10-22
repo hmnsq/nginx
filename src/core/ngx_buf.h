@@ -5,163 +5,163 @@
  */
 
 
-#ifndef _NGX_BUF_H_INCLUDED_
-#define _NGX_BUF_H_INCLUDED_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ _NGX_BUF_H_INCLUDED_
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NGX_BUF_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-typedef void *            ngx_buf_tag_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ *            ngx_buf_ਟੈਗ_t;
 
-typedef struct ngx_buf_s  ngx_buf_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_buf_s  ngx_buf_t;
 
-struct ngx_buf_s {
+ਬਣਤਰ ngx_buf_s {
     u_char          *pos;
-    u_char          *last;
+    u_char          *ਆਖਰੀ;
     off_t            file_pos;
-    off_t            file_last;
+    off_t            file_ਆਖਰੀ;
 
-    u_char          *start;         /* start of buffer */
-    u_char          *end;           /* end of buffer */
-    ngx_buf_tag_t    tag;
+    u_char          *ਸ਼ੁਰੂ;         /* start of buffer */
+    u_char          *ਸਿਰਾ;           /* end of buffer */
+    ngx_buf_ਟੈਗ_t    ਟੈਗ;
     ngx_file_t      *file;
     ngx_buf_t       *shadow;
 
 
     /* the buf's content could be changed */
-    unsigned         temporary:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ         temporary:1;
 
     /*
      * the buf's content is in a memory cache or in a read only memory
      * and must not be changed
      */
-    unsigned         memory:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ         ਸਮ੍ਰਿਤੀ:1;
 
     /* the buf's content is mmap()ed and must not be changed */
-    unsigned         mmap:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ         mmap:1;
 
-    unsigned         recycled:1;
-    unsigned         in_file:1;
-    unsigned         flush:1;
-    unsigned         sync:1;
-    unsigned         last_buf:1;
-    unsigned         last_in_chain:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ         recycled:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ         ਵਿੱਚ_file:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ         flush:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ         sync:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ         ਆਖਰੀ_buf:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ         ਆਖਰੀ_ਵਿੱਚ_chain:1;
 
-    unsigned         last_shadow:1;
-    unsigned         temp_file:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ         ਆਖਰੀ_shadow:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ         ਆਰਜ਼ੀ_file:1;
 
-    /* STUB */ int   num;
+    /* STUB */ ਪੂਰਨ   ਅੰਕ;
 };
 
 
-struct ngx_chain_s {
+ਬਣਤਰ ngx_chain_s {
     ngx_buf_t    *buf;
-    ngx_chain_t  *next;
+    ngx_chain_t  *ਅਗਲਾ;
 };
 
 
-typedef struct {
-    ngx_int_t    num;
-    size_t       size;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    ngx_int_t    ਅੰਕ;
+    ਮਾਪ_t       ਮਾਪ;
 } ngx_bufs_t;
 
 
-typedef struct ngx_output_chain_ctx_s  ngx_output_chain_ctx_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_output_chain_ctx_s  ngx_output_chain_ctx_t;
 
-typedef ngx_int_t (*ngx_output_chain_filter_pt)(void *ctx, ngx_chain_t *in);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ngx_int_t (*ngx_output_chain_filter_pt)(ਖਾਲੀ *ctx, ngx_chain_t *ਵਿੱਚ);
 
-typedef void (*ngx_output_chain_aio_pt)(ngx_output_chain_ctx_t *ctx,
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ (*ngx_output_chain_aio_pt)(ngx_output_chain_ctx_t *ctx,
     ngx_file_t *file);
 
-struct ngx_output_chain_ctx_s {
+ਬਣਤਰ ngx_output_chain_ctx_s {
     ngx_buf_t                   *buf;
-    ngx_chain_t                 *in;
-    ngx_chain_t                 *free;
+    ngx_chain_t                 *ਵਿੱਚ;
+    ngx_chain_t                 *ਮੁਕਤ;
     ngx_chain_t                 *busy;
 
-    unsigned                     sendfile:1;
-    unsigned                     directio:1;
-    unsigned                     unaligned:1;
-    unsigned                     need_in_memory:1;
-    unsigned                     need_in_temp:1;
-    unsigned                     aio:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                     sendfile:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                     directio:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                     unaligned:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                     need_ਵਿੱਚ_ਸਮ੍ਰਿਤੀ:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                     need_ਵਿੱਚ_ਆਰਜ਼ੀ:1;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ                     aio:1;
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#ਜੇ (NGX_HAVE_FILE_AIO || NGX_COMPAT)
     ngx_output_chain_aio_pt      aio_handler;
-#endif
+#ਜੇ_ਅੰਤ
 
-#if (NGX_THREADS || NGX_COMPAT)
+#ਜੇ (NGX_ਧਾਗੇ || NGX_COMPAT)
     ngx_int_t                  (*thread_handler)(ngx_thread_task_t *task,
                                                  ngx_file_t *file);
     ngx_thread_task_t           *thread_task;
-#endif
+#ਜੇ_ਅੰਤ
 
     off_t                        alignment;
 
     ngx_pool_t                  *pool;
     ngx_int_t                    allocated;
     ngx_bufs_t                   bufs;
-    ngx_buf_tag_t                tag;
+    ngx_buf_ਟੈਗ_t                ਟੈਗ;
 
     ngx_output_chain_filter_pt   output_filter;
-    void                        *filter_ctx;
+    ਖਾਲੀ                        *filter_ctx;
 };
 
 
-typedef struct {
-    ngx_chain_t                 *out;
-    ngx_chain_t                **last;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    ngx_chain_t                 *ਬਾਹਰਲਾ;
+    ngx_chain_t                **ਆਖਰੀ;
     ngx_connection_t            *connection;
     ngx_pool_t                  *pool;
-    off_t                        limit;
+    off_t                        ਹੱਦਬੰਦੀ;
 } ngx_chain_writer_ctx_t;
 
 
-#define NGX_CHAIN_ERROR     (ngx_chain_t *) NGX_ERROR
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_CHAIN_ERROR     (ngx_chain_t *) NGX_ERROR
 
 
-#define ngx_buf_in_memory(b)       ((b)->temporary || (b)->memory || (b)->mmap)
-#define ngx_buf_in_memory_only(b)  (ngx_buf_in_memory(b) && !(b)->in_file)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_buf_ਵਿੱਚ_ਸਮ੍ਰਿਤੀ(b)       ((b)->temporary || (b)->ਸਮ੍ਰਿਤੀ || (b)->mmap)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_buf_ਵਿੱਚ_ਸਮ੍ਰਿਤੀ_only(b)  (ngx_buf_ਵਿੱਚ_ਸਮ੍ਰਿਤੀ(b) && !(b)->ਵਿੱਚ_file)
 
-#define ngx_buf_special(b)                                                   \
-    (((b)->flush || (b)->last_buf || (b)->sync)                              \
-     && !ngx_buf_in_memory(b) && !(b)->in_file)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_buf_special(b)                                                   \
+    (((b)->flush || (b)->ਆਖਰੀ_buf || (b)->sync)                              \
+     && !ngx_buf_ਵਿੱਚ_ਸਮ੍ਰਿਤੀ(b) && !(b)->ਵਿੱਚ_file)
 
-#define ngx_buf_sync_only(b)                                                 \
-    ((b)->sync && !ngx_buf_in_memory(b)                                      \
-     && !(b)->in_file && !(b)->flush && !(b)->last_buf)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_buf_sync_only(b)                                                 \
+    ((b)->sync && !ngx_buf_ਵਿੱਚ_ਸਮ੍ਰਿਤੀ(b)                                      \
+     && !(b)->ਵਿੱਚ_file && !(b)->flush && !(b)->ਆਖਰੀ_buf)
 
-#define ngx_buf_size(b)                                                      \
-    (ngx_buf_in_memory(b) ? (off_t) ((b)->last - (b)->pos):                  \
-                            ((b)->file_last - (b)->file_pos))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_buf_ਮਾਪ(b)                                                      \
+    (ngx_buf_ਵਿੱਚ_ਸਮ੍ਰਿਤੀ(b) ? (off_t) ((b)->ਆਖਰੀ - (b)->pos):                  \
+                            ((b)->file_ਆਖਰੀ - (b)->file_pos))
 
-ngx_buf_t *ngx_create_temp_buf(ngx_pool_t *pool, size_t size);
-ngx_chain_t *ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs);
+ngx_buf_t *ngx_create_ਆਰਜ਼ੀ_buf(ngx_pool_t *pool, ਮਾਪ_t ਮਾਪ);
+ngx_chain_t *ngx_create_chain_ਦਾ_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs);
 
 
-#define ngx_alloc_buf(pool)  ngx_palloc(pool, sizeof(ngx_buf_t))
-#define ngx_calloc_buf(pool) ngx_pcalloc(pool, sizeof(ngx_buf_t))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_alloc_buf(pool)  ngx_palloc(pool, ਆਕਾਰ(ngx_buf_t))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_calloc_buf(pool) ngx_pcalloc(pool, ਆਕਾਰ(ngx_buf_t))
 
 ngx_chain_t *ngx_alloc_chain_link(ngx_pool_t *pool);
-#define ngx_free_chain(pool, cl)                                             \
-    (cl)->next = (pool)->chain;                                              \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_free_chain(pool, cl)                                             \
+    (cl)->ਅਗਲਾ = (pool)->chain;                                              \
     (pool)->chain = (cl)
 
 
 
-ngx_int_t ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *in);
-ngx_int_t ngx_chain_writer(void *ctx, ngx_chain_t *in);
+ngx_int_t ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *ਵਿੱਚ);
+ngx_int_t ngx_chain_writer(ਖਾਲੀ *ctx, ngx_chain_t *ਵਿੱਚ);
 
-ngx_int_t ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain,
-    ngx_chain_t *in);
-ngx_chain_t *ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **free);
-void ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free,
-    ngx_chain_t **busy, ngx_chain_t **out, ngx_buf_tag_t tag);
+ngx_int_t ngx_chain_ਜੋੜੋ_copy(ngx_pool_t *pool, ngx_chain_t **chain,
+    ngx_chain_t *ਵਿੱਚ);
+ngx_chain_t *ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **ਮੁਕਤ);
+ਖਾਲੀ ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **ਮੁਕਤ,
+    ngx_chain_t **busy, ngx_chain_t **ਬਾਹਰਲਾ, ngx_buf_ਟੈਗ_t ਟੈਗ);
 
-off_t ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit);
+off_t ngx_chain_coalesce_file(ngx_chain_t **ਵਿੱਚ, off_t ਹੱਦਬੰਦੀ);
 
-ngx_chain_t *ngx_chain_update_sent(ngx_chain_t *in, off_t sent);
+ngx_chain_t *ngx_chain_update_ਭੇਜਿਆ(ngx_chain_t *ਵਿੱਚ, off_t ਭੇਜਿਆ);
 
-#endif /* _NGX_BUF_H_INCLUDED_ */
+#ਜੇ_ਅੰਤ /* _NGX_BUF_H_INCLUDED_ */

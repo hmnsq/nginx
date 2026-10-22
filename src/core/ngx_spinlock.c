@@ -5,34 +5,34 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-void
-ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
+ਖਾਲੀ
+ngx_spinlock(ngx_atomic_t *ਤਾਲਾ, ngx_atomic_int_t ਮੁੱਲ, ngx_uint_t spin)
 {
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#ਜੇ (NGX_HAVE_ATOMIC_OPS)
 
     ngx_uint_t  i, n;
 
-    for ( ;; ) {
+    ਲਈ ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-            return;
+        ਜੇ (*ਤਾਲਾ == 0 && ngx_atomic_cmp_ਸੈੱਟ(ਤਾਲਾ, 0, ਮੁੱਲ)) {
+            ਵਾਪਸ;
         }
 
-        if (ngx_ncpu > 1) {
+        ਜੇ (ngx_ncpu > 1) {
 
-            for (n = 1; n < spin; n <<= 1) {
+            ਲਈ (n = 1; n < spin; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                ਲਈ (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-                    return;
+                ਜੇ (*ਤਾਲਾ == 0 && ngx_atomic_cmp_ਸੈੱਟ(ਤਾਲਾ, 0, ਮੁੱਲ)) {
+                    ਵਾਪਸ;
                 }
             }
         }
@@ -40,14 +40,14 @@ ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
         ngx_sched_yield();
     }
 
-#else
+#ਨਹੀਂਤਾਂ
 
-#if (NGX_THREADS)
+#ਜੇ (NGX_ਧਾਗੇ)
 
-#error ngx_spinlock() or ngx_atomic_cmp_set() are not defined !
+#ਗਲਤੀ ngx_spinlock() or ngx_atomic_cmp_ਸੈੱਟ() are not defined !
 
-#endif
+#ਜੇ_ਅੰਤ
 
-#endif
+#ਜੇ_ਅੰਤ
 
 }

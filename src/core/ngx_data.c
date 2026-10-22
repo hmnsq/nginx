@@ -4,214 +4,214 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-static size_t  ngx_data_sizes[] = {
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_OBJECT_TYPE */
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_LIST_TYPE */
-    sizeof(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
-    sizeof(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
-    sizeof(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
+ਸਥਿਰ ਮਾਪ_t  ngx_ਅੰਕੜੇ_sizes[] = {
+    ਆਕਾਰ(ngx_ਅੰਕੜੇ_obj_t),            /* NGX_DATA_OBJECT_TYPE */
+    ਆਕਾਰ(ngx_ਅੰਕੜੇ_obj_t),            /* NGX_DATA_LIST_TYPE */
+    ਆਕਾਰ(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
+    ਆਕਾਰ(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
+    ਆਕਾਰ(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
     0,                                 /* NGX_DATA_NULL_TYPE */
 };
 
 
-ngx_data_item_t *
-ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type)
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_new_ਵਸਤੂ(ngx_pool_t *pool, ngx_uint_t type)
 {
-    ngx_data_item_t  *item;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *ਵਸਤੂ;
 
-    item = ngx_pcalloc(pool, offsetof(ngx_data_item_t, data)
-                             + ngx_data_sizes[type]);
-    if (item == NULL) {
-        return NULL;
+    ਵਸਤੂ = ngx_pcalloc(pool, offsetof(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t, ਅੰਕੜੇ)
+                             + ngx_ਅੰਕੜੇ_sizes[type]);
+    ਜੇ (ਵਸਤੂ == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    item->type = type;
+    ਵਸਤੂ->type = type;
 
-    return item;
+    ਵਾਪਸ ਵਸਤੂ;
 }
 
 
-void
-ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name, ngx_data_item_t *item)
+ਖਾਲੀ
+ngx_ਅੰਕੜੇ_ਜੋੜੋ_ਵਸਤੂ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *obj, ngx_str_t *name, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    ngx_data_obj_t  *object;
+    ngx_ਅੰਕੜੇ_obj_t  *object;
 
-    if (obj->type != NGX_DATA_OBJECT_TYPE && obj->type != NGX_DATA_LIST_TYPE) {
-        return;
+    ਜੇ (obj->type != NGX_ਅੰਕੜੇ_OBJECT_TYPE && obj->type != NGX_ਅੰਕੜੇ_LIST_TYPE) {
+        ਵਾਪਸ;
     }
 
-    object = &obj->data.object;
+    object = &obj->ਅੰਕੜੇ.object;
 
-    if (name) {
-        item->name = *name;
+    ਜੇ (name) {
+        ਵਸਤੂ->name = *name;
     }
 
-    if (object->next == NULL) {
-        object->next = &object->item;
+    ਜੇ (object->ਅਗਲਾ == ਨਿਰਾ) {
+        object->ਅਗਲਾ = &object->ਵਸਤੂ;
     }
 
-    *object->next = item;
-    object->next = &item->next;
+    *object->ਅਗਲਾ = ਵਸਤੂ;
+    object->ਅਗਲਾ = &ਵਸਤੂ->ਅਗਲਾ;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_obj_handler(uintptr_t ਅੰਕੜੇ, ngx_pool_t *pool, ਖਾਲੀ *ctx)
 {
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *obj, *ਵਸਤੂ;
+    ngx_ਅੰਕੜੇ_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_ਅੰਕੜੇ_new_object(pool);
+    ਜੇ (obj == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_ਅੰਕੜੇ_decl_t *) ਅੰਕੜੇ;
 
-    while (decl->name.len) {
+    ਜਦੋਂ (decl->name.len) {
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        ਵਸਤੂ = decl->handler(decl->ਅੰਕੜੇ, pool, ctx);
+        ਜੇ (ਵਸਤੂ == ਨਿਰਾ) {
+            ਵਾਪਸ ਨਿਰਾ;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        ਜੇ (ਵਸਤੂ != NGX_ਅੰਕੜੇ_DECLINE) {
+            ngx_ਅੰਕੜੇ_ਜੋੜੋ_ਵਸਤੂ(obj, &decl->name, ਵਸਤੂ);
         }
 
         decl++;
     }
 
-    return obj;
+    ਵਾਪਸ obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_obj_fields_handler(uintptr_t ਅੰਕੜੇ, ngx_pool_t *pool, ਖਾਲੀ *ctx,
     ngx_array_t *fields)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *ਮੁੱਲ;
     ngx_uint_t        i;
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *obj, *ਵਸਤੂ;
+    ngx_ਅੰਕੜੇ_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_ਅੰਕੜੇ_new_object(pool);
+    ਜੇ (obj == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_ਅੰਕੜੇ_decl_t *) ਅੰਕੜੇ;
 
-    while (decl->name.len) {
+    ਜਦੋਂ (decl->name.len) {
 
-        if (fields) {
-            value = fields->elts;
+        ਜੇ (fields) {
+            ਮੁੱਲ = fields->elts;
 
-            for (i = 0; i < fields->nelts; i++) {
+            ਲਈ (i = 0; i < fields->nelts; i++) {
 
-                if (decl->name.len == value[i].len
-                    && ngx_strncmp(decl->name.data, value[i].data,
-                                   value[i].len)
+                ਜੇ (decl->name.len == ਮੁੱਲ[i].len
+                    && ngx_strncmp(decl->name.ਅੰਕੜੇ, ਮੁੱਲ[i].ਅੰਕੜੇ,
+                                   ਮੁੱਲ[i].len)
                     == 0)
                 {
-                    goto found;
+                    ਜਾਓ ਮਿਲਿਆ;
                 }
             }
 
             decl++;
-            continue;
+            ਜਾਰੀ;
         }
 
-found:
+ਮਿਲਿਆ:
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        ਵਸਤੂ = decl->handler(decl->ਅੰਕੜੇ, pool, ctx);
+        ਜੇ (ਵਸਤੂ == ਨਿਰਾ) {
+            ਵਾਪਸ ਨਿਰਾ;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        ਜੇ (ਵਸਤੂ != NGX_ਅੰਕੜੇ_DECLINE) {
+            ngx_ਅੰਕੜੇ_ਜੋੜੋ_ਵਸਤੂ(obj, &decl->name, ਵਸਤੂ);
         }
 
         decl++;
     }
 
-    return obj;
+    ਵਾਪਸ obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_ਸੰਖਿਆ_handler(uintptr_t ਅੰਕੜੇ, ngx_pool_t *pool, ਖਾਲੀ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *ਵਸਤੂ;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    ਵਸਤੂ = ngx_ਅੰਕੜੇ_new_integer(pool);
+    ਜੇ (ਵਸਤੂ == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    item->data.integer = data;
+    ਵਸਤੂ->ਅੰਕੜੇ.integer = ਅੰਕੜੇ;
 
-    return item;
+    ਵਾਪਸ ਵਸਤੂ;
 }
 
 
-ngx_data_item_t *
-ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_string_handler(uintptr_t ਅੰਕੜੇ, ngx_pool_t *pool, ਖਾਲੀ *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *ਮੁੱਲ, *src;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *ਵਸਤੂ;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    ਵਸਤੂ = ngx_ਅੰਕੜੇ_new_string(pool);
+    ਜੇ (ਵਸਤੂ == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    value = &item->data.string;
+    ਮੁੱਲ = &ਵਸਤੂ->ਅੰਕੜੇ.string;
 
-    src = (ngx_str_t *) data;
+    src = (ngx_str_t *) ਅੰਕੜੇ;
 
-    value->len = src->len;
+    ਮੁੱਲ->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    ਮੁੱਲ->ਅੰਕੜੇ = ngx_pstrdup(pool, src);
+    ਜੇ (ਮੁੱਲ->ਅੰਕੜੇ == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    return item;
+    ਵਾਪਸ ਵਸਤੂ;
 }
 
 
-ngx_data_item_t *
-ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_boolean_handler(uintptr_t ਅੰਕੜੇ, ngx_pool_t *pool, ਖਾਲੀ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *ਵਸਤੂ;
 
-    item = ngx_data_new_boolean(pool);
-    if (item == NULL) {
-        return NULL;
+    ਵਸਤੂ = ngx_ਅੰਕੜੇ_new_boolean(pool);
+    ਜੇ (ਵਸਤੂ == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    item->data.boolean = data;
+    ਵਸਤੂ->ਅੰਕੜੇ.boolean = ਅੰਕੜੇ;
 
-    return item;
+    ਵਾਪਸ ਵਸਤੂ;
 }
 
 
-ngx_data_item_t *
-ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_ਸਮਾਂ_handler(uintptr_t ਅੰਕੜੇ, ngx_pool_t *pool, ਖਾਲੀ *ctx)
 {
     u_char      *p;
     ngx_tm_t     tm;
     ngx_str_t    src;
-    ngx_time_t  *tp;
-    u_char       iso8601[sizeof("1974-01-19T13:00:00.000Z") - 1];
+    ngx_ਸਮਾਂ_t  *tp;
+    u_char       iso8601[ਆਕਾਰ("1974-01-19T13:00:00.000Z") - 1];
 
-    tp = (ngx_time_t *) data;
+    tp = (ngx_ਸਮਾਂ_t *) ਅੰਕੜੇ;
 
     ngx_gmtime(tp->sec, &tm);
 
@@ -219,94 +219,94 @@ ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
                     tm.ngx_tm_year, tm.ngx_tm_mon, tm.ngx_tm_mday,
                     tm.ngx_tm_hour, tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    if (tp->msec) {
+    ਜੇ (tp->msec) {
         p = ngx_sprintf(p, ".%03ui", tp->msec);
     }
 
     *p++ = 'Z';
 
-    src.data = iso8601;
+    src.ਅੰਕੜੇ = iso8601;
     src.len = p - iso8601;
 
-    return ngx_data_string_handler((uintptr_t) &src, pool, NULL);
+    ਵਾਪਸ ngx_ਅੰਕੜੇ_string_handler((uintptr_t) &src, pool, ਨਿਰਾ);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_struct_int64_handler(uintptr_t ਅੰਕੜੇ, ngx_pool_t *pool, ਖਾਲੀ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *ਵਸਤੂ;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    ਵਸਤੂ = ngx_ਅੰਕੜੇ_new_integer(pool);
+    ਜੇ (ਵਸਤੂ == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    item->data.integer = *(int64_t *) ((u_char *) ctx + data);
+    ਵਸਤੂ->ਅੰਕੜੇ.integer = *(int64_t *) ((u_char *) ctx + ਅੰਕੜੇ);
 
-    return item;
+    ਵਾਪਸ ਵਸਤੂ;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_struct_int_handler(uintptr_t ਅੰਕੜੇ, ngx_pool_t *pool, ਖਾਲੀ *ctx)
 {
-    ngx_int_t  value;
+    ngx_int_t  ਮੁੱਲ;
 
-    value = *(ngx_int_t *) ((u_char *) ctx + data);
+    ਮੁੱਲ = *(ngx_int_t *) ((u_char *) ctx + ਅੰਕੜੇ);
 
-    return ngx_data_number_handler(value, pool, NULL);
+    ਵਾਪਸ ngx_ਅੰਕੜੇ_ਸੰਖਿਆ_handler(ਮੁੱਲ, pool, ਨਿਰਾ);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_atomic_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_struct_atomic_handler(uintptr_t ਅੰਕੜੇ, ngx_pool_t *pool, ਖਾਲੀ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *ਵਸਤੂ;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    ਵਸਤੂ = ngx_ਅੰਕੜੇ_new_integer(pool);
+    ਜੇ (ਵਸਤੂ == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    item->data.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + data);
+    ਵਸਤੂ->ਅੰਕੜੇ.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + ਅੰਕੜੇ);
 
-    return item;
+    ਵਾਪਸ ਵਸਤੂ;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_struct_str_handler(uintptr_t ਅੰਕੜੇ, ngx_pool_t *pool, ਖਾਲੀ *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *ਮੁੱਲ, *src;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *ਵਸਤੂ;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    ਵਸਤੂ = ngx_ਅੰਕੜੇ_new_string(pool);
+    ਜੇ (ਵਸਤੂ == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    value = &item->data.string;
+    ਮੁੱਲ = &ਵਸਤੂ->ਅੰਕੜੇ.string;
 
-    src = (ngx_str_t *) ((u_char *) ctx + data);
+    src = (ngx_str_t *) ((u_char *) ctx + ਅੰਕੜੇ);
 
-    value->len = src->len;
+    ਮੁੱਲ->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    ਮੁੱਲ->ਅੰਕੜੇ = ngx_pstrdup(pool, src);
+    ਜੇ (ਮੁੱਲ->ਅੰਕੜੇ == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    return item;
+    ਵਾਪਸ ਵਸਤੂ;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *
+ngx_ਅੰਕੜੇ_struct_boolean_handler(uintptr_t ਅੰਕੜੇ, ngx_pool_t *pool, ਖਾਲੀ *ctx)
 {
-    ngx_uint_t  value;
+    ngx_uint_t  ਮੁੱਲ;
 
-    value = *(ngx_uint_t *) ((u_char *) ctx + data);
+    ਮੁੱਲ = *(ngx_uint_t *) ((u_char *) ctx + ਅੰਕੜੇ);
 
-    return ngx_data_boolean_handler(value, pool, NULL);
+    ਵਾਪਸ ngx_ਅੰਕੜੇ_boolean_handler(ਮੁੱਲ, pool, ਨਿਰਾ);
 }

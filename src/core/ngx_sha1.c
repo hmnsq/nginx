@@ -7,16 +7,16 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_sha1.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_sha1.h>
 
 
-static const u_char *ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data,
-    size_t size);
+ਸਥਿਰ ਅਚਲ u_char *ngx_sha1_body(ngx_sha1_t *ctx, ਅਚਲ u_char *ਅੰਕੜੇ,
+    ਮਾਪ_t ਮਾਪ);
 
 
-void
+ਖਾਲੀ
 ngx_sha1_init(ngx_sha1_t *ctx)
 {
     ctx->a = 0x67452301;
@@ -25,95 +25,95 @@ ngx_sha1_init(ngx_sha1_t *ctx)
     ctx->d = 0x10325476;
     ctx->e = 0xc3d2e1f0;
 
-    ctx->bytes = 0;
+    ctx->ਬਾਈਟਾਂ = 0;
 }
 
 
-void
-ngx_sha1_update(ngx_sha1_t *ctx, const void *data, size_t size)
+ਖਾਲੀ
+ngx_sha1_update(ngx_sha1_t *ctx, ਅਚਲ ਖਾਲੀ *ਅੰਕੜੇ, ਮਾਪ_t ਮਾਪ)
 {
-    size_t  used, free;
+    ਮਾਪ_t  ਵਰਤਿਆ, ਮੁਕਤ;
 
-    used = (size_t) (ctx->bytes & 0x3f);
-    ctx->bytes += size;
+    ਵਰਤਿਆ = (ਮਾਪ_t) (ctx->ਬਾਈਟਾਂ & 0x3f);
+    ctx->ਬਾਈਟਾਂ += ਮਾਪ;
 
-    if (used) {
-        free = 64 - used;
+    ਜੇ (ਵਰਤਿਆ) {
+        ਮੁਕਤ = 64 - ਵਰਤਿਆ;
 
-        if (size < free) {
-            ngx_memcpy(&ctx->buffer[used], data, size);
-            return;
+        ਜੇ (ਮਾਪ < ਮੁਕਤ) {
+            ngx_memcpy(&ctx->ਬਫਰ[ਵਰਤਿਆ], ਅੰਕੜੇ, ਮਾਪ);
+            ਵਾਪਸ;
         }
 
-        ngx_memcpy(&ctx->buffer[used], data, free);
-        data = (u_char *) data + free;
-        size -= free;
-        (void) ngx_sha1_body(ctx, ctx->buffer, 64);
+        ngx_memcpy(&ctx->ਬਫਰ[ਵਰਤਿਆ], ਅੰਕੜੇ, ਮੁਕਤ);
+        ਅੰਕੜੇ = (u_char *) ਅੰਕੜੇ + ਮੁਕਤ;
+        ਮਾਪ -= ਮੁਕਤ;
+        (ਖਾਲੀ) ngx_sha1_body(ctx, ctx->ਬਫਰ, 64);
     }
 
-    if (size >= 64) {
-        data = ngx_sha1_body(ctx, data, size & ~(size_t) 0x3f);
-        size &= 0x3f;
+    ਜੇ (ਮਾਪ >= 64) {
+        ਅੰਕੜੇ = ngx_sha1_body(ctx, ਅੰਕੜੇ, ਮਾਪ & ~(ਮਾਪ_t) 0x3f);
+        ਮਾਪ &= 0x3f;
     }
 
-    ngx_memcpy(ctx->buffer, data, size);
+    ngx_memcpy(ctx->ਬਫਰ, ਅੰਕੜੇ, ਮਾਪ);
 }
 
 
-void
-ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
+ਖਾਲੀ
+ngx_sha1_final(u_char ਨਤੀਜਾ[20], ngx_sha1_t *ctx)
 {
-    size_t  used, free;
+    ਮਾਪ_t  ਵਰਤਿਆ, ਮੁਕਤ;
 
-    used = (size_t) (ctx->bytes & 0x3f);
+    ਵਰਤਿਆ = (ਮਾਪ_t) (ctx->ਬਾਈਟਾਂ & 0x3f);
 
-    ctx->buffer[used++] = 0x80;
+    ctx->ਬਫਰ[ਵਰਤਿਆ++] = 0x80;
 
-    free = 64 - used;
+    ਮੁਕਤ = 64 - ਵਰਤਿਆ;
 
-    if (free < 8) {
-        ngx_memzero(&ctx->buffer[used], free);
-        (void) ngx_sha1_body(ctx, ctx->buffer, 64);
-        used = 0;
-        free = 64;
+    ਜੇ (ਮੁਕਤ < 8) {
+        ngx_memzero(&ctx->ਬਫਰ[ਵਰਤਿਆ], ਮੁਕਤ);
+        (ਖਾਲੀ) ngx_sha1_body(ctx, ctx->ਬਫਰ, 64);
+        ਵਰਤਿਆ = 0;
+        ਮੁਕਤ = 64;
     }
 
-    ngx_memzero(&ctx->buffer[used], free - 8);
+    ngx_memzero(&ctx->ਬਫਰ[ਵਰਤਿਆ], ਮੁਕਤ - 8);
 
-    ctx->bytes <<= 3;
-    ctx->buffer[56] = (u_char) (ctx->bytes >> 56);
-    ctx->buffer[57] = (u_char) (ctx->bytes >> 48);
-    ctx->buffer[58] = (u_char) (ctx->bytes >> 40);
-    ctx->buffer[59] = (u_char) (ctx->bytes >> 32);
-    ctx->buffer[60] = (u_char) (ctx->bytes >> 24);
-    ctx->buffer[61] = (u_char) (ctx->bytes >> 16);
-    ctx->buffer[62] = (u_char) (ctx->bytes >> 8);
-    ctx->buffer[63] = (u_char) ctx->bytes;
+    ctx->ਬਾਈਟਾਂ <<= 3;
+    ctx->ਬਫਰ[56] = (u_char) (ctx->ਬਾਈਟਾਂ >> 56);
+    ctx->ਬਫਰ[57] = (u_char) (ctx->ਬਾਈਟਾਂ >> 48);
+    ctx->ਬਫਰ[58] = (u_char) (ctx->ਬਾਈਟਾਂ >> 40);
+    ctx->ਬਫਰ[59] = (u_char) (ctx->ਬਾਈਟਾਂ >> 32);
+    ctx->ਬਫਰ[60] = (u_char) (ctx->ਬਾਈਟਾਂ >> 24);
+    ctx->ਬਫਰ[61] = (u_char) (ctx->ਬਾਈਟਾਂ >> 16);
+    ctx->ਬਫਰ[62] = (u_char) (ctx->ਬਾਈਟਾਂ >> 8);
+    ctx->ਬਫਰ[63] = (u_char) ctx->ਬਾਈਟਾਂ;
 
-    (void) ngx_sha1_body(ctx, ctx->buffer, 64);
+    (ਖਾਲੀ) ngx_sha1_body(ctx, ctx->ਬਫਰ, 64);
 
-    result[0] = (u_char) (ctx->a >> 24);
-    result[1] = (u_char) (ctx->a >> 16);
-    result[2] = (u_char) (ctx->a >> 8);
-    result[3] = (u_char) ctx->a;
-    result[4] = (u_char) (ctx->b >> 24);
-    result[5] = (u_char) (ctx->b >> 16);
-    result[6] = (u_char) (ctx->b >> 8);
-    result[7] = (u_char) ctx->b;
-    result[8] = (u_char) (ctx->c >> 24);
-    result[9] = (u_char) (ctx->c >> 16);
-    result[10] = (u_char) (ctx->c >> 8);
-    result[11] = (u_char) ctx->c;
-    result[12] = (u_char) (ctx->d >> 24);
-    result[13] = (u_char) (ctx->d >> 16);
-    result[14] = (u_char) (ctx->d >> 8);
-    result[15] = (u_char) ctx->d;
-    result[16] = (u_char) (ctx->e >> 24);
-    result[17] = (u_char) (ctx->e >> 16);
-    result[18] = (u_char) (ctx->e >> 8);
-    result[19] = (u_char) ctx->e;
+    ਨਤੀਜਾ[0] = (u_char) (ctx->a >> 24);
+    ਨਤੀਜਾ[1] = (u_char) (ctx->a >> 16);
+    ਨਤੀਜਾ[2] = (u_char) (ctx->a >> 8);
+    ਨਤੀਜਾ[3] = (u_char) ctx->a;
+    ਨਤੀਜਾ[4] = (u_char) (ctx->b >> 24);
+    ਨਤੀਜਾ[5] = (u_char) (ctx->b >> 16);
+    ਨਤੀਜਾ[6] = (u_char) (ctx->b >> 8);
+    ਨਤੀਜਾ[7] = (u_char) ctx->b;
+    ਨਤੀਜਾ[8] = (u_char) (ctx->c >> 24);
+    ਨਤੀਜਾ[9] = (u_char) (ctx->c >> 16);
+    ਨਤੀਜਾ[10] = (u_char) (ctx->c >> 8);
+    ਨਤੀਜਾ[11] = (u_char) ctx->c;
+    ਨਤੀਜਾ[12] = (u_char) (ctx->d >> 24);
+    ਨਤੀਜਾ[13] = (u_char) (ctx->d >> 16);
+    ਨਤੀਜਾ[14] = (u_char) (ctx->d >> 8);
+    ਨਤੀਜਾ[15] = (u_char) ctx->d;
+    ਨਤੀਜਾ[16] = (u_char) (ctx->e >> 24);
+    ਨਤੀਜਾ[17] = (u_char) (ctx->e >> 16);
+    ਨਤੀਜਾ[18] = (u_char) (ctx->e >> 8);
+    ਨਤੀਜਾ[19] = (u_char) ctx->e;
 
-    ngx_memzero(ctx, sizeof(*ctx));
+    ngx_memzero(ctx, ਆਕਾਰ(*ctx));
 }
 
 
@@ -121,19 +121,19 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
  * Helper functions.
  */
 
-#define ROTATE(bits, word)  (((word) << (bits)) | ((word) >> (32 - (bits))))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ROTATE(ਬਿੱਟ, ਸ਼ਬਦ)  (((ਸ਼ਬਦ) << (ਬਿੱਟ)) | ((ਸ਼ਬਦ) >> (32 - (ਬਿੱਟ))))
 
-#define F1(b, c, d)  (((b) & (c)) | ((~(b)) & (d)))
-#define F2(b, c, d)  ((b) ^ (c) ^ (d))
-#define F3(b, c, d)  (((b) & (c)) | ((b) & (d)) | ((c) & (d)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ F1(b, c, d)  (((b) & (c)) | ((~(b)) & (d)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ F2(b, c, d)  ((b) ^ (c) ^ (d))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ F3(b, c, d)  (((b) & (c)) | ((b) & (d)) | ((c) & (d)))
 
-#define STEP(f, a, b, c, d, e, w, t)                                          \
-    temp = ROTATE(5, (a)) + f((b), (c), (d)) + (e) + (w) + (t);               \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ਕਦਮ(f, a, b, c, d, e, w, t)                                          \
+    ਆਰਜ਼ੀ = ROTATE(5, (a)) + f((b), (c), (d)) + (e) + (w) + (t);               \
     (e) = (d);                                                                \
     (d) = (c);                                                                \
     (c) = ROTATE(30, (b));                                                    \
     (b) = (a);                                                                \
-    (a) = temp;
+    (a) = ਆਰਜ਼ੀ;
 
 
 /*
@@ -141,7 +141,7 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
  * them as uint32_t.
  */
 
-#define GET(n)                                                                \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ GET(n)                                                                \
     ((uint32_t) p[n * 4 + 3] |                                                \
     ((uint32_t) p[n * 4 + 2] << 8) |                                          \
     ((uint32_t) p[n * 4 + 1] << 16) |                                         \
@@ -153,16 +153,16 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
  * the bit counters.  There are no alignment requirements.
  */
 
-static const u_char *
-ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
+ਸਥਿਰ ਅਚਲ u_char *
+ngx_sha1_body(ngx_sha1_t *ctx, ਅਚਲ u_char *ਅੰਕੜੇ, ਮਾਪ_t ਮਾਪ)
 {
-    uint32_t       a, b, c, d, e, temp;
+    uint32_t       a, b, c, d, e, ਆਰਜ਼ੀ;
     uint32_t       saved_a, saved_b, saved_c, saved_d, saved_e;
-    uint32_t       words[80];
+    uint32_t       ਸ਼ਬਦ_2[80];
     ngx_uint_t     i;
-    const u_char  *p;
+    ਅਚਲ u_char  *p;
 
-    p = data;
+    p = ਅੰਕੜੇ;
 
     a = ctx->a;
     b = ctx->b;
@@ -170,7 +170,7 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
     d = ctx->d;
     e = ctx->e;
 
-    do {
+    ਕਰੋ {
         saved_a = a;
         saved_b = b;
         saved_c = c;
@@ -179,100 +179,100 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
 
         /* Load data block into the words array */
 
-        for (i = 0; i < 16; i++) {
-            words[i] = GET(i);
+        ਲਈ (i = 0; i < 16; i++) {
+            ਸ਼ਬਦ_2[i] = GET(i);
         }
 
-        for (i = 16; i < 80; i++) {
-            words[i] = ROTATE(1, words[i - 3] ^ words[i - 8] ^ words[i - 14]
-                                 ^ words[i - 16]);
+        ਲਈ (i = 16; i < 80; i++) {
+            ਸ਼ਬਦ_2[i] = ROTATE(1, ਸ਼ਬਦ_2[i - 3] ^ ਸ਼ਬਦ_2[i - 8] ^ ਸ਼ਬਦ_2[i - 14]
+                                 ^ ਸ਼ਬਦ_2[i - 16]);
         }
 
         /* Transformations */
 
-        STEP(F1, a, b, c, d, e, words[0],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[1],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[2],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[3],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[4],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[5],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[6],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[7],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[8],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[9],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[10], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[11], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[12], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[13], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[14], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[15], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[16], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[17], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[18], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[19], 0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[0],  0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[1],  0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[2],  0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[3],  0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[4],  0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[5],  0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[6],  0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[7],  0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[8],  0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[9],  0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[10], 0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[11], 0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[12], 0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[13], 0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[14], 0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[15], 0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[16], 0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[17], 0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[18], 0x5a827999);
+        ਕਦਮ(F1, a, b, c, d, e, ਸ਼ਬਦ_2[19], 0x5a827999);
 
-        STEP(F2, a, b, c, d, e, words[20], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[21], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[22], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[23], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[24], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[25], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[26], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[27], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[28], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[29], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[30], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[31], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[32], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[33], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[34], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[35], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[36], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[37], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[38], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[39], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[20], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[21], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[22], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[23], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[24], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[25], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[26], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[27], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[28], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[29], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[30], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[31], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[32], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[33], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[34], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[35], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[36], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[37], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[38], 0x6ed9eba1);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[39], 0x6ed9eba1);
 
-        STEP(F3, a, b, c, d, e, words[40], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[41], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[42], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[43], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[44], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[45], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[46], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[47], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[48], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[49], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[50], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[51], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[52], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[53], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[54], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[55], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[56], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[57], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[58], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[59], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[40], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[41], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[42], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[43], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[44], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[45], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[46], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[47], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[48], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[49], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[50], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[51], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[52], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[53], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[54], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[55], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[56], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[57], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[58], 0x8f1bbcdc);
+        ਕਦਮ(F3, a, b, c, d, e, ਸ਼ਬਦ_2[59], 0x8f1bbcdc);
 
-        STEP(F2, a, b, c, d, e, words[60], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[61], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[62], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[63], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[64], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[65], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[66], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[67], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[68], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[69], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[70], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[71], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[72], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[73], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[74], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[75], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[76], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[77], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[78], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[79], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[60], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[61], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[62], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[63], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[64], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[65], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[66], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[67], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[68], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[69], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[70], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[71], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[72], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[73], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[74], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[75], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[76], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[77], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[78], 0xca62c1d6);
+        ਕਦਮ(F2, a, b, c, d, e, ਸ਼ਬਦ_2[79], 0xca62c1d6);
 
         a += saved_a;
         b += saved_b;
@@ -282,7 +282,7 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
 
         p += 64;
 
-    } while (size -= 64);
+    } ਜਦੋਂ (ਮਾਪ -= 64);
 
     ctx->a = a;
     ctx->b = b;
@@ -290,5 +290,5 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
     ctx->d = d;
     ctx->e = e;
 
-    return p;
+    ਵਾਪਸ p;
 }

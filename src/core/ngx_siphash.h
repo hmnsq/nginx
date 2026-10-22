@@ -4,15 +4,15 @@
  */
 
 
-#ifndef _NGX_SIPHASH_H_INCLUDED_
-#define _NGX_SIPHASH_H_INCLUDED_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ _NGX_SIPHASH_H_INCLUDED_
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NGX_SIPHASH_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-uint64_t ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len);
+uint64_t ngx_siphash(uint64_t k0, uint64_t k1, u_char *ਅੰਕੜੇ, ਮਾਪ_t len);
 
 
-#endif /* _NGX_SIPHASH_H_INCLUDED_ */
+#ਜੇ_ਅੰਤ /* _NGX_SIPHASH_H_INCLUDED_ */

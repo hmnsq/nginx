@@ -5,74 +5,74 @@
  */
 
 
-#ifndef _NGX_REGEX_H_INCLUDED_
-#define _NGX_REGEX_H_INCLUDED_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ _NGX_REGEX_H_INCLUDED_
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NGX_REGEX_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-#if (NGX_PCRE2)
+#ਜੇ (NGX_PCRE2)
 
-#define PCRE2_CODE_UNIT_WIDTH  8
-#include <pcre2.h>
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ PCRE2_ਕੋਡ_UNIT_ਚੌੜਾਈ  8
+#ਅਨ੍ਤਰ੍ਭਾਵ <pcre2.h>
 
-#define NGX_REGEX_NO_MATCHED   PCRE2_ERROR_NOMATCH   /* -1 */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_REGEX_NO_MATCHED   PCRE2_ERROR_NOMATCH   /* -1 */
 
-typedef pcre2_code  ngx_regex_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ pcre2_ਕੋਡ  ngx_regex_t;
 
-#else
+#ਨਹੀਂਤਾਂ
 
-#include <pcre.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <pcre.h>
 
-#define NGX_REGEX_NO_MATCHED   PCRE_ERROR_NOMATCH    /* -1 */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_REGEX_NO_MATCHED   PCRE_ERROR_NOMATCH    /* -1 */
 
-typedef struct {
-    pcre        *code;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    pcre        *ਕੋਡ;
     pcre_extra  *extra;
 } ngx_regex_t;
 
-#endif
+#ਜੇ_ਅੰਤ
 
 
-#define NGX_REGEX_CASELESS     0x00000001
-#define NGX_REGEX_MULTILINE    0x00000002
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_REGEX_CASELESS     0x00000001
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_REGEX_MULTILINE    0x00000002
 
 
-typedef struct {
-    ngx_str_t     pattern;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    ngx_str_t     ਨਮੂਨਾ;
     ngx_pool_t   *pool;
     ngx_uint_t    options;
 
     ngx_regex_t  *regex;
-    int           captures;
-    int           named_captures;
-    int           name_size;
-    u_char       *names;
+    ਪੂਰਨ           captures;
+    ਪੂਰਨ           named_captures;
+    ਪੂਰਨ           name_ਮਾਪ;
+    u_char       *ਨਾਂ;
     ngx_str_t     err;
 } ngx_regex_compile_t;
 
 
-typedef struct {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
     ngx_regex_t  *regex;
     u_char       *name;
 } ngx_regex_elt_t;
 
 
-void ngx_regex_init(void);
+ਖਾਲੀ ngx_regex_init(ਖਾਲੀ);
 ngx_int_t ngx_regex_compile(ngx_regex_compile_t *rc);
 
-ngx_int_t ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures,
-    ngx_uint_t size);
+ngx_int_t ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, ਪੂਰਨ *captures,
+    ngx_uint_t ਮਾਪ);
 
-#if (NGX_PCRE2)
-#define ngx_regex_exec_n       "pcre2_match()"
-#else
-#define ngx_regex_exec_n       "pcre_exec()"
-#endif
+#ਜੇ (NGX_PCRE2)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_regex_exec_n       "pcre2_match()"
+#ਨਹੀਂਤਾਂ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_regex_exec_n       "pcre_exec()"
+#ਜੇ_ਅੰਤ
 
-ngx_int_t ngx_regex_exec_array(ngx_array_t *a, ngx_str_t *s, ngx_log_t *log);
+ngx_int_t ngx_regex_exec_array(ngx_array_t *a, ngx_str_t *s, ngx_log_t *ਲਘੂਗਣਕ);
 
 
-#endif /* _NGX_REGEX_H_INCLUDED_ */
+#ਜੇ_ਅੰਤ /* _NGX_REGEX_H_INCLUDED_ */

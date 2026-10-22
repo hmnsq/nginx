@@ -5,111 +5,111 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-#ifndef _NGX_QUEUE_H_INCLUDED_
-#define _NGX_QUEUE_H_INCLUDED_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ NGX_ਕਤਾਰ_H_INCLUDED
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_ਕਤਾਰ_H_INCLUDED
 
 
-typedef struct ngx_queue_s  ngx_queue_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_ਕਤਾਰ_s  ngx_ਕਤਾਰ_t;
 
-struct ngx_queue_s {
-    ngx_queue_t  *prev;
-    ngx_queue_t  *next;
+ਬਣਤਰ ngx_ਕਤਾਰ_s {
+    ngx_ਕਤਾਰ_t  *prev;
+    ngx_ਕਤਾਰ_t  *ਅਗਲਾ;
 };
 
 
-#define ngx_queue_init(q)                                                     \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_init(q)                                                     \
     (q)->prev = q;                                                            \
-    (q)->next = q
+    (q)->ਅਗਲਾ = q
 
 
-#define ngx_queue_empty(h)                                                    \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_ਖਾਲੀ_ਥਾਵਾਂ(h)                                                    \
     (h == (h)->prev)
 
 
-#define ngx_queue_insert_head(h, x)                                           \
-    (x)->next = (h)->next;                                                    \
-    (x)->next->prev = x;                                                      \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_ਪਾਓ_ਸਿਰ(h, x)                                           \
+    (x)->ਅਗਲਾ = (h)->ਅਗਲਾ;                                                    \
+    (x)->ਅਗਲਾ->prev = x;                                                      \
     (x)->prev = h;                                                            \
-    (h)->next = x
+    (h)->ਅਗਲਾ = x
 
 
-#define ngx_queue_insert_after   ngx_queue_insert_head
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_ਪਾਓ_after   ngx_ਕਤਾਰ_ਪਾਓ_ਸਿਰ
 
 
-#define ngx_queue_insert_tail(h, x)                                           \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_ਪਾਓ_ਪੂਛ(h, x)                                           \
     (x)->prev = (h)->prev;                                                    \
-    (x)->prev->next = x;                                                      \
-    (x)->next = h;                                                            \
+    (x)->prev->ਅਗਲਾ = x;                                                      \
+    (x)->ਅਗਲਾ = h;                                                            \
     (h)->prev = x
 
 
-#define ngx_queue_insert_before   ngx_queue_insert_tail
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_ਪਾਓ_before   ngx_ਕਤਾਰ_ਪਾਓ_ਪੂਛ
 
 
-#define ngx_queue_head(h)                                                     \
-    (h)->next
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_ਸਿਰ(h)                                                     \
+    (h)->ਅਗਲਾ
 
 
-#define ngx_queue_last(h)                                                     \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_ਆਖਰੀ(h)                                                     \
     (h)->prev
 
 
-#define ngx_queue_sentinel(h)                                                 \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_sentinel(h)                                                 \
     (h)
 
 
-#define ngx_queue_next(q)                                                     \
-    (q)->next
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_ਅਗਲਾ(q)                                                     \
+    (q)->ਅਗਲਾ
 
 
-#define ngx_queue_prev(q)                                                     \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_prev(q)                                                     \
     (q)->prev
 
 
-#if (NGX_DEBUG)
+#ਜੇ (NGX_DEBUG)
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next;                                              \
-    (x)->prev = NULL;                                                         \
-    (x)->next = NULL
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_remove(x)                                                   \
+    (x)->ਅਗਲਾ->prev = (x)->prev;                                              \
+    (x)->prev->ਅਗਲਾ = (x)->ਅਗਲਾ;                                              \
+    (x)->prev = ਨਿਰਾ;                                                         \
+    (x)->ਅਗਲਾ = ਨਿਰਾ
 
-#else
+#ਨਹੀਂਤਾਂ
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_remove(x)                                                   \
+    (x)->ਅਗਲਾ->prev = (x)->prev;                                              \
+    (x)->prev->ਅਗਲਾ = (x)->ਅਗਲਾ
 
-#endif
+#ਜੇ_ਅੰਤ
 
 
-#define ngx_queue_split(h, q, n)                                              \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_ਵੰਡੋ(h, q, n)                                              \
     (n)->prev = (h)->prev;                                                    \
-    (n)->prev->next = n;                                                      \
-    (n)->next = q;                                                            \
+    (n)->prev->ਅਗਲਾ = n;                                                      \
+    (n)->ਅਗਲਾ = q;                                                            \
     (h)->prev = (q)->prev;                                                    \
-    (h)->prev->next = h;                                                      \
+    (h)->prev->ਅਗਲਾ = h;                                                      \
     (q)->prev = n;
 
 
-#define ngx_queue_add(h, n)                                                   \
-    (h)->prev->next = (n)->next;                                              \
-    (n)->next->prev = (h)->prev;                                              \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_ਜੋੜੋ(h, n)                                                   \
+    (h)->prev->ਅਗਲਾ = (n)->ਅਗਲਾ;                                              \
+    (n)->ਅਗਲਾ->prev = (h)->prev;                                              \
     (h)->prev = (n)->prev;                                                    \
-    (h)->prev->next = h;
+    (h)->prev->ਅਗਲਾ = h;
 
 
-#define ngx_queue_data(q, type, link)                                         \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_ਕਤਾਰ_ਅੰਕੜੇ(q, type, link)                                         \
     (type *) ((u_char *) q - offsetof(type, link))
 
 
-ngx_queue_t *ngx_queue_middle(ngx_queue_t *queue);
-void ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ngx_ਕਤਾਰ_t *ngx_ਕਤਾਰ_ਵਿਚਕਾਰ(ngx_ਕਤਾਰ_t *ਕਤਾਰ);
+ਖਾਲੀ ngx_ਕਤਾਰ_ਛਾਂਟੋ(ngx_ਕਤਾਰ_t *ਕਤਾਰ,
+    ngx_int_t (*cmp)(ਅਚਲ ngx_ਕਤਾਰ_t *, ਅਚਲ ngx_ਕਤਾਰ_t *));
 
 
-#endif /* _NGX_QUEUE_H_INCLUDED_ */
+#ਜੇ_ਅੰਤ /* _NGX_QUEUE_H_INCLUDED_ */

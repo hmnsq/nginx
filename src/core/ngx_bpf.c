@@ -4,140 +4,140 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
-#define NGX_BPF_LOGBUF_SIZE  (32 * 1024)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_BPF_LOGBUF_ਮਾਪ  (32 * 1024)
 
 
-static ngx_inline int
-ngx_bpf(enum bpf_cmd cmd, union bpf_attr *attr, unsigned int size)
+ਸਥਿਰ ngx_inline ਪੂਰਨ
+ngx_bpf(ਗਿਣਤੀ bpf_cmd cmd, ਸੰਘ bpf_attr *attr, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ ਮਾਪ)
 {
-    return syscall(__NR_bpf, cmd, attr, size);
+    ਵਾਪਸ syscall(__NR_bpf, cmd, attr, ਮਾਪ);
 }
 
 
-void
-ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol, int fd)
+ਖਾਲੀ
+ngx_bpf_ਪ੍ਰੋਗਰਾਮ_link(ngx_bpf_ਪ੍ਰੋਗਰਾਮ_t *ਪ੍ਰੋਗਰਾਮ, ਅਚਲ ਅੱਖਰ *ਚਿੰਨ੍ਹ, ਪੂਰਨ fd)
 {
     ngx_uint_t        i;
     ngx_bpf_reloc_t  *rl;
 
-    rl = program->relocs;
+    rl = ਪ੍ਰੋਗਰਾਮ->relocs;
 
-    for (i = 0; i < program->nrelocs; i++) {
-        if (ngx_strcmp(rl[i].name, symbol) == 0) {
-            program->ins[rl[i].offset].src_reg = 1;
-            program->ins[rl[i].offset].imm = fd;
+    ਲਈ (i = 0; i < ਪ੍ਰੋਗਰਾਮ->nrelocs; i++) {
+        ਜੇ (ngx_strcmp(rl[i].name, ਚਿੰਨ੍ਹ) == 0) {
+            ਪ੍ਰੋਗਰਾਮ->ins[rl[i].ਵਿੱਥ].src_reg = 1;
+            ਪ੍ਰੋਗਰਾਮ->ins[rl[i].ਵਿੱਥ].imm = fd;
         }
     }
 }
 
 
-int
-ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program)
+ਪੂਰਨ
+ngx_bpf_ਲੱਦੋ_ਪ੍ਰੋਗਰਾਮ(ngx_log_t *ਲਘੂਗਣਕ, ngx_bpf_ਪ੍ਰੋਗਰਾਮ_t *ਪ੍ਰੋਗਰਾਮ)
 {
-    int             fd;
-    union bpf_attr  attr;
-#if (NGX_DEBUG)
-    char            buf[NGX_BPF_LOGBUF_SIZE];
-#endif
+    ਪੂਰਨ             fd;
+    ਸੰਘ bpf_attr  attr;
+#ਜੇ (NGX_DEBUG)
+    ਅੱਖਰ            buf[NGX_BPF_LOGBUF_ਮਾਪ];
+#ਜੇ_ਅੰਤ
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, ਆਕਾਰ(ਸੰਘ bpf_attr));
 
-    attr.license = (uintptr_t) program->license;
-    attr.prog_type = program->type;
-    attr.insns = (uintptr_t) program->ins;
-    attr.insn_cnt = program->nins;
+    attr.license = (uintptr_t) ਪ੍ਰੋਗਰਾਮ->license;
+    attr.prog_type = ਪ੍ਰੋਗਰਾਮ->type;
+    attr.insns = (uintptr_t) ਪ੍ਰੋਗਰਾਮ->ins;
+    attr.insn_cnt = ਪ੍ਰੋਗਰਾਮ->nins;
 
-#if (NGX_DEBUG)
+#ਜੇ (NGX_DEBUG)
     /* for verifier errors */
     attr.log_buf = (uintptr_t) buf;
-    attr.log_size = NGX_BPF_LOGBUF_SIZE;
+    attr.log_ਮਾਪ = NGX_BPF_LOGBUF_ਮਾਪ;
     attr.log_level = 1;
-#endif
+#ਜੇ_ਅੰਤ
 
-    fd = ngx_bpf(BPF_PROG_LOAD, &attr, sizeof(attr));
-    if (fd < 0) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    fd = ngx_bpf(BPF_PROG_ਲੱਦੋ, &attr, ਆਕਾਰ(attr));
+    ਜੇ (fd < 0) {
+        ngx_log_error(NGX_LOG_ALERT, ਲਘੂਗਣਕ, ngx_errno,
                       "failed to load BPF program");
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0,
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ਲਘੂਗਣਕ, 0,
                        "bpf verifier: %s", buf);
 
-        return -1;
+        ਵਾਪਸ -1;
     }
 
-    return fd;
+    ਵਾਪਸ fd;
 }
 
 
-int
-ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags)
+ਪੂਰਨ
+ngx_bpf_map_create(ngx_log_t *ਲਘੂਗਣਕ, ਗਿਣਤੀ bpf_map_type type, ਪੂਰਨ ਕੁੰਜੀ_ਮਾਪ,
+    ਪੂਰਨ ਮੁੱਲ_ਮਾਪ, ਪੂਰਨ max_entries, uint32_t map_flags)
 {
-    int             fd;
-    union bpf_attr  attr;
+    ਪੂਰਨ             fd;
+    ਸੰਘ bpf_attr  attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, ਆਕਾਰ(ਸੰਘ bpf_attr));
 
     attr.map_type = type;
-    attr.key_size = key_size;
-    attr.value_size = value_size;
+    attr.ਕੁੰਜੀ_ਮਾਪ = ਕੁੰਜੀ_ਮਾਪ;
+    attr.ਮੁੱਲ_ਮਾਪ = ਮੁੱਲ_ਮਾਪ;
     attr.max_entries = max_entries;
     attr.map_flags = map_flags;
 
-    fd = ngx_bpf(BPF_MAP_CREATE, &attr, sizeof(attr));
-    if (fd < 0) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    fd = ngx_bpf(BPF_MAP_CREATE, &attr, ਆਕਾਰ(attr));
+    ਜੇ (fd < 0) {
+        ngx_log_error(NGX_LOG_ALERT, ਲਘੂਗਣਕ, ngx_errno,
                       "failed to create BPF map");
-        return NGX_ERROR;
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    return fd;
+    ਵਾਪਸ fd;
 }
 
 
-int
-ngx_bpf_map_update(int fd, const void *key, const void *value, uint64_t flags)
+ਪੂਰਨ
+ngx_bpf_map_update(ਪੂਰਨ fd, ਅਚਲ ਖਾਲੀ *ਕੁੰਜੀ, ਅਚਲ ਖਾਲੀ *ਮੁੱਲ, uint64_t flags)
 {
-    union bpf_attr attr;
+    ਸੰਘ bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, ਆਕਾਰ(ਸੰਘ bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.ਕੁੰਜੀ = (uintptr_t) ਕੁੰਜੀ;
+    attr.ਮੁੱਲ = (uintptr_t) ਮੁੱਲ;
     attr.flags = flags;
 
-    return ngx_bpf(BPF_MAP_UPDATE_ELEM, &attr, sizeof(attr));
+    ਵਾਪਸ ngx_bpf(BPF_MAP_UPDATE_ELEM, &attr, ਆਕਾਰ(attr));
 }
 
 
-int
-ngx_bpf_map_delete(int fd, const void *key)
+ਪੂਰਨ
+ngx_bpf_map_delete(ਪੂਰਨ fd, ਅਚਲ ਖਾਲੀ *ਕੁੰਜੀ)
 {
-    union bpf_attr attr;
+    ਸੰਘ bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, ਆਕਾਰ(ਸੰਘ bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
+    attr.ਕੁੰਜੀ = (uintptr_t) ਕੁੰਜੀ;
 
-    return ngx_bpf(BPF_MAP_DELETE_ELEM, &attr, sizeof(attr));
+    ਵਾਪਸ ngx_bpf(BPF_MAP_DELETE_ELEM, &attr, ਆਕਾਰ(attr));
 }
 
 
-int
-ngx_bpf_map_lookup(int fd, const void *key, void *value)
+ਪੂਰਨ
+ngx_bpf_map_lookup(ਪੂਰਨ fd, ਅਚਲ ਖਾਲੀ *ਕੁੰਜੀ, ਖਾਲੀ *ਮੁੱਲ)
 {
-    union bpf_attr attr;
+    ਸੰਘ bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, ਆਕਾਰ(ਸੰਘ bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.ਕੁੰਜੀ = (uintptr_t) ਕੁੰਜੀ;
+    attr.ਮੁੱਲ = (uintptr_t) ਮੁੱਲ;
 
-    return ngx_bpf(BPF_MAP_LOOKUP_ELEM, &attr, sizeof(attr));
+    ਵਾਪਸ ngx_bpf(BPF_MAP_LOOKUP_ELEM, &attr, ਆਕਾਰ(attr));
 }

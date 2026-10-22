@@ -5,35 +5,35 @@
  */
 
 
-#ifndef _NGX_CRC_H_INCLUDED_
-#define _NGX_CRC_H_INCLUDED_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ NGX_ਚੱਕਰੀ_ਜਾਂਚ_H_INCLUDED
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_ਚੱਕਰੀ_ਜਾਂਚ_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
 /* 32-bit crc16 */
 
-static ngx_inline uint32_t
-ngx_crc(u_char *data, size_t len)
+ਸਥਿਰ ngx_inline uint32_t
+ngx_ਚੱਕਰੀ_ਜਾਂਚ(u_char *ਅੰਕੜੇ, ਮਾਪ_t len)
 {
-    uint32_t  sum;
+    uint32_t  ਜੋੜ;
 
-    for (sum = 0; len; len--) {
+    ਲਈ (ਜੋੜ = 0; len; len--) {
 
         /*
          * gcc 2.95.2 x86 and icc 7.1.006 compile
          * that operator into the single "rol" opcode,
          * msvc 6.0sp2 compiles it into four opcodes.
          */
-        sum = sum >> 1 | sum << 31;
+        ਜੋੜ = ਜੋੜ >> 1 | ਜੋੜ << 31;
 
-        sum += *data++;
+        ਜੋੜ += *ਅੰਕੜੇ++;
     }
 
-    return sum;
+    ਵਾਪਸ ਜੋੜ;
 }
 
 
-#endif /* _NGX_CRC_H_INCLUDED_ */
+#ਜੇ_ਅੰਤ /* _NGX_CRC_H_INCLUDED_ */

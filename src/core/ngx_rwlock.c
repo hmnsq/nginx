@@ -5,40 +5,40 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#ਜੇ (NGX_HAVE_ATOMIC_OPS)
 
 
-#define NGX_RWLOCK_SPIN   2048
-#define NGX_RWLOCK_WLOCK  ((ngx_atomic_uint_t) -1)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_RWLOCK_SPIN   2048
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_RWLOCK_WLOCK  ((ngx_atomic_uint_t) -1)
 
 
-void
-ngx_rwlock_wlock(ngx_atomic_t *lock)
+ਖਾਲੀ
+ngx_rwlock_wlock(ngx_atomic_t *ਤਾਲਾ)
 {
     ngx_uint_t  i, n;
 
-    for ( ;; ) {
+    ਲਈ ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK)) {
-            return;
+        ਜੇ (*ਤਾਲਾ == 0 && ngx_atomic_cmp_ਸੈੱਟ(ਤਾਲਾ, 0, NGX_RWLOCK_WLOCK)) {
+            ਵਾਪਸ;
         }
 
-        if (ngx_ncpu > 1) {
+        ਜੇ (ngx_ncpu > 1) {
 
-            for (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
+            ਲਈ (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                ਲਈ (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0
-                    && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK))
+                ਜੇ (*ਤਾਲਾ == 0
+                    && ngx_atomic_cmp_ਸੈੱਟ(ਤਾਲਾ, 0, NGX_RWLOCK_WLOCK))
                 {
-                    return;
+                    ਵਾਪਸ;
                 }
             }
         }
@@ -48,35 +48,35 @@ ngx_rwlock_wlock(ngx_atomic_t *lock)
 }
 
 
-void
-ngx_rwlock_rlock(ngx_atomic_t *lock)
+ਖਾਲੀ
+ngx_rwlock_rlock(ngx_atomic_t *ਤਾਲਾ)
 {
     ngx_uint_t         i, n;
     ngx_atomic_uint_t  readers;
 
-    for ( ;; ) {
-        readers = *lock;
+    ਲਈ ( ;; ) {
+        readers = *ਤਾਲਾ;
 
-        if (readers != NGX_RWLOCK_WLOCK
-            && ngx_atomic_cmp_set(lock, readers, readers + 1))
+        ਜੇ (readers != NGX_RWLOCK_WLOCK
+            && ngx_atomic_cmp_ਸੈੱਟ(ਤਾਲਾ, readers, readers + 1))
         {
-            return;
+            ਵਾਪਸ;
         }
 
-        if (ngx_ncpu > 1) {
+        ਜੇ (ngx_ncpu > 1) {
 
-            for (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
+            ਲਈ (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                ਲਈ (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                readers = *lock;
+                readers = *ਤਾਲਾ;
 
-                if (readers != NGX_RWLOCK_WLOCK
-                    && ngx_atomic_cmp_set(lock, readers, readers + 1))
+                ਜੇ (readers != NGX_RWLOCK_WLOCK
+                    && ngx_atomic_cmp_ਸੈੱਟ(ਤਾਲਾ, readers, readers + 1))
                 {
-                    return;
+                    ਵਾਪਸ;
                 }
             }
         }
@@ -86,32 +86,32 @@ ngx_rwlock_rlock(ngx_atomic_t *lock)
 }
 
 
-void
-ngx_rwlock_unlock(ngx_atomic_t *lock)
+ਖਾਲੀ
+ngx_rwlock_unlock(ngx_atomic_t *ਤਾਲਾ)
 {
-    if (*lock == NGX_RWLOCK_WLOCK) {
-        (void) ngx_atomic_cmp_set(lock, NGX_RWLOCK_WLOCK, 0);
-    } else {
-        (void) ngx_atomic_fetch_add(lock, -1);
+    ਜੇ (*ਤਾਲਾ == NGX_RWLOCK_WLOCK) {
+        (ਖਾਲੀ) ngx_atomic_cmp_ਸੈੱਟ(ਤਾਲਾ, NGX_RWLOCK_WLOCK, 0);
+    } ਨਹੀਂਤਾਂ {
+        (ਖਾਲੀ) ngx_atomic_fetch_ਜੋੜੋ(ਤਾਲਾ, -1);
     }
 }
 
 
-void
-ngx_rwlock_downgrade(ngx_atomic_t *lock)
+ਖਾਲੀ
+ngx_rwlock_downgrade(ngx_atomic_t *ਤਾਲਾ)
 {
-    if (*lock == NGX_RWLOCK_WLOCK) {
-        *lock = 1;
+    ਜੇ (*ਤਾਲਾ == NGX_RWLOCK_WLOCK) {
+        *ਤਾਲਾ = 1;
     }
 }
 
 
-#else
+#ਨਹੀਂਤਾਂ
 
-#if (NGX_HTTP_UPSTREAM_ZONE || NGX_STREAM_UPSTREAM_ZONE)
+#ਜੇ (NGX_HTTP_UPSTREAM_ZONE || NGX_ਧਾਰਾ_UPSTREAM_ZONE)
 
-#error ngx_atomic_cmp_set() is not defined!
+#ਗਲਤੀ ngx_atomic_cmp_ਸੈੱਟ() is not defined!
 
-#endif
+#ਜੇ_ਅੰਤ
 
-#endif
+#ਜੇ_ਅੰਤ

@@ -5,22 +5,22 @@
  */
 
 
-#ifndef _NGINX_H_INCLUDED_
-#define _NGINX_H_INCLUDED_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ _NGINX_H_INCLUDED_
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NGINX_H_INCLUDED_
 
 
-#define nginx_version      1031009
-#define NGINX_VERSION      "1.31.9"
-#define NGINX_VER          "nginx/" NGINX_VERSION
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ nginx_ਸੰਸਕਰਣ      1031009
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGINX_ਸੰਸਕਰਣ      "1.31.9"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGINX_VER          "nginx/" NGINX_ਸੰਸਕਰਣ
 
-#ifdef NGX_BUILD
-#define NGINX_VER_BUILD    NGINX_VER " (" NGX_BUILD ")"
-#else
-#define NGINX_VER_BUILD    NGINX_VER
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ NGX_BUILD
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGINX_VER_BUILD    NGINX_VER " (" NGX_BUILD ")"
+#ਨਹੀਂਤਾਂ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGINX_VER_BUILD    NGINX_VER
+#ਜੇ_ਅੰਤ
 
-#define NGINX_VAR          "NGINX"
-#define NGX_OLDPID_EXT     ".oldbin"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGINX_VAR          "NGINX"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_OLDPID_EXT     ".oldbin"
 
 
-#endif /* _NGINX_H_INCLUDED_ */
+#ਜੇ_ਅੰਤ /* _NGINX_H_INCLUDED_ */

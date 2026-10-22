@@ -5,12 +5,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ਸਥਿਰ ਖਾਲੀ ngx_ਕਤਾਰ_ਮਿਲਾਓ(ngx_ਕਤਾਰ_t *ਕਤਾਰ, ngx_ਕਤਾਰ_t *ਪੂਛ,
+    ngx_int_t (*cmp)(ਅਚਲ ngx_ਕਤਾਰ_t *, ਅਚਲ ngx_ਕਤਾਰ_t *));
 
 
 /*
@@ -18,32 +18,32 @@ static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
  * or the first element of the queue's second part otherwise
  */
 
-ngx_queue_t *
-ngx_queue_middle(ngx_queue_t *queue)
+ngx_ਕਤਾਰ_t *
+ngx_ਕਤਾਰ_ਵਿਚਕਾਰ(ngx_ਕਤਾਰ_t *ਕਤਾਰ)
 {
-    ngx_queue_t  *middle, *next;
+    ngx_ਕਤਾਰ_t  *ਵਿਚਕਾਰ, *ਅਗਲਾ;
 
-    middle = ngx_queue_head(queue);
+    ਵਿਚਕਾਰ = ngx_ਕਤਾਰ_ਸਿਰ(ਕਤਾਰ);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    ਜੇ (ਵਿਚਕਾਰ == ngx_ਕਤਾਰ_ਆਖਰੀ(ਕਤਾਰ)) {
+        ਵਾਪਸ ਵਿਚਕਾਰ;
     }
 
-    next = ngx_queue_head(queue);
+    ਅਗਲਾ = ngx_ਕਤਾਰ_ਸਿਰ(ਕਤਾਰ);
 
-    for ( ;; ) {
-        middle = ngx_queue_next(middle);
+    ਲਈ ( ;; ) {
+        ਵਿਚਕਾਰ = ngx_ਕਤਾਰ_ਅਗਲਾ(ਵਿਚਕਾਰ);
 
-        next = ngx_queue_next(next);
+        ਅਗਲਾ = ngx_ਕਤਾਰ_ਅਗਲਾ(ਅਗਲਾ);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ਜੇ (ਅਗਲਾ == ngx_ਕਤਾਰ_ਆਖਰੀ(ਕਤਾਰ)) {
+            ਵਾਪਸ ਵਿਚਕਾਰ;
         }
 
-        next = ngx_queue_next(next);
+        ਅਗਲਾ = ngx_ਕਤਾਰ_ਅਗਲਾ(ਅਗਲਾ);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ਜੇ (ਅਗਲਾ == ngx_ਕਤਾਰ_ਆਖਰੀ(ਕਤਾਰ)) {
+            ਵਾਪਸ ਵਿਚਕਾਰ;
         }
     }
 }
@@ -51,56 +51,56 @@ ngx_queue_middle(ngx_queue_t *queue)
 
 /* the stable merge sort */
 
-void
-ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+ਖਾਲੀ
+ngx_ਕਤਾਰ_ਛਾਂਟੋ(ngx_ਕਤਾਰ_t *ਕਤਾਰ,
+    ngx_int_t (*cmp)(ਅਚਲ ngx_ਕਤਾਰ_t *, ਅਚਲ ngx_ਕਤਾਰ_t *))
 {
-    ngx_queue_t  *q, tail;
+    ngx_ਕਤਾਰ_t  *q, ਪੂਛ;
 
-    q = ngx_queue_head(queue);
+    q = ngx_ਕਤਾਰ_ਸਿਰ(ਕਤਾਰ);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    ਜੇ (q == ngx_ਕਤਾਰ_ਆਖਰੀ(ਕਤਾਰ)) {
+        ਵਾਪਸ;
     }
 
-    q = ngx_queue_middle(queue);
+    q = ngx_ਕਤਾਰ_ਵਿਚਕਾਰ(ਕਤਾਰ);
 
-    ngx_queue_split(queue, q, &tail);
+    ngx_ਕਤਾਰ_ਵੰਡੋ(ਕਤਾਰ, q, &ਪੂਛ);
 
-    ngx_queue_sort(queue, cmp);
-    ngx_queue_sort(&tail, cmp);
+    ngx_ਕਤਾਰ_ਛਾਂਟੋ(ਕਤਾਰ, cmp);
+    ngx_ਕਤਾਰ_ਛਾਂਟੋ(&ਪੂਛ, cmp);
 
-    ngx_queue_merge(queue, &tail, cmp);
+    ngx_ਕਤਾਰ_ਮਿਲਾਓ(ਕਤਾਰ, &ਪੂਛ, cmp);
 }
 
 
-static void
-ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+ਸਥਿਰ ਖਾਲੀ
+ngx_ਕਤਾਰ_ਮਿਲਾਓ(ngx_ਕਤਾਰ_t *ਕਤਾਰ, ngx_ਕਤਾਰ_t *ਪੂਛ,
+    ngx_int_t (*cmp)(ਅਚਲ ngx_ਕਤਾਰ_t *, ਅਚਲ ngx_ਕਤਾਰ_t *))
 {
-    ngx_queue_t  *q1, *q2;
+    ngx_ਕਤਾਰ_t  *q1, *q2;
 
-    q1 = ngx_queue_head(queue);
-    q2 = ngx_queue_head(tail);
+    q1 = ngx_ਕਤਾਰ_ਸਿਰ(ਕਤਾਰ);
+    q2 = ngx_ਕਤਾਰ_ਸਿਰ(ਪੂਛ);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
-            ngx_queue_add(queue, tail);
-            break;
+    ਲਈ ( ;; ) {
+        ਜੇ (q1 == ngx_ਕਤਾਰ_sentinel(ਕਤਾਰ)) {
+            ngx_ਕਤਾਰ_ਜੋੜੋ(ਕਤਾਰ, ਪੂਛ);
+            ਰੋਕੋ;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        ਜੇ (q2 == ngx_ਕਤਾਰ_sentinel(ਪੂਛ)) {
+            ਰੋਕੋ;
         }
 
-        if (cmp(q1, q2) <= 0) {
-            q1 = ngx_queue_next(q1);
-            continue;
+        ਜੇ (cmp(q1, q2) <= 0) {
+            q1 = ngx_ਕਤਾਰ_ਅਗਲਾ(q1);
+            ਜਾਰੀ;
         }
 
-        ngx_queue_remove(q2);
-        ngx_queue_insert_before(q1, q2);
+        ngx_ਕਤਾਰ_remove(q2);
+        ngx_ਕਤਾਰ_ਪਾਓ_before(q1, q2);
 
-        q2 = ngx_queue_head(tail);
+        q2 = ngx_ਕਤਾਰ_ਸਿਰ(ਪੂਛ);
     }
 }

@@ -5,49 +5,49 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-static char *ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log);
-static void ngx_log_insert(ngx_log_t *log, ngx_log_t *new_log);
+ਸਥਿਰ ਅੱਖਰ *ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, ਖਾਲੀ *conf);
+ਸਥਿਰ ਅੱਖਰ *ngx_log_ਸੈੱਟ_ਪੱਧਰ(ngx_conf_t *cf, ngx_log_t *ਲਘੂਗਣਕ);
+ਸਥਿਰ ਖਾਲੀ ngx_log_ਪਾਓ(ngx_log_t *ਲਘੂਗਣਕ, ngx_log_t *new_log);
 
 
-#if (NGX_DEBUG)
+#ਜੇ (NGX_DEBUG)
 
-static void ngx_log_memory_writer(ngx_log_t *log, ngx_uint_t level,
-    u_char *buf, size_t len);
-static void ngx_log_memory_cleanup(void *data);
+ਸਥਿਰ ਖਾਲੀ ngx_log_ਸਮ੍ਰਿਤੀ_writer(ngx_log_t *ਲਘੂਗਣਕ, ngx_uint_t level,
+    u_char *buf, ਮਾਪ_t len);
+ਸਥਿਰ ਖਾਲੀ ngx_log_ਸਮ੍ਰਿਤੀ_cleanup(ਖਾਲੀ *ਅੰਕੜੇ);
 
 
-typedef struct {
-    u_char        *start;
-    u_char        *end;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    u_char        *ਸ਼ੁਰੂ;
+    u_char        *ਸਿਰਾ;
     u_char        *pos;
     ngx_atomic_t   written;
-} ngx_log_memory_buf_t;
+} ngx_log_ਸਮ੍ਰਿਤੀ_buf_t;
 
-#endif
+#ਜੇ_ਅੰਤ
 
 
-static ngx_command_t  ngx_errlog_commands[] = {
+ਸਥਿਰ ngx_command_t  ngx_errlog_commands[] = {
 
     { ngx_string("error_log"),
-      NGX_MAIN_CONF|NGX_CONF_1MORE,
+      NGX_MAIN_CONF|NGX_CONF_1_ਹੋਰ,
       ngx_error_log,
       0,
       0,
-      NULL },
+      ਨਿਰਾ },
 
       ngx_null_command
 };
 
 
-static ngx_core_module_t  ngx_errlog_module_ctx = {
+ਸਥਿਰ ngx_core_module_t  ngx_errlog_module_ctx = {
     ngx_string("errlog"),
-    NULL,
-    NULL
+    ਨਿਰਾ,
+    ਨਿਰਾ
 };
 
 
@@ -56,23 +56,23 @@ ngx_module_t  ngx_errlog_module = {
     &ngx_errlog_module_ctx,                /* module context */
     ngx_errlog_commands,                   /* module directives */
     NGX_CORE_MODULE,                       /* module type */
-    NULL,                                  /* init master */
-    NULL,                                  /* init module */
-    NULL,                                  /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
-    NULL,                                  /* exit process */
-    NULL,                                  /* exit master */
+    ਨਿਰਾ,                                  /* init master */
+    ਨਿਰਾ,                                  /* init module */
+    ਨਿਰਾ,                                  /* init process */
+    ਨਿਰਾ,                                  /* init thread */
+    ਨਿਰਾ,                                  /* exit thread */
+    ਨਿਰਾ,                                  /* exit process */
+    ਨਿਰਾ,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
-static ngx_log_t        ngx_log;
-static ngx_open_file_t  ngx_log_file;
+ਸਥਿਰ ngx_log_t        ngx_log;
+ਸਥਿਰ ngx_open_file_t  ngx_log_file;
 ngx_uint_t              ngx_use_stderr = 1;
 
 
-static ngx_str_t err_levels[] = {
+ਸਥਿਰ ngx_str_t err_ਪੱਧਰ[] = {
     ngx_null_string,
     ngx_string("emerg"),
     ngx_string("alert"),
@@ -84,92 +84,92 @@ static ngx_str_t err_levels[] = {
     ngx_string("debug")
 };
 
-static const char *debug_levels[] = {
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *debug_ਪੱਧਰ[] = {
     "debug_core", "debug_alloc", "debug_mutex", "debug_event",
     "debug_http", "debug_mail", "debug_stream"
 };
 
 
-#if (NGX_HAVE_VARIADIC_MACROS)
+#ਜੇ (NGX_HAVE_VARIADIC_MACROS)
 
-void
-ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, ...)
+ਖਾਲੀ
+ngx_log_error_core(ngx_uint_t level, ngx_log_t *ਲਘੂਗਣਕ, ngx_err_t err,
+    ਅਚਲ ਅੱਖਰ *fmt, ...)
 
-#else
+#ਨਹੀਂਤਾਂ
 
-void
-ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, va_list args)
+ਖਾਲੀ
+ngx_log_error_core(ngx_uint_t level, ngx_log_t *ਲਘੂਗਣਕ, ngx_err_t err,
+    ਅਚਲ ਅੱਖਰ *fmt, va_list ਦਲੀਲਾਂ)
 
-#endif
+#ਜੇ_ਅੰਤ
 {
-#if (NGX_HAVE_VARIADIC_MACROS)
-    va_list      args;
-#endif
-    u_char      *p, *last, *msg;
+#ਜੇ (NGX_HAVE_VARIADIC_MACROS)
+    va_list      ਦਲੀਲਾਂ;
+#ਜੇ_ਅੰਤ
+    u_char      *p, *ਆਖਰੀ, *ਸੁਨੇਹਾ;
     ssize_t      n;
     ngx_uint_t   wrote_stderr, debug_connection;
     u_char       errstr[NGX_MAX_ERROR_STR];
 
-    last = errstr + NGX_MAX_ERROR_STR;
+    ਆਖਰੀ = errstr + NGX_MAX_ERROR_STR;
 
-    p = ngx_cpymem(errstr, ngx_cached_err_log_time.data,
-                   ngx_cached_err_log_time.len);
+    p = ngx_cpymem(errstr, ngx_cached_err_log_ਸਮਾਂ.ਅੰਕੜੇ,
+                   ngx_cached_err_log_ਸਮਾਂ.len);
 
-    p = ngx_slprintf(p, last, " [%V] ", &err_levels[level]);
+    p = ngx_slprintf(p, ਆਖਰੀ, " [%V] ", &err_ਪੱਧਰ[level]);
 
     /* pid#tid */
-    p = ngx_slprintf(p, last, "%P#" NGX_TID_T_FMT ": ",
+    p = ngx_slprintf(p, ਆਖਰੀ, "%P#" NGX_TID_T_FMT ": ",
                     ngx_log_pid, ngx_log_tid);
 
-    if (log->connection) {
-        p = ngx_slprintf(p, last, "*%uA ", log->connection);
+    ਜੇ (ਲਘੂਗਣਕ->connection) {
+        p = ngx_slprintf(p, ਆਖਰੀ, "*%uA ", ਲਘੂਗਣਕ->connection);
     }
 
-    msg = p;
+    ਸੁਨੇਹਾ = p;
 
-#if (NGX_HAVE_VARIADIC_MACROS)
+#ਜੇ (NGX_HAVE_VARIADIC_MACROS)
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(p, last, fmt, args);
-    va_end(args);
+    va_ਸ਼ੁਰੂ(ਦਲੀਲਾਂ, fmt);
+    p = ngx_vslprintf(p, ਆਖਰੀ, fmt, ਦਲੀਲਾਂ);
+    va_ਸਿਰਾ(ਦਲੀਲਾਂ);
 
-#else
+#ਨਹੀਂਤਾਂ
 
-    p = ngx_vslprintf(p, last, fmt, args);
+    p = ngx_vslprintf(p, ਆਖਰੀ, fmt, ਦਲੀਲਾਂ);
 
-#endif
+#ਜੇ_ਅੰਤ
 
-    if (err) {
-        p = ngx_log_errno(p, last, err);
+    ਜੇ (err) {
+        p = ngx_log_errno(p, ਆਖਰੀ, err);
     }
 
-    if (level != NGX_LOG_DEBUG && log->handler) {
-        p = log->handler(log, p, last - p);
+    ਜੇ (level != NGX_LOG_DEBUG && ਲਘੂਗਣਕ->handler) {
+        p = ਲਘੂਗਣਕ->handler(ਲਘੂਗਣਕ, p, ਆਖਰੀ - p);
     }
 
-    if (p > last - NGX_LINEFEED_SIZE) {
-        p = last - NGX_LINEFEED_SIZE;
+    ਜੇ (p > ਆਖਰੀ - NGX_LINEFEED_ਮਾਪ) {
+        p = ਆਖਰੀ - NGX_LINEFEED_ਮਾਪ;
     }
 
     ngx_linefeed(p);
 
     wrote_stderr = 0;
-    debug_connection = (log->log_level & NGX_LOG_DEBUG_CONNECTION) != 0;
+    debug_connection = (ਲਘੂਗਣਕ->log_level & NGX_LOG_DEBUG_CONNECTION) != 0;
 
-    while (log) {
+    ਜਦੋਂ (ਲਘੂਗਣਕ) {
 
-        if (log->log_level < level && !debug_connection) {
-            break;
+        ਜੇ (ਲਘੂਗਣਕ->log_level < level && !debug_connection) {
+            ਰੋਕੋ;
         }
 
-        if (log->writer) {
-            log->writer(log, level, errstr, p - errstr);
-            goto next;
+        ਜੇ (ਲਘੂਗਣਕ->writer) {
+            ਲਘੂਗਣਕ->writer(ਲਘੂਗਣਕ, level, errstr, p - errstr);
+            ਜਾਓ ਅਗਲਾ;
         }
 
-        if (ngx_time() == log->disk_full_time) {
+        ਜੇ (ngx_ਸਮਾਂ() == ਲਘੂਗਣਕ->disk_ਭਰਿਆ_ਸਮਾਂ) {
 
             /*
              * on FreeBSD writing to a full filesystem with enabled softupdates
@@ -177,193 +177,193 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
              * filesystem, so we skip writing to a log for one second
              */
 
-            goto next;
+            ਜਾਓ ਅਗਲਾ;
         }
 
-        n = ngx_write_fd(log->file->fd, errstr, p - errstr);
+        n = ngx_write_fd(ਲਘੂਗਣਕ->file->fd, errstr, p - errstr);
 
-        if (n == -1 && ngx_errno == NGX_ENOSPC) {
-            log->disk_full_time = ngx_time();
+        ਜੇ (n == -1 && ngx_errno == NGX_ENOSPC) {
+            ਲਘੂਗਣਕ->disk_ਭਰਿਆ_ਸਮਾਂ = ngx_ਸਮਾਂ();
         }
 
-        if (log->file->fd == ngx_stderr) {
+        ਜੇ (ਲਘੂਗਣਕ->file->fd == ngx_stderr) {
             wrote_stderr = 1;
         }
 
-    next:
+    ਅਗਲਾ:
 
-        log = log->next;
+        ਲਘੂਗਣਕ = ਲਘੂਗਣਕ->ਅਗਲਾ;
     }
 
-    if (!ngx_use_stderr
+    ਜੇ (!ngx_use_stderr
         || level > NGX_LOG_WARN
         || wrote_stderr)
     {
-        return;
+        ਵਾਪਸ;
     }
 
-    msg -= (7 + err_levels[level].len + 3);
+    ਸੁਨੇਹਾ -= (7 + err_ਪੱਧਰ[level].len + 3);
 
-    (void) ngx_sprintf(msg, "nginx: [%V] ", &err_levels[level]);
+    (ਖਾਲੀ) ngx_sprintf(ਸੁਨੇਹਾ, "nginx: [%V] ", &err_ਪੱਧਰ[level]);
 
-    (void) ngx_write_console(ngx_stderr, msg, p - msg);
+    (ਖਾਲੀ) ngx_write_console(ngx_stderr, ਸੁਨੇਹਾ, p - ਸੁਨੇਹਾ);
 }
 
 
-#if !(NGX_HAVE_VARIADIC_MACROS)
+#ਜੇ !(NGX_HAVE_VARIADIC_MACROS)
 
-void ngx_cdecl
-ngx_log_error(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, ...)
+ਖਾਲੀ ngx_cdecl
+ngx_log_error(ngx_uint_t level, ngx_log_t *ਲਘੂਗਣਕ, ngx_err_t err,
+    ਅਚਲ ਅੱਖਰ *fmt, ...)
 {
-    va_list  args;
+    va_list  ਦਲੀਲਾਂ;
 
-    if (log->log_level >= level) {
-        va_start(args, fmt);
-        ngx_log_error_core(level, log, err, fmt, args);
-        va_end(args);
+    ਜੇ (ਲਘੂਗਣਕ->log_level >= level) {
+        va_ਸ਼ੁਰੂ(ਦਲੀਲਾਂ, fmt);
+        ngx_log_error_core(level, ਲਘੂਗਣਕ, err, fmt, ਦਲੀਲਾਂ);
+        va_ਸਿਰਾ(ਦਲੀਲਾਂ);
     }
 }
 
 
-void ngx_cdecl
-ngx_log_debug_core(ngx_log_t *log, ngx_err_t err, const char *fmt, ...)
+ਖਾਲੀ ngx_cdecl
+ngx_log_debug_core(ngx_log_t *ਲਘੂਗਣਕ, ngx_err_t err, ਅਚਲ ਅੱਖਰ *fmt, ...)
 {
-    va_list  args;
+    va_list  ਦਲੀਲਾਂ;
 
-    va_start(args, fmt);
-    ngx_log_error_core(NGX_LOG_DEBUG, log, err, fmt, args);
-    va_end(args);
+    va_ਸ਼ੁਰੂ(ਦਲੀਲਾਂ, fmt);
+    ngx_log_error_core(NGX_LOG_DEBUG, ਲਘੂਗਣਕ, err, fmt, ਦਲੀਲਾਂ);
+    va_ਸਿਰਾ(ਦਲੀਲਾਂ);
 }
 
-#endif
+#ਜੇ_ਅੰਤ
 
 
-void ngx_cdecl
-ngx_log_abort(ngx_err_t err, const char *fmt, ...)
+ਖਾਲੀ ngx_cdecl
+ngx_log_abort(ngx_err_t err, ਅਚਲ ਅੱਖਰ *fmt, ...)
 {
     u_char   *p;
-    va_list   args;
+    va_list   ਦਲੀਲਾਂ;
     u_char    errstr[NGX_MAX_CONF_ERRSTR];
 
-    va_start(args, fmt);
-    p = ngx_vsnprintf(errstr, sizeof(errstr) - 1, fmt, args);
-    va_end(args);
+    va_ਸ਼ੁਰੂ(ਦਲੀਲਾਂ, fmt);
+    p = ngx_vsnprintf(errstr, ਆਕਾਰ(errstr) - 1, fmt, ਦਲੀਲਾਂ);
+    va_ਸਿਰਾ(ਦਲੀਲਾਂ);
 
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, err,
+    ngx_log_error(NGX_LOG_ALERT, ngx_ਚੱਕਰ->ਲਘੂਗਣਕ, err,
                   "%*s", p - errstr, errstr);
 }
 
 
-void ngx_cdecl
-ngx_log_stderr(ngx_err_t err, const char *fmt, ...)
+ਖਾਲੀ ngx_cdecl
+ngx_log_stderr(ngx_err_t err, ਅਚਲ ਅੱਖਰ *fmt, ...)
 {
-    u_char   *p, *last;
-    va_list   args;
+    u_char   *p, *ਆਖਰੀ;
+    va_list   ਦਲੀਲਾਂ;
     u_char    errstr[NGX_MAX_ERROR_STR];
 
-    last = errstr + NGX_MAX_ERROR_STR;
+    ਆਖਰੀ = errstr + NGX_MAX_ERROR_STR;
 
     p = ngx_cpymem(errstr, "nginx: ", 7);
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(p, last, fmt, args);
-    va_end(args);
+    va_ਸ਼ੁਰੂ(ਦਲੀਲਾਂ, fmt);
+    p = ngx_vslprintf(p, ਆਖਰੀ, fmt, ਦਲੀਲਾਂ);
+    va_ਸਿਰਾ(ਦਲੀਲਾਂ);
 
-    if (err) {
-        p = ngx_log_errno(p, last, err);
+    ਜੇ (err) {
+        p = ngx_log_errno(p, ਆਖਰੀ, err);
     }
 
-    if (p > last - NGX_LINEFEED_SIZE) {
-        p = last - NGX_LINEFEED_SIZE;
+    ਜੇ (p > ਆਖਰੀ - NGX_LINEFEED_ਮਾਪ) {
+        p = ਆਖਰੀ - NGX_LINEFEED_ਮਾਪ;
     }
 
     ngx_linefeed(p);
 
-    (void) ngx_write_console(ngx_stderr, errstr, p - errstr);
+    (ਖਾਲੀ) ngx_write_console(ngx_stderr, errstr, p - errstr);
 }
 
 
 u_char *
-ngx_log_errno(u_char *buf, u_char *last, ngx_err_t err)
+ngx_log_errno(u_char *buf, u_char *ਆਖਰੀ, ngx_err_t err)
 {
-    if (buf > last - 50) {
+    ਜੇ (buf > ਆਖਰੀ - 50) {
 
         /* leave a space for an error code */
 
-        buf = last - 50;
+        buf = ਆਖਰੀ - 50;
         *buf++ = '.';
         *buf++ = '.';
         *buf++ = '.';
     }
 
-#if (NGX_WIN32)
-    buf = ngx_slprintf(buf, last, ((unsigned) err < 0x80000000)
+#ਜੇ (NGX_WIN32)
+    buf = ngx_slprintf(buf, ਆਖਰੀ, ((ਬਿਨਾਨਿਸ਼ਾਨੀ) err < 0x80000000)
                                        ? " (%d: " : " (%Xd: ", err);
-#else
-    buf = ngx_slprintf(buf, last, " (%d: ", err);
-#endif
+#ਨਹੀਂਤਾਂ
+    buf = ngx_slprintf(buf, ਆਖਰੀ, " (%d: ", err);
+#ਜੇ_ਅੰਤ
 
-    buf = ngx_strerror(err, buf, last - buf);
+    buf = ngx_strerror(err, buf, ਆਖਰੀ - buf);
 
-    if (buf < last) {
+    ਜੇ (buf < ਆਖਰੀ) {
         *buf++ = ')';
     }
 
-    return buf;
+    ਵਾਪਸ buf;
 }
 
 
 ngx_log_t *
-ngx_log_init(u_char *prefix, u_char *error_log)
+ngx_log_init(u_char *ਅਗੇਤਰ, u_char *error_log)
 {
     u_char  *p, *name;
-    size_t   nlen, plen;
+    ਮਾਪ_t   nlen, plen;
 
     ngx_log.file = &ngx_log_file;
     ngx_log.log_level = NGX_LOG_NOTICE;
 
-    if (error_log == NULL) {
-        error_log = (u_char *) NGX_ERROR_LOG_PATH;
+    ਜੇ (error_log == ਨਿਰਾ) {
+        error_log = (u_char *) NGX_ERROR_LOG_ਰਸਤਾ;
     }
 
     name = error_log;
     nlen = ngx_strlen(name);
 
-    if (nlen == 0) {
+    ਜੇ (nlen == 0) {
         ngx_log_file.fd = ngx_stderr;
-        return &ngx_log;
+        ਵਾਪਸ &ngx_log;
     }
 
-    p = NULL;
+    p = ਨਿਰਾ;
 
-#if (NGX_WIN32)
-    if (name[1] != ':') {
-#else
-    if (name[0] != '/') {
-#endif
+#ਜੇ (NGX_WIN32)
+    ਜੇ (name[1] != ':') {
+#ਨਹੀਂਤਾਂ
+    ਜੇ (name[0] != '/') {
+#ਜੇ_ਅੰਤ
 
-        if (prefix) {
-            plen = ngx_strlen(prefix);
+        ਜੇ (ਅਗੇਤਰ) {
+            plen = ngx_strlen(ਅਗੇਤਰ);
 
-        } else {
-#ifdef NGX_PREFIX
-            prefix = (u_char *) NGX_PREFIX;
-            plen = ngx_strlen(prefix);
-#else
+        } ਨਹੀਂਤਾਂ {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ NGX_ਅਗੇਤਰ
+            ਅਗੇਤਰ = (u_char *) NGX_ਅਗੇਤਰ;
+            plen = ngx_strlen(ਅਗੇਤਰ);
+#ਨਹੀਂਤਾਂ
             plen = 0;
-#endif
+#ਜੇ_ਅੰਤ
         }
 
-        if (plen) {
-            name = malloc(plen + nlen + 2);
-            if (name == NULL) {
-                return NULL;
+        ਜੇ (plen) {
+            name = ਸਮ੍ਰਿਤੀ_ਦਿਓ(plen + nlen + 2);
+            ਜੇ (name == ਨਿਰਾ) {
+                ਵਾਪਸ ਨਿਰਾ;
             }
 
-            p = ngx_cpymem(name, prefix, plen);
+            p = ngx_cpymem(name, ਅਗੇਤਰ, plen);
 
-            if (!ngx_path_separator(*(p - 1))) {
+            ਜੇ (!ngx_ਰਸਤਾ_separator(*(p - 1))) {
                 *p++ = '/';
             }
 
@@ -377,376 +377,376 @@ ngx_log_init(u_char *prefix, u_char *error_log)
                                     NGX_FILE_CREATE_OR_OPEN,
                                     NGX_FILE_DEFAULT_ACCESS);
 
-    if (ngx_log_file.fd == NGX_INVALID_FILE) {
+    ਜੇ (ngx_log_file.fd == NGX_INVALID_FILE) {
         ngx_log_stderr(ngx_errno,
                        "[alert] could not open error log file: "
                        ngx_open_file_n " \"%s\" failed", name);
-#if (NGX_WIN32)
+#ਜੇ (NGX_WIN32)
         ngx_event_log(ngx_errno,
                        "could not open error log file: "
                        ngx_open_file_n " \"%s\" failed", name);
-#endif
+#ਜੇ_ਅੰਤ
 
         ngx_log_file.fd = ngx_stderr;
     }
 
-    if (p) {
+    ਜੇ (p) {
         ngx_free(p);
     }
 
-    return &ngx_log;
+    ਵਾਪਸ &ngx_log;
 }
 
 
 ngx_int_t
-ngx_log_open_default(ngx_cycle_t *cycle)
+ngx_log_open_default(ngx_ਚੱਕਰ_t *ਚੱਕਰ)
 {
-    ngx_log_t  *log;
+    ngx_log_t  *ਲਘੂਗਣਕ;
 
-    if (ngx_log_get_file_log(&cycle->new_log) != NULL) {
-        return NGX_OK;
+    ਜੇ (ngx_log_get_file_log(&ਚੱਕਰ->new_log) != ਨਿਰਾ) {
+        ਵਾਪਸ NGX_OK;
     }
 
-    if (cycle->new_log.log_level != 0) {
+    ਜੇ (ਚੱਕਰ->new_log.log_level != 0) {
         /* there are some error logs, but no files */
 
-        log = ngx_pcalloc(cycle->pool, sizeof(ngx_log_t));
-        if (log == NULL) {
-            return NGX_ERROR;
+        ਲਘੂਗਣਕ = ngx_pcalloc(ਚੱਕਰ->pool, ਆਕਾਰ(ngx_log_t));
+        ਜੇ (ਲਘੂਗਣਕ == ਨਿਰਾ) {
+            ਵਾਪਸ NGX_ERROR;
         }
 
-    } else {
+    } ਨਹੀਂਤਾਂ {
         /* no error logs at all */
-        log = &cycle->new_log;
+        ਲਘੂਗਣਕ = &ਚੱਕਰ->new_log;
     }
 
-    log->log_level = NGX_LOG_ERR;
+    ਲਘੂਗਣਕ->log_level = NGX_LOG_ERR;
 
-    log->file = ngx_conf_open_file(cycle, &cycle->error_log);
-    if (log->file == NULL) {
-        return NGX_ERROR;
+    ਲਘੂਗਣਕ->file = ngx_conf_open_file(ਚੱਕਰ, &ਚੱਕਰ->error_log);
+    ਜੇ (ਲਘੂਗਣਕ->file == ਨਿਰਾ) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    if (log != &cycle->new_log) {
-        ngx_log_insert(&cycle->new_log, log);
+    ਜੇ (ਲਘੂਗਣਕ != &ਚੱਕਰ->new_log) {
+        ngx_log_ਪਾਓ(&ਚੱਕਰ->new_log, ਲਘੂਗਣਕ);
     }
 
-    return NGX_OK;
+    ਵਾਪਸ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_log_redirect_stderr(ngx_cycle_t *cycle)
+ngx_log_redirect_stderr(ngx_ਚੱਕਰ_t *ਚੱਕਰ)
 {
     ngx_fd_t  fd;
 
-    if (cycle->log_use_stderr) {
-        return NGX_OK;
+    ਜੇ (ਚੱਕਰ->log_use_stderr) {
+        ਵਾਪਸ NGX_OK;
     }
 
     /* file log always exists when we are called */
-    fd = ngx_log_get_file_log(cycle->log)->file->fd;
+    fd = ngx_log_get_file_log(ਚੱਕਰ->ਲਘੂਗਣਕ)->file->fd;
 
-    if (fd != ngx_stderr) {
-        if (ngx_set_stderr(fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
-                          ngx_set_stderr_n " failed");
+    ਜੇ (fd != ngx_stderr) {
+        ਜੇ (ngx_ਸੈੱਟ_stderr(fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, ਚੱਕਰ->ਲਘੂਗਣਕ, ngx_errno,
+                          ngx_ਸੈੱਟ_stderr_n " failed");
 
-            return NGX_ERROR;
+            ਵਾਪਸ NGX_ERROR;
         }
     }
 
-    return NGX_OK;
+    ਵਾਪਸ NGX_OK;
 }
 
 
 ngx_log_t *
-ngx_log_get_file_log(ngx_log_t *head)
+ngx_log_get_file_log(ngx_log_t *ਸਿਰ)
 {
-    ngx_log_t  *log;
+    ngx_log_t  *ਲਘੂਗਣਕ;
 
-    for (log = head; log; log = log->next) {
-        if (log->file != NULL) {
-            return log;
+    ਲਈ (ਲਘੂਗਣਕ = ਸਿਰ; ਲਘੂਗਣਕ; ਲਘੂਗਣਕ = ਲਘੂਗਣਕ->ਅਗਲਾ) {
+        ਜੇ (ਲਘੂਗਣਕ->file != ਨਿਰਾ) {
+            ਵਾਪਸ ਲਘੂਗਣਕ;
         }
     }
 
-    return NULL;
+    ਵਾਪਸ ਨਿਰਾ;
 }
 
 
-static char *
-ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log)
+ਸਥਿਰ ਅੱਖਰ *
+ngx_log_ਸੈੱਟ_ਪੱਧਰ(ngx_conf_t *cf, ngx_log_t *ਲਘੂਗਣਕ)
 {
-    ngx_uint_t   i, n, d, found;
-    ngx_str_t   *value;
+    ngx_uint_t   i, n, d, ਮਿਲਿਆ;
+    ngx_str_t   *ਮੁੱਲ;
 
-    if (cf->args->nelts == 2) {
-        log->log_level = NGX_LOG_ERR;
-        return NGX_CONF_OK;
+    ਜੇ (cf->ਦਲੀਲਾਂ->nelts == 2) {
+        ਲਘੂਗਣਕ->log_level = NGX_LOG_ERR;
+        ਵਾਪਸ NGX_CONF_OK;
     }
 
-    value = cf->args->elts;
+    ਮੁੱਲ = cf->ਦਲੀਲਾਂ->elts;
 
-    for (i = 2; i < cf->args->nelts; i++) {
-        found = 0;
+    ਲਈ (i = 2; i < cf->ਦਲੀਲਾਂ->nelts; i++) {
+        ਮਿਲਿਆ = 0;
 
-        for (n = 1; n <= NGX_LOG_DEBUG; n++) {
-            if (ngx_strcmp(value[i].data, err_levels[n].data) == 0) {
+        ਲਈ (n = 1; n <= NGX_LOG_DEBUG; n++) {
+            ਜੇ (ngx_strcmp(ਮੁੱਲ[i].ਅੰਕੜੇ, err_ਪੱਧਰ[n].ਅੰਕੜੇ) == 0) {
 
-                if (log->log_level != 0) {
+                ਜੇ (ਲਘੂਗਣਕ->log_level != 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "duplicate log level \"%V\"",
-                                       &value[i]);
-                    return NGX_CONF_ERROR;
+                                       &ਮੁੱਲ[i]);
+                    ਵਾਪਸ NGX_CONF_ERROR;
                 }
 
-                log->log_level = n;
-                found = 1;
-                break;
+                ਲਘੂਗਣਕ->log_level = n;
+                ਮਿਲਿਆ = 1;
+                ਰੋਕੋ;
             }
         }
 
-        for (n = 0, d = NGX_LOG_DEBUG_FIRST; d <= NGX_LOG_DEBUG_LAST; d <<= 1) {
-            if (ngx_strcmp(value[i].data, debug_levels[n++]) == 0) {
-                if (log->log_level & ~NGX_LOG_DEBUG_ALL) {
+        ਲਈ (n = 0, d = NGX_LOG_DEBUG_ਪਹਿਲਾ; d <= NGX_LOG_DEBUG_ਆਖਰੀ; d <<= 1) {
+            ਜੇ (ngx_strcmp(ਮੁੱਲ[i].ਅੰਕੜੇ, debug_ਪੱਧਰ[n++]) == 0) {
+                ਜੇ (ਲਘੂਗਣਕ->log_level & ~NGX_LOG_DEBUG_ALL) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "invalid log level \"%V\"",
-                                       &value[i]);
-                    return NGX_CONF_ERROR;
+                                       &ਮੁੱਲ[i]);
+                    ਵਾਪਸ NGX_CONF_ERROR;
                 }
 
-                log->log_level |= d;
-                found = 1;
-                break;
+                ਲਘੂਗਣਕ->log_level |= d;
+                ਮਿਲਿਆ = 1;
+                ਰੋਕੋ;
             }
         }
 
 
-        if (!found) {
+        ਜੇ (!ਮਿਲਿਆ) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                               "invalid log level \"%V\"", &value[i]);
-            return NGX_CONF_ERROR;
+                               "invalid log level \"%V\"", &ਮੁੱਲ[i]);
+            ਵਾਪਸ NGX_CONF_ERROR;
         }
     }
 
-    if (log->log_level == NGX_LOG_DEBUG) {
-        log->log_level = NGX_LOG_DEBUG_ALL;
+    ਜੇ (ਲਘੂਗਣਕ->log_level == NGX_LOG_DEBUG) {
+        ਲਘੂਗਣਕ->log_level = NGX_LOG_DEBUG_ALL;
     }
 
-    return NGX_CONF_OK;
+    ਵਾਪਸ NGX_CONF_OK;
 }
 
 
-static char *
-ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ਸਥਿਰ ਅੱਖਰ *
+ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, ਖਾਲੀ *conf)
 {
     ngx_log_t  *dummy;
 
-    dummy = &cf->cycle->new_log;
+    dummy = &cf->ਚੱਕਰ->new_log;
 
-    return ngx_log_set_log(cf, &dummy);
+    ਵਾਪਸ ngx_log_ਸੈੱਟ_log(cf, &dummy);
 }
 
 
-char *
-ngx_log_set_log(ngx_conf_t *cf, ngx_log_t **head)
+ਅੱਖਰ *
+ngx_log_ਸੈੱਟ_log(ngx_conf_t *cf, ngx_log_t **ਸਿਰ)
 {
     ngx_log_t          *new_log;
-    ngx_str_t          *value, name;
+    ngx_str_t          *ਮੁੱਲ, name;
     ngx_syslog_peer_t  *peer;
 
-    if (*head != NULL && (*head)->log_level == 0) {
-        new_log = *head;
+    ਜੇ (*ਸਿਰ != ਨਿਰਾ && (*ਸਿਰ)->log_level == 0) {
+        new_log = *ਸਿਰ;
 
-    } else {
+    } ਨਹੀਂਤਾਂ {
 
-        new_log = ngx_pcalloc(cf->pool, sizeof(ngx_log_t));
-        if (new_log == NULL) {
-            return NGX_CONF_ERROR;
+        new_log = ngx_pcalloc(cf->pool, ਆਕਾਰ(ngx_log_t));
+        ਜੇ (new_log == ਨਿਰਾ) {
+            ਵਾਪਸ NGX_CONF_ERROR;
         }
 
-        if (*head == NULL) {
-            *head = new_log;
+        ਜੇ (*ਸਿਰ == ਨਿਰਾ) {
+            *ਸਿਰ = new_log;
         }
     }
 
-    value = cf->args->elts;
+    ਮੁੱਲ = cf->ਦਲੀਲਾਂ->elts;
 
-    if (ngx_strcmp(value[1].data, "stderr") == 0) {
+    ਜੇ (ngx_strcmp(ਮੁੱਲ[1].ਅੰਕੜੇ, "stderr") == 0) {
         ngx_str_null(&name);
-        cf->cycle->log_use_stderr = 1;
+        cf->ਚੱਕਰ->log_use_stderr = 1;
 
-        new_log->file = ngx_conf_open_file(cf->cycle, &name);
-        if (new_log->file == NULL) {
-            return NGX_CONF_ERROR;
+        new_log->file = ngx_conf_open_file(cf->ਚੱਕਰ, &name);
+        ਜੇ (new_log->file == ਨਿਰਾ) {
+            ਵਾਪਸ NGX_CONF_ERROR;
         }
 
-    } else if (ngx_strncmp(value[1].data, "memory:", 7) == 0) {
+    } ਨਹੀਂਤਾਂ ਜੇ (ngx_strncmp(ਮੁੱਲ[1].ਅੰਕੜੇ, "memory:", 7) == 0) {
 
-#if (NGX_DEBUG)
-        size_t                 size, needed;
+#ਜੇ (NGX_DEBUG)
+        ਮਾਪ_t                 ਮਾਪ, needed;
         ngx_pool_cleanup_t    *cln;
-        ngx_log_memory_buf_t  *buf;
+        ngx_log_ਸਮ੍ਰਿਤੀ_buf_t  *buf;
 
-        value[1].len -= 7;
-        value[1].data += 7;
+        ਮੁੱਲ[1].len -= 7;
+        ਮੁੱਲ[1].ਅੰਕੜੇ += 7;
 
-        needed = sizeof("MEMLOG  :" NGX_LINEFEED)
+        needed = ਆਕਾਰ("MEMLOG  :" NGX_LINEFEED)
                  + cf->conf_file->file.name.len
-                 + NGX_SIZE_T_LEN
+                 + NGX_ਮਾਪ_T_LEN
                  + NGX_INT_T_LEN
                  + NGX_MAX_ERROR_STR;
 
-        size = ngx_parse_size(&value[1]);
+        ਮਾਪ = ngx_parse_ਮਾਪ(&ਮੁੱਲ[1]);
 
-        if (size == (size_t) NGX_ERROR || size < needed) {
+        ਜੇ (ਮਾਪ == (ਮਾਪ_t) NGX_ERROR || ਮਾਪ < needed) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                               "invalid buffer size \"%V\"", &value[1]);
-            return NGX_CONF_ERROR;
+                               "invalid buffer size \"%V\"", &ਮੁੱਲ[1]);
+            ਵਾਪਸ NGX_CONF_ERROR;
         }
 
-        buf = ngx_pcalloc(cf->pool, sizeof(ngx_log_memory_buf_t));
-        if (buf == NULL) {
-            return NGX_CONF_ERROR;
+        buf = ngx_pcalloc(cf->pool, ਆਕਾਰ(ngx_log_ਸਮ੍ਰਿਤੀ_buf_t));
+        ਜੇ (buf == ਨਿਰਾ) {
+            ਵਾਪਸ NGX_CONF_ERROR;
         }
 
-        buf->start = ngx_pnalloc(cf->pool, size);
-        if (buf->start == NULL) {
-            return NGX_CONF_ERROR;
+        buf->ਸ਼ੁਰੂ = ngx_pnalloc(cf->pool, ਮਾਪ);
+        ਜੇ (buf->ਸ਼ੁਰੂ == ਨਿਰਾ) {
+            ਵਾਪਸ NGX_CONF_ERROR;
         }
 
-        buf->end = buf->start + size;
+        buf->ਸਿਰਾ = buf->ਸ਼ੁਰੂ + ਮਾਪ;
 
-        buf->pos = ngx_slprintf(buf->start, buf->end, "MEMLOG %uz %V:%ui%N",
-                                size, &cf->conf_file->file.name,
-                                cf->conf_file->line);
+        buf->pos = ngx_slprintf(buf->ਸ਼ੁਰੂ, buf->ਸਿਰਾ, "MEMLOG %uz %V:%ui%N",
+                                ਮਾਪ, &cf->conf_file->file.name,
+                                cf->conf_file->ਸਤਰ);
 
-        ngx_memset(buf->pos, ' ', buf->end - buf->pos);
+        ngx_memset(buf->pos, ' ', buf->ਸਿਰਾ - buf->pos);
 
-        cln = ngx_pool_cleanup_add(cf->pool, 0);
-        if (cln == NULL) {
-            return NGX_CONF_ERROR;
+        cln = ngx_pool_cleanup_ਜੋੜੋ(cf->pool, 0);
+        ਜੇ (cln == ਨਿਰਾ) {
+            ਵਾਪਸ NGX_CONF_ERROR;
         }
 
-        cln->data = new_log;
-        cln->handler = ngx_log_memory_cleanup;
+        cln->ਅੰਕੜੇ = new_log;
+        cln->handler = ngx_log_ਸਮ੍ਰਿਤੀ_cleanup;
 
-        new_log->writer = ngx_log_memory_writer;
+        new_log->writer = ngx_log_ਸਮ੍ਰਿਤੀ_writer;
         new_log->wdata = buf;
 
-#else
+#ਨਹੀਂਤਾਂ
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "nginx was built without debug support");
-        return NGX_CONF_ERROR;
-#endif
+        ਵਾਪਸ NGX_CONF_ERROR;
+#ਜੇ_ਅੰਤ
 
-    } else if (ngx_strncmp(value[1].data, "syslog:", 7) == 0) {
-        peer = ngx_pcalloc(cf->pool, sizeof(ngx_syslog_peer_t));
-        if (peer == NULL) {
-            return NGX_CONF_ERROR;
+    } ਨਹੀਂਤਾਂ ਜੇ (ngx_strncmp(ਮੁੱਲ[1].ਅੰਕੜੇ, "syslog:", 7) == 0) {
+        peer = ngx_pcalloc(cf->pool, ਆਕਾਰ(ngx_syslog_peer_t));
+        ਜੇ (peer == ਨਿਰਾ) {
+            ਵਾਪਸ NGX_CONF_ERROR;
         }
 
-        if (ngx_syslog_process_conf(cf, peer) != NGX_CONF_OK) {
-            return NGX_CONF_ERROR;
+        ਜੇ (ngx_syslog_process_conf(cf, peer) != NGX_CONF_OK) {
+            ਵਾਪਸ NGX_CONF_ERROR;
         }
 
         new_log->writer = ngx_syslog_writer;
         new_log->wdata = peer;
 
-    } else {
-        new_log->file = ngx_conf_open_file(cf->cycle, &value[1]);
-        if (new_log->file == NULL) {
-            return NGX_CONF_ERROR;
+    } ਨਹੀਂਤਾਂ {
+        new_log->file = ngx_conf_open_file(cf->ਚੱਕਰ, &ਮੁੱਲ[1]);
+        ਜੇ (new_log->file == ਨਿਰਾ) {
+            ਵਾਪਸ NGX_CONF_ERROR;
         }
     }
 
-    if (ngx_log_set_levels(cf, new_log) != NGX_CONF_OK) {
-        return NGX_CONF_ERROR;
+    ਜੇ (ngx_log_ਸੈੱਟ_ਪੱਧਰ(cf, new_log) != NGX_CONF_OK) {
+        ਵਾਪਸ NGX_CONF_ERROR;
     }
 
-    if (*head != new_log) {
-        ngx_log_insert(*head, new_log);
+    ਜੇ (*ਸਿਰ != new_log) {
+        ngx_log_ਪਾਓ(*ਸਿਰ, new_log);
     }
 
-    return NGX_CONF_OK;
+    ਵਾਪਸ NGX_CONF_OK;
 }
 
 
-static void
-ngx_log_insert(ngx_log_t *log, ngx_log_t *new_log)
+ਸਥਿਰ ਖਾਲੀ
+ngx_log_ਪਾਓ(ngx_log_t *ਲਘੂਗਣਕ, ngx_log_t *new_log)
 {
     ngx_log_t  tmp;
 
-    if (new_log->log_level > log->log_level) {
+    ਜੇ (new_log->log_level > ਲਘੂਗਣਕ->log_level) {
 
         /*
          * list head address is permanent, insert new log after
          * head and swap its contents with head
          */
 
-        tmp = *log;
-        *log = *new_log;
+        tmp = *ਲਘੂਗਣਕ;
+        *ਲਘੂਗਣਕ = *new_log;
         *new_log = tmp;
 
-        log->next = new_log;
-        return;
+        ਲਘੂਗਣਕ->ਅਗਲਾ = new_log;
+        ਵਾਪਸ;
     }
 
-    while (log->next) {
-        if (new_log->log_level > log->next->log_level) {
-            new_log->next = log->next;
-            log->next = new_log;
-            return;
+    ਜਦੋਂ (ਲਘੂਗਣਕ->ਅਗਲਾ) {
+        ਜੇ (new_log->log_level > ਲਘੂਗਣਕ->ਅਗਲਾ->log_level) {
+            new_log->ਅਗਲਾ = ਲਘੂਗਣਕ->ਅਗਲਾ;
+            ਲਘੂਗਣਕ->ਅਗਲਾ = new_log;
+            ਵਾਪਸ;
         }
 
-        log = log->next;
+        ਲਘੂਗਣਕ = ਲਘੂਗਣਕ->ਅਗਲਾ;
     }
 
-    log->next = new_log;
+    ਲਘੂਗਣਕ->ਅਗਲਾ = new_log;
 }
 
 
-#if (NGX_DEBUG)
+#ਜੇ (NGX_DEBUG)
 
-static void
-ngx_log_memory_writer(ngx_log_t *log, ngx_uint_t level, u_char *buf,
-    size_t len)
+ਸਥਿਰ ਖਾਲੀ
+ngx_log_ਸਮ੍ਰਿਤੀ_writer(ngx_log_t *ਲਘੂਗਣਕ, ngx_uint_t level, u_char *buf,
+    ਮਾਪ_t len)
 {
     u_char                *p;
-    size_t                 avail, written;
-    ngx_log_memory_buf_t  *mem;
+    ਮਾਪ_t                 avail, written;
+    ngx_log_ਸਮ੍ਰਿਤੀ_buf_t  *mem;
 
-    mem = log->wdata;
+    mem = ਲਘੂਗਣਕ->wdata;
 
-    if (mem == NULL) {
-        return;
+    ਜੇ (mem == ਨਿਰਾ) {
+        ਵਾਪਸ;
     }
 
-    written = ngx_atomic_fetch_add(&mem->written, len);
+    written = ngx_atomic_fetch_ਜੋੜੋ(&mem->written, len);
 
-    p = mem->pos + written % (mem->end - mem->pos);
+    p = mem->pos + written % (mem->ਸਿਰਾ - mem->pos);
 
-    avail = mem->end - p;
+    avail = mem->ਸਿਰਾ - p;
 
-    if (avail >= len) {
+    ਜੇ (avail >= len) {
         ngx_memcpy(p, buf, len);
 
-    } else {
+    } ਨਹੀਂਤਾਂ {
         ngx_memcpy(p, buf, avail);
         ngx_memcpy(mem->pos, buf + avail, len - avail);
     }
 }
 
 
-static void
-ngx_log_memory_cleanup(void *data)
+ਸਥਿਰ ਖਾਲੀ
+ngx_log_ਸਮ੍ਰਿਤੀ_cleanup(ਖਾਲੀ *ਅੰਕੜੇ)
 {
-    ngx_log_t *log = data;
+    ngx_log_t *ਲਘੂਗਣਕ = ਅੰਕੜੇ;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, log, 0, "destroy memory log buffer");
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, ਲਘੂਗਣਕ, 0, "destroy memory log buffer");
 
-    log->wdata = NULL;
+    ਲਘੂਗਣਕ->wdata = ਨਿਰਾ;
 }
 
-#endif
+#ਜੇ_ਅੰਤ

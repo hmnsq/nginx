@@ -10,29 +10,29 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_json_unescape.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_json_unescape.h>
 
 
-static ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
+ਸਥਿਰ ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
     uint32_t codepoint);
 
 
 ngx_int_t
 ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 {
-    size_t       size;
+    ਮਾਪ_t       ਮਾਪ;
     u_char      *d, *s, ch;
-    uint32_t     codepoint, high_surrogate;
+    uint32_t     codepoint, ਉੱਚਾ_surrogate;
     ngx_int_t    n;
-    ngx_uint_t   hex_left;
+    ngx_uint_t   hex_ਖੱਬਾ;
 
-    enum {
+    ਗਿਣਤੀ {
         sw_usual = 0,
         sw_quoted,
         sw_hex,
-        sw_surrogate_start,   /* expect '\' of \uDCxx after high surrogate */
+        sw_surrogate_ਸ਼ੁਰੂ,   /* expect '\' of \uDCxx after high surrogate */
         sw_surrogate_u        /* expect 'u' */
     } state;
 
@@ -62,216 +62,216 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
      * surrounding double quotes).
      */
 
-    if (src->len == 0) {
+    ਜੇ (src->len == 0) {
         dst->len = 0;
-        return NGX_OK;
+        ਵਾਪਸ NGX_OK;
     }
 
-    if (dst->len < src->len) {
-        return NGX_ERROR;
+    ਜੇ (dst->len < src->len) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    s = src->data;
-    d = dst->data;
-    size = src->len;
+    s = src->ਅੰਕੜੇ;
+    d = dst->ਅੰਕੜੇ;
+    ਮਾਪ = src->len;
 
 
     state = sw_usual;
     codepoint = 0;
-    high_surrogate = 0;
-    hex_left = 0;
+    ਉੱਚਾ_surrogate = 0;
+    hex_ਖੱਬਾ = 0;
 
-    while (size--) {
+    ਜਦੋਂ (ਮਾਪ--) {
 
         ch = *s++;
 
-        switch (state) {
-        case sw_usual:
+        ਚੋਣ (state) {
+        ਹਾਲਤ sw_usual:
 
-            if (ch == '"') {
-                return NGX_ERROR;
+            ਜੇ (ch == '"') {
+                ਵਾਪਸ NGX_ERROR;
             }
 
-            if (ch == '\\') {
+            ਜੇ (ch == '\\') {
                 state = sw_quoted;
-                break;
+                ਰੋਕੋ;
             }
 
-            if (ch < 0x20) {
+            ਜੇ (ch < 0x20) {
                 /* RFC 8259: control characters must be escaped */
-                return NGX_ERROR;
+                ਵਾਪਸ NGX_ERROR;
             }
 
             *d++ = ch;
-            break;
+            ਰੋਕੋ;
 
-        case sw_quoted:
+        ਹਾਲਤ sw_quoted:
 
-            switch (ch) {
+            ਚੋਣ (ch) {
 
-            case 'u':
+            ਹਾਲਤ 'u':
                 codepoint = 0;
-                hex_left = 4;
+                hex_ਖੱਬਾ = 4;
                 state = sw_hex;
-                break;
+                ਰੋਕੋ;
 
-            case '"':
-            case '/':
-            case '\\':
+            ਹਾਲਤ '"':
+            ਹਾਲਤ '/':
+            ਹਾਲਤ '\\':
                 *d++ = ch;
                 state = sw_usual;
-                break;
+                ਰੋਕੋ;
 
-            case 'b':
+            ਹਾਲਤ 'b':
                 *d++ = '\b';
                 state = sw_usual;
-                break;
+                ਰੋਕੋ;
 
-            case 'f':
+            ਹਾਲਤ 'f':
                 *d++ = '\f';
                 state = sw_usual;
-                break;
+                ਰੋਕੋ;
 
-            case 'n':
+            ਹਾਲਤ 'n':
                 *d++ = '\n';
                 state = sw_usual;
-                break;
+                ਰੋਕੋ;
 
-            case 'r':
+            ਹਾਲਤ 'r':
                 *d++ = '\r';
                 state = sw_usual;
-                break;
+                ਰੋਕੋ;
 
-            case 't':
+            ਹਾਲਤ 't':
                 *d++ = '\t';
                 state = sw_usual;
-                break;
+                ਰੋਕੋ;
 
-            default:
-                return NGX_ERROR;
+            ਮੂਲ:
+                ਵਾਪਸ NGX_ERROR;
             }
 
-            break;
+            ਰੋਕੋ;
 
-        case sw_hex:
+        ਹਾਲਤ sw_hex:
 
             n = ngx_json_hex_digit(ch);
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            ਜੇ (n == NGX_ERROR) {
+                ਵਾਪਸ NGX_ERROR;
             }
 
             codepoint = (codepoint << 4) | (uint32_t) n;
 
-            if (--hex_left > 0) {
-                break;
+            ਜੇ (--hex_ਖੱਬਾ > 0) {
+                ਰੋਕੋ;
             }
 
-            if (high_surrogate) {
-                if (codepoint < 0xDC00 || codepoint > 0xDFFF) {
-                    return NGX_ERROR;
+            ਜੇ (ਉੱਚਾ_surrogate) {
+                ਜੇ (codepoint < 0xDC00 || codepoint > 0xDFFF) {
+                    ਵਾਪਸ NGX_ERROR;
                 }
 
                 codepoint = 0x10000
-                            + ((high_surrogate - 0xD800) << 10)
+                            + ((ਉੱਚਾ_surrogate - 0xD800) << 10)
                             + (codepoint - 0xDC00);
                 d = ngx_json_utf8_encode(d, codepoint);
-                high_surrogate = 0;
+                ਉੱਚਾ_surrogate = 0;
                 state = sw_usual;
-                break;
+                ਰੋਕੋ;
             }
 
-            if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+            ਜੇ (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
                 /* high surrogate - wait for the low surrogate */
-                high_surrogate = codepoint;
-                state = sw_surrogate_start;
-                break;
+                ਉੱਚਾ_surrogate = codepoint;
+                state = sw_surrogate_ਸ਼ੁਰੂ;
+                ਰੋਕੋ;
             }
 
-            if (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
+            ਜੇ (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_ERROR;
+                ਵਾਪਸ NGX_ERROR;
             }
 
             d = ngx_json_utf8_encode(d, codepoint);
             state = sw_usual;
-            break;
+            ਰੋਕੋ;
 
-        case sw_surrogate_start:
+        ਹਾਲਤ sw_surrogate_ਸ਼ੁਰੂ:
             /*
              * Expect '\' to begin the low-surrogate escape.
              * Lone surrogates are not valid Unicode scalar values
              * (RFC 8259, Section 8.2).
              */
-            if (ch == '\\') {
+            ਜੇ (ch == '\\') {
                 state = sw_surrogate_u;
-                break;
+                ਰੋਕੋ;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            ਵਾਪਸ NGX_ERROR;
 
-        case sw_surrogate_u:
-            if (ch == 'u') {
+        ਹਾਲਤ sw_surrogate_u:
+            ਜੇ (ch == 'u') {
                 codepoint = 0;
-                hex_left = 4;
+                hex_ਖੱਬਾ = 4;
                 state = sw_hex;
-                break;
+                ਰੋਕੋ;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            ਵਾਪਸ NGX_ERROR;
         }
     }
 
-    if (state != sw_usual) {
+    ਜੇ (state != sw_usual) {
         /* truncated escape sequence or unpaired high surrogate */
-        return NGX_ERROR;
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    dst->len = d - dst->data;
+    dst->len = d - dst->ਅੰਕੜੇ;
 
-    return NGX_OK;
+    ਵਾਪਸ NGX_OK;
 }
 
 
-static ngx_inline u_char *
+ਸਥਿਰ ngx_inline u_char *
 ngx_json_utf8_encode(u_char *dst, uint32_t codepoint)
 {
-    if (codepoint <= 0x7F) {
+    ਜੇ (codepoint <= 0x7F) {
         *dst++ = (u_char) codepoint;
 
-    } else if (codepoint <= 0x7FF) {
+    } ਨਹੀਂਤਾਂ ਜੇ (codepoint <= 0x7FF) {
         *dst++ = (u_char) (0xC0 | (codepoint >> 6));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else if (codepoint <= 0xFFFF) {
+    } ਨਹੀਂਤਾਂ ਜੇ (codepoint <= 0xFFFF) {
         *dst++ = (u_char) (0xE0 | (codepoint >> 12));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else {
+    } ਨਹੀਂਤਾਂ {
         *dst++ = (u_char) (0xF0 | (codepoint >> 18));
         *dst++ = (u_char) (0x80 | ((codepoint >> 12) & 0x3F));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
     }
 
-    return dst;
+    ਵਾਪਸ dst;
 }
 
 
 ngx_int_t
 ngx_json_hex_digit(u_char ch)
 {
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0';
+    ਜੇ (ch >= '0' && ch <= '9') {
+        ਵਾਪਸ ch - '0';
     }
 
     ch = (u_char) (ch | 0x20);
 
-    if (ch >= 'a' && ch <= 'f') {
-        return ch - 'a' + 10;
+    ਜੇ (ch >= 'a' && ch <= 'f') {
+        ਵਾਪਸ ch - 'a' + 10;
     }
 
-    return NGX_ERROR;
+    ਵਾਪਸ NGX_ERROR;
 }

@@ -4,173 +4,173 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-typedef ssize_t   (*ngx_json_length_pt)(ngx_data_item_t *item);
-typedef u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_data_item_t *item);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ssize_t   (*ngx_json_ਲੰਮਾਈ_pt)(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
 
 
-typedef struct {
-    ngx_json_length_pt        length;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    ngx_json_ਲੰਮਾਈ_pt        ਲੰਮਾਈ;
     ngx_json_encode_pt        encode;
 } ngx_json_encode_t;
 
 
-static ssize_t ngx_json_obj_length(ngx_data_item_t *item);
-static ssize_t ngx_json_list_length(ngx_data_item_t *item);
-static ssize_t ngx_json_string_length(ngx_data_item_t *item);
-static ssize_t ngx_json_integer_length(ngx_data_item_t *item);
-static ssize_t ngx_json_boolean_length(ngx_data_item_t *item);
-static ssize_t ngx_json_null_length(ngx_data_item_t *item);
+ਸਥਿਰ ssize_t ngx_json_obj_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
+ਸਥਿਰ ssize_t ngx_json_list_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
+ਸਥਿਰ ssize_t ngx_json_string_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
+ਸਥਿਰ ssize_t ngx_json_integer_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
+ਸਥਿਰ ssize_t ngx_json_boolean_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
+ਸਥਿਰ ssize_t ngx_json_null_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
 
-static u_char *ngx_json_obj_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_list_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_string_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_integer_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_null_encode(u_char *p, ngx_data_item_t *item);
+ਸਥਿਰ u_char *ngx_json_obj_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
+ਸਥਿਰ u_char *ngx_json_list_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
+ਸਥਿਰ u_char *ngx_json_string_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
+ਸਥਿਰ u_char *ngx_json_integer_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
+ਸਥਿਰ u_char *ngx_json_boolean_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
+ਸਥਿਰ u_char *ngx_json_null_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ);
 
 
-static ngx_json_encode_t  ngx_json_encode[] = {
+ਸਥਿਰ ngx_json_encode_t  ngx_json_encode[] = {
 
     /* NGX_DATA_OBJECT_TYPE */
-    { ngx_json_obj_length,
+    { ngx_json_obj_ਲੰਮਾਈ,
       ngx_json_obj_encode },
 
     /* NGX_DATA_LIST_TYPE */
-    { ngx_json_list_length,
+    { ngx_json_list_ਲੰਮਾਈ,
       ngx_json_list_encode },
 
     /* NGX_DATA_STRING_TYPE */
-    { ngx_json_string_length,
+    { ngx_json_string_ਲੰਮਾਈ,
       ngx_json_string_encode },
 
     /* NGX_DATA_INTEGER_TYPE */
-    { ngx_json_integer_length,
+    { ngx_json_integer_ਲੰਮਾਈ,
       ngx_json_integer_encode },
 
     /* NGX_DATA_BOOLEAN_TYPE */
-    { ngx_json_boolean_length,
+    { ngx_json_boolean_ਲੰਮਾਈ,
       ngx_json_boolean_encode },
 
     /* NGX_DATA_NULL_TYPE */
-    { ngx_json_null_length,
+    { ngx_json_null_ਲੰਮਾਈ,
       ngx_json_null_encode },
 };
 
 
 ngx_buf_t *
-ngx_json_render(ngx_pool_t *pool, ngx_data_item_t *item)
+ngx_json_render(ngx_pool_t *pool, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    size_t      length;
+    ਮਾਪ_t      ਲੰਮਾਈ;
     ngx_buf_t  *buf;
 
-    length = ngx_json_encode[item->type].length(item);
-    if (length == (size_t) NGX_ERROR) {
-        return NULL;
+    ਲੰਮਾਈ = ngx_json_encode[ਵਸਤੂ->type].ਲੰਮਾਈ(ਵਸਤੂ);
+    ਜੇ (ਲੰਮਾਈ == (ਮਾਪ_t) NGX_ERROR) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    buf = ngx_create_temp_buf(pool, length);
-    if (buf == NULL) {
-        return NULL;
+    buf = ngx_create_ਆਰਜ਼ੀ_buf(pool, ਲੰਮਾਈ);
+    ਜੇ (buf == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    buf->last = ngx_json_encode[item->type].encode(buf->last, item);
+    buf->ਆਖਰੀ = ngx_json_encode[ਵਸਤੂ->type].encode(buf->ਆਖਰੀ, ਵਸਤੂ);
 
-    return buf;
+    ਵਾਪਸ buf;
 }
 
 
-static ssize_t
-ngx_json_obj_length(ngx_data_item_t *item)
+ਸਥਿਰ ssize_t
+ngx_json_obj_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ਮਾਪ_t            len, ਕੁੱਲ;
+    ngx_ਅੰਕੜੇ_obj_t   *obj;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("{}") - 1;
-    i = obj->item;
+    obj = &ਵਸਤੂ->ਅੰਕੜੇ.object;
+    ਕੁੱਲ = ਆਕਾਰ("{}") - 1;
+    i = obj->ਵਸਤੂ;
 
-    if (i) {
-        for ( ;; ) {
-            if (i->name.len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\":") - 1)) {
-                return NGX_ERROR;
+    ਜੇ (i) {
+        ਲਈ ( ;; ) {
+            ਜੇ (i->name.len > NGX_MAX_ਮਾਪ_T_ਮੁੱਲ - (ਆਕਾਰ("\"\":") - 1)) {
+                ਵਾਪਸ NGX_ERROR;
             }
 
-            len = sizeof("\"\":") - 1 + i->name.len;
+            len = ਆਕਾਰ("\"\":") - 1 + i->name.len;
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ਜੇ (len > NGX_MAX_ਮਾਪ_T_ਮੁੱਲ - ਕੁੱਲ) {
+                ਵਾਪਸ NGX_ERROR;
             }
 
-            total += len;
+            ਕੁੱਲ += len;
 
-            len = ngx_escape_json(NULL, i->name.data, i->name.len);
+            len = ngx_escape_json(ਨਿਰਾ, i->name.ਅੰਕੜੇ, i->name.len);
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ਜੇ (len > NGX_MAX_ਮਾਪ_T_ਮੁੱਲ - ਕੁੱਲ) {
+                ਵਾਪਸ NGX_ERROR;
             }
 
-            total += len;
+            ਕੁੱਲ += len;
 
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+            len = ngx_json_encode[i->type].ਲੰਮਾਈ(i);
+            ਜੇ (len == (ਮਾਪ_t) NGX_ERROR) {
+                ਵਾਪਸ NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ਜੇ (len > NGX_MAX_ਮਾਪ_T_ਮੁੱਲ - ਕੁੱਲ) {
+                ਵਾਪਸ NGX_ERROR;
             }
 
-            total += len;
+            ਕੁੱਲ += len;
 
-            i = i->next;
+            i = i->ਅਗਲਾ;
 
-            if (i == NULL) {
-                break;
+            ਜੇ (i == ਨਿਰਾ) {
+                ਰੋਕੋ;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            ਜੇ (ਕੁੱਲ > NGX_MAX_ਮਾਪ_T_ਮੁੱਲ - (ਆਕਾਰ(",") - 1)) {
+                ਵਾਪਸ NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            ਕੁੱਲ += ਆਕਾਰ(",") - 1;
         }
     }
 
-    return total;
+    ਵਾਪਸ ਕੁੱਲ;
 }
 
 
-static u_char *
-ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
+ਸਥਿਰ u_char *
+ngx_json_obj_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_ਅੰਕੜੇ_obj_t   *obj;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *i;
 
-    obj = &item->data.object;
-    i = obj->item;
+    obj = &ਵਸਤੂ->ਅੰਕੜੇ.object;
+    i = obj->ਵਸਤੂ;
 
     *p++ = '{';
 
-    if (i) {
-        for ( ;; ) {
+    ਜੇ (i) {
+        ਲਈ ( ;; ) {
             *p++ = '"';
 
-            p = (u_char *) ngx_escape_json(p, i->name.data, i->name.len);
+            p = (u_char *) ngx_escape_json(p, i->name.ਅੰਕੜੇ, i->name.len);
 
             *p++ = '"';
             *p++ = ':';
 
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->ਅਗਲਾ;
 
-            if (i == NULL) {
-                break;
+            ਜੇ (i == ਨਿਰਾ) {
+                ਰੋਕੋ;
             }
 
             *p++ = ',';
@@ -179,71 +179,71 @@ ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = '}';
 
-    return p;
+    ਵਾਪਸ p;
 }
 
 
-static ssize_t
-ngx_json_list_length(ngx_data_item_t *item)
+ਸਥਿਰ ssize_t
+ngx_json_list_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ਮਾਪ_t            len, ਕੁੱਲ;
+    ngx_ਅੰਕੜੇ_obj_t   *obj;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("[]") - 1;
-    i = obj->item;
+    obj = &ਵਸਤੂ->ਅੰਕੜੇ.object;
+    ਕੁੱਲ = ਆਕਾਰ("[]") - 1;
+    i = obj->ਵਸਤੂ;
 
-    if (i) {
-        for ( ;; ) {
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+    ਜੇ (i) {
+        ਲਈ ( ;; ) {
+            len = ngx_json_encode[i->type].ਲੰਮਾਈ(i);
+            ਜੇ (len == (ਮਾਪ_t) NGX_ERROR) {
+                ਵਾਪਸ NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ਜੇ (len > NGX_MAX_ਮਾਪ_T_ਮੁੱਲ - ਕੁੱਲ) {
+                ਵਾਪਸ NGX_ERROR;
             }
 
-            total += len;
+            ਕੁੱਲ += len;
 
-            i = i->next;
+            i = i->ਅਗਲਾ;
 
-            if (i == NULL) {
-                break;
+            ਜੇ (i == ਨਿਰਾ) {
+                ਰੋਕੋ;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            ਜੇ (ਕੁੱਲ > NGX_MAX_ਮਾਪ_T_ਮੁੱਲ - (ਆਕਾਰ(",") - 1)) {
+                ਵਾਪਸ NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            ਕੁੱਲ += ਆਕਾਰ(",") - 1;
         }
     }
 
-    return total;
+    ਵਾਪਸ ਕੁੱਲ;
 }
 
 
-static u_char *
-ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
+ਸਥਿਰ u_char *
+ngx_json_list_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_ਅੰਕੜੇ_obj_t   *obj;
+    ngx_ਅੰਕੜੇ_ਵਸਤੂ_t  *i;
 
-    obj = &item->data.object;
-    i = obj->item;
+    obj = &ਵਸਤੂ->ਅੰਕੜੇ.object;
+    i = obj->ਵਸਤੂ;
 
     *p++ = '[';
 
-    if (i) {
-        for ( ;; ) {
+    ਜੇ (i) {
+        ਲਈ ( ;; ) {
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->ਅਗਲਾ;
 
-            if (i == NULL) {
-                break;
+            ਜੇ (i == ਨਿਰਾ) {
+                ਰੋਕੋ;
             }
 
             *p++ = ',';
@@ -252,89 +252,89 @@ ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = ']';
 
-    return p;
+    ਵਾਪਸ p;
 }
 
 
-static ssize_t
-ngx_json_string_length(ngx_data_item_t *item)
+ਸਥਿਰ ssize_t
+ngx_json_string_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    size_t      len, total;
+    ਮਾਪ_t      len, ਕੁੱਲ;
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &ਵਸਤੂ->ਅੰਕੜੇ.string;
 
-    if (str->len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\"") - 1)) {
-        return NGX_ERROR;
+    ਜੇ (str->len > NGX_MAX_ਮਾਪ_T_ਮੁੱਲ - (ਆਕਾਰ("\"\"") - 1)) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    total = sizeof("\"\"") - 1 + str->len;
+    ਕੁੱਲ = ਆਕਾਰ("\"\"") - 1 + str->len;
 
-    len = ngx_escape_json(NULL, str->data, str->len);
+    len = ngx_escape_json(ਨਿਰਾ, str->ਅੰਕੜੇ, str->len);
 
-    if (len > NGX_MAX_SIZE_T_VALUE - total) {
-        return NGX_ERROR;
+    ਜੇ (len > NGX_MAX_ਮਾਪ_T_ਮੁੱਲ - ਕੁੱਲ) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    return total + len;
+    ਵਾਪਸ ਕੁੱਲ + len;
 }
 
 
-static u_char *
-ngx_json_string_encode(u_char *p, ngx_data_item_t *item)
+ਸਥਿਰ u_char *
+ngx_json_string_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &ਵਸਤੂ->ਅੰਕੜੇ.string;
 
     *p++ = '"';
 
-    p = (u_char *) ngx_escape_json(p, str->data, str->len);
+    p = (u_char *) ngx_escape_json(p, str->ਅੰਕੜੇ, str->len);
 
     *p++ = '"';
 
-    return p;
+    ਵਾਪਸ p;
 }
 
 
-static ssize_t
-ngx_json_integer_length(ngx_data_item_t *item)
+ਸਥਿਰ ssize_t
+ngx_json_integer_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    return NGX_INT64_LEN;
+    ਵਾਪਸ NGX_INT64_LEN;
 }
 
 
-static u_char *
-ngx_json_integer_encode(u_char *p, ngx_data_item_t *item)
+ਸਥਿਰ u_char *
+ngx_json_integer_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    return ngx_sprintf(p, "%L", item->data.integer);
+    ਵਾਪਸ ngx_sprintf(p, "%L", ਵਸਤੂ->ਅੰਕੜੇ.integer);
 }
 
 
-static ssize_t
-ngx_json_boolean_length(ngx_data_item_t *item)
+ਸਥਿਰ ssize_t
+ngx_json_boolean_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    return sizeof("false") - 1;
+    ਵਾਪਸ ਆਕਾਰ("false") - 1;
 }
 
 
-static u_char *
-ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item)
+ਸਥਿਰ u_char *
+ngx_json_boolean_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    return item->data.boolean ? ngx_cpymem(p, "true", 4)
+    ਵਾਪਸ ਵਸਤੂ->ਅੰਕੜੇ.boolean ? ngx_cpymem(p, "true", 4)
                               : ngx_cpymem(p, "false", 5);
 }
 
 
-static ssize_t
-ngx_json_null_length(ngx_data_item_t *item)
+ਸਥਿਰ ssize_t
+ngx_json_null_ਲੰਮਾਈ(ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    return sizeof("null") - 1;
+    ਵਾਪਸ ਆਕਾਰ("null") - 1;
 }
 
 
-static u_char *
-ngx_json_null_encode(u_char *p, ngx_data_item_t *item)
+ਸਥਿਰ u_char *
+ngx_json_null_encode(u_char *p, ngx_ਅੰਕੜੇ_ਵਸਤੂ_t *ਵਸਤੂ)
 {
-    return ngx_cpymem(p, "null", 4);
+    ਵਾਪਸ ngx_cpymem(p, "null", 4);
 }

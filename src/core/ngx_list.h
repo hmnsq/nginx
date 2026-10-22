@@ -5,50 +5,50 @@
  */
 
 
-#ifndef _NGX_LIST_H_INCLUDED_
-#define _NGX_LIST_H_INCLUDED_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ _NGX_LIST_H_INCLUDED_
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NGX_LIST_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
-typedef struct ngx_list_part_s  ngx_list_part_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_list_part_s  ngx_list_part_t;
 
-struct ngx_list_part_s {
-    void             *elts;
+ਬਣਤਰ ngx_list_part_s {
+    ਖਾਲੀ             *elts;
     ngx_uint_t        nelts;
-    ngx_list_part_t  *next;
+    ngx_list_part_t  *ਅਗਲਾ;
 };
 
 
-typedef struct {
-    ngx_list_part_t  *last;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    ngx_list_part_t  *ਆਖਰੀ;
     ngx_list_part_t   part;
-    size_t            size;
+    ਮਾਪ_t            ਮਾਪ;
     ngx_uint_t        nalloc;
     ngx_pool_t       *pool;
 } ngx_list_t;
 
 
-ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size);
+ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, ਮਾਪ_t ਮਾਪ);
 
-static ngx_inline ngx_int_t
-ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
+ਸਥਿਰ ngx_inline ngx_int_t
+ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, ਮਾਪ_t ਮਾਪ)
 {
-    list->part.elts = ngx_palloc(pool, n * size);
-    if (list->part.elts == NULL) {
-        return NGX_ERROR;
+    list->part.elts = ngx_palloc(pool, n * ਮਾਪ);
+    ਜੇ (list->part.elts == ਨਿਰਾ) {
+        ਵਾਪਸ NGX_ERROR;
     }
 
     list->part.nelts = 0;
-    list->part.next = NULL;
-    list->last = &list->part;
-    list->size = size;
+    list->part.ਅਗਲਾ = ਨਿਰਾ;
+    list->ਆਖਰੀ = &list->part;
+    list->ਮਾਪ = ਮਾਪ;
     list->nalloc = n;
     list->pool = pool;
 
-    return NGX_OK;
+    ਵਾਪਸ NGX_OK;
 }
 
 
@@ -77,7 +77,7 @@ ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
  */
 
 
-void *ngx_list_push(ngx_list_t *list);
+ਖਾਲੀ *ngx_list_ਧੱਕੋ(ngx_list_t *list);
 
 
-#endif /* _NGX_LIST_H_INCLUDED_ */
+#ਜੇ_ਅੰਤ /* _NGX_LIST_H_INCLUDED_ */

@@ -4,40 +4,40 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_event.h>
 
 
-#define NGX_SYSLOG_MAX_STR                                                    \
-    NGX_MAX_ERROR_STR + sizeof("<255>Jan 01 00:00:00 ") - 1                   \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_SYSLOG_MAX_STR                                                    \
+    NGX_MAX_ERROR_STR + ਆਕਾਰ("<255>Jan 01 00:00:00 ") - 1                   \
     + (NGX_MAXHOSTNAMELEN - 1) + 1 /* space */                                \
-    + 32 /* tag */ + 2 /* colon, space */
+    + 32 /*ਟੈਗ*/ + 2 /* colon, space */
 
 
-static char *ngx_syslog_parse_args(ngx_conf_t *cf, ngx_syslog_peer_t *peer);
-static ngx_int_t ngx_syslog_init_peer(ngx_syslog_peer_t *peer);
-static void ngx_syslog_cleanup(void *data);
-static u_char *ngx_syslog_log_error(ngx_log_t *log, u_char *buf, size_t len);
+ਸਥਿਰ ਅੱਖਰ *ngx_syslog_parse_ਦਲੀਲਾਂ(ngx_conf_t *cf, ngx_syslog_peer_t *peer);
+ਸਥਿਰ ngx_int_t ngx_syslog_init_peer(ngx_syslog_peer_t *peer);
+ਸਥਿਰ ਖਾਲੀ ngx_syslog_cleanup(ਖਾਲੀ *ਅੰਕੜੇ);
+ਸਥਿਰ u_char *ngx_syslog_log_error(ngx_log_t *ਲਘੂਗਣਕ, u_char *buf, ਮਾਪ_t len);
 
 
-static char  *facilities[] = {
+ਸਥਿਰ ਅੱਖਰ  *facilities[] = {
     "kern", "user", "mail", "daemon", "auth", "intern", "lpr", "news", "uucp",
     "clock", "authpriv", "ftp", "ntp", "audit", "alert", "cron", "local0",
     "local1", "local2", "local3", "local4", "local5", "local6", "local7",
-    NULL
+    ਨਿਰਾ
 };
 
 /* note 'error/warn' like in nginx.conf, not 'err/warning' */
-static char  *severities[] = {
-    "emerg", "alert", "crit", "error", "warn", "notice", "info", "debug", NULL
+ਸਥਿਰ ਅੱਖਰ  *severities[] = {
+    "emerg", "alert", "crit", "error", "warn", "notice", "info", "debug", ਨਿਰਾ
 };
 
-static ngx_log_t    ngx_syslog_dummy_log;
-static ngx_event_t  ngx_syslog_dummy_event;
+ਸਥਿਰ ngx_log_t    ngx_syslog_dummy_log;
+ਸਥਿਰ ngx_event_t  ngx_syslog_dummy_event;
 
 
-char *
+ਅੱਖਰ *
 ngx_syslog_process_conf(ngx_conf_t *cf, ngx_syslog_peer_t *peer)
 {
     ngx_pool_cleanup_t  *cln;
@@ -45,366 +45,366 @@ ngx_syslog_process_conf(ngx_conf_t *cf, ngx_syslog_peer_t *peer)
     peer->facility = NGX_CONF_UNSET_UINT;
     peer->severity = NGX_CONF_UNSET_UINT;
 
-    if (ngx_syslog_parse_args(cf, peer) != NGX_CONF_OK) {
-        return NGX_CONF_ERROR;
+    ਜੇ (ngx_syslog_parse_ਦਲੀਲਾਂ(cf, peer) != NGX_CONF_OK) {
+        ਵਾਪਸ NGX_CONF_ERROR;
     }
 
-    if (peer->server.sockaddr == NULL) {
+    ਜੇ (peer->server.sockaddr == ਨਿਰਾ) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "no syslog server specified");
-        return NGX_CONF_ERROR;
+        ਵਾਪਸ NGX_CONF_ERROR;
     }
 
-    if (peer->facility == NGX_CONF_UNSET_UINT) {
+    ਜੇ (peer->facility == NGX_CONF_UNSET_UINT) {
         peer->facility = 23; /* local7 */
     }
 
-    if (peer->severity == NGX_CONF_UNSET_UINT) {
+    ਜੇ (peer->severity == NGX_CONF_UNSET_UINT) {
         peer->severity = 6; /* info */
     }
 
-    if (peer->tag.data == NULL) {
-        ngx_str_set(&peer->tag, "nginx");
+    ਜੇ (peer->ਟੈਗ.ਅੰਕੜੇ == ਨਿਰਾ) {
+        ngx_str_ਸੈੱਟ(&peer->ਟੈਗ, "nginx");
     }
 
-    peer->hostname = &cf->cycle->hostname;
-    peer->logp = &cf->cycle->new_log;
+    peer->hostname = &cf->ਚੱਕਰ->hostname;
+    peer->logp = &cf->ਚੱਕਰ->new_log;
 
     peer->conn.fd = (ngx_socket_t) -1;
 
-    peer->conn.read = &ngx_syslog_dummy_event;
-    peer->conn.write = &ngx_syslog_dummy_event;
+    peer->conn.ਪਠ = &ngx_syslog_dummy_event;
+    peer->conn.ਲਿਖ = &ngx_syslog_dummy_event;
 
-    ngx_syslog_dummy_event.log = &ngx_syslog_dummy_log;
+    ngx_syslog_dummy_event.ਲਘੂਗਣਕ = &ngx_syslog_dummy_log;
 
-    cln = ngx_pool_cleanup_add(cf->pool, 0);
-    if (cln == NULL) {
-        return NGX_CONF_ERROR;
+    cln = ngx_pool_cleanup_ਜੋੜੋ(cf->pool, 0);
+    ਜੇ (cln == ਨਿਰਾ) {
+        ਵਾਪਸ NGX_CONF_ERROR;
     }
 
-    cln->data = peer;
+    cln->ਅੰਕੜੇ = peer;
     cln->handler = ngx_syslog_cleanup;
 
-    return NGX_CONF_OK;
+    ਵਾਪਸ NGX_CONF_OK;
 }
 
 
-static char *
-ngx_syslog_parse_args(ngx_conf_t *cf, ngx_syslog_peer_t *peer)
+ਸਥਿਰ ਅੱਖਰ *
+ngx_syslog_parse_ਦਲੀਲਾਂ(ngx_conf_t *cf, ngx_syslog_peer_t *peer)
 {
     u_char      *p, *comma, c;
-    size_t       len;
-    ngx_str_t   *value;
+    ਮਾਪ_t       len;
+    ngx_str_t   *ਮੁੱਲ;
     ngx_url_t    u;
     ngx_uint_t   i;
 
-    value = cf->args->elts;
+    ਮੁੱਲ = cf->ਦਲੀਲਾਂ->elts;
 
-    p = value[1].data + sizeof("syslog:") - 1;
+    p = ਮੁੱਲ[1].ਅੰਕੜੇ + ਆਕਾਰ("syslog:") - 1;
 
-    for ( ;; ) {
+    ਲਈ ( ;; ) {
         comma = (u_char *) ngx_strchr(p, ',');
 
-        if (comma != NULL) {
+        ਜੇ (comma != ਨਿਰਾ) {
             len = comma - p;
             *comma = '\0';
 
-        } else {
-            len = value[1].data + value[1].len - p;
+        } ਨਹੀਂਤਾਂ {
+            len = ਮੁੱਲ[1].ਅੰਕੜੇ + ਮੁੱਲ[1].len - p;
         }
 
-        if (ngx_strncmp(p, "server=", 7) == 0) {
+        ਜੇ (ngx_strncmp(p, "server=", 7) == 0) {
 
-            if (peer->server.sockaddr != NULL) {
+            ਜੇ (peer->server.sockaddr != ਨਿਰਾ) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "duplicate syslog \"server\"");
-                return NGX_CONF_ERROR;
+                ਵਾਪਸ NGX_CONF_ERROR;
             }
 
-            ngx_memzero(&u, sizeof(ngx_url_t));
+            ngx_memzero(&u, ਆਕਾਰ(ngx_url_t));
 
-            u.url.data = p + 7;
+            u.url.ਅੰਕੜੇ = p + 7;
             u.url.len = len - 7;
-            u.default_port = 514;
+            u.default_ਪੋਰਟ = 514;
 
-            if (ngx_parse_url(cf->pool, &u) != NGX_OK) {
-                if (u.err) {
+            ਜੇ (ngx_parse_url(cf->pool, &u) != NGX_OK) {
+                ਜੇ (u.err) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "%s in syslog server \"%V\"",
                                        u.err, &u.url);
                 }
 
-                return NGX_CONF_ERROR;
+                ਵਾਪਸ NGX_CONF_ERROR;
             }
 
             peer->server = u.addrs[0];
 
-        } else if (ngx_strncmp(p, "facility=", 9) == 0) {
+        } ਨਹੀਂਤਾਂ ਜੇ (ngx_strncmp(p, "facility=", 9) == 0) {
 
-            if (peer->facility != NGX_CONF_UNSET_UINT) {
+            ਜੇ (peer->facility != NGX_CONF_UNSET_UINT) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "duplicate syslog \"facility\"");
-                return NGX_CONF_ERROR;
+                ਵਾਪਸ NGX_CONF_ERROR;
             }
 
-            for (i = 0; facilities[i] != NULL; i++) {
+            ਲਈ (i = 0; facilities[i] != ਨਿਰਾ; i++) {
 
-                if (ngx_strcmp(p + 9, facilities[i]) == 0) {
+                ਜੇ (ngx_strcmp(p + 9, facilities[i]) == 0) {
                     peer->facility = i;
-                    goto next;
+                    ਜਾਓ ਅਗਲਾ;
                 }
             }
 
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "unknown syslog facility \"%s\"", p + 9);
-            return NGX_CONF_ERROR;
+            ਵਾਪਸ NGX_CONF_ERROR;
 
-        } else if (ngx_strncmp(p, "severity=", 9) == 0) {
+        } ਨਹੀਂਤਾਂ ਜੇ (ngx_strncmp(p, "severity=", 9) == 0) {
 
-            if (peer->severity != NGX_CONF_UNSET_UINT) {
+            ਜੇ (peer->severity != NGX_CONF_UNSET_UINT) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "duplicate syslog \"severity\"");
-                return NGX_CONF_ERROR;
+                ਵਾਪਸ NGX_CONF_ERROR;
             }
 
-            for (i = 0; severities[i] != NULL; i++) {
+            ਲਈ (i = 0; severities[i] != ਨਿਰਾ; i++) {
 
-                if (ngx_strcmp(p + 9, severities[i]) == 0) {
+                ਜੇ (ngx_strcmp(p + 9, severities[i]) == 0) {
                     peer->severity = i;
-                    goto next;
+                    ਜਾਓ ਅਗਲਾ;
                 }
             }
 
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "unknown syslog severity \"%s\"", p + 9);
-            return NGX_CONF_ERROR;
+            ਵਾਪਸ NGX_CONF_ERROR;
 
-        } else if (ngx_strncmp(p, "tag=", 4) == 0) {
+        } ਨਹੀਂਤਾਂ ਜੇ (ngx_strncmp(p, "tag=", 4) == 0) {
 
-            if (peer->tag.data != NULL) {
+            ਜੇ (peer->ਟੈਗ.ਅੰਕੜੇ != ਨਿਰਾ) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "duplicate syslog \"tag\"");
-                return NGX_CONF_ERROR;
+                ਵਾਪਸ NGX_CONF_ERROR;
             }
 
             /*
              * RFC 3164: the TAG is a string of ABNF alphanumeric characters
              * that MUST NOT exceed 32 characters.
              */
-            if (len - 4 > 32) {
+            ਜੇ (len - 4 > 32) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "syslog tag length exceeds 32");
-                return NGX_CONF_ERROR;
+                ਵਾਪਸ NGX_CONF_ERROR;
             }
 
-            for (i = 4; i < len; i++) {
+            ਲਈ (i = 4; i < len; i++) {
                 c = ngx_tolower(p[i]);
 
-                if (c < '0' || (c > '9' && c < 'a' && c != '_') || c > 'z') {
+                ਜੇ (c < '0' || (c > '9' && c < 'a' && c != '_') || c > 'z') {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "syslog \"tag\" only allows "
                                        "alphanumeric characters "
                                        "and underscore");
-                    return NGX_CONF_ERROR;
+                    ਵਾਪਸ NGX_CONF_ERROR;
                 }
             }
 
-            peer->tag.data = p + 4;
-            peer->tag.len = len - 4;
+            peer->ਟੈਗ.ਅੰਕੜੇ = p + 4;
+            peer->ਟੈਗ.len = len - 4;
 
-        } else if (len == 10 && ngx_strncmp(p, "nohostname", 10) == 0) {
+        } ਨਹੀਂਤਾਂ ਜੇ (len == 10 && ngx_strncmp(p, "nohostname", 10) == 0) {
             peer->nohostname = 1;
 
-        } else {
+        } ਨਹੀਂਤਾਂ {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "unknown syslog parameter \"%s\"", p);
-            return NGX_CONF_ERROR;
+            ਵਾਪਸ NGX_CONF_ERROR;
         }
 
-    next:
+    ਅਗਲਾ:
 
-        if (comma == NULL) {
-            break;
+        ਜੇ (comma == ਨਿਰਾ) {
+            ਰੋਕੋ;
         }
 
         p = comma + 1;
     }
 
-    return NGX_CONF_OK;
+    ਵਾਪਸ NGX_CONF_OK;
 }
 
 
 u_char *
-ngx_syslog_add_header(ngx_syslog_peer_t *peer, u_char *buf)
+ngx_syslog_ਜੋੜੋ_ਸਿਰਲੇਖ(ngx_syslog_peer_t *peer, u_char *buf)
 {
     ngx_uint_t  pri;
 
     pri = peer->facility * 8 + peer->severity;
 
-    if (peer->nohostname) {
-        return ngx_sprintf(buf, "<%ui>%V %V: ", pri, &ngx_cached_syslog_time,
-                           &peer->tag);
+    ਜੇ (peer->nohostname) {
+        ਵਾਪਸ ngx_sprintf(buf, "<%ui>%V %V: ", pri, &ngx_cached_syslog_ਸਮਾਂ,
+                           &peer->ਟੈਗ);
     }
 
-    return ngx_sprintf(buf, "<%ui>%V %V %V: ", pri, &ngx_cached_syslog_time,
-                       peer->hostname, &peer->tag);
+    ਵਾਪਸ ngx_sprintf(buf, "<%ui>%V %V %V: ", pri, &ngx_cached_syslog_ਸਮਾਂ,
+                       peer->hostname, &peer->ਟੈਗ);
 }
 
 
-void
-ngx_syslog_writer(ngx_log_t *log, ngx_uint_t level, u_char *buf,
-    size_t len)
+ਖਾਲੀ
+ngx_syslog_writer(ngx_log_t *ਲਘੂਗਣਕ, ngx_uint_t level, u_char *buf,
+    ਮਾਪ_t len)
 {
-    u_char             *p, msg[NGX_SYSLOG_MAX_STR];
-    ngx_uint_t          head_len;
+    u_char             *p, ਸੁਨੇਹਾ[NGX_SYSLOG_MAX_STR];
+    ngx_uint_t          ਸਿਰ_len;
     ngx_syslog_peer_t  *peer;
 
-    peer = log->wdata;
+    peer = ਲਘੂਗਣਕ->wdata;
 
-    if (peer->busy) {
-        return;
+    ਜੇ (peer->busy) {
+        ਵਾਪਸ;
     }
 
     peer->busy = 1;
     peer->severity = level - 1;
 
-    p = ngx_syslog_add_header(peer, msg);
-    head_len = p - msg;
+    p = ngx_syslog_ਜੋੜੋ_ਸਿਰਲੇਖ(peer, ਸੁਨੇਹਾ);
+    ਸਿਰ_len = p - ਸੁਨੇਹਾ;
 
-    len -= NGX_LINEFEED_SIZE;
+    len -= NGX_LINEFEED_ਮਾਪ;
 
-    if (len > NGX_SYSLOG_MAX_STR - head_len) {
-        len = NGX_SYSLOG_MAX_STR - head_len;
+    ਜੇ (len > NGX_SYSLOG_MAX_STR - ਸਿਰ_len) {
+        len = NGX_SYSLOG_MAX_STR - ਸਿਰ_len;
     }
 
     p = ngx_snprintf(p, len, "%s", buf);
 
-    (void) ngx_syslog_send(peer, msg, p - msg);
+    (ਖਾਲੀ) ngx_syslog_send(peer, ਸੁਨੇਹਾ, p - ਸੁਨੇਹਾ);
 
     peer->busy = 0;
 }
 
 
 ssize_t
-ngx_syslog_send(ngx_syslog_peer_t *peer, u_char *buf, size_t len)
+ngx_syslog_send(ngx_syslog_peer_t *peer, u_char *buf, ਮਾਪ_t len)
 {
     ssize_t  n;
 
-    if (peer->log.handler == NULL) {
-        peer->log = *peer->logp;
-        peer->log.handler = ngx_syslog_log_error;
-        peer->log.data = peer;
-        peer->log.action = "logging to syslog";
+    ਜੇ (peer->ਲਘੂਗਣਕ.handler == ਨਿਰਾ) {
+        peer->ਲਘੂਗਣਕ = *peer->logp;
+        peer->ਲਘੂਗਣਕ.handler = ngx_syslog_log_error;
+        peer->ਲਘੂਗਣਕ.ਅੰਕੜੇ = peer;
+        peer->ਲਘੂਗਣਕ.action = "logging to syslog";
     }
 
-    if (peer->conn.fd == (ngx_socket_t) -1) {
-        if (ngx_syslog_init_peer(peer) != NGX_OK) {
-            return NGX_ERROR;
+    ਜੇ (peer->conn.fd == (ngx_socket_t) -1) {
+        ਜੇ (ngx_syslog_init_peer(peer) != NGX_OK) {
+            ਵਾਪਸ NGX_ERROR;
         }
     }
 
-    if (ngx_send) {
+    ਜੇ (ngx_send) {
         n = ngx_send(&peer->conn, buf, len);
 
-    } else {
+    } ਨਹੀਂਤਾਂ {
         /* event module has not yet set ngx_io */
         n = ngx_os_io.send(&peer->conn, buf, len);
     }
 
-    if (n == NGX_ERROR) {
+    ਜੇ (n == NGX_ERROR) {
 
-        if (ngx_close_socket(peer->conn.fd) == -1) {
-            ngx_log_error(NGX_LOG_ALERT, &peer->log, ngx_socket_errno,
+        ਜੇ (ngx_close_socket(peer->conn.fd) == -1) {
+            ngx_log_error(NGX_LOG_ALERT, &peer->ਲਘੂਗਣਕ, ngx_socket_errno,
                           ngx_close_socket_n " failed");
         }
 
         peer->conn.fd = (ngx_socket_t) -1;
     }
 
-    return n;
+    ਵਾਪਸ n;
 }
 
 
-static ngx_int_t
+ਸਥਿਰ ngx_int_t
 ngx_syslog_init_peer(ngx_syslog_peer_t *peer)
 {
     ngx_socket_t  fd;
 
     fd = ngx_socket(peer->server.sockaddr->sa_family, SOCK_DGRAM, 0);
-    if (fd == (ngx_socket_t) -1) {
-        ngx_log_error(NGX_LOG_ALERT, &peer->log, ngx_socket_errno,
+    ਜੇ (fd == (ngx_socket_t) -1) {
+        ngx_log_error(NGX_LOG_ALERT, &peer->ਲਘੂਗਣਕ, ngx_socket_errno,
                       ngx_socket_n " failed");
-        return NGX_ERROR;
+        ਵਾਪਸ NGX_ERROR;
     }
 
-    if (ngx_nonblocking(fd) == -1) {
-        ngx_log_error(NGX_LOG_ALERT, &peer->log, ngx_socket_errno,
+    ਜੇ (ngx_nonblocking(fd) == -1) {
+        ngx_log_error(NGX_LOG_ALERT, &peer->ਲਘੂਗਣਕ, ngx_socket_errno,
                       ngx_nonblocking_n " failed");
-        goto failed;
+        ਜਾਓ failed;
     }
 
-    if (connect(fd, peer->server.sockaddr, peer->server.socklen) == -1) {
-        ngx_log_error(NGX_LOG_ALERT, &peer->log, ngx_socket_errno,
+    ਜੇ (connect(fd, peer->server.sockaddr, peer->server.socklen) == -1) {
+        ngx_log_error(NGX_LOG_ALERT, &peer->ਲਘੂਗਣਕ, ngx_socket_errno,
                       "connect() failed");
-        goto failed;
+        ਜਾਓ failed;
     }
 
     peer->conn.fd = fd;
-    peer->conn.log = &peer->log;
+    peer->conn.ਲਘੂਗਣਕ = &peer->ਲਘੂਗਣਕ;
 
     /* UDP sockets are always ready to write */
-    peer->conn.write->ready = 1;
+    peer->conn.ਲਿਖ->ready = 1;
 
-    return NGX_OK;
+    ਵਾਪਸ NGX_OK;
 
 failed:
 
-    if (ngx_close_socket(fd) == -1) {
-        ngx_log_error(NGX_LOG_ALERT, &peer->log, ngx_socket_errno,
+    ਜੇ (ngx_close_socket(fd) == -1) {
+        ngx_log_error(NGX_LOG_ALERT, &peer->ਲਘੂਗਣਕ, ngx_socket_errno,
                       ngx_close_socket_n " failed");
     }
 
-    return NGX_ERROR;
+    ਵਾਪਸ NGX_ERROR;
 }
 
 
-static void
-ngx_syslog_cleanup(void *data)
+ਸਥਿਰ ਖਾਲੀ
+ngx_syslog_cleanup(ਖਾਲੀ *ਅੰਕੜੇ)
 {
-    ngx_syslog_peer_t  *peer = data;
+    ngx_syslog_peer_t  *peer = ਅੰਕੜੇ;
 
     /* prevents further use of this peer */
     peer->busy = 1;
 
-    if (peer->conn.fd == (ngx_socket_t) -1) {
-        return;
+    ਜੇ (peer->conn.fd == (ngx_socket_t) -1) {
+        ਵਾਪਸ;
     }
 
-    if (ngx_close_socket(peer->conn.fd) == -1) {
-        ngx_log_error(NGX_LOG_ALERT, &peer->log, ngx_socket_errno,
+    ਜੇ (ngx_close_socket(peer->conn.fd) == -1) {
+        ngx_log_error(NGX_LOG_ALERT, &peer->ਲਘੂਗਣਕ, ngx_socket_errno,
                       ngx_close_socket_n " failed");
     }
 }
 
 
-static u_char *
-ngx_syslog_log_error(ngx_log_t *log, u_char *buf, size_t len)
+ਸਥਿਰ u_char *
+ngx_syslog_log_error(ngx_log_t *ਲਘੂਗਣਕ, u_char *buf, ਮਾਪ_t len)
 {
     u_char             *p;
     ngx_syslog_peer_t  *peer;
 
     p = buf;
 
-    if (log->action) {
-        p = ngx_snprintf(buf, len, " while %s", log->action);
+    ਜੇ (ਲਘੂਗਣਕ->action) {
+        p = ngx_snprintf(buf, len, " while %s", ਲਘੂਗਣਕ->action);
         len -= p - buf;
     }
 
-    peer = log->data;
+    peer = ਲਘੂਗਣਕ->ਅੰਕੜੇ;
 
-    if (peer) {
+    ਜੇ (peer) {
         p = ngx_snprintf(p, len, ", server: %V", &peer->server.name);
     }
 
-    return p;
+    ਵਾਪਸ p;
 }

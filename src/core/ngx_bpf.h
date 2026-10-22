@@ -4,40 +4,40 @@
  */
 
 
-#ifndef _NGX_BPF_H_INCLUDED_
-#define _NGX_BPF_H_INCLUDED_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ _NGX_BPF_H_INCLUDED_
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NGX_BPF_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
-#include <linux/bpf.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <linux/bpf.h>
 
 
-typedef struct {
-    char                *name;
-    int                  offset;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    ਅੱਖਰ                *name;
+    ਪੂਰਨ                  ਵਿੱਥ;
 } ngx_bpf_reloc_t;
 
-typedef struct {
-    char                *license;
-    enum bpf_prog_type   type;
-    struct bpf_insn     *ins;
-    size_t               nins;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ {
+    ਅੱਖਰ                *license;
+    ਗਿਣਤੀ bpf_prog_type   type;
+    ਬਣਤਰ bpf_insn     *ins;
+    ਮਾਪ_t               nins;
     ngx_bpf_reloc_t     *relocs;
-    size_t               nrelocs;
-} ngx_bpf_program_t;
+    ਮਾਪ_t               nrelocs;
+} ngx_bpf_ਪ੍ਰੋਗਰਾਮ_t;
 
 
-void ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol,
-    int fd);
-int ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program);
+ਖਾਲੀ ngx_bpf_ਪ੍ਰੋਗਰਾਮ_link(ngx_bpf_ਪ੍ਰੋਗਰਾਮ_t *ਪ੍ਰੋਗਰਾਮ, ਅਚਲ ਅੱਖਰ *ਚਿੰਨ੍ਹ,
+    ਪੂਰਨ fd);
+ਪੂਰਨ ngx_bpf_ਲੱਦੋ_ਪ੍ਰੋਗਰਾਮ(ngx_log_t *ਲਘੂਗਣਕ, ngx_bpf_ਪ੍ਰੋਗਰਾਮ_t *ਪ੍ਰੋਗਰਾਮ);
 
-int ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags);
-int ngx_bpf_map_update(int fd, const void *key, const void *value,
+ਪੂਰਨ ngx_bpf_map_create(ngx_log_t *ਲਘੂਗਣਕ, ਗਿਣਤੀ bpf_map_type type, ਪੂਰਨ ਕੁੰਜੀ_ਮਾਪ,
+    ਪੂਰਨ ਮੁੱਲ_ਮਾਪ, ਪੂਰਨ max_entries, uint32_t map_flags);
+ਪੂਰਨ ngx_bpf_map_update(ਪੂਰਨ fd, ਅਚਲ ਖਾਲੀ *ਕੁੰਜੀ, ਅਚਲ ਖਾਲੀ *ਮੁੱਲ,
     uint64_t flags);
-int ngx_bpf_map_delete(int fd, const void *key);
-int ngx_bpf_map_lookup(int fd, const void *key, void *value);
+ਪੂਰਨ ngx_bpf_map_delete(ਪੂਰਨ fd, ਅਚਲ ਖਾਲੀ *ਕੁੰਜੀ);
+ਪੂਰਨ ngx_bpf_map_lookup(ਪੂਰਨ fd, ਅਚਲ ਖਾਲੀ *ਕੁੰਜੀ, ਖਾਲੀ *ਮੁੱਲ);
 
-#endif /* _NGX_BPF_H_INCLUDED_ */
+#ਜੇ_ਅੰਤ /* _NGX_BPF_H_INCLUDED_ */

@@ -5,137 +5,137 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_core.h>
 
 
 ngx_array_t *
-ngx_array_create(ngx_pool_t *p, ngx_uint_t n, size_t size)
+ngx_array_create(ngx_pool_t *p, ngx_uint_t n, ਮਾਪ_t ਮਾਪ)
 {
     ngx_array_t *a;
 
-    a = ngx_palloc(p, sizeof(ngx_array_t));
-    if (a == NULL) {
-        return NULL;
+    a = ngx_palloc(p, ਆਕਾਰ(ngx_array_t));
+    ਜੇ (a == ਨਿਰਾ) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    if (ngx_array_init(a, p, n, size) != NGX_OK) {
-        return NULL;
+    ਜੇ (ngx_array_init(a, p, n, ਮਾਪ) != NGX_OK) {
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    return a;
+    ਵਾਪਸ a;
 }
 
 
-void
+ਖਾਲੀ
 ngx_array_destroy(ngx_array_t *a)
 {
     ngx_pool_t  *p;
 
     p = a->pool;
 
-    if ((u_char *) a->elts + a->size * a->nalloc == p->d.last) {
-        p->d.last -= a->size * a->nalloc;
+    ਜੇ ((u_char *) a->elts + a->ਮਾਪ * a->nalloc == p->d.ਆਖਰੀ) {
+        p->d.ਆਖਰੀ -= a->ਮਾਪ * a->nalloc;
     }
 
-    if ((u_char *) a + sizeof(ngx_array_t) == p->d.last) {
-        p->d.last = (u_char *) a;
+    ਜੇ ((u_char *) a + ਆਕਾਰ(ngx_array_t) == p->d.ਆਖਰੀ) {
+        p->d.ਆਖਰੀ = (u_char *) a;
     }
 }
 
 
-void *
-ngx_array_push(ngx_array_t *a)
+ਖਾਲੀ *
+ngx_array_ਧੱਕੋ(ngx_array_t *a)
 {
-    void        *elt, *new;
-    size_t       size;
+    ਖਾਲੀ        *elt, *new;
+    ਮਾਪ_t       ਮਾਪ;
     ngx_pool_t  *p;
 
-    if (a->nelts == a->nalloc) {
+    ਜੇ (a->nelts == a->nalloc) {
 
         /* the array is full */
 
-        size = a->size * a->nalloc;
+        ਮਾਪ = a->ਮਾਪ * a->nalloc;
 
         p = a->pool;
 
-        if ((u_char *) a->elts + size == p->d.last
-            && p->d.last + a->size <= p->d.end)
+        ਜੇ ((u_char *) a->elts + ਮਾਪ == p->d.ਆਖਰੀ
+            && p->d.ਆਖਰੀ + a->ਮਾਪ <= p->d.ਸਿਰਾ)
         {
             /*
              * the array allocation is the last in the pool
              * and there is space for new allocation
              */
 
-            p->d.last += a->size;
+            p->d.ਆਖਰੀ += a->ਮਾਪ;
             a->nalloc++;
 
-        } else {
+        } ਨਹੀਂਤਾਂ {
             /* allocate a new array */
 
-            new = ngx_palloc(p, 2 * size);
-            if (new == NULL) {
-                return NULL;
+            new = ngx_palloc(p, 2 * ਮਾਪ);
+            ਜੇ (new == ਨਿਰਾ) {
+                ਵਾਪਸ ਨਿਰਾ;
             }
 
-            ngx_memcpy(new, a->elts, size);
+            ngx_memcpy(new, a->elts, ਮਾਪ);
             a->elts = new;
             a->nalloc *= 2;
         }
     }
 
-    elt = (u_char *) a->elts + a->size * a->nelts;
+    elt = (u_char *) a->elts + a->ਮਾਪ * a->nelts;
     a->nelts++;
 
-    return elt;
+    ਵਾਪਸ elt;
 }
 
 
-void *
-ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
+ਖਾਲੀ *
+ngx_array_ਧੱਕੋ_n(ngx_array_t *a, ngx_uint_t n)
 {
-    void        *elt, *new;
-    size_t       size;
+    ਖਾਲੀ        *elt, *new;
+    ਮਾਪ_t       ਮਾਪ;
     ngx_uint_t   nalloc;
     ngx_pool_t  *p;
 
-    size = n * a->size;
+    ਮਾਪ = n * a->ਮਾਪ;
 
-    if (a->nelts + n > a->nalloc) {
+    ਜੇ (a->nelts + n > a->nalloc) {
 
         /* the array is full */
 
         p = a->pool;
 
-        if ((u_char *) a->elts + a->size * a->nalloc == p->d.last
-            && p->d.last + size <= p->d.end)
+        ਜੇ ((u_char *) a->elts + a->ਮਾਪ * a->nalloc == p->d.ਆਖਰੀ
+            && p->d.ਆਖਰੀ + ਮਾਪ <= p->d.ਸਿਰਾ)
         {
             /*
              * the array allocation is the last in the pool
              * and there is space for new allocation
              */
 
-            p->d.last += size;
+            p->d.ਆਖਰੀ += ਮਾਪ;
             a->nalloc += n;
 
-        } else {
+        } ਨਹੀਂਤਾਂ {
             /* allocate a new array */
 
             nalloc = 2 * ((n >= a->nalloc) ? n : a->nalloc);
 
-            new = ngx_palloc(p, nalloc * a->size);
-            if (new == NULL) {
-                return NULL;
+            new = ngx_palloc(p, nalloc * a->ਮਾਪ);
+            ਜੇ (new == ਨਿਰਾ) {
+                ਵਾਪਸ ਨਿਰਾ;
             }
 
-            ngx_memcpy(new, a->elts, a->nelts * a->size);
+            ngx_memcpy(new, a->elts, a->nelts * a->ਮਾਪ);
             a->elts = new;
             a->nalloc = nalloc;
         }
     }
 
-    elt = (u_char *) a->elts + a->size * a->nelts;
+    elt = (u_char *) a->elts + a->ਮਾਪ * a->nelts;
     a->nelts += n;
 
-    return elt;
+    ਵਾਪਸ elt;
 }

@@ -5,123 +5,123 @@
  */
 
 
-#ifndef _NGX_CORE_H_INCLUDED_
-#define _NGX_CORE_H_INCLUDED_
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ _NGX_CORE_H_INCLUDED_
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _NGX_CORE_H_INCLUDED_
 
 
-#include <ngx_config.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_config.h>
 
 
-typedef struct ngx_module_s          ngx_module_t;
-typedef struct ngx_conf_s            ngx_conf_t;
-typedef struct ngx_cycle_s           ngx_cycle_t;
-typedef struct ngx_pool_s            ngx_pool_t;
-typedef struct ngx_chain_s           ngx_chain_t;
-typedef struct ngx_log_s             ngx_log_t;
-typedef struct ngx_open_file_s       ngx_open_file_t;
-typedef struct ngx_command_s         ngx_command_t;
-typedef struct ngx_file_s            ngx_file_t;
-typedef struct ngx_event_s           ngx_event_t;
-typedef struct ngx_event_aio_s       ngx_event_aio_t;
-typedef struct ngx_connection_s      ngx_connection_t;
-typedef struct ngx_thread_task_s     ngx_thread_task_t;
-typedef struct ngx_ssl_s             ngx_ssl_t;
-typedef struct ngx_ssl_cache_s       ngx_ssl_cache_t;
-typedef struct ngx_proxy_protocol_s  ngx_proxy_protocol_t;
-typedef struct ngx_quic_stream_s     ngx_quic_stream_t;
-typedef struct ngx_ssl_connection_s  ngx_ssl_connection_t;
-typedef struct ngx_udp_connection_s  ngx_udp_connection_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_module_s          ngx_module_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_conf_s            ngx_conf_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_ਚੱਕਰ_s           ngx_ਚੱਕਰ_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_pool_s            ngx_pool_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_chain_s           ngx_chain_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_log_s             ngx_log_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_open_file_s       ngx_open_file_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_command_s         ngx_command_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_file_s            ngx_file_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_event_s           ngx_event_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_event_aio_s       ngx_event_aio_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_connection_s      ngx_connection_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_thread_task_s     ngx_thread_task_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_ssl_s             ngx_ssl_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_ssl_cache_s       ngx_ssl_cache_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_proxy_protocol_s  ngx_proxy_protocol_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_quic_ਧਾਰਾ_s     ngx_quic_ਧਾਰਾ_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_ssl_connection_s  ngx_ssl_connection_t;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ngx_udp_connection_s  ngx_udp_connection_t;
 
-typedef void (*ngx_event_handler_pt)(ngx_event_t *ev);
-typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
-
-
-#define  NGX_OK          0
-#define  NGX_ERROR      -1
-#define  NGX_AGAIN      -2
-#define  NGX_BUSY       -3
-#define  NGX_DONE       -4
-#define  NGX_DECLINED   -5
-#define  NGX_ABORT      -6
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ (*ngx_event_handler_pt)(ngx_event_t *ev);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ (*ngx_connection_handler_pt)(ngx_connection_t *c);
 
 
-#include <ngx_errno.h>
-#include <ngx_atomic.h>
-#include <ngx_thread.h>
-#include <ngx_rbtree.h>
-#include <ngx_time.h>
-#include <ngx_socket.h>
-#include <ngx_string.h>
-#include <ngx_files.h>
-#include <ngx_shmem.h>
-#include <ngx_process.h>
-#include <ngx_user.h>
-#include <ngx_dlopen.h>
-#include <ngx_parse.h>
-#include <ngx_parse_time.h>
-#include <ngx_log.h>
-#include <ngx_alloc.h>
-#include <ngx_palloc.h>
-#include <ngx_buf.h>
-#include <ngx_queue.h>
-#include <ngx_array.h>
-#include <ngx_list.h>
-#include <ngx_hash.h>
-#include <ngx_file.h>
-#include <ngx_crc.h>
-#include <ngx_crc32.h>
-#include <ngx_murmurhash.h>
-#include <ngx_siphash.h>
-#if (NGX_PCRE)
-#include <ngx_regex.h>
-#endif
-#include <ngx_radix_tree.h>
-#include <ngx_times.h>
-#include <ngx_rwlock.h>
-#include <ngx_shmtx.h>
-#include <ngx_data.h>
-#include <ngx_json.h>
-#include <ngx_slab.h>
-#include <ngx_inet.h>
-#include <ngx_cycle.h>
-#include <ngx_resolver.h>
-#if (NGX_OPENSSL)
-#include <ngx_event_openssl.h>
-#if (NGX_QUIC)
-#include <ngx_event_quic.h>
-#endif
-#endif
-#include <ngx_process_cycle.h>
-#if (NGX_CONTROL_API)
-#include <ngx_control.h>
-#endif
-#include <ngx_conf_file.h>
-#include <ngx_module.h>
-#include <ngx_open_file_cache.h>
-#include <ngx_os.h>
-#include <ngx_connection.h>
-#include <ngx_syslog.h>
-#include <ngx_proxy_protocol.h>
-#if (NGX_HAVE_BPF)
-#include <ngx_bpf.h>
-#endif
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ  NGX_OK          0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ  NGX_ERROR      -1
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ  NGX_AGAIN      -2
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ  NGX_BUSY       -3
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ  NGX_ਪੂਰਾ       -4
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ  NGX_DECLINED   -5
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ  NGX_ABORT      -6
 
 
-#define LF     (u_char) '\n'
-#define CR     (u_char) '\r'
-#define CRLF   "\r\n"
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_errno.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_atomic.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_thread.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_rbtree.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_time.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_socket.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_files.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_shmem.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_process.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_user.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_dlopen.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_parse.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_parse_time.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_log.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_alloc.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_palloc.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_buf.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_queue.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_array.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_list.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_hash.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_file.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_crc.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_crc32.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_murmurhash.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_siphash.h>
+#ਜੇ (NGX_PCRE)
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_regex.h>
+#ਜੇ_ਅੰਤ
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_radix_tree.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_times.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_rwlock.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_shmtx.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_data.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_json.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_slab.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_inet.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_cycle.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_resolver.h>
+#ਜੇ (NGX_OPENSSL)
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_event_openssl.h>
+#ਜੇ (NGX_QUIC)
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_event_quic.h>
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅੰਤ
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_process_cycle.h>
+#ਜੇ (NGX_CONTROL_API)
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_control.h>
+#ਜੇ_ਅੰਤ
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_conf_file.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_module.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_open_file_cache.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_os.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_connection.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_syslog.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_proxy_protocol.h>
+#ਜੇ (NGX_HAVE_BPF)
+#ਅਨ੍ਤਰ੍ਭਾਵ <ngx_bpf.h>
+#ਜੇ_ਅੰਤ
 
 
-#define ngx_abs(value)       (((value) >= 0) ? (value) : - (value))
-#define ngx_max(val1, val2)  ((val1 < val2) ? (val2) : (val1))
-#define ngx_min(val1, val2)  ((val1 > val2) ? (val2) : (val1))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LF     (u_char) '\n'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CR     (u_char) '\r'
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CRLF   "\r\n"
 
-void ngx_cpuinfo(void);
 
-#if (NGX_HAVE_OPENAT)
-#define NGX_DISABLE_SYMLINKS_OFF        0
-#define NGX_DISABLE_SYMLINKS_ON         1
-#define NGX_DISABLE_SYMLINKS_NOTOWNER   2
-#endif
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_abs(ਮੁੱਲ)       (((ਮੁੱਲ) >= 0) ? (ਮੁੱਲ) : - (ਮੁੱਲ))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_max(val1, val2)  ((val1 < val2) ? (val2) : (val1))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ngx_min(val1, val2)  ((val1 > val2) ? (val2) : (val1))
 
-#endif /* _NGX_CORE_H_INCLUDED_ */
+ਖਾਲੀ ngx_cpuinfo(ਖਾਲੀ);
+
+#ਜੇ (NGX_HAVE_OPENAT)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_DISABLE_SYMLINKS_OFF        0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_DISABLE_SYMLINKS_ON         1
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ NGX_DISABLE_SYMLINKS_NOTOWNER   2
+#ਜੇ_ਅੰਤ
+
+#ਜੇ_ਅੰਤ /* _NGX_CORE_H_INCLUDED_ */
