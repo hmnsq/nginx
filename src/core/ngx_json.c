@@ -4,173 +4,173 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-typedef ssize_t   (*ngx_json_length_pt)(ngx_data_item_t *item);
-typedef u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_data_item_t *item);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ssize_t   (*ngx_json_ಉದ್ದಳತೆ_pt)(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
 
 
-typedef struct {
-    ngx_json_length_pt        length;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
+    ngx_json_ಉದ್ದಳತೆ_pt        ಉದ್ದಳತೆ;
     ngx_json_encode_pt        encode;
 } ngx_json_encode_t;
 
 
-static ssize_t ngx_json_obj_length(ngx_data_item_t *item);
-static ssize_t ngx_json_list_length(ngx_data_item_t *item);
-static ssize_t ngx_json_string_length(ngx_data_item_t *item);
-static ssize_t ngx_json_integer_length(ngx_data_item_t *item);
-static ssize_t ngx_json_boolean_length(ngx_data_item_t *item);
-static ssize_t ngx_json_null_length(ngx_data_item_t *item);
+ಸ್ಥಿರ ssize_t ngx_json_obj_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
+ಸ್ಥಿರ ssize_t ngx_json_list_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
+ಸ್ಥಿರ ssize_t ngx_json_string_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
+ಸ್ಥಿರ ssize_t ngx_json_integer_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
+ಸ್ಥಿರ ssize_t ngx_json_boolean_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
+ಸ್ಥಿರ ssize_t ngx_json_null_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
 
-static u_char *ngx_json_obj_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_list_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_string_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_integer_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_null_encode(u_char *p, ngx_data_item_t *item);
+ಸ್ಥಿರ u_char *ngx_json_obj_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
+ಸ್ಥಿರ u_char *ngx_json_list_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
+ಸ್ಥಿರ u_char *ngx_json_string_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
+ಸ್ಥಿರ u_char *ngx_json_integer_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
+ಸ್ಥಿರ u_char *ngx_json_boolean_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
+ಸ್ಥಿರ u_char *ngx_json_null_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ);
 
 
-static ngx_json_encode_t  ngx_json_encode[] = {
+ಸ್ಥಿರ ngx_json_encode_t  ngx_json_encode[] = {
 
     /* NGX_DATA_OBJECT_TYPE */
-    { ngx_json_obj_length,
+    { ngx_json_obj_ಉದ್ದಳತೆ,
       ngx_json_obj_encode },
 
     /* NGX_DATA_LIST_TYPE */
-    { ngx_json_list_length,
+    { ngx_json_list_ಉದ್ದಳತೆ,
       ngx_json_list_encode },
 
     /* NGX_DATA_STRING_TYPE */
-    { ngx_json_string_length,
+    { ngx_json_string_ಉದ್ದಳತೆ,
       ngx_json_string_encode },
 
     /* NGX_DATA_INTEGER_TYPE */
-    { ngx_json_integer_length,
+    { ngx_json_integer_ಉದ್ದಳತೆ,
       ngx_json_integer_encode },
 
     /* NGX_DATA_BOOLEAN_TYPE */
-    { ngx_json_boolean_length,
+    { ngx_json_boolean_ಉದ್ದಳತೆ,
       ngx_json_boolean_encode },
 
     /* NGX_DATA_NULL_TYPE */
-    { ngx_json_null_length,
+    { ngx_json_null_ಉದ್ದಳತೆ,
       ngx_json_null_encode },
 };
 
 
 ngx_buf_t *
-ngx_json_render(ngx_pool_t *pool, ngx_data_item_t *item)
+ngx_json_render(ngx_pool_t *pool, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    size_t      length;
+    ಗಾತ್ರ_t      ಉದ್ದಳತೆ;
     ngx_buf_t  *buf;
 
-    length = ngx_json_encode[item->type].length(item);
-    if (length == (size_t) NGX_ERROR) {
-        return NULL;
+    ಉದ್ದಳತೆ = ngx_json_encode[ಅಂಶ->type].ಉದ್ದಳತೆ(ಅಂಶ);
+    ಆದರೆ (ಉದ್ದಳತೆ == (ಗಾತ್ರ_t) NGX_ERROR) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    buf = ngx_create_temp_buf(pool, length);
-    if (buf == NULL) {
-        return NULL;
+    buf = ngx_create_ತಾತ್ಕಾಲಿಕ_buf(pool, ಉದ್ದಳತೆ);
+    ಆದರೆ (buf == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    buf->last = ngx_json_encode[item->type].encode(buf->last, item);
+    buf->ಕೊನೆಯ = ngx_json_encode[ಅಂಶ->type].encode(buf->ಕೊನೆಯ, ಅಂಶ);
 
-    return buf;
+    ಹಿಂತಿರುಗಿ buf;
 }
 
 
-static ssize_t
-ngx_json_obj_length(ngx_data_item_t *item)
+ಸ್ಥಿರ ssize_t
+ngx_json_obj_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ಗಾತ್ರ_t            len, ಒಟ್ಟು;
+    ngx_ದತ್ತಾಂಶ_obj_t   *obj;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("{}") - 1;
-    i = obj->item;
+    obj = &ಅಂಶ->ದತ್ತಾಂಶ.object;
+    ಒಟ್ಟು = ಗಾತ್ರ("{}") - 1;
+    i = obj->ಅಂಶ;
 
-    if (i) {
-        for ( ;; ) {
-            if (i->name.len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\":") - 1)) {
-                return NGX_ERROR;
+    ಆದರೆ (i) {
+        ಗಾಗಿ ( ;; ) {
+            ಆದರೆ (i->name.len > NGX_MAX_ಗಾತ್ರ_T_ಮೌಲ್ಯ - (ಗಾತ್ರ("\"\":") - 1)) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            len = sizeof("\"\":") - 1 + i->name.len;
+            len = ಗಾತ್ರ("\"\":") - 1 + i->name.len;
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ಆದರೆ (len > NGX_MAX_ಗಾತ್ರ_T_ಮೌಲ್ಯ - ಒಟ್ಟು) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            total += len;
+            ಒಟ್ಟು += len;
 
-            len = ngx_escape_json(NULL, i->name.data, i->name.len);
+            len = ngx_escape_json(ಖಾಲಿ, i->name.ದತ್ತಾಂಶ, i->name.len);
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ಆದರೆ (len > NGX_MAX_ಗಾತ್ರ_T_ಮೌಲ್ಯ - ಒಟ್ಟು) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            total += len;
+            ಒಟ್ಟು += len;
 
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+            len = ngx_json_encode[i->type].ಉದ್ದಳತೆ(i);
+            ಆದರೆ (len == (ಗಾತ್ರ_t) NGX_ERROR) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ಆದರೆ (len > NGX_MAX_ಗಾತ್ರ_T_ಮೌಲ್ಯ - ಒಟ್ಟು) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            total += len;
+            ಒಟ್ಟು += len;
 
-            i = i->next;
+            i = i->ಮುಂದಿನ;
 
-            if (i == NULL) {
-                break;
+            ಆದರೆ (i == ಖಾಲಿ) {
+                ನಿಲ್ಲಿಸು;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            ಆದರೆ (ಒಟ್ಟು > NGX_MAX_ಗಾತ್ರ_T_ಮೌಲ್ಯ - (ಗಾತ್ರ(",") - 1)) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            ಒಟ್ಟು += ಗಾತ್ರ(",") - 1;
         }
     }
 
-    return total;
+    ಹಿಂತಿರುಗಿ ಒಟ್ಟು;
 }
 
 
-static u_char *
-ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
+ಸ್ಥಿರ u_char *
+ngx_json_obj_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_ದತ್ತಾಂಶ_obj_t   *obj;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *i;
 
-    obj = &item->data.object;
-    i = obj->item;
+    obj = &ಅಂಶ->ದತ್ತಾಂಶ.object;
+    i = obj->ಅಂಶ;
 
     *p++ = '{';
 
-    if (i) {
-        for ( ;; ) {
+    ಆದರೆ (i) {
+        ಗಾಗಿ ( ;; ) {
             *p++ = '"';
 
-            p = (u_char *) ngx_escape_json(p, i->name.data, i->name.len);
+            p = (u_char *) ngx_escape_json(p, i->name.ದತ್ತಾಂಶ, i->name.len);
 
             *p++ = '"';
             *p++ = ':';
 
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->ಮುಂದಿನ;
 
-            if (i == NULL) {
-                break;
+            ಆದರೆ (i == ಖಾಲಿ) {
+                ನಿಲ್ಲಿಸು;
             }
 
             *p++ = ',';
@@ -179,71 +179,71 @@ ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = '}';
 
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
 
-static ssize_t
-ngx_json_list_length(ngx_data_item_t *item)
+ಸ್ಥಿರ ssize_t
+ngx_json_list_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ಗಾತ್ರ_t            len, ಒಟ್ಟು;
+    ngx_ದತ್ತಾಂಶ_obj_t   *obj;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("[]") - 1;
-    i = obj->item;
+    obj = &ಅಂಶ->ದತ್ತಾಂಶ.object;
+    ಒಟ್ಟು = ಗಾತ್ರ("[]") - 1;
+    i = obj->ಅಂಶ;
 
-    if (i) {
-        for ( ;; ) {
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+    ಆದರೆ (i) {
+        ಗಾಗಿ ( ;; ) {
+            len = ngx_json_encode[i->type].ಉದ್ದಳತೆ(i);
+            ಆದರೆ (len == (ಗಾತ್ರ_t) NGX_ERROR) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ಆದರೆ (len > NGX_MAX_ಗಾತ್ರ_T_ಮೌಲ್ಯ - ಒಟ್ಟು) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            total += len;
+            ಒಟ್ಟು += len;
 
-            i = i->next;
+            i = i->ಮುಂದಿನ;
 
-            if (i == NULL) {
-                break;
+            ಆದರೆ (i == ಖಾಲಿ) {
+                ನಿಲ್ಲಿಸು;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            ಆದರೆ (ಒಟ್ಟು > NGX_MAX_ಗಾತ್ರ_T_ಮೌಲ್ಯ - (ಗಾತ್ರ(",") - 1)) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            ಒಟ್ಟು += ಗಾತ್ರ(",") - 1;
         }
     }
 
-    return total;
+    ಹಿಂತಿರುಗಿ ಒಟ್ಟು;
 }
 
 
-static u_char *
-ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
+ಸ್ಥಿರ u_char *
+ngx_json_list_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_ದತ್ತಾಂಶ_obj_t   *obj;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *i;
 
-    obj = &item->data.object;
-    i = obj->item;
+    obj = &ಅಂಶ->ದತ್ತಾಂಶ.object;
+    i = obj->ಅಂಶ;
 
     *p++ = '[';
 
-    if (i) {
-        for ( ;; ) {
+    ಆದರೆ (i) {
+        ಗಾಗಿ ( ;; ) {
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->ಮುಂದಿನ;
 
-            if (i == NULL) {
-                break;
+            ಆದರೆ (i == ಖಾಲಿ) {
+                ನಿಲ್ಲಿಸು;
             }
 
             *p++ = ',';
@@ -252,89 +252,89 @@ ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = ']';
 
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
 
-static ssize_t
-ngx_json_string_length(ngx_data_item_t *item)
+ಸ್ಥಿರ ssize_t
+ngx_json_string_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    size_t      len, total;
+    ಗಾತ್ರ_t      len, ಒಟ್ಟು;
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &ಅಂಶ->ದತ್ತಾಂಶ.string;
 
-    if (str->len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\"") - 1)) {
-        return NGX_ERROR;
+    ಆದರೆ (str->len > NGX_MAX_ಗಾತ್ರ_T_ಮೌಲ್ಯ - (ಗಾತ್ರ("\"\"") - 1)) {
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    total = sizeof("\"\"") - 1 + str->len;
+    ಒಟ್ಟು = ಗಾತ್ರ("\"\"") - 1 + str->len;
 
-    len = ngx_escape_json(NULL, str->data, str->len);
+    len = ngx_escape_json(ಖಾಲಿ, str->ದತ್ತಾಂಶ, str->len);
 
-    if (len > NGX_MAX_SIZE_T_VALUE - total) {
-        return NGX_ERROR;
+    ಆದರೆ (len > NGX_MAX_ಗಾತ್ರ_T_ಮೌಲ್ಯ - ಒಟ್ಟು) {
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    return total + len;
+    ಹಿಂತಿರುಗಿ ಒಟ್ಟು + len;
 }
 
 
-static u_char *
-ngx_json_string_encode(u_char *p, ngx_data_item_t *item)
+ಸ್ಥಿರ u_char *
+ngx_json_string_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &ಅಂಶ->ದತ್ತಾಂಶ.string;
 
     *p++ = '"';
 
-    p = (u_char *) ngx_escape_json(p, str->data, str->len);
+    p = (u_char *) ngx_escape_json(p, str->ದತ್ತಾಂಶ, str->len);
 
     *p++ = '"';
 
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
 
-static ssize_t
-ngx_json_integer_length(ngx_data_item_t *item)
+ಸ್ಥಿರ ssize_t
+ngx_json_integer_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    return NGX_INT64_LEN;
+    ಹಿಂತಿರುಗಿ NGX_INT64_LEN;
 }
 
 
-static u_char *
-ngx_json_integer_encode(u_char *p, ngx_data_item_t *item)
+ಸ್ಥಿರ u_char *
+ngx_json_integer_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    return ngx_sprintf(p, "%L", item->data.integer);
+    ಹಿಂತಿರುಗಿ ngx_sprintf(p, "%L", ಅಂಶ->ದತ್ತಾಂಶ.integer);
 }
 
 
-static ssize_t
-ngx_json_boolean_length(ngx_data_item_t *item)
+ಸ್ಥಿರ ssize_t
+ngx_json_boolean_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    return sizeof("false") - 1;
+    ಹಿಂತಿರುಗಿ ಗಾತ್ರ("false") - 1;
 }
 
 
-static u_char *
-ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item)
+ಸ್ಥಿರ u_char *
+ngx_json_boolean_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    return item->data.boolean ? ngx_cpymem(p, "true", 4)
+    ಹಿಂತಿರುಗಿ ಅಂಶ->ದತ್ತಾಂಶ.boolean ? ngx_cpymem(p, "true", 4)
                               : ngx_cpymem(p, "false", 5);
 }
 
 
-static ssize_t
-ngx_json_null_length(ngx_data_item_t *item)
+ಸ್ಥಿರ ssize_t
+ngx_json_null_ಉದ್ದಳತೆ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    return sizeof("null") - 1;
+    ಹಿಂತಿರುಗಿ ಗಾತ್ರ("null") - 1;
 }
 
 
-static u_char *
-ngx_json_null_encode(u_char *p, ngx_data_item_t *item)
+ಸ್ಥಿರ u_char *
+ngx_json_null_encode(u_char *p, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    return ngx_cpymem(p, "null", 4);
+    ಹಿಂತಿರುಗಿ ngx_cpymem(p, "null", 4);
 }

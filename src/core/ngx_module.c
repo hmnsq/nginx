@@ -6,121 +6,121 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-#define NGX_MAX_DYNAMIC_MODULES  128
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_MAX_DYNAMIC_MODULES  128
 
 
-static ngx_uint_t ngx_module_index(ngx_cycle_t *cycle);
-static ngx_uint_t ngx_module_ctx_index(ngx_cycle_t *cycle, ngx_uint_t type,
-    ngx_uint_t index);
+ಸ್ಥಿರ ngx_uint_t ngx_module_ಸೂಚ್ಯಂಕ(ngx_ಚಕ್ರ_t *ಚಕ್ರ);
+ಸ್ಥಿರ ngx_uint_t ngx_module_ctx_ಸೂಚ್ಯಂಕ(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ngx_uint_t type,
+    ngx_uint_t ಸೂಚ್ಯಂಕ);
 
 
 ngx_uint_t         ngx_max_module;
-static ngx_uint_t  ngx_modules_n;
+ಸ್ಥಿರ ngx_uint_t  ngx_modules_n;
 
 
 ngx_int_t
-ngx_preinit_modules(void)
+ngx_preinit_modules(ಶೂನ್ಯ)
 {
     ngx_uint_t  i;
 
-    for (i = 0; ngx_modules[i]; i++) {
-        ngx_modules[i]->index = i;
-        ngx_modules[i]->name = ngx_module_names[i];
+    ಗಾಗಿ (i = 0; ngx_modules[i]; i++) {
+        ngx_modules[i]->ಸೂಚ್ಯಂಕ = i;
+        ngx_modules[i]->name = ngx_module_ಹೆಸರುಗಳು[i];
     }
 
     ngx_modules_n = i;
     ngx_max_module = ngx_modules_n + NGX_MAX_DYNAMIC_MODULES;
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_cycle_modules(ngx_cycle_t *cycle)
+ngx_ಚಕ್ರ_modules(ngx_ಚಕ್ರ_t *ಚಕ್ರ)
 {
     /*
      * create a list of modules to be used for this cycle,
      * copy static modules to it
      */
 
-    cycle->modules = ngx_pcalloc(cycle->pool, (ngx_max_module + 1)
-                                              * sizeof(ngx_module_t *));
-    if (cycle->modules == NULL) {
-        return NGX_ERROR;
+    ಚಕ್ರ->modules = ngx_pcalloc(ಚಕ್ರ->pool, (ngx_max_module + 1)
+                                              * ಗಾತ್ರ(ngx_module_t *));
+    ಆದರೆ (ಚಕ್ರ->modules == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    ngx_memcpy(cycle->modules, ngx_modules,
-               ngx_modules_n * sizeof(ngx_module_t *));
+    ngx_memcpy(ಚಕ್ರ->modules, ngx_modules,
+               ngx_modules_n * ಗಾತ್ರ(ngx_module_t *));
 
-    cycle->modules_n = ngx_modules_n;
+    ಚಕ್ರ->modules_n = ngx_modules_n;
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_init_modules(ngx_cycle_t *cycle)
+ngx_init_modules(ngx_ಚಕ್ರ_t *ಚಕ್ರ)
 {
     ngx_uint_t  i;
 
-    for (i = 0; cycle->modules[i]; i++) {
-        if (cycle->modules[i]->init_module) {
-            if (cycle->modules[i]->init_module(cycle) != NGX_OK) {
-                return NGX_ERROR;
+    ಗಾಗಿ (i = 0; ಚಕ್ರ->modules[i]; i++) {
+        ಆದರೆ (ಚಕ್ರ->modules[i]->init_module) {
+            ಆದರೆ (ಚಕ್ರ->modules[i]->init_module(ಚಕ್ರ) != NGX_OK) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
         }
     }
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_count_modules(ngx_cycle_t *cycle, ngx_uint_t type)
+ngx_ಎಣಿಕೆ_modules(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ngx_uint_t type)
 {
-    ngx_uint_t     i, next, max;
+    ngx_uint_t     i, ಮುಂದಿನ, max;
     ngx_module_t  *module;
 
-    next = 0;
+    ಮುಂದಿನ = 0;
     max = 0;
 
     /* count appropriate modules, set up their indices */
 
-    for (i = 0; cycle->modules[i]; i++) {
-        module = cycle->modules[i];
+    ಗಾಗಿ (i = 0; ಚಕ್ರ->modules[i]; i++) {
+        module = ಚಕ್ರ->modules[i];
 
-        if (module->type != type) {
-            continue;
+        ಆದರೆ (module->type != type) {
+            ಮುಂದುವರಿ;
         }
 
-        if (module->ctx_index != NGX_MODULE_UNSET_INDEX) {
+        ಆದರೆ (module->ctx_ಸೂಚ್ಯಂಕ != NGX_MODULE_UNSET_ಸೂಚ್ಯಂಕ) {
 
             /* if ctx_index was assigned, preserve it */
 
-            if (module->ctx_index > max) {
-                max = module->ctx_index;
+            ಆದರೆ (module->ctx_ಸೂಚ್ಯಂಕ > max) {
+                max = module->ctx_ಸೂಚ್ಯಂಕ;
             }
 
-            if (module->ctx_index == next) {
-                next++;
+            ಆದರೆ (module->ctx_ಸೂಚ್ಯಂಕ == ಮುಂದಿನ) {
+                ಮುಂದಿನ++;
             }
 
-            continue;
+            ಮುಂದುವರಿ;
         }
 
         /* search for some free index */
 
-        module->ctx_index = ngx_module_ctx_index(cycle, type, next);
+        module->ctx_ಸೂಚ್ಯಂಕ = ngx_module_ctx_ಸೂಚ್ಯಂಕ(ಚಕ್ರ, type, ಮುಂದಿನ);
 
-        if (module->ctx_index > max) {
-            max = module->ctx_index;
+        ಆದರೆ (module->ctx_ಸೂಚ್ಯಂಕ > max) {
+            max = module->ctx_ಸೂಚ್ಯಂಕ;
         }
 
-        next = module->ctx_index + 1;
+        ಮುಂದಿನ = module->ctx_ಸೂಚ್ಯಂಕ + 1;
     }
 
     /*
@@ -130,63 +130,63 @@ ngx_count_modules(ngx_cycle_t *cycle, ngx_uint_t type)
      * and we'll have to roll back to the previous cycle
      */
 
-    if (cycle->old_cycle && cycle->old_cycle->modules) {
+    ಆದರೆ (ಚಕ್ರ->old_ಚಕ್ರ && ಚಕ್ರ->old_ಚಕ್ರ->modules) {
 
-        for (i = 0; cycle->old_cycle->modules[i]; i++) {
-            module = cycle->old_cycle->modules[i];
+        ಗಾಗಿ (i = 0; ಚಕ್ರ->old_ಚಕ್ರ->modules[i]; i++) {
+            module = ಚಕ್ರ->old_ಚಕ್ರ->modules[i];
 
-            if (module->type != type) {
-                continue;
+            ಆದರೆ (module->type != type) {
+                ಮುಂದುವರಿ;
             }
 
-            if (module->ctx_index > max) {
-                max = module->ctx_index;
+            ಆದರೆ (module->ctx_ಸೂಚ್ಯಂಕ > max) {
+                max = module->ctx_ಸೂಚ್ಯಂಕ;
             }
         }
     }
 
     /* prevent loading of additional modules */
 
-    cycle->modules_used = 1;
+    ಚಕ್ರ->modules_ಬಳಸಿದ = 1;
 
-    return max + 1;
+    ಹಿಂತಿರುಗಿ max + 1;
 }
 
 
 ngx_int_t
-ngx_add_module(ngx_conf_t *cf, ngx_str_t *file, ngx_module_t *module,
-    char **order)
+ngx_ಕೂಡಿಸು_module(ngx_conf_t *cf, ngx_str_t *file, ngx_module_t *module,
+    ಅಕ್ಷರ **ಕ್ರಮ)
 {
-    void               *rv;
+    ಶೂನ್ಯ               *rv;
     ngx_uint_t          i, m, before;
     ngx_core_module_t  *core_module;
 
-    if (cf->cycle->modules_n >= ngx_max_module) {
+    ಆದರೆ (cf->ಚಕ್ರ->modules_n >= ngx_max_module) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "too many modules loaded");
-        return NGX_ERROR;
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    if (module->version != nginx_version) {
+    ಆದರೆ (module->ಆವೃತ್ತಿ != nginx_ಆವೃತ್ತಿ) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "module \"%V\" version %ui instead of %ui",
-                           file, module->version, (ngx_uint_t) nginx_version);
-        return NGX_ERROR;
+                           file, module->ಆವೃತ್ತಿ, (ngx_uint_t) nginx_ಆವೃತ್ತಿ);
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    if (ngx_strcmp(module->signature, NGX_MODULE_SIGNATURE) != 0) {
+    ಆದರೆ (ngx_strcmp(module->signature, NGX_MODULE_SIGNATURE) != 0) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "module \"%V\" is not binary compatible",
                            file);
-        return NGX_ERROR;
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    for (m = 0; cf->cycle->modules[m]; m++) {
-        if (ngx_strcmp(cf->cycle->modules[m]->name, module->name) == 0) {
+    ಗಾಗಿ (m = 0; cf->ಚಕ್ರ->modules[m]; m++) {
+        ಆದರೆ (ngx_strcmp(cf->ಚಕ್ರ->modules[m]->name, module->name) == 0) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "module \"%s\" is already loaded",
                                module->name);
-            return NGX_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
     }
 
@@ -194,13 +194,13 @@ ngx_add_module(ngx_conf_t *cf, ngx_str_t *file, ngx_module_t *module,
      * if the module wasn't previously loaded, assign an index
      */
 
-    if (module->index == NGX_MODULE_UNSET_INDEX) {
-        module->index = ngx_module_index(cf->cycle);
+    ಆದರೆ (module->ಸೂಚ್ಯಂಕ == NGX_MODULE_UNSET_ಸೂಚ್ಯಂಕ) {
+        module->ಸೂಚ್ಯಂಕ = ngx_module_ಸೂಚ್ಯಂಕ(cf->ಚಕ್ರ);
 
-        if (module->index >= ngx_max_module) {
+        ಆದರೆ (module->ಸೂಚ್ಯಂಕ >= ngx_max_module) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "too many modules loaded");
-            return NGX_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
     }
 
@@ -208,33 +208,33 @@ ngx_add_module(ngx_conf_t *cf, ngx_str_t *file, ngx_module_t *module,
      * put the module into the cycle->modules array
      */
 
-    before = cf->cycle->modules_n;
+    before = cf->ಚಕ್ರ->modules_n;
 
-    if (order) {
-        for (i = 0; order[i]; i++) {
-            if (ngx_strcmp(order[i], module->name) == 0) {
+    ಆದರೆ (ಕ್ರಮ) {
+        ಗಾಗಿ (i = 0; ಕ್ರಮ[i]; i++) {
+            ಆದರೆ (ngx_strcmp(ಕ್ರಮ[i], module->name) == 0) {
                 i++;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
         }
 
-        for ( /* void */ ; order[i]; i++) {
+        ಗಾಗಿ ( /* void */ ; ಕ್ರಮ[i]; i++) {
 
-#if 0
-            ngx_log_debug2(NGX_LOG_DEBUG_CORE, cf->log, 0,
+#ಆದರೆ 0
+            ngx_log_debug2(NGX_LOG_DEBUG_CORE, cf->ಲಘುಗಣಕ, 0,
                            "module: %s before %s",
-                           module->name, order[i]);
-#endif
+                           module->name, ಕ್ರಮ[i]);
+#ಆದರೆ_ಅಂತ್ಯ
 
-            for (m = 0; m < before; m++) {
-                if (ngx_strcmp(cf->cycle->modules[m]->name, order[i]) == 0) {
+            ಗಾಗಿ (m = 0; m < before; m++) {
+                ಆದರೆ (ngx_strcmp(cf->ಚಕ್ರ->modules[m]->name, ಕ್ರಮ[i]) == 0) {
 
-                    ngx_log_debug3(NGX_LOG_DEBUG_CORE, cf->log, 0,
+                    ngx_log_debug3(NGX_LOG_DEBUG_CORE, cf->ಲಘುಗಣಕ, 0,
                                    "module: %s before %s:%i",
-                                   module->name, order[i], m);
+                                   module->name, ಕ್ರಮ[i], m);
 
                     before = m;
-                    break;
+                    ನಿಲ್ಲಿಸು;
                 }
             }
         }
@@ -242,16 +242,16 @@ ngx_add_module(ngx_conf_t *cf, ngx_str_t *file, ngx_module_t *module,
 
     /* put the module before modules[before] */
 
-    if (before != cf->cycle->modules_n) {
-        ngx_memmove(&cf->cycle->modules[before + 1],
-                    &cf->cycle->modules[before],
-                    (cf->cycle->modules_n - before) * sizeof(ngx_module_t *));
+    ಆದರೆ (before != cf->ಚಕ್ರ->modules_n) {
+        ngx_memmove(&cf->ಚಕ್ರ->modules[before + 1],
+                    &cf->ಚಕ್ರ->modules[before],
+                    (cf->ಚಕ್ರ->modules_n - before) * ಗಾತ್ರ(ngx_module_t *));
     }
 
-    cf->cycle->modules[before] = module;
-    cf->cycle->modules_n++;
+    cf->ಚಕ್ರ->modules[before] = module;
+    cf->ಚಕ್ರ->modules_n++;
 
-    if (module->type == NGX_CORE_MODULE) {
+    ಆದರೆ (module->type == NGX_CORE_MODULE) {
 
         /*
          * we are smart enough to initialize core modules;
@@ -262,61 +262,61 @@ ngx_add_module(ngx_conf_t *cf, ngx_str_t *file, ngx_module_t *module,
 
         core_module = module->ctx;
 
-        if (core_module->create_conf) {
-            rv = core_module->create_conf(cf->cycle);
-            if (rv == NULL) {
-                return NGX_ERROR;
+        ಆದರೆ (core_module->create_conf) {
+            rv = core_module->create_conf(cf->ಚಕ್ರ);
+            ಆದರೆ (rv == ಖಾಲಿ) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            cf->cycle->conf_ctx[module->index] = rv;
+            cf->ಚಕ್ರ->conf_ctx[module->ಸೂಚ್ಯಂಕ] = rv;
         }
     }
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
-static ngx_uint_t
-ngx_module_index(ngx_cycle_t *cycle)
+ಸ್ಥಿರ ngx_uint_t
+ngx_module_ಸೂಚ್ಯಂಕ(ngx_ಚಕ್ರ_t *ಚಕ್ರ)
 {
-    ngx_uint_t     i, index;
+    ngx_uint_t     i, ಸೂಚ್ಯಂಕ;
     ngx_module_t  *module;
 
-    index = 0;
+    ಸೂಚ್ಯಂಕ = 0;
 
 again:
 
     /* find an unused index */
 
-    for (i = 0; cycle->modules[i]; i++) {
-        module = cycle->modules[i];
+    ಗಾಗಿ (i = 0; ಚಕ್ರ->modules[i]; i++) {
+        module = ಚಕ್ರ->modules[i];
 
-        if (module->index == index) {
-            index++;
-            goto again;
+        ಆದರೆ (module->ಸೂಚ್ಯಂಕ == ಸೂಚ್ಯಂಕ) {
+            ಸೂಚ್ಯಂಕ++;
+            ಹೋಗು again;
         }
     }
 
     /* check previous cycle */
 
-    if (cycle->old_cycle && cycle->old_cycle->modules) {
+    ಆದರೆ (ಚಕ್ರ->old_ಚಕ್ರ && ಚಕ್ರ->old_ಚಕ್ರ->modules) {
 
-        for (i = 0; cycle->old_cycle->modules[i]; i++) {
-            module = cycle->old_cycle->modules[i];
+        ಗಾಗಿ (i = 0; ಚಕ್ರ->old_ಚಕ್ರ->modules[i]; i++) {
+            module = ಚಕ್ರ->old_ಚಕ್ರ->modules[i];
 
-            if (module->index == index) {
-                index++;
-                goto again;
+            ಆದರೆ (module->ಸೂಚ್ಯಂಕ == ಸೂಚ್ಯಂಕ) {
+                ಸೂಚ್ಯಂಕ++;
+                ಹೋಗು again;
             }
         }
     }
 
-    return index;
+    ಹಿಂತಿರುಗಿ ಸೂಚ್ಯಂಕ;
 }
 
 
-static ngx_uint_t
-ngx_module_ctx_index(ngx_cycle_t *cycle, ngx_uint_t type, ngx_uint_t index)
+ಸ್ಥಿರ ngx_uint_t
+ngx_module_ctx_ಸೂಚ್ಯಂಕ(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ngx_uint_t type, ngx_uint_t ಸೂಚ್ಯಂಕ)
 {
     ngx_uint_t     i;
     ngx_module_t  *module;
@@ -325,36 +325,36 @@ again:
 
     /* find an unused ctx_index */
 
-    for (i = 0; cycle->modules[i]; i++) {
-        module = cycle->modules[i];
+    ಗಾಗಿ (i = 0; ಚಕ್ರ->modules[i]; i++) {
+        module = ಚಕ್ರ->modules[i];
 
-        if (module->type != type) {
-            continue;
+        ಆದರೆ (module->type != type) {
+            ಮುಂದುವರಿ;
         }
 
-        if (module->ctx_index == index) {
-            index++;
-            goto again;
+        ಆದರೆ (module->ctx_ಸೂಚ್ಯಂಕ == ಸೂಚ್ಯಂಕ) {
+            ಸೂಚ್ಯಂಕ++;
+            ಹೋಗು again;
         }
     }
 
     /* check previous cycle */
 
-    if (cycle->old_cycle && cycle->old_cycle->modules) {
+    ಆದರೆ (ಚಕ್ರ->old_ಚಕ್ರ && ಚಕ್ರ->old_ಚಕ್ರ->modules) {
 
-        for (i = 0; cycle->old_cycle->modules[i]; i++) {
-            module = cycle->old_cycle->modules[i];
+        ಗಾಗಿ (i = 0; ಚಕ್ರ->old_ಚಕ್ರ->modules[i]; i++) {
+            module = ಚಕ್ರ->old_ಚಕ್ರ->modules[i];
 
-            if (module->type != type) {
-                continue;
+            ಆದರೆ (module->type != type) {
+                ಮುಂದುವರಿ;
             }
 
-            if (module->ctx_index == index) {
-                index++;
-                goto again;
+            ಆದರೆ (module->ctx_ಸೂಚ್ಯಂಕ == ಸೂಚ್ಯಂಕ) {
+                ಸೂಚ್ಯಂಕ++;
+                ಹೋಗು again;
             }
         }
     }
 
-    return index;
+    ಹಿಂತಿರುಗಿ ಸೂಚ್ಯಂಕ;
 }

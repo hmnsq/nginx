@@ -5,121 +5,121 @@
  */
 
 
-#ifndef _NGX_HASH_H_INCLUDED_
-#define _NGX_HASH_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ _NGX_HASH_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿಸು _NGX_HASH_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-typedef struct {
-    void             *value;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
+    ಶೂನ್ಯ             *ಮೌಲ್ಯ;
     u_short           len;
     u_char            name[1];
 } ngx_hash_elt_t;
 
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_hash_elt_t  **buckets;
-    ngx_uint_t        size;
+    ngx_uint_t        ಗಾತ್ರ_2;
 } ngx_hash_t;
 
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_hash_t        hash;
-    void             *value;
+    ಶೂನ್ಯ             *ಮೌಲ್ಯ;
 } ngx_hash_wildcard_t;
 
 
-typedef struct {
-    ngx_str_t         key;
-    ngx_uint_t        key_hash;
-    void             *value;
-} ngx_hash_key_t;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
+    ngx_str_t         ಕೀಲಿ;
+    ngx_uint_t        ಕೀಲಿ_hash;
+    ಶೂನ್ಯ             *ಮೌಲ್ಯ;
+} ngx_hash_ಕೀಲಿ_t;
 
 
-typedef ngx_uint_t (*ngx_hash_key_pt) (u_char *data, size_t len);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ngx_uint_t (*ngx_hash_ಕೀಲಿ_pt) (u_char *ದತ್ತಾಂಶ, ಗಾತ್ರ_t len);
 
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_hash_t            hash;
-    ngx_hash_wildcard_t  *wc_head;
-    ngx_hash_wildcard_t  *wc_tail;
+    ngx_hash_wildcard_t  *wc_ತಲೆ;
+    ngx_hash_wildcard_t  *wc_ಬಾಲ;
 } ngx_hash_combined_t;
 
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_hash_t       *hash;
-    ngx_hash_key_pt   key;
+    ngx_hash_ಕೀಲಿ_pt   ಕೀಲಿ;
 
-    ngx_uint_t        max_size;
-    ngx_uint_t        bucket_size;
+    ngx_uint_t        max_ಗಾತ್ರ;
+    ngx_uint_t        ಪಾತ್ರೆ_ಗಾತ್ರ;
 
-    char             *name;
+    ಅಕ್ಷರ             *name;
     ngx_pool_t       *pool;
-    ngx_pool_t       *temp_pool;
+    ngx_pool_t       *ತಾತ್ಕಾಲಿಕ_pool;
 } ngx_hash_init_t;
 
 
-#define NGX_HASH_SMALL            1
-#define NGX_HASH_LARGE            2
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_HASH_SMALL            1
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_HASH_LARGE            2
 
-#define NGX_HASH_LARGE_ASIZE      16384
-#define NGX_HASH_LARGE_HSIZE      10007
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_HASH_LARGE_ASIZE      16384
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_HASH_LARGE_HSIZE      10007
 
-#define NGX_HASH_WILDCARD_KEY     1
-#define NGX_HASH_READONLY_KEY     2
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_HASH_WILDCARD_ಕೀಲಿ     1
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_HASH_READONLY_ಕೀಲಿ     2
 
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_uint_t        hsize;
 
     ngx_pool_t       *pool;
-    ngx_pool_t       *temp_pool;
+    ngx_pool_t       *ತಾತ್ಕಾಲಿಕ_pool;
 
-    ngx_array_t       keys;
-    ngx_array_t      *keys_hash;
+    ngx_array_t       ಕೀಲಿಗಳು;
+    ngx_array_t      *ಕೀಲಿಗಳು_hash;
 
-    ngx_array_t       dns_wc_head;
-    ngx_array_t      *dns_wc_head_hash;
+    ngx_array_t       dns_wc_ತಲೆ;
+    ngx_array_t      *dns_wc_ತಲೆ_hash;
 
-    ngx_array_t       dns_wc_tail;
-    ngx_array_t      *dns_wc_tail_hash;
-} ngx_hash_keys_arrays_t;
+    ngx_array_t       dns_wc_ಬಾಲ;
+    ngx_array_t      *dns_wc_ಬಾಲ_hash;
+} ngx_hash_ಕೀಲಿಗಳು_arrays_t;
 
 
-typedef struct ngx_table_elt_s  ngx_table_elt_t;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ ngx_ಕೋಷ್ಟಕ_elt_s  ngx_ಕೋಷ್ಟಕ_elt_t;
 
-struct ngx_table_elt_s {
+ರಚನೆ ngx_ಕೋಷ್ಟಕ_elt_s {
     ngx_uint_t        hash;
-    ngx_str_t         key;
-    ngx_str_t         value;
-    u_char           *lowcase_key;
-    ngx_table_elt_t  *next;
+    ngx_str_t         ಕೀಲಿ;
+    ngx_str_t         ಮೌಲ್ಯ;
+    u_char           *lowcase_ಕೀಲಿ;
+    ngx_ಕೋಷ್ಟಕ_elt_t  *ಮುಂದಿನ;
 };
 
 
-void *ngx_hash_find(ngx_hash_t *hash, ngx_uint_t key, u_char *name, size_t len);
-void *ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len);
-void *ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len);
-void *ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t key,
-    u_char *name, size_t len);
+ಶೂನ್ಯ *ngx_hash_ಕಂಡುಹಿಡಿ(ngx_hash_t *hash, ngx_uint_t ಕೀಲಿ, u_char *name, ಗಾತ್ರ_t len);
+ಶೂನ್ಯ *ngx_hash_ಕಂಡುಹಿಡಿ_wc_ತಲೆ(ngx_hash_wildcard_t *hwc, u_char *name, ಗಾತ್ರ_t len);
+ಶೂನ್ಯ *ngx_hash_ಕಂಡುಹಿಡಿ_wc_ಬಾಲ(ngx_hash_wildcard_t *hwc, u_char *name, ಗಾತ್ರ_t len);
+ಶೂನ್ಯ *ngx_hash_ಕಂಡುಹಿಡಿ_combined(ngx_hash_combined_t *hash, ngx_uint_t ಕೀಲಿ,
+    u_char *name, ಗಾತ್ರ_t len);
 
-ngx_int_t ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
+ngx_int_t ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_ಕೀಲಿ_t *ಹೆಸರುಗಳು,
     ngx_uint_t nelts);
-ngx_int_t ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
+ngx_int_t ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_ಕೀಲಿ_t *ಹೆಸರುಗಳು,
     ngx_uint_t nelts);
 
-#define ngx_hash(key, c)   ((ngx_uint_t) key * 31 + c)
-ngx_uint_t ngx_hash_key(u_char *data, size_t len);
-ngx_uint_t ngx_hash_key_lc(u_char *data, size_t len);
-ngx_uint_t ngx_hash_strlow(u_char *dst, u_char *src, size_t n);
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_hash(ಕೀಲಿ, c)   ((ngx_uint_t) ಕೀಲಿ * 31 + c)
+ngx_uint_t ngx_hash_ಕೀಲಿ(u_char *ದತ್ತಾಂಶ, ಗಾತ್ರ_t len);
+ngx_uint_t ngx_hash_ಕೀಲಿ_lc(u_char *ದತ್ತಾಂಶ, ಗಾತ್ರ_t len);
+ngx_uint_t ngx_hash_strlow(u_char *dst, u_char *src, ಗಾತ್ರ_t n);
 
 
-ngx_int_t ngx_hash_keys_array_init(ngx_hash_keys_arrays_t *ha, ngx_uint_t type);
-ngx_int_t ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key,
-    void *value, ngx_uint_t flags);
+ngx_int_t ngx_hash_ಕೀಲಿಗಳು_array_init(ngx_hash_ಕೀಲಿಗಳು_arrays_t *ha, ngx_uint_t type);
+ngx_int_t ngx_hash_ಕೂಡಿಸು_ಕೀಲಿ(ngx_hash_ಕೀಲಿಗಳು_arrays_t *ha, ngx_str_t *ಕೀಲಿ,
+    ಶೂನ್ಯ *ಮೌಲ್ಯ, ngx_uint_t flags);
 
 
-#endif /* _NGX_HASH_H_INCLUDED_ */
+#ಆದರೆ_ಅಂತ್ಯ /* _NGX_HASH_H_INCLUDED_ */

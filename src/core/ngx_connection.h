@@ -5,95 +5,95 @@
  */
 
 
-#ifndef _NGX_CONNECTION_H_INCLUDED_
-#define _NGX_CONNECTION_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ _NGX_CONNECTION_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿಸು _NGX_CONNECTION_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-typedef struct ngx_listening_s  ngx_listening_t;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ ngx_listening_s  ngx_listening_t;
 
-struct ngx_listening_s {
+ರಚನೆ ngx_listening_s {
     ngx_socket_t        fd;
 
-    struct sockaddr    *sockaddr;
+    ರಚನೆ sockaddr    *sockaddr;
     socklen_t           socklen;    /* size of sockaddr */
-    size_t              addr_text_max_len;
-    ngx_str_t           addr_text;
+    ಗಾತ್ರ_t              addr_ಪಠ್ಯ_max_len;
+    ngx_str_t           addr_ಪಠ್ಯ;
 
-    int                 type;
-    int                 protocol;
+    ಪೂರ್ಣಾಂಕ                 type;
+    ಪೂರ್ಣಾಂಕ                 protocol;
 
-    int                 backlog;
-    int                 rcvbuf;
-    int                 sndbuf;
-#if (NGX_HAVE_KEEPALIVE_TUNABLE)
-    int                 keepidle;
-    int                 keepintvl;
-    int                 keepcnt;
-#endif
+    ಪೂರ್ಣಾಂಕ                 backlog;
+    ಪೂರ್ಣಾಂಕ                 rcvbuf;
+    ಪೂರ್ಣಾಂಕ                 sndbuf;
+#ಆದರೆ (NGX_HAVE_KEEPALIVE_TUNABLE)
+    ಪೂರ್ಣಾಂಕ                 keepidle;
+    ಪೂರ್ಣಾಂಕ                 keepintvl;
+    ಪೂರ್ಣಾಂಕ                 keepcnt;
+#ಆದರೆ_ಅಂತ್ಯ
 
     /* handler of accepted connection */
     ngx_connection_handler_pt   handler;
 
-    void               *servers;  /* array of ngx_http_in_addr_t, for example */
+    ಶೂನ್ಯ               *servers;  /* array of ngx_http_in_addr_t, for example */
 
-    ngx_log_t           log;
+    ngx_log_t           ಲಘುಗಣಕ;
     ngx_log_t          *logp;
 
-    size_t              pool_size;
+    ಗಾತ್ರ_t              pool_ಗಾತ್ರ;
 
-    ngx_listening_t    *previous;
+    ngx_listening_t    *ಹಿಂದಿನ;
     ngx_connection_t   *connection;
 
     ngx_rbtree_t        rbtree;
-    ngx_rbtree_node_t   sentinel;
+    ngx_rbtree_ಗಂಟು_t   sentinel;
 
-    ngx_uint_t          worker;
+    ngx_uint_t          ಕೆಲಸಗಾರ;
 
-    unsigned            open:1;
-    unsigned            remain:1;
-    unsigned            ignore:1;
+    ಚಿಹ್ನೆರಹಿತ            open:1;
+    ಚಿಹ್ನೆರಹಿತ            remain:1;
+    ಚಿಹ್ನೆರಹಿತ            ignore:1;
 
-    unsigned            bound:1;       /* already bound */
-    unsigned            inherited:1;   /* inherited from previous process */
-    unsigned            nonblocking_accept:1;
-    unsigned            listen:1;
-    unsigned            nonblocking:1;
-    unsigned            shared:1;    /* shared between threads or processes */
-    unsigned            addr_ntop:1;
-    unsigned            wildcard:1;
+    ಚಿಹ್ನೆರಹಿತ            bound:1;       /* already bound */
+    ಚಿಹ್ನೆರಹಿತ            inherited:1;   /* inherited from previous process */
+    ಚಿಹ್ನೆರಹಿತ            nonblocking_accept:1;
+    ಚಿಹ್ನೆರಹಿತ            listen:1;
+    ಚಿಹ್ನೆರಹಿತ            nonblocking:1;
+    ಚಿಹ್ನೆರಹಿತ            shared:1;    /* shared between threads or processes */
+    ಚಿಹ್ನೆರಹಿತ            addr_ntop:1;
+    ಚಿಹ್ನೆರಹಿತ            wildcard:1;
 
-#if (NGX_HAVE_INET6)
-    unsigned            ipv6only:1;
-#endif
-    unsigned            reuseport:1;
-    unsigned            add_reuseport:1;
-    unsigned            keepalive:2;
-    unsigned            quic:1;
+#ಆದರೆ (NGX_HAVE_INET6)
+    ಚಿಹ್ನೆರಹಿತ            ipv6only:1;
+#ಆದರೆ_ಅಂತ್ಯ
+    ಚಿಹ್ನೆರಹಿತ            reuseport:1;
+    ಚಿಹ್ನೆರಹಿತ            ಕೂಡಿಸು_reuseport:1;
+    ಚಿಹ್ನೆರಹಿತ            keepalive:2;
+    ಚಿಹ್ನೆರಹಿತ            quic:1;
 
-    unsigned            change_protocol:1;
+    ಚಿಹ್ನೆರಹಿತ            change_protocol:1;
 
-    unsigned            deferred_accept:1;
-    unsigned            delete_deferred:1;
-    unsigned            add_deferred:1;
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
-    char               *accept_filter;
-#endif
-#if (NGX_HAVE_SETFIB)
-    int                 setfib;
-#endif
+    ಚಿಹ್ನೆರಹಿತ            deferred_accept:1;
+    ಚಿಹ್ನೆರಹಿತ            delete_deferred:1;
+    ಚಿಹ್ನೆರಹಿತ            ಕೂಡಿಸು_deferred:1;
+#ಆದರೆ (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+    ಅಕ್ಷರ               *accept_filter;
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ (NGX_HAVE_SETFIB)
+    ಪೂರ್ಣಾಂಕ                 setfib;
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if (NGX_HAVE_TCP_FASTOPEN)
-    int                 fastopen;
-#endif
+#ಆದರೆ (NGX_HAVE_TCP_FASTOPEN)
+    ಪೂರ್ಣಾಂಕ                 fastopen;
+#ಆದರೆ_ಅಂತ್ಯ
 
 };
 
 
-typedef enum {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ {
     NGX_ERROR_ALERT = 0,
     NGX_ERROR_ERR,
     NGX_ERROR_INFO,
@@ -103,29 +103,29 @@ typedef enum {
 } ngx_connection_log_error_e;
 
 
-typedef enum {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ {
     NGX_TCP_NODELAY_UNSET = 0,
-    NGX_TCP_NODELAY_SET,
+    NGX_TCP_NODELAY_ಗಣ,
     NGX_TCP_NODELAY_DISABLED
 } ngx_connection_tcp_nodelay_e;
 
 
-typedef enum {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ {
     NGX_TCP_NOPUSH_UNSET = 0,
-    NGX_TCP_NOPUSH_SET,
+    NGX_TCP_NOPUSH_ಗಣ,
     NGX_TCP_NOPUSH_DISABLED
 } ngx_connection_tcp_nopush_e;
 
 
-#define NGX_LOWLEVEL_BUFFERED  0x0f
-#define NGX_SSL_BUFFERED       0x01
-#define NGX_HTTP_V2_BUFFERED   0x02
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_LOWLEVEL_BUFFERED  0x0f
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_SSL_BUFFERED       0x01
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_HTTP_V2_BUFFERED   0x02
 
 
-struct ngx_connection_s {
-    void               *data;
-    ngx_event_t        *read;
-    ngx_event_t        *write;
+ರಚನೆ ngx_connection_s {
+    ಶೂನ್ಯ               *ದತ್ತಾಂಶ;
+    ngx_event_t        *ಪಠ;
+    ngx_event_t        *ಲಿಖ;
 
     ngx_socket_t        fd;
 
@@ -136,104 +136,104 @@ struct ngx_connection_s {
 
     ngx_listening_t    *listening;
 
-    off_t               sent;
+    off_t               ಕಳುಹಿಸಿದ;
 
-    ngx_log_t          *log;
+    ngx_log_t          *ಲಘುಗಣಕ;
 
     ngx_pool_t         *pool;
 
-    int                 type;
+    ಪೂರ್ಣಾಂಕ                 type;
 
-    struct sockaddr    *sockaddr;
+    ರಚನೆ sockaddr    *sockaddr;
     socklen_t           socklen;
-    ngx_str_t           addr_text;
+    ngx_str_t           addr_ಪಠ್ಯ;
 
     ngx_proxy_protocol_t  *proxy_protocol;
 
-#if (NGX_QUIC || NGX_COMPAT)
-    ngx_quic_stream_t     *quic;
-#endif
+#ಆದರೆ (NGX_QUIC || NGX_COMPAT)
+    ngx_quic_ಹರಿವು_t     *quic;
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if (NGX_SSL || NGX_COMPAT)
+#ಆದರೆ (NGX_SSL || NGX_COMPAT)
     ngx_ssl_connection_t  *ssl;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     ngx_udp_connection_t  *udp;
 
-    struct sockaddr    *local_sockaddr;
+    ರಚನೆ sockaddr    *local_sockaddr;
     socklen_t           local_socklen;
 
-    ngx_buf_t          *buffer;
+    ngx_buf_t          *ಬಫರ್;
 
-    ngx_queue_t         queue;
+    ngx_ಸರತಿ_t         ಸರತಿ;
 
-    ngx_atomic_uint_t   number;
+    ngx_atomic_uint_t   ಸಂಖ್ಯೆ;
 
-    ngx_msec_t          start_time;
-    ngx_uint_t          requests;
+    ngx_msec_t          ಆರಂಭ_ಸಮಯ;
+    ngx_uint_t          ವಿನಂತಿಗಳು;
 
-    unsigned            buffered:8;
+    ಚಿಹ್ನೆರಹಿತ            buffered:8;
 
-    unsigned            log_error:3;     /* ngx_connection_log_error_e */
+    ಚಿಹ್ನೆರಹಿತ            log_error:3;     /* ngx_connection_log_error_e */
 
-    unsigned            timedout:1;
-    unsigned            error:1;
-    unsigned            destroyed:1;
-    unsigned            pipeline:1;
+    ಚಿಹ್ನೆರಹಿತ            timedout:1;
+    ಚಿಹ್ನೆರಹಿತ            error:1;
+    ಚಿಹ್ನೆರಹಿತ            destroyed:1;
+    ಚಿಹ್ನೆರಹಿತ            pipeline:1;
 
-    unsigned            idle:1;
-    unsigned            reusable:1;
-    unsigned            close:1;
-    unsigned            shared:1;
+    ಚಿಹ್ನೆರಹಿತ            idle:1;
+    ಚಿಹ್ನೆರಹಿತ            reusable:1;
+    ಚಿಹ್ನೆರಹಿತ            close:1;
+    ಚಿಹ್ನೆರಹಿತ            shared:1;
 
-    unsigned            sendfile:1;
-    unsigned            sndlowat:1;
-    unsigned            tcp_nodelay:2;   /* ngx_connection_tcp_nodelay_e */
-    unsigned            tcp_nopush:2;    /* ngx_connection_tcp_nopush_e */
+    ಚಿಹ್ನೆರಹಿತ            sendfile:1;
+    ಚಿಹ್ನೆರಹಿತ            sndlowat:1;
+    ಚಿಹ್ನೆರಹಿತ            tcp_nodelay:2;   /* ngx_connection_tcp_nodelay_e */
+    ಚಿಹ್ನೆರಹಿತ            tcp_nopush:2;    /* ngx_connection_tcp_nopush_e */
 
-    unsigned            need_last_buf:1;
-    unsigned            need_flush_buf:1;
+    ಚಿಹ್ನೆರಹಿತ            need_ಕೊನೆಯ_buf:1;
+    ಚಿಹ್ನೆರಹಿತ            need_flush_buf:1;
 
-#if (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
-    unsigned            busy_count:2;
-#endif
+#ಆದರೆ (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
+    ಚಿಹ್ನೆರಹಿತ            busy_ಎಣಿಕೆ:2;
+#ಆದರೆ_ಅಂತ್ಯ
 
-    unsigned            ktls_recv:1;
+    ಚಿಹ್ನೆರಹಿತ            ktls_recv:1;
 
-#if (NGX_THREADS || NGX_COMPAT)
+#ಆದರೆ (NGX_ಎಳೆಗಳು || NGX_COMPAT)
     ngx_thread_task_t  *sendfile_task;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 };
 
 
-#define ngx_set_connection_log(c, l)                                         \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಗಣ_connection_log(c, l)                                         \
                                                                              \
-    c->log->file = l->file;                                                  \
-    c->log->next = l->next;                                                  \
-    c->log->writer = l->writer;                                              \
-    c->log->wdata = l->wdata;                                                \
-    if (!(c->log->log_level & NGX_LOG_DEBUG_CONNECTION)) {                   \
-        c->log->log_level = l->log_level;                                    \
+    c->ಲಘುಗಣಕ->file = l->file;                                                  \
+    c->ಲಘುಗಣಕ->ಮುಂದಿನ = l->ಮುಂದಿನ;                                                  \
+    c->ಲಘುಗಣಕ->writer = l->writer;                                              \
+    c->ಲಘುಗಣಕ->wdata = l->wdata;                                                \
+    ಆದರೆ (!(c->ಲಘುಗಣಕ->log_level & NGX_LOG_DEBUG_CONNECTION)) {                   \
+        c->ಲಘುಗಣಕ->log_level = l->log_level;                                    \
     }
 
 
-ngx_listening_t *ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
+ngx_listening_t *ngx_create_listening(ngx_conf_t *cf, ರಚನೆ sockaddr *sockaddr,
     socklen_t socklen);
-ngx_int_t ngx_clone_listening(ngx_cycle_t *cycle, ngx_listening_t *ls);
-ngx_int_t ngx_set_inherited_sockets(ngx_cycle_t *cycle);
-ngx_int_t ngx_open_listening_sockets(ngx_cycle_t *cycle);
-void ngx_configure_listening_sockets(ngx_cycle_t *cycle);
-void ngx_close_listening_sockets(ngx_cycle_t *cycle);
-void ngx_close_connection(ngx_connection_t *c);
-void ngx_close_idle_connections(ngx_cycle_t *cycle);
+ngx_int_t ngx_clone_listening(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ngx_listening_t *ls);
+ngx_int_t ngx_ಗಣ_inherited_sockets(ngx_ಚಕ್ರ_t *ಚಕ್ರ);
+ngx_int_t ngx_open_listening_sockets(ngx_ಚಕ್ರ_t *ಚಕ್ರ);
+ಶೂನ್ಯ ngx_configure_listening_sockets(ngx_ಚಕ್ರ_t *ಚಕ್ರ);
+ಶೂನ್ಯ ngx_close_listening_sockets(ngx_ಚಕ್ರ_t *ಚಕ್ರ);
+ಶೂನ್ಯ ngx_close_connection(ngx_connection_t *c);
+ಶೂನ್ಯ ngx_close_idle_connections(ngx_ಚಕ್ರ_t *ಚಕ್ರ);
 ngx_int_t ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
-    ngx_uint_t port);
+    ngx_uint_t ಪೋರ್ಟ್);
 ngx_int_t ngx_tcp_nodelay(ngx_connection_t *c);
-ngx_int_t ngx_connection_error(ngx_connection_t *c, ngx_err_t err, char *text);
+ngx_int_t ngx_connection_error(ngx_connection_t *c, ngx_err_t err, ಅಕ್ಷರ *ಪಠ್ಯ);
 
-ngx_connection_t *ngx_get_connection(ngx_socket_t s, ngx_log_t *log);
-void ngx_free_connection(ngx_connection_t *c);
+ngx_connection_t *ngx_get_connection(ngx_socket_t s, ngx_log_t *ಲಘುಗಣಕ);
+ಶೂನ್ಯ ngx_free_connection(ngx_connection_t *c);
 
-void ngx_reusable_connection(ngx_connection_t *c, ngx_uint_t reusable);
+ಶೂನ್ಯ ngx_reusable_connection(ngx_connection_t *c, ngx_uint_t reusable);
 
-#endif /* _NGX_CONNECTION_H_INCLUDED_ */
+#ಆದರೆ_ಅಂತ್ಯ /* _NGX_CONNECTION_H_INCLUDED_ */

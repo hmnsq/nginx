@@ -5,111 +5,111 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-#ifndef _NGX_QUEUE_H_INCLUDED_
-#define _NGX_QUEUE_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ NGX_ಸರತಿ_H_INCLUDED
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_ಸರತಿ_H_INCLUDED
 
 
-typedef struct ngx_queue_s  ngx_queue_t;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ ngx_ಸರತಿ_s  ngx_ಸರತಿ_t;
 
-struct ngx_queue_s {
-    ngx_queue_t  *prev;
-    ngx_queue_t  *next;
+ರಚನೆ ngx_ಸರತಿ_s {
+    ngx_ಸರತಿ_t  *prev;
+    ngx_ಸರತಿ_t  *ಮುಂದಿನ;
 };
 
 
-#define ngx_queue_init(q)                                                     \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_init(q)                                                     \
     (q)->prev = q;                                                            \
-    (q)->next = q
+    (q)->ಮುಂದಿನ = q
 
 
-#define ngx_queue_empty(h)                                                    \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_ಖಾಲಿಗಳು(h)                                                    \
     (h == (h)->prev)
 
 
-#define ngx_queue_insert_head(h, x)                                           \
-    (x)->next = (h)->next;                                                    \
-    (x)->next->prev = x;                                                      \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_ಸೇರಿಸು_ತಲೆ(h, x)                                           \
+    (x)->ಮುಂದಿನ = (h)->ಮುಂದಿನ;                                                    \
+    (x)->ಮುಂದಿನ->prev = x;                                                      \
     (x)->prev = h;                                                            \
-    (h)->next = x
+    (h)->ಮುಂದಿನ = x
 
 
-#define ngx_queue_insert_after   ngx_queue_insert_head
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_ಸೇರಿಸು_after   ngx_ಸರತಿ_ಸೇರಿಸು_ತಲೆ
 
 
-#define ngx_queue_insert_tail(h, x)                                           \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_ಸೇರಿಸು_ಬಾಲ(h, x)                                           \
     (x)->prev = (h)->prev;                                                    \
-    (x)->prev->next = x;                                                      \
-    (x)->next = h;                                                            \
+    (x)->prev->ಮುಂದಿನ = x;                                                      \
+    (x)->ಮುಂದಿನ = h;                                                            \
     (h)->prev = x
 
 
-#define ngx_queue_insert_before   ngx_queue_insert_tail
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_ಸೇರಿಸು_before   ngx_ಸರತಿ_ಸೇರಿಸು_ಬಾಲ
 
 
-#define ngx_queue_head(h)                                                     \
-    (h)->next
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_ತಲೆ(h)                                                     \
+    (h)->ಮುಂದಿನ
 
 
-#define ngx_queue_last(h)                                                     \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_ಕೊನೆಯ(h)                                                     \
     (h)->prev
 
 
-#define ngx_queue_sentinel(h)                                                 \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_sentinel(h)                                                 \
     (h)
 
 
-#define ngx_queue_next(q)                                                     \
-    (q)->next
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_ಮುಂದಿನ(q)                                                     \
+    (q)->ಮುಂದಿನ
 
 
-#define ngx_queue_prev(q)                                                     \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_prev(q)                                                     \
     (q)->prev
 
 
-#if (NGX_DEBUG)
+#ಆದರೆ (NGX_DEBUG)
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next;                                              \
-    (x)->prev = NULL;                                                         \
-    (x)->next = NULL
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_remove(x)                                                   \
+    (x)->ಮುಂದಿನ->prev = (x)->prev;                                              \
+    (x)->prev->ಮುಂದಿನ = (x)->ಮುಂದಿನ;                                              \
+    (x)->prev = ಖಾಲಿ;                                                         \
+    (x)->ಮುಂದಿನ = ಖಾಲಿ
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_remove(x)                                                   \
+    (x)->ಮುಂದಿನ->prev = (x)->prev;                                              \
+    (x)->prev->ಮುಂದಿನ = (x)->ಮುಂದಿನ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-#define ngx_queue_split(h, q, n)                                              \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_ವಿಭಜಿಸು(h, q, n)                                              \
     (n)->prev = (h)->prev;                                                    \
-    (n)->prev->next = n;                                                      \
-    (n)->next = q;                                                            \
+    (n)->prev->ಮುಂದಿನ = n;                                                      \
+    (n)->ಮುಂದಿನ = q;                                                            \
     (h)->prev = (q)->prev;                                                    \
-    (h)->prev->next = h;                                                      \
+    (h)->prev->ಮುಂದಿನ = h;                                                      \
     (q)->prev = n;
 
 
-#define ngx_queue_add(h, n)                                                   \
-    (h)->prev->next = (n)->next;                                              \
-    (n)->next->prev = (h)->prev;                                              \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_ಕೂಡಿಸು(h, n)                                                   \
+    (h)->prev->ಮುಂದಿನ = (n)->ಮುಂದಿನ;                                              \
+    (n)->ಮುಂದಿನ->prev = (h)->prev;                                              \
     (h)->prev = (n)->prev;                                                    \
-    (h)->prev->next = h;
+    (h)->prev->ಮುಂದಿನ = h;
 
 
-#define ngx_queue_data(q, type, link)                                         \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಸರತಿ_ದತ್ತಾಂಶ(q, type, link)                                         \
     (type *) ((u_char *) q - offsetof(type, link))
 
 
-ngx_queue_t *ngx_queue_middle(ngx_queue_t *queue);
-void ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ngx_ಸರತಿ_t *ngx_ಸರತಿ_ಮಧ್ಯ(ngx_ಸರತಿ_t *ಸರತಿ);
+ಶೂನ್ಯ ngx_ಸರತಿ_ವಿಂಗಡಿಸು(ngx_ಸರತಿ_t *ಸರತಿ,
+    ngx_int_t (*cmp)(ಸ್ಥಿರಾಂಕ ngx_ಸರತಿ_t *, ಸ್ಥಿರಾಂಕ ngx_ಸರತಿ_t *));
 
 
-#endif /* _NGX_QUEUE_H_INCLUDED_ */
+#ಆದರೆ_ಅಂತ್ಯ /* _NGX_QUEUE_H_INCLUDED_ */

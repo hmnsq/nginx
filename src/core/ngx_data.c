@@ -4,214 +4,214 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-static size_t  ngx_data_sizes[] = {
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_OBJECT_TYPE */
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_LIST_TYPE */
-    sizeof(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
-    sizeof(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
-    sizeof(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
+ಸ್ಥಿರ ಗಾತ್ರ_t  ngx_ದತ್ತಾಂಶ_sizes[] = {
+    ಗಾತ್ರ(ngx_ದತ್ತಾಂಶ_obj_t),            /* NGX_DATA_OBJECT_TYPE */
+    ಗಾತ್ರ(ngx_ದತ್ತಾಂಶ_obj_t),            /* NGX_DATA_LIST_TYPE */
+    ಗಾತ್ರ(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
+    ಗಾತ್ರ(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
+    ಗಾತ್ರ(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
     0,                                 /* NGX_DATA_NULL_TYPE */
 };
 
 
-ngx_data_item_t *
-ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type)
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_new_ಅಂಶ(ngx_pool_t *pool, ngx_uint_t type)
 {
-    ngx_data_item_t  *item;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *ಅಂಶ;
 
-    item = ngx_pcalloc(pool, offsetof(ngx_data_item_t, data)
-                             + ngx_data_sizes[type]);
-    if (item == NULL) {
-        return NULL;
+    ಅಂಶ = ngx_pcalloc(pool, offsetof(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t, ದತ್ತಾಂಶ)
+                             + ngx_ದತ್ತಾಂಶ_sizes[type]);
+    ಆದರೆ (ಅಂಶ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    item->type = type;
+    ಅಂಶ->type = type;
 
-    return item;
+    ಹಿಂತಿರುಗಿ ಅಂಶ;
 }
 
 
-void
-ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name, ngx_data_item_t *item)
+ಶೂನ್ಯ
+ngx_ದತ್ತಾಂಶ_ಕೂಡಿಸು_ಅಂಶ(ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *obj, ngx_str_t *name, ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *ಅಂಶ)
 {
-    ngx_data_obj_t  *object;
+    ngx_ದತ್ತಾಂಶ_obj_t  *object;
 
-    if (obj->type != NGX_DATA_OBJECT_TYPE && obj->type != NGX_DATA_LIST_TYPE) {
-        return;
+    ಆದರೆ (obj->type != NGX_ದತ್ತಾಂಶ_OBJECT_TYPE && obj->type != NGX_ದತ್ತಾಂಶ_LIST_TYPE) {
+        ಹಿಂತಿರುಗಿ;
     }
 
-    object = &obj->data.object;
+    object = &obj->ದತ್ತಾಂಶ.object;
 
-    if (name) {
-        item->name = *name;
+    ಆದರೆ (name) {
+        ಅಂಶ->name = *name;
     }
 
-    if (object->next == NULL) {
-        object->next = &object->item;
+    ಆದರೆ (object->ಮುಂದಿನ == ಖಾಲಿ) {
+        object->ಮುಂದಿನ = &object->ಅಂಶ;
     }
 
-    *object->next = item;
-    object->next = &item->next;
+    *object->ಮುಂದಿನ = ಅಂಶ;
+    object->ಮುಂದಿನ = &ಅಂಶ->ಮುಂದಿನ;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_obj_handler(uintptr_t ದತ್ತಾಂಶ, ngx_pool_t *pool, ಶೂನ್ಯ *ctx)
 {
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *obj, *ಅಂಶ;
+    ngx_ದತ್ತಾಂಶ_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_ದತ್ತಾಂಶ_new_object(pool);
+    ಆದರೆ (obj == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_ದತ್ತಾಂಶ_decl_t *) ದತ್ತಾಂಶ;
 
-    while (decl->name.len) {
+    ಆಗ (decl->name.len) {
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        ಅಂಶ = decl->handler(decl->ದತ್ತಾಂಶ, pool, ctx);
+        ಆದರೆ (ಅಂಶ == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ ಖಾಲಿ;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        ಆದರೆ (ಅಂಶ != NGX_ದತ್ತಾಂಶ_DECLINE) {
+            ngx_ದತ್ತಾಂಶ_ಕೂಡಿಸು_ಅಂಶ(obj, &decl->name, ಅಂಶ);
         }
 
         decl++;
     }
 
-    return obj;
+    ಹಿಂತಿರುಗಿ obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_obj_fields_handler(uintptr_t ದತ್ತಾಂಶ, ngx_pool_t *pool, ಶೂನ್ಯ *ctx,
     ngx_array_t *fields)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *ಮೌಲ್ಯ;
     ngx_uint_t        i;
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *obj, *ಅಂಶ;
+    ngx_ದತ್ತಾಂಶ_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_ದತ್ತಾಂಶ_new_object(pool);
+    ಆದರೆ (obj == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_ದತ್ತಾಂಶ_decl_t *) ದತ್ತಾಂಶ;
 
-    while (decl->name.len) {
+    ಆಗ (decl->name.len) {
 
-        if (fields) {
-            value = fields->elts;
+        ಆದರೆ (fields) {
+            ಮೌಲ್ಯ = fields->elts;
 
-            for (i = 0; i < fields->nelts; i++) {
+            ಗಾಗಿ (i = 0; i < fields->nelts; i++) {
 
-                if (decl->name.len == value[i].len
-                    && ngx_strncmp(decl->name.data, value[i].data,
-                                   value[i].len)
+                ಆದರೆ (decl->name.len == ಮೌಲ್ಯ[i].len
+                    && ngx_strncmp(decl->name.ದತ್ತಾಂಶ, ಮೌಲ್ಯ[i].ದತ್ತಾಂಶ,
+                                   ಮೌಲ್ಯ[i].len)
                     == 0)
                 {
-                    goto found;
+                    ಹೋಗು ಸಿಕ್ಕಿತು;
                 }
             }
 
             decl++;
-            continue;
+            ಮುಂದುವರಿ;
         }
 
-found:
+ಸಿಕ್ಕಿತು:
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        ಅಂಶ = decl->handler(decl->ದತ್ತಾಂಶ, pool, ctx);
+        ಆದರೆ (ಅಂಶ == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ ಖಾಲಿ;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        ಆದರೆ (ಅಂಶ != NGX_ದತ್ತಾಂಶ_DECLINE) {
+            ngx_ದತ್ತಾಂಶ_ಕೂಡಿಸು_ಅಂಶ(obj, &decl->name, ಅಂಶ);
         }
 
         decl++;
     }
 
-    return obj;
+    ಹಿಂತಿರುಗಿ obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_ಸಂಖ್ಯೆ_handler(uintptr_t ದತ್ತಾಂಶ, ngx_pool_t *pool, ಶೂನ್ಯ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *ಅಂಶ;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    ಅಂಶ = ngx_ದತ್ತಾಂಶ_new_integer(pool);
+    ಆದರೆ (ಅಂಶ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    item->data.integer = data;
+    ಅಂಶ->ದತ್ತಾಂಶ.integer = ದತ್ತಾಂಶ;
 
-    return item;
+    ಹಿಂತಿರುಗಿ ಅಂಶ;
 }
 
 
-ngx_data_item_t *
-ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_string_handler(uintptr_t ದತ್ತಾಂಶ, ngx_pool_t *pool, ಶೂನ್ಯ *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *ಮೌಲ್ಯ, *src;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *ಅಂಶ;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    ಅಂಶ = ngx_ದತ್ತಾಂಶ_new_string(pool);
+    ಆದರೆ (ಅಂಶ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    value = &item->data.string;
+    ಮೌಲ್ಯ = &ಅಂಶ->ದತ್ತಾಂಶ.string;
 
-    src = (ngx_str_t *) data;
+    src = (ngx_str_t *) ದತ್ತಾಂಶ;
 
-    value->len = src->len;
+    ಮೌಲ್ಯ->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    ಮೌಲ್ಯ->ದತ್ತಾಂಶ = ngx_pstrdup(pool, src);
+    ಆದರೆ (ಮೌಲ್ಯ->ದತ್ತಾಂಶ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    return item;
+    ಹಿಂತಿರುಗಿ ಅಂಶ;
 }
 
 
-ngx_data_item_t *
-ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_boolean_handler(uintptr_t ದತ್ತಾಂಶ, ngx_pool_t *pool, ಶೂನ್ಯ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *ಅಂಶ;
 
-    item = ngx_data_new_boolean(pool);
-    if (item == NULL) {
-        return NULL;
+    ಅಂಶ = ngx_ದತ್ತಾಂಶ_new_boolean(pool);
+    ಆದರೆ (ಅಂಶ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    item->data.boolean = data;
+    ಅಂಶ->ದತ್ತಾಂಶ.boolean = ದತ್ತಾಂಶ;
 
-    return item;
+    ಹಿಂತಿರುಗಿ ಅಂಶ;
 }
 
 
-ngx_data_item_t *
-ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_ಸಮಯ_handler(uintptr_t ದತ್ತಾಂಶ, ngx_pool_t *pool, ಶೂನ್ಯ *ctx)
 {
     u_char      *p;
     ngx_tm_t     tm;
     ngx_str_t    src;
-    ngx_time_t  *tp;
-    u_char       iso8601[sizeof("1974-01-19T13:00:00.000Z") - 1];
+    ngx_ಸಮಯ_t  *tp;
+    u_char       iso8601[ಗಾತ್ರ("1974-01-19T13:00:00.000Z") - 1];
 
-    tp = (ngx_time_t *) data;
+    tp = (ngx_ಸಮಯ_t *) ದತ್ತಾಂಶ;
 
     ngx_gmtime(tp->sec, &tm);
 
@@ -219,94 +219,94 @@ ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
                     tm.ngx_tm_year, tm.ngx_tm_mon, tm.ngx_tm_mday,
                     tm.ngx_tm_hour, tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    if (tp->msec) {
+    ಆದರೆ (tp->msec) {
         p = ngx_sprintf(p, ".%03ui", tp->msec);
     }
 
     *p++ = 'Z';
 
-    src.data = iso8601;
+    src.ದತ್ತಾಂಶ = iso8601;
     src.len = p - iso8601;
 
-    return ngx_data_string_handler((uintptr_t) &src, pool, NULL);
+    ಹಿಂತಿರುಗಿ ngx_ದತ್ತಾಂಶ_string_handler((uintptr_t) &src, pool, ಖಾಲಿ);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_struct_int64_handler(uintptr_t ದತ್ತಾಂಶ, ngx_pool_t *pool, ಶೂನ್ಯ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *ಅಂಶ;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    ಅಂಶ = ngx_ದತ್ತಾಂಶ_new_integer(pool);
+    ಆದರೆ (ಅಂಶ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    item->data.integer = *(int64_t *) ((u_char *) ctx + data);
+    ಅಂಶ->ದತ್ತಾಂಶ.integer = *(int64_t *) ((u_char *) ctx + ದತ್ತಾಂಶ);
 
-    return item;
+    ಹಿಂತಿರುಗಿ ಅಂಶ;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_struct_int_handler(uintptr_t ದತ್ತಾಂಶ, ngx_pool_t *pool, ಶೂನ್ಯ *ctx)
 {
-    ngx_int_t  value;
+    ngx_int_t  ಮೌಲ್ಯ;
 
-    value = *(ngx_int_t *) ((u_char *) ctx + data);
+    ಮೌಲ್ಯ = *(ngx_int_t *) ((u_char *) ctx + ದತ್ತಾಂಶ);
 
-    return ngx_data_number_handler(value, pool, NULL);
+    ಹಿಂತಿರುಗಿ ngx_ದತ್ತಾಂಶ_ಸಂಖ್ಯೆ_handler(ಮೌಲ್ಯ, pool, ಖಾಲಿ);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_atomic_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_struct_atomic_handler(uintptr_t ದತ್ತಾಂಶ, ngx_pool_t *pool, ಶೂನ್ಯ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *ಅಂಶ;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    ಅಂಶ = ngx_ದತ್ತಾಂಶ_new_integer(pool);
+    ಆದರೆ (ಅಂಶ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    item->data.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + data);
+    ಅಂಶ->ದತ್ತಾಂಶ.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + ದತ್ತಾಂಶ);
 
-    return item;
+    ಹಿಂತಿರುಗಿ ಅಂಶ;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_struct_str_handler(uintptr_t ದತ್ತಾಂಶ, ngx_pool_t *pool, ಶೂನ್ಯ *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *ಮೌಲ್ಯ, *src;
+    ngx_ದತ್ತಾಂಶ_ಅಂಶ_t  *ಅಂಶ;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    ಅಂಶ = ngx_ದತ್ತಾಂಶ_new_string(pool);
+    ಆದರೆ (ಅಂಶ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    value = &item->data.string;
+    ಮೌಲ್ಯ = &ಅಂಶ->ದತ್ತಾಂಶ.string;
 
-    src = (ngx_str_t *) ((u_char *) ctx + data);
+    src = (ngx_str_t *) ((u_char *) ctx + ದತ್ತಾಂಶ);
 
-    value->len = src->len;
+    ಮೌಲ್ಯ->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    ಮೌಲ್ಯ->ದತ್ತಾಂಶ = ngx_pstrdup(pool, src);
+    ಆದರೆ (ಮೌಲ್ಯ->ದತ್ತಾಂಶ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    return item;
+    ಹಿಂತಿರುಗಿ ಅಂಶ;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ದತ್ತಾಂಶ_ಅಂಶ_t *
+ngx_ದತ್ತಾಂಶ_struct_boolean_handler(uintptr_t ದತ್ತಾಂಶ, ngx_pool_t *pool, ಶೂನ್ಯ *ctx)
 {
-    ngx_uint_t  value;
+    ngx_uint_t  ಮೌಲ್ಯ;
 
-    value = *(ngx_uint_t *) ((u_char *) ctx + data);
+    ಮೌಲ್ಯ = *(ngx_uint_t *) ((u_char *) ctx + ದತ್ತಾಂಶ);
 
-    return ngx_data_boolean_handler(value, pool, NULL);
+    ಹಿಂತಿರುಗಿ ngx_ದತ್ತಾಂಶ_boolean_handler(ಮೌಲ್ಯ, pool, ಖಾಲಿ);
 }

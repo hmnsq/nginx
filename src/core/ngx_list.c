@@ -5,59 +5,59 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
 ngx_list_t *
-ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size)
+ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
     ngx_list_t  *list;
 
-    list = ngx_palloc(pool, sizeof(ngx_list_t));
-    if (list == NULL) {
-        return NULL;
+    list = ngx_palloc(pool, ಗಾತ್ರ(ngx_list_t));
+    ಆದರೆ (list == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    if (ngx_list_init(list, pool, n, size) != NGX_OK) {
-        return NULL;
+    ಆದರೆ (ngx_list_init(list, pool, n, ಗಾತ್ರ_2) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    return list;
+    ಹಿಂತಿರುಗಿ list;
 }
 
 
-void *
-ngx_list_push(ngx_list_t *l)
+ಶೂನ್ಯ *
+ngx_list_ತಳ್ಳು(ngx_list_t *l)
 {
-    void             *elt;
-    ngx_list_part_t  *last;
+    ಶೂನ್ಯ             *elt;
+    ngx_list_part_t  *ಕೊನೆಯ;
 
-    last = l->last;
+    ಕೊನೆಯ = l->ಕೊನೆಯ;
 
-    if (last->nelts == l->nalloc) {
+    ಆದರೆ (ಕೊನೆಯ->nelts == l->nalloc) {
 
         /* the last part is full, allocate a new list part */
 
-        last = ngx_palloc(l->pool, sizeof(ngx_list_part_t));
-        if (last == NULL) {
-            return NULL;
+        ಕೊನೆಯ = ngx_palloc(l->pool, ಗಾತ್ರ(ngx_list_part_t));
+        ಆದರೆ (ಕೊನೆಯ == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ ಖಾಲಿ;
         }
 
-        last->elts = ngx_palloc(l->pool, l->nalloc * l->size);
-        if (last->elts == NULL) {
-            return NULL;
+        ಕೊನೆಯ->elts = ngx_palloc(l->pool, l->nalloc * l->ಗಾತ್ರ_2);
+        ಆದರೆ (ಕೊನೆಯ->elts == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ ಖಾಲಿ;
         }
 
-        last->nelts = 0;
-        last->next = NULL;
+        ಕೊನೆಯ->nelts = 0;
+        ಕೊನೆಯ->ಮುಂದಿನ = ಖಾಲಿ;
 
-        l->last->next = last;
-        l->last = last;
+        l->ಕೊನೆಯ->ಮುಂದಿನ = ಕೊನೆಯ;
+        l->ಕೊನೆಯ = ಕೊನೆಯ;
     }
 
-    elt = (char *) last->elts + l->size * last->nelts;
-    last->nelts++;
+    elt = (ಅಕ್ಷರ *) ಕೊನೆಯ->elts + l->ಗಾತ್ರ_2 * ಕೊನೆಯ->nelts;
+    ಕೊನೆಯ->nelts++;
 
-    return elt;
+    ಹಿಂತಿರುಗಿ elt;
 }

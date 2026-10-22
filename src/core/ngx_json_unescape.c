@@ -10,29 +10,29 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_json_unescape.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_json_unescape.h>
 
 
-static ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
+ಸ್ಥಿರ ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
     uint32_t codepoint);
 
 
 ngx_int_t
 ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 {
-    size_t       size;
+    ಗಾತ್ರ_t       ಗಾತ್ರ_2;
     u_char      *d, *s, ch;
-    uint32_t     codepoint, high_surrogate;
+    uint32_t     codepoint, ಮೇಲಿನ_surrogate;
     ngx_int_t    n;
-    ngx_uint_t   hex_left;
+    ngx_uint_t   hex_ಎಡ;
 
-    enum {
+    ಎಣಿಕೆ {
         sw_usual = 0,
         sw_quoted,
         sw_hex,
-        sw_surrogate_start,   /* expect '\' of \uDCxx after high surrogate */
+        sw_surrogate_ಆರಂಭ,   /* expect '\' of \uDCxx after high surrogate */
         sw_surrogate_u        /* expect 'u' */
     } state;
 
@@ -62,216 +62,216 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
      * surrounding double quotes).
      */
 
-    if (src->len == 0) {
+    ಆದರೆ (src->len == 0) {
         dst->len = 0;
-        return NGX_OK;
+        ಹಿಂತಿರುಗಿ NGX_OK;
     }
 
-    if (dst->len < src->len) {
-        return NGX_ERROR;
+    ಆದರೆ (dst->len < src->len) {
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    s = src->data;
-    d = dst->data;
-    size = src->len;
+    s = src->ದತ್ತಾಂಶ;
+    d = dst->ದತ್ತಾಂಶ;
+    ಗಾತ್ರ_2 = src->len;
 
 
     state = sw_usual;
     codepoint = 0;
-    high_surrogate = 0;
-    hex_left = 0;
+    ಮೇಲಿನ_surrogate = 0;
+    hex_ಎಡ = 0;
 
-    while (size--) {
+    ಆಗ (ಗಾತ್ರ_2--) {
 
         ch = *s++;
 
-        switch (state) {
-        case sw_usual:
+        ಆಯ್ಕೆ (state) {
+        ಸ್ಥಿತಿ sw_usual:
 
-            if (ch == '"') {
-                return NGX_ERROR;
+            ಆದರೆ (ch == '"') {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            if (ch == '\\') {
+            ಆದರೆ (ch == '\\') {
                 state = sw_quoted;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
 
-            if (ch < 0x20) {
+            ಆದರೆ (ch < 0x20) {
                 /* RFC 8259: control characters must be escaped */
-                return NGX_ERROR;
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
             *d++ = ch;
-            break;
+            ನಿಲ್ಲಿಸು;
 
-        case sw_quoted:
+        ಸ್ಥಿತಿ sw_quoted:
 
-            switch (ch) {
+            ಆಯ್ಕೆ (ch) {
 
-            case 'u':
+            ಸ್ಥಿತಿ 'u':
                 codepoint = 0;
-                hex_left = 4;
+                hex_ಎಡ = 4;
                 state = sw_hex;
-                break;
+                ನಿಲ್ಲಿಸು;
 
-            case '"':
-            case '/':
-            case '\\':
+            ಸ್ಥಿತಿ '"':
+            ಸ್ಥಿತಿ '/':
+            ಸ್ಥಿತಿ '\\':
                 *d++ = ch;
                 state = sw_usual;
-                break;
+                ನಿಲ್ಲಿಸು;
 
-            case 'b':
+            ಸ್ಥಿತಿ 'b':
                 *d++ = '\b';
                 state = sw_usual;
-                break;
+                ನಿಲ್ಲಿಸು;
 
-            case 'f':
+            ಸ್ಥಿತಿ 'f':
                 *d++ = '\f';
                 state = sw_usual;
-                break;
+                ನಿಲ್ಲಿಸು;
 
-            case 'n':
+            ಸ್ಥಿತಿ 'n':
                 *d++ = '\n';
                 state = sw_usual;
-                break;
+                ನಿಲ್ಲಿಸು;
 
-            case 'r':
+            ಸ್ಥಿತಿ 'r':
                 *d++ = '\r';
                 state = sw_usual;
-                break;
+                ನಿಲ್ಲಿಸು;
 
-            case 't':
+            ಸ್ಥಿತಿ 't':
                 *d++ = '\t';
                 state = sw_usual;
-                break;
+                ನಿಲ್ಲಿಸು;
 
-            default:
-                return NGX_ERROR;
+            ಪೂರ್ವನಿಯೋಜಿತ:
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            break;
+            ನಿಲ್ಲಿಸು;
 
-        case sw_hex:
+        ಸ್ಥಿತಿ sw_hex:
 
             n = ngx_json_hex_digit(ch);
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            ಆದರೆ (n == NGX_ERROR) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
             codepoint = (codepoint << 4) | (uint32_t) n;
 
-            if (--hex_left > 0) {
-                break;
+            ಆದರೆ (--hex_ಎಡ > 0) {
+                ನಿಲ್ಲಿಸು;
             }
 
-            if (high_surrogate) {
-                if (codepoint < 0xDC00 || codepoint > 0xDFFF) {
-                    return NGX_ERROR;
+            ಆದರೆ (ಮೇಲಿನ_surrogate) {
+                ಆದರೆ (codepoint < 0xDC00 || codepoint > 0xDFFF) {
+                    ಹಿಂತಿರುಗಿ NGX_ERROR;
                 }
 
                 codepoint = 0x10000
-                            + ((high_surrogate - 0xD800) << 10)
+                            + ((ಮೇಲಿನ_surrogate - 0xD800) << 10)
                             + (codepoint - 0xDC00);
                 d = ngx_json_utf8_encode(d, codepoint);
-                high_surrogate = 0;
+                ಮೇಲಿನ_surrogate = 0;
                 state = sw_usual;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
 
-            if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+            ಆದರೆ (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
                 /* high surrogate - wait for the low surrogate */
-                high_surrogate = codepoint;
-                state = sw_surrogate_start;
-                break;
+                ಮೇಲಿನ_surrogate = codepoint;
+                state = sw_surrogate_ಆರಂಭ;
+                ನಿಲ್ಲಿಸು;
             }
 
-            if (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
+            ಆದರೆ (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_ERROR;
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
             d = ngx_json_utf8_encode(d, codepoint);
             state = sw_usual;
-            break;
+            ನಿಲ್ಲಿಸು;
 
-        case sw_surrogate_start:
+        ಸ್ಥಿತಿ sw_surrogate_ಆರಂಭ:
             /*
              * Expect '\' to begin the low-surrogate escape.
              * Lone surrogates are not valid Unicode scalar values
              * (RFC 8259, Section 8.2).
              */
-            if (ch == '\\') {
+            ಆದರೆ (ch == '\\') {
                 state = sw_surrogate_u;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
 
-        case sw_surrogate_u:
-            if (ch == 'u') {
+        ಸ್ಥಿತಿ sw_surrogate_u:
+            ಆದರೆ (ch == 'u') {
                 codepoint = 0;
-                hex_left = 4;
+                hex_ಎಡ = 4;
                 state = sw_hex;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
     }
 
-    if (state != sw_usual) {
+    ಆದರೆ (state != sw_usual) {
         /* truncated escape sequence or unpaired high surrogate */
-        return NGX_ERROR;
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    dst->len = d - dst->data;
+    dst->len = d - dst->ದತ್ತಾಂಶ;
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
-static ngx_inline u_char *
+ಸ್ಥಿರ ngx_inline u_char *
 ngx_json_utf8_encode(u_char *dst, uint32_t codepoint)
 {
-    if (codepoint <= 0x7F) {
+    ಆದರೆ (codepoint <= 0x7F) {
         *dst++ = (u_char) codepoint;
 
-    } else if (codepoint <= 0x7FF) {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (codepoint <= 0x7FF) {
         *dst++ = (u_char) (0xC0 | (codepoint >> 6));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else if (codepoint <= 0xFFFF) {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (codepoint <= 0xFFFF) {
         *dst++ = (u_char) (0xE0 | (codepoint >> 12));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         *dst++ = (u_char) (0xF0 | (codepoint >> 18));
         *dst++ = (u_char) (0x80 | ((codepoint >> 12) & 0x3F));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
     }
 
-    return dst;
+    ಹಿಂತಿರುಗಿ dst;
 }
 
 
 ngx_int_t
 ngx_json_hex_digit(u_char ch)
 {
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0';
+    ಆದರೆ (ch >= '0' && ch <= '9') {
+        ಹಿಂತಿರುಗಿ ch - '0';
     }
 
     ch = (u_char) (ch | 0x20);
 
-    if (ch >= 'a' && ch <= 'f') {
-        return ch - 'a' + 10;
+    ಆದರೆ (ch >= 'a' && ch <= 'f') {
+        ಹಿಂತಿರುಗಿ ch - 'a' + 10;
     }
 
-    return NGX_ERROR;
+    ಹಿಂತಿರುಗಿ NGX_ERROR;
 }

@@ -5,12 +5,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ಸ್ಥಿರ ಶೂನ್ಯ ngx_ಸರತಿ_ವಿಲೀನ(ngx_ಸರತಿ_t *ಸರತಿ, ngx_ಸರತಿ_t *ಬಾಲ,
+    ngx_int_t (*cmp)(ಸ್ಥಿರಾಂಕ ngx_ಸರತಿ_t *, ಸ್ಥಿರಾಂಕ ngx_ಸರತಿ_t *));
 
 
 /*
@@ -18,32 +18,32 @@ static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
  * or the first element of the queue's second part otherwise
  */
 
-ngx_queue_t *
-ngx_queue_middle(ngx_queue_t *queue)
+ngx_ಸರತಿ_t *
+ngx_ಸರತಿ_ಮಧ್ಯ(ngx_ಸರತಿ_t *ಸರತಿ)
 {
-    ngx_queue_t  *middle, *next;
+    ngx_ಸರತಿ_t  *ಮಧ್ಯ, *ಮುಂದಿನ;
 
-    middle = ngx_queue_head(queue);
+    ಮಧ್ಯ = ngx_ಸರತಿ_ತಲೆ(ಸರತಿ);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    ಆದರೆ (ಮಧ್ಯ == ngx_ಸರತಿ_ಕೊನೆಯ(ಸರತಿ)) {
+        ಹಿಂತಿರುಗಿ ಮಧ್ಯ;
     }
 
-    next = ngx_queue_head(queue);
+    ಮುಂದಿನ = ngx_ಸರತಿ_ತಲೆ(ಸರತಿ);
 
-    for ( ;; ) {
-        middle = ngx_queue_next(middle);
+    ಗಾಗಿ ( ;; ) {
+        ಮಧ್ಯ = ngx_ಸರತಿ_ಮುಂದಿನ(ಮಧ್ಯ);
 
-        next = ngx_queue_next(next);
+        ಮುಂದಿನ = ngx_ಸರತಿ_ಮುಂದಿನ(ಮುಂದಿನ);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ಆದರೆ (ಮುಂದಿನ == ngx_ಸರತಿ_ಕೊನೆಯ(ಸರತಿ)) {
+            ಹಿಂತಿರುಗಿ ಮಧ್ಯ;
         }
 
-        next = ngx_queue_next(next);
+        ಮುಂದಿನ = ngx_ಸರತಿ_ಮುಂದಿನ(ಮುಂದಿನ);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ಆದರೆ (ಮುಂದಿನ == ngx_ಸರತಿ_ಕೊನೆಯ(ಸರತಿ)) {
+            ಹಿಂತಿರುಗಿ ಮಧ್ಯ;
         }
     }
 }
@@ -51,56 +51,56 @@ ngx_queue_middle(ngx_queue_t *queue)
 
 /* the stable merge sort */
 
-void
-ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+ಶೂನ್ಯ
+ngx_ಸರತಿ_ವಿಂಗಡಿಸು(ngx_ಸರತಿ_t *ಸರತಿ,
+    ngx_int_t (*cmp)(ಸ್ಥಿರಾಂಕ ngx_ಸರತಿ_t *, ಸ್ಥಿರಾಂಕ ngx_ಸರತಿ_t *))
 {
-    ngx_queue_t  *q, tail;
+    ngx_ಸರತಿ_t  *q, ಬಾಲ;
 
-    q = ngx_queue_head(queue);
+    q = ngx_ಸರತಿ_ತಲೆ(ಸರತಿ);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    ಆದರೆ (q == ngx_ಸರತಿ_ಕೊನೆಯ(ಸರತಿ)) {
+        ಹಿಂತಿರುಗಿ;
     }
 
-    q = ngx_queue_middle(queue);
+    q = ngx_ಸರತಿ_ಮಧ್ಯ(ಸರತಿ);
 
-    ngx_queue_split(queue, q, &tail);
+    ngx_ಸರತಿ_ವಿಭಜಿಸು(ಸರತಿ, q, &ಬಾಲ);
 
-    ngx_queue_sort(queue, cmp);
-    ngx_queue_sort(&tail, cmp);
+    ngx_ಸರತಿ_ವಿಂಗಡಿಸು(ಸರತಿ, cmp);
+    ngx_ಸರತಿ_ವಿಂಗಡಿಸು(&ಬಾಲ, cmp);
 
-    ngx_queue_merge(queue, &tail, cmp);
+    ngx_ಸರತಿ_ವಿಲೀನ(ಸರತಿ, &ಬಾಲ, cmp);
 }
 
 
-static void
-ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+ಸ್ಥಿರ ಶೂನ್ಯ
+ngx_ಸರತಿ_ವಿಲೀನ(ngx_ಸರತಿ_t *ಸರತಿ, ngx_ಸರತಿ_t *ಬಾಲ,
+    ngx_int_t (*cmp)(ಸ್ಥಿರಾಂಕ ngx_ಸರತಿ_t *, ಸ್ಥಿರಾಂಕ ngx_ಸರತಿ_t *))
 {
-    ngx_queue_t  *q1, *q2;
+    ngx_ಸರತಿ_t  *q1, *q2;
 
-    q1 = ngx_queue_head(queue);
-    q2 = ngx_queue_head(tail);
+    q1 = ngx_ಸರತಿ_ತಲೆ(ಸರತಿ);
+    q2 = ngx_ಸರತಿ_ತಲೆ(ಬಾಲ);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
-            ngx_queue_add(queue, tail);
-            break;
+    ಗಾಗಿ ( ;; ) {
+        ಆದರೆ (q1 == ngx_ಸರತಿ_sentinel(ಸರತಿ)) {
+            ngx_ಸರತಿ_ಕೂಡಿಸು(ಸರತಿ, ಬಾಲ);
+            ನಿಲ್ಲಿಸು;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        ಆದರೆ (q2 == ngx_ಸರತಿ_sentinel(ಬಾಲ)) {
+            ನಿಲ್ಲಿಸು;
         }
 
-        if (cmp(q1, q2) <= 0) {
-            q1 = ngx_queue_next(q1);
-            continue;
+        ಆದರೆ (cmp(q1, q2) <= 0) {
+            q1 = ngx_ಸರತಿ_ಮುಂದಿನ(q1);
+            ಮುಂದುವರಿ;
         }
 
-        ngx_queue_remove(q2);
-        ngx_queue_insert_before(q1, q2);
+        ngx_ಸರತಿ_remove(q2);
+        ngx_ಸರತಿ_ಸೇರಿಸು_before(q1, q2);
 
-        q2 = ngx_queue_head(tail);
+        q2 = ngx_ಸರತಿ_ತಲೆ(ಬಾಲ);
     }
 }

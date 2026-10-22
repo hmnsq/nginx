@@ -5,40 +5,40 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#ಆದರೆ (NGX_HAVE_ATOMIC_OPS)
 
 
-#define NGX_RWLOCK_SPIN   2048
-#define NGX_RWLOCK_WLOCK  ((ngx_atomic_uint_t) -1)
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_RWLOCK_SPIN   2048
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_RWLOCK_WLOCK  ((ngx_atomic_uint_t) -1)
 
 
-void
-ngx_rwlock_wlock(ngx_atomic_t *lock)
+ಶೂನ್ಯ
+ngx_rwlock_wlock(ngx_atomic_t *ಬೀಗ)
 {
     ngx_uint_t  i, n;
 
-    for ( ;; ) {
+    ಗಾಗಿ ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK)) {
-            return;
+        ಆದರೆ (*ಬೀಗ == 0 && ngx_atomic_cmp_ಗಣ(ಬೀಗ, 0, NGX_RWLOCK_WLOCK)) {
+            ಹಿಂತಿರುಗಿ;
         }
 
-        if (ngx_ncpu > 1) {
+        ಆದರೆ (ngx_ncpu > 1) {
 
-            for (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
+            ಗಾಗಿ (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                ಗಾಗಿ (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0
-                    && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK))
+                ಆದರೆ (*ಬೀಗ == 0
+                    && ngx_atomic_cmp_ಗಣ(ಬೀಗ, 0, NGX_RWLOCK_WLOCK))
                 {
-                    return;
+                    ಹಿಂತಿರುಗಿ;
                 }
             }
         }
@@ -48,35 +48,35 @@ ngx_rwlock_wlock(ngx_atomic_t *lock)
 }
 
 
-void
-ngx_rwlock_rlock(ngx_atomic_t *lock)
+ಶೂನ್ಯ
+ngx_rwlock_rlock(ngx_atomic_t *ಬೀಗ)
 {
     ngx_uint_t         i, n;
     ngx_atomic_uint_t  readers;
 
-    for ( ;; ) {
-        readers = *lock;
+    ಗಾಗಿ ( ;; ) {
+        readers = *ಬೀಗ;
 
-        if (readers != NGX_RWLOCK_WLOCK
-            && ngx_atomic_cmp_set(lock, readers, readers + 1))
+        ಆದರೆ (readers != NGX_RWLOCK_WLOCK
+            && ngx_atomic_cmp_ಗಣ(ಬೀಗ, readers, readers + 1))
         {
-            return;
+            ಹಿಂತಿರುಗಿ;
         }
 
-        if (ngx_ncpu > 1) {
+        ಆದರೆ (ngx_ncpu > 1) {
 
-            for (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
+            ಗಾಗಿ (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                ಗಾಗಿ (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                readers = *lock;
+                readers = *ಬೀಗ;
 
-                if (readers != NGX_RWLOCK_WLOCK
-                    && ngx_atomic_cmp_set(lock, readers, readers + 1))
+                ಆದರೆ (readers != NGX_RWLOCK_WLOCK
+                    && ngx_atomic_cmp_ಗಣ(ಬೀಗ, readers, readers + 1))
                 {
-                    return;
+                    ಹಿಂತಿರುಗಿ;
                 }
             }
         }
@@ -86,32 +86,32 @@ ngx_rwlock_rlock(ngx_atomic_t *lock)
 }
 
 
-void
-ngx_rwlock_unlock(ngx_atomic_t *lock)
+ಶೂನ್ಯ
+ngx_rwlock_unlock(ngx_atomic_t *ಬೀಗ)
 {
-    if (*lock == NGX_RWLOCK_WLOCK) {
-        (void) ngx_atomic_cmp_set(lock, NGX_RWLOCK_WLOCK, 0);
-    } else {
-        (void) ngx_atomic_fetch_add(lock, -1);
+    ಆದರೆ (*ಬೀಗ == NGX_RWLOCK_WLOCK) {
+        (ಶೂನ್ಯ) ngx_atomic_cmp_ಗಣ(ಬೀಗ, NGX_RWLOCK_WLOCK, 0);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        (ಶೂನ್ಯ) ngx_atomic_fetch_ಕೂಡಿಸು(ಬೀಗ, -1);
     }
 }
 
 
-void
-ngx_rwlock_downgrade(ngx_atomic_t *lock)
+ಶೂನ್ಯ
+ngx_rwlock_downgrade(ngx_atomic_t *ಬೀಗ)
 {
-    if (*lock == NGX_RWLOCK_WLOCK) {
-        *lock = 1;
+    ಆದರೆ (*ಬೀಗ == NGX_RWLOCK_WLOCK) {
+        *ಬೀಗ = 1;
     }
 }
 
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
-#if (NGX_HTTP_UPSTREAM_ZONE || NGX_STREAM_UPSTREAM_ZONE)
+#ಆದರೆ (NGX_HTTP_UPSTREAM_ZONE || NGX_ಹರಿವು_UPSTREAM_ZONE)
 
-#error ngx_atomic_cmp_set() is not defined!
+#ದೋಷ ngx_atomic_cmp_ಗಣ() is not defined!
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

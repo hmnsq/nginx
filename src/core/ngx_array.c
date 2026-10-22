@@ -5,137 +5,137 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
 ngx_array_t *
-ngx_array_create(ngx_pool_t *p, ngx_uint_t n, size_t size)
+ngx_array_create(ngx_pool_t *p, ngx_uint_t n, ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
     ngx_array_t *a;
 
-    a = ngx_palloc(p, sizeof(ngx_array_t));
-    if (a == NULL) {
-        return NULL;
+    a = ngx_palloc(p, ಗಾತ್ರ(ngx_array_t));
+    ಆದರೆ (a == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    if (ngx_array_init(a, p, n, size) != NGX_OK) {
-        return NULL;
+    ಆದರೆ (ngx_array_init(a, p, n, ಗಾತ್ರ_2) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    return a;
+    ಹಿಂತಿರುಗಿ a;
 }
 
 
-void
+ಶೂನ್ಯ
 ngx_array_destroy(ngx_array_t *a)
 {
     ngx_pool_t  *p;
 
     p = a->pool;
 
-    if ((u_char *) a->elts + a->size * a->nalloc == p->d.last) {
-        p->d.last -= a->size * a->nalloc;
+    ಆದರೆ ((u_char *) a->elts + a->ಗಾತ್ರ_2 * a->nalloc == p->d.ಕೊನೆಯ) {
+        p->d.ಕೊನೆಯ -= a->ಗಾತ್ರ_2 * a->nalloc;
     }
 
-    if ((u_char *) a + sizeof(ngx_array_t) == p->d.last) {
-        p->d.last = (u_char *) a;
+    ಆದರೆ ((u_char *) a + ಗಾತ್ರ(ngx_array_t) == p->d.ಕೊನೆಯ) {
+        p->d.ಕೊನೆಯ = (u_char *) a;
     }
 }
 
 
-void *
-ngx_array_push(ngx_array_t *a)
+ಶೂನ್ಯ *
+ngx_array_ತಳ್ಳು(ngx_array_t *a)
 {
-    void        *elt, *new;
-    size_t       size;
+    ಶೂನ್ಯ        *elt, *new;
+    ಗಾತ್ರ_t       ಗಾತ್ರ_2;
     ngx_pool_t  *p;
 
-    if (a->nelts == a->nalloc) {
+    ಆದರೆ (a->nelts == a->nalloc) {
 
         /* the array is full */
 
-        size = a->size * a->nalloc;
+        ಗಾತ್ರ_2 = a->ಗಾತ್ರ_2 * a->nalloc;
 
         p = a->pool;
 
-        if ((u_char *) a->elts + size == p->d.last
-            && p->d.last + a->size <= p->d.end)
+        ಆದರೆ ((u_char *) a->elts + ಗಾತ್ರ_2 == p->d.ಕೊನೆಯ
+            && p->d.ಕೊನೆಯ + a->ಗಾತ್ರ_2 <= p->d.ಕೊನೆ)
         {
             /*
              * the array allocation is the last in the pool
              * and there is space for new allocation
              */
 
-            p->d.last += a->size;
+            p->d.ಕೊನೆಯ += a->ಗಾತ್ರ_2;
             a->nalloc++;
 
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* allocate a new array */
 
-            new = ngx_palloc(p, 2 * size);
-            if (new == NULL) {
-                return NULL;
+            new = ngx_palloc(p, 2 * ಗಾತ್ರ_2);
+            ಆದರೆ (new == ಖಾಲಿ) {
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             }
 
-            ngx_memcpy(new, a->elts, size);
+            ngx_memcpy(new, a->elts, ಗಾತ್ರ_2);
             a->elts = new;
             a->nalloc *= 2;
         }
     }
 
-    elt = (u_char *) a->elts + a->size * a->nelts;
+    elt = (u_char *) a->elts + a->ಗಾತ್ರ_2 * a->nelts;
     a->nelts++;
 
-    return elt;
+    ಹಿಂತಿರುಗಿ elt;
 }
 
 
-void *
-ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
+ಶೂನ್ಯ *
+ngx_array_ತಳ್ಳು_n(ngx_array_t *a, ngx_uint_t n)
 {
-    void        *elt, *new;
-    size_t       size;
+    ಶೂನ್ಯ        *elt, *new;
+    ಗಾತ್ರ_t       ಗಾತ್ರ_2;
     ngx_uint_t   nalloc;
     ngx_pool_t  *p;
 
-    size = n * a->size;
+    ಗಾತ್ರ_2 = n * a->ಗಾತ್ರ_2;
 
-    if (a->nelts + n > a->nalloc) {
+    ಆದರೆ (a->nelts + n > a->nalloc) {
 
         /* the array is full */
 
         p = a->pool;
 
-        if ((u_char *) a->elts + a->size * a->nalloc == p->d.last
-            && p->d.last + size <= p->d.end)
+        ಆದರೆ ((u_char *) a->elts + a->ಗಾತ್ರ_2 * a->nalloc == p->d.ಕೊನೆಯ
+            && p->d.ಕೊನೆಯ + ಗಾತ್ರ_2 <= p->d.ಕೊನೆ)
         {
             /*
              * the array allocation is the last in the pool
              * and there is space for new allocation
              */
 
-            p->d.last += size;
+            p->d.ಕೊನೆಯ += ಗಾತ್ರ_2;
             a->nalloc += n;
 
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* allocate a new array */
 
             nalloc = 2 * ((n >= a->nalloc) ? n : a->nalloc);
 
-            new = ngx_palloc(p, nalloc * a->size);
-            if (new == NULL) {
-                return NULL;
+            new = ngx_palloc(p, nalloc * a->ಗಾತ್ರ_2);
+            ಆದರೆ (new == ಖಾಲಿ) {
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             }
 
-            ngx_memcpy(new, a->elts, a->nelts * a->size);
+            ngx_memcpy(new, a->elts, a->nelts * a->ಗಾತ್ರ_2);
             a->elts = new;
             a->nalloc = nalloc;
         }
     }
 
-    elt = (u_char *) a->elts + a->size * a->nelts;
+    elt = (u_char *) a->elts + a->ಗಾತ್ರ_2 * a->nelts;
     a->nelts += n;
 
-    return elt;
+    ಹಿಂತಿರುಗಿ elt;
 }

@@ -5,426 +5,426 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-static ngx_inline void *ngx_palloc_small(ngx_pool_t *pool, size_t size,
+ಸ್ಥಿರ ngx_inline ಶೂನ್ಯ *ngx_palloc_small(ngx_pool_t *pool, ಗಾತ್ರ_t ಗಾತ್ರ_2,
     ngx_uint_t align);
-static void *ngx_palloc_block(ngx_pool_t *pool, size_t size);
-static void *ngx_palloc_large(ngx_pool_t *pool, size_t size);
+ಸ್ಥಿರ ಶೂನ್ಯ *ngx_palloc_ಖಂಡ(ngx_pool_t *pool, ಗಾತ್ರ_t ಗಾತ್ರ_2);
+ಸ್ಥಿರ ಶೂನ್ಯ *ngx_palloc_large(ngx_pool_t *pool, ಗಾತ್ರ_t ಗಾತ್ರ_2);
 
 
 ngx_pool_t *
-ngx_create_pool(size_t size, ngx_log_t *log)
+ngx_create_pool(ಗಾತ್ರ_t ಗಾತ್ರ_2, ngx_log_t *ಲಘುಗಣಕ)
 {
     ngx_pool_t  *p;
 
-    p = ngx_memalign(NGX_POOL_ALIGNMENT, size, log);
-    if (p == NULL) {
-        return NULL;
+    p = ngx_memalign(NGX_POOL_ALIGNMENT, ಗಾತ್ರ_2, ಲಘುಗಣಕ);
+    ಆದರೆ (p == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    p->d.last = (u_char *) p + sizeof(ngx_pool_t);
-    p->d.end = (u_char *) p + size;
-    p->d.next = NULL;
+    p->d.ಕೊನೆಯ = (u_char *) p + ಗಾತ್ರ(ngx_pool_t);
+    p->d.ಕೊನೆ = (u_char *) p + ಗಾತ್ರ_2;
+    p->d.ಮುಂದಿನ = ಖಾಲಿ;
     p->d.failed = 0;
 
-    size = size - sizeof(ngx_pool_t);
-    p->max = (size < NGX_MAX_ALLOC_FROM_POOL) ? size : NGX_MAX_ALLOC_FROM_POOL;
+    ಗಾತ್ರ_2 = ಗಾತ್ರ_2 - ಗಾತ್ರ(ngx_pool_t);
+    p->max = (ಗಾತ್ರ_2 < NGX_MAX_ALLOC_FROM_POOL) ? ಗಾತ್ರ_2 : NGX_MAX_ALLOC_FROM_POOL;
 
     p->current = p;
-    p->chain = NULL;
-    p->large = NULL;
-    p->cleanup = NULL;
-    p->log = log;
+    p->chain = ಖಾಲಿ;
+    p->large = ಖಾಲಿ;
+    p->cleanup = ಖಾಲಿ;
+    p->ಲಘುಗಣಕ = ಲಘುಗಣಕ;
 
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
 
-void
+ಶೂನ್ಯ
 ngx_destroy_pool(ngx_pool_t *pool)
 {
     ngx_pool_t          *p, *n;
     ngx_pool_large_t    *l;
     ngx_pool_cleanup_t  *c;
 
-    for (c = pool->cleanup; c; c = c->next) {
-        if (c->handler) {
-            ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
+    ಗಾಗಿ (c = pool->cleanup; c; c = c->ಮುಂದಿನ) {
+        ಆದರೆ (c->handler) {
+            ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->ಲಘುಗಣಕ, 0,
                            "run cleanup: %p", c);
-            c->handler(c->data);
+            c->handler(c->ದತ್ತಾಂಶ);
         }
     }
 
-#if (NGX_DEBUG)
+#ಆದರೆ (NGX_DEBUG)
 
     /*
      * we could allocate the pool->log from this pool
      * so we cannot use this log while free()ing the pool
      */
 
-    for (l = pool->large; l; l = l->next) {
-        ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0, "free: %p", l->alloc);
+    ಗಾಗಿ (l = pool->large; l; l = l->ಮುಂದಿನ) {
+        ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->ಲಘುಗಣಕ, 0, "free: %p", l->alloc);
     }
 
-    for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
-        ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
-                       "free: %p, unused: %uz", p, p->d.end - p->d.last);
+    ಗಾಗಿ (p = pool, n = pool->d.ಮುಂದಿನ; /* void */; p = n, n = n->d.ಮುಂದಿನ) {
+        ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, pool->ಲಘುಗಣಕ, 0,
+                       "free: %p, unused: %uz", p, p->d.ಕೊನೆ - p->d.ಕೊನೆಯ);
 
-        if (n == NULL) {
-            break;
+        ಆದರೆ (n == ಖಾಲಿ) {
+            ನಿಲ್ಲಿಸು;
         }
     }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    for (l = pool->large; l; l = l->next) {
-        if (l->alloc) {
+    ಗಾಗಿ (l = pool->large; l; l = l->ಮುಂದಿನ) {
+        ಆದರೆ (l->alloc) {
             ngx_free(l->alloc);
         }
     }
 
-    for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
+    ಗಾಗಿ (p = pool, n = pool->d.ಮುಂದಿನ; /* void */; p = n, n = n->d.ಮುಂದಿನ) {
         ngx_free(p);
 
-        if (n == NULL) {
-            break;
+        ಆದರೆ (n == ಖಾಲಿ) {
+            ನಿಲ್ಲಿಸು;
         }
     }
 }
 
 
-void
+ಶೂನ್ಯ
 ngx_reset_pool(ngx_pool_t *pool)
 {
     ngx_pool_t        *p;
     ngx_pool_large_t  *l;
 
-    for (l = pool->large; l; l = l->next) {
-        if (l->alloc) {
+    ಗಾಗಿ (l = pool->large; l; l = l->ಮುಂದಿನ) {
+        ಆದರೆ (l->alloc) {
             ngx_free(l->alloc);
         }
     }
 
-    for (p = pool; p; p = p->d.next) {
-        p->d.last = (u_char *) p + sizeof(ngx_pool_t);
+    ಗಾಗಿ (p = pool; p; p = p->d.ಮುಂದಿನ) {
+        p->d.ಕೊನೆಯ = (u_char *) p + ಗಾತ್ರ(ngx_pool_t);
         p->d.failed = 0;
     }
 
     pool->current = pool;
-    pool->chain = NULL;
-    pool->large = NULL;
+    pool->chain = ಖಾಲಿ;
+    pool->large = ಖಾಲಿ;
 }
 
 
-void *
-ngx_palloc(ngx_pool_t *pool, size_t size)
+ಶೂನ್ಯ *
+ngx_palloc(ngx_pool_t *pool, ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
-#if !(NGX_DEBUG_PALLOC)
-    if (size <= pool->max) {
-        return ngx_palloc_small(pool, size, 1);
+#ಆದರೆ !(NGX_DEBUG_PALLOC)
+    ಆದರೆ (ಗಾತ್ರ_2 <= pool->max) {
+        ಹಿಂತಿರುಗಿ ngx_palloc_small(pool, ಗಾತ್ರ_2, 1);
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    return ngx_palloc_large(pool, size);
+    ಹಿಂತಿರುಗಿ ngx_palloc_large(pool, ಗಾತ್ರ_2);
 }
 
 
-void *
-ngx_pnalloc(ngx_pool_t *pool, size_t size)
+ಶೂನ್ಯ *
+ngx_pnalloc(ngx_pool_t *pool, ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
-#if !(NGX_DEBUG_PALLOC)
-    if (size <= pool->max) {
-        return ngx_palloc_small(pool, size, 0);
+#ಆದರೆ !(NGX_DEBUG_PALLOC)
+    ಆದರೆ (ಗಾತ್ರ_2 <= pool->max) {
+        ಹಿಂತಿರುಗಿ ngx_palloc_small(pool, ಗಾತ್ರ_2, 0);
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    return ngx_palloc_large(pool, size);
+    ಹಿಂತಿರುಗಿ ngx_palloc_large(pool, ಗಾತ್ರ_2);
 }
 
 
-static ngx_inline void *
-ngx_palloc_small(ngx_pool_t *pool, size_t size, ngx_uint_t align)
+ಸ್ಥಿರ ngx_inline ಶೂನ್ಯ *
+ngx_palloc_small(ngx_pool_t *pool, ಗಾತ್ರ_t ಗಾತ್ರ_2, ngx_uint_t align)
 {
     u_char      *m;
     ngx_pool_t  *p;
 
     p = pool->current;
 
-    do {
-        m = p->d.last;
+    ಮಾಡು {
+        m = p->d.ಕೊನೆಯ;
 
-        if (align) {
+        ಆದರೆ (align) {
             m = ngx_align_ptr(m, NGX_ALIGNMENT);
         }
 
-        if ((size_t) (p->d.end - m) >= size) {
-            p->d.last = m + size;
+        ಆದರೆ ((ಗಾತ್ರ_t) (p->d.ಕೊನೆ - m) >= ಗಾತ್ರ_2) {
+            p->d.ಕೊನೆಯ = m + ಗಾತ್ರ_2;
 
-            return m;
+            ಹಿಂತಿರುಗಿ m;
         }
 
-        p = p->d.next;
+        p = p->d.ಮುಂದಿನ;
 
-    } while (p);
+    } ಆಗ (p);
 
-    return ngx_palloc_block(pool, size);
+    ಹಿಂತಿರುಗಿ ngx_palloc_ಖಂಡ(pool, ಗಾತ್ರ_2);
 }
 
 
-static void *
-ngx_palloc_block(ngx_pool_t *pool, size_t size)
+ಸ್ಥಿರ ಶೂನ್ಯ *
+ngx_palloc_ಖಂಡ(ngx_pool_t *pool, ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
     u_char      *m;
-    size_t       psize;
+    ಗಾತ್ರ_t       psize;
     ngx_pool_t  *p, *new;
 
-    psize = (size_t) (pool->d.end - (u_char *) pool);
+    psize = (ಗಾತ್ರ_t) (pool->d.ಕೊನೆ - (u_char *) pool);
 
-    m = ngx_memalign(NGX_POOL_ALIGNMENT, psize, pool->log);
-    if (m == NULL) {
-        return NULL;
+    m = ngx_memalign(NGX_POOL_ALIGNMENT, psize, pool->ಲಘುಗಣಕ);
+    ಆದರೆ (m == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
     new = (ngx_pool_t *) m;
 
-    new->d.end = m + psize;
-    new->d.next = NULL;
+    new->d.ಕೊನೆ = m + psize;
+    new->d.ಮುಂದಿನ = ಖಾಲಿ;
     new->d.failed = 0;
 
-    m += sizeof(ngx_pool_data_t);
+    m += ಗಾತ್ರ(ngx_pool_ದತ್ತಾಂಶ_t);
     m = ngx_align_ptr(m, NGX_ALIGNMENT);
-    new->d.last = m + size;
+    new->d.ಕೊನೆಯ = m + ಗಾತ್ರ_2;
 
-    for (p = pool->current; p->d.next; p = p->d.next) {
-        if (p->d.failed++ > 4) {
-            pool->current = p->d.next;
+    ಗಾಗಿ (p = pool->current; p->d.ಮುಂದಿನ; p = p->d.ಮುಂದಿನ) {
+        ಆದರೆ (p->d.failed++ > 4) {
+            pool->current = p->d.ಮುಂದಿನ;
         }
     }
 
-    p->d.next = new;
+    p->d.ಮುಂದಿನ = new;
 
-    return m;
+    ಹಿಂತಿರುಗಿ m;
 }
 
 
-static void *
-ngx_palloc_large(ngx_pool_t *pool, size_t size)
+ಸ್ಥಿರ ಶೂನ್ಯ *
+ngx_palloc_large(ngx_pool_t *pool, ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
-    void              *p;
+    ಶೂನ್ಯ              *p;
     ngx_uint_t         n;
     ngx_pool_large_t  *large;
 
-    p = ngx_alloc(size, pool->log);
-    if (p == NULL) {
-        return NULL;
+    p = ngx_alloc(ಗಾತ್ರ_2, pool->ಲಘುಗಣಕ);
+    ಆದರೆ (p == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
     n = 0;
 
-    for (large = pool->large; large; large = large->next) {
-        if (large->alloc == NULL) {
+    ಗಾಗಿ (large = pool->large; large; large = large->ಮುಂದಿನ) {
+        ಆದರೆ (large->alloc == ಖಾಲಿ) {
             large->alloc = p;
-            return p;
+            ಹಿಂತಿರುಗಿ p;
         }
 
-        if (n++ > 3) {
-            break;
+        ಆದರೆ (n++ > 3) {
+            ನಿಲ್ಲಿಸು;
         }
     }
 
-    large = ngx_palloc_small(pool, sizeof(ngx_pool_large_t), 1);
-    if (large == NULL) {
+    large = ngx_palloc_small(pool, ಗಾತ್ರ(ngx_pool_large_t), 1);
+    ಆದರೆ (large == ಖಾಲಿ) {
         ngx_free(p);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
     large->alloc = p;
-    large->next = pool->large;
+    large->ಮುಂದಿನ = pool->large;
     pool->large = large;
 
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
 
-void *
-ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment)
+ಶೂನ್ಯ *
+ngx_pmemalign(ngx_pool_t *pool, ಗಾತ್ರ_t ಗಾತ್ರ_2, ಗಾತ್ರ_t alignment)
 {
-    void              *p;
+    ಶೂನ್ಯ              *p;
     ngx_pool_large_t  *large;
 
-    p = ngx_memalign(alignment, size, pool->log);
-    if (p == NULL) {
-        return NULL;
+    p = ngx_memalign(alignment, ಗಾತ್ರ_2, pool->ಲಘುಗಣಕ);
+    ಆದರೆ (p == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    large = ngx_palloc_small(pool, sizeof(ngx_pool_large_t), 1);
-    if (large == NULL) {
+    large = ngx_palloc_small(pool, ಗಾತ್ರ(ngx_pool_large_t), 1);
+    ಆದರೆ (large == ಖಾಲಿ) {
         ngx_free(p);
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
     large->alloc = p;
-    large->next = pool->large;
+    large->ಮುಂದಿನ = pool->large;
     pool->large = large;
 
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
 
 ngx_int_t
-ngx_pfree(ngx_pool_t *pool, void *p)
+ngx_pfree(ngx_pool_t *pool, ಶೂನ್ಯ *p)
 {
     ngx_pool_large_t  *l;
 
-    for (l = pool->large; l; l = l->next) {
-        if (p == l->alloc) {
-            ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
+    ಗಾಗಿ (l = pool->large; l; l = l->ಮುಂದಿನ) {
+        ಆದರೆ (p == l->alloc) {
+            ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->ಲಘುಗಣಕ, 0,
                            "free: %p", l->alloc);
             ngx_free(l->alloc);
-            l->alloc = NULL;
+            l->alloc = ಖಾಲಿ;
 
-            return NGX_OK;
+            ಹಿಂತಿರುಗಿ NGX_OK;
         }
     }
 
-    return NGX_DECLINED;
+    ಹಿಂತಿರುಗಿ NGX_DECLINED;
 }
 
 
-void *
-ngx_pcalloc(ngx_pool_t *pool, size_t size)
+ಶೂನ್ಯ *
+ngx_pcalloc(ngx_pool_t *pool, ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
-    void *p;
+    ಶೂನ್ಯ *p;
 
-    p = ngx_palloc(pool, size);
-    if (p) {
-        ngx_memzero(p, size);
+    p = ngx_palloc(pool, ಗಾತ್ರ_2);
+    ಆದರೆ (p) {
+        ngx_memzero(p, ಗಾತ್ರ_2);
     }
 
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
 
 ngx_pool_cleanup_t *
-ngx_pool_cleanup_add(ngx_pool_t *p, size_t size)
+ngx_pool_cleanup_ಕೂಡಿಸು(ngx_pool_t *p, ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
     ngx_pool_cleanup_t  *c;
 
-    c = ngx_palloc(p, sizeof(ngx_pool_cleanup_t));
-    if (c == NULL) {
-        return NULL;
+    c = ngx_palloc(p, ಗಾತ್ರ(ngx_pool_cleanup_t));
+    ಆದರೆ (c == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    if (size) {
-        c->data = ngx_palloc(p, size);
-        if (c->data == NULL) {
-            return NULL;
+    ಆದರೆ (ಗಾತ್ರ_2) {
+        c->ದತ್ತಾಂಶ = ngx_palloc(p, ಗಾತ್ರ_2);
+        ಆದರೆ (c->ದತ್ತಾಂಶ == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ ಖಾಲಿ;
         }
 
-    } else {
-        c->data = NULL;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        c->ದತ್ತಾಂಶ = ಖಾಲಿ;
     }
 
-    c->handler = NULL;
-    c->next = p->cleanup;
+    c->handler = ಖಾಲಿ;
+    c->ಮುಂದಿನ = p->cleanup;
 
     p->cleanup = c;
 
-    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, p->log, 0, "add cleanup: %p", c);
+    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, p->ಲಘುಗಣಕ, 0, "add cleanup: %p", c);
 
-    return c;
+    ಹಿಂತಿರುಗಿ c;
 }
 
 
-void
-ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd)
+ಶೂನ್ಯ
+ngx_pool_ಸತತ_cleanup_file(ngx_pool_t *p, ngx_fd_t fd)
 {
     ngx_pool_cleanup_t       *c;
     ngx_pool_cleanup_file_t  *cf;
 
-    for (c = p->cleanup; c; c = c->next) {
-        if (c->handler == ngx_pool_cleanup_file) {
+    ಗಾಗಿ (c = p->cleanup; c; c = c->ಮುಂದಿನ) {
+        ಆದರೆ (c->handler == ngx_pool_cleanup_file) {
 
-            cf = c->data;
+            cf = c->ದತ್ತಾಂಶ;
 
-            if (cf->fd == fd) {
+            ಆದರೆ (cf->fd == fd) {
                 c->handler(cf);
-                c->handler = NULL;
-                return;
+                c->handler = ಖಾಲಿ;
+                ಹಿಂತಿರುಗಿ;
             }
         }
     }
 }
 
 
-void
-ngx_pool_cleanup_file(void *data)
+ಶೂನ್ಯ
+ngx_pool_cleanup_file(ಶೂನ್ಯ *ದತ್ತಾಂಶ)
 {
-    ngx_pool_cleanup_file_t  *c = data;
+    ngx_pool_cleanup_file_t  *c = ದತ್ತಾಂಶ;
 
-    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, c->log, 0, "file cleanup: fd:%d",
+    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, c->ಲಘುಗಣಕ, 0, "file cleanup: fd:%d",
                    c->fd);
 
-    if (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, c->log, ngx_errno,
+    ಆದರೆ (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, c->ಲಘುಗಣಕ, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", c->name);
     }
 }
 
 
-void
-ngx_pool_delete_file(void *data)
+ಶೂನ್ಯ
+ngx_pool_delete_file(ಶೂನ್ಯ *ದತ್ತಾಂಶ)
 {
-    ngx_pool_cleanup_file_t  *c = data;
+    ngx_pool_cleanup_file_t  *c = ದತ್ತಾಂಶ;
 
     ngx_err_t  err;
 
-    ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, c->log, 0, "file cleanup: fd:%d %s",
+    ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, c->ಲಘುಗಣಕ, 0, "file cleanup: fd:%d %s",
                    c->fd, c->name);
 
-    if (ngx_delete_file(c->name) == NGX_FILE_ERROR) {
+    ಆದರೆ (ngx_delete_file(c->name) == NGX_FILE_ERROR) {
         err = ngx_errno;
 
-        if (err != NGX_ENOENT) {
-            ngx_log_error(NGX_LOG_CRIT, c->log, err,
+        ಆದರೆ (err != NGX_ENOENT) {
+            ngx_log_error(NGX_LOG_CRIT, c->ಲಘುಗಣಕ, err,
                           ngx_delete_file_n " \"%s\" failed", c->name);
         }
     }
 
-    if (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, c->log, ngx_errno,
+    ಆದರೆ (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, c->ಲಘುಗಣಕ, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", c->name);
     }
 }
 
 
-#if 0
+#ಆದರೆ 0
 
-static void *
-ngx_get_cached_block(size_t size)
+ಸ್ಥಿರ ಶೂನ್ಯ *
+ngx_get_cached_ಖಂಡ(ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
-    void                     *p;
-    ngx_cached_block_slot_t  *slot;
+    ಶೂನ್ಯ                     *p;
+    ngx_cached_ಖಂಡ_ಸ್ಥಾನ_t  *ಸ್ಥಾನ;
 
-    if (ngx_cycle->cache == NULL) {
-        return NULL;
+    ಆದರೆ (ngx_ಚಕ್ರ->cache == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    slot = &ngx_cycle->cache[(size + ngx_pagesize - 1) / ngx_pagesize];
+    ಸ್ಥಾನ = &ngx_ಚಕ್ರ->cache[(ಗಾತ್ರ_2 + ngx_pagesize - 1) / ngx_pagesize];
 
-    slot->tries++;
+    ಸ್ಥಾನ->tries++;
 
-    if (slot->number) {
-        p = slot->block;
-        slot->block = slot->block->next;
-        slot->number--;
-        return p;
+    ಆದರೆ (ಸ್ಥಾನ->ಸಂಖ್ಯೆ) {
+        p = ಸ್ಥಾನ->ಖಂಡ;
+        ಸ್ಥಾನ->ಖಂಡ = ಸ್ಥಾನ->ಖಂಡ->ಮುಂದಿನ;
+        ಸ್ಥಾನ->ಸಂಖ್ಯೆ--;
+        ಹಿಂತಿರುಗಿ p;
     }
 
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

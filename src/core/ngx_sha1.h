@@ -5,24 +5,24 @@
  */
 
 
-#ifndef _NGX_SHA1_H_INCLUDED_
-#define _NGX_SHA1_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ _NGX_SHA1_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿಸು _NGX_SHA1_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-typedef struct {
-    uint64_t  bytes;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
+    uint64_t  ಬೈಟುಗಳು;
     uint32_t  a, b, c, d, e, f;
-    u_char    buffer[64];
+    u_char    ಬಫರ್[64];
 } ngx_sha1_t;
 
 
-void ngx_sha1_init(ngx_sha1_t *ctx);
-void ngx_sha1_update(ngx_sha1_t *ctx, const void *data, size_t size);
-void ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx);
+ಶೂನ್ಯ ngx_sha1_init(ngx_sha1_t *ctx);
+ಶೂನ್ಯ ngx_sha1_update(ngx_sha1_t *ctx, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ದತ್ತಾಂಶ, ಗಾತ್ರ_t ಗಾತ್ರ_2);
+ಶೂನ್ಯ ngx_sha1_final(u_char ಫಲಿತಾಂಶ[20], ngx_sha1_t *ctx);
 
 
-#endif /* _NGX_SHA1_H_INCLUDED_ */
+#ಆದರೆ_ಅಂತ್ಯ /* _NGX_SHA1_H_INCLUDED_ */

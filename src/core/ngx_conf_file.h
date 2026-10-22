@@ -5,12 +5,12 @@
  */
 
 
-#ifndef _NGX_CONF_FILE_H_INCLUDED_
-#define _NGX_CONF_FILE_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ _NGX_CONF_FILE_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿಸು _NGX_CONF_FILE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
 /*
@@ -19,281 +19,281 @@
  *    TT        command type, i.e. HTTP "location" or "server" command
  */
 
-#define NGX_CONF_NOARGS      0x00000001
-#define NGX_CONF_TAKE1       0x00000002
-#define NGX_CONF_TAKE2       0x00000004
-#define NGX_CONF_TAKE3       0x00000008
-#define NGX_CONF_TAKE4       0x00000010
-#define NGX_CONF_TAKE5       0x00000020
-#define NGX_CONF_TAKE6       0x00000040
-#define NGX_CONF_TAKE7       0x00000080
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_NOARGS      0x00000001
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE1       0x00000002
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE2       0x00000004
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE3       0x00000008
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE4       0x00000010
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE5       0x00000020
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE6       0x00000040
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE7       0x00000080
 
-#define NGX_CONF_MAX_ARGS    8
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_MAX_ವಾದಗಳು    8
 
-#define NGX_CONF_TAKE12      (NGX_CONF_TAKE1|NGX_CONF_TAKE2)
-#define NGX_CONF_TAKE13      (NGX_CONF_TAKE1|NGX_CONF_TAKE3)
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE12      (NGX_CONF_TAKE1|NGX_CONF_TAKE2)
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE13      (NGX_CONF_TAKE1|NGX_CONF_TAKE3)
 
-#define NGX_CONF_TAKE23      (NGX_CONF_TAKE2|NGX_CONF_TAKE3)
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE23      (NGX_CONF_TAKE2|NGX_CONF_TAKE3)
 
-#define NGX_CONF_TAKE123     (NGX_CONF_TAKE1|NGX_CONF_TAKE2|NGX_CONF_TAKE3)
-#define NGX_CONF_TAKE1234    (NGX_CONF_TAKE1|NGX_CONF_TAKE2|NGX_CONF_TAKE3   \
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE123     (NGX_CONF_TAKE1|NGX_CONF_TAKE2|NGX_CONF_TAKE3)
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_TAKE1234    (NGX_CONF_TAKE1|NGX_CONF_TAKE2|NGX_CONF_TAKE3   \
                               |NGX_CONF_TAKE4)
 
-#define NGX_CONF_ARGS_NUMBER 0x000000ff
-#define NGX_CONF_BLOCK       0x00000100
-#define NGX_CONF_FLAG        0x00000200
-#define NGX_CONF_ANY         0x00000400
-#define NGX_CONF_1MORE       0x00000800
-#define NGX_CONF_2MORE       0x00001000
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_ವಾದಗಳು_ಸಂಖ್ಯೆ 0x000000ff
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_ಖಂಡ       0x00000100
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_FLAG        0x00000200
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_ANY         0x00000400
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_1_ಇನ್ನಷ್ಟು       0x00000800
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_2_ಇನ್ನಷ್ಟು       0x00001000
 
-#define NGX_DIRECT_CONF      0x00010000
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_ನೇರ_CONF      0x00010000
 
-#define NGX_MAIN_CONF        0x01000000
-#define NGX_ANY_CONF         0xFF000000
-
-
-
-#define NGX_CONF_UNSET       -1
-#define NGX_CONF_UNSET_UINT  (ngx_uint_t) -1
-#define NGX_CONF_UNSET_PTR   (void *) -1
-#define NGX_CONF_UNSET_SIZE  (size_t) -1
-#define NGX_CONF_UNSET_MSEC  (ngx_msec_t) -1
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_MAIN_CONF        0x01000000
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_ANY_CONF         0xFF000000
 
 
-#define NGX_CONF_OK          NULL
-#define NGX_CONF_ERROR       (void *) -1
 
-#define NGX_CONF_BLOCK_START 1
-#define NGX_CONF_BLOCK_DONE  2
-#define NGX_CONF_FILE_DONE   3
-
-#define NGX_CORE_MODULE      0x45524F43  /* "CORE" */
-#define NGX_CONF_MODULE      0x464E4F43  /* "CONF" */
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_UNSET       -1
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_UNSET_UINT  (ngx_uint_t) -1
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_UNSET_PTR   (ಶೂನ್ಯ *) -1
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_UNSET_ಗಾತ್ರ  (ಗಾತ್ರ_t) -1
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_UNSET_MSEC  (ngx_msec_t) -1
 
 
-#define NGX_MAX_CONF_ERRSTR  1024
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_OK          ಖಾಲಿ
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_ERROR       (ಶೂನ್ಯ *) -1
+
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_ಖಂಡ_ಆರಂಭ 1
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_ಖಂಡ_ಮುಗಿದ  2
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_FILE_ಮುಗಿದ   3
+
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CORE_MODULE      0x45524F43  /* "CORE" */
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_MODULE      0x464E4F43  /* "CONF" */
 
 
-struct ngx_command_s {
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_MAX_CONF_ERRSTR  1024
+
+
+ರಚನೆ ngx_command_s {
     ngx_str_t             name;
     ngx_uint_t            type;
-    char               *(*set)(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+    ಅಕ್ಷರ               *(*ಗಣ)(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
     ngx_uint_t            conf;
-    ngx_uint_t            offset;
-    void                 *post;
+    ngx_uint_t            ಸ್ಥಾನಾಂತರ;
+    ಶೂನ್ಯ                 *post;
 };
 
-#define ngx_null_command  { ngx_null_string, 0, NULL, 0, 0, NULL }
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_null_command  { ngx_null_string, 0, ಖಾಲಿ, 0, 0, ಖಾಲಿ }
 
 
-struct ngx_open_file_s {
+ರಚನೆ ngx_open_file_s {
     ngx_fd_t              fd;
     ngx_str_t             name;
 
-    void                (*flush)(ngx_open_file_t *file, ngx_log_t *log);
-    void                 *data;
+    ಶೂನ್ಯ                (*flush)(ngx_open_file_t *file, ngx_log_t *ಲಘುಗಣಕ);
+    ಶೂನ್ಯ                 *ದತ್ತಾಂಶ;
 };
 
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_file_t            file;
-    ngx_buf_t            *buffer;
+    ngx_buf_t            *ಬಫರ್;
     ngx_buf_t            *dump;
-    ngx_uint_t            line;
+    ngx_uint_t            ಸಾಲು;
 } ngx_conf_file_t;
 
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_str_t             name;
-    ngx_buf_t            *buffer;
+    ngx_buf_t            *ಬಫರ್;
 } ngx_conf_dump_t;
 
 
-typedef char *(*ngx_conf_handler_pt)(ngx_conf_t *cf,
-    ngx_command_t *dummy, void *conf);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಅಕ್ಷರ *(*ngx_conf_handler_pt)(ngx_conf_t *cf,
+    ngx_command_t *dummy, ಶೂನ್ಯ *conf);
 
 
-struct ngx_conf_s {
-    char                 *name;
-    ngx_array_t          *args;
+ರಚನೆ ngx_conf_s {
+    ಅಕ್ಷರ                 *name;
+    ngx_array_t          *ವಾದಗಳು;
 
-    ngx_cycle_t          *cycle;
+    ngx_ಚಕ್ರ_t          *ಚಕ್ರ;
     ngx_pool_t           *pool;
-    ngx_pool_t           *temp_pool;
+    ngx_pool_t           *ತಾತ್ಕಾಲಿಕ_pool;
     ngx_conf_file_t      *conf_file;
-    ngx_log_t            *log;
+    ngx_log_t            *ಲಘುಗಣಕ;
 
-    void                 *ctx;
+    ಶೂನ್ಯ                 *ctx;
     ngx_uint_t            module_type;
     ngx_uint_t            cmd_type;
 
     ngx_conf_handler_pt   handler;
-    void                 *handler_conf;
+    ಶೂನ್ಯ                 *handler_conf;
 };
 
 
-typedef char *(*ngx_conf_post_handler_pt) (ngx_conf_t *cf,
-    void *data, void *conf);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಅಕ್ಷರ *(*ngx_conf_post_handler_pt) (ngx_conf_t *cf,
+    ಶೂನ್ಯ *ದತ್ತಾಂಶ, ಶೂನ್ಯ *conf);
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_conf_post_handler_pt  post_handler;
 } ngx_conf_post_t;
 
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_conf_post_handler_pt  post_handler;
-    char                     *old_name;
-    char                     *new_name;
+    ಅಕ್ಷರ                     *old_name;
+    ಅಕ್ಷರ                     *new_name;
 } ngx_conf_deprecated_t;
 
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_conf_post_handler_pt  post_handler;
-    ngx_int_t                 low;
-    ngx_int_t                 high;
-} ngx_conf_num_bounds_t;
+    ngx_int_t                 ಕೆಳಗಿನ;
+    ngx_int_t                 ಮೇಲಿನ;
+} ngx_conf_ಅಂಕೆ_bounds_t;
 
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_str_t                 name;
-    ngx_uint_t                value;
+    ngx_uint_t                ಮೌಲ್ಯ;
 } ngx_conf_enum_t;
 
 
-#define NGX_CONF_BITMASK_SET  1
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_CONF_BITMASK_ಗಣ  1
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_str_t                 name;
-    ngx_uint_t                mask;
+    ngx_uint_t                ಮುಖವಾಡ;
 } ngx_conf_bitmask_t;
 
 
 
-char * ngx_conf_deprecated(ngx_conf_t *cf, void *post, void *data);
-char *ngx_conf_check_num_bounds(ngx_conf_t *cf, void *post, void *data);
-char *ngx_conf_check_size_nonzero(ngx_conf_t *cf, void *post, void *data);
+ಅಕ್ಷರ * ngx_conf_deprecated(ngx_conf_t *cf, ಶೂನ್ಯ *post, ಶೂನ್ಯ *ದತ್ತಾಂಶ);
+ಅಕ್ಷರ *ngx_conf_check_ಅಂಕೆ_bounds(ngx_conf_t *cf, ಶೂನ್ಯ *post, ಶೂನ್ಯ *ದತ್ತಾಂಶ);
+ಅಕ್ಷರ *ngx_conf_check_ಗಾತ್ರ_nonzero(ngx_conf_t *cf, ಶೂನ್ಯ *post, ಶೂನ್ಯ *ದತ್ತಾಂಶ);
 
 
-extern ngx_conf_post_t  ngx_conf_size_nonzero_post;
+ಬಾಹ್ಯ ngx_conf_post_t  ngx_conf_ಗಾತ್ರ_nonzero_post;
 
 
-#define ngx_get_conf(conf_ctx, module)  conf_ctx[module.index]
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_get_conf(conf_ctx, module)  conf_ctx[module.ಸೂಚ್ಯಂಕ]
 
 
 
-#define ngx_conf_init_value(conf, default)                                   \
-    if (conf == NGX_CONF_UNSET) {                                            \
-        conf = default;                                                      \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_init_ಮೌಲ್ಯ(conf, ಪೂರ್ವನಿಯೋಜಿತ)                                   \
+    ಆದರೆ (conf == NGX_CONF_UNSET) {                                            \
+        conf = ಪೂರ್ವನಿಯೋಜಿತ;                                                      \
     }
 
-#define ngx_conf_init_ptr_value(conf, default)                               \
-    if (conf == NGX_CONF_UNSET_PTR) {                                        \
-        conf = default;                                                      \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_init_ptr_ಮೌಲ್ಯ(conf, ಪೂರ್ವನಿಯೋಜಿತ)                               \
+    ಆದರೆ (conf == NGX_CONF_UNSET_PTR) {                                        \
+        conf = ಪೂರ್ವನಿಯೋಜಿತ;                                                      \
     }
 
-#define ngx_conf_init_uint_value(conf, default)                              \
-    if (conf == NGX_CONF_UNSET_UINT) {                                       \
-        conf = default;                                                      \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_init_uint_ಮೌಲ್ಯ(conf, ಪೂರ್ವನಿಯೋಜಿತ)                              \
+    ಆದರೆ (conf == NGX_CONF_UNSET_UINT) {                                       \
+        conf = ಪೂರ್ವನಿಯೋಜಿತ;                                                      \
     }
 
-#define ngx_conf_init_size_value(conf, default)                              \
-    if (conf == NGX_CONF_UNSET_SIZE) {                                       \
-        conf = default;                                                      \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_init_ಗಾತ್ರ_ಮೌಲ್ಯ(conf, ಪೂರ್ವನಿಯೋಜಿತ)                              \
+    ಆದರೆ (conf == NGX_CONF_UNSET_ಗಾತ್ರ) {                                       \
+        conf = ಪೂರ್ವನಿಯೋಜಿತ;                                                      \
     }
 
-#define ngx_conf_init_msec_value(conf, default)                              \
-    if (conf == NGX_CONF_UNSET_MSEC) {                                       \
-        conf = default;                                                      \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_init_msec_ಮೌಲ್ಯ(conf, ಪೂರ್ವನಿಯೋಜಿತ)                              \
+    ಆದರೆ (conf == NGX_CONF_UNSET_MSEC) {                                       \
+        conf = ಪೂರ್ವನಿಯೋಜಿತ;                                                      \
     }
 
-#define ngx_conf_merge_value(conf, prev, default)                            \
-    if (conf == NGX_CONF_UNSET) {                                            \
-        conf = (prev == NGX_CONF_UNSET) ? default : prev;                    \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_ವಿಲೀನ_ಮೌಲ್ಯ(conf, prev, ಪೂರ್ವನಿಯೋಜಿತ)                            \
+    ಆದರೆ (conf == NGX_CONF_UNSET) {                                            \
+        conf = (prev == NGX_CONF_UNSET) ? ಪೂರ್ವನಿಯೋಜಿತ : prev;                    \
     }
 
-#define ngx_conf_merge_ptr_value(conf, prev, default)                        \
-    if (conf == NGX_CONF_UNSET_PTR) {                                        \
-        conf = (prev == NGX_CONF_UNSET_PTR) ? default : prev;                \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_ವಿಲೀನ_ptr_ಮೌಲ್ಯ(conf, prev, ಪೂರ್ವನಿಯೋಜಿತ)                        \
+    ಆದರೆ (conf == NGX_CONF_UNSET_PTR) {                                        \
+        conf = (prev == NGX_CONF_UNSET_PTR) ? ಪೂರ್ವನಿಯೋಜಿತ : prev;                \
     }
 
-#define ngx_conf_merge_uint_value(conf, prev, default)                       \
-    if (conf == NGX_CONF_UNSET_UINT) {                                       \
-        conf = (prev == NGX_CONF_UNSET_UINT) ? default : prev;               \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_ವಿಲೀನ_uint_ಮೌಲ್ಯ(conf, prev, ಪೂರ್ವನಿಯೋಜಿತ)                       \
+    ಆದರೆ (conf == NGX_CONF_UNSET_UINT) {                                       \
+        conf = (prev == NGX_CONF_UNSET_UINT) ? ಪೂರ್ವನಿಯೋಜಿತ : prev;               \
     }
 
-#define ngx_conf_merge_msec_value(conf, prev, default)                       \
-    if (conf == NGX_CONF_UNSET_MSEC) {                                       \
-        conf = (prev == NGX_CONF_UNSET_MSEC) ? default : prev;               \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_ವಿಲೀನ_msec_ಮೌಲ್ಯ(conf, prev, ಪೂರ್ವನಿಯೋಜಿತ)                       \
+    ಆದರೆ (conf == NGX_CONF_UNSET_MSEC) {                                       \
+        conf = (prev == NGX_CONF_UNSET_MSEC) ? ಪೂರ್ವನಿಯೋಜಿತ : prev;               \
     }
 
-#define ngx_conf_merge_sec_value(conf, prev, default)                        \
-    if (conf == NGX_CONF_UNSET) {                                            \
-        conf = (prev == NGX_CONF_UNSET) ? default : prev;                    \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_ವಿಲೀನ_sec_ಮೌಲ್ಯ(conf, prev, ಪೂರ್ವನಿಯೋಜಿತ)                        \
+    ಆದರೆ (conf == NGX_CONF_UNSET) {                                            \
+        conf = (prev == NGX_CONF_UNSET) ? ಪೂರ್ವನಿಯೋಜಿತ : prev;                    \
     }
 
-#define ngx_conf_merge_size_value(conf, prev, default)                       \
-    if (conf == NGX_CONF_UNSET_SIZE) {                                       \
-        conf = (prev == NGX_CONF_UNSET_SIZE) ? default : prev;               \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_ವಿಲೀನ_ಗಾತ್ರ_ಮೌಲ್ಯ(conf, prev, ಪೂರ್ವನಿಯೋಜಿತ)                       \
+    ಆದರೆ (conf == NGX_CONF_UNSET_ಗಾತ್ರ) {                                       \
+        conf = (prev == NGX_CONF_UNSET_ಗಾತ್ರ) ? ಪೂರ್ವನಿಯೋಜಿತ : prev;               \
     }
 
-#define ngx_conf_merge_off_value(conf, prev, default)                        \
-    if (conf == NGX_CONF_UNSET) {                                            \
-        conf = (prev == NGX_CONF_UNSET) ? default : prev;                    \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_ವಿಲೀನ_off_ಮೌಲ್ಯ(conf, prev, ಪೂರ್ವನಿಯೋಜಿತ)                        \
+    ಆದರೆ (conf == NGX_CONF_UNSET) {                                            \
+        conf = (prev == NGX_CONF_UNSET) ? ಪೂರ್ವನಿಯೋಜಿತ : prev;                    \
     }
 
-#define ngx_conf_merge_str_value(conf, prev, default)                        \
-    if (conf.data == NULL) {                                                 \
-        if (prev.data) {                                                     \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_ವಿಲೀನ_str_ಮೌಲ್ಯ(conf, prev, ಪೂರ್ವನಿಯೋಜಿತ)                        \
+    ಆದರೆ (conf.ದತ್ತಾಂಶ == ಖಾಲಿ) {                                                 \
+        ಆದರೆ (prev.ದತ್ತಾಂಶ) {                                                     \
             conf.len = prev.len;                                             \
-            conf.data = prev.data;                                           \
-        } else {                                                             \
-            conf.len = sizeof(default) - 1;                                  \
-            conf.data = (u_char *) default;                                  \
+            conf.ದತ್ತಾಂಶ = prev.ದತ್ತಾಂಶ;                                           \
+        } ಇಲ್ಲದಿದ್ದರೆ {                                                             \
+            conf.len = ಗಾತ್ರ(ಪೂರ್ವನಿಯೋಜಿತ) - 1;                                  \
+            conf.ದತ್ತಾಂಶ = (u_char *) ಪೂರ್ವನಿಯೋಜಿತ;                                  \
         }                                                                    \
     }
 
-#define ngx_conf_merge_bufs_value(conf, prev, default_num, default_size)     \
-    if (conf.num == 0) {                                                     \
-        if (prev.num) {                                                      \
-            conf.num = prev.num;                                             \
-            conf.size = prev.size;                                           \
-        } else {                                                             \
-            conf.num = default_num;                                          \
-            conf.size = default_size;                                        \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_ವಿಲೀನ_bufs_ಮೌಲ್ಯ(conf, prev, default_ಅಂಕೆ, default_ಗಾತ್ರ)     \
+    ಆದರೆ (conf.ಅಂಕೆ == 0) {                                                     \
+        ಆದರೆ (prev.ಅಂಕೆ) {                                                      \
+            conf.ಅಂಕೆ = prev.ಅಂಕೆ;                                             \
+            conf.ಗಾತ್ರ_2 = prev.ಗಾತ್ರ_2;                                           \
+        } ಇಲ್ಲದಿದ್ದರೆ {                                                             \
+            conf.ಅಂಕೆ = default_ಅಂಕೆ;                                          \
+            conf.ಗಾತ್ರ_2 = default_ಗಾತ್ರ;                                        \
         }                                                                    \
     }
 
-#define ngx_conf_merge_bitmask_value(conf, prev, default)                    \
-    if (conf == 0) {                                                         \
-        conf = (prev == 0) ? default : prev;                                 \
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_conf_ವಿಲೀನ_bitmask_ಮೌಲ್ಯ(conf, prev, ಪೂರ್ವನಿಯೋಜಿತ)                    \
+    ಆದರೆ (conf == 0) {                                                         \
+        conf = (prev == 0) ? ಪೂರ್ವನಿಯೋಜಿತ : prev;                                 \
     }
 
 
-char *ngx_conf_param(ngx_conf_t *cf);
-char *ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename);
-char *ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+ಅಕ್ಷರ *ngx_conf_param(ngx_conf_t *cf);
+ಅಕ್ಷರ *ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename);
+ಅಕ್ಷರ *ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
 
 
-ngx_int_t ngx_conf_full_name(ngx_cycle_t *cycle, ngx_str_t *name,
-    ngx_uint_t conf_prefix);
-ngx_open_file_t *ngx_conf_open_file(ngx_cycle_t *cycle, ngx_str_t *name);
-void ngx_cdecl ngx_conf_log_error(ngx_uint_t level, ngx_conf_t *cf,
-    ngx_err_t err, const char *fmt, ...);
+ngx_int_t ngx_conf_ತುಂಬಿದ_name(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ngx_str_t *name,
+    ngx_uint_t conf_ಪೂರ್ವಪ್ರತ್ಯಯ);
+ngx_open_file_t *ngx_conf_open_file(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ngx_str_t *name);
+ಶೂನ್ಯ ngx_cdecl ngx_conf_log_error(ngx_uint_t level, ngx_conf_t *cf,
+    ngx_err_t err, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *fmt, ...);
 
 
-char *ngx_conf_set_flag_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_str_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_str_array_slot(ngx_conf_t *cf, ngx_command_t *cmd,
-    void *conf);
-char *ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_num_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_size_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_off_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_msec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_sec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_bufs_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_bitmask_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_flag_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_str_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_str_array_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd,
+    ಶೂನ್ಯ *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_keyval_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_ಅಂಕೆ_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_ಗಾತ್ರ_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_off_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_msec_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_sec_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_bufs_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_enum_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಅಕ್ಷರ *ngx_conf_ಗಣ_bitmask_ಸ್ಥಾನ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
 
 
-#endif /* _NGX_CONF_FILE_H_INCLUDED_ */
+#ಆದರೆ_ಅಂತ್ಯ /* _NGX_CONF_FILE_H_INCLUDED_ */

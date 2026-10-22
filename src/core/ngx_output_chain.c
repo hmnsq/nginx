@@ -5,14 +5,14 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_event.h>
 
 
-#if 0
-#define NGX_SENDFILE_LIMIT  4096
-#endif
+#ಆದರೆ 0
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_SENDFILE_ಎಲ್ಲೆ  4096
+#ಆದರೆ_ಅಂತ್ಯ
 
 /*
  * When DIRECTIO is enabled FreeBSD, Solaris, and MacOSX read directly
@@ -24,31 +24,31 @@
  * usually 512 bytes, however, on XFS it may be 4096 bytes.
  */
 
-#define NGX_NONE            1
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_NONE            1
 
 
-static ngx_inline ngx_int_t
+ಸ್ಥಿರ ngx_inline ngx_int_t
     ngx_output_chain_as_is(ngx_output_chain_ctx_t *ctx, ngx_buf_t *buf);
-static ngx_int_t ngx_output_chain_add_copy(ngx_pool_t *pool,
-    ngx_chain_t **chain, ngx_chain_t *in);
-static ngx_int_t ngx_output_chain_align_file_buf(ngx_output_chain_ctx_t *ctx,
+ಸ್ಥಿರ ngx_int_t ngx_output_chain_ಕೂಡಿಸು_copy(ngx_pool_t *pool,
+    ngx_chain_t **chain, ngx_chain_t *ಒಳ);
+ಸ್ಥಿರ ngx_int_t ngx_output_chain_align_file_buf(ngx_output_chain_ctx_t *ctx,
     off_t bsize);
-static ngx_int_t ngx_output_chain_get_buf(ngx_output_chain_ctx_t *ctx,
+ಸ್ಥಿರ ngx_int_t ngx_output_chain_get_buf(ngx_output_chain_ctx_t *ctx,
     off_t bsize);
-static ngx_int_t ngx_output_chain_copy_buf(ngx_output_chain_ctx_t *ctx);
+ಸ್ಥಿರ ngx_int_t ngx_output_chain_copy_buf(ngx_output_chain_ctx_t *ctx);
 
 
 ngx_int_t
-ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *in)
+ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *ಒಳ)
 {
     off_t         bsize;
-    ngx_int_t     rc, last;
-    ngx_chain_t  *cl, *out, **last_out;
+    ngx_int_t     rc, ಕೊನೆಯ;
+    ngx_chain_t  *cl, *ಹೊರಹೋಗು, **ಕೊನೆಯ_ಹೊರಹೋಗು;
 
-    if (ctx->in == NULL && ctx->busy == NULL
-#if (NGX_HAVE_FILE_AIO || NGX_THREADS)
+    ಆದರೆ (ctx->ಒಳ == ಖಾಲಿ && ctx->busy == ಖಾಲಿ
+#ಆದರೆ (NGX_HAVE_FILE_AIO || NGX_ಎಳೆಗಳು)
         && !ctx->aio
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
        )
     {
         /*
@@ -57,359 +57,359 @@ ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *in)
          * that does not require the copy
          */
 
-        if (in == NULL) {
-            return ctx->output_filter(ctx->filter_ctx, in);
+        ಆದರೆ (ಒಳ == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ ctx->output_filter(ctx->filter_ctx, ಒಳ);
         }
 
-        if (in->next == NULL
-#if (NGX_SENDFILE_LIMIT)
-            && !(in->buf->in_file && in->buf->file_last > NGX_SENDFILE_LIMIT)
-#endif
-            && ngx_output_chain_as_is(ctx, in->buf))
+        ಆದರೆ (ಒಳ->ಮುಂದಿನ == ಖಾಲಿ
+#ಆದರೆ (NGX_SENDFILE_ಎಲ್ಲೆ)
+            && !(ಒಳ->buf->ಒಳ_file && ಒಳ->buf->file_ಕೊನೆಯ > NGX_SENDFILE_ಎಲ್ಲೆ)
+#ಆದರೆ_ಅಂತ್ಯ
+            && ngx_output_chain_as_is(ctx, ಒಳ->buf))
         {
-            return ctx->output_filter(ctx->filter_ctx, in);
+            ಹಿಂತಿರುಗಿ ctx->output_filter(ctx->filter_ctx, ಒಳ);
         }
     }
 
     /* add the incoming buf to the chain ctx->in */
 
-    if (in) {
-        if (ngx_output_chain_add_copy(ctx->pool, &ctx->in, in) == NGX_ERROR) {
-            return NGX_ERROR;
+    ಆದರೆ (ಒಳ) {
+        ಆದರೆ (ngx_output_chain_ಕೂಡಿಸು_copy(ctx->pool, &ctx->ಒಳ, ಒಳ) == NGX_ERROR) {
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
     }
 
-    out = NULL;
-    last_out = &out;
-    last = NGX_NONE;
+    ಹೊರಹೋಗು = ಖಾಲಿ;
+    ಕೊನೆಯ_ಹೊರಹೋಗು = &ಹೊರಹೋಗು;
+    ಕೊನೆಯ = NGX_NONE;
 
-    for ( ;; ) {
+    ಗಾಗಿ ( ;; ) {
 
-#if (NGX_HAVE_FILE_AIO || NGX_THREADS)
-        if (ctx->aio) {
-            return NGX_AGAIN;
+#ಆದರೆ (NGX_HAVE_FILE_AIO || NGX_ಎಳೆಗಳು)
+        ಆದರೆ (ctx->aio) {
+            ಹಿಂತಿರುಗಿ NGX_AGAIN;
         }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-        while (ctx->in) {
+        ಆಗ (ctx->ಒಳ) {
 
             /*
              * cycle while there are the ctx->in bufs
              * and there are the free output bufs to copy in
              */
 
-            bsize = ngx_buf_size(ctx->in->buf);
+            bsize = ngx_buf_ಗಾತ್ರ(ctx->ಒಳ->buf);
 
-            if (bsize == 0 && !ngx_buf_special(ctx->in->buf)) {
+            ಆದರೆ (bsize == 0 && !ngx_buf_special(ctx->ಒಳ->buf)) {
 
-                ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+                ngx_log_error(NGX_LOG_ALERT, ctx->pool->ಲಘುಗಣಕ, 0,
                               "zero size buf in output "
                               "t:%d r:%d f:%d %p %p-%p %p %O-%O",
-                              ctx->in->buf->temporary,
-                              ctx->in->buf->recycled,
-                              ctx->in->buf->in_file,
-                              ctx->in->buf->start,
-                              ctx->in->buf->pos,
-                              ctx->in->buf->last,
-                              ctx->in->buf->file,
-                              ctx->in->buf->file_pos,
-                              ctx->in->buf->file_last);
+                              ctx->ಒಳ->buf->temporary,
+                              ctx->ಒಳ->buf->recycled,
+                              ctx->ಒಳ->buf->ಒಳ_file,
+                              ctx->ಒಳ->buf->ಆರಂಭ,
+                              ctx->ಒಳ->buf->pos,
+                              ctx->ಒಳ->buf->ಕೊನೆಯ,
+                              ctx->ಒಳ->buf->file,
+                              ctx->ಒಳ->buf->file_pos,
+                              ctx->ಒಳ->buf->file_ಕೊನೆಯ);
 
-                ngx_debug_point();
+                ngx_debug_ಬಿಂದು();
 
-                cl = ctx->in;
-                ctx->in = cl->next;
+                cl = ctx->ಒಳ;
+                ctx->ಒಳ = cl->ಮುಂದಿನ;
 
                 ngx_free_chain(ctx->pool, cl);
 
-                continue;
+                ಮುಂದುವರಿ;
             }
 
-            if (bsize < 0) {
+            ಆದರೆ (bsize < 0) {
 
-                ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+                ngx_log_error(NGX_LOG_ALERT, ctx->pool->ಲಘುಗಣಕ, 0,
                               "negative size buf in output "
                               "t:%d r:%d f:%d %p %p-%p %p %O-%O",
-                              ctx->in->buf->temporary,
-                              ctx->in->buf->recycled,
-                              ctx->in->buf->in_file,
-                              ctx->in->buf->start,
-                              ctx->in->buf->pos,
-                              ctx->in->buf->last,
-                              ctx->in->buf->file,
-                              ctx->in->buf->file_pos,
-                              ctx->in->buf->file_last);
+                              ctx->ಒಳ->buf->temporary,
+                              ctx->ಒಳ->buf->recycled,
+                              ctx->ಒಳ->buf->ಒಳ_file,
+                              ctx->ಒಳ->buf->ಆರಂಭ,
+                              ctx->ಒಳ->buf->pos,
+                              ctx->ಒಳ->buf->ಕೊನೆಯ,
+                              ctx->ಒಳ->buf->file,
+                              ctx->ಒಳ->buf->file_pos,
+                              ctx->ಒಳ->buf->file_ಕೊನೆಯ);
 
-                ngx_debug_point();
+                ngx_debug_ಬಿಂದು();
 
-                return NGX_ERROR;
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            if (ngx_output_chain_as_is(ctx, ctx->in->buf)) {
+            ಆದರೆ (ngx_output_chain_as_is(ctx, ctx->ಒಳ->buf)) {
 
                 /* move the chain link to the output chain */
 
-                cl = ctx->in;
-                ctx->in = cl->next;
+                cl = ctx->ಒಳ;
+                ctx->ಒಳ = cl->ಮುಂದಿನ;
 
-                *last_out = cl;
-                last_out = &cl->next;
-                cl->next = NULL;
+                *ಕೊನೆಯ_ಹೊರಹೋಗು = cl;
+                ಕೊನೆಯ_ಹೊರಹೋಗು = &cl->ಮುಂದಿನ;
+                cl->ಮುಂದಿನ = ಖಾಲಿ;
 
-                continue;
+                ಮುಂದುವರಿ;
             }
 
-            if (ctx->buf == NULL) {
+            ಆದರೆ (ctx->buf == ಖಾಲಿ) {
 
                 rc = ngx_output_chain_align_file_buf(ctx, bsize);
 
-                if (rc == NGX_ERROR) {
-                    return NGX_ERROR;
+                ಆದರೆ (rc == NGX_ERROR) {
+                    ಹಿಂತಿರುಗಿ NGX_ERROR;
                 }
 
-                if (rc != NGX_OK) {
+                ಆದರೆ (rc != NGX_OK) {
 
-                    if (ctx->free) {
+                    ಆದರೆ (ctx->ಬಿಡುಗಡೆ) {
 
                         /* get the free buf */
 
-                        cl = ctx->free;
+                        cl = ctx->ಬಿಡುಗಡೆ;
                         ctx->buf = cl->buf;
-                        ctx->free = cl->next;
+                        ctx->ಬಿಡುಗಡೆ = cl->ಮುಂದಿನ;
 
                         ngx_free_chain(ctx->pool, cl);
 
-                    } else if (out || ctx->allocated == ctx->bufs.num) {
+                    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಹೊರಹೋಗು || ctx->allocated == ctx->bufs.ಅಂಕೆ) {
 
-                        break;
+                        ನಿಲ್ಲಿಸು;
 
-                    } else if (ngx_output_chain_get_buf(ctx, bsize) != NGX_OK) {
-                        return NGX_ERROR;
+                    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ngx_output_chain_get_buf(ctx, bsize) != NGX_OK) {
+                        ಹಿಂತಿರುಗಿ NGX_ERROR;
                     }
                 }
             }
 
             rc = ngx_output_chain_copy_buf(ctx);
 
-            if (rc == NGX_ERROR) {
-                return rc;
+            ಆದರೆ (rc == NGX_ERROR) {
+                ಹಿಂತಿರುಗಿ rc;
             }
 
-            if (rc == NGX_AGAIN) {
-                if (out) {
-                    break;
+            ಆದರೆ (rc == NGX_AGAIN) {
+                ಆದರೆ (ಹೊರಹೋಗು) {
+                    ನಿಲ್ಲಿಸು;
                 }
 
-                return rc;
+                ಹಿಂತಿರುಗಿ rc;
             }
 
             /* delete the completed buf from the ctx->in chain */
 
-            if (ngx_buf_size(ctx->in->buf) == 0) {
-                cl = ctx->in;
-                ctx->in = cl->next;
+            ಆದರೆ (ngx_buf_ಗಾತ್ರ(ctx->ಒಳ->buf) == 0) {
+                cl = ctx->ಒಳ;
+                ctx->ಒಳ = cl->ಮುಂದಿನ;
 
                 ngx_free_chain(ctx->pool, cl);
             }
 
             cl = ngx_alloc_chain_link(ctx->pool);
-            if (cl == NULL) {
-                return NGX_ERROR;
+            ಆದರೆ (cl == ಖಾಲಿ) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
             cl->buf = ctx->buf;
-            cl->next = NULL;
-            *last_out = cl;
-            last_out = &cl->next;
-            ctx->buf = NULL;
+            cl->ಮುಂದಿನ = ಖಾಲಿ;
+            *ಕೊನೆಯ_ಹೊರಹೋಗು = cl;
+            ಕೊನೆಯ_ಹೊರಹೋಗು = &cl->ಮುಂದಿನ;
+            ctx->buf = ಖಾಲಿ;
         }
 
-        if (out == NULL && last != NGX_NONE) {
+        ಆದರೆ (ಹೊರಹೋಗು == ಖಾಲಿ && ಕೊನೆಯ != NGX_NONE) {
 
-            if (ctx->in) {
-                return NGX_AGAIN;
+            ಆದರೆ (ctx->ಒಳ) {
+                ಹಿಂತಿರುಗಿ NGX_AGAIN;
             }
 
-            return last;
+            ಹಿಂತಿರುಗಿ ಕೊನೆಯ;
         }
 
-        last = ctx->output_filter(ctx->filter_ctx, out);
+        ಕೊನೆಯ = ctx->output_filter(ctx->filter_ctx, ಹೊರಹೋಗು);
 
-        if (last == NGX_ERROR || last == NGX_DONE) {
-            return last;
+        ಆದರೆ (ಕೊನೆಯ == NGX_ERROR || ಕೊನೆಯ == NGX_ಮುಗಿದ) {
+            ಹಿಂತಿರುಗಿ ಕೊನೆಯ;
         }
 
-        ngx_chain_update_chains(ctx->pool, &ctx->free, &ctx->busy, &out,
-                                ctx->tag);
-        last_out = &out;
+        ngx_chain_update_chains(ctx->pool, &ctx->ಬಿಡುಗಡೆ, &ctx->busy, &ಹೊರಹೋಗು,
+                                ctx->ಟ್ಯಾಗ್);
+        ಕೊನೆಯ_ಹೊರಹೋಗು = &ಹೊರಹೋಗು;
     }
 }
 
 
-static ngx_inline ngx_int_t
+ಸ್ಥಿರ ngx_inline ngx_int_t
 ngx_output_chain_as_is(ngx_output_chain_ctx_t *ctx, ngx_buf_t *buf)
 {
     ngx_uint_t  sendfile;
 
-    if (ngx_buf_special(buf)) {
-        return 1;
+    ಆದರೆ (ngx_buf_special(buf)) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-#if (NGX_THREADS)
-    if (buf->in_file) {
+#ಆದರೆ (NGX_ಎಳೆಗಳು)
+    ಆದರೆ (buf->ಒಳ_file) {
         buf->file->thread_handler = ctx->thread_handler;
         buf->file->thread_ctx = ctx->filter_ctx;
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     sendfile = ctx->sendfile;
 
-#if (NGX_SENDFILE_LIMIT)
+#ಆದರೆ (NGX_SENDFILE_ಎಲ್ಲೆ)
 
-    if (buf->in_file && buf->file_pos >= NGX_SENDFILE_LIMIT) {
+    ಆದರೆ (buf->ಒಳ_file && buf->file_pos >= NGX_SENDFILE_ಎಲ್ಲೆ) {
         sendfile = 0;
     }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if !(NGX_HAVE_SENDFILE_NODISKIO)
+#ಆದರೆ !(NGX_HAVE_SENDFILE_NODISKIO)
 
     /*
      * With DIRECTIO, disable sendfile() unless sendfile(SF_NOCACHE)
      * is available.
      */
 
-    if (buf->in_file && buf->file->directio) {
+    ಆದರೆ (buf->ಒಳ_file && buf->file->directio) {
         sendfile = 0;
     }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    if (!sendfile) {
+    ಆದರೆ (!sendfile) {
 
-        if (!ngx_buf_in_memory(buf)) {
-            return 0;
+        ಆದರೆ (!ngx_buf_ಒಳ_ಸ್ಮರಣೆ(buf)) {
+            ಹಿಂತಿರುಗಿ 0;
         }
 
-        buf->in_file = 0;
+        buf->ಒಳ_file = 0;
     }
 
-    if (ctx->need_in_memory && !ngx_buf_in_memory(buf)) {
-        return 0;
+    ಆದರೆ (ctx->need_ಒಳ_ಸ್ಮರಣೆ && !ngx_buf_ಒಳ_ಸ್ಮರಣೆ(buf)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    if (ctx->need_in_temp && (buf->memory || buf->mmap)) {
-        return 0;
+    ಆದರೆ (ctx->need_ಒಳ_ತಾತ್ಕಾಲಿಕ && (buf->ಸ್ಮರಣೆ || buf->mmap)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    return 1;
+    ಹಿಂತಿರುಗಿ 1;
 }
 
 
-static ngx_int_t
-ngx_output_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain,
-    ngx_chain_t *in)
+ಸ್ಥಿರ ngx_int_t
+ngx_output_chain_ಕೂಡಿಸು_copy(ngx_pool_t *pool, ngx_chain_t **chain,
+    ngx_chain_t *ಒಳ)
 {
     ngx_chain_t  *cl, **ll;
-#if (NGX_SENDFILE_LIMIT)
+#ಆದರೆ (NGX_SENDFILE_ಎಲ್ಲೆ)
     ngx_buf_t    *b, *buf;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     ll = chain;
 
-    for (cl = *chain; cl; cl = cl->next) {
-        ll = &cl->next;
+    ಗಾಗಿ (cl = *chain; cl; cl = cl->ಮುಂದಿನ) {
+        ll = &cl->ಮುಂದಿನ;
     }
 
-    while (in) {
+    ಆಗ (ಒಳ) {
 
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            return NGX_ERROR;
+        ಆದರೆ (cl == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
 
-#if (NGX_SENDFILE_LIMIT)
+#ಆದರೆ (NGX_SENDFILE_ಎಲ್ಲೆ)
 
-        buf = in->buf;
+        buf = ಒಳ->buf;
 
-        if (buf->in_file
-            && buf->file_pos < NGX_SENDFILE_LIMIT
-            && buf->file_last > NGX_SENDFILE_LIMIT)
+        ಆದರೆ (buf->ಒಳ_file
+            && buf->file_pos < NGX_SENDFILE_ಎಲ್ಲೆ
+            && buf->file_ಕೊನೆಯ > NGX_SENDFILE_ಎಲ್ಲೆ)
         {
             /* split a file buf on two bufs by the sendfile limit */
 
             b = ngx_calloc_buf(pool);
-            if (b == NULL) {
-                return NGX_ERROR;
+            ಆದರೆ (b == ಖಾಲಿ) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            ngx_memcpy(b, buf, sizeof(ngx_buf_t));
+            ngx_memcpy(b, buf, ಗಾತ್ರ(ngx_buf_t));
 
-            if (ngx_buf_in_memory(buf)) {
-                buf->pos += (ssize_t) (NGX_SENDFILE_LIMIT - buf->file_pos);
-                b->last = buf->pos;
+            ಆದರೆ (ngx_buf_ಒಳ_ಸ್ಮರಣೆ(buf)) {
+                buf->pos += (ssize_t) (NGX_SENDFILE_ಎಲ್ಲೆ - buf->file_pos);
+                b->ಕೊನೆಯ = buf->pos;
             }
 
-            buf->file_pos = NGX_SENDFILE_LIMIT;
-            b->file_last = NGX_SENDFILE_LIMIT;
+            buf->file_pos = NGX_SENDFILE_ಎಲ್ಲೆ;
+            b->file_ಕೊನೆಯ = NGX_SENDFILE_ಎಲ್ಲೆ;
 
             cl->buf = b;
 
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             cl->buf = buf;
-            in = in->next;
+            ಒಳ = ಒಳ->ಮುಂದಿನ;
         }
 
-#else
-        cl->buf = in->buf;
-        in = in->next;
+#ಇಲ್ಲದಿದ್ದರೆ
+        cl->buf = ಒಳ->buf;
+        ಒಳ = ಒಳ->ಮುಂದಿನ;
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-        cl->next = NULL;
+        cl->ಮುಂದಿನ = ಖಾಲಿ;
         *ll = cl;
-        ll = &cl->next;
+        ll = &cl->ಮುಂದಿನ;
     }
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
-static ngx_int_t
+ಸ್ಥಿರ ngx_int_t
 ngx_output_chain_align_file_buf(ngx_output_chain_ctx_t *ctx, off_t bsize)
 {
-    size_t      size;
-    ngx_buf_t  *in;
+    ಗಾತ್ರ_t      ಗಾತ್ರ_2;
+    ngx_buf_t  *ಒಳ;
 
-    in = ctx->in->buf;
+    ಒಳ = ctx->ಒಳ->buf;
 
-    if (in->file == NULL || !in->file->directio) {
-        return NGX_DECLINED;
+    ಆದರೆ (ಒಳ->file == ಖಾಲಿ || !ಒಳ->file->directio) {
+        ಹಿಂತಿರುಗಿ NGX_DECLINED;
     }
 
     ctx->directio = 1;
 
-    size = (size_t) (in->file_pos - (in->file_pos & ~(ctx->alignment - 1)));
+    ಗಾತ್ರ_2 = (ಗಾತ್ರ_t) (ಒಳ->file_pos - (ಒಳ->file_pos & ~(ctx->alignment - 1)));
 
-    if (size == 0) {
+    ಆದರೆ (ಗಾತ್ರ_2 == 0) {
 
-        if (bsize >= (off_t) ctx->bufs.size) {
-            return NGX_DECLINED;
+        ಆದರೆ (bsize >= (off_t) ctx->bufs.ಗಾತ್ರ_2) {
+            ಹಿಂತಿರುಗಿ NGX_DECLINED;
         }
 
-        size = (size_t) bsize;
+        ಗಾತ್ರ_2 = (ಗಾತ್ರ_t) bsize;
 
-    } else {
-        size = (size_t) ctx->alignment - size;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಗಾತ್ರ_2 = (ಗಾತ್ರ_t) ctx->alignment - ಗಾತ್ರ_2;
 
-        if ((off_t) size > bsize) {
-            size = (size_t) bsize;
+        ಆದರೆ ((off_t) ಗಾತ್ರ_2 > bsize) {
+            ಗಾತ್ರ_2 = (ಗಾತ್ರ_t) bsize;
         }
     }
 
-    ctx->buf = ngx_create_temp_buf(ctx->pool, size);
-    if (ctx->buf == NULL) {
-        return NGX_ERROR;
+    ctx->buf = ngx_create_ತಾತ್ಕಾಲಿಕ_buf(ctx->pool, ಗಾತ್ರ_2);
+    ಆದರೆ (ctx->buf == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
     /*
@@ -417,40 +417,40 @@ ngx_output_chain_align_file_buf(ngx_output_chain_ctx_t *ctx, off_t bsize)
      * to reuse the buf via ctx->free list
      */
 
-#if (NGX_HAVE_ALIGNED_DIRECTIO)
+#ಆದರೆ (NGX_HAVE_ALIGNED_DIRECTIO)
     ctx->unaligned = 1;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
-static ngx_int_t
+ಸ್ಥಿರ ngx_int_t
 ngx_output_chain_get_buf(ngx_output_chain_ctx_t *ctx, off_t bsize)
 {
-    size_t       size;
-    ngx_buf_t   *b, *in;
+    ಗಾತ್ರ_t       ಗಾತ್ರ_2;
+    ngx_buf_t   *b, *ಒಳ;
     ngx_uint_t   recycled;
 
-    in = ctx->in->buf;
-    size = ctx->bufs.size;
+    ಒಳ = ctx->ಒಳ->buf;
+    ಗಾತ್ರ_2 = ctx->bufs.ಗಾತ್ರ_2;
     recycled = 1;
 
-    if (in->last_in_chain) {
+    ಆದರೆ (ಒಳ->ಕೊನೆಯ_ಒಳ_chain) {
 
-        if (bsize < (off_t) size) {
+        ಆದರೆ (bsize < (off_t) ಗಾತ್ರ_2) {
 
             /*
              * allocate a small temp buf for a small last buf
              * or its small last part
              */
 
-            size = (size_t) bsize;
+            ಗಾತ್ರ_2 = (ಗಾತ್ರ_t) bsize;
             recycled = 0;
 
-        } else if (!ctx->directio
-                   && ctx->bufs.num == 1
-                   && (bsize < (off_t) (size + size / 4)))
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (!ctx->directio
+                   && ctx->bufs.ಅಂಕೆ == 1
+                   && (bsize < (off_t) (ಗಾತ್ರ_2 + ಗಾತ್ರ_2 / 4)))
         {
             /*
              * allocate a temp buf that equals to a last buf,
@@ -458,363 +458,363 @@ ngx_output_chain_get_buf(ngx_output_chain_ctx_t *ctx, off_t bsize)
              * than 1.25 of bufs.size and the temp buf is single
              */
 
-            size = (size_t) bsize;
+            ಗಾತ್ರ_2 = (ಗಾತ್ರ_t) bsize;
             recycled = 0;
         }
     }
 
     b = ngx_calloc_buf(ctx->pool);
-    if (b == NULL) {
-        return NGX_ERROR;
+    ಆದರೆ (b == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    if (ctx->directio) {
+    ಆದರೆ (ctx->directio) {
 
         /*
          * allocate block aligned to a disk sector size to enable
          * userland buffer direct usage conjunctly with directio
          */
 
-        b->start = ngx_pmemalign(ctx->pool, size, (size_t) ctx->alignment);
-        if (b->start == NULL) {
-            return NGX_ERROR;
+        b->ಆರಂಭ = ngx_pmemalign(ctx->pool, ಗಾತ್ರ_2, (ಗಾತ್ರ_t) ctx->alignment);
+        ಆದರೆ (b->ಆರಂಭ == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
 
-    } else {
-        b->start = ngx_palloc(ctx->pool, size);
-        if (b->start == NULL) {
-            return NGX_ERROR;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        b->ಆರಂಭ = ngx_palloc(ctx->pool, ಗಾತ್ರ_2);
+        ಆದರೆ (b->ಆರಂಭ == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
     }
 
-    b->pos = b->start;
-    b->last = b->start;
-    b->end = b->last + size;
+    b->pos = b->ಆರಂಭ;
+    b->ಕೊನೆಯ = b->ಆರಂಭ;
+    b->ಕೊನೆ = b->ಕೊನೆಯ + ಗಾತ್ರ_2;
     b->temporary = 1;
-    b->tag = ctx->tag;
+    b->ಟ್ಯಾಗ್ = ctx->ಟ್ಯಾಗ್;
     b->recycled = recycled;
 
     ctx->buf = b;
     ctx->allocated++;
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
-static ngx_int_t
+ಸ್ಥಿರ ngx_int_t
 ngx_output_chain_copy_buf(ngx_output_chain_ctx_t *ctx)
 {
-    off_t        size;
+    off_t        ಗಾತ್ರ_2;
     ssize_t      n;
     ngx_buf_t   *src, *dst;
     ngx_uint_t   sendfile;
 
-    src = ctx->in->buf;
+    src = ctx->ಒಳ->buf;
     dst = ctx->buf;
 
-    size = ngx_buf_size(src);
-    size = ngx_min(size, dst->end - dst->pos);
+    ಗಾತ್ರ_2 = ngx_buf_ಗಾತ್ರ(src);
+    ಗಾತ್ರ_2 = ngx_min(ಗಾತ್ರ_2, dst->ಕೊನೆ - dst->pos);
 
     sendfile = ctx->sendfile && !ctx->directio;
 
-#if (NGX_SENDFILE_LIMIT)
+#ಆದರೆ (NGX_SENDFILE_ಎಲ್ಲೆ)
 
-    if (src->in_file && src->file_pos >= NGX_SENDFILE_LIMIT) {
+    ಆದರೆ (src->ಒಳ_file && src->file_pos >= NGX_SENDFILE_ಎಲ್ಲೆ) {
         sendfile = 0;
     }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    if (ngx_buf_in_memory(src)) {
-        ngx_memcpy(dst->pos, src->pos, (size_t) size);
-        src->pos += (size_t) size;
-        dst->last += (size_t) size;
+    ಆದರೆ (ngx_buf_ಒಳ_ಸ್ಮರಣೆ(src)) {
+        ngx_memcpy(dst->pos, src->pos, (ಗಾತ್ರ_t) ಗಾತ್ರ_2);
+        src->pos += (ಗಾತ್ರ_t) ಗಾತ್ರ_2;
+        dst->ಕೊನೆಯ += (ಗಾತ್ರ_t) ಗಾತ್ರ_2;
 
-        if (src->in_file) {
+        ಆದರೆ (src->ಒಳ_file) {
 
-            if (sendfile) {
-                dst->in_file = 1;
+            ಆದರೆ (sendfile) {
+                dst->ಒಳ_file = 1;
                 dst->file = src->file;
                 dst->file_pos = src->file_pos;
-                dst->file_last = src->file_pos + size;
+                dst->file_ಕೊನೆಯ = src->file_pos + ಗಾತ್ರ_2;
 
-            } else {
-                dst->in_file = 0;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                dst->ಒಳ_file = 0;
             }
 
-            src->file_pos += size;
+            src->file_pos += ಗಾತ್ರ_2;
 
-        } else {
-            dst->in_file = 0;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            dst->ಒಳ_file = 0;
         }
 
-        if (src->pos == src->last) {
+        ಆದರೆ (src->pos == src->ಕೊನೆಯ) {
             dst->flush = src->flush;
-            dst->last_buf = src->last_buf;
-            dst->last_in_chain = src->last_in_chain;
+            dst->ಕೊನೆಯ_buf = src->ಕೊನೆಯ_buf;
+            dst->ಕೊನೆಯ_ಒಳ_chain = src->ಕೊನೆಯ_ಒಳ_chain;
 
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             dst->flush = 0;
-            dst->last_buf = 0;
-            dst->last_in_chain = 0;
+            dst->ಕೊನೆಯ_buf = 0;
+            dst->ಕೊನೆಯ_ಒಳ_chain = 0;
         }
 
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
 
-#if (NGX_HAVE_ALIGNED_DIRECTIO)
+#ಆದರೆ (NGX_HAVE_ALIGNED_DIRECTIO)
 
-        if (ctx->unaligned) {
-            if (ngx_directio_off(src->file->fd) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, ngx_errno,
+        ಆದರೆ (ctx->unaligned) {
+            ಆದರೆ (ngx_directio_off(src->file->fd) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_ALERT, ctx->pool->ಲಘುಗಣಕ, ngx_errno,
                               ngx_directio_off_n " \"%s\" failed",
-                              src->file->name.data);
+                              src->file->name.ದತ್ತಾಂಶ);
             }
         }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if (NGX_HAVE_FILE_AIO)
-        if (ctx->aio_handler) {
-            n = ngx_file_aio_read(src->file, dst->pos, (size_t) size,
+#ಆದರೆ (NGX_HAVE_FILE_AIO)
+        ಆದರೆ (ctx->aio_handler) {
+            n = ngx_file_aio_read(src->file, dst->pos, (ಗಾತ್ರ_t) ಗಾತ್ರ_2,
                                   src->file_pos, ctx->pool);
-            if (n == NGX_AGAIN) {
+            ಆದರೆ (n == NGX_AGAIN) {
                 ctx->aio_handler(ctx, src->file);
-                return NGX_AGAIN;
+                ಹಿಂತಿರುಗಿ NGX_AGAIN;
             }
 
-        } else
-#endif
-#if (NGX_THREADS)
-        if (ctx->thread_handler) {
+        } ಇಲ್ಲದಿದ್ದರೆ
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ (NGX_ಎಳೆಗಳು)
+        ಆದರೆ (ctx->thread_handler) {
             src->file->thread_task = ctx->thread_task;
             src->file->thread_handler = ctx->thread_handler;
             src->file->thread_ctx = ctx->filter_ctx;
 
-            n = ngx_thread_read(src->file, dst->pos, (size_t) size,
+            n = ngx_thread_read(src->file, dst->pos, (ಗಾತ್ರ_t) ಗಾತ್ರ_2,
                                 src->file_pos, ctx->pool);
-            if (n == NGX_AGAIN) {
+            ಆದರೆ (n == NGX_AGAIN) {
                 ctx->thread_task = src->file->thread_task;
-                return NGX_AGAIN;
+                ಹಿಂತಿರುಗಿ NGX_AGAIN;
             }
 
-        } else
-#endif
+        } ಇಲ್ಲದಿದ್ದರೆ
+#ಆದರೆ_ಅಂತ್ಯ
         {
-            n = ngx_read_file(src->file, dst->pos, (size_t) size,
+            n = ngx_read_file(src->file, dst->pos, (ಗಾತ್ರ_t) ಗಾತ್ರ_2,
                               src->file_pos);
         }
 
-#if (NGX_HAVE_ALIGNED_DIRECTIO)
+#ಆದರೆ (NGX_HAVE_ALIGNED_DIRECTIO)
 
-        if (ctx->unaligned) {
+        ಆದರೆ (ctx->unaligned) {
             ngx_err_t  err;
 
             err = ngx_errno;
 
-            if (ngx_directio_on(src->file->fd) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, ngx_errno,
+            ಆದರೆ (ngx_directio_on(src->file->fd) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_ALERT, ctx->pool->ಲಘುಗಣಕ, ngx_errno,
                               ngx_directio_on_n " \"%s\" failed",
-                              src->file->name.data);
+                              src->file->name.ದತ್ತಾಂಶ);
             }
 
-            ngx_set_errno(err);
+            ngx_ಗಣ_errno(err);
 
             ctx->unaligned = 0;
         }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-        if (n == NGX_ERROR) {
-            return (ngx_int_t) n;
+        ಆದರೆ (n == NGX_ERROR) {
+            ಹಿಂತಿರುಗಿ (ngx_int_t) n;
         }
 
-        if (n != size) {
-            ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+        ಆದರೆ (n != ಗಾತ್ರ_2) {
+            ngx_log_error(NGX_LOG_ALERT, ctx->pool->ಲಘುಗಣಕ, 0,
                           ngx_read_file_n " read only %z of %O from \"%s\"",
-                          n, size, src->file->name.data);
-            return NGX_ERROR;
+                          n, ಗಾತ್ರ_2, src->file->name.ದತ್ತಾಂಶ);
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
 
-        dst->last += n;
+        dst->ಕೊನೆಯ += n;
 
-        if (sendfile) {
-            dst->in_file = 1;
+        ಆದರೆ (sendfile) {
+            dst->ಒಳ_file = 1;
             dst->file = src->file;
             dst->file_pos = src->file_pos;
-            dst->file_last = src->file_pos + n;
+            dst->file_ಕೊನೆಯ = src->file_pos + n;
 
-        } else {
-            dst->in_file = 0;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            dst->ಒಳ_file = 0;
         }
 
         src->file_pos += n;
 
-        if (src->file_pos == src->file_last) {
+        ಆದರೆ (src->file_pos == src->file_ಕೊನೆಯ) {
             dst->flush = src->flush;
-            dst->last_buf = src->last_buf;
-            dst->last_in_chain = src->last_in_chain;
+            dst->ಕೊನೆಯ_buf = src->ಕೊನೆಯ_buf;
+            dst->ಕೊನೆಯ_ಒಳ_chain = src->ಕೊನೆಯ_ಒಳ_chain;
 
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             dst->flush = 0;
-            dst->last_buf = 0;
-            dst->last_in_chain = 0;
+            dst->ಕೊನೆಯ_buf = 0;
+            dst->ಕೊನೆಯ_ಒಳ_chain = 0;
         }
     }
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_chain_writer(void *data, ngx_chain_t *in)
+ngx_chain_writer(ಶೂನ್ಯ *ದತ್ತಾಂಶ, ngx_chain_t *ಒಳ)
 {
-    ngx_chain_writer_ctx_t *ctx = data;
+    ngx_chain_writer_ctx_t *ctx = ದತ್ತಾಂಶ;
 
-    off_t              size;
+    off_t              ಗಾತ್ರ_2;
     ngx_chain_t       *cl, *ln, *chain;
     ngx_connection_t  *c;
 
     c = ctx->connection;
 
-    for (size = 0; in; in = in->next) {
+    ಗಾಗಿ (ಗಾತ್ರ_2 = 0; ಒಳ; ಒಳ = ಒಳ->ಮುಂದಿನ) {
 
-        if (ngx_buf_size(in->buf) == 0 && !ngx_buf_special(in->buf)) {
+        ಆದರೆ (ngx_buf_ಗಾತ್ರ(ಒಳ->buf) == 0 && !ngx_buf_special(ಒಳ->buf)) {
 
-            ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+            ngx_log_error(NGX_LOG_ALERT, ctx->pool->ಲಘುಗಣಕ, 0,
                           "zero size buf in chain writer "
                           "t:%d r:%d f:%d %p %p-%p %p %O-%O",
-                          in->buf->temporary,
-                          in->buf->recycled,
-                          in->buf->in_file,
-                          in->buf->start,
-                          in->buf->pos,
-                          in->buf->last,
-                          in->buf->file,
-                          in->buf->file_pos,
-                          in->buf->file_last);
+                          ಒಳ->buf->temporary,
+                          ಒಳ->buf->recycled,
+                          ಒಳ->buf->ಒಳ_file,
+                          ಒಳ->buf->ಆರಂಭ,
+                          ಒಳ->buf->pos,
+                          ಒಳ->buf->ಕೊನೆಯ,
+                          ಒಳ->buf->file,
+                          ಒಳ->buf->file_pos,
+                          ಒಳ->buf->file_ಕೊನೆಯ);
 
-            ngx_debug_point();
+            ngx_debug_ಬಿಂದು();
 
-            continue;
+            ಮುಂದುವರಿ;
         }
 
-        if (ngx_buf_size(in->buf) < 0) {
+        ಆದರೆ (ngx_buf_ಗಾತ್ರ(ಒಳ->buf) < 0) {
 
-            ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+            ngx_log_error(NGX_LOG_ALERT, ctx->pool->ಲಘುಗಣಕ, 0,
                           "negative size buf in chain writer "
                           "t:%d r:%d f:%d %p %p-%p %p %O-%O",
-                          in->buf->temporary,
-                          in->buf->recycled,
-                          in->buf->in_file,
-                          in->buf->start,
-                          in->buf->pos,
-                          in->buf->last,
-                          in->buf->file,
-                          in->buf->file_pos,
-                          in->buf->file_last);
+                          ಒಳ->buf->temporary,
+                          ಒಳ->buf->recycled,
+                          ಒಳ->buf->ಒಳ_file,
+                          ಒಳ->buf->ಆರಂಭ,
+                          ಒಳ->buf->pos,
+                          ಒಳ->buf->ಕೊನೆಯ,
+                          ಒಳ->buf->file,
+                          ಒಳ->buf->file_pos,
+                          ಒಳ->buf->file_ಕೊನೆಯ);
 
-            ngx_debug_point();
+            ngx_debug_ಬಿಂದು();
 
-            return NGX_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
 
-        size += ngx_buf_size(in->buf);
+        ಗಾತ್ರ_2 += ngx_buf_ಗಾತ್ರ(ಒಳ->buf);
 
-        ngx_log_debug2(NGX_LOG_DEBUG_CORE, c->log, 0,
+        ngx_log_debug2(NGX_LOG_DEBUG_CORE, c->ಲಘುಗಣಕ, 0,
                        "chain writer buf fl:%d s:%uO",
-                       in->buf->flush, ngx_buf_size(in->buf));
+                       ಒಳ->buf->flush, ngx_buf_ಗಾತ್ರ(ಒಳ->buf));
 
         cl = ngx_alloc_chain_link(ctx->pool);
-        if (cl == NULL) {
-            return NGX_ERROR;
+        ಆದರೆ (cl == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
 
-        cl->buf = in->buf;
-        cl->next = NULL;
-        *ctx->last = cl;
-        ctx->last = &cl->next;
+        cl->buf = ಒಳ->buf;
+        cl->ಮುಂದಿನ = ಖಾಲಿ;
+        *ctx->ಕೊನೆಯ = cl;
+        ctx->ಕೊನೆಯ = &cl->ಮುಂದಿನ;
     }
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
-                   "chain writer in: %p", ctx->out);
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->ಲಘುಗಣಕ, 0,
+                   "chain writer in: %p", ctx->ಹೊರಹೋಗು);
 
-    for (cl = ctx->out; cl; cl = cl->next) {
+    ಗಾಗಿ (cl = ctx->ಹೊರಹೋಗು; cl; cl = cl->ಮುಂದಿನ) {
 
-        if (ngx_buf_size(cl->buf) == 0 && !ngx_buf_special(cl->buf)) {
+        ಆದರೆ (ngx_buf_ಗಾತ್ರ(cl->buf) == 0 && !ngx_buf_special(cl->buf)) {
 
-            ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+            ngx_log_error(NGX_LOG_ALERT, ctx->pool->ಲಘುಗಣಕ, 0,
                           "zero size buf in chain writer "
                           "t:%d r:%d f:%d %p %p-%p %p %O-%O",
                           cl->buf->temporary,
                           cl->buf->recycled,
-                          cl->buf->in_file,
-                          cl->buf->start,
+                          cl->buf->ಒಳ_file,
+                          cl->buf->ಆರಂಭ,
                           cl->buf->pos,
-                          cl->buf->last,
+                          cl->buf->ಕೊನೆಯ,
                           cl->buf->file,
                           cl->buf->file_pos,
-                          cl->buf->file_last);
+                          cl->buf->file_ಕೊನೆಯ);
 
-            ngx_debug_point();
+            ngx_debug_ಬಿಂದು();
 
-            continue;
+            ಮುಂದುವರಿ;
         }
 
-        if (ngx_buf_size(cl->buf) < 0) {
+        ಆದರೆ (ngx_buf_ಗಾತ್ರ(cl->buf) < 0) {
 
-            ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+            ngx_log_error(NGX_LOG_ALERT, ctx->pool->ಲಘುಗಣಕ, 0,
                           "negative size buf in chain writer "
                           "t:%d r:%d f:%d %p %p-%p %p %O-%O",
                           cl->buf->temporary,
                           cl->buf->recycled,
-                          cl->buf->in_file,
-                          cl->buf->start,
+                          cl->buf->ಒಳ_file,
+                          cl->buf->ಆರಂಭ,
                           cl->buf->pos,
-                          cl->buf->last,
+                          cl->buf->ಕೊನೆಯ,
                           cl->buf->file,
                           cl->buf->file_pos,
-                          cl->buf->file_last);
+                          cl->buf->file_ಕೊನೆಯ);
 
-            ngx_debug_point();
+            ngx_debug_ಬಿಂದು();
 
-            return NGX_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
 
-        size += ngx_buf_size(cl->buf);
+        ಗಾತ್ರ_2 += ngx_buf_ಗಾತ್ರ(cl->buf);
     }
 
-    if (size == 0 && !c->buffered) {
-        return NGX_OK;
+    ಆದರೆ (ಗಾತ್ರ_2 == 0 && !c->buffered) {
+        ಹಿಂತಿರುಗಿ NGX_OK;
     }
 
-    chain = c->send_chain(c, ctx->out, ctx->limit);
+    chain = c->send_chain(c, ctx->ಹೊರಹೋಗು, ctx->ಎಲ್ಲೆ);
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->ಲಘುಗಣಕ, 0,
                    "chain writer out: %p", chain);
 
-    if (chain == NGX_CHAIN_ERROR) {
-        return NGX_ERROR;
+    ಆದರೆ (chain == NGX_CHAIN_ERROR) {
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    if (chain && c->write->ready) {
-        ngx_post_event(c->write, &ngx_posted_next_events);
+    ಆದರೆ (chain && c->ಲಿಖ->ready) {
+        ngx_post_event(c->ಲಿಖ, &ngx_posted_ಮುಂದಿನ_events);
     }
 
-    for (cl = ctx->out; cl && cl != chain; /* void */) {
+    ಗಾಗಿ (cl = ctx->ಹೊರಹೋಗು; cl && cl != chain; /* void */) {
         ln = cl;
-        cl = cl->next;
+        cl = cl->ಮುಂದಿನ;
         ngx_free_chain(ctx->pool, ln);
     }
 
-    ctx->out = chain;
+    ctx->ಹೊರಹೋಗು = chain;
 
-    if (ctx->out == NULL) {
-        ctx->last = &ctx->out;
+    ಆದರೆ (ctx->ಹೊರಹೋಗು == ಖಾಲಿ) {
+        ctx->ಕೊನೆಯ = &ctx->ಹೊರಹೋಗು;
 
-        if (!c->buffered) {
-            return NGX_OK;
+        ಆದರೆ (!c->buffered) {
+            ಹಿಂತಿರುಗಿ NGX_OK;
         }
     }
 
-    return NGX_AGAIN;
+    ಹಿಂತಿರುಗಿ NGX_AGAIN;
 }

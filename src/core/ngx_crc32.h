@@ -5,114 +5,114 @@
  */
 
 
-#ifndef _NGX_CRC32_H_INCLUDED_
-#define _NGX_CRC32_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ NGX_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_H_INCLUDED
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-extern uint32_t  *ngx_crc32_table_short;
-extern uint32_t   ngx_crc32_table256[];
-extern uint32_t   ngx_crc32c_table256[];
+ಬಾಹ್ಯ uint32_t  *ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_ಕೋಷ್ಟಕ_short;
+ಬಾಹ್ಯ uint32_t   ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_table256[];
+ಬಾಹ್ಯ uint32_t   ngx_crc32c_table256[];
 
 
-static ngx_inline uint32_t
-ngx_crc32_short(u_char *p, size_t len)
+ಸ್ಥಿರ ngx_inline uint32_t
+ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_short(u_char *p, ಗಾತ್ರ_t len)
 {
     u_char    c;
-    uint32_t  crc;
+    uint32_t  ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ;
 
-    crc = 0xffffffff;
+    ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = 0xffffffff;
 
-    while (len--) {
+    ಆಗ (len--) {
         c = *p++;
-        crc = ngx_crc32_table_short[(crc ^ (c & 0xf)) & 0xf] ^ (crc >> 4);
-        crc = ngx_crc32_table_short[(crc ^ (c >> 4)) & 0xf] ^ (crc >> 4);
+        ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_ಕೋಷ್ಟಕ_short[(ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ ^ (c & 0xf)) & 0xf] ^ (ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ >> 4);
+        ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_ಕೋಷ್ಟಕ_short[(ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ ^ (c >> 4)) & 0xf] ^ (ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ >> 4);
     }
 
-    return crc ^ 0xffffffff;
+    ಹಿಂತಿರುಗಿ ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ ^ 0xffffffff;
 }
 
 
-static ngx_inline uint32_t
-ngx_crc32_long(u_char *p, size_t len)
+ಸ್ಥಿರ ngx_inline uint32_t
+ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_long(u_char *p, ಗಾತ್ರ_t len)
 {
-    uint32_t  crc;
+    uint32_t  ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ;
 
-    crc = 0xffffffff;
+    ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = 0xffffffff;
 
-    while (len--) {
-        crc = ngx_crc32_table256[(crc ^ *p++) & 0xff] ^ (crc >> 8);
+    ಆಗ (len--) {
+        ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_table256[(ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ ^ *p++) & 0xff] ^ (ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ >> 8);
     }
 
-    return crc ^ 0xffffffff;
+    ಹಿಂತಿರುಗಿ ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ ^ 0xffffffff;
 }
 
 
-#define ngx_crc32_init(crc)                                                   \
-    crc = 0xffffffff
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_init(ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ)                                                   \
+    ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = 0xffffffff
 
 
-static ngx_inline void
-ngx_crc32_update(uint32_t *crc, u_char *p, size_t len)
-{
-    uint32_t  c;
-
-    c = *crc;
-
-    while (len--) {
-        c = ngx_crc32_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
-    }
-
-    *crc = c;
-}
-
-
-#define ngx_crc32_final(crc)                                                  \
-    crc ^= 0xffffffff
-
-
-static ngx_inline uint32_t
-ngx_crc32c_long(u_char *p, size_t len)
-{
-    uint32_t  crc;
-
-    crc = 0xffffffff;
-
-    while (len--) {
-        crc = ngx_crc32c_table256[(crc ^ *p++) & 0xff] ^ (crc >> 8);
-    }
-
-    return crc ^ 0xffffffff;
-}
-
-
-#define ngx_crc32c_init(crc)                                                  \
-    crc = 0xffffffff
-
-
-static ngx_inline void
-ngx_crc32c_update(uint32_t *crc, u_char *p, size_t len)
+ಸ್ಥಿರ ngx_inline ಶೂನ್ಯ
+ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_update(uint32_t *ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ, u_char *p, ಗಾತ್ರ_t len)
 {
     uint32_t  c;
 
-    c = *crc;
+    c = *ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ;
 
-    while (len--) {
+    ಆಗ (len--) {
+        c = ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
+    }
+
+    *ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = c;
+}
+
+
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_final(ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ)                                                  \
+    ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ ^= 0xffffffff
+
+
+ಸ್ಥಿರ ngx_inline uint32_t
+ngx_crc32c_long(u_char *p, ಗಾತ್ರ_t len)
+{
+    uint32_t  ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ;
+
+    ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = 0xffffffff;
+
+    ಆಗ (len--) {
+        ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = ngx_crc32c_table256[(ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ ^ *p++) & 0xff] ^ (ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ >> 8);
+    }
+
+    ಹಿಂತಿರುಗಿ ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ ^ 0xffffffff;
+}
+
+
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_crc32c_init(ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ)                                                  \
+    ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = 0xffffffff
+
+
+ಸ್ಥಿರ ngx_inline ಶೂನ್ಯ
+ngx_crc32c_update(uint32_t *ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ, u_char *p, ಗಾತ್ರ_t len)
+{
+    uint32_t  c;
+
+    c = *ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ;
+
+    ಆಗ (len--) {
         c = ngx_crc32c_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
     }
 
-    *crc = c;
+    *ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ = c;
 }
 
 
-#define ngx_crc32c_final(crc)                                                 \
-    crc ^= 0xffffffff
+#ವ್ಯಾಖ್ಯಾನಿಸು ngx_crc32c_final(ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ)                                                 \
+    ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ ^= 0xffffffff
 
 
-ngx_int_t ngx_crc32_table_init(void);
+ngx_int_t ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_ಕೋಷ್ಟಕ_init(ಶೂನ್ಯ);
 
 
-#endif /* _NGX_CRC32_H_INCLUDED_ */
+#ಆದರೆ_ಅಂತ್ಯ /* _NGX_CRC32_H_INCLUDED_ */

@@ -6,16 +6,16 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_md5.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_md5.h>
 
 
-static const u_char *ngx_md5_body(ngx_md5_t *ctx, const u_char *data,
-    size_t size);
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ u_char *ngx_md5_body(ngx_md5_t *ctx, ಸ್ಥಿರಾಂಕ u_char *ದತ್ತಾಂಶ,
+    ಗಾತ್ರ_t ಗಾತ್ರ_2);
 
 
-void
+ಶೂನ್ಯ
 ngx_md5_init(ngx_md5_t *ctx)
 {
     ctx->a = 0x67452301;
@@ -23,91 +23,91 @@ ngx_md5_init(ngx_md5_t *ctx)
     ctx->c = 0x98badcfe;
     ctx->d = 0x10325476;
 
-    ctx->bytes = 0;
+    ctx->ಬೈಟುಗಳು = 0;
 }
 
 
-void
-ngx_md5_update(ngx_md5_t *ctx, const void *data, size_t size)
+ಶೂನ್ಯ
+ngx_md5_update(ngx_md5_t *ctx, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ದತ್ತಾಂಶ, ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
-    size_t  used, free;
+    ಗಾತ್ರ_t  ಬಳಸಿದ, ಬಿಡುಗಡೆ;
 
-    used = (size_t) (ctx->bytes & 0x3f);
-    ctx->bytes += size;
+    ಬಳಸಿದ = (ಗಾತ್ರ_t) (ctx->ಬೈಟುಗಳು & 0x3f);
+    ctx->ಬೈಟುಗಳು += ಗಾತ್ರ_2;
 
-    if (used) {
-        free = 64 - used;
+    ಆದರೆ (ಬಳಸಿದ) {
+        ಬಿಡುಗಡೆ = 64 - ಬಳಸಿದ;
 
-        if (size < free) {
-            ngx_memcpy(&ctx->buffer[used], data, size);
-            return;
+        ಆದರೆ (ಗಾತ್ರ_2 < ಬಿಡುಗಡೆ) {
+            ngx_memcpy(&ctx->ಬಫರ್[ಬಳಸಿದ], ದತ್ತಾಂಶ, ಗಾತ್ರ_2);
+            ಹಿಂತಿರುಗಿ;
         }
 
-        ngx_memcpy(&ctx->buffer[used], data, free);
-        data = (u_char *) data + free;
-        size -= free;
-        (void) ngx_md5_body(ctx, ctx->buffer, 64);
+        ngx_memcpy(&ctx->ಬಫರ್[ಬಳಸಿದ], ದತ್ತಾಂಶ, ಬಿಡುಗಡೆ);
+        ದತ್ತಾಂಶ = (u_char *) ದತ್ತಾಂಶ + ಬಿಡುಗಡೆ;
+        ಗಾತ್ರ_2 -= ಬಿಡುಗಡೆ;
+        (ಶೂನ್ಯ) ngx_md5_body(ctx, ctx->ಬಫರ್, 64);
     }
 
-    if (size >= 64) {
-        data = ngx_md5_body(ctx, data, size & ~(size_t) 0x3f);
-        size &= 0x3f;
+    ಆದರೆ (ಗಾತ್ರ_2 >= 64) {
+        ದತ್ತಾಂಶ = ngx_md5_body(ctx, ದತ್ತಾಂಶ, ಗಾತ್ರ_2 & ~(ಗಾತ್ರ_t) 0x3f);
+        ಗಾತ್ರ_2 &= 0x3f;
     }
 
-    ngx_memcpy(ctx->buffer, data, size);
+    ngx_memcpy(ctx->ಬಫರ್, ದತ್ತಾಂಶ, ಗಾತ್ರ_2);
 }
 
 
-void
-ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
+ಶೂನ್ಯ
+ngx_md5_final(u_char ಫಲಿತಾಂಶ[16], ngx_md5_t *ctx)
 {
-    size_t  used, free;
+    ಗಾತ್ರ_t  ಬಳಸಿದ, ಬಿಡುಗಡೆ;
 
-    used = (size_t) (ctx->bytes & 0x3f);
+    ಬಳಸಿದ = (ಗಾತ್ರ_t) (ctx->ಬೈಟುಗಳು & 0x3f);
 
-    ctx->buffer[used++] = 0x80;
+    ctx->ಬಫರ್[ಬಳಸಿದ++] = 0x80;
 
-    free = 64 - used;
+    ಬಿಡುಗಡೆ = 64 - ಬಳಸಿದ;
 
-    if (free < 8) {
-        ngx_memzero(&ctx->buffer[used], free);
-        (void) ngx_md5_body(ctx, ctx->buffer, 64);
-        used = 0;
-        free = 64;
+    ಆದರೆ (ಬಿಡುಗಡೆ < 8) {
+        ngx_memzero(&ctx->ಬಫರ್[ಬಳಸಿದ], ಬಿಡುಗಡೆ);
+        (ಶೂನ್ಯ) ngx_md5_body(ctx, ctx->ಬಫರ್, 64);
+        ಬಳಸಿದ = 0;
+        ಬಿಡುಗಡೆ = 64;
     }
 
-    ngx_memzero(&ctx->buffer[used], free - 8);
+    ngx_memzero(&ctx->ಬಫರ್[ಬಳಸಿದ], ಬಿಡುಗಡೆ - 8);
 
-    ctx->bytes <<= 3;
-    ctx->buffer[56] = (u_char) ctx->bytes;
-    ctx->buffer[57] = (u_char) (ctx->bytes >> 8);
-    ctx->buffer[58] = (u_char) (ctx->bytes >> 16);
-    ctx->buffer[59] = (u_char) (ctx->bytes >> 24);
-    ctx->buffer[60] = (u_char) (ctx->bytes >> 32);
-    ctx->buffer[61] = (u_char) (ctx->bytes >> 40);
-    ctx->buffer[62] = (u_char) (ctx->bytes >> 48);
-    ctx->buffer[63] = (u_char) (ctx->bytes >> 56);
+    ctx->ಬೈಟುಗಳು <<= 3;
+    ctx->ಬಫರ್[56] = (u_char) ctx->ಬೈಟುಗಳು;
+    ctx->ಬಫರ್[57] = (u_char) (ctx->ಬೈಟುಗಳು >> 8);
+    ctx->ಬಫರ್[58] = (u_char) (ctx->ಬೈಟುಗಳು >> 16);
+    ctx->ಬಫರ್[59] = (u_char) (ctx->ಬೈಟುಗಳು >> 24);
+    ctx->ಬಫರ್[60] = (u_char) (ctx->ಬೈಟುಗಳು >> 32);
+    ctx->ಬಫರ್[61] = (u_char) (ctx->ಬೈಟುಗಳು >> 40);
+    ctx->ಬಫರ್[62] = (u_char) (ctx->ಬೈಟುಗಳು >> 48);
+    ctx->ಬಫರ್[63] = (u_char) (ctx->ಬೈಟುಗಳು >> 56);
 
-    (void) ngx_md5_body(ctx, ctx->buffer, 64);
+    (ಶೂನ್ಯ) ngx_md5_body(ctx, ctx->ಬಫರ್, 64);
 
-    result[0] = (u_char) ctx->a;
-    result[1] = (u_char) (ctx->a >> 8);
-    result[2] = (u_char) (ctx->a >> 16);
-    result[3] = (u_char) (ctx->a >> 24);
-    result[4] = (u_char) ctx->b;
-    result[5] = (u_char) (ctx->b >> 8);
-    result[6] = (u_char) (ctx->b >> 16);
-    result[7] = (u_char) (ctx->b >> 24);
-    result[8] = (u_char) ctx->c;
-    result[9] = (u_char) (ctx->c >> 8);
-    result[10] = (u_char) (ctx->c >> 16);
-    result[11] = (u_char) (ctx->c >> 24);
-    result[12] = (u_char) ctx->d;
-    result[13] = (u_char) (ctx->d >> 8);
-    result[14] = (u_char) (ctx->d >> 16);
-    result[15] = (u_char) (ctx->d >> 24);
+    ಫಲಿತಾಂಶ[0] = (u_char) ctx->a;
+    ಫಲಿತಾಂಶ[1] = (u_char) (ctx->a >> 8);
+    ಫಲಿತಾಂಶ[2] = (u_char) (ctx->a >> 16);
+    ಫಲಿತಾಂಶ[3] = (u_char) (ctx->a >> 24);
+    ಫಲಿತಾಂಶ[4] = (u_char) ctx->b;
+    ಫಲಿತಾಂಶ[5] = (u_char) (ctx->b >> 8);
+    ಫಲಿತಾಂಶ[6] = (u_char) (ctx->b >> 16);
+    ಫಲಿತಾಂಶ[7] = (u_char) (ctx->b >> 24);
+    ಫಲಿತಾಂಶ[8] = (u_char) ctx->c;
+    ಫಲಿತಾಂಶ[9] = (u_char) (ctx->c >> 8);
+    ಫಲಿತಾಂಶ[10] = (u_char) (ctx->c >> 16);
+    ಫಲಿತಾಂಶ[11] = (u_char) (ctx->c >> 24);
+    ಫಲಿತಾಂಶ[12] = (u_char) ctx->d;
+    ಫಲಿತಾಂಶ[13] = (u_char) (ctx->d >> 8);
+    ಫಲಿತಾಂಶ[14] = (u_char) (ctx->d >> 16);
+    ಫಲಿತಾಂಶ[15] = (u_char) (ctx->d >> 24);
 
-    ngx_memzero(ctx, sizeof(*ctx));
+    ngx_memzero(ctx, ಗಾತ್ರ(*ctx));
 }
 
 
@@ -119,16 +119,16 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
  * Colin Plumb's implementation.
  */
 
-#define F(x, y, z)  ((z) ^ ((x) & ((y) ^ (z))))
-#define G(x, y, z)  ((y) ^ ((z) & ((x) ^ (y))))
-#define H(x, y, z)  ((x) ^ (y) ^ (z))
-#define I(x, y, z)  ((y) ^ ((x) | ~(z)))
+#ವ್ಯಾಖ್ಯಾನಿಸು F(x, y, z)  ((z) ^ ((x) & ((y) ^ (z))))
+#ವ್ಯಾಖ್ಯಾನಿಸು G(x, y, z)  ((y) ^ ((z) & ((x) ^ (y))))
+#ವ್ಯಾಖ್ಯಾನಿಸು H(x, y, z)  ((x) ^ (y) ^ (z))
+#ವ್ಯಾಖ್ಯಾನಿಸು I(x, y, z)  ((y) ^ ((x) | ~(z)))
 
 /*
  * The MD5 transformation for all four rounds.
  */
 
-#define STEP(f, a, b, c, d, x, t, s)                                          \
+#ವ್ಯಾಖ್ಯಾನಿಸು ಹೆಜ್ಜೆ(f, a, b, c, d, x, t, s)                                          \
     (a) += f((b), (c), (d)) + (x) + (t);                                      \
     (a) = (((a) << (s)) | (((a) & 0xffffffff) >> (32 - (s))));                \
     (a) += (b)
@@ -142,23 +142,23 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
  * does not work.
  */
 
-#if (NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
+#ಆದರೆ (NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
 
-#define SET(n)      (*(uint32_t *) &p[n * 4])
-#define GET(n)      (*(uint32_t *) &p[n * 4])
+#ವ್ಯಾಖ್ಯಾನಿಸು ಗಣ_2(n)      (*(uint32_t *) &p[n * 4])
+#ವ್ಯಾಖ್ಯಾನಿಸು GET(n)      (*(uint32_t *) &p[n * 4])
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
-#define SET(n)                                                                \
-    (block[n] =                                                               \
+#ವ್ಯಾಖ್ಯಾನಿಸು ಗಣ_2(n)                                                                \
+    (ಖಂಡ[n] =                                                               \
     (uint32_t) p[n * 4] |                                                     \
     ((uint32_t) p[n * 4 + 1] << 8) |                                          \
     ((uint32_t) p[n * 4 + 2] << 16) |                                         \
     ((uint32_t) p[n * 4 + 3] << 24))
 
-#define GET(n)      block[n]
+#ವ್ಯಾಖ್ಯಾನಿಸು GET(n)      ಖಂಡ[n]
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
@@ -166,24 +166,24 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
  * the bit counters.  There are no alignment requirements.
  */
 
-static const u_char *
-ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ u_char *
+ngx_md5_body(ngx_md5_t *ctx, ಸ್ಥಿರಾಂಕ u_char *ದತ್ತಾಂಶ, ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
     uint32_t       a, b, c, d;
     uint32_t       saved_a, saved_b, saved_c, saved_d;
-    const u_char  *p;
-#if !(NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
-    uint32_t       block[16];
-#endif
+    ಸ್ಥಿರಾಂಕ u_char  *p;
+#ಆದರೆ !(NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
+    uint32_t       ಖಂಡ[16];
+#ಆದರೆ_ಅಂತ್ಯ
 
-    p = data;
+    p = ದತ್ತಾಂಶ;
 
     a = ctx->a;
     b = ctx->b;
     c = ctx->c;
     d = ctx->d;
 
-    do {
+    ಮಾಡು {
         saved_a = a;
         saved_b = b;
         saved_c = c;
@@ -191,79 +191,79 @@ ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
 
         /* Round 1 */
 
-        STEP(F, a, b, c, d, SET(0),  0xd76aa478, 7);
-        STEP(F, d, a, b, c, SET(1),  0xe8c7b756, 12);
-        STEP(F, c, d, a, b, SET(2),  0x242070db, 17);
-        STEP(F, b, c, d, a, SET(3),  0xc1bdceee, 22);
-        STEP(F, a, b, c, d, SET(4),  0xf57c0faf, 7);
-        STEP(F, d, a, b, c, SET(5),  0x4787c62a, 12);
-        STEP(F, c, d, a, b, SET(6),  0xa8304613, 17);
-        STEP(F, b, c, d, a, SET(7),  0xfd469501, 22);
-        STEP(F, a, b, c, d, SET(8),  0x698098d8, 7);
-        STEP(F, d, a, b, c, SET(9),  0x8b44f7af, 12);
-        STEP(F, c, d, a, b, SET(10), 0xffff5bb1, 17);
-        STEP(F, b, c, d, a, SET(11), 0x895cd7be, 22);
-        STEP(F, a, b, c, d, SET(12), 0x6b901122, 7);
-        STEP(F, d, a, b, c, SET(13), 0xfd987193, 12);
-        STEP(F, c, d, a, b, SET(14), 0xa679438e, 17);
-        STEP(F, b, c, d, a, SET(15), 0x49b40821, 22);
+        ಹೆಜ್ಜೆ(F, a, b, c, d, ಗಣ_2(0),  0xd76aa478, 7);
+        ಹೆಜ್ಜೆ(F, d, a, b, c, ಗಣ_2(1),  0xe8c7b756, 12);
+        ಹೆಜ್ಜೆ(F, c, d, a, b, ಗಣ_2(2),  0x242070db, 17);
+        ಹೆಜ್ಜೆ(F, b, c, d, a, ಗಣ_2(3),  0xc1bdceee, 22);
+        ಹೆಜ್ಜೆ(F, a, b, c, d, ಗಣ_2(4),  0xf57c0faf, 7);
+        ಹೆಜ್ಜೆ(F, d, a, b, c, ಗಣ_2(5),  0x4787c62a, 12);
+        ಹೆಜ್ಜೆ(F, c, d, a, b, ಗಣ_2(6),  0xa8304613, 17);
+        ಹೆಜ್ಜೆ(F, b, c, d, a, ಗಣ_2(7),  0xfd469501, 22);
+        ಹೆಜ್ಜೆ(F, a, b, c, d, ಗಣ_2(8),  0x698098d8, 7);
+        ಹೆಜ್ಜೆ(F, d, a, b, c, ಗಣ_2(9),  0x8b44f7af, 12);
+        ಹೆಜ್ಜೆ(F, c, d, a, b, ಗಣ_2(10), 0xffff5bb1, 17);
+        ಹೆಜ್ಜೆ(F, b, c, d, a, ಗಣ_2(11), 0x895cd7be, 22);
+        ಹೆಜ್ಜೆ(F, a, b, c, d, ಗಣ_2(12), 0x6b901122, 7);
+        ಹೆಜ್ಜೆ(F, d, a, b, c, ಗಣ_2(13), 0xfd987193, 12);
+        ಹೆಜ್ಜೆ(F, c, d, a, b, ಗಣ_2(14), 0xa679438e, 17);
+        ಹೆಜ್ಜೆ(F, b, c, d, a, ಗಣ_2(15), 0x49b40821, 22);
 
         /* Round 2 */
 
-        STEP(G, a, b, c, d, GET(1),  0xf61e2562, 5);
-        STEP(G, d, a, b, c, GET(6),  0xc040b340, 9);
-        STEP(G, c, d, a, b, GET(11), 0x265e5a51, 14);
-        STEP(G, b, c, d, a, GET(0),  0xe9b6c7aa, 20);
-        STEP(G, a, b, c, d, GET(5),  0xd62f105d, 5);
-        STEP(G, d, a, b, c, GET(10), 0x02441453, 9);
-        STEP(G, c, d, a, b, GET(15), 0xd8a1e681, 14);
-        STEP(G, b, c, d, a, GET(4),  0xe7d3fbc8, 20);
-        STEP(G, a, b, c, d, GET(9),  0x21e1cde6, 5);
-        STEP(G, d, a, b, c, GET(14), 0xc33707d6, 9);
-        STEP(G, c, d, a, b, GET(3),  0xf4d50d87, 14);
-        STEP(G, b, c, d, a, GET(8),  0x455a14ed, 20);
-        STEP(G, a, b, c, d, GET(13), 0xa9e3e905, 5);
-        STEP(G, d, a, b, c, GET(2),  0xfcefa3f8, 9);
-        STEP(G, c, d, a, b, GET(7),  0x676f02d9, 14);
-        STEP(G, b, c, d, a, GET(12), 0x8d2a4c8a, 20);
+        ಹೆಜ್ಜೆ(G, a, b, c, d, GET(1),  0xf61e2562, 5);
+        ಹೆಜ್ಜೆ(G, d, a, b, c, GET(6),  0xc040b340, 9);
+        ಹೆಜ್ಜೆ(G, c, d, a, b, GET(11), 0x265e5a51, 14);
+        ಹೆಜ್ಜೆ(G, b, c, d, a, GET(0),  0xe9b6c7aa, 20);
+        ಹೆಜ್ಜೆ(G, a, b, c, d, GET(5),  0xd62f105d, 5);
+        ಹೆಜ್ಜೆ(G, d, a, b, c, GET(10), 0x02441453, 9);
+        ಹೆಜ್ಜೆ(G, c, d, a, b, GET(15), 0xd8a1e681, 14);
+        ಹೆಜ್ಜೆ(G, b, c, d, a, GET(4),  0xe7d3fbc8, 20);
+        ಹೆಜ್ಜೆ(G, a, b, c, d, GET(9),  0x21e1cde6, 5);
+        ಹೆಜ್ಜೆ(G, d, a, b, c, GET(14), 0xc33707d6, 9);
+        ಹೆಜ್ಜೆ(G, c, d, a, b, GET(3),  0xf4d50d87, 14);
+        ಹೆಜ್ಜೆ(G, b, c, d, a, GET(8),  0x455a14ed, 20);
+        ಹೆಜ್ಜೆ(G, a, b, c, d, GET(13), 0xa9e3e905, 5);
+        ಹೆಜ್ಜೆ(G, d, a, b, c, GET(2),  0xfcefa3f8, 9);
+        ಹೆಜ್ಜೆ(G, c, d, a, b, GET(7),  0x676f02d9, 14);
+        ಹೆಜ್ಜೆ(G, b, c, d, a, GET(12), 0x8d2a4c8a, 20);
 
         /* Round 3 */
 
-        STEP(H, a, b, c, d, GET(5),  0xfffa3942, 4);
-        STEP(H, d, a, b, c, GET(8),  0x8771f681, 11);
-        STEP(H, c, d, a, b, GET(11), 0x6d9d6122, 16);
-        STEP(H, b, c, d, a, GET(14), 0xfde5380c, 23);
-        STEP(H, a, b, c, d, GET(1),  0xa4beea44, 4);
-        STEP(H, d, a, b, c, GET(4),  0x4bdecfa9, 11);
-        STEP(H, c, d, a, b, GET(7),  0xf6bb4b60, 16);
-        STEP(H, b, c, d, a, GET(10), 0xbebfbc70, 23);
-        STEP(H, a, b, c, d, GET(13), 0x289b7ec6, 4);
-        STEP(H, d, a, b, c, GET(0),  0xeaa127fa, 11);
-        STEP(H, c, d, a, b, GET(3),  0xd4ef3085, 16);
-        STEP(H, b, c, d, a, GET(6),  0x04881d05, 23);
-        STEP(H, a, b, c, d, GET(9),  0xd9d4d039, 4);
-        STEP(H, d, a, b, c, GET(12), 0xe6db99e5, 11);
-        STEP(H, c, d, a, b, GET(15), 0x1fa27cf8, 16);
-        STEP(H, b, c, d, a, GET(2),  0xc4ac5665, 23);
+        ಹೆಜ್ಜೆ(H, a, b, c, d, GET(5),  0xfffa3942, 4);
+        ಹೆಜ್ಜೆ(H, d, a, b, c, GET(8),  0x8771f681, 11);
+        ಹೆಜ್ಜೆ(H, c, d, a, b, GET(11), 0x6d9d6122, 16);
+        ಹೆಜ್ಜೆ(H, b, c, d, a, GET(14), 0xfde5380c, 23);
+        ಹೆಜ್ಜೆ(H, a, b, c, d, GET(1),  0xa4beea44, 4);
+        ಹೆಜ್ಜೆ(H, d, a, b, c, GET(4),  0x4bdecfa9, 11);
+        ಹೆಜ್ಜೆ(H, c, d, a, b, GET(7),  0xf6bb4b60, 16);
+        ಹೆಜ್ಜೆ(H, b, c, d, a, GET(10), 0xbebfbc70, 23);
+        ಹೆಜ್ಜೆ(H, a, b, c, d, GET(13), 0x289b7ec6, 4);
+        ಹೆಜ್ಜೆ(H, d, a, b, c, GET(0),  0xeaa127fa, 11);
+        ಹೆಜ್ಜೆ(H, c, d, a, b, GET(3),  0xd4ef3085, 16);
+        ಹೆಜ್ಜೆ(H, b, c, d, a, GET(6),  0x04881d05, 23);
+        ಹೆಜ್ಜೆ(H, a, b, c, d, GET(9),  0xd9d4d039, 4);
+        ಹೆಜ್ಜೆ(H, d, a, b, c, GET(12), 0xe6db99e5, 11);
+        ಹೆಜ್ಜೆ(H, c, d, a, b, GET(15), 0x1fa27cf8, 16);
+        ಹೆಜ್ಜೆ(H, b, c, d, a, GET(2),  0xc4ac5665, 23);
 
         /* Round 4 */
 
-        STEP(I, a, b, c, d, GET(0),  0xf4292244, 6);
-        STEP(I, d, a, b, c, GET(7),  0x432aff97, 10);
-        STEP(I, c, d, a, b, GET(14), 0xab9423a7, 15);
-        STEP(I, b, c, d, a, GET(5),  0xfc93a039, 21);
-        STEP(I, a, b, c, d, GET(12), 0x655b59c3, 6);
-        STEP(I, d, a, b, c, GET(3),  0x8f0ccc92, 10);
-        STEP(I, c, d, a, b, GET(10), 0xffeff47d, 15);
-        STEP(I, b, c, d, a, GET(1),  0x85845dd1, 21);
-        STEP(I, a, b, c, d, GET(8),  0x6fa87e4f, 6);
-        STEP(I, d, a, b, c, GET(15), 0xfe2ce6e0, 10);
-        STEP(I, c, d, a, b, GET(6),  0xa3014314, 15);
-        STEP(I, b, c, d, a, GET(13), 0x4e0811a1, 21);
-        STEP(I, a, b, c, d, GET(4),  0xf7537e82, 6);
-        STEP(I, d, a, b, c, GET(11), 0xbd3af235, 10);
-        STEP(I, c, d, a, b, GET(2),  0x2ad7d2bb, 15);
-        STEP(I, b, c, d, a, GET(9),  0xeb86d391, 21);
+        ಹೆಜ್ಜೆ(I, a, b, c, d, GET(0),  0xf4292244, 6);
+        ಹೆಜ್ಜೆ(I, d, a, b, c, GET(7),  0x432aff97, 10);
+        ಹೆಜ್ಜೆ(I, c, d, a, b, GET(14), 0xab9423a7, 15);
+        ಹೆಜ್ಜೆ(I, b, c, d, a, GET(5),  0xfc93a039, 21);
+        ಹೆಜ್ಜೆ(I, a, b, c, d, GET(12), 0x655b59c3, 6);
+        ಹೆಜ್ಜೆ(I, d, a, b, c, GET(3),  0x8f0ccc92, 10);
+        ಹೆಜ್ಜೆ(I, c, d, a, b, GET(10), 0xffeff47d, 15);
+        ಹೆಜ್ಜೆ(I, b, c, d, a, GET(1),  0x85845dd1, 21);
+        ಹೆಜ್ಜೆ(I, a, b, c, d, GET(8),  0x6fa87e4f, 6);
+        ಹೆಜ್ಜೆ(I, d, a, b, c, GET(15), 0xfe2ce6e0, 10);
+        ಹೆಜ್ಜೆ(I, c, d, a, b, GET(6),  0xa3014314, 15);
+        ಹೆಜ್ಜೆ(I, b, c, d, a, GET(13), 0x4e0811a1, 21);
+        ಹೆಜ್ಜೆ(I, a, b, c, d, GET(4),  0xf7537e82, 6);
+        ಹೆಜ್ಜೆ(I, d, a, b, c, GET(11), 0xbd3af235, 10);
+        ಹೆಜ್ಜೆ(I, c, d, a, b, GET(2),  0x2ad7d2bb, 15);
+        ಹೆಜ್ಜೆ(I, b, c, d, a, GET(9),  0xeb86d391, 21);
 
         a += saved_a;
         b += saved_b;
@@ -272,12 +272,12 @@ ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
 
         p += 64;
 
-    } while (size -= 64);
+    } ಆಗ (ಗಾತ್ರ_2 -= 64);
 
     ctx->a = a;
     ctx->b = b;
     ctx->c = c;
     ctx->d = d;
 
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }

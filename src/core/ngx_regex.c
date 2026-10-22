@@ -5,42 +5,42 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     ngx_flag_t   pcre_jit;
     ngx_list_t  *studies;
 } ngx_regex_conf_t;
 
 
-static ngx_inline void ngx_regex_malloc_init(ngx_pool_t *pool);
-static ngx_inline void ngx_regex_malloc_done(void);
+ಸ್ಥಿರ ngx_inline ಶೂನ್ಯ ngx_regex_malloc_init(ngx_pool_t *pool);
+ಸ್ಥಿರ ngx_inline ಶೂನ್ಯ ngx_regex_malloc_ಮುಗಿದ(ಶೂನ್ಯ);
 
-#if (NGX_PCRE2)
-static void * ngx_libc_cdecl ngx_regex_malloc(size_t size, void *data);
-static void ngx_libc_cdecl ngx_regex_free(void *p, void *data);
-#else
-static void * ngx_libc_cdecl ngx_regex_malloc(size_t size);
-static void ngx_libc_cdecl ngx_regex_free(void *p);
-#endif
-static void ngx_regex_cleanup(void *data);
+#ಆದರೆ (NGX_PCRE2)
+ಸ್ಥಿರ ಶೂನ್ಯ * ngx_libc_cdecl ngx_regex_malloc(ಗಾತ್ರ_t ಗಾತ್ರ_2, ಶೂನ್ಯ *ದತ್ತಾಂಶ);
+ಸ್ಥಿರ ಶೂನ್ಯ ngx_libc_cdecl ngx_regex_free(ಶೂನ್ಯ *p, ಶೂನ್ಯ *ದತ್ತಾಂಶ);
+#ಇಲ್ಲದಿದ್ದರೆ
+ಸ್ಥಿರ ಶೂನ್ಯ * ngx_libc_cdecl ngx_regex_malloc(ಗಾತ್ರ_t ಗಾತ್ರ_2);
+ಸ್ಥಿರ ಶೂನ್ಯ ngx_libc_cdecl ngx_regex_free(ಶೂನ್ಯ *p);
+#ಆದರೆ_ಅಂತ್ಯ
+ಸ್ಥಿರ ಶೂನ್ಯ ngx_regex_cleanup(ಶೂನ್ಯ *ದತ್ತಾಂಶ);
 
-static ngx_int_t ngx_regex_module_init(ngx_cycle_t *cycle);
+ಸ್ಥಿರ ngx_int_t ngx_regex_module_init(ngx_ಚಕ್ರ_t *ಚಕ್ರ);
 
-static void *ngx_regex_create_conf(ngx_cycle_t *cycle);
-static char *ngx_regex_init_conf(ngx_cycle_t *cycle, void *conf);
+ಸ್ಥಿರ ಶೂನ್ಯ *ngx_regex_create_conf(ngx_ಚಕ್ರ_t *ಚಕ್ರ);
+ಸ್ಥಿರ ಅಕ್ಷರ *ngx_regex_init_conf(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ಶೂನ್ಯ *conf);
 
-static char *ngx_regex_pcre_jit(ngx_conf_t *cf, void *post, void *data);
-static ngx_conf_post_t  ngx_regex_pcre_jit_post = { ngx_regex_pcre_jit };
+ಸ್ಥಿರ ಅಕ್ಷರ *ngx_regex_pcre_jit(ngx_conf_t *cf, ಶೂನ್ಯ *post, ಶೂನ್ಯ *ದತ್ತಾಂಶ);
+ಸ್ಥಿರ ngx_conf_post_t  ngx_regex_pcre_jit_post = { ngx_regex_pcre_jit };
 
 
-static ngx_command_t  ngx_regex_commands[] = {
+ಸ್ಥಿರ ngx_command_t  ngx_regex_commands[] = {
 
     { ngx_string("pcre_jit"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_FLAG,
-      ngx_conf_set_flag_slot,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_FLAG,
+      ngx_conf_ಗಣ_flag_ಸ್ಥಾನ,
       0,
       offsetof(ngx_regex_conf_t, pcre_jit),
       &ngx_regex_pcre_jit_post },
@@ -49,7 +49,7 @@ static ngx_command_t  ngx_regex_commands[] = {
 };
 
 
-static ngx_core_module_t  ngx_regex_module_ctx = {
+ಸ್ಥಿರ ngx_core_module_t  ngx_regex_module_ctx = {
     ngx_string("regex"),
     ngx_regex_create_conf,
     ngx_regex_init_conf
@@ -61,338 +61,338 @@ ngx_module_t  ngx_regex_module = {
     &ngx_regex_module_ctx,                 /* module context */
     ngx_regex_commands,                    /* module directives */
     NGX_CORE_MODULE,                       /* module type */
-    NULL,                                  /* init master */
+    ಖಾಲಿ,                                  /* init master */
     ngx_regex_module_init,                 /* init module */
-    NULL,                                  /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
-    NULL,                                  /* exit process */
-    NULL,                                  /* exit master */
+    ಖಾಲಿ,                                  /* init process */
+    ಖಾಲಿ,                                  /* init thread */
+    ಖಾಲಿ,                                  /* exit thread */
+    ಖಾಲಿ,                                  /* exit process */
+    ಖಾಲಿ,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
-static ngx_pool_t             *ngx_regex_pool;
-static ngx_list_t             *ngx_regex_studies;
-static ngx_uint_t              ngx_regex_direct_alloc;
+ಸ್ಥಿರ ngx_pool_t             *ngx_regex_pool;
+ಸ್ಥಿರ ngx_list_t             *ngx_regex_studies;
+ಸ್ಥಿರ ngx_uint_t              ngx_regex_ನೇರ_alloc;
 
-#if (NGX_PCRE2)
-static pcre2_compile_context  *ngx_regex_compile_context;
-static pcre2_match_data       *ngx_regex_match_data;
-static ngx_uint_t              ngx_regex_match_data_size;
-#endif
+#ಆದರೆ (NGX_PCRE2)
+ಸ್ಥಿರ pcre2_compile_context  *ngx_regex_compile_context;
+ಸ್ಥಿರ pcre2_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ       *ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ;
+ಸ್ಥಿರ ngx_uint_t              ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ_ಗಾತ್ರ;
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-void
-ngx_regex_init(void)
+ಶೂನ್ಯ
+ngx_regex_init(ಶೂನ್ಯ)
 {
-#if !(NGX_PCRE2)
+#ಆದರೆ !(NGX_PCRE2)
     pcre_malloc = ngx_regex_malloc;
     pcre_free = ngx_regex_free;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
 
-static ngx_inline void
+ಸ್ಥಿರ ngx_inline ಶೂನ್ಯ
 ngx_regex_malloc_init(ngx_pool_t *pool)
 {
     ngx_regex_pool = pool;
-    ngx_regex_direct_alloc = (pool == NULL) ? 1 : 0;
+    ngx_regex_ನೇರ_alloc = (pool == ಖಾಲಿ) ? 1 : 0;
 }
 
 
-static ngx_inline void
-ngx_regex_malloc_done(void)
+ಸ್ಥಿರ ngx_inline ಶೂನ್ಯ
+ngx_regex_malloc_ಮುಗಿದ(ಶೂನ್ಯ)
 {
-    ngx_regex_pool = NULL;
-    ngx_regex_direct_alloc = 0;
+    ngx_regex_pool = ಖಾಲಿ;
+    ngx_regex_ನೇರ_alloc = 0;
 }
 
 
-#if (NGX_PCRE2)
+#ಆದರೆ (NGX_PCRE2)
 
 ngx_int_t
 ngx_regex_compile(ngx_regex_compile_t *rc)
 {
-    int                     n, errcode;
-    char                   *p;
+    ಪೂರ್ಣಾಂಕ                     n, errcode;
+    ಅಕ್ಷರ                   *p;
     u_char                  errstr[128];
-    size_t                  erroff;
+    ಗಾತ್ರ_t                  erroff;
     uint32_t                options;
-    pcre2_code             *re;
+    pcre2_ಸಂಕೇತ             *re;
     ngx_regex_elt_t        *elt;
     pcre2_general_context  *gctx;
     pcre2_compile_context  *cctx;
 
-    if (ngx_regex_compile_context == NULL) {
+    ಆದರೆ (ngx_regex_compile_context == ಖಾಲಿ) {
         /*
          * Allocate a compile context if not yet allocated.  This uses
          * direct allocations from heap, so the result can be cached
          * even at runtime.
          */
 
-        ngx_regex_malloc_init(NULL);
+        ngx_regex_malloc_init(ಖಾಲಿ);
 
         gctx = pcre2_general_context_create(ngx_regex_malloc, ngx_regex_free,
-                                            NULL);
-        if (gctx == NULL) {
-            ngx_regex_malloc_done();
-            goto nomem;
+                                            ಖಾಲಿ);
+        ಆದರೆ (gctx == ಖಾಲಿ) {
+            ngx_regex_malloc_ಮುಗಿದ();
+            ಹೋಗು nomem;
         }
 
         cctx = pcre2_compile_context_create(gctx);
-        if (cctx == NULL) {
+        ಆದರೆ (cctx == ಖಾಲಿ) {
             pcre2_general_context_free(gctx);
-            ngx_regex_malloc_done();
-            goto nomem;
+            ngx_regex_malloc_ಮುಗಿದ();
+            ಹೋಗು nomem;
         }
 
         ngx_regex_compile_context = cctx;
 
         pcre2_general_context_free(gctx);
-        ngx_regex_malloc_done();
+        ngx_regex_malloc_ಮುಗಿದ();
     }
 
     options = 0;
 
-    if (rc->options & NGX_REGEX_CASELESS) {
+    ಆದರೆ (rc->options & NGX_REGEX_CASELESS) {
         options |= PCRE2_CASELESS;
     }
 
-    if (rc->options & NGX_REGEX_MULTILINE) {
+    ಆದರೆ (rc->options & NGX_REGEX_MULTILINE) {
         options |= PCRE2_MULTILINE;
     }
 
-    if (rc->options & ~(NGX_REGEX_CASELESS|NGX_REGEX_MULTILINE)) {
-        rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+    ಆದರೆ (rc->options & ~(NGX_REGEX_CASELESS|NGX_REGEX_MULTILINE)) {
+        rc->err.len = ngx_snprintf(rc->err.ದತ್ತಾಂಶ, rc->err.len,
                             "regex \"%V\" compilation failed: invalid options",
-                            &rc->pattern)
-                      - rc->err.data;
-        return NGX_ERROR;
+                            &rc->ನಮೂನೆ)
+                      - rc->err.ದತ್ತಾಂಶ;
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
     ngx_regex_malloc_init(rc->pool);
 
-    re = pcre2_compile(rc->pattern.data, rc->pattern.len, options,
+    re = pcre2_compile(rc->ನಮೂನೆ.ದತ್ತಾಂಶ, rc->ನಮೂನೆ.len, options,
                        &errcode, &erroff, ngx_regex_compile_context);
 
     /* ensure that there is no current pool */
-    ngx_regex_malloc_done();
+    ngx_regex_malloc_ಮುಗಿದ();
 
-    if (re == NULL) {
-        pcre2_get_error_message(errcode, errstr, 128);
+    ಆದರೆ (re == ಖಾಲಿ) {
+        pcre2_get_error_ಸಂದೇಶ(errcode, errstr, 128);
 
-        if ((size_t) erroff == rc->pattern.len) {
-            rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+        ಆದರೆ ((ಗಾತ್ರ_t) erroff == rc->ನಮೂನೆ.len) {
+            rc->err.len = ngx_snprintf(rc->err.ದತ್ತಾಂಶ, rc->err.len,
                               "pcre2_compile() failed: %s in \"%V\"",
-                               errstr, &rc->pattern)
-                          - rc->err.data;
+                               errstr, &rc->ನಮೂನೆ)
+                          - rc->err.ದತ್ತಾಂಶ;
 
-        } else {
-            rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            rc->err.len = ngx_snprintf(rc->err.ದತ್ತಾಂಶ, rc->err.len,
                               "pcre2_compile() failed: %s in \"%V\" at \"%s\"",
-                               errstr, &rc->pattern, rc->pattern.data + erroff)
-                          - rc->err.data;
+                               errstr, &rc->ನಮೂನೆ, rc->ನಮೂನೆ.ದತ್ತಾಂಶ + erroff)
+                          - rc->err.ದತ್ತಾಂಶ;
         }
 
-        return NGX_ERROR;
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
     rc->regex = re;
 
     /* do not study at runtime */
 
-    if (ngx_regex_studies != NULL) {
-        elt = ngx_list_push(ngx_regex_studies);
-        if (elt == NULL) {
-            goto nomem;
+    ಆದರೆ (ngx_regex_studies != ಖಾಲಿ) {
+        elt = ngx_list_ತಳ್ಳು(ngx_regex_studies);
+        ಆದರೆ (elt == ಖಾಲಿ) {
+            ಹೋಗು nomem;
         }
 
         elt->regex = rc->regex;
-        elt->name = rc->pattern.data;
+        elt->name = rc->ನಮೂನೆ.ದತ್ತಾಂಶ;
     }
 
-    n = pcre2_pattern_info(re, PCRE2_INFO_CAPTURECOUNT, &rc->captures);
-    if (n < 0) {
+    n = pcre2_ನಮೂನೆ_info(re, PCRE2_INFO_CAPTURECOUNT, &rc->captures);
+    ಆದರೆ (n < 0) {
         p = "pcre2_pattern_info(\"%V\", PCRE2_INFO_CAPTURECOUNT) failed: %d";
-        goto failed;
+        ಹೋಗು failed;
     }
 
-    if (rc->captures == 0) {
-        return NGX_OK;
+    ಆದರೆ (rc->captures == 0) {
+        ಹಿಂತಿರುಗಿ NGX_OK;
     }
 
-    n = pcre2_pattern_info(re, PCRE2_INFO_NAMECOUNT, &rc->named_captures);
-    if (n < 0) {
+    n = pcre2_ನಮೂನೆ_info(re, PCRE2_INFO_NAMECOUNT, &rc->named_captures);
+    ಆದರೆ (n < 0) {
         p = "pcre2_pattern_info(\"%V\", PCRE2_INFO_NAMECOUNT) failed: %d";
-        goto failed;
+        ಹೋಗು failed;
     }
 
-    if (rc->named_captures == 0) {
-        return NGX_OK;
+    ಆದರೆ (rc->named_captures == 0) {
+        ಹಿಂತಿರುಗಿ NGX_OK;
     }
 
-    n = pcre2_pattern_info(re, PCRE2_INFO_NAMEENTRYSIZE, &rc->name_size);
-    if (n < 0) {
+    n = pcre2_ನಮೂನೆ_info(re, PCRE2_INFO_NAMEENTRYSIZE, &rc->name_ಗಾತ್ರ);
+    ಆದರೆ (n < 0) {
         p = "pcre2_pattern_info(\"%V\", PCRE2_INFO_NAMEENTRYSIZE) failed: %d";
-        goto failed;
+        ಹೋಗು failed;
     }
 
-    n = pcre2_pattern_info(re, PCRE2_INFO_NAMETABLE, &rc->names);
-    if (n < 0) {
+    n = pcre2_ನಮೂನೆ_info(re, PCRE2_INFO_NAMETABLE, &rc->ಹೆಸರುಗಳು);
+    ಆದರೆ (n < 0) {
         p = "pcre2_pattern_info(\"%V\", PCRE2_INFO_NAMETABLE) failed: %d";
-        goto failed;
+        ಹೋಗು failed;
     }
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 
 failed:
 
-    rc->err.len = ngx_snprintf(rc->err.data, rc->err.len, p, &rc->pattern, n)
-                  - rc->err.data;
-    return NGX_ERROR;
+    rc->err.len = ngx_snprintf(rc->err.ದತ್ತಾಂಶ, rc->err.len, p, &rc->ನಮೂನೆ, n)
+                  - rc->err.ದತ್ತಾಂಶ;
+    ಹಿಂತಿರುಗಿ NGX_ERROR;
 
 nomem:
 
-    rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+    rc->err.len = ngx_snprintf(rc->err.ದತ್ತಾಂಶ, rc->err.len,
                                "regex \"%V\" compilation failed: no memory",
-                               &rc->pattern)
-                  - rc->err.data;
-    return NGX_ERROR;
+                               &rc->ನಮೂನೆ)
+                  - rc->err.ದತ್ತಾಂಶ;
+    ಹಿಂತಿರುಗಿ NGX_ERROR;
 }
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
 ngx_int_t
 ngx_regex_compile(ngx_regex_compile_t *rc)
 {
-    int               n, erroff;
-    char             *p;
+    ಪೂರ್ಣಾಂಕ               n, erroff;
+    ಅಕ್ಷರ             *p;
     pcre             *re;
-    const char       *errstr;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ       *errstr;
     ngx_uint_t        options;
     ngx_regex_elt_t  *elt;
 
     options = 0;
 
-    if (rc->options & NGX_REGEX_CASELESS) {
+    ಆದರೆ (rc->options & NGX_REGEX_CASELESS) {
         options |= PCRE_CASELESS;
     }
 
-    if (rc->options & NGX_REGEX_MULTILINE) {
+    ಆದರೆ (rc->options & NGX_REGEX_MULTILINE) {
         options |= PCRE_MULTILINE;
     }
 
-    if (rc->options & ~(NGX_REGEX_CASELESS|NGX_REGEX_MULTILINE)) {
-        rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+    ಆದರೆ (rc->options & ~(NGX_REGEX_CASELESS|NGX_REGEX_MULTILINE)) {
+        rc->err.len = ngx_snprintf(rc->err.ದತ್ತಾಂಶ, rc->err.len,
                             "regex \"%V\" compilation failed: invalid options",
-                            &rc->pattern)
-                      - rc->err.data;
-        return NGX_ERROR;
+                            &rc->ನಮೂನೆ)
+                      - rc->err.ದತ್ತಾಂಶ;
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
     ngx_regex_malloc_init(rc->pool);
 
-    re = pcre_compile((const char *) rc->pattern.data, (int) options,
-                      &errstr, &erroff, NULL);
+    re = pcre_compile((ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *) rc->ನಮೂನೆ.ದತ್ತಾಂಶ, (ಪೂರ್ಣಾಂಕ) options,
+                      &errstr, &erroff, ಖಾಲಿ);
 
     /* ensure that there is no current pool */
-    ngx_regex_malloc_done();
+    ngx_regex_malloc_ಮುಗಿದ();
 
-    if (re == NULL) {
-        if ((size_t) erroff == rc->pattern.len) {
-           rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+    ಆದರೆ (re == ಖಾಲಿ) {
+        ಆದರೆ ((ಗಾತ್ರ_t) erroff == rc->ನಮೂನೆ.len) {
+           rc->err.len = ngx_snprintf(rc->err.ದತ್ತಾಂಶ, rc->err.len,
                               "pcre_compile() failed: %s in \"%V\"",
-                               errstr, &rc->pattern)
-                         - rc->err.data;
+                               errstr, &rc->ನಮೂನೆ)
+                         - rc->err.ದತ್ತಾಂಶ;
 
-        } else {
-           rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+        } ಇಲ್ಲದಿದ್ದರೆ {
+           rc->err.len = ngx_snprintf(rc->err.ದತ್ತಾಂಶ, rc->err.len,
                               "pcre_compile() failed: %s in \"%V\" at \"%s\"",
-                               errstr, &rc->pattern, rc->pattern.data + erroff)
-                         - rc->err.data;
+                               errstr, &rc->ನಮೂನೆ, rc->ನಮೂನೆ.ದತ್ತಾಂಶ + erroff)
+                         - rc->err.ದತ್ತಾಂಶ;
         }
 
-        return NGX_ERROR;
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    rc->regex = ngx_pcalloc(rc->pool, sizeof(ngx_regex_t));
-    if (rc->regex == NULL) {
-        goto nomem;
+    rc->regex = ngx_pcalloc(rc->pool, ಗಾತ್ರ(ngx_regex_t));
+    ಆದರೆ (rc->regex == ಖಾಲಿ) {
+        ಹೋಗು nomem;
     }
 
-    rc->regex->code = re;
+    rc->regex->ಸಂಕೇತ_2 = re;
 
     /* do not study at runtime */
 
-    if (ngx_regex_studies != NULL) {
-        elt = ngx_list_push(ngx_regex_studies);
-        if (elt == NULL) {
-            goto nomem;
+    ಆದರೆ (ngx_regex_studies != ಖಾಲಿ) {
+        elt = ngx_list_ತಳ್ಳು(ngx_regex_studies);
+        ಆದರೆ (elt == ಖಾಲಿ) {
+            ಹೋಗು nomem;
         }
 
         elt->regex = rc->regex;
-        elt->name = rc->pattern.data;
+        elt->name = rc->ನಮೂನೆ.ದತ್ತಾಂಶ;
     }
 
-    n = pcre_fullinfo(re, NULL, PCRE_INFO_CAPTURECOUNT, &rc->captures);
-    if (n < 0) {
+    n = pcre_fullinfo(re, ಖಾಲಿ, PCRE_INFO_CAPTURECOUNT, &rc->captures);
+    ಆದರೆ (n < 0) {
         p = "pcre_fullinfo(\"%V\", PCRE_INFO_CAPTURECOUNT) failed: %d";
-        goto failed;
+        ಹೋಗು failed;
     }
 
-    if (rc->captures == 0) {
-        return NGX_OK;
+    ಆದರೆ (rc->captures == 0) {
+        ಹಿಂತಿರುಗಿ NGX_OK;
     }
 
-    n = pcre_fullinfo(re, NULL, PCRE_INFO_NAMECOUNT, &rc->named_captures);
-    if (n < 0) {
+    n = pcre_fullinfo(re, ಖಾಲಿ, PCRE_INFO_NAMECOUNT, &rc->named_captures);
+    ಆದರೆ (n < 0) {
         p = "pcre_fullinfo(\"%V\", PCRE_INFO_NAMECOUNT) failed: %d";
-        goto failed;
+        ಹೋಗು failed;
     }
 
-    if (rc->named_captures == 0) {
-        return NGX_OK;
+    ಆದರೆ (rc->named_captures == 0) {
+        ಹಿಂತಿರುಗಿ NGX_OK;
     }
 
-    n = pcre_fullinfo(re, NULL, PCRE_INFO_NAMEENTRYSIZE, &rc->name_size);
-    if (n < 0) {
+    n = pcre_fullinfo(re, ಖಾಲಿ, PCRE_INFO_NAMEENTRYSIZE, &rc->name_ಗಾತ್ರ);
+    ಆದರೆ (n < 0) {
         p = "pcre_fullinfo(\"%V\", PCRE_INFO_NAMEENTRYSIZE) failed: %d";
-        goto failed;
+        ಹೋಗು failed;
     }
 
-    n = pcre_fullinfo(re, NULL, PCRE_INFO_NAMETABLE, &rc->names);
-    if (n < 0) {
+    n = pcre_fullinfo(re, ಖಾಲಿ, PCRE_INFO_NAMETABLE, &rc->ಹೆಸರುಗಳು);
+    ಆದರೆ (n < 0) {
         p = "pcre_fullinfo(\"%V\", PCRE_INFO_NAMETABLE) failed: %d";
-        goto failed;
+        ಹೋಗು failed;
     }
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 
 failed:
 
-    rc->err.len = ngx_snprintf(rc->err.data, rc->err.len, p, &rc->pattern, n)
-                  - rc->err.data;
-    return NGX_ERROR;
+    rc->err.len = ngx_snprintf(rc->err.ದತ್ತಾಂಶ, rc->err.len, p, &rc->ನಮೂನೆ, n)
+                  - rc->err.ದತ್ತಾಂಶ;
+    ಹಿಂತಿರುಗಿ NGX_ERROR;
 
 nomem:
 
-    rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+    rc->err.len = ngx_snprintf(rc->err.ದತ್ತಾಂಶ, rc->err.len,
                                "regex \"%V\" compilation failed: no memory",
-                               &rc->pattern)
-                  - rc->err.data;
-    return NGX_ERROR;
+                               &rc->ನಮೂನೆ)
+                  - rc->err.ದತ್ತಾಂಶ;
+    ಹಿಂತಿರುಗಿ NGX_ERROR;
 }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-#if (NGX_PCRE2)
+#ಆದರೆ (NGX_PCRE2)
 
 ngx_int_t
-ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures, ngx_uint_t size)
+ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, ಪೂರ್ಣಾಂಕ *captures, ngx_uint_t ಗಾತ್ರ_2)
 {
-    size_t      *ov;
+    ಗಾತ್ರ_t      *ov;
     ngx_int_t    rc;
     ngx_uint_t   n, i;
 
@@ -402,68 +402,68 @@ ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures, ngx_uint_t size)
      * is configured to do direct allocations from heap during matching.
      */
 
-    ngx_regex_malloc_init(NULL);
+    ngx_regex_malloc_init(ಖಾಲಿ);
 
-    if (ngx_regex_match_data == NULL
-        || size > ngx_regex_match_data_size)
+    ಆದರೆ (ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ == ಖಾಲಿ
+        || ಗಾತ್ರ_2 > ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ_ಗಾತ್ರ)
     {
         /*
          * Allocate a match data if not yet allocated or smaller than
          * needed.
          */
 
-        if (ngx_regex_match_data) {
-            pcre2_match_data_free(ngx_regex_match_data);
+        ಆದರೆ (ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ) {
+            pcre2_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ_free(ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ);
         }
 
-        ngx_regex_match_data_size = size;
-        ngx_regex_match_data = pcre2_match_data_create(size / 3, NULL);
+        ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ_ಗಾತ್ರ = ಗಾತ್ರ_2;
+        ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ = pcre2_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ_create(ಗಾತ್ರ_2 / 3, ಖಾಲಿ);
 
-        if (ngx_regex_match_data == NULL) {
+        ಆದರೆ (ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ == ಖಾಲಿ) {
             rc = PCRE2_ERROR_NOMEMORY;
-            goto failed;
+            ಹೋಗು failed;
         }
     }
 
-    rc = pcre2_match(re, s->data, s->len, 0, 0, ngx_regex_match_data, NULL);
+    rc = pcre2_ಹೊಂದಿಕೆ(re, s->ದತ್ತಾಂಶ, s->len, 0, 0, ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ, ಖಾಲಿ);
 
-    if (rc < 0) {
-        goto failed;
+    ಆದರೆ (rc < 0) {
+        ಹೋಗು failed;
     }
 
-    n = pcre2_get_ovector_count(ngx_regex_match_data);
-    ov = pcre2_get_ovector_pointer(ngx_regex_match_data);
+    n = pcre2_get_ovector_ಎಣಿಕೆ(ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ);
+    ov = pcre2_get_ovector_ಸೂಚಕ(ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ);
 
-    if (n > size / 3) {
-        n = size / 3;
+    ಆದರೆ (n > ಗಾತ್ರ_2 / 3) {
+        n = ಗಾತ್ರ_2 / 3;
     }
 
-    for (i = 0; i < n; i++) {
+    ಗಾಗಿ (i = 0; i < n; i++) {
         captures[i * 2] = ov[i * 2];
         captures[i * 2 + 1] = ov[i * 2 + 1];
     }
 
 failed:
 
-    ngx_regex_malloc_done();
+    ngx_regex_malloc_ಮುಗಿದ();
 
-    return rc;
+    ಹಿಂತಿರುಗಿ rc;
 }
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
 ngx_int_t
-ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures, ngx_uint_t size)
+ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, ಪೂರ್ಣಾಂಕ *captures, ngx_uint_t ಗಾತ್ರ_2)
 {
-    return pcre_exec(re->code, re->extra, (const char *) s->data, s->len,
-                     0, 0, captures, size);
+    ಹಿಂತಿರುಗಿ pcre_exec(re->ಸಂಕೇತ_2, re->extra, (ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *) s->ದತ್ತಾಂಶ, s->len,
+                     0, 0, captures, ಗಾತ್ರ_2);
 }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 ngx_int_t
-ngx_regex_exec_array(ngx_array_t *a, ngx_str_t *s, ngx_log_t *log)
+ngx_regex_exec_array(ngx_array_t *a, ngx_str_t *s, ngx_log_t *ಲಘುಗಣಕ)
 {
     ngx_int_t         n;
     ngx_uint_t        i;
@@ -471,84 +471,84 @@ ngx_regex_exec_array(ngx_array_t *a, ngx_str_t *s, ngx_log_t *log)
 
     re = a->elts;
 
-    for (i = 0; i < a->nelts; i++) {
+    ಗಾಗಿ (i = 0; i < a->nelts; i++) {
 
-        n = ngx_regex_exec(re[i].regex, s, NULL, 0);
+        n = ngx_regex_exec(re[i].regex, s, ಖಾಲಿ, 0);
 
-        if (n == NGX_REGEX_NO_MATCHED) {
-            continue;
+        ಆದರೆ (n == NGX_REGEX_NO_MATCHED) {
+            ಮುಂದುವರಿ;
         }
 
-        if (n < 0) {
-            ngx_log_error(NGX_LOG_ALERT, log, 0,
+        ಆದರೆ (n < 0) {
+            ngx_log_error(NGX_LOG_ALERT, ಲಘುಗಣಕ, 0,
                           ngx_regex_exec_n " failed: %i on \"%V\" using \"%s\"",
                           n, s, re[i].name);
-            return NGX_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
 
-        /* match */
+        /*ಹೊಂದಿಕೆ*/
 
-        return NGX_OK;
+        ಹಿಂತಿರುಗಿ NGX_OK;
     }
 
-    return NGX_DECLINED;
+    ಹಿಂತಿರುಗಿ NGX_DECLINED;
 }
 
 
-#if (NGX_PCRE2)
+#ಆದರೆ (NGX_PCRE2)
 
-static void * ngx_libc_cdecl
-ngx_regex_malloc(size_t size, void *data)
+ಸ್ಥಿರ ಶೂನ್ಯ * ngx_libc_cdecl
+ngx_regex_malloc(ಗಾತ್ರ_t ಗಾತ್ರ_2, ಶೂನ್ಯ *ದತ್ತಾಂಶ)
 {
-    if (ngx_regex_pool) {
-        return ngx_palloc(ngx_regex_pool, size);
+    ಆದರೆ (ngx_regex_pool) {
+        ಹಿಂತಿರುಗಿ ngx_palloc(ngx_regex_pool, ಗಾತ್ರ_2);
     }
 
-    if (ngx_regex_direct_alloc) {
-        return ngx_alloc(size, ngx_cycle->log);
+    ಆದರೆ (ngx_regex_ನೇರ_alloc) {
+        ಹಿಂತಿರುಗಿ ngx_alloc(ಗಾತ್ರ_2, ngx_ಚಕ್ರ->ಲಘುಗಣಕ);
     }
 
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
 
-static void ngx_libc_cdecl
-ngx_regex_free(void *p, void *data)
+ಸ್ಥಿರ ಶೂನ್ಯ ngx_libc_cdecl
+ngx_regex_free(ಶೂನ್ಯ *p, ಶೂನ್ಯ *ದತ್ತಾಂಶ)
 {
-    if (ngx_regex_direct_alloc) {
+    ಆದರೆ (ngx_regex_ನೇರ_alloc) {
         ngx_free(p);
     }
 
-    return;
+    ಹಿಂತಿರುಗಿ;
 }
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
-static void * ngx_libc_cdecl
-ngx_regex_malloc(size_t size)
+ಸ್ಥಿರ ಶೂನ್ಯ * ngx_libc_cdecl
+ngx_regex_malloc(ಗಾತ್ರ_t ಗಾತ್ರ_2)
 {
-    if (ngx_regex_pool) {
-        return ngx_palloc(ngx_regex_pool, size);
+    ಆದರೆ (ngx_regex_pool) {
+        ಹಿಂತಿರುಗಿ ngx_palloc(ngx_regex_pool, ಗಾತ್ರ_2);
     }
 
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 }
 
 
-static void ngx_libc_cdecl
-ngx_regex_free(void *p)
+ಸ್ಥಿರ ಶೂನ್ಯ ngx_libc_cdecl
+ngx_regex_free(ಶೂನ್ಯ *p)
 {
-    return;
+    ಹಿಂತಿರುಗಿ;
 }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-static void
-ngx_regex_cleanup(void *data)
+ಸ್ಥಿರ ಶೂನ್ಯ
+ngx_regex_cleanup(ಶೂನ್ಯ *ದತ್ತಾಂಶ)
 {
-#if (NGX_PCRE2 || NGX_HAVE_PCRE_JIT)
-    ngx_regex_conf_t *rcf = data;
+#ಆದರೆ (NGX_PCRE2 || NGX_HAVE_PCRE_JIT)
+    ngx_regex_conf_t *rcf = ದತ್ತಾಂಶ;
 
     ngx_uint_t        i;
     ngx_list_part_t  *part;
@@ -557,14 +557,14 @@ ngx_regex_cleanup(void *data)
     part = &rcf->studies->part;
     elts = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    ಗಾಗಿ (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        ಆದರೆ (i >= part->nelts) {
+            ಆದರೆ (part->ಮುಂದಿನ == ಖಾಲಿ) {
+                ನಿಲ್ಲಿಸು;
             }
 
-            part = part->next;
+            part = part->ಮುಂದಿನ;
             elts = part->elts;
             i = 0;
         }
@@ -576,56 +576,56 @@ ngx_regex_cleanup(void *data)
          * for the same reason.
          */
 
-#if (NGX_PCRE2)
-        pcre2_code_free(elts[i].regex);
-#else
-        if (elts[i].regex->extra != NULL) {
+#ಆದರೆ (NGX_PCRE2)
+        pcre2_ಸಂಕೇತ_free(elts[i].regex);
+#ಇಲ್ಲದಿದ್ದರೆ
+        ಆದರೆ (elts[i].regex->extra != ಖಾಲಿ) {
             pcre_free_study(elts[i].regex->extra);
         }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     /*
      * On configuration parsing errors ngx_regex_module_init() will not
      * be called.  Make sure ngx_regex_studies is properly cleared anyway.
      */
 
-    ngx_regex_studies = NULL;
+    ngx_regex_studies = ಖಾಲಿ;
 
-#if (NGX_PCRE2)
+#ಆದರೆ (NGX_PCRE2)
 
     /*
      * Free compile context and match data.  If needed at runtime by
      * the new cycle, these will be re-allocated.
      */
 
-    ngx_regex_malloc_init(NULL);
+    ngx_regex_malloc_init(ಖಾಲಿ);
 
-    if (ngx_regex_compile_context) {
+    ಆದರೆ (ngx_regex_compile_context) {
         pcre2_compile_context_free(ngx_regex_compile_context);
-        ngx_regex_compile_context = NULL;
+        ngx_regex_compile_context = ಖಾಲಿ;
     }
 
-    if (ngx_regex_match_data) {
-        pcre2_match_data_free(ngx_regex_match_data);
-        ngx_regex_match_data = NULL;
-        ngx_regex_match_data_size = 0;
+    ಆದರೆ (ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ) {
+        pcre2_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ_free(ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ);
+        ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ = ಖಾಲಿ;
+        ngx_regex_ಹೊಂದಿಕೆ_ದತ್ತಾಂಶ_ಗಾತ್ರ = 0;
     }
 
-    ngx_regex_malloc_done();
+    ngx_regex_malloc_ಮುಗಿದ();
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
 
-static ngx_int_t
-ngx_regex_module_init(ngx_cycle_t *cycle)
+ಸ್ಥಿರ ngx_int_t
+ngx_regex_module_init(ngx_ಚಕ್ರ_t *ಚಕ್ರ)
 {
-    int                opt;
-#if !(NGX_PCRE2)
-    const char        *errstr;
-#endif
+    ಪೂರ್ಣಾಂಕ                opt;
+#ಆದರೆ !(NGX_PCRE2)
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ        *errstr;
+#ಆದರೆ_ಅಂತ್ಯ
     ngx_uint_t         i;
     ngx_list_part_t   *part;
     ngx_regex_elt_t   *elts;
@@ -633,172 +633,172 @@ ngx_regex_module_init(ngx_cycle_t *cycle)
 
     opt = 0;
 
-    rcf = (ngx_regex_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_regex_module);
+    rcf = (ngx_regex_conf_t *) ngx_get_conf(ಚಕ್ರ->conf_ctx, ngx_regex_module);
 
-#if (NGX_PCRE2 || NGX_HAVE_PCRE_JIT)
+#ಆದರೆ (NGX_PCRE2 || NGX_HAVE_PCRE_JIT)
 
-    if (rcf->pcre_jit) {
-#if (NGX_PCRE2)
+    ಆದರೆ (rcf->pcre_jit) {
+#ಆದರೆ (NGX_PCRE2)
         opt = 1;
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
         opt = PCRE_STUDY_JIT_COMPILE;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    ngx_regex_malloc_init(cycle->pool);
+    ngx_regex_malloc_init(ಚಕ್ರ->pool);
 
     part = &rcf->studies->part;
     elts = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    ಗಾಗಿ (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        ಆದರೆ (i >= part->nelts) {
+            ಆದರೆ (part->ಮುಂದಿನ == ಖಾಲಿ) {
+                ನಿಲ್ಲಿಸು;
             }
 
-            part = part->next;
+            part = part->ಮುಂದಿನ;
             elts = part->elts;
             i = 0;
         }
 
-#if (NGX_PCRE2)
+#ಆದರೆ (NGX_PCRE2)
 
-        if (opt) {
-            int  n;
+        ಆದರೆ (opt) {
+            ಪೂರ್ಣಾಂಕ  n;
 
             n = pcre2_jit_compile(elts[i].regex, PCRE2_JIT_COMPLETE);
 
-            if (n != 0) {
-                ngx_log_error(NGX_LOG_INFO, cycle->log, 0,
+            ಆದರೆ (n != 0) {
+                ngx_log_error(NGX_LOG_INFO, ಚಕ್ರ->ಲಘುಗಣಕ, 0,
                               "pcre2_jit_compile() failed: %d in \"%s\", "
                               "ignored",
                               n, elts[i].name);
             }
         }
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
-        elts[i].regex->extra = pcre_study(elts[i].regex->code, opt, &errstr);
+        elts[i].regex->extra = pcre_study(elts[i].regex->ಸಂಕೇತ_2, opt, &errstr);
 
-        if (errstr != NULL) {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, 0,
+        ಆದರೆ (errstr != ಖಾಲಿ) {
+            ngx_log_error(NGX_LOG_ALERT, ಚಕ್ರ->ಲಘುಗಣಕ, 0,
                           "pcre_study() failed: %s in \"%s\"",
                           errstr, elts[i].name);
         }
 
-#if (NGX_HAVE_PCRE_JIT)
-        if (opt & PCRE_STUDY_JIT_COMPILE) {
-            int jit, n;
+#ಆದರೆ (NGX_HAVE_PCRE_JIT)
+        ಆದರೆ (opt & PCRE_STUDY_JIT_COMPILE) {
+            ಪೂರ್ಣಾಂಕ jit, n;
 
             jit = 0;
-            n = pcre_fullinfo(elts[i].regex->code, elts[i].regex->extra,
+            n = pcre_fullinfo(elts[i].regex->ಸಂಕೇತ_2, elts[i].regex->extra,
                               PCRE_INFO_JIT, &jit);
 
-            if (n != 0 || jit != 1) {
-                ngx_log_error(NGX_LOG_INFO, cycle->log, 0,
+            ಆದರೆ (n != 0 || jit != 1) {
+                ngx_log_error(NGX_LOG_INFO, ಚಕ್ರ->ಲಘುಗಣಕ, 0,
                               "JIT compiler does not support pattern: \"%s\"",
                               elts[i].name);
             }
         }
-#endif
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
     }
 
-    ngx_regex_malloc_done();
+    ngx_regex_malloc_ಮುಗಿದ();
 
-    ngx_regex_studies = NULL;
+    ngx_regex_studies = ಖಾಲಿ;
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
-static void *
-ngx_regex_create_conf(ngx_cycle_t *cycle)
+ಸ್ಥಿರ ಶೂನ್ಯ *
+ngx_regex_create_conf(ngx_ಚಕ್ರ_t *ಚಕ್ರ)
 {
     ngx_regex_conf_t    *rcf;
     ngx_pool_cleanup_t  *cln;
 
-    rcf = ngx_pcalloc(cycle->pool, sizeof(ngx_regex_conf_t));
-    if (rcf == NULL) {
-        return NULL;
+    rcf = ngx_pcalloc(ಚಕ್ರ->pool, ಗಾತ್ರ(ngx_regex_conf_t));
+    ಆದರೆ (rcf == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
     rcf->pcre_jit = NGX_CONF_UNSET;
 
-    cln = ngx_pool_cleanup_add(cycle->pool, 0);
-    if (cln == NULL) {
-        return NULL;
+    cln = ngx_pool_cleanup_ಕೂಡಿಸು(ಚಕ್ರ->pool, 0);
+    ಆದರೆ (cln == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    rcf->studies = ngx_list_create(cycle->pool, 8, sizeof(ngx_regex_elt_t));
-    if (rcf->studies == NULL) {
-        return NULL;
+    rcf->studies = ngx_list_create(ಚಕ್ರ->pool, 8, ಗಾತ್ರ(ngx_regex_elt_t));
+    ಆದರೆ (rcf->studies == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
     cln->handler = ngx_regex_cleanup;
-    cln->data = rcf;
+    cln->ದತ್ತಾಂಶ = rcf;
 
     ngx_regex_studies = rcf->studies;
 
-    return rcf;
+    ಹಿಂತಿರುಗಿ rcf;
 }
 
 
-static char *
-ngx_regex_init_conf(ngx_cycle_t *cycle, void *conf)
+ಸ್ಥಿರ ಅಕ್ಷರ *
+ngx_regex_init_conf(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ಶೂನ್ಯ *conf)
 {
     ngx_regex_conf_t *rcf = conf;
 
-    ngx_conf_init_value(rcf->pcre_jit, 0);
+    ngx_conf_init_ಮೌಲ್ಯ(rcf->pcre_jit, 0);
 
-    return NGX_CONF_OK;
+    ಹಿಂತಿರುಗಿ NGX_CONF_OK;
 }
 
 
-static char *
-ngx_regex_pcre_jit(ngx_conf_t *cf, void *post, void *data)
+ಸ್ಥಿರ ಅಕ್ಷರ *
+ngx_regex_pcre_jit(ngx_conf_t *cf, ಶೂನ್ಯ *post, ಶೂನ್ಯ *ದತ್ತಾಂಶ)
 {
-    ngx_flag_t  *fp = data;
+    ngx_flag_t  *fp = ದತ್ತಾಂಶ;
 
-    if (*fp == 0) {
-        return NGX_CONF_OK;
+    ಆದರೆ (*fp == 0) {
+        ಹಿಂತಿರುಗಿ NGX_CONF_OK;
     }
 
-#if (NGX_PCRE2)
+#ಆದರೆ (NGX_PCRE2)
     {
-    int       r;
+    ಪೂರ್ಣಾಂಕ       r;
     uint32_t  jit;
 
     jit = 0;
     r = pcre2_config(PCRE2_CONFIG_JIT, &jit);
 
-    if (r != 0 || jit != 1) {
+    ಆದರೆ (r != 0 || jit != 1) {
         ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                            "PCRE2 library does not support JIT");
         *fp = 0;
     }
     }
-#elif (NGX_HAVE_PCRE_JIT)
+#ಅಥವಾಆದರೆ (NGX_HAVE_PCRE_JIT)
     {
-    int  jit, r;
+    ಪೂರ್ಣಾಂಕ  jit, r;
 
     jit = 0;
     r = pcre_config(PCRE_CONFIG_JIT, &jit);
 
-    if (r != 0 || jit != 1) {
+    ಆದರೆ (r != 0 || jit != 1) {
         ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                            "PCRE library does not support JIT");
         *fp = 0;
     }
     }
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
     ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                        "nginx was built without PCRE JIT support");
     *fp = 0;
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    return NGX_CONF_OK;
+    ಹಿಂತಿರುಗಿ NGX_CONF_OK;
 }

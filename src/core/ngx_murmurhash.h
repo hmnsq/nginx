@@ -5,15 +5,15 @@
  */
 
 
-#ifndef _NGX_MURMURHASH_H_INCLUDED_
-#define _NGX_MURMURHASH_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ _NGX_MURMURHASH_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿಸು _NGX_MURMURHASH_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
-uint32_t ngx_murmur_hash2(u_char *data, size_t len);
+uint32_t ngx_murmur_hash2(u_char *ದತ್ತಾಂಶ, ಗಾತ್ರ_t len);
 
 
-#endif /* _NGX_MURMURHASH_H_INCLUDED_ */
+#ಆದರೆ_ಅಂತ್ಯ /* _NGX_MURMURHASH_H_INCLUDED_ */

@@ -5,159 +5,159 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <nginx.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <nginx.h>
 
 
-static void ngx_show_version_info(void);
-static ngx_int_t ngx_add_inherited_sockets(ngx_cycle_t *cycle);
-static void ngx_cleanup_environment(void *data);
-static void ngx_cleanup_environment_variable(void *data);
-static ngx_int_t ngx_get_options(int argc, char *const *argv);
-static ngx_int_t ngx_process_options(ngx_cycle_t *cycle);
-static ngx_int_t ngx_save_argv(ngx_cycle_t *cycle, int argc, char *const *argv);
-static void *ngx_core_module_create_conf(ngx_cycle_t *cycle);
-static char *ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf);
-static char *ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_set_env(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd,
-    void *conf);
-static char *ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd,
-    void *conf);
-static char *ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-#if (NGX_HAVE_DLOPEN)
-static void ngx_unload_module(void *data);
-#endif
+ಸ್ಥಿರ ಶೂನ್ಯ ngx_show_ಆವೃತ್ತಿ_info(ಶೂನ್ಯ);
+ಸ್ಥಿರ ngx_int_t ngx_ಕೂಡಿಸು_inherited_sockets(ngx_ಚಕ್ರ_t *ಚಕ್ರ);
+ಸ್ಥಿರ ಶೂನ್ಯ ngx_cleanup_environment(ಶೂನ್ಯ *ದತ್ತಾಂಶ);
+ಸ್ಥಿರ ಶೂನ್ಯ ngx_cleanup_environment_variable(ಶೂನ್ಯ *ದತ್ತಾಂಶ);
+ಸ್ಥಿರ ngx_int_t ngx_get_options(ಪೂರ್ಣಾಂಕ argc, ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ *argv);
+ಸ್ಥಿರ ngx_int_t ngx_process_options(ngx_ಚಕ್ರ_t *ಚಕ್ರ);
+ಸ್ಥಿರ ngx_int_t ngx_save_argv(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ಪೂರ್ಣಾಂಕ argc, ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ *argv);
+ಸ್ಥಿರ ಶೂನ್ಯ *ngx_core_module_create_conf(ngx_ಚಕ್ರ_t *ಚಕ್ರ);
+ಸ್ಥಿರ ಅಕ್ಷರ *ngx_core_module_init_conf(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ಶೂನ್ಯ *conf);
+ಸ್ಥಿರ ಅಕ್ಷರ *ngx_ಗಣ_user(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಸ್ಥಿರ ಅಕ್ಷರ *ngx_ಗಣ_env(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಸ್ಥಿರ ಅಕ್ಷರ *ngx_ಗಣ_ಆದ್ಯತೆ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+ಸ್ಥಿರ ಅಕ್ಷರ *ngx_ಗಣ_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd,
+    ಶೂನ್ಯ *conf);
+ಸ್ಥಿರ ಅಕ್ಷರ *ngx_ಗಣ_ಕೆಲಸಗಾರ_processes(ngx_conf_t *cf, ngx_command_t *cmd,
+    ಶೂನ್ಯ *conf);
+ಸ್ಥಿರ ಅಕ್ಷರ *ngx_ತುಂಬು_module(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf);
+#ಆದರೆ (NGX_HAVE_DLOPEN)
+ಸ್ಥಿರ ಶೂನ್ಯ ngx_unload_module(ಶೂನ್ಯ *ದತ್ತಾಂಶ);
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-static ngx_conf_enum_t  ngx_debug_points[] = {
+ಸ್ಥಿರ ngx_conf_enum_t  ngx_debug_points[] = {
     { ngx_string("stop"), NGX_DEBUG_POINTS_STOP },
     { ngx_string("abort"), NGX_DEBUG_POINTS_ABORT },
     { ngx_null_string, 0 }
 };
 
 
-static ngx_command_t  ngx_core_commands[] = {
+ಸ್ಥಿರ ngx_command_t  ngx_core_commands[] = {
 
     { ngx_string("daemon"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_FLAG,
-      ngx_conf_set_flag_slot,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_FLAG,
+      ngx_conf_ಗಣ_flag_ಸ್ಥಾನ,
       0,
       offsetof(ngx_core_conf_t, daemon),
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("master_process"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_FLAG,
-      ngx_conf_set_flag_slot,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_FLAG,
+      ngx_conf_ಗಣ_flag_ಸ್ಥಾನ,
       0,
       offsetof(ngx_core_conf_t, master),
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("timer_resolution"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_msec_slot,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_conf_ಗಣ_msec_ಸ್ಥಾನ,
       0,
       offsetof(ngx_core_conf_t, timer_resolution),
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("pid"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_str_slot,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_conf_ಗಣ_str_ಸ್ಥಾನ,
       0,
       offsetof(ngx_core_conf_t, pid),
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("lock_file"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_str_slot,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_conf_ಗಣ_str_ಸ್ಥಾನ,
       0,
-      offsetof(ngx_core_conf_t, lock_file),
-      NULL },
+      offsetof(ngx_core_conf_t, ಬೀಗ_file),
+      ಖಾಲಿ },
 
     { ngx_string("worker_processes"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_set_worker_processes,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_ಗಣ_ಕೆಲಸಗಾರ_processes,
       0,
       0,
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("debug_points"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_enum_slot,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_conf_ಗಣ_enum_ಸ್ಥಾನ,
       0,
       offsetof(ngx_core_conf_t, debug_points),
       &ngx_debug_points },
 
     { ngx_string("user"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE12,
-      ngx_set_user,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE12,
+      ngx_ಗಣ_user,
       0,
       0,
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("worker_priority"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_set_priority,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_ಗಣ_ಆದ್ಯತೆ,
       0,
       0,
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("worker_cpu_affinity"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_1MORE,
-      ngx_set_cpu_affinity,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_1_ಇನ್ನಷ್ಟು,
+      ngx_ಗಣ_cpu_affinity,
       0,
       0,
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("worker_rlimit_nofile"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_num_slot,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_conf_ಗಣ_ಅಂಕೆ_ಸ್ಥಾನ,
       0,
       offsetof(ngx_core_conf_t, rlimit_nofile),
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("worker_rlimit_core"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_off_slot,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_conf_ಗಣ_off_ಸ್ಥಾನ,
       0,
       offsetof(ngx_core_conf_t, rlimit_core),
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("worker_shutdown_timeout"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_msec_slot,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_conf_ಗಣ_msec_ಸ್ಥಾನ,
       0,
       offsetof(ngx_core_conf_t, shutdown_timeout),
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("working_directory"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_str_slot,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_conf_ಗಣ_str_ಸ್ಥಾನ,
       0,
       offsetof(ngx_core_conf_t, working_directory),
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("env"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_set_env,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_ಗಣ_env,
       0,
       0,
-      NULL },
+      ಖಾಲಿ },
 
     { ngx_string("load_module"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_load_module,
+      NGX_MAIN_CONF|NGX_ನೇರ_CONF|NGX_CONF_TAKE1,
+      ngx_ತುಂಬು_module,
       0,
       0,
-      NULL },
+      ಖಾಲಿ },
 
       ngx_null_command
 };
 
 
-static ngx_core_module_t  ngx_core_module_ctx = {
+ಸ್ಥಿರ ngx_core_module_t  ngx_core_module_ctx = {
     ngx_string("core"),
     ngx_core_module_create_conf,
     ngx_core_module_init_conf
@@ -169,114 +169,114 @@ ngx_module_t  ngx_core_module = {
     &ngx_core_module_ctx,                  /* module context */
     ngx_core_commands,                     /* module directives */
     NGX_CORE_MODULE,                       /* module type */
-    NULL,                                  /* init master */
-    NULL,                                  /* init module */
-    NULL,                                  /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
-    NULL,                                  /* exit process */
-    NULL,                                  /* exit master */
+    ಖಾಲಿ,                                  /* init master */
+    ಖಾಲಿ,                                  /* init module */
+    ಖಾಲಿ,                                  /* init process */
+    ಖಾಲಿ,                                  /* init thread */
+    ಖಾಲಿ,                                  /* exit thread */
+    ಖಾಲಿ,                                  /* exit process */
+    ಖಾಲಿ,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
-static ngx_uint_t   ngx_show_help;
-static ngx_uint_t   ngx_show_version;
-static ngx_uint_t   ngx_show_configure;
-static u_char      *ngx_prefix;
-static u_char      *ngx_error_log;
-static u_char      *ngx_conf_file;
-static u_char      *ngx_conf_params;
-#if (NGX_CONTROL_API)
-static u_char      *ngx_control_addr;
-#endif
-static char        *ngx_signal;
+ಸ್ಥಿರ ngx_uint_t   ngx_show_help;
+ಸ್ಥಿರ ngx_uint_t   ngx_show_ಆವೃತ್ತಿ;
+ಸ್ಥಿರ ngx_uint_t   ngx_show_configure;
+ಸ್ಥಿರ u_char      *ngx_ಪೂರ್ವಪ್ರತ್ಯಯ;
+ಸ್ಥಿರ u_char      *ngx_error_log;
+ಸ್ಥಿರ u_char      *ngx_conf_file;
+ಸ್ಥಿರ u_char      *ngx_conf_params;
+#ಆದರೆ (NGX_CONTROL_API)
+ಸ್ಥಿರ u_char      *ngx_control_addr;
+#ಆದರೆ_ಅಂತ್ಯ
+ಸ್ಥಿರ ಅಕ್ಷರ        *ngx_signal;
 
 
-static char **ngx_os_environ;
+ಸ್ಥಿರ ಅಕ್ಷರ **ngx_os_environ;
 
 
-int ngx_cdecl
-main(int argc, char *const *argv)
+ಪೂರ್ಣಾಂಕ ngx_cdecl
+ಮುಖ್ಯ(ಪೂರ್ಣಾಂಕ argc, ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ *argv)
 {
     ngx_buf_t        *b;
-    ngx_log_t        *log;
+    ngx_log_t        *ಲಘುಗಣಕ;
     ngx_uint_t        i;
-    ngx_cycle_t      *cycle, init_cycle;
+    ngx_ಚಕ್ರ_t      *ಚಕ್ರ, init_ಚಕ್ರ;
     ngx_conf_dump_t  *cd;
     ngx_core_conf_t  *ccf;
 
     ngx_debug_init();
 
-    if (ngx_strerror_init() != NGX_OK) {
-        return 1;
+    ಆದರೆ (ngx_strerror_init() != NGX_OK) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-    if (ngx_get_options(argc, argv) != NGX_OK) {
-        return 1;
+    ಆದರೆ (ngx_get_options(argc, argv) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-    if (ngx_show_version) {
-        ngx_show_version_info();
+    ಆದರೆ (ngx_show_ಆವೃತ್ತಿ) {
+        ngx_show_ಆವೃತ್ತಿ_info();
 
-        if (!ngx_test_config) {
-            return 0;
+        ಆದರೆ (!ngx_test_config) {
+            ಹಿಂತಿರುಗಿ 0;
         }
     }
 
     /* TODO */ ngx_max_sockets = -1;
 
-    ngx_time_init();
+    ngx_ಸಮಯ_init();
 
-#if (NGX_PCRE)
+#ಆದರೆ (NGX_PCRE)
     ngx_regex_init();
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     ngx_pid = ngx_getpid();
-    ngx_parent = ngx_getppid();
+    ngx_ಪೋಷಕ = ngx_getppid();
 
-    log = ngx_log_init(ngx_prefix, ngx_error_log);
-    if (log == NULL) {
-        return 1;
+    ಲಘುಗಣಕ = ngx_log_init(ngx_ಪೂರ್ವಪ್ರತ್ಯಯ, ngx_error_log);
+    ಆದರೆ (ಲಘುಗಣಕ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
     /* STUB */
-#if (NGX_OPENSSL)
-    ngx_ssl_init(log);
-#endif
+#ಆದರೆ (NGX_OPENSSL)
+    ngx_ssl_init(ಲಘುಗಣಕ);
+#ಆದರೆ_ಅಂತ್ಯ
 
     /*
      * init_cycle->log is required for signal handlers and
      * ngx_process_options()
      */
 
-    ngx_memzero(&init_cycle, sizeof(ngx_cycle_t));
-    init_cycle.log = log;
-    ngx_cycle = &init_cycle;
+    ngx_memzero(&init_ಚಕ್ರ, ಗಾತ್ರ(ngx_ಚಕ್ರ_t));
+    init_ಚಕ್ರ.ಲಘುಗಣಕ = ಲಘುಗಣಕ;
+    ngx_ಚಕ್ರ = &init_ಚಕ್ರ;
 
-    init_cycle.pool = ngx_create_pool(1024, log);
-    if (init_cycle.pool == NULL) {
-        return 1;
+    init_ಚಕ್ರ.pool = ngx_create_pool(1024, ಲಘುಗಣಕ);
+    ಆದರೆ (init_ಚಕ್ರ.pool == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-    if (ngx_save_argv(&init_cycle, argc, argv) != NGX_OK) {
-        return 1;
+    ಆದರೆ (ngx_save_argv(&init_ಚಕ್ರ, argc, argv) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-    if (ngx_process_options(&init_cycle) != NGX_OK) {
-        return 1;
+    ಆದರೆ (ngx_process_options(&init_ಚಕ್ರ) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-    if (ngx_os_init(log) != NGX_OK) {
-        return 1;
+    ಆದರೆ (ngx_os_init(ಲಘುಗಣಕ) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
     /*
      * ngx_crc32_table_init() requires ngx_cacheline_size set in ngx_os_init()
      */
 
-    if (ngx_crc32_table_init() != NGX_OK) {
-        return 1;
+    ಆದರೆ (ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_32_ಕೋಷ್ಟಕ_init() != NGX_OK) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
     /*
@@ -285,134 +285,134 @@ main(int argc, char *const *argv)
 
     ngx_slab_sizes_init();
 
-    if (ngx_add_inherited_sockets(&init_cycle) != NGX_OK) {
-        return 1;
+    ಆದರೆ (ngx_ಕೂಡಿಸು_inherited_sockets(&init_ಚಕ್ರ) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-#if (NGX_CONTROL_API)
+#ಆದರೆ (NGX_CONTROL_API)
     ngx_control_preinit();
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    if (ngx_preinit_modules() != NGX_OK) {
-        return 1;
+    ಆದರೆ (ngx_preinit_modules() != NGX_OK) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-    cycle = ngx_init_cycle(&init_cycle);
-    if (cycle == NULL) {
-        if (ngx_test_config) {
+    ಚಕ್ರ = ngx_init_ಚಕ್ರ(&init_ಚಕ್ರ);
+    ಆದರೆ (ಚಕ್ರ == ಖಾಲಿ) {
+        ಆದರೆ (ngx_test_config) {
             ngx_log_stderr(0, "configuration file %s test failed",
-                           init_cycle.conf_file.data);
+                           init_ಚಕ್ರ.conf_file.ದತ್ತಾಂಶ);
         }
 
-        return 1;
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-    if (ngx_test_config) {
-        if (!ngx_quiet_mode) {
+    ಆದರೆ (ngx_test_config) {
+        ಆದರೆ (!ngx_quiet_ಬಹುಲಕ) {
             ngx_log_stderr(0, "configuration file %s test is successful",
-                           cycle->conf_file.data);
+                           ಚಕ್ರ->conf_file.ದತ್ತಾಂಶ);
         }
 
-        if (ngx_dump_config) {
-            cd = cycle->config_dump.elts;
+        ಆದರೆ (ngx_dump_config) {
+            cd = ಚಕ್ರ->config_dump.elts;
 
-            for (i = 0; i < cycle->config_dump.nelts; i++) {
+            ಗಾಗಿ (i = 0; i < ಚಕ್ರ->config_dump.nelts; i++) {
 
                 ngx_write_stdout("# configuration file ");
-                (void) ngx_write_fd(ngx_stdout, cd[i].name.data,
+                (ಶೂನ್ಯ) ngx_write_fd(ngx_stdout, cd[i].name.ದತ್ತಾಂಶ,
                                     cd[i].name.len);
                 ngx_write_stdout(":" NGX_LINEFEED);
 
-                b = cd[i].buffer;
+                b = cd[i].ಬಫರ್;
 
-                (void) ngx_write_fd(ngx_stdout, b->pos, b->last - b->pos);
+                (ಶೂನ್ಯ) ngx_write_fd(ngx_stdout, b->pos, b->ಕೊನೆಯ - b->pos);
                 ngx_write_stdout(NGX_LINEFEED);
             }
         }
 
-        return 0;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    if (ngx_signal) {
-        return ngx_signal_process(cycle, ngx_signal);
+    ಆದರೆ (ngx_signal) {
+        ಹಿಂತಿರುಗಿ ngx_signal_process(ಚಕ್ರ, ngx_signal);
     }
 
-    ngx_os_status(cycle->log);
+    ngx_os_ಸ್ಥಿತಿ(ಚಕ್ರ->ಲಘುಗಣಕ);
 
-    ngx_cycle = cycle;
+    ngx_ಚಕ್ರ = ಚಕ್ರ;
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(ಚಕ್ರ->conf_ctx, ngx_core_module);
 
-    if (ccf->master && ngx_process == NGX_PROCESS_SINGLE) {
+    ಆದರೆ (ccf->master && ngx_process == NGX_PROCESS_SINGLE) {
         ngx_process = NGX_PROCESS_MASTER;
     }
 
-#if !(NGX_WIN32)
+#ಆದರೆ !(NGX_WIN32)
 
-    if (ngx_init_signals(cycle->log) != NGX_OK) {
-        return 1;
+    ಆದರೆ (ngx_init_ಸಂಕೇತಗಳು(ಚಕ್ರ->ಲಘುಗಣಕ) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-    if (!ngx_inherited && ccf->daemon) {
-        if (ngx_daemon(cycle->log) != NGX_OK) {
-            return 1;
+    ಆದರೆ (!ngx_inherited && ccf->daemon) {
+        ಆದರೆ (ngx_daemon(ಚಕ್ರ->ಲಘುಗಣಕ) != NGX_OK) {
+            ಹಿಂತಿರುಗಿ 1;
         }
 
         ngx_daemonized = 1;
     }
 
-    if (ngx_inherited) {
+    ಆದರೆ (ngx_inherited) {
         ngx_daemonized = 1;
     }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if (NGX_CONTROL_API)
-    if (ngx_process == NGX_PROCESS_SINGLE) {
-        ngx_log_error(NGX_LOG_WARN, cycle->log, 0,
+#ಆದರೆ (NGX_CONTROL_API)
+    ಆದರೆ (ngx_process == NGX_PROCESS_SINGLE) {
+        ngx_log_error(NGX_LOG_WARN, ಚಕ್ರ->ಲಘುಗಣಕ, 0,
                       "control API unavailable in single process mode");
 
-    } else {
-        if (ngx_control_init(ngx_control_addr) != NGX_OK) {
-            return 1;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಆದರೆ (ngx_control_init(ngx_control_addr) != NGX_OK) {
+            ಹಿಂತಿರುಗಿ 1;
         }
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    if (ngx_create_pidfile(&ccf->pid, cycle->log) != NGX_OK) {
-        return 1;
+    ಆದರೆ (ngx_create_pidfile(&ccf->pid, ಚಕ್ರ->ಲಘುಗಣಕ) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-    if (ngx_log_redirect_stderr(cycle) != NGX_OK) {
-        return 1;
+    ಆದರೆ (ngx_log_redirect_stderr(ಚಕ್ರ) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ 1;
     }
 
-    if (log->file->fd != ngx_stderr) {
-        if (ngx_close_file(log->file->fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
+    ಆದರೆ (ಲಘುಗಣಕ->file->fd != ngx_stderr) {
+        ಆದರೆ (ngx_close_file(ಲಘುಗಣಕ->file->fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, ಚಕ್ರ->ಲಘುಗಣಕ, ngx_errno,
                           ngx_close_file_n " built-in log failed");
         }
     }
 
     ngx_use_stderr = 0;
 
-    if (ngx_process == NGX_PROCESS_SINGLE) {
-        ngx_single_process_cycle(cycle);
+    ಆದರೆ (ngx_process == NGX_PROCESS_SINGLE) {
+        ngx_single_process_ಚಕ್ರ(ಚಕ್ರ);
 
-    } else {
-        ngx_master_process_cycle(cycle);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ngx_master_process_ಚಕ್ರ(ಚಕ್ರ);
     }
 
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
 
-static void
-ngx_show_version_info(void)
+ಸ್ಥಿರ ಶೂನ್ಯ
+ngx_show_ಆವೃತ್ತಿ_info(ಶೂನ್ಯ)
 {
     ngx_write_stderr("nginx version: " NGINX_VER_BUILD NGX_LINEFEED);
 
-    if (ngx_show_help) {
+    ಆದರೆ (ngx_show_help) {
         ngx_write_stderr(
             "Usage: nginx [-?hvVtTq] [-s signal] [-p prefix]" NGX_LINEFEED
             "             [-e filename] [-c filename] [-g directives]"
@@ -429,57 +429,57 @@ ngx_show_version_info(void)
                                "during configuration testing" NGX_LINEFEED
             "  -s signal     : send signal to a master process: "
                                "stop, quit, reopen, reload" NGX_LINEFEED
-#if (NGX_CONTROL_API)
+#ಆದರೆ (NGX_CONTROL_API)
             "  -l addr       : open control socket on address" NGX_LINEFEED
-#endif
-#ifdef NGX_PREFIX
-            "  -p prefix     : set prefix path (default: " NGX_PREFIX ")"
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ NGX_ಪೂರ್ವಪ್ರತ್ಯಯ
+            "  -p prefix     : set prefix path (default: " NGX_ಪೂರ್ವಪ್ರತ್ಯಯ ")"
                                NGX_LINEFEED
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
             "  -p prefix     : set prefix path (default: NONE)" NGX_LINEFEED
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
             "  -e filename   : set error log file (default: "
-#ifdef NGX_ERROR_LOG_STDERR
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ NGX_ERROR_LOG_STDERR
                                "stderr)" NGX_LINEFEED
-#else
-                               NGX_ERROR_LOG_PATH ")" NGX_LINEFEED
-#endif
-            "  -c filename   : set configuration file (default: " NGX_CONF_PATH
+#ಇಲ್ಲದಿದ್ದರೆ
+                               NGX_ERROR_LOG_ಮಾರ್ಗ ")" NGX_LINEFEED
+#ಆದರೆ_ಅಂತ್ಯ
+            "  -c filename   : set configuration file (default: " NGX_CONF_ಮಾರ್ಗ
                                ")" NGX_LINEFEED
             "  -g directives : set global directives out of configuration "
                                "file" NGX_LINEFEED NGX_LINEFEED
         );
     }
 
-    if (ngx_show_configure) {
+    ಆದರೆ (ngx_show_configure) {
 
-#ifdef NGX_COMPILER
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ NGX_COMPILER
         ngx_write_stderr("built by " NGX_COMPILER NGX_LINEFEED);
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if (NGX_SSL)
-        if (ngx_strcmp(ngx_ssl_version(), OPENSSL_VERSION_TEXT) == 0) {
-            ngx_write_stderr("built with " OPENSSL_VERSION_TEXT NGX_LINEFEED);
-        } else {
-            ngx_write_stderr("built with " OPENSSL_VERSION_TEXT
+#ಆದರೆ (NGX_SSL)
+        ಆದರೆ (ngx_strcmp(ngx_ssl_ಆವೃತ್ತಿ(), OPENSSL_ಆವೃತ್ತಿ_ಪಠ್ಯ) == 0) {
+            ngx_write_stderr("built with " OPENSSL_ಆವೃತ್ತಿ_ಪಠ್ಯ NGX_LINEFEED);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ngx_write_stderr("built with " OPENSSL_ಆವೃತ್ತಿ_ಪಠ್ಯ
                              " (running with ");
-            ngx_write_stderr((char *) (uintptr_t) ngx_ssl_version());
+            ngx_write_stderr((ಅಕ್ಷರ *) (uintptr_t) ngx_ssl_ಆವೃತ್ತಿ());
             ngx_write_stderr(")" NGX_LINEFEED);
         }
-#ifdef SSL_CTRL_SET_TLSEXT_HOSTNAME
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ SSL_CTRL_ಗಣ_TLSEXT_HOSTNAME
         ngx_write_stderr("TLS SNI support enabled" NGX_LINEFEED);
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
         ngx_write_stderr("TLS SNI support disabled" NGX_LINEFEED);
-#endif
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
 
         ngx_write_stderr("configure arguments:" NGX_CONFIGURE NGX_LINEFEED);
     }
 }
 
 
-static ngx_int_t
-ngx_add_inherited_sockets(ngx_cycle_t *cycle)
+ಸ್ಥಿರ ngx_int_t
+ngx_ಕೂಡಿಸು_inherited_sockets(ngx_ಚಕ್ರ_t *ಚಕ್ರ)
 {
     u_char           *p, *v, *inherited;
     ngx_int_t         s;
@@ -487,228 +487,228 @@ ngx_add_inherited_sockets(ngx_cycle_t *cycle)
 
     inherited = (u_char *) getenv(NGINX_VAR);
 
-    if (inherited == NULL) {
-        return NGX_OK;
+    ಆದರೆ (inherited == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ NGX_OK;
     }
 
-    ngx_log_error(NGX_LOG_NOTICE, cycle->log, 0,
+    ngx_log_error(NGX_LOG_NOTICE, ಚಕ್ರ->ಲಘುಗಣಕ, 0,
                   "using inherited sockets from \"%s\"", inherited);
 
-    if (ngx_array_init(&cycle->listening, cycle->pool, 10,
-                       sizeof(ngx_listening_t))
+    ಆದರೆ (ngx_array_init(&ಚಕ್ರ->listening, ಚಕ್ರ->pool, 10,
+                       ಗಾತ್ರ(ngx_listening_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    for (p = inherited, v = p; *p; p++) {
-        if (*p == ':' || *p == ';') {
+    ಗಾಗಿ (p = inherited, v = p; *p; p++) {
+        ಆದರೆ (*p == ':' || *p == ';') {
             s = ngx_atoi(v, p - v);
-            if (s == NGX_ERROR) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
+            ಆದರೆ (s == NGX_ERROR) {
+                ngx_log_error(NGX_LOG_EMERG, ಚಕ್ರ->ಲಘುಗಣಕ, 0,
                               "invalid socket number \"%s\" in " NGINX_VAR
                               " environment variable, ignoring the rest"
                               " of the variable", v);
-                break;
+                ನಿಲ್ಲಿಸು;
             }
 
             v = p + 1;
 
-            ls = ngx_array_push(&cycle->listening);
-            if (ls == NULL) {
-                return NGX_ERROR;
+            ls = ngx_array_ತಳ್ಳು(&ಚಕ್ರ->listening);
+            ಆದರೆ (ls == ಖಾಲಿ) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            ngx_memzero(ls, sizeof(ngx_listening_t));
+            ngx_memzero(ls, ಗಾತ್ರ(ngx_listening_t));
 
             ls->fd = (ngx_socket_t) s;
             ls->inherited = 1;
         }
     }
 
-    if (v != p) {
-        ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
+    ಆದರೆ (v != p) {
+        ngx_log_error(NGX_LOG_EMERG, ಚಕ್ರ->ಲಘುಗಣಕ, 0,
                       "invalid socket number \"%s\" in " NGINX_VAR
                       " environment variable, ignoring", v);
     }
 
     ngx_inherited = 1;
 
-    return ngx_set_inherited_sockets(cycle);
+    ಹಿಂತಿರುಗಿ ngx_ಗಣ_inherited_sockets(ಚಕ್ರ);
 }
 
 
-char **
-ngx_set_environment(ngx_cycle_t *cycle, ngx_uint_t *last)
+ಅಕ್ಷರ **
+ngx_ಗಣ_environment(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ngx_uint_t *ಕೊನೆಯ)
 {
-    char                **p, **env, *str;
-    size_t                len;
+    ಅಕ್ಷರ                **p, **env, *str;
+    ಗಾತ್ರ_t                len;
     ngx_str_t            *var;
     ngx_uint_t            i, n;
     ngx_core_conf_t      *ccf;
     ngx_pool_cleanup_t   *cln;
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(ಚಕ್ರ->conf_ctx, ngx_core_module);
 
-    if (last == NULL && ccf->environment) {
-        return ccf->environment;
+    ಆದರೆ (ಕೊನೆಯ == ಖಾಲಿ && ccf->environment) {
+        ಹಿಂತಿರುಗಿ ccf->environment;
     }
 
     var = ccf->env.elts;
 
-    for (i = 0; i < ccf->env.nelts; i++) {
-        if (ngx_strcmp(var[i].data, "TZ") == 0
-            || ngx_strncmp(var[i].data, "TZ=", 3) == 0)
+    ಗಾಗಿ (i = 0; i < ccf->env.nelts; i++) {
+        ಆದರೆ (ngx_strcmp(var[i].ದತ್ತಾಂಶ, "TZ") == 0
+            || ngx_strncmp(var[i].ದತ್ತಾಂಶ, "TZ=", 3) == 0)
         {
-            goto tz_found;
+            ಹೋಗು tz_ಸಿಕ್ಕಿತು;
         }
     }
 
-    var = ngx_array_push(&ccf->env);
-    if (var == NULL) {
-        return NULL;
+    var = ngx_array_ತಳ್ಳು(&ccf->env);
+    ಆದರೆ (var == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
     var->len = 2;
-    var->data = (u_char *) "TZ";
+    var->ದತ್ತಾಂಶ = (u_char *) "TZ";
 
     var = ccf->env.elts;
 
-tz_found:
+tz_ಸಿಕ್ಕಿತು:
 
     n = 0;
 
-    for (i = 0; i < ccf->env.nelts; i++) {
+    ಗಾಗಿ (i = 0; i < ccf->env.nelts; i++) {
 
-        if (var[i].data[var[i].len] == '=') {
+        ಆದರೆ (var[i].ದತ್ತಾಂಶ[var[i].len] == '=') {
             n++;
-            continue;
+            ಮುಂದುವರಿ;
         }
 
-        for (p = ngx_os_environ; *p; p++) {
+        ಗಾಗಿ (p = ngx_os_environ; *p; p++) {
 
-            if (ngx_strncmp(*p, var[i].data, var[i].len) == 0
+            ಆದರೆ (ngx_strncmp(*p, var[i].ದತ್ತಾಂಶ, var[i].len) == 0
                 && (*p)[var[i].len] == '=')
             {
                 n++;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
         }
     }
 
-    if (last) {
-        env = ngx_alloc((*last + n + 1) * sizeof(char *), cycle->log);
-        if (env == NULL) {
-            return NULL;
+    ಆದರೆ (ಕೊನೆಯ) {
+        env = ngx_alloc((*ಕೊನೆಯ + n + 1) * ಗಾತ್ರ(ಅಕ್ಷರ *), ಚಕ್ರ->ಲಘುಗಣಕ);
+        ಆದರೆ (env == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ ಖಾಲಿ;
         }
 
-        *last = n;
+        *ಕೊನೆಯ = n;
 
-    } else {
-        cln = ngx_pool_cleanup_add(cycle->pool, 0);
-        if (cln == NULL) {
-            return NULL;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        cln = ngx_pool_cleanup_ಕೂಡಿಸು(ಚಕ್ರ->pool, 0);
+        ಆದರೆ (cln == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ ಖಾಲಿ;
         }
 
-        env = ngx_alloc((n + 1) * sizeof(char *), cycle->log);
-        if (env == NULL) {
-            return NULL;
+        env = ngx_alloc((n + 1) * ಗಾತ್ರ(ಅಕ್ಷರ *), ಚಕ್ರ->ಲಘುಗಣಕ);
+        ಆದರೆ (env == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ ಖಾಲಿ;
         }
 
         cln->handler = ngx_cleanup_environment;
-        cln->data = env;
+        cln->ದತ್ತಾಂಶ = env;
     }
 
     n = 0;
 
-    for (i = 0; i < ccf->env.nelts; i++) {
+    ಗಾಗಿ (i = 0; i < ccf->env.nelts; i++) {
 
-        if (var[i].data[var[i].len] == '=') {
+        ಆದರೆ (var[i].ದತ್ತಾಂಶ[var[i].len] == '=') {
 
-            if (last) {
-                env[n++] = (char *) var[i].data;
-                continue;
+            ಆದರೆ (ಕೊನೆಯ) {
+                env[n++] = (ಅಕ್ಷರ *) var[i].ದತ್ತಾಂಶ;
+                ಮುಂದುವರಿ;
             }
 
-            cln = ngx_pool_cleanup_add(cycle->pool, 0);
-            if (cln == NULL) {
-                return NULL;
+            cln = ngx_pool_cleanup_ಕೂಡಿಸು(ಚಕ್ರ->pool, 0);
+            ಆದರೆ (cln == ಖಾಲಿ) {
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             }
 
-            len = ngx_strlen(var[i].data) + 1;
+            len = ngx_strlen(var[i].ದತ್ತಾಂಶ) + 1;
 
-            str = ngx_alloc(len, cycle->log);
-            if (str == NULL) {
-                return NULL;
+            str = ngx_alloc(len, ಚಕ್ರ->ಲಘುಗಣಕ);
+            ಆದರೆ (str == ಖಾಲಿ) {
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             }
 
-            ngx_memcpy(str, var[i].data, len);
+            ngx_memcpy(str, var[i].ದತ್ತಾಂಶ, len);
 
             cln->handler = ngx_cleanup_environment_variable;
-            cln->data = str;
+            cln->ದತ್ತಾಂಶ = str;
 
             env[n++] = str;
 
-            continue;
+            ಮುಂದುವರಿ;
         }
 
-        for (p = ngx_os_environ; *p; p++) {
+        ಗಾಗಿ (p = ngx_os_environ; *p; p++) {
 
-            if (ngx_strncmp(*p, var[i].data, var[i].len) == 0
+            ಆದರೆ (ngx_strncmp(*p, var[i].ದತ್ತಾಂಶ, var[i].len) == 0
                 && (*p)[var[i].len] == '=')
             {
                 env[n++] = *p;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
         }
     }
 
-    env[n] = NULL;
+    env[n] = ಖಾಲಿ;
 
-    if (last == NULL) {
+    ಆದರೆ (ಕೊನೆಯ == ಖಾಲಿ) {
         ccf->environment = env;
         environ = env;
     }
 
-    return env;
+    ಹಿಂತಿರುಗಿ env;
 }
 
 
-static void
-ngx_cleanup_environment(void *data)
+ಸ್ಥಿರ ಶೂನ್ಯ
+ngx_cleanup_environment(ಶೂನ್ಯ *ದತ್ತಾಂಶ)
 {
-    char  **env = data;
+    ಅಕ್ಷರ  **env = ದತ್ತಾಂಶ;
 
-    if (environ == env) {
+    ಆದರೆ (environ == env) {
 
         /*
          * if the environment is still used, as it happens on exit,
          * the only option is to leak it
          */
 
-        return;
+        ಹಿಂತಿರುಗಿ;
     }
 
     ngx_free(env);
 }
 
 
-static void
-ngx_cleanup_environment_variable(void *data)
+ಸ್ಥಿರ ಶೂನ್ಯ
+ngx_cleanup_environment_variable(ಶೂನ್ಯ *ದತ್ತಾಂಶ)
 {
-    char  *var = data;
+    ಅಕ್ಷರ  *var = ದತ್ತಾಂಶ;
 
-    char  **p;
+    ಅಕ್ಷರ  **p;
 
-    for (p = environ; *p; p++) {
+    ಗಾಗಿ (p = environ; *p; p++) {
 
         /*
          * if an environment variable is still used, as it happens on exit,
          * the only option is to leak it
          */
 
-        if (*p == var) {
-            return;
+        ಆದರೆ (*p == var) {
+            ಹಿಂತಿರುಗಿ;
         }
     }
 
@@ -717,9 +717,9 @@ ngx_cleanup_environment_variable(void *data)
 
 
 ngx_pid_t
-ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
+ngx_exec_new_ದ್ವಿಮಾನ(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ *argv)
 {
-    char             **env, *var;
+    ಅಕ್ಷರ             **env, *var;
     u_char            *p;
     ngx_uint_t         i, n;
     ngx_pid_t          pid;
@@ -727,32 +727,32 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
     ngx_core_conf_t   *ccf;
     ngx_listening_t   *ls;
 
-    ngx_memzero(&ctx, sizeof(ngx_exec_ctx_t));
+    ngx_memzero(&ctx, ಗಾತ್ರ(ngx_exec_ctx_t));
 
-    ctx.path = argv[0];
+    ctx.ಮಾರ್ಗ = argv[0];
     ctx.name = "new binary process";
     ctx.argv = argv;
 
     n = 3;
-    env = ngx_set_environment(cycle, &n);
-    if (env == NULL) {
-        return NGX_INVALID_PID;
+    env = ngx_ಗಣ_environment(ಚಕ್ರ, &n);
+    ಆದರೆ (env == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ NGX_INVALID_PID;
     }
 
-    var = ngx_alloc(sizeof(NGINX_VAR)
-                    + cycle->listening.nelts * (NGX_INT32_LEN + 1) + 2,
-                    cycle->log);
-    if (var == NULL) {
+    var = ngx_alloc(ಗಾತ್ರ(NGINX_VAR)
+                    + ಚಕ್ರ->listening.nelts * (NGX_INT32_LEN + 1) + 2,
+                    ಚಕ್ರ->ಲಘುಗಣಕ);
+    ಆದರೆ (var == ಖಾಲಿ) {
         ngx_free(env);
-        return NGX_INVALID_PID;
+        ಹಿಂತಿರುಗಿ NGX_INVALID_PID;
     }
 
-    p = ngx_cpymem(var, NGINX_VAR "=", sizeof(NGINX_VAR));
+    p = ngx_cpymem(var, NGINX_VAR "=", ಗಾತ್ರ(NGINX_VAR));
 
-    ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
-        if (ls[i].ignore) {
-            continue;
+    ls = ಚಕ್ರ->listening.elts;
+    ಗಾಗಿ (i = 0; i < ಚಕ್ರ->listening.nelts; i++) {
+        ಆದರೆ (ls[i].ignore) {
+            ಮುಂದುವರಿ;
         }
         p = ngx_sprintf(p, "%ud;", ls[i].fd);
     }
@@ -761,7 +761,7 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
 
     env[n++] = var;
 
-#if (NGX_SETPROCTITLE_USES_ENV)
+#ಆದರೆ (NGX_SETPROCTITLE_ಬಳಸುತ್ತದೆ_ENV)
 
     /* allocate the spare 300 bytes for the new binary process title */
 
@@ -771,381 +771,381 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
                "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
                "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if (NGX_CONTROL_API)
+#ಆದರೆ (NGX_CONTROL_API)
     env[n] = ngx_control_handoff();
 
-    if (env[n] != NULL) {
+    ಆದರೆ (env[n] != ಖಾಲಿ) {
         n++;
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    env[n] = NULL;
+    env[n] = ಖಾಲಿ;
 
-#if (NGX_DEBUG)
+#ಆದರೆ (NGX_DEBUG)
     {
-    char  **e;
-    for (e = env; *e; e++) {
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, cycle->log, 0, "env: %s", *e);
+    ಅಕ್ಷರ  **e;
+    ಗಾಗಿ (e = env; *e; e++) {
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ಚಕ್ರ->ಲಘುಗಣಕ, 0, "env: %s", *e);
     }
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    ctx.envp = (char *const *) env;
+    ctx.envp = (ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ *) env;
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(ಚಕ್ರ->conf_ctx, ngx_core_module);
 
-    if (ngx_rename_file(ccf->pid.data, ccf->oldpid.data) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
+    ಆದರೆ (ngx_rename_file(ccf->pid.ದತ್ತಾಂಶ, ccf->oldpid.ದತ್ತಾಂಶ) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, ಚಕ್ರ->ಲಘುಗಣಕ, ngx_errno,
                       ngx_rename_file_n " %s to %s failed "
                       "before executing new binary process \"%s\"",
-                      ccf->pid.data, ccf->oldpid.data, argv[0]);
+                      ccf->pid.ದತ್ತಾಂಶ, ccf->oldpid.ದತ್ತಾಂಶ, argv[0]);
 
         ngx_free(env);
         ngx_free(var);
 
-        return NGX_INVALID_PID;
+        ಹಿಂತಿರುಗಿ NGX_INVALID_PID;
     }
 
-    pid = ngx_execute(cycle, &ctx);
+    pid = ngx_execute(ಚಕ್ರ, &ctx);
 
-    if (pid == NGX_INVALID_PID) {
-        if (ngx_rename_file(ccf->oldpid.data, ccf->pid.data)
+    ಆದರೆ (pid == NGX_INVALID_PID) {
+        ಆದರೆ (ngx_rename_file(ccf->oldpid.ದತ್ತಾಂಶ, ccf->pid.ದತ್ತಾಂಶ)
             == NGX_FILE_ERROR)
         {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
+            ngx_log_error(NGX_LOG_ALERT, ಚಕ್ರ->ಲಘುಗಣಕ, ngx_errno,
                           ngx_rename_file_n " %s back to %s failed after "
                           "an attempt to execute new binary process \"%s\"",
-                          ccf->oldpid.data, ccf->pid.data, argv[0]);
+                          ccf->oldpid.ದತ್ತಾಂಶ, ccf->pid.ದತ್ತಾಂಶ, argv[0]);
         }
     }
 
     ngx_free(env);
     ngx_free(var);
 
-    return pid;
+    ಹಿಂತಿರುಗಿ pid;
 }
 
 
-static ngx_int_t
-ngx_get_options(int argc, char *const *argv)
+ಸ್ಥಿರ ngx_int_t
+ngx_get_options(ಪೂರ್ಣಾಂಕ argc, ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ *argv)
 {
     u_char     *p;
     ngx_int_t   i;
 
-    for (i = 1; i < argc; i++) {
+    ಗಾಗಿ (i = 1; i < argc; i++) {
 
         p = (u_char *) argv[i];
 
-        if (*p++ != '-') {
+        ಆದರೆ (*p++ != '-') {
             ngx_log_stderr(0, "invalid option: \"%s\"", argv[i]);
-            return NGX_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
 
-        while (*p) {
+        ಆಗ (*p) {
 
-            switch (*p++) {
+            ಆಯ್ಕೆ (*p++) {
 
-            case '?':
-            case 'h':
-                ngx_show_version = 1;
+            ಸ್ಥಿತಿ '?':
+            ಸ್ಥಿತಿ 'h':
+                ngx_show_ಆವೃತ್ತಿ = 1;
                 ngx_show_help = 1;
-                break;
+                ನಿಲ್ಲಿಸು;
 
-            case 'v':
-                ngx_show_version = 1;
-                break;
+            ಸ್ಥಿತಿ 'v':
+                ngx_show_ಆವೃತ್ತಿ = 1;
+                ನಿಲ್ಲಿಸು;
 
-            case 'V':
-                ngx_show_version = 1;
+            ಸ್ಥಿತಿ 'V':
+                ngx_show_ಆವೃತ್ತಿ = 1;
                 ngx_show_configure = 1;
-                break;
+                ನಿಲ್ಲಿಸು;
 
-            case 't':
+            ಸ್ಥಿತಿ 't':
                 ngx_test_config = 1;
-                break;
+                ನಿಲ್ಲಿಸು;
 
-            case 'T':
+            ಸ್ಥಿತಿ 'T':
                 ngx_test_config = 1;
                 ngx_dump_config = 1;
-                break;
+                ನಿಲ್ಲಿಸು;
 
-            case 'q':
-                ngx_quiet_mode = 1;
-                break;
+            ಸ್ಥಿತಿ 'q':
+                ngx_quiet_ಬಹುಲಕ = 1;
+                ನಿಲ್ಲಿಸು;
 
-            case 'p':
-                if (*p) {
-                    ngx_prefix = p;
-                    goto next;
+            ಸ್ಥಿತಿ 'p':
+                ಆದರೆ (*p) {
+                    ngx_ಪೂರ್ವಪ್ರತ್ಯಯ = p;
+                    ಹೋಗು ಮುಂದಿನ;
                 }
 
-                if (argv[++i]) {
-                    ngx_prefix = (u_char *) argv[i];
-                    goto next;
+                ಆದರೆ (argv[++i]) {
+                    ngx_ಪೂರ್ವಪ್ರತ್ಯಯ = (u_char *) argv[i];
+                    ಹೋಗು ಮುಂದಿನ;
                 }
 
                 ngx_log_stderr(0, "option \"-p\" requires directory name");
-                return NGX_ERROR;
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
 
-            case 'e':
-                if (*p) {
+            ಸ್ಥಿತಿ 'e':
+                ಆದರೆ (*p) {
                     ngx_error_log = p;
 
-                } else if (argv[++i]) {
+                } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (argv[++i]) {
                     ngx_error_log = (u_char *) argv[i];
 
-                } else {
+                } ಇಲ್ಲದಿದ್ದರೆ {
                     ngx_log_stderr(0, "option \"-e\" requires file name");
-                    return NGX_ERROR;
+                    ಹಿಂತಿರುಗಿ NGX_ERROR;
                 }
 
-                if (ngx_strcmp(ngx_error_log, "stderr") == 0) {
+                ಆದರೆ (ngx_strcmp(ngx_error_log, "stderr") == 0) {
                     ngx_error_log = (u_char *) "";
                 }
 
-                goto next;
+                ಹೋಗು ಮುಂದಿನ;
 
-            case 'c':
-                if (*p) {
+            ಸ್ಥಿತಿ 'c':
+                ಆದರೆ (*p) {
                     ngx_conf_file = p;
-                    goto next;
+                    ಹೋಗು ಮುಂದಿನ;
                 }
 
-                if (argv[++i]) {
+                ಆದರೆ (argv[++i]) {
                     ngx_conf_file = (u_char *) argv[i];
-                    goto next;
+                    ಹೋಗು ಮುಂದಿನ;
                 }
 
                 ngx_log_stderr(0, "option \"-c\" requires file name");
-                return NGX_ERROR;
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
 
-            case 'g':
-                if (*p) {
+            ಸ್ಥಿತಿ 'g':
+                ಆದರೆ (*p) {
                     ngx_conf_params = p;
-                    goto next;
+                    ಹೋಗು ಮುಂದಿನ;
                 }
 
-                if (argv[++i]) {
+                ಆದರೆ (argv[++i]) {
                     ngx_conf_params = (u_char *) argv[i];
-                    goto next;
+                    ಹೋಗು ಮುಂದಿನ;
                 }
 
                 ngx_log_stderr(0, "option \"-g\" requires parameter");
-                return NGX_ERROR;
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
 
-            case 's':
-                if (*p) {
-                    ngx_signal = (char *) p;
+            ಸ್ಥಿತಿ 's':
+                ಆದರೆ (*p) {
+                    ngx_signal = (ಅಕ್ಷರ *) p;
 
-                } else if (argv[++i]) {
+                } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (argv[++i]) {
                     ngx_signal = argv[i];
 
-                } else {
+                } ಇಲ್ಲದಿದ್ದರೆ {
                     ngx_log_stderr(0, "option \"-s\" requires parameter");
-                    return NGX_ERROR;
+                    ಹಿಂತಿರುಗಿ NGX_ERROR;
                 }
 
-                if (ngx_strcmp(ngx_signal, "stop") == 0
+                ಆದರೆ (ngx_strcmp(ngx_signal, "stop") == 0
                     || ngx_strcmp(ngx_signal, "quit") == 0
                     || ngx_strcmp(ngx_signal, "reopen") == 0
                     || ngx_strcmp(ngx_signal, "reload") == 0)
                 {
                     ngx_process = NGX_PROCESS_SIGNALLER;
-                    goto next;
+                    ಹೋಗು ಮುಂದಿನ;
                 }
 
                 ngx_log_stderr(0, "invalid option: \"-s %s\"", ngx_signal);
-                return NGX_ERROR;
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
 
-#if (NGX_CONTROL_API)
-            case 'l':
+#ಆದರೆ (NGX_CONTROL_API)
+            ಸ್ಥಿತಿ 'l':
                 ngx_control_api_enabled = 1;
 
-                if (*p) {
+                ಆದರೆ (*p) {
                     ngx_control_addr = p;
-                    goto next;
+                    ಹೋಗು ಮುಂದಿನ;
                 }
 
-                if (argv[++i]) {
+                ಆದರೆ (argv[++i]) {
                     ngx_control_addr = (u_char *) argv[i];
-                    goto next;
+                    ಹೋಗು ಮುಂದಿನ;
                 }
 
                 ngx_log_stderr(0, "option \"-l\" requires listen address");
-                return NGX_ERROR;
-#endif
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
+#ಆದರೆ_ಅಂತ್ಯ
 
-            default:
+            ಪೂರ್ವನಿಯೋಜಿತ:
                 ngx_log_stderr(0, "invalid option: \"%c\"", *(p - 1));
-                return NGX_ERROR;
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
         }
 
-    next:
+    ಮುಂದಿನ:
 
-        continue;
+        ಮುಂದುವರಿ;
     }
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
-static ngx_int_t
-ngx_save_argv(ngx_cycle_t *cycle, int argc, char *const *argv)
+ಸ್ಥಿರ ngx_int_t
+ngx_save_argv(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ಪೂರ್ಣಾಂಕ argc, ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ *argv)
 {
-#if (NGX_FREEBSD)
+#ಆದರೆ (NGX_FREEBSD)
 
-    ngx_os_argv = (char **) argv;
+    ngx_os_argv = (ಅಕ್ಷರ **) argv;
     ngx_argc = argc;
-    ngx_argv = (char **) argv;
+    ngx_argv = (ಅಕ್ಷರ **) argv;
 
-#else
-    size_t     len;
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಗಾತ್ರ_t     len;
     ngx_int_t  i;
 
-    ngx_os_argv = (char **) argv;
+    ngx_os_argv = (ಅಕ್ಷರ **) argv;
     ngx_argc = argc;
 
-    ngx_argv = ngx_alloc((argc + 1) * sizeof(char *), cycle->log);
-    if (ngx_argv == NULL) {
-        return NGX_ERROR;
+    ngx_argv = ngx_alloc((argc + 1) * ಗಾತ್ರ(ಅಕ್ಷರ *), ಚಕ್ರ->ಲಘುಗಣಕ);
+    ಆದರೆ (ngx_argv == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    for (i = 0; i < argc; i++) {
+    ಗಾಗಿ (i = 0; i < argc; i++) {
         len = ngx_strlen(argv[i]) + 1;
 
-        ngx_argv[i] = ngx_alloc(len, cycle->log);
-        if (ngx_argv[i] == NULL) {
-            return NGX_ERROR;
+        ngx_argv[i] = ngx_alloc(len, ಚಕ್ರ->ಲಘುಗಣಕ);
+        ಆದರೆ (ngx_argv[i] == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
 
-        (void) ngx_cpystrn((u_char *) ngx_argv[i], (u_char *) argv[i], len);
+        (ಶೂನ್ಯ) ngx_cpystrn((u_char *) ngx_argv[i], (u_char *) argv[i], len);
     }
 
-    ngx_argv[i] = NULL;
+    ngx_argv[i] = ಖಾಲಿ;
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     ngx_os_environ = environ;
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
-static ngx_int_t
-ngx_process_options(ngx_cycle_t *cycle)
+ಸ್ಥಿರ ngx_int_t
+ngx_process_options(ngx_ಚಕ್ರ_t *ಚಕ್ರ)
 {
     u_char  *p;
-    size_t   len;
+    ಗಾತ್ರ_t   len;
 
-    if (ngx_prefix) {
-        len = ngx_strlen(ngx_prefix);
-        p = ngx_prefix;
+    ಆದರೆ (ngx_ಪೂರ್ವಪ್ರತ್ಯಯ) {
+        len = ngx_strlen(ngx_ಪೂರ್ವಪ್ರತ್ಯಯ);
+        p = ngx_ಪೂರ್ವಪ್ರತ್ಯಯ;
 
-        if (len && !ngx_path_separator(p[len - 1])) {
-            p = ngx_pnalloc(cycle->pool, len + 1);
-            if (p == NULL) {
-                return NGX_ERROR;
+        ಆದರೆ (len && !ngx_ಮಾರ್ಗ_separator(p[len - 1])) {
+            p = ngx_pnalloc(ಚಕ್ರ->pool, len + 1);
+            ಆದರೆ (p == ಖಾಲಿ) {
+                ಹಿಂತಿರುಗಿ NGX_ERROR;
             }
 
-            ngx_memcpy(p, ngx_prefix, len);
+            ngx_memcpy(p, ngx_ಪೂರ್ವಪ್ರತ್ಯಯ, len);
             p[len++] = '/';
         }
 
-        cycle->conf_prefix.len = len;
-        cycle->conf_prefix.data = p;
-        cycle->prefix.len = len;
-        cycle->prefix.data = p;
+        ಚಕ್ರ->conf_ಪೂರ್ವಪ್ರತ್ಯಯ.len = len;
+        ಚಕ್ರ->conf_ಪೂರ್ವಪ್ರತ್ಯಯ.ದತ್ತಾಂಶ = p;
+        ಚಕ್ರ->ಪೂರ್ವಪ್ರತ್ಯಯ.len = len;
+        ಚಕ್ರ->ಪೂರ್ವಪ್ರತ್ಯಯ.ದತ್ತಾಂಶ = p;
 
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
 
-#ifndef NGX_PREFIX
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ NGX_ಪೂರ್ವಪ್ರತ್ಯಯ
 
-        p = ngx_pnalloc(cycle->pool, NGX_MAX_PATH);
-        if (p == NULL) {
-            return NGX_ERROR;
+        p = ngx_pnalloc(ಚಕ್ರ->pool, NGX_MAX_ಮಾರ್ಗ);
+        ಆದರೆ (p == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
 
-        if (ngx_getcwd(p, NGX_MAX_PATH) == 0) {
+        ಆದರೆ (ngx_getcwd(p, NGX_MAX_ಮಾರ್ಗ) == 0) {
             ngx_log_stderr(ngx_errno, "[emerg]: " ngx_getcwd_n " failed");
-            return NGX_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_ERROR;
         }
 
         len = ngx_strlen(p);
 
         p[len++] = '/';
 
-        cycle->conf_prefix.len = len;
-        cycle->conf_prefix.data = p;
-        cycle->prefix.len = len;
-        cycle->prefix.data = p;
+        ಚಕ್ರ->conf_ಪೂರ್ವಪ್ರತ್ಯಯ.len = len;
+        ಚಕ್ರ->conf_ಪೂರ್ವಪ್ರತ್ಯಯ.ದತ್ತಾಂಶ = p;
+        ಚಕ್ರ->ಪೂರ್ವಪ್ರತ್ಯಯ.len = len;
+        ಚಕ್ರ->ಪೂರ್ವಪ್ರತ್ಯಯ.ದತ್ತಾಂಶ = p;
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
-#ifdef NGX_CONF_PREFIX
-        ngx_str_set(&cycle->conf_prefix, NGX_CONF_PREFIX);
-#else
-        ngx_str_set(&cycle->conf_prefix, NGX_PREFIX);
-#endif
-        ngx_str_set(&cycle->prefix, NGX_PREFIX);
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ NGX_CONF_ಪೂರ್ವಪ್ರತ್ಯಯ
+        ngx_str_ಗಣ(&ಚಕ್ರ->conf_ಪೂರ್ವಪ್ರತ್ಯಯ, NGX_CONF_ಪೂರ್ವಪ್ರತ್ಯಯ);
+#ಇಲ್ಲದಿದ್ದರೆ
+        ngx_str_ಗಣ(&ಚಕ್ರ->conf_ಪೂರ್ವಪ್ರತ್ಯಯ, NGX_ಪೂರ್ವಪ್ರತ್ಯಯ);
+#ಆದರೆ_ಅಂತ್ಯ
+        ngx_str_ಗಣ(&ಚಕ್ರ->ಪೂರ್ವಪ್ರತ್ಯಯ, NGX_ಪೂರ್ವಪ್ರತ್ಯಯ);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     }
 
-    if (ngx_conf_file) {
-        cycle->conf_file.len = ngx_strlen(ngx_conf_file);
-        cycle->conf_file.data = ngx_conf_file;
+    ಆದರೆ (ngx_conf_file) {
+        ಚಕ್ರ->conf_file.len = ngx_strlen(ngx_conf_file);
+        ಚಕ್ರ->conf_file.ದತ್ತಾಂಶ = ngx_conf_file;
 
-    } else {
-        ngx_str_set(&cycle->conf_file, NGX_CONF_PATH);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ngx_str_ಗಣ(&ಚಕ್ರ->conf_file, NGX_CONF_ಮಾರ್ಗ);
     }
 
-    if (ngx_conf_full_name(cycle, &cycle->conf_file, 0) != NGX_OK) {
-        return NGX_ERROR;
+    ಆದರೆ (ngx_conf_ತುಂಬಿದ_name(ಚಕ್ರ, &ಚಕ್ರ->conf_file, 0) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ NGX_ERROR;
     }
 
-    for (p = cycle->conf_file.data + cycle->conf_file.len - 1;
-         p > cycle->conf_file.data;
+    ಗಾಗಿ (p = ಚಕ್ರ->conf_file.ದತ್ತಾಂಶ + ಚಕ್ರ->conf_file.len - 1;
+         p > ಚಕ್ರ->conf_file.ದತ್ತಾಂಶ;
          p--)
     {
-        if (ngx_path_separator(*p)) {
-            cycle->conf_prefix.len = p - cycle->conf_file.data + 1;
-            cycle->conf_prefix.data = cycle->conf_file.data;
-            break;
+        ಆದರೆ (ngx_ಮಾರ್ಗ_separator(*p)) {
+            ಚಕ್ರ->conf_ಪೂರ್ವಪ್ರತ್ಯಯ.len = p - ಚಕ್ರ->conf_file.ದತ್ತಾಂಶ + 1;
+            ಚಕ್ರ->conf_ಪೂರ್ವಪ್ರತ್ಯಯ.ದತ್ತಾಂಶ = ಚಕ್ರ->conf_file.ದತ್ತಾಂಶ;
+            ನಿಲ್ಲಿಸು;
         }
     }
 
-    if (ngx_error_log) {
-        cycle->error_log.len = ngx_strlen(ngx_error_log);
-        cycle->error_log.data = ngx_error_log;
+    ಆದರೆ (ngx_error_log) {
+        ಚಕ್ರ->error_log.len = ngx_strlen(ngx_error_log);
+        ಚಕ್ರ->error_log.ದತ್ತಾಂಶ = ngx_error_log;
 
-    } else {
-        ngx_str_set(&cycle->error_log, NGX_ERROR_LOG_PATH);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ngx_str_ಗಣ(&ಚಕ್ರ->error_log, NGX_ERROR_LOG_ಮಾರ್ಗ);
     }
 
-    if (ngx_conf_params) {
-        cycle->conf_param.len = ngx_strlen(ngx_conf_params);
-        cycle->conf_param.data = ngx_conf_params;
+    ಆದರೆ (ngx_conf_params) {
+        ಚಕ್ರ->conf_param.len = ngx_strlen(ngx_conf_params);
+        ಚಕ್ರ->conf_param.ದತ್ತಾಂಶ = ngx_conf_params;
     }
 
-    if (ngx_test_config) {
-        cycle->log->log_level = NGX_LOG_INFO;
+    ಆದರೆ (ngx_test_config) {
+        ಚಕ್ರ->ಲಘುಗಣಕ->log_level = NGX_LOG_INFO;
     }
 
-    return NGX_OK;
+    ಹಿಂತಿರುಗಿ NGX_OK;
 }
 
 
-static void *
-ngx_core_module_create_conf(ngx_cycle_t *cycle)
+ಸ್ಥಿರ ಶೂನ್ಯ *
+ngx_core_module_create_conf(ngx_ಚಕ್ರ_t *ಚಕ್ರ)
 {
     ngx_core_conf_t  *ccf;
 
-    ccf = ngx_pcalloc(cycle->pool, sizeof(ngx_core_conf_t));
-    if (ccf == NULL) {
-        return NULL;
+    ccf = ngx_pcalloc(ಚಕ್ರ->pool, ಗಾತ್ರ(ngx_core_conf_t));
+    ಆದರೆ (ccf == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
     /*
@@ -1164,584 +1164,584 @@ ngx_core_module_create_conf(ngx_cycle_t *cycle)
     ccf->timer_resolution = NGX_CONF_UNSET_MSEC;
     ccf->shutdown_timeout = NGX_CONF_UNSET_MSEC;
 
-    ccf->worker_processes = NGX_CONF_UNSET;
+    ccf->ಕೆಲಸಗಾರ_processes = NGX_CONF_UNSET;
     ccf->debug_points = NGX_CONF_UNSET;
 
     ccf->rlimit_nofile = NGX_CONF_UNSET;
     ccf->rlimit_core = NGX_CONF_UNSET;
 
     ccf->user = (ngx_uid_t) NGX_CONF_UNSET_UINT;
-    ccf->group = (ngx_gid_t) NGX_CONF_UNSET_UINT;
+    ccf->ಗುಂಪು = (ngx_gid_t) NGX_CONF_UNSET_UINT;
 
-    if (ngx_array_init(&ccf->env, cycle->pool, 1, sizeof(ngx_str_t))
+    ಆದರೆ (ngx_array_init(&ccf->env, ಚಕ್ರ->pool, 1, ಗಾತ್ರ(ngx_str_t))
         != NGX_OK)
     {
-        return NULL;
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    return ccf;
+    ಹಿಂತಿರುಗಿ ccf;
 }
 
 
-static char *
-ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
+ಸ್ಥಿರ ಅಕ್ಷರ *
+ngx_core_module_init_conf(ngx_ಚಕ್ರ_t *ಚಕ್ರ, ಶೂನ್ಯ *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_conf_init_value(ccf->daemon, 1);
-    ngx_conf_init_value(ccf->master, 1);
-    ngx_conf_init_msec_value(ccf->timer_resolution, 0);
-    ngx_conf_init_msec_value(ccf->shutdown_timeout, 0);
+    ngx_conf_init_ಮೌಲ್ಯ(ccf->daemon, 1);
+    ngx_conf_init_ಮೌಲ್ಯ(ccf->master, 1);
+    ngx_conf_init_msec_ಮೌಲ್ಯ(ccf->timer_resolution, 0);
+    ngx_conf_init_msec_ಮೌಲ್ಯ(ccf->shutdown_timeout, 0);
 
-    ngx_conf_init_value(ccf->worker_processes, 1);
-    ngx_conf_init_value(ccf->debug_points, 0);
+    ngx_conf_init_ಮೌಲ್ಯ(ccf->ಕೆಲಸಗಾರ_processes, 1);
+    ngx_conf_init_ಮೌಲ್ಯ(ccf->debug_points, 0);
 
-#if (NGX_HAVE_CPU_AFFINITY)
+#ಆದರೆ (NGX_HAVE_CPU_AFFINITY)
 
-    if (!ccf->cpu_affinity_auto
+    ಆದರೆ (!ccf->cpu_affinity_auto
         && ccf->cpu_affinity_n
         && ccf->cpu_affinity_n != 1
-        && ccf->cpu_affinity_n != (ngx_uint_t) ccf->worker_processes)
+        && ccf->cpu_affinity_n != (ngx_uint_t) ccf->ಕೆಲಸಗಾರ_processes)
     {
-        ngx_log_error(NGX_LOG_WARN, cycle->log, 0,
+        ngx_log_error(NGX_LOG_WARN, ಚಕ್ರ->ಲಘುಗಣಕ, 0,
                       "the number of \"worker_processes\" is not equal to "
                       "the number of \"worker_cpu_affinity\" masks, "
                       "using last mask for remaining worker processes");
     }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-    if (ccf->pid.len == 0) {
-        ngx_str_set(&ccf->pid, NGX_PID_PATH);
+    ಆದರೆ (ccf->pid.len == 0) {
+        ngx_str_ಗಣ(&ccf->pid, NGX_PID_ಮಾರ್ಗ);
     }
 
-    if (ngx_conf_full_name(cycle, &ccf->pid, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    ಆದರೆ (ngx_conf_ತುಂಬಿದ_name(ಚಕ್ರ, &ccf->pid, 0) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
-    ccf->oldpid.len = ccf->pid.len + sizeof(NGX_OLDPID_EXT);
+    ccf->oldpid.len = ccf->pid.len + ಗಾತ್ರ(NGX_OLDPID_EXT);
 
-    ccf->oldpid.data = ngx_pnalloc(cycle->pool, ccf->oldpid.len);
-    if (ccf->oldpid.data == NULL) {
-        return NGX_CONF_ERROR;
+    ccf->oldpid.ದತ್ತಾಂಶ = ngx_pnalloc(ಚಕ್ರ->pool, ccf->oldpid.len);
+    ಆದರೆ (ccf->oldpid.ದತ್ತಾಂಶ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
-    ngx_memcpy(ngx_cpymem(ccf->oldpid.data, ccf->pid.data, ccf->pid.len),
-               NGX_OLDPID_EXT, sizeof(NGX_OLDPID_EXT));
+    ngx_memcpy(ngx_cpymem(ccf->oldpid.ದತ್ತಾಂಶ, ccf->pid.ದತ್ತಾಂಶ, ccf->pid.len),
+               NGX_OLDPID_EXT, ಗಾತ್ರ(NGX_OLDPID_EXT));
 
 
-    if (ccf->working_directory.len) {
+    ಆದರೆ (ccf->working_directory.len) {
         ngx_file_info_t  fi;
 
-        if (ngx_conf_full_name(cycle, &ccf->working_directory, 0) != NGX_OK) {
-            return NGX_CONF_ERROR;
+        ಆದರೆ (ngx_conf_ತುಂಬಿದ_name(ಚಕ್ರ, &ccf->working_directory, 0) != NGX_OK) {
+            ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
         }
 
-        if (ngx_file_info(ccf->working_directory.data, &fi) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+        ಆದರೆ (ngx_file_info(ccf->working_directory.ದತ್ತಾಂಶ, &fi) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_EMERG, ಚಕ್ರ->ಲಘುಗಣಕ, ngx_errno,
                           ngx_file_info_n " \"%s\" failed",
-                          ccf->working_directory.data);
-            return NGX_CONF_ERROR;
+                          ccf->working_directory.ದತ್ತಾಂಶ);
+            ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
         }
 
-        if (!ngx_is_dir(&fi)) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
+        ಆದರೆ (!ngx_is_dir(&fi)) {
+            ngx_log_error(NGX_LOG_EMERG, ಚಕ್ರ->ಲಘುಗಣಕ, 0,
                           "\"%s\" is not a directory",
-                          ccf->working_directory.data);
-            return NGX_CONF_ERROR;
+                          ccf->working_directory.ದತ್ತಾಂಶ);
+            ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
         }
     }
 
 
-#if !(NGX_WIN32)
+#ಆದರೆ !(NGX_WIN32)
 
-    if (ccf->user == (uid_t) NGX_CONF_UNSET_UINT && geteuid() == 0) {
-        struct group   *grp;
-        struct passwd  *pwd;
+    ಆದರೆ (ccf->user == (uid_t) NGX_CONF_UNSET_UINT && geteuid() == 0) {
+        ರಚನೆ ಗುಂಪು   *grp;
+        ರಚನೆ passwd  *pwd;
 
-        ngx_set_errno(0);
+        ngx_ಗಣ_errno(0);
         pwd = getpwnam(NGX_USER);
-        if (pwd == NULL) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+        ಆದರೆ (pwd == ಖಾಲಿ) {
+            ngx_log_error(NGX_LOG_EMERG, ಚಕ್ರ->ಲಘುಗಣಕ, ngx_errno,
                           "getpwnam(\"" NGX_USER "\") failed");
-            return NGX_CONF_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
         }
 
         ccf->username = NGX_USER;
         ccf->user = pwd->pw_uid;
 
-        ngx_set_errno(0);
-        grp = getgrnam(NGX_GROUP);
-        if (grp == NULL) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
-                          "getgrnam(\"" NGX_GROUP "\") failed");
-            return NGX_CONF_ERROR;
+        ngx_ಗಣ_errno(0);
+        grp = getgrnam(NGX_ಗುಂಪು);
+        ಆದರೆ (grp == ಖಾಲಿ) {
+            ngx_log_error(NGX_LOG_EMERG, ಚಕ್ರ->ಲಘುಗಣಕ, ngx_errno,
+                          "getgrnam(\"" NGX_ಗುಂಪು "\") failed");
+            ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
         }
 
-        ccf->group = grp->gr_gid;
+        ccf->ಗುಂಪು = grp->gr_gid;
     }
 
 
-    if (ccf->lock_file.len == 0) {
-        ngx_str_set(&ccf->lock_file, NGX_LOCK_PATH);
+    ಆದರೆ (ccf->ಬೀಗ_file.len == 0) {
+        ngx_str_ಗಣ(&ccf->ಬೀಗ_file, NGX_ಬೀಗ_ಮಾರ್ಗ);
     }
 
-    if (ngx_conf_full_name(cycle, &ccf->lock_file, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    ಆದರೆ (ngx_conf_ತುಂಬಿದ_name(ಚಕ್ರ, &ccf->ಬೀಗ_file, 0) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
     {
-    ngx_str_t  lock_file;
+    ngx_str_t  ಬೀಗ_file;
 
-    lock_file = cycle->old_cycle->lock_file;
+    ಬೀಗ_file = ಚಕ್ರ->old_ಚಕ್ರ->ಬೀಗ_file;
 
-    if (lock_file.len) {
-        lock_file.len--;
+    ಆದರೆ (ಬೀಗ_file.len) {
+        ಬೀಗ_file.len--;
 
-        if (ccf->lock_file.len != lock_file.len
-            || ngx_strncmp(ccf->lock_file.data, lock_file.data, lock_file.len)
+        ಆದರೆ (ccf->ಬೀಗ_file.len != ಬೀಗ_file.len
+            || ngx_strncmp(ccf->ಬೀಗ_file.ದತ್ತಾಂಶ, ಬೀಗ_file.ದತ್ತಾಂಶ, ಬೀಗ_file.len)
                != 0)
         {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
+            ngx_log_error(NGX_LOG_EMERG, ಚಕ್ರ->ಲಘುಗಣಕ, 0,
                           "\"lock_file\" could not be changed, ignored");
         }
 
-        cycle->lock_file.len = lock_file.len + 1;
-        lock_file.len += sizeof(".accept");
+        ಚಕ್ರ->ಬೀಗ_file.len = ಬೀಗ_file.len + 1;
+        ಬೀಗ_file.len += ಗಾತ್ರ(".accept");
 
-        cycle->lock_file.data = ngx_pstrdup(cycle->pool, &lock_file);
-        if (cycle->lock_file.data == NULL) {
-            return NGX_CONF_ERROR;
+        ಚಕ್ರ->ಬೀಗ_file.ದತ್ತಾಂಶ = ngx_pstrdup(ಚಕ್ರ->pool, &ಬೀಗ_file);
+        ಆದರೆ (ಚಕ್ರ->ಬೀಗ_file.ದತ್ತಾಂಶ == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
         }
 
-    } else {
-        cycle->lock_file.len = ccf->lock_file.len + 1;
-        cycle->lock_file.data = ngx_pnalloc(cycle->pool,
-                                      ccf->lock_file.len + sizeof(".accept"));
-        if (cycle->lock_file.data == NULL) {
-            return NGX_CONF_ERROR;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಚಕ್ರ->ಬೀಗ_file.len = ccf->ಬೀಗ_file.len + 1;
+        ಚಕ್ರ->ಬೀಗ_file.ದತ್ತಾಂಶ = ngx_pnalloc(ಚಕ್ರ->pool,
+                                      ccf->ಬೀಗ_file.len + ಗಾತ್ರ(".accept"));
+        ಆದರೆ (ಚಕ್ರ->ಬೀಗ_file.ದತ್ತಾಂಶ == ಖಾಲಿ) {
+            ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
         }
 
-        ngx_memcpy(ngx_cpymem(cycle->lock_file.data, ccf->lock_file.data,
-                              ccf->lock_file.len),
-                   ".accept", sizeof(".accept"));
+        ngx_memcpy(ngx_cpymem(ಚಕ್ರ->ಬೀಗ_file.ದತ್ತಾಂಶ, ccf->ಬೀಗ_file.ದತ್ತಾಂಶ,
+                              ccf->ಬೀಗ_file.len),
+                   ".accept", ಗಾತ್ರ(".accept"));
     }
     }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    return NGX_CONF_OK;
+    ಹಿಂತಿರುಗಿ NGX_CONF_OK;
 }
 
 
-static char *
-ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ಸ್ಥಿರ ಅಕ್ಷರ *
+ngx_ಗಣ_user(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf)
 {
-#if (NGX_WIN32)
+#ಆದರೆ (NGX_WIN32)
 
     ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                        "\"user\" is not supported, ignored");
 
-    return NGX_CONF_OK;
+    ಹಿಂತಿರುಗಿ NGX_CONF_OK;
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
     ngx_core_conf_t  *ccf = conf;
 
-    char             *group;
-    struct passwd    *pwd;
-    struct group     *grp;
-    ngx_str_t        *value;
+    ಅಕ್ಷರ             *ಗುಂಪು;
+    ರಚನೆ passwd    *pwd;
+    ರಚನೆ ಗುಂಪು     *grp;
+    ngx_str_t        *ಮೌಲ್ಯ;
 
-    if (ccf->user != (uid_t) NGX_CONF_UNSET_UINT) {
-        return "is duplicate";
+    ಆದರೆ (ccf->user != (uid_t) NGX_CONF_UNSET_UINT) {
+        ಹಿಂತಿರುಗಿ "is duplicate";
     }
 
-    if (geteuid() != 0) {
+    ಆದರೆ (geteuid() != 0) {
         ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                            "the \"user\" directive makes sense only "
                            "if the master process runs "
                            "with super-user privileges, ignored");
-        return NGX_CONF_OK;
+        ಹಿಂತಿರುಗಿ NGX_CONF_OK;
     }
 
-    value = cf->args->elts;
+    ಮೌಲ್ಯ = cf->ವಾದಗಳು->elts;
 
-    ccf->username = (char *) value[1].data;
+    ccf->username = (ಅಕ್ಷರ *) ಮೌಲ್ಯ[1].ದತ್ತಾಂಶ;
 
-    ngx_set_errno(0);
-    pwd = getpwnam((const char *) value[1].data);
-    if (pwd == NULL) {
+    ngx_ಗಣ_errno(0);
+    pwd = getpwnam((ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *) ಮೌಲ್ಯ[1].ದತ್ತಾಂಶ);
+    ಆದರೆ (pwd == ಖಾಲಿ) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
-                           "getpwnam(\"%s\") failed", value[1].data);
-        return NGX_CONF_ERROR;
+                           "getpwnam(\"%s\") failed", ಮೌಲ್ಯ[1].ದತ್ತಾಂಶ);
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
     ccf->user = pwd->pw_uid;
 
-    group = (char *) ((cf->args->nelts == 2) ? value[1].data : value[2].data);
+    ಗುಂಪು = (ಅಕ್ಷರ *) ((cf->ವಾದಗಳು->nelts == 2) ? ಮೌಲ್ಯ[1].ದತ್ತಾಂಶ : ಮೌಲ್ಯ[2].ದತ್ತಾಂಶ);
 
-    ngx_set_errno(0);
-    grp = getgrnam(group);
-    if (grp == NULL) {
+    ngx_ಗಣ_errno(0);
+    grp = getgrnam(ಗುಂಪು);
+    ಆದರೆ (grp == ಖಾಲಿ) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
-                           "getgrnam(\"%s\") failed", group);
-        return NGX_CONF_ERROR;
+                           "getgrnam(\"%s\") failed", ಗುಂಪು);
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
-    ccf->group = grp->gr_gid;
+    ccf->ಗುಂಪು = grp->gr_gid;
 
-    return NGX_CONF_OK;
+    ಹಿಂತಿರುಗಿ NGX_CONF_OK;
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
 
-static char *
-ngx_set_env(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ಸ್ಥಿರ ಅಕ್ಷರ *
+ngx_ಗಣ_env(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_str_t   *value, *var;
+    ngx_str_t   *ಮೌಲ್ಯ, *var;
     ngx_uint_t   i;
 
-    var = ngx_array_push(&ccf->env);
-    if (var == NULL) {
-        return NGX_CONF_ERROR;
+    var = ngx_array_ತಳ್ಳು(&ccf->env);
+    ಆದರೆ (var == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
-    *var = value[1];
+    ಮೌಲ್ಯ = cf->ವಾದಗಳು->elts;
+    *var = ಮೌಲ್ಯ[1];
 
-    for (i = 0; i < value[1].len; i++) {
+    ಗಾಗಿ (i = 0; i < ಮೌಲ್ಯ[1].len; i++) {
 
-        if (value[1].data[i] == '=') {
+        ಆದರೆ (ಮೌಲ್ಯ[1].ದತ್ತಾಂಶ[i] == '=') {
 
             var->len = i;
 
-            return NGX_CONF_OK;
+            ಹಿಂತಿರುಗಿ NGX_CONF_OK;
         }
     }
 
-    return NGX_CONF_OK;
+    ಹಿಂತಿರುಗಿ NGX_CONF_OK;
 }
 
 
-static char *
-ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ಸ್ಥಿರ ಅಕ್ಷರ *
+ngx_ಗಣ_ಆದ್ಯತೆ(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_str_t        *value;
+    ngx_str_t        *ಮೌಲ್ಯ;
     ngx_uint_t        n, minus;
 
-    if (ccf->priority != 0) {
-        return "is duplicate";
+    ಆದರೆ (ccf->ಆದ್ಯತೆ != 0) {
+        ಹಿಂತಿರುಗಿ "is duplicate";
     }
 
-    value = cf->args->elts;
+    ಮೌಲ್ಯ = cf->ವಾದಗಳು->elts;
 
-    if (value[1].data[0] == '-') {
+    ಆದರೆ (ಮೌಲ್ಯ[1].ದತ್ತಾಂಶ[0] == '-') {
         n = 1;
         minus = 1;
 
-    } else if (value[1].data[0] == '+') {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಮೌಲ್ಯ[1].ದತ್ತಾಂಶ[0] == '+') {
         n = 1;
         minus = 0;
 
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         n = 0;
         minus = 0;
     }
 
-    ccf->priority = ngx_atoi(&value[1].data[n], value[1].len - n);
-    if (ccf->priority == NGX_ERROR) {
-        return "invalid number";
+    ccf->ಆದ್ಯತೆ = ngx_atoi(&ಮೌಲ್ಯ[1].ದತ್ತಾಂಶ[n], ಮೌಲ್ಯ[1].len - n);
+    ಆದರೆ (ccf->ಆದ್ಯತೆ == NGX_ERROR) {
+        ಹಿಂತಿರುಗಿ "invalid number";
     }
 
-    if (minus) {
-        ccf->priority = -ccf->priority;
+    ಆದರೆ (minus) {
+        ccf->ಆದ್ಯತೆ = -ccf->ಆದ್ಯತೆ;
     }
 
-    return NGX_CONF_OK;
+    ಹಿಂತಿರುಗಿ NGX_CONF_OK;
 }
 
 
-static char *
-ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ಸ್ಥಿರ ಅಕ್ಷರ *
+ngx_ಗಣ_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf)
 {
-#if (NGX_HAVE_CPU_AFFINITY)
+#ಆದರೆ (NGX_HAVE_CPU_AFFINITY)
     ngx_core_conf_t  *ccf = conf;
 
     u_char            ch, *p;
-    ngx_str_t        *value;
+    ngx_str_t        *ಮೌಲ್ಯ;
     ngx_uint_t        i, n;
-    ngx_cpuset_t     *mask;
+    ngx_cpuset_t     *ಮುಖವಾಡ;
 
-    if (ccf->cpu_affinity) {
-        return "is duplicate";
+    ಆದರೆ (ccf->cpu_affinity) {
+        ಹಿಂತಿರುಗಿ "is duplicate";
     }
 
-    mask = ngx_palloc(cf->pool, (cf->args->nelts - 1) * sizeof(ngx_cpuset_t));
-    if (mask == NULL) {
-        return NGX_CONF_ERROR;
+    ಮುಖವಾಡ = ngx_palloc(cf->pool, (cf->ವಾದಗಳು->nelts - 1) * ಗಾತ್ರ(ngx_cpuset_t));
+    ಆದರೆ (ಮುಖವಾಡ == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
-    ccf->cpu_affinity_n = cf->args->nelts - 1;
-    ccf->cpu_affinity = mask;
+    ccf->cpu_affinity_n = cf->ವಾದಗಳು->nelts - 1;
+    ccf->cpu_affinity = ಮುಖವಾಡ;
 
-    value = cf->args->elts;
+    ಮೌಲ್ಯ = cf->ವಾದಗಳು->elts;
 
-    if (ngx_strcmp(value[1].data, "auto") == 0) {
+    ಆದರೆ (ngx_strcmp(ಮೌಲ್ಯ[1].ದತ್ತಾಂಶ, "auto") == 0) {
 
-        if (cf->args->nelts > 3) {
+        ಆದರೆ (cf->ವಾದಗಳು->nelts > 3) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "invalid number of arguments in "
                                "\"worker_cpu_affinity\" directive");
-            return NGX_CONF_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
         }
 
         ccf->cpu_affinity_auto = 1;
 
-        CPU_ZERO(&mask[0]);
-        for (i = 0; i < (ngx_uint_t) ngx_min(ngx_ncpu, CPU_SETSIZE); i++) {
-            CPU_SET(i, &mask[0]);
+        CPU_ZERO(&ಮುಖವಾಡ[0]);
+        ಗಾಗಿ (i = 0; i < (ngx_uint_t) ngx_min(ngx_ncpu, CPU_SETSIZE); i++) {
+            CPU_ಗಣ(i, &ಮುಖವಾಡ[0]);
         }
 
         n = 2;
 
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         n = 1;
     }
 
-    for ( /* void */ ; n < cf->args->nelts; n++) {
+    ಗಾಗಿ ( /* void */ ; n < cf->ವಾದಗಳು->nelts; n++) {
 
-        if (value[n].len > CPU_SETSIZE) {
+        ಆದರೆ (ಮೌಲ್ಯ[n].len > CPU_SETSIZE) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                          "\"worker_cpu_affinity\" supports up to %d CPUs only",
                          CPU_SETSIZE);
-            return NGX_CONF_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
         }
 
         i = 0;
-        CPU_ZERO(&mask[n - 1]);
+        CPU_ZERO(&ಮುಖವಾಡ[n - 1]);
 
-        for (p = value[n].data + value[n].len - 1;
-             p >= value[n].data;
+        ಗಾಗಿ (p = ಮೌಲ್ಯ[n].ದತ್ತಾಂಶ + ಮೌಲ್ಯ[n].len - 1;
+             p >= ಮೌಲ್ಯ[n].ದತ್ತಾಂಶ;
              p--)
         {
             ch = *p;
 
-            if (ch == ' ') {
-                continue;
+            ಆದರೆ (ch == ' ') {
+                ಮುಂದುವರಿ;
             }
 
             i++;
 
-            if (ch == '0') {
-                continue;
+            ಆದರೆ (ch == '0') {
+                ಮುಂದುವರಿ;
             }
 
-            if (ch == '1') {
-                CPU_SET(i - 1, &mask[n - 1]);
-                continue;
+            ಆದರೆ (ch == '1') {
+                CPU_ಗಣ(i - 1, &ಮುಖವಾಡ[n - 1]);
+                ಮುಂದುವರಿ;
             }
 
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                           "invalid character \"%c\" in \"worker_cpu_affinity\"",
                           ch);
-            return NGX_CONF_ERROR;
+            ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
         }
     }
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
     ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                        "\"worker_cpu_affinity\" is not supported "
                        "on this platform, ignored");
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-    return NGX_CONF_OK;
+    ಹಿಂತಿರುಗಿ NGX_CONF_OK;
 }
 
 
 ngx_cpuset_t *
 ngx_get_cpu_affinity(ngx_uint_t n)
 {
-#if (NGX_HAVE_CPU_AFFINITY)
+#ಆದರೆ (NGX_HAVE_CPU_AFFINITY)
     ngx_uint_t        i, j;
-    ngx_cpuset_t     *mask;
+    ngx_cpuset_t     *ಮುಖವಾಡ;
     ngx_core_conf_t  *ccf;
 
-    static ngx_cpuset_t  result;
+    ಸ್ಥಿರ ngx_cpuset_t  ಫಲಿತಾಂಶ;
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(ngx_cycle->conf_ctx,
+    ccf = (ngx_core_conf_t *) ngx_get_conf(ngx_ಚಕ್ರ->conf_ctx,
                                            ngx_core_module);
 
-    if (ccf->cpu_affinity == NULL) {
-        return NULL;
+    ಆದರೆ (ccf->cpu_affinity == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;
     }
 
-    if (ccf->cpu_affinity_auto) {
-        mask = &ccf->cpu_affinity[ccf->cpu_affinity_n - 1];
+    ಆದರೆ (ccf->cpu_affinity_auto) {
+        ಮುಖವಾಡ = &ccf->cpu_affinity[ccf->cpu_affinity_n - 1];
 
-        for (i = 0, j = n; /* void */ ; i++) {
+        ಗಾಗಿ (i = 0, j = n; /* void */ ; i++) {
 
-            if (CPU_ISSET(i % CPU_SETSIZE, mask) && j-- == 0) {
-                break;
+            ಆದರೆ (CPU_ISSET(i % CPU_SETSIZE, ಮುಖವಾಡ) && j-- == 0) {
+                ನಿಲ್ಲಿಸು;
             }
 
-            if (i == CPU_SETSIZE && j == n) {
+            ಆದರೆ (i == CPU_SETSIZE && j == n) {
                 /* empty mask */
-                return NULL;
+                ಹಿಂತಿರುಗಿ ಖಾಲಿ;
             }
 
             /* void */
         }
 
-        CPU_ZERO(&result);
-        CPU_SET(i % CPU_SETSIZE, &result);
+        CPU_ZERO(&ಫಲಿತಾಂಶ);
+        CPU_ಗಣ(i % CPU_SETSIZE, &ಫಲಿತಾಂಶ);
 
-        return &result;
+        ಹಿಂತಿರುಗಿ &ಫಲಿತಾಂಶ;
     }
 
-    if (ccf->cpu_affinity_n > n) {
-        return &ccf->cpu_affinity[n];
+    ಆದರೆ (ccf->cpu_affinity_n > n) {
+        ಹಿಂತಿರುಗಿ &ccf->cpu_affinity[n];
     }
 
-    return &ccf->cpu_affinity[ccf->cpu_affinity_n - 1];
+    ಹಿಂತಿರುಗಿ &ccf->cpu_affinity[ccf->cpu_affinity_n - 1];
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
-    return NULL;
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
 
-static char *
-ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ಸ್ಥಿರ ಅಕ್ಷರ *
+ngx_ಗಣ_ಕೆಲಸಗಾರ_processes(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *ಮೌಲ್ಯ;
     ngx_core_conf_t  *ccf;
 
     ccf = (ngx_core_conf_t *) conf;
 
-    if (ccf->worker_processes != NGX_CONF_UNSET) {
-        return "is duplicate";
+    ಆದರೆ (ccf->ಕೆಲಸಗಾರ_processes != NGX_CONF_UNSET) {
+        ಹಿಂತಿರುಗಿ "is duplicate";
     }
 
-    value = cf->args->elts;
+    ಮೌಲ್ಯ = cf->ವಾದಗಳು->elts;
 
-    if (ngx_strcmp(value[1].data, "auto") == 0) {
-        ccf->worker_processes = ngx_ncpu;
-        return NGX_CONF_OK;
+    ಆದರೆ (ngx_strcmp(ಮೌಲ್ಯ[1].ದತ್ತಾಂಶ, "auto") == 0) {
+        ccf->ಕೆಲಸಗಾರ_processes = ngx_ncpu;
+        ಹಿಂತಿರುಗಿ NGX_CONF_OK;
     }
 
-    ccf->worker_processes = ngx_atoi(value[1].data, value[1].len);
+    ccf->ಕೆಲಸಗಾರ_processes = ngx_atoi(ಮೌಲ್ಯ[1].ದತ್ತಾಂಶ, ಮೌಲ್ಯ[1].len);
 
-    if (ccf->worker_processes == NGX_ERROR) {
-        return "invalid value";
+    ಆದರೆ (ccf->ಕೆಲಸಗಾರ_processes == NGX_ERROR) {
+        ಹಿಂತಿರುಗಿ "invalid value";
     }
 
-    return NGX_CONF_OK;
+    ಹಿಂತಿರುಗಿ NGX_CONF_OK;
 }
 
 
-static char *
-ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ಸ್ಥಿರ ಅಕ್ಷರ *
+ngx_ತುಂಬು_module(ngx_conf_t *cf, ngx_command_t *cmd, ಶೂನ್ಯ *conf)
 {
-#if (NGX_HAVE_DLOPEN)
-    void                *handle;
-    char               **names, **order;
-    ngx_str_t           *value, file;
+#ಆದರೆ (NGX_HAVE_DLOPEN)
+    ಶೂನ್ಯ                *handle;
+    ಅಕ್ಷರ               **ಹೆಸರುಗಳು, **ಕ್ರಮ;
+    ngx_str_t           *ಮೌಲ್ಯ, file;
     ngx_uint_t           i;
     ngx_module_t        *module, **modules;
     ngx_pool_cleanup_t  *cln;
 
-    if (cf->cycle->modules_used) {
-        return "is specified too late";
+    ಆದರೆ (cf->ಚಕ್ರ->modules_ಬಳಸಿದ) {
+        ಹಿಂತಿರುಗಿ "is specified too late";
     }
 
-    value = cf->args->elts;
+    ಮೌಲ್ಯ = cf->ವಾದಗಳು->elts;
 
-    file = value[1];
+    file = ಮೌಲ್ಯ[1];
 
-    if (ngx_conf_full_name(cf->cycle, &file, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    ಆದರೆ (ngx_conf_ತುಂಬಿದ_name(cf->ಚಕ್ರ, &file, 0) != NGX_OK) {
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
-    cln = ngx_pool_cleanup_add(cf->cycle->pool, 0);
-    if (cln == NULL) {
-        return NGX_CONF_ERROR;
+    cln = ngx_pool_cleanup_ಕೂಡಿಸು(cf->ಚಕ್ರ->pool, 0);
+    ಆದರೆ (cln == ಖಾಲಿ) {
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
-    handle = ngx_dlopen(file.data);
-    if (handle == NULL) {
+    handle = ngx_dlopen(file.ದತ್ತಾಂಶ);
+    ಆದರೆ (handle == ಖಾಲಿ) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            ngx_dlopen_n " \"%s\" failed (%s)",
-                           file.data, ngx_dlerror());
-        return NGX_CONF_ERROR;
+                           file.ದತ್ತಾಂಶ, ngx_dlerror());
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
     cln->handler = ngx_unload_module;
-    cln->data = handle;
+    cln->ದತ್ತಾಂಶ = handle;
 
     modules = ngx_dlsym(handle, "ngx_modules");
-    if (modules == NULL) {
+    ಆದರೆ (modules == ಖಾಲಿ) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            ngx_dlsym_n " \"%V\", \"%s\" failed (%s)",
-                           &value[1], "ngx_modules", ngx_dlerror());
-        return NGX_CONF_ERROR;
+                           &ಮೌಲ್ಯ[1], "ngx_modules", ngx_dlerror());
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
-    names = ngx_dlsym(handle, "ngx_module_names");
-    if (names == NULL) {
+    ಹೆಸರುಗಳು = ngx_dlsym(handle, "ngx_module_names");
+    ಆದರೆ (ಹೆಸರುಗಳು == ಖಾಲಿ) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            ngx_dlsym_n " \"%V\", \"%s\" failed (%s)",
-                           &value[1], "ngx_module_names", ngx_dlerror());
-        return NGX_CONF_ERROR;
+                           &ಮೌಲ್ಯ[1], "ngx_module_names", ngx_dlerror());
+        ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
     }
 
-    order = ngx_dlsym(handle, "ngx_module_order");
+    ಕ್ರಮ = ngx_dlsym(handle, "ngx_module_order");
 
-    for (i = 0; modules[i]; i++) {
+    ಗಾಗಿ (i = 0; modules[i]; i++) {
         module = modules[i];
-        module->name = names[i];
+        module->name = ಹೆಸರುಗಳು[i];
 
-        if (ngx_add_module(cf, &file, module, order) != NGX_OK) {
-            return NGX_CONF_ERROR;
+        ಆದರೆ (ngx_ಕೂಡಿಸು_module(cf, &file, module, ಕ್ರಮ) != NGX_OK) {
+            ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
         }
 
-        ngx_log_debug2(NGX_LOG_DEBUG_CORE, cf->log, 0, "module: %s i:%ui",
-                       module->name, module->index);
+        ngx_log_debug2(NGX_LOG_DEBUG_CORE, cf->ಲಘುಗಣಕ, 0, "module: %s i:%ui",
+                       module->name, module->ಸೂಚ್ಯಂಕ);
     }
 
-    return NGX_CONF_OK;
+    ಹಿಂತಿರುಗಿ NGX_CONF_OK;
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                        "\"load_module\" is not supported "
                        "on this platform");
-    return NGX_CONF_ERROR;
+    ಹಿಂತಿರುಗಿ NGX_CONF_ERROR;
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
 
-#if (NGX_HAVE_DLOPEN)
+#ಆದರೆ (NGX_HAVE_DLOPEN)
 
-static void
-ngx_unload_module(void *data)
+ಸ್ಥಿರ ಶೂನ್ಯ
+ngx_unload_module(ಶೂನ್ಯ *ದತ್ತಾಂಶ)
 {
-    void  *handle = data;
+    ಶೂನ್ಯ  *handle = ದತ್ತಾಂಶ;
 
-    if (ngx_dlclose(handle) != 0) {
-        ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0,
+    ಆದರೆ (ngx_dlclose(handle) != 0) {
+        ngx_log_error(NGX_LOG_ALERT, ngx_ಚಕ್ರ->ಲಘುಗಣಕ, 0,
                       ngx_dlclose_n " failed (%s)", ngx_dlerror());
     }
 }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

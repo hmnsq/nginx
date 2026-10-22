@@ -5,35 +5,35 @@
  */
 
 
-#ifndef _NGX_CRC_H_INCLUDED_
-#define _NGX_CRC_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ NGX_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_H_INCLUDED
+#ವ್ಯಾಖ್ಯಾನಿಸು NGX_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
 
 /* 32-bit crc16 */
 
-static ngx_inline uint32_t
-ngx_crc(u_char *data, size_t len)
+ಸ್ಥಿರ ngx_inline uint32_t
+ngx_ಚಕ್ರೀಯ_ಪರೀಕ್ಷೆ(u_char *ದತ್ತಾಂಶ, ಗಾತ್ರ_t len)
 {
-    uint32_t  sum;
+    uint32_t  ಮೊತ್ತ;
 
-    for (sum = 0; len; len--) {
+    ಗಾಗಿ (ಮೊತ್ತ = 0; len; len--) {
 
         /*
          * gcc 2.95.2 x86 and icc 7.1.006 compile
          * that operator into the single "rol" opcode,
          * msvc 6.0sp2 compiles it into four opcodes.
          */
-        sum = sum >> 1 | sum << 31;
+        ಮೊತ್ತ = ಮೊತ್ತ >> 1 | ಮೊತ್ತ << 31;
 
-        sum += *data++;
+        ಮೊತ್ತ += *ದತ್ತಾಂಶ++;
     }
 
-    return sum;
+    ಹಿಂತಿರುಗಿ ಮೊತ್ತ;
 }
 
 
-#endif /* _NGX_CRC_H_INCLUDED_ */
+#ಆದರೆ_ಅಂತ್ಯ /* _NGX_CRC_H_INCLUDED_ */

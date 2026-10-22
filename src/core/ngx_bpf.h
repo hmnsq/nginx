@@ -4,40 +4,40 @@
  */
 
 
-#ifndef _NGX_BPF_H_INCLUDED_
-#define _NGX_BPF_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ _NGX_BPF_H_INCLUDED_
+#ವ್ಯಾಖ್ಯಾನಿಸು _NGX_BPF_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ಅನ್ತರ್ಭಾವ <ngx_config.h>
+#ಅನ್ತರ್ಭಾವ <ngx_core.h>
 
-#include <linux/bpf.h>
+#ಅನ್ತರ್ಭಾವ <linux/bpf.h>
 
 
-typedef struct {
-    char                *name;
-    int                  offset;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
+    ಅಕ್ಷರ                *name;
+    ಪೂರ್ಣಾಂಕ                  ಸ್ಥಾನಾಂತರ;
 } ngx_bpf_reloc_t;
 
-typedef struct {
-    char                *license;
-    enum bpf_prog_type   type;
-    struct bpf_insn     *ins;
-    size_t               nins;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
+    ಅಕ್ಷರ                *license;
+    ಎಣಿಕೆ bpf_prog_type   type;
+    ರಚನೆ bpf_insn     *ins;
+    ಗಾತ್ರ_t               nins;
     ngx_bpf_reloc_t     *relocs;
-    size_t               nrelocs;
-} ngx_bpf_program_t;
+    ಗಾತ್ರ_t               nrelocs;
+} ngx_bpf_ಕಾರ್ಯಕ್ರಮ_t;
 
 
-void ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol,
-    int fd);
-int ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program);
+ಶೂನ್ಯ ngx_bpf_ಕಾರ್ಯಕ್ರಮ_link(ngx_bpf_ಕಾರ್ಯಕ್ರಮ_t *ಕಾರ್ಯಕ್ರಮ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಚಿಹ್ನೆ,
+    ಪೂರ್ಣಾಂಕ fd);
+ಪೂರ್ಣಾಂಕ ngx_bpf_ತುಂಬು_ಕಾರ್ಯಕ್ರಮ(ngx_log_t *ಲಘುಗಣಕ, ngx_bpf_ಕಾರ್ಯಕ್ರಮ_t *ಕಾರ್ಯಕ್ರಮ);
 
-int ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags);
-int ngx_bpf_map_update(int fd, const void *key, const void *value,
+ಪೂರ್ಣಾಂಕ ngx_bpf_map_create(ngx_log_t *ಲಘುಗಣಕ, ಎಣಿಕೆ bpf_map_type type, ಪೂರ್ಣಾಂಕ ಕೀಲಿ_ಗಾತ್ರ,
+    ಪೂರ್ಣಾಂಕ ಮೌಲ್ಯ_ಗಾತ್ರ, ಪೂರ್ಣಾಂಕ max_entries, uint32_t map_flags);
+ಪೂರ್ಣಾಂಕ ngx_bpf_map_update(ಪೂರ್ಣಾಂಕ fd, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಕೀಲಿ, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಮೌಲ್ಯ,
     uint64_t flags);
-int ngx_bpf_map_delete(int fd, const void *key);
-int ngx_bpf_map_lookup(int fd, const void *key, void *value);
+ಪೂರ್ಣಾಂಕ ngx_bpf_map_delete(ಪೂರ್ಣಾಂಕ fd, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಕೀಲಿ);
+ಪೂರ್ಣಾಂಕ ngx_bpf_map_lookup(ಪೂರ್ಣಾಂಕ fd, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಕೀಲಿ, ಶೂನ್ಯ *ಮೌಲ್ಯ);
 
-#endif /* _NGX_BPF_H_INCLUDED_ */
+#ಆದರೆ_ಅಂತ್ಯ /* _NGX_BPF_H_INCLUDED_ */
