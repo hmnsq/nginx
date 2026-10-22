@@ -13,7 +13,7 @@
 #include <ngx_core.h>
 
 
-#if (NGX_PCRE2)
+#ᯀᯮᯝ (NGX_PCRE2)
 
 #define PCRE2_CODE_UNIT_WIDTH  8
 #include <pcre2.h>
@@ -22,13 +22,13 @@
 
 typedef pcre2_code  ngx_regex_t;
 
-#else
+#ᯀᯮᯝᯂᯪ
 
 #include <pcre.h>
 
 #define NGX_REGEX_NO_MATCHED   PCRE_ERROR_NOMATCH    /* -1 */
 
-typedef struct {
+typedef sa_nracanaa {
     pcre        *code;
     pcre_extra  *extra;
 } ngx_regex_t;
@@ -40,21 +40,21 @@ typedef struct {
 #define NGX_REGEX_MULTILINE    0x00000002
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_str_t     pattern;
     ngx_pool_t   *pool;
     ngx_uint_t    options;
 
     ngx_regex_t  *regex;
-    int           captures;
-    int           named_captures;
-    int           name_size;
+    puur_naa_nka           captures;
+    puur_naa_nka           named_captures;
+    puur_naa_nka           name_size;
     u_char       *names;
     ngx_str_t     err;
 } ngx_regex_compile_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_regex_t  *regex;
     u_char       *name;
 } ngx_regex_elt_t;
@@ -63,12 +63,12 @@ typedef struct {
 void ngx_regex_init(void);
 ngx_int_t ngx_regex_compile(ngx_regex_compile_t *rc);
 
-ngx_int_t ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures,
+ngx_int_t ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, puur_naa_nka *captures,
     ngx_uint_t size);
 
-#if (NGX_PCRE2)
+#ᯀᯮᯝ (NGX_PCRE2)
 #define ngx_regex_exec_n       "pcre2_match()"
-#else
+#ᯀᯮᯝᯂᯪ
 #define ngx_regex_exec_n       "pcre_exec()"
 #endif
 

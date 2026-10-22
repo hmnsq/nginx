@@ -13,7 +13,7 @@
 #include <ngx_core.h>
 
 
-typedef struct {
+typedef sa_nracanaa {
     void        *elts;
     ngx_uint_t   nelts;
     size_t       size;
@@ -42,11 +42,11 @@ ngx_array_init(ngx_array_t *array, ngx_pool_t *pool, ngx_uint_t n, size_t size)
     array->pool = pool;
 
     array->elts = ngx_palloc(pool, n * size);
-    if (array->elts == NULL) {
-        return NGX_ERROR;
+    ᯀᯮᯝ (array->elts == NULL) {
+        ᯀᯮᯞ NGX_ERROR;
     }
 
-    return NGX_OK;
+    ᯀᯮᯞ NGX_OK;
 }
 
 

@@ -18,9 +18,9 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     uint32_t           key, mask, inc;
     ngx_radix_tree_t  *tree;
 
-    tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
-        return NULL;
+    tree = ngx_palloc(pool, parimaa_na(ngx_radix_tree_t));
+    ᯀᯮᯝ (tree == NULL) {
+        ᯀᯮᯞ NULL;
     }
 
     tree->pool = pool;
@@ -29,8 +29,8 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     tree->size = 0;
 
     tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
-        return NULL;
+    ᯀᯮᯝ (tree->root == NULL) {
+        ᯀᯮᯞ NULL;
     }
 
     tree->root->right = NULL;
@@ -38,8 +38,8 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     tree->root->parent = NULL;
     tree->root->value = NGX_RADIX_NO_VALUE;
 
-    if (preallocate == 0) {
-        return tree;
+    ᯀᯮᯝ (preallocate == 0) {
+        ᯀᯮᯞ tree;
     }
 
     /*
@@ -59,18 +59,18 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      *     8 bits on sparc64 in 32-bit mode (8K pages)
      */
 
-    if (preallocate == -1) {
-        switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
+    ᯀᯮᯝ (preallocate == -1) {
+        switch (ngx_pagesize / parimaa_na(ngx_radix_node_t)) {
 
         /* amd64 */
-        case 128:
+        pak_sa 128:
             preallocate = 6;
-            break;
+            bha_nga;
 
         /* i386, sparc64 */
-        case 256:
+        pak_sa 256:
             preallocate = 7;
-            break;
+            bha_nga;
 
         /* sparc64 in 32-bit mode */
         default:
@@ -81,27 +81,27 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     mask = 0;
     inc = 0x80000000;
 
-    while (preallocate--) {
+    ᯀᯬᯝ (preallocate--) {
 
         key = 0;
         mask >>= 1;
         mask |= 0x80000000;
 
         do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+            ᯀᯮᯝ (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
                 != NGX_OK)
             {
-                return NULL;
+                ᯀᯮᯞ NULL;
             }
 
             key += inc;
 
-        } while (key);
+        } ᯀᯬᯝ (key);
 
         inc >>= 1;
     }
 
-    return tree;
+    ᯀᯮᯞ tree;
 }
 
 
@@ -117,35 +117,35 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
     node = tree->root;
     next = tree->root;
 
-    while (bit & mask) {
-        if (key & bit) {
+    ᯀᯬᯝ (bit & mask) {
+        ᯀᯮᯝ (key & bit) {
             next = node->right;
 
-        } else {
+        } ᯀᯮᯝᯂᯪ {
             next = node->left;
         }
 
-        if (next == NULL) {
-            break;
+        ᯀᯮᯝ (next == NULL) {
+            bha_nga;
         }
 
         bit >>= 1;
         node = next;
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    ᯀᯮᯝ (next) {
+        ᯀᯮᯝ (node->value != NGX_RADIX_NO_VALUE) {
+            ᯀᯮᯞ NGX_BUSY;
         }
 
         node->value = value;
-        return NGX_OK;
+        ᯀᯮᯞ NGX_OK;
     }
 
-    while (bit & mask) {
+    ᯀᯬᯝ (bit & mask) {
         next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+        ᯀᯮᯝ (next == NULL) {
+            ᯀᯮᯞ NGX_ERROR;
         }
 
         next->right = NULL;
@@ -153,10 +153,10 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
         next->parent = node;
         next->value = NGX_RADIX_NO_VALUE;
 
-        if (key & bit) {
+        ᯀᯮᯝ (key & bit) {
             node->right = next;
 
-        } else {
+        } ᯀᯮᯝᯂᯪ {
             node->left = next;
         }
 
@@ -166,7 +166,7 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
 
     node->value = value;
 
-    return NGX_OK;
+    ᯀᯮᯞ NGX_OK;
 }
 
 
@@ -179,35 +179,35 @@ ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
     bit = 0x80000000;
     node = tree->root;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
+    ᯀᯬᯝ (node && (bit & mask)) {
+        ᯀᯮᯝ (key & bit) {
             node = node->right;
 
-        } else {
+        } ᯀᯮᯝᯂᯪ {
             node = node->left;
         }
 
         bit >>= 1;
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    ᯀᯮᯝ (node == NULL) {
+        ᯀᯮᯞ NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    ᯀᯮᯝ (node->right || node->left) {
+        ᯀᯮᯝ (node->value != NGX_RADIX_NO_VALUE) {
             node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+            ᯀᯮᯞ NGX_OK;
         }
 
-        return NGX_ERROR;
+        ᯀᯮᯞ NGX_ERROR;
     }
 
     for ( ;; ) {
-        if (node->parent->right == node) {
+        ᯀᯮᯝ (node->parent->right == node) {
             node->parent->right = NULL;
 
-        } else {
+        } ᯀᯮᯝᯂᯪ {
             node->parent->left = NULL;
         }
 
@@ -216,20 +216,20 @@ ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
 
         node = node->parent;
 
-        if (node->right || node->left) {
-            break;
+        ᯀᯮᯝ (node->right || node->left) {
+            bha_nga;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        ᯀᯮᯝ (node->value != NGX_RADIX_NO_VALUE) {
+            bha_nga;
         }
 
-        if (node->parent == NULL) {
-            break;
+        ᯀᯮᯝ (node->parent == NULL) {
+            bha_nga;
         }
     }
 
-    return NGX_OK;
+    ᯀᯮᯞ NGX_OK;
 }
 
 
@@ -244,26 +244,26 @@ ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
     value = NGX_RADIX_NO_VALUE;
     node = tree->root;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    ᯀᯬᯝ (node) {
+        ᯀᯮᯝ (node->value != NGX_RADIX_NO_VALUE) {
             value = node->value;
         }
 
-        if (key & bit) {
+        ᯀᯮᯝ (key & bit) {
             node = node->right;
 
-        } else {
+        } ᯀᯮᯝᯂᯪ {
             node = node->left;
         }
 
         bit >>= 1;
     }
 
-    return value;
+    ᯀᯮᯞ value;
 }
 
 
-#if (NGX_HAVE_INET6)
+#ᯀᯮᯝ (NGX_HAVE_INET6)
 
 ngx_int_t
 ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
@@ -279,43 +279,43 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
     node = tree->root;
     next = tree->root;
 
-    while (bit & mask[i]) {
-        if (key[i] & bit) {
+    ᯀᯬᯝ (bit & mask[i]) {
+        ᯀᯮᯝ (key[i] & bit) {
             next = node->right;
 
-        } else {
+        } ᯀᯮᯝᯂᯪ {
             next = node->left;
         }
 
-        if (next == NULL) {
-            break;
+        ᯀᯮᯝ (next == NULL) {
+            bha_nga;
         }
 
         bit >>= 1;
         node = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        ᯀᯮᯝ (bit == 0) {
+            ᯀᯮᯝ (++i == 16) {
+                bha_nga;
             }
 
             bit = 0x80;
         }
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    ᯀᯮᯝ (next) {
+        ᯀᯮᯝ (node->value != NGX_RADIX_NO_VALUE) {
+            ᯀᯮᯞ NGX_BUSY;
         }
 
         node->value = value;
-        return NGX_OK;
+        ᯀᯮᯞ NGX_OK;
     }
 
-    while (bit & mask[i]) {
+    ᯀᯬᯝ (bit & mask[i]) {
         next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+        ᯀᯮᯝ (next == NULL) {
+            ᯀᯮᯞ NGX_ERROR;
         }
 
         next->right = NULL;
@@ -323,19 +323,19 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
         next->parent = node;
         next->value = NGX_RADIX_NO_VALUE;
 
-        if (key[i] & bit) {
+        ᯀᯮᯝ (key[i] & bit) {
             node->right = next;
 
-        } else {
+        } ᯀᯮᯝᯂᯪ {
             node->left = next;
         }
 
         bit >>= 1;
         node = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        ᯀᯮᯝ (bit == 0) {
+            ᯀᯮᯝ (++i == 16) {
+                bha_nga;
             }
 
             bit = 0x80;
@@ -344,7 +344,7 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
 
     node->value = value;
 
-    return NGX_OK;
+    ᯀᯮᯞ NGX_OK;
 }
 
 
@@ -359,43 +359,43 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
     bit = 0x80;
     node = tree->root;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
+    ᯀᯬᯝ (node && (bit & mask[i])) {
+        ᯀᯮᯝ (key[i] & bit) {
             node = node->right;
 
-        } else {
+        } ᯀᯮᯝᯂᯪ {
             node = node->left;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        ᯀᯮᯝ (bit == 0) {
+            ᯀᯮᯝ (++i == 16) {
+                bha_nga;
             }
 
             bit = 0x80;
         }
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    ᯀᯮᯝ (node == NULL) {
+        ᯀᯮᯞ NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    ᯀᯮᯝ (node->right || node->left) {
+        ᯀᯮᯝ (node->value != NGX_RADIX_NO_VALUE) {
             node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+            ᯀᯮᯞ NGX_OK;
         }
 
-        return NGX_ERROR;
+        ᯀᯮᯞ NGX_ERROR;
     }
 
     for ( ;; ) {
-        if (node->parent->right == node) {
+        ᯀᯮᯝ (node->parent->right == node) {
             node->parent->right = NULL;
 
-        } else {
+        } ᯀᯮᯝᯂᯪ {
             node->parent->left = NULL;
         }
 
@@ -404,20 +404,20 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
 
         node = node->parent;
 
-        if (node->right || node->left) {
-            break;
+        ᯀᯮᯝ (node->right || node->left) {
+            bha_nga;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        ᯀᯮᯝ (node->value != NGX_RADIX_NO_VALUE) {
+            bha_nga;
         }
 
-        if (node->parent == NULL) {
-            break;
+        ᯀᯮᯝ (node->parent == NULL) {
+            bha_nga;
         }
     }
 
-    return NGX_OK;
+    ᯀᯮᯞ NGX_OK;
 }
 
 
@@ -434,27 +434,27 @@ ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
     value = NGX_RADIX_NO_VALUE;
     node = tree->root;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    ᯀᯬᯝ (node) {
+        ᯀᯮᯝ (node->value != NGX_RADIX_NO_VALUE) {
             value = node->value;
         }
 
-        if (key[i] & bit) {
+        ᯀᯮᯝ (key[i] & bit) {
             node = node->right;
 
-        } else {
+        } ᯀᯮᯝᯂᯪ {
             node = node->left;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
+        ᯀᯮᯝ (bit == 0) {
             i++;
             bit = 0x80;
         }
     }
 
-    return value;
+    ᯀᯮᯞ value;
 }
 
 #endif
@@ -465,24 +465,24 @@ ngx_radix_alloc(ngx_radix_tree_t *tree)
 {
     ngx_radix_node_t  *p;
 
-    if (tree->free) {
+    ᯀᯮᯝ (tree->free) {
         p = tree->free;
         tree->free = tree->free->right;
-        return p;
+        ᯀᯮᯞ p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
+    ᯀᯮᯝ (tree->size < parimaa_na(ngx_radix_node_t)) {
         tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
-            return NULL;
+        ᯀᯮᯝ (tree->start == NULL) {
+            ᯀᯮᯞ NULL;
         }
 
         tree->size = ngx_pagesize;
     }
 
     p = (ngx_radix_node_t *) tree->start;
-    tree->start += sizeof(ngx_radix_node_t);
-    tree->size -= sizeof(ngx_radix_node_t);
+    tree->start += parimaa_na(ngx_radix_node_t);
+    tree->size -= parimaa_na(ngx_radix_node_t);
 
-    return p;
+    ᯀᯮᯞ p;
 }
