@@ -28,51 +28,51 @@ ngx_parse_http_time(u_char *value, size_t len)
     fmt = 0;
     end = value + len;
 
-#if (NGX_SUPPRESS_WARN)
+#nếu (NGX_SUPPRESS_WARN)
     day = 32;
     year = 2038;
 #endif
 
-    for (p = value; p < end; p++) {
-        if (*p == ',') {
+    cho (p = value; p < end; p++) {
+        nếu (*p == ',') {
             break;
         }
 
-        if (*p == ' ') {
+        nếu (*p == ' ') {
             fmt = isoc;
             break;
         }
     }
 
-    for (p++; p < end; p++) {
-        if (*p != ' ') {
+    cho (p++; p < end; p++) {
+        nếu (*p != ' ') {
             break;
         }
     }
 
-    if (end - p < 18) {
-        return NGX_ERROR;
+    nếu (end - p < 18) {
+        trả_về NGX_ERROR;
     }
 
-    if (fmt != isoc) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    nếu (fmt != isoc) {
+        nếu (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            trả_về NGX_ERROR;
         }
 
         day = (*p - '0') * 10 + (*(p + 1) - '0');
         p += 2;
 
-        if (*p == ' ') {
-            if (end - p < 18) {
-                return NGX_ERROR;
+        nếu (*p == ' ') {
+            nếu (end - p < 18) {
+                trả_về NGX_ERROR;
             }
             fmt = rfc822;
 
-        } else if (*p == '-') {
+        } không_thì nếu (*p == '-') {
             fmt = rfc850;
 
-        } else {
-            return NGX_ERROR;
+        } không_thì {
+            trả_về NGX_ERROR;
         }
 
         p++;
@@ -113,32 +113,32 @@ ngx_parse_http_time(u_char *value, size_t len)
         break;
 
     default:
-        return NGX_ERROR;
+        trả_về NGX_ERROR;
     }
 
     p += 3;
 
-    if ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
-        return NGX_ERROR;
+    nếu ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
+        trả_về NGX_ERROR;
     }
 
     p++;
 
-    if (fmt == rfc822) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+    nếu (fmt == rfc822) {
+        nếu (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            trả_về NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
         p += 4;
 
-    } else if (fmt == rfc850) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    } không_thì nếu (fmt == rfc850) {
+        nếu (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            trả_về NGX_ERROR;
         }
 
         year = (*p - '0') * 10 + (*(p + 1) - '0');
@@ -146,91 +146,91 @@ ngx_parse_http_time(u_char *value, size_t len)
         p += 2;
     }
 
-    if (fmt == isoc) {
-        if (*p == ' ') {
+    nếu (fmt == isoc) {
+        nếu (*p == ' ') {
             p++;
         }
 
-        if (*p < '0' || *p > '9') {
-            return NGX_ERROR;
+        nếu (*p < '0' || *p > '9') {
+            trả_về NGX_ERROR;
         }
 
         day = *p++ - '0';
 
-        if (*p != ' ') {
-            if (*p < '0' || *p > '9') {
-                return NGX_ERROR;
+        nếu (*p != ' ') {
+            nếu (*p < '0' || *p > '9') {
+                trả_về NGX_ERROR;
             }
 
             day = day * 10 + (*p++ - '0');
         }
 
-        if (end - p < 14) {
-            return NGX_ERROR;
+        nếu (end - p < 14) {
+            trả_về NGX_ERROR;
         }
     }
 
-    if (*p++ != ' ') {
-        return NGX_ERROR;
+    nếu (*p++ != ' ') {
+        trả_về NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    nếu (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        trả_về NGX_ERROR;
     }
 
     hour = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    nếu (*p++ != ':') {
+        trả_về NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    nếu (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        trả_về NGX_ERROR;
     }
 
     min = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    nếu (*p++ != ':') {
+        trả_về NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    nếu (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        trả_về NGX_ERROR;
     }
 
     sec = (*p - '0') * 10 + (*(p + 1) - '0');
 
-    if (fmt == isoc) {
+    nếu (fmt == isoc) {
         p += 2;
 
-        if (*p++ != ' ') {
-            return NGX_ERROR;
+        nếu (*p++ != ' ') {
+            trả_về NGX_ERROR;
         }
 
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+        nếu (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            trả_về NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
     }
 
-    if (hour > 23 || min > 59 || sec > 59) {
-        return NGX_ERROR;
+    nếu (hour > 23 || min > 59 || sec > 59) {
+        trả_về NGX_ERROR;
     }
 
-    if (day == 29 && month == 1) {
-        if ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
-            return NGX_ERROR;
+    nếu (day == 29 && month == 1) {
+        nếu ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
+            trả_về NGX_ERROR;
         }
 
-    } else if (day > mday[month]) {
-        return NGX_ERROR;
+    } không_thì nếu (day > mday[month]) {
+        trả_về NGX_ERROR;
     }
 
     /*
@@ -238,7 +238,7 @@ ngx_parse_http_time(u_char *value, size_t len)
      * it is needed for Gauss' formula
      */
 
-    if (--month <= 0) {
+    nếu (--month <= 0) {
         month += 12;
         year -= 1;
     }
@@ -265,13 +265,13 @@ ngx_parse_http_time(u_char *value, size_t len)
 
             - 719527 + 31 + 28) * 86400 + hour * 3600 + min * 60 + sec;
 
-#if (NGX_TIME_T_SIZE <= 4)
+#nếu (NGX_TIME_T_SIZE <= 4)
 
-    if (time > 0x7fffffff) {
-        return NGX_ERROR;
+    nếu (time > 0x7fffffff) {
+        trả_về NGX_ERROR;
     }
 
 #endif
 
-    return (time_t) time;
+    trả_về (time_t) time;
 }

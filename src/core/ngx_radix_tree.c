@@ -19,8 +19,8 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     ngx_radix_tree_t  *tree;
 
     tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
-        return NULL;
+    nếu (tree == NULL) {
+        trả_về NULL;
     }
 
     tree->pool = pool;
@@ -29,8 +29,8 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     tree->size = 0;
 
     tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
-        return NULL;
+    nếu (tree->root == NULL) {
+        trả_về NULL;
     }
 
     tree->root->right = NULL;
@@ -38,8 +38,8 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     tree->root->parent = NULL;
     tree->root->value = NGX_RADIX_NO_VALUE;
 
-    if (preallocate == 0) {
-        return tree;
+    nếu (preallocate == 0) {
+        trả_về tree;
     }
 
     /*
@@ -59,7 +59,7 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      *     8 bits on sparc64 in 32-bit mode (8K pages)
      */
 
-    if (preallocate == -1) {
+    nếu (preallocate == -1) {
         switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
 
         /* amd64 */
@@ -81,27 +81,27 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     mask = 0;
     inc = 0x80000000;
 
-    while (preallocate--) {
+    trong_khi (preallocate--) {
 
         key = 0;
         mask >>= 1;
         mask |= 0x80000000;
 
         do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+            nếu (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
                 != NGX_OK)
             {
-                return NULL;
+                trả_về NULL;
             }
 
             key += inc;
 
-        } while (key);
+        } trong_khi (key);
 
         inc >>= 1;
     }
 
-    return tree;
+    trả_về tree;
 }
 
 
@@ -117,15 +117,15 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
     node = tree->root;
     next = tree->root;
 
-    while (bit & mask) {
-        if (key & bit) {
+    trong_khi (bit & mask) {
+        nếu (key & bit) {
             next = node->right;
 
-        } else {
+        } không_thì {
             next = node->left;
         }
 
-        if (next == NULL) {
+        nếu (next == NULL) {
             break;
         }
 
@@ -133,19 +133,19 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
         node = next;
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    nếu (next) {
+        nếu (node->value != NGX_RADIX_NO_VALUE) {
+            trả_về NGX_BUSY;
         }
 
         node->value = value;
-        return NGX_OK;
+        trả_về NGX_OK;
     }
 
-    while (bit & mask) {
+    trong_khi (bit & mask) {
         next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+        nếu (next == NULL) {
+            trả_về NGX_ERROR;
         }
 
         next->right = NULL;
@@ -153,10 +153,10 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
         next->parent = node;
         next->value = NGX_RADIX_NO_VALUE;
 
-        if (key & bit) {
+        nếu (key & bit) {
             node->right = next;
 
-        } else {
+        } không_thì {
             node->left = next;
         }
 
@@ -166,7 +166,7 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
 
     node->value = value;
 
-    return NGX_OK;
+    trả_về NGX_OK;
 }
 
 
@@ -179,35 +179,35 @@ ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
     bit = 0x80000000;
     node = tree->root;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
+    trong_khi (node && (bit & mask)) {
+        nếu (key & bit) {
             node = node->right;
 
-        } else {
+        } không_thì {
             node = node->left;
         }
 
         bit >>= 1;
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    nếu (node == NULL) {
+        trả_về NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    nếu (node->right || node->left) {
+        nếu (node->value != NGX_RADIX_NO_VALUE) {
             node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+            trả_về NGX_OK;
         }
 
-        return NGX_ERROR;
+        trả_về NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
+    cho ( ;; ) {
+        nếu (node->parent->right == node) {
             node->parent->right = NULL;
 
-        } else {
+        } không_thì {
             node->parent->left = NULL;
         }
 
@@ -216,20 +216,20 @@ ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
 
         node = node->parent;
 
-        if (node->right || node->left) {
+        nếu (node->right || node->left) {
             break;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
+        nếu (node->value != NGX_RADIX_NO_VALUE) {
             break;
         }
 
-        if (node->parent == NULL) {
+        nếu (node->parent == NULL) {
             break;
         }
     }
 
-    return NGX_OK;
+    trả_về NGX_OK;
 }
 
 
@@ -244,26 +244,26 @@ ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
     value = NGX_RADIX_NO_VALUE;
     node = tree->root;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    trong_khi (node) {
+        nếu (node->value != NGX_RADIX_NO_VALUE) {
             value = node->value;
         }
 
-        if (key & bit) {
+        nếu (key & bit) {
             node = node->right;
 
-        } else {
+        } không_thì {
             node = node->left;
         }
 
         bit >>= 1;
     }
 
-    return value;
+    trả_về value;
 }
 
 
-#if (NGX_HAVE_INET6)
+#nếu (NGX_HAVE_INET6)
 
 ngx_int_t
 ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
@@ -279,23 +279,23 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
     node = tree->root;
     next = tree->root;
 
-    while (bit & mask[i]) {
-        if (key[i] & bit) {
+    trong_khi (bit & mask[i]) {
+        nếu (key[i] & bit) {
             next = node->right;
 
-        } else {
+        } không_thì {
             next = node->left;
         }
 
-        if (next == NULL) {
+        nếu (next == NULL) {
             break;
         }
 
         bit >>= 1;
         node = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
+        nếu (bit == 0) {
+            nếu (++i == 16) {
                 break;
             }
 
@@ -303,19 +303,19 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
         }
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    nếu (next) {
+        nếu (node->value != NGX_RADIX_NO_VALUE) {
+            trả_về NGX_BUSY;
         }
 
         node->value = value;
-        return NGX_OK;
+        trả_về NGX_OK;
     }
 
-    while (bit & mask[i]) {
+    trong_khi (bit & mask[i]) {
         next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+        nếu (next == NULL) {
+            trả_về NGX_ERROR;
         }
 
         next->right = NULL;
@@ -323,18 +323,18 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
         next->parent = node;
         next->value = NGX_RADIX_NO_VALUE;
 
-        if (key[i] & bit) {
+        nếu (key[i] & bit) {
             node->right = next;
 
-        } else {
+        } không_thì {
             node->left = next;
         }
 
         bit >>= 1;
         node = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
+        nếu (bit == 0) {
+            nếu (++i == 16) {
                 break;
             }
 
@@ -344,7 +344,7 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
 
     node->value = value;
 
-    return NGX_OK;
+    trả_về NGX_OK;
 }
 
 
@@ -359,18 +359,18 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
     bit = 0x80;
     node = tree->root;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
+    trong_khi (node && (bit & mask[i])) {
+        nếu (key[i] & bit) {
             node = node->right;
 
-        } else {
+        } không_thì {
             node = node->left;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
-            if (++i == 16) {
+        nếu (bit == 0) {
+            nếu (++i == 16) {
                 break;
             }
 
@@ -378,24 +378,24 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
         }
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    nếu (node == NULL) {
+        trả_về NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    nếu (node->right || node->left) {
+        nếu (node->value != NGX_RADIX_NO_VALUE) {
             node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+            trả_về NGX_OK;
         }
 
-        return NGX_ERROR;
+        trả_về NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
+    cho ( ;; ) {
+        nếu (node->parent->right == node) {
             node->parent->right = NULL;
 
-        } else {
+        } không_thì {
             node->parent->left = NULL;
         }
 
@@ -404,20 +404,20 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
 
         node = node->parent;
 
-        if (node->right || node->left) {
+        nếu (node->right || node->left) {
             break;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
+        nếu (node->value != NGX_RADIX_NO_VALUE) {
             break;
         }
 
-        if (node->parent == NULL) {
+        nếu (node->parent == NULL) {
             break;
         }
     }
 
-    return NGX_OK;
+    trả_về NGX_OK;
 }
 
 
@@ -434,27 +434,27 @@ ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
     value = NGX_RADIX_NO_VALUE;
     node = tree->root;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    trong_khi (node) {
+        nếu (node->value != NGX_RADIX_NO_VALUE) {
             value = node->value;
         }
 
-        if (key[i] & bit) {
+        nếu (key[i] & bit) {
             node = node->right;
 
-        } else {
+        } không_thì {
             node = node->left;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
+        nếu (bit == 0) {
             i++;
             bit = 0x80;
         }
     }
 
-    return value;
+    trả_về value;
 }
 
 #endif
@@ -465,16 +465,16 @@ ngx_radix_alloc(ngx_radix_tree_t *tree)
 {
     ngx_radix_node_t  *p;
 
-    if (tree->free) {
+    nếu (tree->free) {
         p = tree->free;
         tree->free = tree->free->right;
-        return p;
+        trả_về p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
+    nếu (tree->size < sizeof(ngx_radix_node_t)) {
         tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
-            return NULL;
+        nếu (tree->start == NULL) {
+            trả_về NULL;
         }
 
         tree->size = ngx_pagesize;
@@ -484,5 +484,5 @@ ngx_radix_alloc(ngx_radix_tree_t *tree)
     tree->start += sizeof(ngx_radix_node_t);
     tree->size -= sizeof(ngx_radix_node_t);
 
-    return p;
+    trả_về p;
 }
