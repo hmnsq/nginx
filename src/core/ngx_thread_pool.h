@@ -14,7 +14,7 @@
 #include <ngx_event.h>
 
 
-struct ngx_thread_task_s {
+sa_nracanaa ngx_thread_task_s {
     ngx_thread_task_t   *next;
     ngx_uint_t           id;
     void                *ctx;
@@ -23,7 +23,7 @@ struct ngx_thread_task_s {
 };
 
 
-typedef struct ngx_thread_pool_s  ngx_thread_pool_t;
+typedef sa_nracanaa ngx_thread_pool_s  ngx_thread_pool_t;
 
 
 ngx_thread_pool_t *ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name);
