@@ -26,15 +26,15 @@ static ngx_msec_t ngx_monotonic_time(time_t sec, ngx_uint_t msec);
 static ngx_uint_t        slot;
 static ngx_atomic_t      ngx_time_lock;
 
-volatile ngx_msec_t      ngx_current_msec;
-volatile ngx_time_t     *ngx_cached_time;
-volatile ngx_str_t       ngx_cached_err_log_time;
-volatile ngx_str_t       ngx_cached_http_time;
-volatile ngx_str_t       ngx_cached_http_log_time;
-volatile ngx_str_t       ngx_cached_http_log_iso8601;
-volatile ngx_str_t       ngx_cached_syslog_time;
+ca_ncala ngx_msec_t      ngx_current_msec;
+ca_ncala ngx_time_t     *ngx_cached_time;
+ca_ncala ngx_str_t       ngx_cached_err_log_time;
+ca_ncala ngx_str_t       ngx_cached_http_time;
+ca_ncala ngx_str_t       ngx_cached_http_log_time;
+ca_ncala ngx_str_t       ngx_cached_http_log_iso8601;
+ca_ncala ngx_str_t       ngx_cached_syslog_time;
 
-#if !(NGX_WIN32)
+#အကယ်၍ !(NGX_WIN32)
 
 /*
  * localtime() and localtime_r() are not Async-Signal-Safe functions, therefore,
@@ -47,29 +47,29 @@ static ngx_int_t         cached_gmtoff;
 
 static ngx_time_t        cached_time[NGX_TIME_SLOTS];
 static u_char            cached_err_log_time[NGX_TIME_SLOTS]
-                                    [sizeof("1970/09/28 12:00:00")];
+                                    [parimaa_na("1970/09/28 12:00:00")];
 static u_char            cached_http_time[NGX_TIME_SLOTS]
-                                    [sizeof("Mon, 28 Sep 1970 06:00:00 GMT")];
+                                    [parimaa_na("Mon, 28 Sep 1970 06:00:00 GMT")];
 static u_char            cached_http_log_time[NGX_TIME_SLOTS]
-                                    [sizeof("28/Sep/1970:12:00:00 +0600")];
+                                    [parimaa_na("28/Sep/1970:12:00:00 +0600")];
 static u_char            cached_http_log_iso8601[NGX_TIME_SLOTS]
-                                    [sizeof("1970-09-28T12:00:00+06:00")];
+                                    [parimaa_na("1970-09-28T12:00:00+06:00")];
 static u_char            cached_syslog_time[NGX_TIME_SLOTS]
-                                    [sizeof("Sep 28 12:00:00")];
+                                    [parimaa_na("Sep 28 12:00:00")];
 
 
-static char  *week[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+static var_na  *week[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+static var_na  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
 void
 ngx_time_init(void)
 {
-    ngx_cached_err_log_time.len = sizeof("1970/09/28 12:00:00") - 1;
-    ngx_cached_http_time.len = sizeof("Mon, 28 Sep 1970 06:00:00 GMT") - 1;
-    ngx_cached_http_log_time.len = sizeof("28/Sep/1970:12:00:00 +0600") - 1;
-    ngx_cached_http_log_iso8601.len = sizeof("1970-09-28T12:00:00+06:00") - 1;
-    ngx_cached_syslog_time.len = sizeof("Sep 28 12:00:00") - 1;
+    ngx_cached_err_log_time.len = parimaa_na("1970/09/28 12:00:00") - 1;
+    ngx_cached_http_time.len = parimaa_na("Mon, 28 Sep 1970 06:00:00 GMT") - 1;
+    ngx_cached_http_log_time.len = parimaa_na("28/Sep/1970:12:00:00 +0600") - 1;
+    ngx_cached_http_log_iso8601.len = parimaa_na("1970-09-28T12:00:00+06:00") - 1;
+    ngx_cached_syslog_time.len = parimaa_na("Sep 28 12:00:00") - 1;
 
     ngx_cached_time = &cached_time[0];
 
@@ -85,10 +85,10 @@ ngx_time_update(void)
     time_t           sec;
     ngx_uint_t       msec;
     ngx_time_t      *tp;
-    struct timeval   tv;
+    sa_nracanaa timeval   tv;
 
-    if (!ngx_trylock(&ngx_time_lock)) {
-        return;
+    အကယ်၍ (!ngx_trylock(&ngx_time_lock)) {
+        ပြန်ပေး;
     }
 
     ngx_gettimeofday(&tv);
@@ -100,15 +100,15 @@ ngx_time_update(void)
 
     tp = &cached_time[slot];
 
-    if (tp->sec == sec) {
+    အကယ်၍ (tp->sec == sec) {
         tp->msec = msec;
         ngx_unlock(&ngx_time_lock);
-        return;
+        ပြန်ပေး;
     }
 
-    if (slot == NGX_TIME_SLOTS - 1) {
+    အကယ်၍ (slot == NGX_TIME_SLOTS - 1) {
         slot = 0;
-    } else {
+    } မဟုတ်ပါက {
         slot++;
     }
 
@@ -127,7 +127,7 @@ ngx_time_update(void)
                        months[gmt.ngx_tm_mon - 1], gmt.ngx_tm_year,
                        gmt.ngx_tm_hour, gmt.ngx_tm_min, gmt.ngx_tm_sec);
 
-#if (NGX_HAVE_GETTIMEZONE)
+#အကယ်၍ (NGX_HAVE_GETTIMEZONE)
 
     tp->gmtoff = ngx_gettimezone();
     ngx_gmtime(sec + tp->gmtoff * 60, &tm);
@@ -138,7 +138,7 @@ ngx_time_update(void)
     cached_gmtoff = (ngx_int_t) (tm.ngx_tm_gmtoff / 60);
     tp->gmtoff = cached_gmtoff;
 
-#else
+#မဟုတ်ပါက
 
     ngx_localtime(sec, &tm);
     cached_gmtoff = ngx_timezone(tm.ngx_tm_isdst);
@@ -195,8 +195,8 @@ ngx_time_update(void)
 static ngx_msec_t
 ngx_monotonic_time(time_t sec, ngx_uint_t msec)
 {
-#if (NGX_HAVE_CLOCK_MONOTONIC)
-    struct timespec  ts;
+#အကယ်၍ (NGX_HAVE_CLOCK_MONOTONIC)
+    sa_nracanaa timespec  ts;
 
     clock_gettime(CLOCK_MONOTONIC, &ts);
 
@@ -205,11 +205,11 @@ ngx_monotonic_time(time_t sec, ngx_uint_t msec)
 
 #endif
 
-    return (ngx_msec_t) sec * 1000 + msec;
+    ပြန်ပေး (ngx_msec_t) sec * 1000 + msec;
 }
 
 
-#if !(NGX_WIN32)
+#အကယ်၍ !(NGX_WIN32)
 
 void
 ngx_time_sigsafe_update(void)
@@ -218,10 +218,10 @@ ngx_time_sigsafe_update(void)
     ngx_tm_t         tm;
     time_t           sec;
     ngx_time_t      *tp;
-    struct timeval   tv;
+    sa_nracanaa timeval   tv;
 
-    if (!ngx_trylock(&ngx_time_lock)) {
-        return;
+    အကယ်၍ (!ngx_trylock(&ngx_time_lock)) {
+        ပြန်ပေး;
     }
 
     ngx_gettimeofday(&tv);
@@ -230,14 +230,14 @@ ngx_time_sigsafe_update(void)
 
     tp = &cached_time[slot];
 
-    if (tp->sec == sec) {
+    အကယ်၍ (tp->sec == sec) {
         ngx_unlock(&ngx_time_lock);
-        return;
+        ပြန်ပေး;
     }
 
-    if (slot == NGX_TIME_SLOTS - 1) {
+    အကယ်၍ (slot == NGX_TIME_SLOTS - 1) {
         slot = 0;
-    } else {
+    } မဟုတ်ပါက {
         slot++;
     }
 
@@ -278,7 +278,7 @@ ngx_http_time(u_char *buf, time_t t)
 
     ngx_gmtime(t, &tm);
 
-    return ngx_sprintf(buf, "%s, %02d %s %4d %02d:%02d:%02d GMT",
+    ပြန်ပေး ngx_sprintf(buf, "%s, %02d %s %4d %02d:%02d:%02d GMT",
                        week[tm.ngx_tm_wday],
                        tm.ngx_tm_mday,
                        months[tm.ngx_tm_mon - 1],
@@ -301,7 +301,7 @@ ngx_http_cookie_time(u_char *buf, time_t t)
      * 2-digit years more than "37"
      */
 
-    return ngx_sprintf(buf,
+    ပြန်ပေး ngx_sprintf(buf,
                        (tm.ngx_tm_year > 2037) ?
                                          "%s, %02d-%s-%d %02d:%02d:%02d GMT":
                                          "%s, %02d-%s-%02d %02d:%02d:%02d GMT",
@@ -324,7 +324,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
 
     /* the calculation is valid for positive time_t only */
 
-    if (t < 0) {
+    အကယ်၍ (t < 0) {
         t = 0;
     }
 
@@ -336,7 +336,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
      * truncate to December 31, 9999, 23:59:59
      */
 
-    if (days > 2932896) {
+    အကယ်၍ (days > 2932896) {
         days = 2932896;
         sec = 86399;
     }
@@ -369,7 +369,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
 
     yday = days - (365 * year + year / 4 - year / 100 + year / 400);
 
-    if (yday < 0) {
+    အကယ်၍ (yday < 0) {
         leap = (year % 4 == 0) && (year % 100 || (year % 400 == 0));
         yday = 365 + leap + yday;
         year--;
@@ -389,7 +389,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
 
     mday = yday - (367 * mon / 12 - 30) + 1;
 
-    if (yday >= 306) {
+    အကယ်၍ (yday >= 306) {
 
         year++;
         mon -= 10;
@@ -400,7 +400,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
          * yday -= 306;
          */
 
-    } else {
+    } မဟုတ်ပါက {
 
         mon += 2;
 
@@ -425,25 +425,25 @@ time_t
 ngx_next_time(time_t when)
 {
     time_t     now, next;
-    struct tm  tm;
+    sa_nracanaa tm  tm;
 
     now = ngx_time();
 
     ngx_libc_localtime(now, &tm);
 
-    tm.tm_hour = (int) (when / 3600);
+    tm.tm_hour = (ကိန်းပြည့်) (when / 3600);
     when %= 3600;
-    tm.tm_min = (int) (when / 60);
-    tm.tm_sec = (int) (when % 60);
+    tm.tm_min = (ကိန်းပြည့်) (when / 60);
+    tm.tm_sec = (ကိန်းပြည့်) (when % 60);
 
     next = mktime(&tm);
 
-    if (next == -1) {
-        return -1;
+    အကယ်၍ (next == -1) {
+        ပြန်ပေး -1;
     }
 
-    if (next - now > 0) {
-        return next;
+    အကယ်၍ (next - now > 0) {
+        ပြန်ပေး next;
     }
 
     tm.tm_mday++;
@@ -452,9 +452,9 @@ ngx_next_time(time_t when)
 
     next = mktime(&tm);
 
-    if (next != -1) {
-        return next;
+    အကယ်၍ (next != -1) {
+        ပြန်ပေး next;
     }
 
-    return -1;
+    ပြန်ပေး -1;
 }

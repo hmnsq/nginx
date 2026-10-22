@@ -35,12 +35,12 @@ ngx_md5_update(ngx_md5_t *ctx, const void *data, size_t size)
     used = (size_t) (ctx->bytes & 0x3f);
     ctx->bytes += size;
 
-    if (used) {
+    အကယ်၍ (used) {
         free = 64 - used;
 
-        if (size < free) {
+        အကယ်၍ (size < free) {
             ngx_memcpy(&ctx->buffer[used], data, size);
-            return;
+            ပြန်ပေး;
         }
 
         ngx_memcpy(&ctx->buffer[used], data, free);
@@ -49,7 +49,7 @@ ngx_md5_update(ngx_md5_t *ctx, const void *data, size_t size)
         (void) ngx_md5_body(ctx, ctx->buffer, 64);
     }
 
-    if (size >= 64) {
+    အကယ်၍ (size >= 64) {
         data = ngx_md5_body(ctx, data, size & ~(size_t) 0x3f);
         size &= 0x3f;
     }
@@ -69,7 +69,7 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
 
     free = 64 - used;
 
-    if (free < 8) {
+    အကယ်၍ (free < 8) {
         ngx_memzero(&ctx->buffer[used], free);
         (void) ngx_md5_body(ctx, ctx->buffer, 64);
         used = 0;
@@ -107,7 +107,7 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
     result[14] = (u_char) (ctx->d >> 16);
     result[15] = (u_char) (ctx->d >> 24);
 
-    ngx_memzero(ctx, sizeof(*ctx));
+    ngx_memzero(ctx, parimaa_na(*ctx));
 }
 
 
@@ -142,12 +142,12 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
  * does not work.
  */
 
-#if (NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
+#အကယ်၍ (NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
 
 #define SET(n)      (*(uint32_t *) &p[n * 4])
 #define GET(n)      (*(uint32_t *) &p[n * 4])
 
-#else
+#မဟုတ်ပါက
 
 #define SET(n)                                                                \
     (block[n] =                                                               \
@@ -172,7 +172,7 @@ ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
     uint32_t       a, b, c, d;
     uint32_t       saved_a, saved_b, saved_c, saved_d;
     const u_char  *p;
-#if !(NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
+#အကယ်၍ !(NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
     uint32_t       block[16];
 #endif
 
@@ -272,12 +272,12 @@ ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
 
         p += 64;
 
-    } while (size -= 64);
+    } နေစဉ် (size -= 64);
 
     ctx->a = a;
     ctx->b = b;
     ctx->c = c;
     ctx->d = d;
 
-    return p;
+    ပြန်ပေး p;
 }

@@ -14,16 +14,16 @@ ngx_array_create(ngx_pool_t *p, ngx_uint_t n, size_t size)
 {
     ngx_array_t *a;
 
-    a = ngx_palloc(p, sizeof(ngx_array_t));
-    if (a == NULL) {
-        return NULL;
+    a = ngx_palloc(p, parimaa_na(ngx_array_t));
+    အကယ်၍ (a == NULL) {
+        ပြန်ပေး NULL;
     }
 
-    if (ngx_array_init(a, p, n, size) != NGX_OK) {
-        return NULL;
+    အကယ်၍ (ngx_array_init(a, p, n, size) != NGX_OK) {
+        ပြန်ပေး NULL;
     }
 
-    return a;
+    ပြန်ပေး a;
 }
 
 
@@ -34,11 +34,11 @@ ngx_array_destroy(ngx_array_t *a)
 
     p = a->pool;
 
-    if ((u_char *) a->elts + a->size * a->nalloc == p->d.last) {
+    အကယ်၍ ((u_char *) a->elts + a->size * a->nalloc == p->d.last) {
         p->d.last -= a->size * a->nalloc;
     }
 
-    if ((u_char *) a + sizeof(ngx_array_t) == p->d.last) {
+    အကယ်၍ ((u_char *) a + parimaa_na(ngx_array_t) == p->d.last) {
         p->d.last = (u_char *) a;
     }
 }
@@ -51,7 +51,7 @@ ngx_array_push(ngx_array_t *a)
     size_t       size;
     ngx_pool_t  *p;
 
-    if (a->nelts == a->nalloc) {
+    အကယ်၍ (a->nelts == a->nalloc) {
 
         /* the array is full */
 
@@ -59,7 +59,7 @@ ngx_array_push(ngx_array_t *a)
 
         p = a->pool;
 
-        if ((u_char *) a->elts + size == p->d.last
+        အကယ်၍ ((u_char *) a->elts + size == p->d.last
             && p->d.last + a->size <= p->d.end)
         {
             /*
@@ -70,12 +70,12 @@ ngx_array_push(ngx_array_t *a)
             p->d.last += a->size;
             a->nalloc++;
 
-        } else {
+        } မဟုတ်ပါက {
             /* allocate a new array */
 
             new = ngx_palloc(p, 2 * size);
-            if (new == NULL) {
-                return NULL;
+            အကယ်၍ (new == NULL) {
+                ပြန်ပေး NULL;
             }
 
             ngx_memcpy(new, a->elts, size);
@@ -87,7 +87,7 @@ ngx_array_push(ngx_array_t *a)
     elt = (u_char *) a->elts + a->size * a->nelts;
     a->nelts++;
 
-    return elt;
+    ပြန်ပေး elt;
 }
 
 
@@ -101,13 +101,13 @@ ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
 
     size = n * a->size;
 
-    if (a->nelts + n > a->nalloc) {
+    အကယ်၍ (a->nelts + n > a->nalloc) {
 
         /* the array is full */
 
         p = a->pool;
 
-        if ((u_char *) a->elts + a->size * a->nalloc == p->d.last
+        အကယ်၍ ((u_char *) a->elts + a->size * a->nalloc == p->d.last
             && p->d.last + size <= p->d.end)
         {
             /*
@@ -118,14 +118,14 @@ ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
             p->d.last += size;
             a->nalloc += n;
 
-        } else {
+        } မဟုတ်ပါက {
             /* allocate a new array */
 
             nalloc = 2 * ((n >= a->nalloc) ? n : a->nalloc);
 
             new = ngx_palloc(p, nalloc * a->size);
-            if (new == NULL) {
-                return NULL;
+            အကယ်၍ (new == NULL) {
+                ပြန်ပေး NULL;
             }
 
             ngx_memcpy(new, a->elts, a->nelts * a->size);
@@ -137,5 +137,5 @@ ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
     elt = (u_char *) a->elts + a->size * a->nelts;
     a->nelts += n;
 
-    return elt;
+    ပြန်ပေး elt;
 }
