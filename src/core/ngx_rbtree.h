@@ -9,78 +9,78 @@
 #define _NGX_RBTREE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef ngx_uint_t  ngx_rbtree_key_t;
-typedef ngx_int_t   ngx_rbtree_key_int_t;
+تعريفنوع ngx_uint_t  ngx_rbtree_مبودي_t;
+تعريفنوع ngx_int_t   ngx_rbtree_مبودي_int_t;
 
 
-typedef struct ngx_rbtree_node_s  ngx_rbtree_node_t;
+تعريفنوع بنية ngx_rbtree_كلي_s  ngx_rbtree_كلي_t;
 
-struct ngx_rbtree_node_s {
-    ngx_rbtree_key_t       key;
-    ngx_rbtree_node_t     *left;
-    ngx_rbtree_node_t     *right;
-    ngx_rbtree_node_t     *parent;
+بنية ngx_rbtree_كلي_s {
+    ngx_rbtree_مبودي_t       مبودي;
+    ngx_rbtree_كلي_t     *هغو;
+    ngx_rbtree_كلي_t     *دام;
+    ngx_rbtree_كلي_t     *parent;
     u_char                 color;
     u_char                 data;
 };
 
 
-typedef struct ngx_rbtree_s  ngx_rbtree_t;
+تعريفنوع بنية ngx_rbtree_s  ngx_rbtree_t;
 
-typedef void (*ngx_rbtree_insert_pt) (ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
+تعريفنوع فراغ (*ngx_rbtree_سك_pt) (ngx_rbtree_كلي_t *سيو,
+    ngx_rbtree_كلي_t *كلي, ngx_rbtree_كلي_t *sentinel);
 
-struct ngx_rbtree_s {
-    ngx_rbtree_node_t     *root;
-    ngx_rbtree_node_t     *sentinel;
-    ngx_rbtree_insert_pt   insert;
+بنية ngx_rbtree_s {
+    ngx_rbtree_كلي_t     *سيو;
+    ngx_rbtree_كلي_t     *sentinel;
+    ngx_rbtree_سك_pt   سك;
 };
 
 
-#define ngx_rbtree_init(tree, s, i)                                           \
+#define ngx_rbtree_init(بشيا, s, i)                                           \
     ngx_rbtree_sentinel_init(s);                                              \
-    (tree)->root = s;                                                         \
-    (tree)->sentinel = s;                                                     \
-    (tree)->insert = i
+    (بشيا)->سيو = s;                                                         \
+    (بشيا)->sentinel = s;                                                     \
+    (بشيا)->سك = i
 
-#define ngx_rbtree_data(node, type, link)                                     \
-    (type *) ((u_char *) (node) - offsetof(type, link))
-
-
-void ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_insert_value(ngx_rbtree_node_t *root, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel);
-void ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-ngx_rbtree_node_t *ngx_rbtree_next(ngx_rbtree_t *tree,
-    ngx_rbtree_node_t *node);
+#define ngx_rbtree_data(كلي, type, link)                                     \
+    (type *) ((u_char *) (كلي) - offsetof(type, link))
 
 
-#define ngx_rbt_red(node)               ((node)->color = 1)
-#define ngx_rbt_black(node)             ((node)->color = 0)
-#define ngx_rbt_is_red(node)            ((node)->color)
-#define ngx_rbt_is_black(node)          (!ngx_rbt_is_red(node))
+فراغ ngx_rbtree_سك(ngx_rbtree_t *بشيا, ngx_rbtree_كلي_t *كلي);
+فراغ ngx_rbtree_delete(ngx_rbtree_t *بشيا, ngx_rbtree_كلي_t *كلي);
+فراغ ngx_rbtree_سك_درج(ngx_rbtree_كلي_t *سيو, ngx_rbtree_كلي_t *كلي,
+    ngx_rbtree_كلي_t *sentinel);
+فراغ ngx_rbtree_سك_timer_درج(ngx_rbtree_كلي_t *سيو,
+    ngx_rbtree_كلي_t *كلي, ngx_rbtree_كلي_t *sentinel);
+ngx_rbtree_كلي_t *ngx_rbtree_next(ngx_rbtree_t *بشيا,
+    ngx_rbtree_كلي_t *كلي);
+
+
+#define ngx_rbt_red(كلي)               ((كلي)->color = 1)
+#define ngx_rbt_black(كلي)             ((كلي)->color = 0)
+#define ngx_rbt_is_red(كلي)            ((كلي)->color)
+#define ngx_rbt_is_black(كلي)          (!ngx_rbt_is_red(كلي))
 #define ngx_rbt_copy_color(n1, n2)      (n1->color = n2->color)
 
 
 /* a sentinel must be black */
 
-#define ngx_rbtree_sentinel_init(node)  ngx_rbt_black(node)
+#define ngx_rbtree_sentinel_init(كلي)  ngx_rbt_black(كلي)
 
 
-static ngx_inline ngx_rbtree_node_t *
-ngx_rbtree_min(ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ساكن ngx_inline ngx_rbtree_كلي_t *
+ngx_rbtree_min(ngx_rbtree_كلي_t *كلي, ngx_rbtree_كلي_t *sentinel)
 {
-    while (node->left != sentinel) {
-        node = node->left;
+    طالما (كلي->هغو != sentinel) {
+        كلي = كلي->هغو;
     }
 
-    return node;
+    أرجع كلي;
 }
 
 

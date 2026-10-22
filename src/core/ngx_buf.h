@@ -9,15 +9,15 @@
 #define _NGX_BUF_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef void *            ngx_buf_tag_t;
+تعريفنوع فراغ *            ngx_buf_tag_t;
 
-typedef struct ngx_buf_s  ngx_buf_t;
+تعريفنوع بنية ngx_buf_s  ngx_buf_t;
 
-struct ngx_buf_s {
+بنية ngx_buf_s {
     u_char          *pos;
     u_char          *last;
     off_t            file_pos;
@@ -52,33 +52,33 @@ struct ngx_buf_s {
     unsigned         last_shadow:1;
     unsigned         temp_file:1;
 
-    /* STUB */ int   num;
+    /* STUB */ صحيح   لمب;
 };
 
 
-struct ngx_chain_s {
+بنية ngx_chain_s {
     ngx_buf_t    *buf;
     ngx_chain_t  *next;
 };
 
 
-typedef struct {
-    ngx_int_t    num;
+تعريفنوع بنية {
+    ngx_int_t    لمب;
     size_t       size;
 } ngx_bufs_t;
 
 
-typedef struct ngx_output_chain_ctx_s  ngx_output_chain_ctx_t;
+تعريفنوع بنية ngx_output_chain_ctx_s  ngx_output_chain_ctx_t;
 
-typedef ngx_int_t (*ngx_output_chain_filter_pt)(void *ctx, ngx_chain_t *in);
+تعريفنوع ngx_int_t (*ngx_output_chain_filter_pt)(فراغ *ctx, ngx_chain_t *in);
 
-typedef void (*ngx_output_chain_aio_pt)(ngx_output_chain_ctx_t *ctx,
+تعريفنوع فراغ (*ngx_output_chain_aio_pt)(ngx_output_chain_ctx_t *ctx,
     ngx_file_t *file);
 
-struct ngx_output_chain_ctx_s {
+بنية ngx_output_chain_ctx_s {
     ngx_buf_t                   *buf;
     ngx_chain_t                 *in;
-    ngx_chain_t                 *free;
+    ngx_chain_t                 *حرر;
     ngx_chain_t                 *busy;
 
     unsigned                     sendfile:1;
@@ -88,11 +88,11 @@ struct ngx_output_chain_ctx_s {
     unsigned                     need_in_temp:1;
     unsigned                     aio:1;
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#إذا (NGX_HAVE_FILE_AIO || NGX_COMPAT)
     ngx_output_chain_aio_pt      aio_handler;
 #endif
 
-#if (NGX_THREADS || NGX_COMPAT)
+#إذا (NGX_THREADS || NGX_COMPAT)
     ngx_int_t                  (*thread_handler)(ngx_thread_task_t *task,
                                                  ngx_file_t *file);
     ngx_thread_task_t           *thread_task;
@@ -106,11 +106,11 @@ struct ngx_output_chain_ctx_s {
     ngx_buf_tag_t                tag;
 
     ngx_output_chain_filter_pt   output_filter;
-    void                        *filter_ctx;
+    فراغ                        *filter_ctx;
 };
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_chain_t                 *out;
     ngx_chain_t                **last;
     ngx_connection_t            *connection;
@@ -141,8 +141,8 @@ ngx_buf_t *ngx_create_temp_buf(ngx_pool_t *pool, size_t size);
 ngx_chain_t *ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs);
 
 
-#define ngx_alloc_buf(pool)  ngx_palloc(pool, sizeof(ngx_buf_t))
-#define ngx_calloc_buf(pool) ngx_pcalloc(pool, sizeof(ngx_buf_t))
+#define ngx_alloc_buf(pool)  ngx_palloc(pool, حجم(ngx_buf_t))
+#define ngx_calloc_buf(pool) ngx_pcalloc(pool, حجم(ngx_buf_t))
 
 ngx_chain_t *ngx_alloc_chain_link(ngx_pool_t *pool);
 #define ngx_free_chain(pool, cl)                                             \
@@ -152,12 +152,12 @@ ngx_chain_t *ngx_alloc_chain_link(ngx_pool_t *pool);
 
 
 ngx_int_t ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *in);
-ngx_int_t ngx_chain_writer(void *ctx, ngx_chain_t *in);
+ngx_int_t ngx_chain_writer(فراغ *ctx, ngx_chain_t *in);
 
 ngx_int_t ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain,
     ngx_chain_t *in);
-ngx_chain_t *ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **free);
-void ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free,
+ngx_chain_t *ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **حرر);
+فراغ ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **حرر,
     ngx_chain_t **busy, ngx_chain_t **out, ngx_buf_tag_t tag);
 
 off_t ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit);
