@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
 
 
 ngx_list_t *
@@ -14,50 +14,50 @@ ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size)
 {
     ngx_list_t  *list;
 
-    list = ngx_palloc(pool, sizeof(ngx_list_t));
-    if (list == NULL) {
-        return NULL;
+    list = ngx_palloc(pool, அளவு(ngx_list_t));
+    எனில் (list == வெற்று) {
+        திரும்பு வெற்று;
     }
 
-    if (ngx_list_init(list, pool, n, size) != NGX_OK) {
-        return NULL;
+    எனில் (ngx_list_init(list, pool, n, size) != NGX_OK) {
+        திரும்பு வெற்று;
     }
 
-    return list;
+    திரும்பு list;
 }
 
 
-void *
-ngx_list_push(ngx_list_t *l)
+வெறுமை *
+ngx_list_தள்ளு(ngx_list_t *l)
 {
-    void             *elt;
+    வெறுமை             *elt;
     ngx_list_part_t  *last;
 
     last = l->last;
 
-    if (last->nelts == l->nalloc) {
+    எனில் (last->nelts == l->nalloc) {
 
         /* the last part is full, allocate a new list part */
 
-        last = ngx_palloc(l->pool, sizeof(ngx_list_part_t));
-        if (last == NULL) {
-            return NULL;
+        last = ngx_palloc(l->pool, அளவு(ngx_list_part_t));
+        எனில் (last == வெற்று) {
+            திரும்பு வெற்று;
         }
 
         last->elts = ngx_palloc(l->pool, l->nalloc * l->size);
-        if (last->elts == NULL) {
-            return NULL;
+        எனில் (last->elts == வெற்று) {
+            திரும்பு வெற்று;
         }
 
         last->nelts = 0;
-        last->next = NULL;
+        last->next = வெற்று;
 
         l->last->next = last;
         l->last = last;
     }
 
-    elt = (char *) last->elts + l->size * last->nelts;
+    elt = (எழுத்து *) last->elts + l->size * last->nelts;
     last->nelts++;
 
-    return elt;
+    திரும்பு elt;
 }

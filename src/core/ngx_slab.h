@@ -9,20 +9,20 @@
 #define _NGX_SLAB_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
 
 
-typedef struct ngx_slab_page_s  ngx_slab_page_t;
+வகைவரை கட்டமைப்பு ngx_slab_page_s  ngx_slab_page_t;
 
-struct ngx_slab_page_s {
+கட்டமைப்பு ngx_slab_page_s {
     uintptr_t         slab;
     ngx_slab_page_t  *next;
     uintptr_t         prev;
 };
 
 
-typedef struct {
+வகைவரை கட்டமைப்பு {
     ngx_uint_t        total;
     ngx_uint_t        used;
 
@@ -31,7 +31,7 @@ typedef struct {
 } ngx_slab_stat_t;
 
 
-typedef struct {
+வகைவரை கட்டமைப்பு {
     ngx_shmtx_sh_t    lock;
 
     size_t            min_size;
@@ -39,7 +39,7 @@ typedef struct {
 
     ngx_slab_page_t  *pages;
     ngx_slab_page_t  *last;
-    ngx_slab_page_t   free;
+    ngx_slab_page_t   விடுவி;
 
     ngx_slab_stat_t  *stats;
     ngx_uint_t        pfree;
@@ -54,19 +54,19 @@ typedef struct {
 
     unsigned          log_nomem:1;
 
-    void             *data;
-    void             *addr;
+    வெறுமை             *data;
+    வெறுமை             *addr;
 } ngx_slab_pool_t;
 
 
-void ngx_slab_sizes_init(void);
-void ngx_slab_init(ngx_slab_pool_t *pool);
-void *ngx_slab_alloc(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_calloc(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_calloc_locked(ngx_slab_pool_t *pool, size_t size);
-void ngx_slab_free(ngx_slab_pool_t *pool, void *p);
-void ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p);
+வெறுமை ngx_slab_sizes_init(வெறுமை);
+வெறுமை ngx_slab_init(ngx_slab_pool_t *pool);
+வெறுமை *ngx_slab_alloc(ngx_slab_pool_t *pool, size_t size);
+வெறுமை *ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size);
+வெறுமை *ngx_slab_calloc(ngx_slab_pool_t *pool, size_t size);
+வெறுமை *ngx_slab_calloc_locked(ngx_slab_pool_t *pool, size_t size);
+வெறுமை ngx_slab_free(ngx_slab_pool_t *pool, வெறுமை *p);
+வெறுமை ngx_slab_free_locked(ngx_slab_pool_t *pool, வெறுமை *p);
 
 
 #endif /* _NGX_SLAB_H_INCLUDED_ */

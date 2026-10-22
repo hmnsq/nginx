@@ -9,49 +9,49 @@
 #define _NGX_JSON_PARSE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_json_unescape.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
+#அந்தர்பாவ <ngx_json_unescape.h>
 
 
 #define NGX_JSON_SKIP                    -7
 #define NGX_JSON_DEFAULT_MAX_DEPTH       64
 
 
-typedef enum {
+வகைவரை எண்ணிக்கை {
     NGX_JSON_OBJECT_OPEN = 0,
     NGX_JSON_OBJECT_CLOSE,
     NGX_JSON_ARRAY_OPEN,
     NGX_JSON_ARRAY_CLOSE,
-    NGX_JSON_KEY,
-    NGX_JSON_KEY_ESCAPED,
-    NGX_JSON_VALUE_STRING,
-    NGX_JSON_VALUE_STRING_ESCAPED,
-    NGX_JSON_VALUE_NUMBER,
-    NGX_JSON_VALUE_BOOL,
-    NGX_JSON_VALUE_NULL
+    NGX_JSON_சாவி,
+    NGX_JSON_சாவி_ESCAPED,
+    NGX_JSON_மதிப்பு_STRING,
+    NGX_JSON_மதிப்பு_STRING_ESCAPED,
+    NGX_JSON_மதிப்பு_எண்,
+    NGX_JSON_மதிப்பு_BOOL,
+    NGX_JSON_மதிப்பு_NULL
 } ngx_json_event_e;
 
 
-typedef enum {
+வகைவரை எண்ணிக்கை {
     ngx_json_start = 0,
     ngx_json_done,
     ngx_json_object,
     ngx_json_object_next,
     ngx_json_object_name_separator,
-    ngx_json_value,
-    ngx_json_object_value_separator,
-    ngx_json_array_value_separator,
+    ngx_json_மதிப்பு,
+    ngx_json_object_மதிப்பு_separator,
+    ngx_json_array_மதிப்பு_separator,
     ngx_json_array,
     ngx_json_string,
-    ngx_json_number_minus,
-    ngx_json_number_int,
-    ngx_json_number_int_zero,
-    ngx_json_number_frac,
-    ngx_json_number_frac_digit,
-    ngx_json_number_exp,
-    ngx_json_number_exp_plusminus,
-    ngx_json_number_exp_digit,
+    ngx_json_எண்_minus,
+    ngx_json_எண்_int,
+    ngx_json_எண்_int_zero,
+    ngx_json_எண்_frac,
+    ngx_json_எண்_frac_digit,
+    ngx_json_எண்_exp,
+    ngx_json_எண்_exp_plusminus,
+    ngx_json_எண்_exp_digit,
     ngx_json_escaped,
     ngx_json_escaped_hex,       /* first \uXXXX: reading the four hex digits */
     ngx_json_surrogate_start,   /* expect '\' beginning the low surrogate */
@@ -70,45 +70,45 @@ typedef enum {
 } ngx_json_state_e;
 
 
-typedef enum {
+வகைவரை எண்ணிக்கை {
     ngx_json_ctx_none = 0,
     ngx_json_ctx_object,
     ngx_json_ctx_array
 } ngx_json_container_e;
 
 
-typedef struct ngx_json_ctx_s  ngx_json_ctx_t;
+வகைவரை கட்டமைப்பு ngx_json_ctx_s  ngx_json_ctx_t;
 
 
-typedef ngx_int_t (*ngx_json_handler_pt)(ngx_json_ctx_t *ctx,
+வகைவரை ngx_int_t (*ngx_json_handler_pt)(ngx_json_ctx_t *ctx,
     ngx_json_event_e event, ngx_str_t *token);
 
 
-struct ngx_json_ctx_s {
+கட்டமைப்பு ngx_json_ctx_s {
     ngx_json_state_e       state;
 
-    ngx_json_container_e  *stack;
+    ngx_json_container_e  *அடுக்கு;
     ngx_uint_t             depth;
     ngx_uint_t             max_depth;
 
     uint32_t               codepoint;
-    ngx_uint_t             hex_left;         /* hex digits still expected */
+    ngx_uint_t             hex_இடது;         /* hex digits still expected */
 
     ngx_uint_t             skip_until_depth;
 
     ngx_pool_t            *pool;
     ngx_json_handler_pt    handler;
-    void                  *data;
+    வெறுமை                  *data;
 
-    ngx_uint_t             in_key;           /* unsigned in_key:1; */
+    ngx_uint_t             in_சாவி;           /* unsigned in_key:1; */
     ngx_uint_t             escaped;          /* unsigned escaped:1; */
 };
 
 
-void ngx_json_ctx_init(ngx_json_ctx_t *ctx, ngx_pool_t *pool);
+வெறுமை ngx_json_ctx_init(ngx_json_ctx_t *ctx, ngx_pool_t *pool);
 ngx_int_t ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len);
 ngx_int_t ngx_json_parse(ngx_pool_t *pool, ngx_str_t *json,
-    ngx_json_handler_pt handler, void *data);
+    ngx_json_handler_pt handler, வெறுமை *data);
 
 
 #endif /* _NGX_JSON_PARSE_H_INCLUDED_ */

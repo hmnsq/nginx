@@ -4,8 +4,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
 
 
 /*
@@ -19,14 +19,14 @@
     (uint64_t) (((x) << (b)) | ((x) >> (64 - (b))))
 
 #define ngx_sipround                                                          \
-    do {                                                                      \
+    செய் {                                                                      \
         v0 += v1; v1 = ngx_siphash_rotl(v1, 13); v1 ^= v0;                    \
         v0 = ngx_siphash_rotl(v0, 32);                                        \
         v2 += v3; v3 = ngx_siphash_rotl(v3, 16); v3 ^= v2;                    \
         v0 += v3; v3 = ngx_siphash_rotl(v3, 21); v3 ^= v0;                    \
         v2 += v1; v1 = ngx_siphash_rotl(v1, 17); v1 ^= v2;                    \
         v2 = ngx_siphash_rotl(v2, 32);                                        \
-    } while (0)
+    } போது (0)
 
 
 uint64_t
@@ -44,7 +44,7 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
     remainder = len & 7;
     end = data + len - remainder;
 
-    for ( /* void */ ; data != end; data += 8) {
+    க்கு ( /* void */ ; data != end; data += 8) {
         ngx_memcpy(&m, data, 8);
         v3 ^= m;
         ngx_sipround;
@@ -54,30 +54,30 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
 
     m = (uint64_t) len << 56;
 
-    switch (remainder) {
-    case 7:
+    தேர்வு (remainder) {
+    நிலை 7:
         m |= (uint64_t) data[6] << 48;
         /* fall through */
-    case 6:
+    நிலை 6:
         m |= (uint64_t) data[5] << 40;
         /* fall through */
-    case 5:
+    நிலை 5:
         m |= (uint64_t) data[4] << 32;
         /* fall through */
-    case 4:
+    நிலை 4:
         m |= (uint64_t) data[3] << 24;
         /* fall through */
-    case 3:
+    நிலை 3:
         m |= (uint64_t) data[2] << 16;
         /* fall through */
-    case 2:
+    நிலை 2:
         m |= (uint64_t) data[1] << 8;
         /* fall through */
-    case 1:
+    நிலை 1:
         m |= (uint64_t) data[0];
-        break;
-    case 0:
-        break;
+        நிறுத்து;
+    நிலை 0:
+        நிறுத்து;
     }
 
     v3 ^= m;
@@ -91,5 +91,5 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
     ngx_sipround;
     ngx_sipround;
 
-    return v0 ^ v1 ^ v2 ^ v3;
+    திரும்பு v0 ^ v1 ^ v2 ^ v3;
 }

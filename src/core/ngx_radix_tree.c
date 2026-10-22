@@ -5,41 +5,41 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
 
 
-static ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
+நிலையான ngx_radix_முனை_t *ngx_radix_alloc(ngx_radix_மரம்_t *மரம்);
 
 
-ngx_radix_tree_t *
-ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
+ngx_radix_மரம்_t *
+ngx_radix_மரம்_create(ngx_pool_t *pool, ngx_int_t preallocate)
 {
-    uint32_t           key, mask, inc;
-    ngx_radix_tree_t  *tree;
+    uint32_t           சாவி, mask, inc;
+    ngx_radix_மரம்_t  *மரம்;
 
-    tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
-        return NULL;
+    மரம் = ngx_palloc(pool, அளவு(ngx_radix_மரம்_t));
+    எனில் (மரம் == வெற்று) {
+        திரும்பு வெற்று;
     }
 
-    tree->pool = pool;
-    tree->free = NULL;
-    tree->start = NULL;
-    tree->size = 0;
+    மரம்->pool = pool;
+    மரம்->விடுவி = வெற்று;
+    மரம்->start = வெற்று;
+    மரம்->size = 0;
 
-    tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
-        return NULL;
+    மரம்->வேர் = ngx_radix_alloc(மரம்);
+    எனில் (மரம்->வேர் == வெற்று) {
+        திரும்பு வெற்று;
     }
 
-    tree->root->right = NULL;
-    tree->root->left = NULL;
-    tree->root->parent = NULL;
-    tree->root->value = NGX_RADIX_NO_VALUE;
+    மரம்->வேர்->வலது = வெற்று;
+    மரம்->வேர்->இடது = வெற்று;
+    மரம்->வேர்->parent = வெற்று;
+    மரம்->வேர்->மதிப்பு = NGX_RADIX_NO_மதிப்பு;
 
-    if (preallocate == 0) {
-        return tree;
+    எனில் (preallocate == 0) {
+        திரும்பு மரம்;
     }
 
     /*
@@ -59,21 +59,21 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      *     8 bits on sparc64 in 32-bit mode (8K pages)
      */
 
-    if (preallocate == -1) {
-        switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
+    எனில் (preallocate == -1) {
+        தேர்வு (ngx_pagesize / அளவு(ngx_radix_முனை_t)) {
 
         /* amd64 */
-        case 128:
+        நிலை 128:
             preallocate = 6;
-            break;
+            நிறுத்து;
 
         /* i386, sparc64 */
-        case 256:
+        நிலை 256:
             preallocate = 7;
-            break;
+            நிறுத்து;
 
         /* sparc64 in 32-bit mode */
-        default:
+        இயல்பு:
             preallocate = 8;
         }
     }
@@ -81,408 +81,408 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     mask = 0;
     inc = 0x80000000;
 
-    while (preallocate--) {
+    போது (preallocate--) {
 
-        key = 0;
+        சாவி = 0;
         mask >>= 1;
         mask |= 0x80000000;
 
-        do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+        செய் {
+            எனில் (ngx_radix32tree_செருகு(மரம், சாவி, mask, NGX_RADIX_NO_மதிப்பு)
                 != NGX_OK)
             {
-                return NULL;
+                திரும்பு வெற்று;
             }
 
-            key += inc;
+            சாவி += inc;
 
-        } while (key);
+        } போது (சாவி);
 
         inc >>= 1;
     }
 
-    return tree;
+    திரும்பு மரம்;
 }
 
 
 ngx_int_t
-ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
-    uintptr_t value)
+ngx_radix32tree_செருகு(ngx_radix_மரம்_t *மரம், uint32_t சாவி, uint32_t mask,
+    uintptr_t மதிப்பு)
 {
     uint32_t           bit;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_முனை_t  *முனை, *next;
 
     bit = 0x80000000;
 
-    node = tree->root;
-    next = tree->root;
+    முனை = மரம்->வேர்;
+    next = மரம்->வேர்;
 
-    while (bit & mask) {
-        if (key & bit) {
-            next = node->right;
+    போது (bit & mask) {
+        எனில் (சாவி & bit) {
+            next = முனை->வலது;
 
-        } else {
-            next = node->left;
+        } இல்லையெனில் {
+            next = முனை->இடது;
         }
 
-        if (next == NULL) {
-            break;
-        }
-
-        bit >>= 1;
-        node = next;
-    }
-
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
-        }
-
-        node->value = value;
-        return NGX_OK;
-    }
-
-    while (bit & mask) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
-        }
-
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
-
-        if (key & bit) {
-            node->right = next;
-
-        } else {
-            node->left = next;
+        எனில் (next == வெற்று) {
+            நிறுத்து;
         }
 
         bit >>= 1;
-        node = next;
+        முனை = next;
     }
 
-    node->value = value;
+    எனில் (next) {
+        எனில் (முனை->மதிப்பு != NGX_RADIX_NO_மதிப்பு) {
+            திரும்பு NGX_BUSY;
+        }
 
-    return NGX_OK;
+        முனை->மதிப்பு = மதிப்பு;
+        திரும்பு NGX_OK;
+    }
+
+    போது (bit & mask) {
+        next = ngx_radix_alloc(மரம்);
+        எனில் (next == வெற்று) {
+            திரும்பு NGX_ERROR;
+        }
+
+        next->வலது = வெற்று;
+        next->இடது = வெற்று;
+        next->parent = முனை;
+        next->மதிப்பு = NGX_RADIX_NO_மதிப்பு;
+
+        எனில் (சாவி & bit) {
+            முனை->வலது = next;
+
+        } இல்லையெனில் {
+            முனை->இடது = next;
+        }
+
+        bit >>= 1;
+        முனை = next;
+    }
+
+    முனை->மதிப்பு = மதிப்பு;
+
+    திரும்பு NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
+ngx_radix32tree_delete(ngx_radix_மரம்_t *மரம், uint32_t சாவி, uint32_t mask)
 {
     uint32_t           bit;
-    ngx_radix_node_t  *node;
+    ngx_radix_முனை_t  *முனை;
 
     bit = 0x80000000;
-    node = tree->root;
+    முனை = மரம்->வேர்;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
-            node = node->right;
+    போது (முனை && (bit & mask)) {
+        எனில் (சாவி & bit) {
+            முனை = முனை->வலது;
 
-        } else {
-            node = node->left;
+        } இல்லையெனில் {
+            முனை = முனை->இடது;
         }
 
         bit >>= 1;
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    எனில் (முனை == வெற்று) {
+        திரும்பு NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    எனில் (முனை->வலது || முனை->இடது) {
+        எனில் (முனை->மதிப்பு != NGX_RADIX_NO_மதிப்பு) {
+            முனை->மதிப்பு = NGX_RADIX_NO_மதிப்பு;
+            திரும்பு NGX_OK;
         }
 
-        return NGX_ERROR;
+        திரும்பு NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    க்கு ( ;; ) {
+        எனில் (முனை->parent->வலது == முனை) {
+            முனை->parent->வலது = வெற்று;
 
-        } else {
-            node->parent->left = NULL;
+        } இல்லையெனில் {
+            முனை->parent->இடது = வெற்று;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        முனை->வலது = மரம்->விடுவி;
+        மரம்->விடுவி = முனை;
 
-        node = node->parent;
+        முனை = முனை->parent;
 
-        if (node->right || node->left) {
-            break;
+        எனில் (முனை->வலது || முனை->இடது) {
+            நிறுத்து;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        எனில் (முனை->மதிப்பு != NGX_RADIX_NO_மதிப்பு) {
+            நிறுத்து;
         }
 
-        if (node->parent == NULL) {
-            break;
+        எனில் (முனை->parent == வெற்று) {
+            நிறுத்து;
         }
     }
 
-    return NGX_OK;
+    திரும்பு NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
+ngx_radix32tree_find(ngx_radix_மரம்_t *மரம், uint32_t சாவி)
 {
     uint32_t           bit;
-    uintptr_t          value;
-    ngx_radix_node_t  *node;
+    uintptr_t          மதிப்பு;
+    ngx_radix_முனை_t  *முனை;
 
     bit = 0x80000000;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    மதிப்பு = NGX_RADIX_NO_மதிப்பு;
+    முனை = மரம்->வேர்;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    போது (முனை) {
+        எனில் (முனை->மதிப்பு != NGX_RADIX_NO_மதிப்பு) {
+            மதிப்பு = முனை->மதிப்பு;
         }
 
-        if (key & bit) {
-            node = node->right;
+        எனில் (சாவி & bit) {
+            முனை = முனை->வலது;
 
-        } else {
-            node = node->left;
+        } இல்லையெனில் {
+            முனை = முனை->இடது;
         }
 
         bit >>= 1;
     }
 
-    return value;
+    திரும்பு மதிப்பு;
 }
 
 
-#if (NGX_HAVE_INET6)
+#எனில் (NGX_HAVE_INET6)
 
 ngx_int_t
-ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
-    uintptr_t value)
+ngx_radix128tree_செருகு(ngx_radix_மரம்_t *மரம், u_char *சாவி, u_char *mask,
+    uintptr_t மதிப்பு)
 {
     u_char             bit;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_முனை_t  *முனை, *next;
 
     i = 0;
     bit = 0x80;
 
-    node = tree->root;
-    next = tree->root;
+    முனை = மரம்->வேர்;
+    next = மரம்->வேர்;
 
-    while (bit & mask[i]) {
-        if (key[i] & bit) {
-            next = node->right;
+    போது (bit & mask[i]) {
+        எனில் (சாவி[i] & bit) {
+            next = முனை->வலது;
 
-        } else {
-            next = node->left;
+        } இல்லையெனில் {
+            next = முனை->இடது;
         }
 
-        if (next == NULL) {
-            break;
+        எனில் (next == வெற்று) {
+            நிறுத்து;
         }
 
         bit >>= 1;
-        node = next;
+        முனை = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        எனில் (bit == 0) {
+            எனில் (++i == 16) {
+                நிறுத்து;
             }
 
             bit = 0x80;
         }
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    எனில் (next) {
+        எனில் (முனை->மதிப்பு != NGX_RADIX_NO_மதிப்பு) {
+            திரும்பு NGX_BUSY;
         }
 
-        node->value = value;
-        return NGX_OK;
+        முனை->மதிப்பு = மதிப்பு;
+        திரும்பு NGX_OK;
     }
 
-    while (bit & mask[i]) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+    போது (bit & mask[i]) {
+        next = ngx_radix_alloc(மரம்);
+        எனில் (next == வெற்று) {
+            திரும்பு NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
+        next->வலது = வெற்று;
+        next->இடது = வெற்று;
+        next->parent = முனை;
+        next->மதிப்பு = NGX_RADIX_NO_மதிப்பு;
 
-        if (key[i] & bit) {
-            node->right = next;
+        எனில் (சாவி[i] & bit) {
+            முனை->வலது = next;
 
-        } else {
-            node->left = next;
+        } இல்லையெனில் {
+            முனை->இடது = next;
         }
 
         bit >>= 1;
-        node = next;
+        முனை = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        எனில் (bit == 0) {
+            எனில் (++i == 16) {
+                நிறுத்து;
             }
 
             bit = 0x80;
         }
     }
 
-    node->value = value;
+    முனை->மதிப்பு = மதிப்பு;
 
-    return NGX_OK;
+    திரும்பு NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
+ngx_radix128tree_delete(ngx_radix_மரம்_t *மரம், u_char *சாவி, u_char *mask)
 {
     u_char             bit;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_முனை_t  *முனை;
 
     i = 0;
     bit = 0x80;
-    node = tree->root;
+    முனை = மரம்->வேர்;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
-            node = node->right;
+    போது (முனை && (bit & mask[i])) {
+        எனில் (சாவி[i] & bit) {
+            முனை = முனை->வலது;
 
-        } else {
-            node = node->left;
+        } இல்லையெனில் {
+            முனை = முனை->இடது;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        எனில் (bit == 0) {
+            எனில் (++i == 16) {
+                நிறுத்து;
             }
 
             bit = 0x80;
         }
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    எனில் (முனை == வெற்று) {
+        திரும்பு NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    எனில் (முனை->வலது || முனை->இடது) {
+        எனில் (முனை->மதிப்பு != NGX_RADIX_NO_மதிப்பு) {
+            முனை->மதிப்பு = NGX_RADIX_NO_மதிப்பு;
+            திரும்பு NGX_OK;
         }
 
-        return NGX_ERROR;
+        திரும்பு NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    க்கு ( ;; ) {
+        எனில் (முனை->parent->வலது == முனை) {
+            முனை->parent->வலது = வெற்று;
 
-        } else {
-            node->parent->left = NULL;
+        } இல்லையெனில் {
+            முனை->parent->இடது = வெற்று;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        முனை->வலது = மரம்->விடுவி;
+        மரம்->விடுவி = முனை;
 
-        node = node->parent;
+        முனை = முனை->parent;
 
-        if (node->right || node->left) {
-            break;
+        எனில் (முனை->வலது || முனை->இடது) {
+            நிறுத்து;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        எனில் (முனை->மதிப்பு != NGX_RADIX_NO_மதிப்பு) {
+            நிறுத்து;
         }
 
-        if (node->parent == NULL) {
-            break;
+        எனில் (முனை->parent == வெற்று) {
+            நிறுத்து;
         }
     }
 
-    return NGX_OK;
+    திரும்பு NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
+ngx_radix128tree_find(ngx_radix_மரம்_t *மரம், u_char *சாவி)
 {
     u_char             bit;
-    uintptr_t          value;
+    uintptr_t          மதிப்பு;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_முனை_t  *முனை;
 
     i = 0;
     bit = 0x80;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    மதிப்பு = NGX_RADIX_NO_மதிப்பு;
+    முனை = மரம்->வேர்;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    போது (முனை) {
+        எனில் (முனை->மதிப்பு != NGX_RADIX_NO_மதிப்பு) {
+            மதிப்பு = முனை->மதிப்பு;
         }
 
-        if (key[i] & bit) {
-            node = node->right;
+        எனில் (சாவி[i] & bit) {
+            முனை = முனை->வலது;
 
-        } else {
-            node = node->left;
+        } இல்லையெனில் {
+            முனை = முனை->இடது;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
+        எனில் (bit == 0) {
             i++;
             bit = 0x80;
         }
     }
 
-    return value;
+    திரும்பு மதிப்பு;
 }
 
 #endif
 
 
-static ngx_radix_node_t *
-ngx_radix_alloc(ngx_radix_tree_t *tree)
+நிலையான ngx_radix_முனை_t *
+ngx_radix_alloc(ngx_radix_மரம்_t *மரம்)
 {
-    ngx_radix_node_t  *p;
+    ngx_radix_முனை_t  *p;
 
-    if (tree->free) {
-        p = tree->free;
-        tree->free = tree->free->right;
-        return p;
+    எனில் (மரம்->விடுவி) {
+        p = மரம்->விடுவி;
+        மரம்->விடுவி = மரம்->விடுவி->வலது;
+        திரும்பு p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
-        tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
-            return NULL;
+    எனில் (மரம்->size < அளவு(ngx_radix_முனை_t)) {
+        மரம்->start = ngx_pmemalign(மரம்->pool, ngx_pagesize, ngx_pagesize);
+        எனில் (மரம்->start == வெற்று) {
+            திரும்பு வெற்று;
         }
 
-        tree->size = ngx_pagesize;
+        மரம்->size = ngx_pagesize;
     }
 
-    p = (ngx_radix_node_t *) tree->start;
-    tree->start += sizeof(ngx_radix_node_t);
-    tree->size -= sizeof(ngx_radix_node_t);
+    p = (ngx_radix_முனை_t *) மரம்->start;
+    மரம்->start += அளவு(ngx_radix_முனை_t);
+    மரம்->size -= அளவு(ngx_radix_முனை_t);
 
-    return p;
+    திரும்பு p;
 }

@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
 
 
 /*
@@ -15,116 +15,116 @@
  */
 
 
-static ngx_inline void ngx_rbtree_left_rotate(ngx_rbtree_node_t **root,
-    ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
-static ngx_inline void ngx_rbtree_right_rotate(ngx_rbtree_node_t **root,
-    ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
+நிலையான ngx_inline வெறுமை ngx_rbtree_இடது_rotate(ngx_rbtree_முனை_t **வேர்,
+    ngx_rbtree_முனை_t *sentinel, ngx_rbtree_முனை_t *முனை);
+நிலையான ngx_inline வெறுமை ngx_rbtree_வலது_rotate(ngx_rbtree_முனை_t **வேர்,
+    ngx_rbtree_முனை_t *sentinel, ngx_rbtree_முனை_t *முனை);
 
 
-void
-ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+வெறுமை
+ngx_rbtree_செருகு(ngx_rbtree_t *மரம், ngx_rbtree_முனை_t *முனை)
 {
-    ngx_rbtree_node_t  **root, *temp, *sentinel;
+    ngx_rbtree_முனை_t  **வேர், *temp, *sentinel;
 
     /* a binary tree insert */
 
-    root = &tree->root;
-    sentinel = tree->sentinel;
+    வேர் = &மரம்->வேர்;
+    sentinel = மரம்->sentinel;
 
-    if (*root == sentinel) {
-        node->parent = NULL;
-        node->left = sentinel;
-        node->right = sentinel;
-        ngx_rbt_black(node);
-        *root = node;
+    எனில் (*வேர் == sentinel) {
+        முனை->parent = வெற்று;
+        முனை->இடது = sentinel;
+        முனை->வலது = sentinel;
+        ngx_rbt_black(முனை);
+        *வேர் = முனை;
 
-        return;
+        திரும்பு;
     }
 
-    tree->insert(*root, node, sentinel);
+    மரம்->செருகு(*வேர், முனை, sentinel);
 
     /* re-balance tree */
 
-    while (node != *root && ngx_rbt_is_red(node->parent)) {
+    போது (முனை != *வேர் && ngx_rbt_is_red(முனை->parent)) {
 
-        if (node->parent == node->parent->parent->left) {
-            temp = node->parent->parent->right;
+        எனில் (முனை->parent == முனை->parent->parent->இடது) {
+            temp = முனை->parent->parent->வலது;
 
-            if (ngx_rbt_is_red(temp)) {
-                ngx_rbt_black(node->parent);
+            எனில் (ngx_rbt_is_red(temp)) {
+                ngx_rbt_black(முனை->parent);
                 ngx_rbt_black(temp);
-                ngx_rbt_red(node->parent->parent);
-                node = node->parent->parent;
+                ngx_rbt_red(முனை->parent->parent);
+                முனை = முனை->parent->parent;
 
-            } else {
-                if (node == node->parent->right) {
-                    node = node->parent;
-                    ngx_rbtree_left_rotate(root, sentinel, node);
+            } இல்லையெனில் {
+                எனில் (முனை == முனை->parent->வலது) {
+                    முனை = முனை->parent;
+                    ngx_rbtree_இடது_rotate(வேர், sentinel, முனை);
                 }
 
-                ngx_rbt_black(node->parent);
-                ngx_rbt_red(node->parent->parent);
-                ngx_rbtree_right_rotate(root, sentinel, node->parent->parent);
+                ngx_rbt_black(முனை->parent);
+                ngx_rbt_red(முனை->parent->parent);
+                ngx_rbtree_வலது_rotate(வேர், sentinel, முனை->parent->parent);
             }
 
-        } else {
-            temp = node->parent->parent->left;
+        } இல்லையெனில் {
+            temp = முனை->parent->parent->இடது;
 
-            if (ngx_rbt_is_red(temp)) {
-                ngx_rbt_black(node->parent);
+            எனில் (ngx_rbt_is_red(temp)) {
+                ngx_rbt_black(முனை->parent);
                 ngx_rbt_black(temp);
-                ngx_rbt_red(node->parent->parent);
-                node = node->parent->parent;
+                ngx_rbt_red(முனை->parent->parent);
+                முனை = முனை->parent->parent;
 
-            } else {
-                if (node == node->parent->left) {
-                    node = node->parent;
-                    ngx_rbtree_right_rotate(root, sentinel, node);
+            } இல்லையெனில் {
+                எனில் (முனை == முனை->parent->இடது) {
+                    முனை = முனை->parent;
+                    ngx_rbtree_வலது_rotate(வேர், sentinel, முனை);
                 }
 
-                ngx_rbt_black(node->parent);
-                ngx_rbt_red(node->parent->parent);
-                ngx_rbtree_left_rotate(root, sentinel, node->parent->parent);
+                ngx_rbt_black(முனை->parent);
+                ngx_rbt_red(முனை->parent->parent);
+                ngx_rbtree_இடது_rotate(வேர், sentinel, முனை->parent->parent);
             }
         }
     }
 
-    ngx_rbt_black(*root);
+    ngx_rbt_black(*வேர்);
 }
 
 
-void
-ngx_rbtree_insert_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel)
+வெறுமை
+ngx_rbtree_செருகு_மதிப்பு(ngx_rbtree_முனை_t *temp, ngx_rbtree_முனை_t *முனை,
+    ngx_rbtree_முனை_t *sentinel)
 {
-    ngx_rbtree_node_t  **p;
+    ngx_rbtree_முனை_t  **p;
 
-    for ( ;; ) {
+    க்கு ( ;; ) {
 
-        p = (node->key < temp->key) ? &temp->left : &temp->right;
+        p = (முனை->சாவி < temp->சாவி) ? &temp->இடது : &temp->வலது;
 
-        if (*p == sentinel) {
-            break;
+        எனில் (*p == sentinel) {
+            நிறுத்து;
         }
 
         temp = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = முனை;
+    முனை->parent = temp;
+    முனை->இடது = sentinel;
+    முனை->வலது = sentinel;
+    ngx_rbt_red(முனை);
 }
 
 
-void
-ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel)
+வெறுமை
+ngx_rbtree_செருகு_timer_மதிப்பு(ngx_rbtree_முனை_t *temp, ngx_rbtree_முனை_t *முனை,
+    ngx_rbtree_முனை_t *sentinel)
 {
-    ngx_rbtree_node_t  **p;
+    ngx_rbtree_முனை_t  **p;
 
-    for ( ;; ) {
+    க்கு ( ;; ) {
 
         /*
          * Timer values
@@ -135,178 +135,178 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 
         /*  node->key < temp->key */
 
-        p = ((ngx_rbtree_key_int_t) (node->key - temp->key) < 0)
-            ? &temp->left : &temp->right;
+        p = ((ngx_rbtree_சாவி_int_t) (முனை->சாவி - temp->சாவி) < 0)
+            ? &temp->இடது : &temp->வலது;
 
-        if (*p == sentinel) {
-            break;
+        எனில் (*p == sentinel) {
+            நிறுத்து;
         }
 
         temp = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = முனை;
+    முனை->parent = temp;
+    முனை->இடது = sentinel;
+    முனை->வலது = sentinel;
+    ngx_rbt_red(முனை);
 }
 
 
-void
-ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+வெறுமை
+ngx_rbtree_delete(ngx_rbtree_t *மரம், ngx_rbtree_முனை_t *முனை)
 {
     ngx_uint_t           red;
-    ngx_rbtree_node_t  **root, *sentinel, *subst, *temp, *w;
+    ngx_rbtree_முனை_t  **வேர், *sentinel, *subst, *temp, *w;
 
     /* a binary tree delete */
 
-    root = &tree->root;
-    sentinel = tree->sentinel;
+    வேர் = &மரம்->வேர்;
+    sentinel = மரம்->sentinel;
 
-    if (node->left == sentinel) {
-        temp = node->right;
-        subst = node;
+    எனில் (முனை->இடது == sentinel) {
+        temp = முனை->வலது;
+        subst = முனை;
 
-    } else if (node->right == sentinel) {
-        temp = node->left;
-        subst = node;
+    } இல்லையெனில் எனில் (முனை->வலது == sentinel) {
+        temp = முனை->இடது;
+        subst = முனை;
 
-    } else {
-        subst = ngx_rbtree_min(node->right, sentinel);
-        temp = subst->right;
+    } இல்லையெனில் {
+        subst = ngx_rbtree_min(முனை->வலது, sentinel);
+        temp = subst->வலது;
     }
 
-    if (subst == *root) {
-        *root = temp;
+    எனில் (subst == *வேர்) {
+        *வேர் = temp;
         ngx_rbt_black(temp);
 
         /* DEBUG stuff */
-        node->left = NULL;
-        node->right = NULL;
-        node->parent = NULL;
-        node->key = 0;
+        முனை->இடது = வெற்று;
+        முனை->வலது = வெற்று;
+        முனை->parent = வெற்று;
+        முனை->சாவி = 0;
 
-        return;
+        திரும்பு;
     }
 
     red = ngx_rbt_is_red(subst);
 
-    if (subst == subst->parent->left) {
-        subst->parent->left = temp;
+    எனில் (subst == subst->parent->இடது) {
+        subst->parent->இடது = temp;
 
-    } else {
-        subst->parent->right = temp;
+    } இல்லையெனில் {
+        subst->parent->வலது = temp;
     }
 
-    if (subst == node) {
+    எனில் (subst == முனை) {
 
         temp->parent = subst->parent;
 
-    } else {
+    } இல்லையெனில் {
 
-        if (subst->parent == node) {
+        எனில் (subst->parent == முனை) {
             temp->parent = subst;
 
-        } else {
+        } இல்லையெனில் {
             temp->parent = subst->parent;
         }
 
-        subst->left = node->left;
-        subst->right = node->right;
-        subst->parent = node->parent;
-        ngx_rbt_copy_color(subst, node);
+        subst->இடது = முனை->இடது;
+        subst->வலது = முனை->வலது;
+        subst->parent = முனை->parent;
+        ngx_rbt_copy_color(subst, முனை);
 
-        if (node == *root) {
-            *root = subst;
+        எனில் (முனை == *வேர்) {
+            *வேர் = subst;
 
-        } else {
-            if (node == node->parent->left) {
-                node->parent->left = subst;
-            } else {
-                node->parent->right = subst;
+        } இல்லையெனில் {
+            எனில் (முனை == முனை->parent->இடது) {
+                முனை->parent->இடது = subst;
+            } இல்லையெனில் {
+                முனை->parent->வலது = subst;
             }
         }
 
-        if (subst->left != sentinel) {
-            subst->left->parent = subst;
+        எனில் (subst->இடது != sentinel) {
+            subst->இடது->parent = subst;
         }
 
-        if (subst->right != sentinel) {
-            subst->right->parent = subst;
+        எனில் (subst->வலது != sentinel) {
+            subst->வலது->parent = subst;
         }
     }
 
     /* DEBUG stuff */
-    node->left = NULL;
-    node->right = NULL;
-    node->parent = NULL;
-    node->key = 0;
+    முனை->இடது = வெற்று;
+    முனை->வலது = வெற்று;
+    முனை->parent = வெற்று;
+    முனை->சாவி = 0;
 
-    if (red) {
-        return;
+    எனில் (red) {
+        திரும்பு;
     }
 
     /* a delete fixup */
 
-    while (temp != *root && ngx_rbt_is_black(temp)) {
+    போது (temp != *வேர் && ngx_rbt_is_black(temp)) {
 
-        if (temp == temp->parent->left) {
-            w = temp->parent->right;
+        எனில் (temp == temp->parent->இடது) {
+            w = temp->parent->வலது;
 
-            if (ngx_rbt_is_red(w)) {
+            எனில் (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
-                ngx_rbtree_left_rotate(root, sentinel, temp->parent);
-                w = temp->parent->right;
+                ngx_rbtree_இடது_rotate(வேர், sentinel, temp->parent);
+                w = temp->parent->வலது;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            எனில் (ngx_rbt_is_black(w->இடது) && ngx_rbt_is_black(w->வலது)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->right)) {
-                    ngx_rbt_black(w->left);
+            } இல்லையெனில் {
+                எனில் (ngx_rbt_is_black(w->வலது)) {
+                    ngx_rbt_black(w->இடது);
                     ngx_rbt_red(w);
-                    ngx_rbtree_right_rotate(root, sentinel, w);
-                    w = temp->parent->right;
+                    ngx_rbtree_வலது_rotate(வேர், sentinel, w);
+                    w = temp->parent->வலது;
                 }
 
                 ngx_rbt_copy_color(w, temp->parent);
                 ngx_rbt_black(temp->parent);
-                ngx_rbt_black(w->right);
-                ngx_rbtree_left_rotate(root, sentinel, temp->parent);
-                temp = *root;
+                ngx_rbt_black(w->வலது);
+                ngx_rbtree_இடது_rotate(வேர், sentinel, temp->parent);
+                temp = *வேர்;
             }
 
-        } else {
-            w = temp->parent->left;
+        } இல்லையெனில் {
+            w = temp->parent->இடது;
 
-            if (ngx_rbt_is_red(w)) {
+            எனில் (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
-                ngx_rbtree_right_rotate(root, sentinel, temp->parent);
-                w = temp->parent->left;
+                ngx_rbtree_வலது_rotate(வேர், sentinel, temp->parent);
+                w = temp->parent->இடது;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            எனில் (ngx_rbt_is_black(w->இடது) && ngx_rbt_is_black(w->வலது)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->left)) {
-                    ngx_rbt_black(w->right);
+            } இல்லையெனில் {
+                எனில் (ngx_rbt_is_black(w->இடது)) {
+                    ngx_rbt_black(w->வலது);
                     ngx_rbt_red(w);
-                    ngx_rbtree_left_rotate(root, sentinel, w);
-                    w = temp->parent->left;
+                    ngx_rbtree_இடது_rotate(வேர், sentinel, w);
+                    w = temp->parent->இடது;
                 }
 
                 ngx_rbt_copy_color(w, temp->parent);
                 ngx_rbt_black(temp->parent);
-                ngx_rbt_black(w->left);
-                ngx_rbtree_right_rotate(root, sentinel, temp->parent);
-                temp = *root;
+                ngx_rbt_black(w->இடது);
+                ngx_rbtree_வலது_rotate(வேர், sentinel, temp->parent);
+                temp = *வேர்;
             }
         }
     }
@@ -315,90 +315,90 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
 }
 
 
-static ngx_inline void
-ngx_rbtree_left_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
-    ngx_rbtree_node_t *node)
+நிலையான ngx_inline வெறுமை
+ngx_rbtree_இடது_rotate(ngx_rbtree_முனை_t **வேர், ngx_rbtree_முனை_t *sentinel,
+    ngx_rbtree_முனை_t *முனை)
 {
-    ngx_rbtree_node_t  *temp;
+    ngx_rbtree_முனை_t  *temp;
 
-    temp = node->right;
-    node->right = temp->left;
+    temp = முனை->வலது;
+    முனை->வலது = temp->இடது;
 
-    if (temp->left != sentinel) {
-        temp->left->parent = node;
+    எனில் (temp->இடது != sentinel) {
+        temp->இடது->parent = முனை;
     }
 
-    temp->parent = node->parent;
+    temp->parent = முனை->parent;
 
-    if (node == *root) {
-        *root = temp;
+    எனில் (முனை == *வேர்) {
+        *வேர் = temp;
 
-    } else if (node == node->parent->left) {
-        node->parent->left = temp;
+    } இல்லையெனில் எனில் (முனை == முனை->parent->இடது) {
+        முனை->parent->இடது = temp;
 
-    } else {
-        node->parent->right = temp;
+    } இல்லையெனில் {
+        முனை->parent->வலது = temp;
     }
 
-    temp->left = node;
-    node->parent = temp;
+    temp->இடது = முனை;
+    முனை->parent = temp;
 }
 
 
-static ngx_inline void
-ngx_rbtree_right_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
-    ngx_rbtree_node_t *node)
+நிலையான ngx_inline வெறுமை
+ngx_rbtree_வலது_rotate(ngx_rbtree_முனை_t **வேர், ngx_rbtree_முனை_t *sentinel,
+    ngx_rbtree_முனை_t *முனை)
 {
-    ngx_rbtree_node_t  *temp;
+    ngx_rbtree_முனை_t  *temp;
 
-    temp = node->left;
-    node->left = temp->right;
+    temp = முனை->இடது;
+    முனை->இடது = temp->வலது;
 
-    if (temp->right != sentinel) {
-        temp->right->parent = node;
+    எனில் (temp->வலது != sentinel) {
+        temp->வலது->parent = முனை;
     }
 
-    temp->parent = node->parent;
+    temp->parent = முனை->parent;
 
-    if (node == *root) {
-        *root = temp;
+    எனில் (முனை == *வேர்) {
+        *வேர் = temp;
 
-    } else if (node == node->parent->right) {
-        node->parent->right = temp;
+    } இல்லையெனில் எனில் (முனை == முனை->parent->வலது) {
+        முனை->parent->வலது = temp;
 
-    } else {
-        node->parent->left = temp;
+    } இல்லையெனில் {
+        முனை->parent->இடது = temp;
     }
 
-    temp->right = node;
-    node->parent = temp;
+    temp->வலது = முனை;
+    முனை->parent = temp;
 }
 
 
-ngx_rbtree_node_t *
-ngx_rbtree_next(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+ngx_rbtree_முனை_t *
+ngx_rbtree_next(ngx_rbtree_t *மரம், ngx_rbtree_முனை_t *முனை)
 {
-    ngx_rbtree_node_t  *root, *sentinel, *parent;
+    ngx_rbtree_முனை_t  *வேர், *sentinel, *parent;
 
-    sentinel = tree->sentinel;
+    sentinel = மரம்->sentinel;
 
-    if (node->right != sentinel) {
-        return ngx_rbtree_min(node->right, sentinel);
+    எனில் (முனை->வலது != sentinel) {
+        திரும்பு ngx_rbtree_min(முனை->வலது, sentinel);
     }
 
-    root = tree->root;
+    வேர் = மரம்->வேர்;
 
-    for ( ;; ) {
-        parent = node->parent;
+    க்கு ( ;; ) {
+        parent = முனை->parent;
 
-        if (node == root) {
-            return NULL;
+        எனில் (முனை == வேர்) {
+            திரும்பு வெற்று;
         }
 
-        if (node == parent->left) {
-            return parent;
+        எனில் (முனை == parent->இடது) {
+            திரும்பு parent;
         }
 
-        node = parent;
+        முனை = parent;
     }
 }

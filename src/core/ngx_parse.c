@@ -5,117 +5,117 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
 
 
 ssize_t
-ngx_parse_size(ngx_str_t *line)
+ngx_parse_size(ngx_str_t *வரி)
 {
     u_char   unit;
     size_t   len;
     ssize_t  size, scale, max;
 
-    len = line->len;
+    len = வரி->len;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    எனில் (len == 0) {
+        திரும்பு NGX_ERROR;
     }
 
-    unit = line->data[len - 1];
+    unit = வரி->data[len - 1];
 
-    switch (unit) {
-    case 'K':
-    case 'k':
+    தேர்வு (unit) {
+    நிலை 'K':
+    நிலை 'k':
         len--;
-        max = NGX_MAX_SIZE_T_VALUE / 1024;
+        max = NGX_MAX_SIZE_T_மதிப்பு / 1024;
         scale = 1024;
-        break;
+        நிறுத்து;
 
-    case 'M':
-    case 'm':
+    நிலை 'M':
+    நிலை 'm':
         len--;
-        max = NGX_MAX_SIZE_T_VALUE / (1024 * 1024);
+        max = NGX_MAX_SIZE_T_மதிப்பு / (1024 * 1024);
         scale = 1024 * 1024;
-        break;
+        நிறுத்து;
 
-    default:
-        max = NGX_MAX_SIZE_T_VALUE;
+    இயல்பு:
+        max = NGX_MAX_SIZE_T_மதிப்பு;
         scale = 1;
     }
 
-    size = ngx_atosz(line->data, len);
-    if (size == NGX_ERROR || size > max) {
-        return NGX_ERROR;
+    size = ngx_atosz(வரி->data, len);
+    எனில் (size == NGX_ERROR || size > max) {
+        திரும்பு NGX_ERROR;
     }
 
     size *= scale;
 
-    return size;
+    திரும்பு size;
 }
 
 
 off_t
-ngx_parse_offset(ngx_str_t *line)
+ngx_parse_offset(ngx_str_t *வரி)
 {
     u_char  unit;
     off_t   offset, scale, max;
     size_t  len;
 
-    len = line->len;
+    len = வரி->len;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    எனில் (len == 0) {
+        திரும்பு NGX_ERROR;
     }
 
-    unit = line->data[len - 1];
+    unit = வரி->data[len - 1];
 
-    switch (unit) {
-    case 'K':
-    case 'k':
+    தேர்வு (unit) {
+    நிலை 'K':
+    நிலை 'k':
         len--;
-        max = NGX_MAX_OFF_T_VALUE / 1024;
+        max = NGX_MAX_OFF_T_மதிப்பு / 1024;
         scale = 1024;
-        break;
+        நிறுத்து;
 
-    case 'M':
-    case 'm':
+    நிலை 'M':
+    நிலை 'm':
         len--;
-        max = NGX_MAX_OFF_T_VALUE / (1024 * 1024);
+        max = NGX_MAX_OFF_T_மதிப்பு / (1024 * 1024);
         scale = 1024 * 1024;
-        break;
+        நிறுத்து;
 
-    case 'G':
-    case 'g':
+    நிலை 'G':
+    நிலை 'g':
         len--;
-        max = NGX_MAX_OFF_T_VALUE / (1024 * 1024 * 1024);
+        max = NGX_MAX_OFF_T_மதிப்பு / (1024 * 1024 * 1024);
         scale = 1024 * 1024 * 1024;
-        break;
+        நிறுத்து;
 
-    default:
-        max = NGX_MAX_OFF_T_VALUE;
+    இயல்பு:
+        max = NGX_MAX_OFF_T_மதிப்பு;
         scale = 1;
     }
 
-    offset = ngx_atoof(line->data, len);
-    if (offset == NGX_ERROR || offset > max) {
-        return NGX_ERROR;
+    offset = ngx_atoof(வரி->data, len);
+    எனில் (offset == NGX_ERROR || offset > max) {
+        திரும்பு NGX_ERROR;
     }
 
     offset *= scale;
 
-    return offset;
+    திரும்பு offset;
 }
 
 
 ngx_int_t
-ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
+ngx_parse_time(ngx_str_t *வரி, ngx_uint_t is_sec)
 {
     u_char      *p, *last;
-    ngx_int_t    value, total, scale;
+    ngx_int_t    மதிப்பு, total, scale;
     ngx_int_t    max, cutoff, cutlim;
     ngx_uint_t   valid;
-    enum {
+    எண்ணிக்கை {
         st_start = 0,
         st_year,
         st_month,
@@ -129,155 +129,155 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
     } step;
 
     valid = 0;
-    value = 0;
+    மதிப்பு = 0;
     total = 0;
-    cutoff = NGX_MAX_INT_T_VALUE / 10;
-    cutlim = NGX_MAX_INT_T_VALUE % 10;
+    cutoff = NGX_MAX_INT_T_மதிப்பு / 10;
+    cutlim = NGX_MAX_INT_T_மதிப்பு % 10;
     step = is_sec ? st_start : st_month;
 
-    p = line->data;
-    last = p + line->len;
+    p = வரி->data;
+    last = p + வரி->len;
 
-    while (p < last) {
+    போது (p < last) {
 
-        if (*p >= '0' && *p <= '9') {
-            if (value >= cutoff && (value > cutoff || *p - '0' > cutlim)) {
-                return NGX_ERROR;
+        எனில் (*p >= '0' && *p <= '9') {
+            எனில் (மதிப்பு >= cutoff && (மதிப்பு > cutoff || *p - '0' > cutlim)) {
+                திரும்பு NGX_ERROR;
             }
 
-            value = value * 10 + (*p++ - '0');
+            மதிப்பு = மதிப்பு * 10 + (*p++ - '0');
             valid = 1;
-            continue;
+            தொடர்;
         }
 
-        switch (*p++) {
+        தேர்வு (*p++) {
 
-        case 'y':
-            if (step > st_start) {
-                return NGX_ERROR;
+        நிலை 'y':
+            எனில் (step > st_start) {
+                திரும்பு NGX_ERROR;
             }
             step = st_year;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 365);
+            max = NGX_MAX_INT_T_மதிப்பு / (60 * 60 * 24 * 365);
             scale = 60 * 60 * 24 * 365;
-            break;
+            நிறுத்து;
 
-        case 'M':
-            if (step >= st_month) {
-                return NGX_ERROR;
+        நிலை 'M':
+            எனில் (step >= st_month) {
+                திரும்பு NGX_ERROR;
             }
             step = st_month;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 30);
+            max = NGX_MAX_INT_T_மதிப்பு / (60 * 60 * 24 * 30);
             scale = 60 * 60 * 24 * 30;
-            break;
+            நிறுத்து;
 
-        case 'w':
-            if (step >= st_week) {
-                return NGX_ERROR;
+        நிலை 'w':
+            எனில் (step >= st_week) {
+                திரும்பு NGX_ERROR;
             }
             step = st_week;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 7);
+            max = NGX_MAX_INT_T_மதிப்பு / (60 * 60 * 24 * 7);
             scale = 60 * 60 * 24 * 7;
-            break;
+            நிறுத்து;
 
-        case 'd':
-            if (step >= st_day) {
-                return NGX_ERROR;
+        நிலை 'd':
+            எனில் (step >= st_day) {
+                திரும்பு NGX_ERROR;
             }
             step = st_day;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24);
+            max = NGX_MAX_INT_T_மதிப்பு / (60 * 60 * 24);
             scale = 60 * 60 * 24;
-            break;
+            நிறுத்து;
 
-        case 'h':
-            if (step >= st_hour) {
-                return NGX_ERROR;
+        நிலை 'h':
+            எனில் (step >= st_hour) {
+                திரும்பு NGX_ERROR;
             }
             step = st_hour;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60);
+            max = NGX_MAX_INT_T_மதிப்பு / (60 * 60);
             scale = 60 * 60;
-            break;
+            நிறுத்து;
 
-        case 'm':
-            if (p < last && *p == 's') {
-                if (is_sec || step >= st_msec) {
-                    return NGX_ERROR;
+        நிலை 'm':
+            எனில் (p < last && *p == 's') {
+                எனில் (is_sec || step >= st_msec) {
+                    திரும்பு NGX_ERROR;
                 }
                 p++;
                 step = st_msec;
-                max = NGX_MAX_INT_T_VALUE;
+                max = NGX_MAX_INT_T_மதிப்பு;
                 scale = 1;
-                break;
+                நிறுத்து;
             }
 
-            if (step >= st_min) {
-                return NGX_ERROR;
+            எனில் (step >= st_min) {
+                திரும்பு NGX_ERROR;
             }
             step = st_min;
-            max = NGX_MAX_INT_T_VALUE / 60;
+            max = NGX_MAX_INT_T_மதிப்பு / 60;
             scale = 60;
-            break;
+            நிறுத்து;
 
-        case 's':
-            if (step >= st_sec) {
-                return NGX_ERROR;
+        நிலை 's':
+            எனில் (step >= st_sec) {
+                திரும்பு NGX_ERROR;
             }
             step = st_sec;
-            max = NGX_MAX_INT_T_VALUE;
+            max = NGX_MAX_INT_T_மதிப்பு;
             scale = 1;
-            break;
+            நிறுத்து;
 
-        case ' ':
-            if (step >= st_sec) {
-                return NGX_ERROR;
+        நிலை ' ':
+            எனில் (step >= st_sec) {
+                திரும்பு NGX_ERROR;
             }
             step = st_last;
-            max = NGX_MAX_INT_T_VALUE;
+            max = NGX_MAX_INT_T_மதிப்பு;
             scale = 1;
-            break;
+            நிறுத்து;
 
-        default:
-            return NGX_ERROR;
+        இயல்பு:
+            திரும்பு NGX_ERROR;
         }
 
-        if (step != st_msec && !is_sec) {
+        எனில் (step != st_msec && !is_sec) {
             scale *= 1000;
             max /= 1000;
         }
 
-        if (value > max) {
-            return NGX_ERROR;
+        எனில் (மதிப்பு > max) {
+            திரும்பு NGX_ERROR;
         }
 
-        value *= scale;
+        மதிப்பு *= scale;
 
-        if (total > NGX_MAX_INT_T_VALUE - value) {
-            return NGX_ERROR;
+        எனில் (total > NGX_MAX_INT_T_மதிப்பு - மதிப்பு) {
+            திரும்பு NGX_ERROR;
         }
 
-        total += value;
+        total += மதிப்பு;
 
-        value = 0;
+        மதிப்பு = 0;
 
-        while (p < last && *p == ' ') {
+        போது (p < last && *p == ' ') {
             p++;
         }
     }
 
-    if (!valid) {
-        return NGX_ERROR;
+    எனில் (!valid) {
+        திரும்பு NGX_ERROR;
     }
 
-    if (!is_sec) {
-        if (value > NGX_MAX_INT_T_VALUE / 1000) {
-            return NGX_ERROR;
+    எனில் (!is_sec) {
+        எனில் (மதிப்பு > NGX_MAX_INT_T_மதிப்பு / 1000) {
+            திரும்பு NGX_ERROR;
         }
 
-        value *= 1000;
+        மதிப்பு *= 1000;
     }
 
-    if (total > NGX_MAX_INT_T_VALUE - value) {
-        return NGX_ERROR;
+    எனில் (total > NGX_MAX_INT_T_மதிப்பு - மதிப்பு) {
+        திரும்பு NGX_ERROR;
     }
 
-    return total + value;
+    திரும்பு total + மதிப்பு;
 }

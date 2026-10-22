@@ -8,8 +8,8 @@
 #define _NGX_JSON_UNESCAPE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
 
 
 /*

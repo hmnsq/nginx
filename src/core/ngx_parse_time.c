@@ -5,20 +5,20 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
 
 
-static ngx_uint_t  mday[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+நிலையான ngx_uint_t  mday[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 time_t
-ngx_parse_http_time(u_char *value, size_t len)
+ngx_parse_http_time(u_char *மதிப்பு, size_t len)
 {
     u_char      *p, *end;
     ngx_int_t    month;
     ngx_uint_t   day, year, hour, min, sec;
     uint64_t     time;
-    enum {
+    எண்ணிக்கை {
         no = 0,
         rfc822,   /* Tue, 10 Nov 2002 23:50:13   */
         rfc850,   /* Tuesday, 10-Dec-02 23:50:13 */
@@ -26,119 +26,119 @@ ngx_parse_http_time(u_char *value, size_t len)
     } fmt;
 
     fmt = 0;
-    end = value + len;
+    end = மதிப்பு + len;
 
-#if (NGX_SUPPRESS_WARN)
+#எனில் (NGX_SUPPRESS_WARN)
     day = 32;
     year = 2038;
 #endif
 
-    for (p = value; p < end; p++) {
-        if (*p == ',') {
-            break;
+    க்கு (p = மதிப்பு; p < end; p++) {
+        எனில் (*p == ',') {
+            நிறுத்து;
         }
 
-        if (*p == ' ') {
+        எனில் (*p == ' ') {
             fmt = isoc;
-            break;
+            நிறுத்து;
         }
     }
 
-    for (p++; p < end; p++) {
-        if (*p != ' ') {
-            break;
+    க்கு (p++; p < end; p++) {
+        எனில் (*p != ' ') {
+            நிறுத்து;
         }
     }
 
-    if (end - p < 18) {
-        return NGX_ERROR;
+    எனில் (end - p < 18) {
+        திரும்பு NGX_ERROR;
     }
 
-    if (fmt != isoc) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    எனில் (fmt != isoc) {
+        எனில் (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            திரும்பு NGX_ERROR;
         }
 
         day = (*p - '0') * 10 + (*(p + 1) - '0');
         p += 2;
 
-        if (*p == ' ') {
-            if (end - p < 18) {
-                return NGX_ERROR;
+        எனில் (*p == ' ') {
+            எனில் (end - p < 18) {
+                திரும்பு NGX_ERROR;
             }
             fmt = rfc822;
 
-        } else if (*p == '-') {
+        } இல்லையெனில் எனில் (*p == '-') {
             fmt = rfc850;
 
-        } else {
-            return NGX_ERROR;
+        } இல்லையெனில் {
+            திரும்பு NGX_ERROR;
         }
 
         p++;
     }
 
-    switch (*p) {
+    தேர்வு (*p) {
 
-    case 'J':
+    நிலை 'J':
         month = *(p + 1) == 'a' ? 0 : *(p + 2) == 'n' ? 5 : 6;
-        break;
+        நிறுத்து;
 
-    case 'F':
+    நிலை 'F':
         month = 1;
-        break;
+        நிறுத்து;
 
-    case 'M':
+    நிலை 'M':
         month = *(p + 2) == 'r' ? 2 : 4;
-        break;
+        நிறுத்து;
 
-    case 'A':
+    நிலை 'A':
         month = *(p + 1) == 'p' ? 3 : 7;
-        break;
+        நிறுத்து;
 
-    case 'S':
+    நிலை 'S':
         month = 8;
-        break;
+        நிறுத்து;
 
-    case 'O':
+    நிலை 'O':
         month = 9;
-        break;
+        நிறுத்து;
 
-    case 'N':
+    நிலை 'N':
         month = 10;
-        break;
+        நிறுத்து;
 
-    case 'D':
+    நிலை 'D':
         month = 11;
-        break;
+        நிறுத்து;
 
-    default:
-        return NGX_ERROR;
+    இயல்பு:
+        திரும்பு NGX_ERROR;
     }
 
     p += 3;
 
-    if ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
-        return NGX_ERROR;
+    எனில் ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
+        திரும்பு NGX_ERROR;
     }
 
     p++;
 
-    if (fmt == rfc822) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+    எனில் (fmt == rfc822) {
+        எனில் (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            திரும்பு NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
         p += 4;
 
-    } else if (fmt == rfc850) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    } இல்லையெனில் எனில் (fmt == rfc850) {
+        எனில் (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            திரும்பு NGX_ERROR;
         }
 
         year = (*p - '0') * 10 + (*(p + 1) - '0');
@@ -146,91 +146,91 @@ ngx_parse_http_time(u_char *value, size_t len)
         p += 2;
     }
 
-    if (fmt == isoc) {
-        if (*p == ' ') {
+    எனில் (fmt == isoc) {
+        எனில் (*p == ' ') {
             p++;
         }
 
-        if (*p < '0' || *p > '9') {
-            return NGX_ERROR;
+        எனில் (*p < '0' || *p > '9') {
+            திரும்பு NGX_ERROR;
         }
 
         day = *p++ - '0';
 
-        if (*p != ' ') {
-            if (*p < '0' || *p > '9') {
-                return NGX_ERROR;
+        எனில் (*p != ' ') {
+            எனில் (*p < '0' || *p > '9') {
+                திரும்பு NGX_ERROR;
             }
 
             day = day * 10 + (*p++ - '0');
         }
 
-        if (end - p < 14) {
-            return NGX_ERROR;
+        எனில் (end - p < 14) {
+            திரும்பு NGX_ERROR;
         }
     }
 
-    if (*p++ != ' ') {
-        return NGX_ERROR;
+    எனில் (*p++ != ' ') {
+        திரும்பு NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    எனில் (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        திரும்பு NGX_ERROR;
     }
 
     hour = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    எனில் (*p++ != ':') {
+        திரும்பு NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    எனில் (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        திரும்பு NGX_ERROR;
     }
 
     min = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    எனில் (*p++ != ':') {
+        திரும்பு NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    எனில் (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        திரும்பு NGX_ERROR;
     }
 
     sec = (*p - '0') * 10 + (*(p + 1) - '0');
 
-    if (fmt == isoc) {
+    எனில் (fmt == isoc) {
         p += 2;
 
-        if (*p++ != ' ') {
-            return NGX_ERROR;
+        எனில் (*p++ != ' ') {
+            திரும்பு NGX_ERROR;
         }
 
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+        எனில் (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            திரும்பு NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
     }
 
-    if (hour > 23 || min > 59 || sec > 59) {
-        return NGX_ERROR;
+    எனில் (hour > 23 || min > 59 || sec > 59) {
+        திரும்பு NGX_ERROR;
     }
 
-    if (day == 29 && month == 1) {
-        if ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
-            return NGX_ERROR;
+    எனில் (day == 29 && month == 1) {
+        எனில் ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
+            திரும்பு NGX_ERROR;
         }
 
-    } else if (day > mday[month]) {
-        return NGX_ERROR;
+    } இல்லையெனில் எனில் (day > mday[month]) {
+        திரும்பு NGX_ERROR;
     }
 
     /*
@@ -238,7 +238,7 @@ ngx_parse_http_time(u_char *value, size_t len)
      * it is needed for Gauss' formula
      */
 
-    if (--month <= 0) {
+    எனில் (--month <= 0) {
         month += 12;
         year -= 1;
     }
@@ -265,13 +265,13 @@ ngx_parse_http_time(u_char *value, size_t len)
 
             - 719527 + 31 + 28) * 86400 + hour * 3600 + min * 60 + sec;
 
-#if (NGX_TIME_T_SIZE <= 4)
+#எனில் (NGX_TIME_T_SIZE <= 4)
 
-    if (time > 0x7fffffff) {
-        return NGX_ERROR;
+    எனில் (time > 0x7fffffff) {
+        திரும்பு NGX_ERROR;
     }
 
 #endif
 
-    return (time_t) time;
+    திரும்பு (time_t) time;
 }

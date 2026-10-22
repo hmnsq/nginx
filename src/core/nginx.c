@@ -5,83 +5,83 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <nginx.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
+#அந்தர்பாவ <nginx.h>
 
 
-static void ngx_show_version_info(void);
-static ngx_int_t ngx_add_inherited_sockets(ngx_cycle_t *cycle);
-static void ngx_cleanup_environment(void *data);
-static void ngx_cleanup_environment_variable(void *data);
-static ngx_int_t ngx_get_options(int argc, char *const *argv);
-static ngx_int_t ngx_process_options(ngx_cycle_t *cycle);
-static ngx_int_t ngx_save_argv(ngx_cycle_t *cycle, int argc, char *const *argv);
-static void *ngx_core_module_create_conf(ngx_cycle_t *cycle);
-static char *ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf);
-static char *ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_set_env(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd,
-    void *conf);
-static char *ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd,
-    void *conf);
-static char *ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-#if (NGX_HAVE_DLOPEN)
-static void ngx_unload_module(void *data);
+நிலையான வெறுமை ngx_show_version_info(வெறுமை);
+நிலையான ngx_int_t ngx_add_inherited_sockets(ngx_cycle_t *cycle);
+நிலையான வெறுமை ngx_cleanup_environment(வெறுமை *data);
+நிலையான வெறுமை ngx_cleanup_environment_variable(வெறுமை *data);
+நிலையான ngx_int_t ngx_get_options(முழு argc, எழுத்து *மாறிலி *argv);
+நிலையான ngx_int_t ngx_process_options(ngx_cycle_t *cycle);
+நிலையான ngx_int_t ngx_save_argv(ngx_cycle_t *cycle, முழு argc, எழுத்து *மாறிலி *argv);
+நிலையான வெறுமை *ngx_core_module_create_conf(ngx_cycle_t *cycle);
+நிலையான எழுத்து *ngx_core_module_init_conf(ngx_cycle_t *cycle, வெறுமை *conf);
+நிலையான எழுத்து *ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, வெறுமை *conf);
+நிலையான எழுத்து *ngx_set_env(ngx_conf_t *cf, ngx_command_t *cmd, வெறுமை *conf);
+நிலையான எழுத்து *ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, வெறுமை *conf);
+நிலையான எழுத்து *ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd,
+    வெறுமை *conf);
+நிலையான எழுத்து *ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd,
+    வெறுமை *conf);
+நிலையான எழுத்து *ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, வெறுமை *conf);
+#எனில் (NGX_HAVE_DLOPEN)
+நிலையான வெறுமை ngx_unload_module(வெறுமை *data);
 #endif
 
 
-static ngx_conf_enum_t  ngx_debug_points[] = {
+நிலையான ngx_conf_enum_t  ngx_debug_points[] = {
     { ngx_string("stop"), NGX_DEBUG_POINTS_STOP },
     { ngx_string("abort"), NGX_DEBUG_POINTS_ABORT },
     { ngx_null_string, 0 }
 };
 
 
-static ngx_command_t  ngx_core_commands[] = {
+நிலையான ngx_command_t  ngx_core_commands[] = {
 
     { ngx_string("daemon"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_FLAG,
       ngx_conf_set_flag_slot,
       0,
       offsetof(ngx_core_conf_t, daemon),
-      NULL },
+      வெற்று },
 
     { ngx_string("master_process"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_FLAG,
       ngx_conf_set_flag_slot,
       0,
       offsetof(ngx_core_conf_t, master),
-      NULL },
+      வெற்று },
 
     { ngx_string("timer_resolution"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_msec_slot,
       0,
       offsetof(ngx_core_conf_t, timer_resolution),
-      NULL },
+      வெற்று },
 
     { ngx_string("pid"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_str_slot,
       0,
       offsetof(ngx_core_conf_t, pid),
-      NULL },
+      வெற்று },
 
     { ngx_string("lock_file"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_str_slot,
       0,
       offsetof(ngx_core_conf_t, lock_file),
-      NULL },
+      வெற்று },
 
     { ngx_string("worker_processes"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_set_worker_processes,
       0,
       0,
-      NULL },
+      வெற்று },
 
     { ngx_string("debug_points"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
@@ -95,69 +95,69 @@ static ngx_command_t  ngx_core_commands[] = {
       ngx_set_user,
       0,
       0,
-      NULL },
+      வெற்று },
 
     { ngx_string("worker_priority"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_set_priority,
       0,
       0,
-      NULL },
+      வெற்று },
 
     { ngx_string("worker_cpu_affinity"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_1MORE,
       ngx_set_cpu_affinity,
       0,
       0,
-      NULL },
+      வெற்று },
 
     { ngx_string("worker_rlimit_nofile"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_num_slot,
+      ngx_conf_set_இலக்கம்_slot,
       0,
       offsetof(ngx_core_conf_t, rlimit_nofile),
-      NULL },
+      வெற்று },
 
     { ngx_string("worker_rlimit_core"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_off_slot,
       0,
       offsetof(ngx_core_conf_t, rlimit_core),
-      NULL },
+      வெற்று },
 
     { ngx_string("worker_shutdown_timeout"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_msec_slot,
       0,
       offsetof(ngx_core_conf_t, shutdown_timeout),
-      NULL },
+      வெற்று },
 
     { ngx_string("working_directory"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_str_slot,
       0,
       offsetof(ngx_core_conf_t, working_directory),
-      NULL },
+      வெற்று },
 
     { ngx_string("env"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_set_env,
       0,
       0,
-      NULL },
+      வெற்று },
 
     { ngx_string("load_module"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_load_module,
       0,
       0,
-      NULL },
+      வெற்று },
 
       ngx_null_command
 };
 
 
-static ngx_core_module_t  ngx_core_module_ctx = {
+நிலையான ngx_core_module_t  ngx_core_module_ctx = {
     ngx_string("core"),
     ngx_core_module_create_conf,
     ngx_core_module_init_conf
@@ -169,35 +169,35 @@ ngx_module_t  ngx_core_module = {
     &ngx_core_module_ctx,                  /* module context */
     ngx_core_commands,                     /* module directives */
     NGX_CORE_MODULE,                       /* module type */
-    NULL,                                  /* init master */
-    NULL,                                  /* init module */
-    NULL,                                  /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
-    NULL,                                  /* exit process */
-    NULL,                                  /* exit master */
+    வெற்று,                                  /* init master */
+    வெற்று,                                  /* init module */
+    வெற்று,                                  /* init process */
+    வெற்று,                                  /* init thread */
+    வெற்று,                                  /* exit thread */
+    வெற்று,                                  /* exit process */
+    வெற்று,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
-static ngx_uint_t   ngx_show_help;
-static ngx_uint_t   ngx_show_version;
-static ngx_uint_t   ngx_show_configure;
-static u_char      *ngx_prefix;
-static u_char      *ngx_error_log;
-static u_char      *ngx_conf_file;
-static u_char      *ngx_conf_params;
-#if (NGX_CONTROL_API)
-static u_char      *ngx_control_addr;
+நிலையான ngx_uint_t   ngx_show_help;
+நிலையான ngx_uint_t   ngx_show_version;
+நிலையான ngx_uint_t   ngx_show_configure;
+நிலையான u_char      *ngx_prefix;
+நிலையான u_char      *ngx_error_log;
+நிலையான u_char      *ngx_conf_file;
+நிலையான u_char      *ngx_conf_params;
+#எனில் (NGX_CONTROL_API)
+நிலையான u_char      *ngx_control_addr;
 #endif
-static char        *ngx_signal;
+நிலையான எழுத்து        *ngx_signal;
 
 
-static char **ngx_os_environ;
+நிலையான எழுத்து **ngx_os_environ;
 
 
-int ngx_cdecl
-main(int argc, char *const *argv)
+முழு ngx_cdecl
+முதன்மை(முழு argc, எழுத்து *மாறிலி *argv)
 {
     ngx_buf_t        *b;
     ngx_log_t        *log;
@@ -208,19 +208,19 @@ main(int argc, char *const *argv)
 
     ngx_debug_init();
 
-    if (ngx_strerror_init() != NGX_OK) {
-        return 1;
+    எனில் (ngx_strerror_init() != NGX_OK) {
+        திரும்பு 1;
     }
 
-    if (ngx_get_options(argc, argv) != NGX_OK) {
-        return 1;
+    எனில் (ngx_get_options(argc, argv) != NGX_OK) {
+        திரும்பு 1;
     }
 
-    if (ngx_show_version) {
+    எனில் (ngx_show_version) {
         ngx_show_version_info();
 
-        if (!ngx_test_config) {
-            return 0;
+        எனில் (!ngx_test_config) {
+            திரும்பு 0;
         }
     }
 
@@ -228,7 +228,7 @@ main(int argc, char *const *argv)
 
     ngx_time_init();
 
-#if (NGX_PCRE)
+#எனில் (NGX_PCRE)
     ngx_regex_init();
 #endif
 
@@ -236,12 +236,12 @@ main(int argc, char *const *argv)
     ngx_parent = ngx_getppid();
 
     log = ngx_log_init(ngx_prefix, ngx_error_log);
-    if (log == NULL) {
-        return 1;
+    எனில் (log == வெற்று) {
+        திரும்பு 1;
     }
 
     /* STUB */
-#if (NGX_OPENSSL)
+#எனில் (NGX_OPENSSL)
     ngx_ssl_init(log);
 #endif
 
@@ -250,33 +250,33 @@ main(int argc, char *const *argv)
      * ngx_process_options()
      */
 
-    ngx_memzero(&init_cycle, sizeof(ngx_cycle_t));
+    ngx_memzero(&init_cycle, அளவு(ngx_cycle_t));
     init_cycle.log = log;
     ngx_cycle = &init_cycle;
 
     init_cycle.pool = ngx_create_pool(1024, log);
-    if (init_cycle.pool == NULL) {
-        return 1;
+    எனில் (init_cycle.pool == வெற்று) {
+        திரும்பு 1;
     }
 
-    if (ngx_save_argv(&init_cycle, argc, argv) != NGX_OK) {
-        return 1;
+    எனில் (ngx_save_argv(&init_cycle, argc, argv) != NGX_OK) {
+        திரும்பு 1;
     }
 
-    if (ngx_process_options(&init_cycle) != NGX_OK) {
-        return 1;
+    எனில் (ngx_process_options(&init_cycle) != NGX_OK) {
+        திரும்பு 1;
     }
 
-    if (ngx_os_init(log) != NGX_OK) {
-        return 1;
+    எனில் (ngx_os_init(log) != NGX_OK) {
+        திரும்பு 1;
     }
 
     /*
      * ngx_crc32_table_init() requires ngx_cacheline_size set in ngx_os_init()
      */
 
-    if (ngx_crc32_table_init() != NGX_OK) {
-        return 1;
+    எனில் (ngx_crc32_table_init() != NGX_OK) {
+        திரும்பு 1;
     }
 
     /*
@@ -285,56 +285,56 @@ main(int argc, char *const *argv)
 
     ngx_slab_sizes_init();
 
-    if (ngx_add_inherited_sockets(&init_cycle) != NGX_OK) {
-        return 1;
+    எனில் (ngx_add_inherited_sockets(&init_cycle) != NGX_OK) {
+        திரும்பு 1;
     }
 
-#if (NGX_CONTROL_API)
+#எனில் (NGX_CONTROL_API)
     ngx_control_preinit();
 #endif
 
-    if (ngx_preinit_modules() != NGX_OK) {
-        return 1;
+    எனில் (ngx_preinit_modules() != NGX_OK) {
+        திரும்பு 1;
     }
 
     cycle = ngx_init_cycle(&init_cycle);
-    if (cycle == NULL) {
-        if (ngx_test_config) {
+    எனில் (cycle == வெற்று) {
+        எனில் (ngx_test_config) {
             ngx_log_stderr(0, "configuration file %s test failed",
                            init_cycle.conf_file.data);
         }
 
-        return 1;
+        திரும்பு 1;
     }
 
-    if (ngx_test_config) {
-        if (!ngx_quiet_mode) {
+    எனில் (ngx_test_config) {
+        எனில் (!ngx_quiet_mode) {
             ngx_log_stderr(0, "configuration file %s test is successful",
                            cycle->conf_file.data);
         }
 
-        if (ngx_dump_config) {
+        எனில் (ngx_dump_config) {
             cd = cycle->config_dump.elts;
 
-            for (i = 0; i < cycle->config_dump.nelts; i++) {
+            க்கு (i = 0; i < cycle->config_dump.nelts; i++) {
 
                 ngx_write_stdout("# configuration file ");
-                (void) ngx_write_fd(ngx_stdout, cd[i].name.data,
+                (வெறுமை) ngx_write_fd(ngx_stdout, cd[i].name.data,
                                     cd[i].name.len);
                 ngx_write_stdout(":" NGX_LINEFEED);
 
                 b = cd[i].buffer;
 
-                (void) ngx_write_fd(ngx_stdout, b->pos, b->last - b->pos);
+                (வெறுமை) ngx_write_fd(ngx_stdout, b->pos, b->last - b->pos);
                 ngx_write_stdout(NGX_LINEFEED);
             }
         }
 
-        return 0;
+        திரும்பு 0;
     }
 
-    if (ngx_signal) {
-        return ngx_signal_process(cycle, ngx_signal);
+    எனில் (ngx_signal) {
+        திரும்பு ngx_signal_process(cycle, ngx_signal);
     }
 
     ngx_os_status(cycle->log);
@@ -343,52 +343,52 @@ main(int argc, char *const *argv)
 
     ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
 
-    if (ccf->master && ngx_process == NGX_PROCESS_SINGLE) {
+    எனில் (ccf->master && ngx_process == NGX_PROCESS_SINGLE) {
         ngx_process = NGX_PROCESS_MASTER;
     }
 
-#if !(NGX_WIN32)
+#எனில் !(NGX_WIN32)
 
-    if (ngx_init_signals(cycle->log) != NGX_OK) {
-        return 1;
+    எனில் (ngx_init_signals(cycle->log) != NGX_OK) {
+        திரும்பு 1;
     }
 
-    if (!ngx_inherited && ccf->daemon) {
-        if (ngx_daemon(cycle->log) != NGX_OK) {
-            return 1;
+    எனில் (!ngx_inherited && ccf->daemon) {
+        எனில் (ngx_daemon(cycle->log) != NGX_OK) {
+            திரும்பு 1;
         }
 
         ngx_daemonized = 1;
     }
 
-    if (ngx_inherited) {
+    எனில் (ngx_inherited) {
         ngx_daemonized = 1;
     }
 
 #endif
 
-#if (NGX_CONTROL_API)
-    if (ngx_process == NGX_PROCESS_SINGLE) {
+#எனில் (NGX_CONTROL_API)
+    எனில் (ngx_process == NGX_PROCESS_SINGLE) {
         ngx_log_error(NGX_LOG_WARN, cycle->log, 0,
                       "control API unavailable in single process mode");
 
-    } else {
-        if (ngx_control_init(ngx_control_addr) != NGX_OK) {
-            return 1;
+    } இல்லையெனில் {
+        எனில் (ngx_control_init(ngx_control_addr) != NGX_OK) {
+            திரும்பு 1;
         }
     }
 #endif
 
-    if (ngx_create_pidfile(&ccf->pid, cycle->log) != NGX_OK) {
-        return 1;
+    எனில் (ngx_create_pidfile(&ccf->pid, cycle->log) != NGX_OK) {
+        திரும்பு 1;
     }
 
-    if (ngx_log_redirect_stderr(cycle) != NGX_OK) {
-        return 1;
+    எனில் (ngx_log_redirect_stderr(cycle) != NGX_OK) {
+        திரும்பு 1;
     }
 
-    if (log->file->fd != ngx_stderr) {
-        if (ngx_close_file(log->file->fd) == NGX_FILE_ERROR) {
+    எனில் (log->file->fd != ngx_stderr) {
+        எனில் (ngx_close_file(log->file->fd) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
                           ngx_close_file_n " built-in log failed");
         }
@@ -396,23 +396,23 @@ main(int argc, char *const *argv)
 
     ngx_use_stderr = 0;
 
-    if (ngx_process == NGX_PROCESS_SINGLE) {
+    எனில் (ngx_process == NGX_PROCESS_SINGLE) {
         ngx_single_process_cycle(cycle);
 
-    } else {
+    } இல்லையெனில் {
         ngx_master_process_cycle(cycle);
     }
 
-    return 0;
+    திரும்பு 0;
 }
 
 
-static void
-ngx_show_version_info(void)
+நிலையான வெறுமை
+ngx_show_version_info(வெறுமை)
 {
     ngx_write_stderr("nginx version: " NGINX_VER_BUILD NGX_LINEFEED);
 
-    if (ngx_show_help) {
+    எனில் (ngx_show_help) {
         ngx_write_stderr(
             "Usage: nginx [-?hvVtTq] [-s signal] [-p prefix]" NGX_LINEFEED
             "             [-e filename] [-c filename] [-g directives]"
@@ -429,19 +429,19 @@ ngx_show_version_info(void)
                                "during configuration testing" NGX_LINEFEED
             "  -s signal     : send signal to a master process: "
                                "stop, quit, reopen, reload" NGX_LINEFEED
-#if (NGX_CONTROL_API)
+#எனில் (NGX_CONTROL_API)
             "  -l addr       : open control socket on address" NGX_LINEFEED
 #endif
 #ifdef NGX_PREFIX
             "  -p prefix     : set prefix path (default: " NGX_PREFIX ")"
                                NGX_LINEFEED
-#else
+#இல்லையெனில்
             "  -p prefix     : set prefix path (default: NONE)" NGX_LINEFEED
 #endif
             "  -e filename   : set error log file (default: "
 #ifdef NGX_ERROR_LOG_STDERR
                                "stderr)" NGX_LINEFEED
-#else
+#இல்லையெனில்
                                NGX_ERROR_LOG_PATH ")" NGX_LINEFEED
 #endif
             "  -c filename   : set configuration file (default: " NGX_CONF_PATH
@@ -451,24 +451,24 @@ ngx_show_version_info(void)
         );
     }
 
-    if (ngx_show_configure) {
+    எனில் (ngx_show_configure) {
 
 #ifdef NGX_COMPILER
         ngx_write_stderr("built by " NGX_COMPILER NGX_LINEFEED);
 #endif
 
-#if (NGX_SSL)
-        if (ngx_strcmp(ngx_ssl_version(), OPENSSL_VERSION_TEXT) == 0) {
+#எனில் (NGX_SSL)
+        எனில் (ngx_strcmp(ngx_ssl_version(), OPENSSL_VERSION_TEXT) == 0) {
             ngx_write_stderr("built with " OPENSSL_VERSION_TEXT NGX_LINEFEED);
-        } else {
+        } இல்லையெனில் {
             ngx_write_stderr("built with " OPENSSL_VERSION_TEXT
                              " (running with ");
-            ngx_write_stderr((char *) (uintptr_t) ngx_ssl_version());
+            ngx_write_stderr((எழுத்து *) (uintptr_t) ngx_ssl_version());
             ngx_write_stderr(")" NGX_LINEFEED);
         }
 #ifdef SSL_CTRL_SET_TLSEXT_HOSTNAME
         ngx_write_stderr("TLS SNI support enabled" NGX_LINEFEED);
-#else
+#இல்லையெனில்
         ngx_write_stderr("TLS SNI support disabled" NGX_LINEFEED);
 #endif
 #endif
@@ -478,7 +478,7 @@ ngx_show_version_info(void)
 }
 
 
-static ngx_int_t
+நிலையான ngx_int_t
 ngx_add_inherited_sockets(ngx_cycle_t *cycle)
 {
     u_char           *p, *v, *inherited;
@@ -487,46 +487,46 @@ ngx_add_inherited_sockets(ngx_cycle_t *cycle)
 
     inherited = (u_char *) getenv(NGINX_VAR);
 
-    if (inherited == NULL) {
-        return NGX_OK;
+    எனில் (inherited == வெற்று) {
+        திரும்பு NGX_OK;
     }
 
     ngx_log_error(NGX_LOG_NOTICE, cycle->log, 0,
                   "using inherited sockets from \"%s\"", inherited);
 
-    if (ngx_array_init(&cycle->listening, cycle->pool, 10,
-                       sizeof(ngx_listening_t))
+    எனில் (ngx_array_init(&cycle->listening, cycle->pool, 10,
+                       அளவு(ngx_listening_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        திரும்பு NGX_ERROR;
     }
 
-    for (p = inherited, v = p; *p; p++) {
-        if (*p == ':' || *p == ';') {
+    க்கு (p = inherited, v = p; *p; p++) {
+        எனில் (*p == ':' || *p == ';') {
             s = ngx_atoi(v, p - v);
-            if (s == NGX_ERROR) {
+            எனில் (s == NGX_ERROR) {
                 ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
                               "invalid socket number \"%s\" in " NGINX_VAR
                               " environment variable, ignoring the rest"
                               " of the variable", v);
-                break;
+                நிறுத்து;
             }
 
             v = p + 1;
 
-            ls = ngx_array_push(&cycle->listening);
-            if (ls == NULL) {
-                return NGX_ERROR;
+            ls = ngx_array_தள்ளு(&cycle->listening);
+            எனில் (ls == வெற்று) {
+                திரும்பு NGX_ERROR;
             }
 
-            ngx_memzero(ls, sizeof(ngx_listening_t));
+            ngx_memzero(ls, அளவு(ngx_listening_t));
 
             ls->fd = (ngx_socket_t) s;
             ls->inherited = 1;
         }
     }
 
-    if (v != p) {
+    எனில் (v != p) {
         ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
                       "invalid socket number \"%s\" in " NGINX_VAR
                       " environment variable, ignoring", v);
@@ -534,14 +534,14 @@ ngx_add_inherited_sockets(ngx_cycle_t *cycle)
 
     ngx_inherited = 1;
 
-    return ngx_set_inherited_sockets(cycle);
+    திரும்பு ngx_set_inherited_sockets(cycle);
 }
 
 
-char **
+எழுத்து **
 ngx_set_environment(ngx_cycle_t *cycle, ngx_uint_t *last)
 {
-    char                **p, **env, *str;
+    எழுத்து                **p, **env, *str;
     size_t                len;
     ngx_str_t            *var;
     ngx_uint_t            i, n;
@@ -550,23 +550,23 @@ ngx_set_environment(ngx_cycle_t *cycle, ngx_uint_t *last)
 
     ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
 
-    if (last == NULL && ccf->environment) {
-        return ccf->environment;
+    எனில் (last == வெற்று && ccf->environment) {
+        திரும்பு ccf->environment;
     }
 
     var = ccf->env.elts;
 
-    for (i = 0; i < ccf->env.nelts; i++) {
-        if (ngx_strcmp(var[i].data, "TZ") == 0
+    க்கு (i = 0; i < ccf->env.nelts; i++) {
+        எனில் (ngx_strcmp(var[i].data, "TZ") == 0
             || ngx_strncmp(var[i].data, "TZ=", 3) == 0)
         {
-            goto tz_found;
+            செல் tz_found;
         }
     }
 
-    var = ngx_array_push(&ccf->env);
-    if (var == NULL) {
-        return NULL;
+    var = ngx_array_தள்ளு(&ccf->env);
+    எனில் (var == வெற்று) {
+        திரும்பு வெற்று;
     }
 
     var->len = 2;
@@ -578,41 +578,41 @@ tz_found:
 
     n = 0;
 
-    for (i = 0; i < ccf->env.nelts; i++) {
+    க்கு (i = 0; i < ccf->env.nelts; i++) {
 
-        if (var[i].data[var[i].len] == '=') {
+        எனில் (var[i].data[var[i].len] == '=') {
             n++;
-            continue;
+            தொடர்;
         }
 
-        for (p = ngx_os_environ; *p; p++) {
+        க்கு (p = ngx_os_environ; *p; p++) {
 
-            if (ngx_strncmp(*p, var[i].data, var[i].len) == 0
+            எனில் (ngx_strncmp(*p, var[i].data, var[i].len) == 0
                 && (*p)[var[i].len] == '=')
             {
                 n++;
-                break;
+                நிறுத்து;
             }
         }
     }
 
-    if (last) {
-        env = ngx_alloc((*last + n + 1) * sizeof(char *), cycle->log);
-        if (env == NULL) {
-            return NULL;
+    எனில் (last) {
+        env = ngx_alloc((*last + n + 1) * அளவு(எழுத்து *), cycle->log);
+        எனில் (env == வெற்று) {
+            திரும்பு வெற்று;
         }
 
         *last = n;
 
-    } else {
+    } இல்லையெனில் {
         cln = ngx_pool_cleanup_add(cycle->pool, 0);
-        if (cln == NULL) {
-            return NULL;
+        எனில் (cln == வெற்று) {
+            திரும்பு வெற்று;
         }
 
-        env = ngx_alloc((n + 1) * sizeof(char *), cycle->log);
-        if (env == NULL) {
-            return NULL;
+        env = ngx_alloc((n + 1) * அளவு(எழுத்து *), cycle->log);
+        எனில் (env == வெற்று) {
+            திரும்பு வெற்று;
         }
 
         cln->handler = ngx_cleanup_environment;
@@ -621,25 +621,25 @@ tz_found:
 
     n = 0;
 
-    for (i = 0; i < ccf->env.nelts; i++) {
+    க்கு (i = 0; i < ccf->env.nelts; i++) {
 
-        if (var[i].data[var[i].len] == '=') {
+        எனில் (var[i].data[var[i].len] == '=') {
 
-            if (last) {
-                env[n++] = (char *) var[i].data;
-                continue;
+            எனில் (last) {
+                env[n++] = (எழுத்து *) var[i].data;
+                தொடர்;
             }
 
             cln = ngx_pool_cleanup_add(cycle->pool, 0);
-            if (cln == NULL) {
-                return NULL;
+            எனில் (cln == வெற்று) {
+                திரும்பு வெற்று;
             }
 
             len = ngx_strlen(var[i].data) + 1;
 
             str = ngx_alloc(len, cycle->log);
-            if (str == NULL) {
-                return NULL;
+            எனில் (str == வெற்று) {
+                திரும்பு வெற்று;
             }
 
             ngx_memcpy(str, var[i].data, len);
@@ -649,66 +649,66 @@ tz_found:
 
             env[n++] = str;
 
-            continue;
+            தொடர்;
         }
 
-        for (p = ngx_os_environ; *p; p++) {
+        க்கு (p = ngx_os_environ; *p; p++) {
 
-            if (ngx_strncmp(*p, var[i].data, var[i].len) == 0
+            எனில் (ngx_strncmp(*p, var[i].data, var[i].len) == 0
                 && (*p)[var[i].len] == '=')
             {
                 env[n++] = *p;
-                break;
+                நிறுத்து;
             }
         }
     }
 
-    env[n] = NULL;
+    env[n] = வெற்று;
 
-    if (last == NULL) {
+    எனில் (last == வெற்று) {
         ccf->environment = env;
         environ = env;
     }
 
-    return env;
+    திரும்பு env;
 }
 
 
-static void
-ngx_cleanup_environment(void *data)
+நிலையான வெறுமை
+ngx_cleanup_environment(வெறுமை *data)
 {
-    char  **env = data;
+    எழுத்து  **env = data;
 
-    if (environ == env) {
+    எனில் (environ == env) {
 
         /*
          * if the environment is still used, as it happens on exit,
          * the only option is to leak it
          */
 
-        return;
+        திரும்பு;
     }
 
     ngx_free(env);
 }
 
 
-static void
-ngx_cleanup_environment_variable(void *data)
+நிலையான வெறுமை
+ngx_cleanup_environment_variable(வெறுமை *data)
 {
-    char  *var = data;
+    எழுத்து  *var = data;
 
-    char  **p;
+    எழுத்து  **p;
 
-    for (p = environ; *p; p++) {
+    க்கு (p = environ; *p; p++) {
 
         /*
          * if an environment variable is still used, as it happens on exit,
          * the only option is to leak it
          */
 
-        if (*p == var) {
-            return;
+        எனில் (*p == var) {
+            திரும்பு;
         }
     }
 
@@ -717,9 +717,9 @@ ngx_cleanup_environment_variable(void *data)
 
 
 ngx_pid_t
-ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
+ngx_exec_new_இருமம்(ngx_cycle_t *cycle, எழுத்து *மாறிலி *argv)
 {
-    char             **env, *var;
+    எழுத்து             **env, *var;
     u_char            *p;
     ngx_uint_t         i, n;
     ngx_pid_t          pid;
@@ -727,7 +727,7 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
     ngx_core_conf_t   *ccf;
     ngx_listening_t   *ls;
 
-    ngx_memzero(&ctx, sizeof(ngx_exec_ctx_t));
+    ngx_memzero(&ctx, அளவு(ngx_exec_ctx_t));
 
     ctx.path = argv[0];
     ctx.name = "new binary process";
@@ -735,24 +735,24 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
 
     n = 3;
     env = ngx_set_environment(cycle, &n);
-    if (env == NULL) {
-        return NGX_INVALID_PID;
+    எனில் (env == வெற்று) {
+        திரும்பு NGX_INVALID_PID;
     }
 
-    var = ngx_alloc(sizeof(NGINX_VAR)
+    var = ngx_alloc(அளவு(NGINX_VAR)
                     + cycle->listening.nelts * (NGX_INT32_LEN + 1) + 2,
                     cycle->log);
-    if (var == NULL) {
+    எனில் (var == வெற்று) {
         ngx_free(env);
-        return NGX_INVALID_PID;
+        திரும்பு NGX_INVALID_PID;
     }
 
-    p = ngx_cpymem(var, NGINX_VAR "=", sizeof(NGINX_VAR));
+    p = ngx_cpymem(var, NGINX_VAR "=", அளவு(NGINX_VAR));
 
     ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
-        if (ls[i].ignore) {
-            continue;
+    க்கு (i = 0; i < cycle->listening.nelts; i++) {
+        எனில் (ls[i].ignore) {
+            தொடர்;
         }
         p = ngx_sprintf(p, "%ud;", ls[i].fd);
     }
@@ -761,7 +761,7 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
 
     env[n++] = var;
 
-#if (NGX_SETPROCTITLE_USES_ENV)
+#எனில் (NGX_SETPROCTITLE_USES_ENV)
 
     /* allocate the spare 300 bytes for the new binary process title */
 
@@ -773,30 +773,30 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
 
 #endif
 
-#if (NGX_CONTROL_API)
+#எனில் (NGX_CONTROL_API)
     env[n] = ngx_control_handoff();
 
-    if (env[n] != NULL) {
+    எனில் (env[n] != வெற்று) {
         n++;
     }
 #endif
 
-    env[n] = NULL;
+    env[n] = வெற்று;
 
-#if (NGX_DEBUG)
+#எனில் (NGX_DEBUG)
     {
-    char  **e;
-    for (e = env; *e; e++) {
+    எழுத்து  **e;
+    க்கு (e = env; *e; e++) {
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, cycle->log, 0, "env: %s", *e);
     }
     }
 #endif
 
-    ctx.envp = (char *const *) env;
+    ctx.envp = (எழுத்து *மாறிலி *) env;
 
     ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
 
-    if (ngx_rename_file(ccf->pid.data, ccf->oldpid.data) == NGX_FILE_ERROR) {
+    எனில் (ngx_rename_file(ccf->pid.data, ccf->oldpid.data) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
                       ngx_rename_file_n " %s to %s failed "
                       "before executing new binary process \"%s\"",
@@ -805,13 +805,13 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
         ngx_free(env);
         ngx_free(var);
 
-        return NGX_INVALID_PID;
+        திரும்பு NGX_INVALID_PID;
     }
 
     pid = ngx_execute(cycle, &ctx);
 
-    if (pid == NGX_INVALID_PID) {
-        if (ngx_rename_file(ccf->oldpid.data, ccf->pid.data)
+    எனில் (pid == NGX_INVALID_PID) {
+        எனில் (ngx_rename_file(ccf->oldpid.data, ccf->pid.data)
             == NGX_FILE_ERROR)
         {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
@@ -824,230 +824,230 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
     ngx_free(env);
     ngx_free(var);
 
-    return pid;
+    திரும்பு pid;
 }
 
 
-static ngx_int_t
-ngx_get_options(int argc, char *const *argv)
+நிலையான ngx_int_t
+ngx_get_options(முழு argc, எழுத்து *மாறிலி *argv)
 {
     u_char     *p;
     ngx_int_t   i;
 
-    for (i = 1; i < argc; i++) {
+    க்கு (i = 1; i < argc; i++) {
 
         p = (u_char *) argv[i];
 
-        if (*p++ != '-') {
+        எனில் (*p++ != '-') {
             ngx_log_stderr(0, "invalid option: \"%s\"", argv[i]);
-            return NGX_ERROR;
+            திரும்பு NGX_ERROR;
         }
 
-        while (*p) {
+        போது (*p) {
 
-            switch (*p++) {
+            தேர்வு (*p++) {
 
-            case '?':
-            case 'h':
+            நிலை '?':
+            நிலை 'h':
                 ngx_show_version = 1;
                 ngx_show_help = 1;
-                break;
+                நிறுத்து;
 
-            case 'v':
+            நிலை 'v':
                 ngx_show_version = 1;
-                break;
+                நிறுத்து;
 
-            case 'V':
+            நிலை 'V':
                 ngx_show_version = 1;
                 ngx_show_configure = 1;
-                break;
+                நிறுத்து;
 
-            case 't':
+            நிலை 't':
                 ngx_test_config = 1;
-                break;
+                நிறுத்து;
 
-            case 'T':
+            நிலை 'T':
                 ngx_test_config = 1;
                 ngx_dump_config = 1;
-                break;
+                நிறுத்து;
 
-            case 'q':
+            நிலை 'q':
                 ngx_quiet_mode = 1;
-                break;
+                நிறுத்து;
 
-            case 'p':
-                if (*p) {
+            நிலை 'p':
+                எனில் (*p) {
                     ngx_prefix = p;
-                    goto next;
+                    செல் next;
                 }
 
-                if (argv[++i]) {
+                எனில் (argv[++i]) {
                     ngx_prefix = (u_char *) argv[i];
-                    goto next;
+                    செல் next;
                 }
 
                 ngx_log_stderr(0, "option \"-p\" requires directory name");
-                return NGX_ERROR;
+                திரும்பு NGX_ERROR;
 
-            case 'e':
-                if (*p) {
+            நிலை 'e':
+                எனில் (*p) {
                     ngx_error_log = p;
 
-                } else if (argv[++i]) {
+                } இல்லையெனில் எனில் (argv[++i]) {
                     ngx_error_log = (u_char *) argv[i];
 
-                } else {
+                } இல்லையெனில் {
                     ngx_log_stderr(0, "option \"-e\" requires file name");
-                    return NGX_ERROR;
+                    திரும்பு NGX_ERROR;
                 }
 
-                if (ngx_strcmp(ngx_error_log, "stderr") == 0) {
+                எனில் (ngx_strcmp(ngx_error_log, "stderr") == 0) {
                     ngx_error_log = (u_char *) "";
                 }
 
-                goto next;
+                செல் next;
 
-            case 'c':
-                if (*p) {
+            நிலை 'c':
+                எனில் (*p) {
                     ngx_conf_file = p;
-                    goto next;
+                    செல் next;
                 }
 
-                if (argv[++i]) {
+                எனில் (argv[++i]) {
                     ngx_conf_file = (u_char *) argv[i];
-                    goto next;
+                    செல் next;
                 }
 
                 ngx_log_stderr(0, "option \"-c\" requires file name");
-                return NGX_ERROR;
+                திரும்பு NGX_ERROR;
 
-            case 'g':
-                if (*p) {
+            நிலை 'g':
+                எனில் (*p) {
                     ngx_conf_params = p;
-                    goto next;
+                    செல் next;
                 }
 
-                if (argv[++i]) {
+                எனில் (argv[++i]) {
                     ngx_conf_params = (u_char *) argv[i];
-                    goto next;
+                    செல் next;
                 }
 
                 ngx_log_stderr(0, "option \"-g\" requires parameter");
-                return NGX_ERROR;
+                திரும்பு NGX_ERROR;
 
-            case 's':
-                if (*p) {
-                    ngx_signal = (char *) p;
+            நிலை 's':
+                எனில் (*p) {
+                    ngx_signal = (எழுத்து *) p;
 
-                } else if (argv[++i]) {
+                } இல்லையெனில் எனில் (argv[++i]) {
                     ngx_signal = argv[i];
 
-                } else {
+                } இல்லையெனில் {
                     ngx_log_stderr(0, "option \"-s\" requires parameter");
-                    return NGX_ERROR;
+                    திரும்பு NGX_ERROR;
                 }
 
-                if (ngx_strcmp(ngx_signal, "stop") == 0
+                எனில் (ngx_strcmp(ngx_signal, "stop") == 0
                     || ngx_strcmp(ngx_signal, "quit") == 0
                     || ngx_strcmp(ngx_signal, "reopen") == 0
                     || ngx_strcmp(ngx_signal, "reload") == 0)
                 {
                     ngx_process = NGX_PROCESS_SIGNALLER;
-                    goto next;
+                    செல் next;
                 }
 
                 ngx_log_stderr(0, "invalid option: \"-s %s\"", ngx_signal);
-                return NGX_ERROR;
+                திரும்பு NGX_ERROR;
 
-#if (NGX_CONTROL_API)
-            case 'l':
+#எனில் (NGX_CONTROL_API)
+            நிலை 'l':
                 ngx_control_api_enabled = 1;
 
-                if (*p) {
+                எனில் (*p) {
                     ngx_control_addr = p;
-                    goto next;
+                    செல் next;
                 }
 
-                if (argv[++i]) {
+                எனில் (argv[++i]) {
                     ngx_control_addr = (u_char *) argv[i];
-                    goto next;
+                    செல் next;
                 }
 
                 ngx_log_stderr(0, "option \"-l\" requires listen address");
-                return NGX_ERROR;
+                திரும்பு NGX_ERROR;
 #endif
 
-            default:
+            இயல்பு:
                 ngx_log_stderr(0, "invalid option: \"%c\"", *(p - 1));
-                return NGX_ERROR;
+                திரும்பு NGX_ERROR;
             }
         }
 
     next:
 
-        continue;
+        தொடர்;
     }
 
-    return NGX_OK;
+    திரும்பு NGX_OK;
 }
 
 
-static ngx_int_t
-ngx_save_argv(ngx_cycle_t *cycle, int argc, char *const *argv)
+நிலையான ngx_int_t
+ngx_save_argv(ngx_cycle_t *cycle, முழு argc, எழுத்து *மாறிலி *argv)
 {
-#if (NGX_FREEBSD)
+#எனில் (NGX_FREEBSD)
 
-    ngx_os_argv = (char **) argv;
+    ngx_os_argv = (எழுத்து **) argv;
     ngx_argc = argc;
-    ngx_argv = (char **) argv;
+    ngx_argv = (எழுத்து **) argv;
 
-#else
+#இல்லையெனில்
     size_t     len;
     ngx_int_t  i;
 
-    ngx_os_argv = (char **) argv;
+    ngx_os_argv = (எழுத்து **) argv;
     ngx_argc = argc;
 
-    ngx_argv = ngx_alloc((argc + 1) * sizeof(char *), cycle->log);
-    if (ngx_argv == NULL) {
-        return NGX_ERROR;
+    ngx_argv = ngx_alloc((argc + 1) * அளவு(எழுத்து *), cycle->log);
+    எனில் (ngx_argv == வெற்று) {
+        திரும்பு NGX_ERROR;
     }
 
-    for (i = 0; i < argc; i++) {
+    க்கு (i = 0; i < argc; i++) {
         len = ngx_strlen(argv[i]) + 1;
 
         ngx_argv[i] = ngx_alloc(len, cycle->log);
-        if (ngx_argv[i] == NULL) {
-            return NGX_ERROR;
+        எனில் (ngx_argv[i] == வெற்று) {
+            திரும்பு NGX_ERROR;
         }
 
-        (void) ngx_cpystrn((u_char *) ngx_argv[i], (u_char *) argv[i], len);
+        (வெறுமை) ngx_cpystrn((u_char *) ngx_argv[i], (u_char *) argv[i], len);
     }
 
-    ngx_argv[i] = NULL;
+    ngx_argv[i] = வெற்று;
 
 #endif
 
     ngx_os_environ = environ;
 
-    return NGX_OK;
+    திரும்பு NGX_OK;
 }
 
 
-static ngx_int_t
+நிலையான ngx_int_t
 ngx_process_options(ngx_cycle_t *cycle)
 {
     u_char  *p;
     size_t   len;
 
-    if (ngx_prefix) {
+    எனில் (ngx_prefix) {
         len = ngx_strlen(ngx_prefix);
         p = ngx_prefix;
 
-        if (len && !ngx_path_separator(p[len - 1])) {
+        எனில் (len && !ngx_path_separator(p[len - 1])) {
             p = ngx_pnalloc(cycle->pool, len + 1);
-            if (p == NULL) {
-                return NGX_ERROR;
+            எனில் (p == வெற்று) {
+                திரும்பு NGX_ERROR;
             }
 
             ngx_memcpy(p, ngx_prefix, len);
@@ -1059,18 +1059,18 @@ ngx_process_options(ngx_cycle_t *cycle)
         cycle->prefix.len = len;
         cycle->prefix.data = p;
 
-    } else {
+    } இல்லையெனில் {
 
 #ifndef NGX_PREFIX
 
         p = ngx_pnalloc(cycle->pool, NGX_MAX_PATH);
-        if (p == NULL) {
-            return NGX_ERROR;
+        எனில் (p == வெற்று) {
+            திரும்பு NGX_ERROR;
         }
 
-        if (ngx_getcwd(p, NGX_MAX_PATH) == 0) {
+        எனில் (ngx_getcwd(p, NGX_MAX_PATH) == 0) {
             ngx_log_stderr(ngx_errno, "[emerg]: " ngx_getcwd_n " failed");
-            return NGX_ERROR;
+            திரும்பு NGX_ERROR;
         }
 
         len = ngx_strlen(p);
@@ -1082,11 +1082,11 @@ ngx_process_options(ngx_cycle_t *cycle)
         cycle->prefix.len = len;
         cycle->prefix.data = p;
 
-#else
+#இல்லையெனில்
 
 #ifdef NGX_CONF_PREFIX
         ngx_str_set(&cycle->conf_prefix, NGX_CONF_PREFIX);
-#else
+#இல்லையெனில்
         ngx_str_set(&cycle->conf_prefix, NGX_PREFIX);
 #endif
         ngx_str_set(&cycle->prefix, NGX_PREFIX);
@@ -1094,58 +1094,58 @@ ngx_process_options(ngx_cycle_t *cycle)
 #endif
     }
 
-    if (ngx_conf_file) {
+    எனில் (ngx_conf_file) {
         cycle->conf_file.len = ngx_strlen(ngx_conf_file);
         cycle->conf_file.data = ngx_conf_file;
 
-    } else {
+    } இல்லையெனில் {
         ngx_str_set(&cycle->conf_file, NGX_CONF_PATH);
     }
 
-    if (ngx_conf_full_name(cycle, &cycle->conf_file, 0) != NGX_OK) {
-        return NGX_ERROR;
+    எனில் (ngx_conf_full_name(cycle, &cycle->conf_file, 0) != NGX_OK) {
+        திரும்பு NGX_ERROR;
     }
 
-    for (p = cycle->conf_file.data + cycle->conf_file.len - 1;
+    க்கு (p = cycle->conf_file.data + cycle->conf_file.len - 1;
          p > cycle->conf_file.data;
          p--)
     {
-        if (ngx_path_separator(*p)) {
+        எனில் (ngx_path_separator(*p)) {
             cycle->conf_prefix.len = p - cycle->conf_file.data + 1;
             cycle->conf_prefix.data = cycle->conf_file.data;
-            break;
+            நிறுத்து;
         }
     }
 
-    if (ngx_error_log) {
+    எனில் (ngx_error_log) {
         cycle->error_log.len = ngx_strlen(ngx_error_log);
         cycle->error_log.data = ngx_error_log;
 
-    } else {
+    } இல்லையெனில் {
         ngx_str_set(&cycle->error_log, NGX_ERROR_LOG_PATH);
     }
 
-    if (ngx_conf_params) {
+    எனில் (ngx_conf_params) {
         cycle->conf_param.len = ngx_strlen(ngx_conf_params);
         cycle->conf_param.data = ngx_conf_params;
     }
 
-    if (ngx_test_config) {
+    எனில் (ngx_test_config) {
         cycle->log->log_level = NGX_LOG_INFO;
     }
 
-    return NGX_OK;
+    திரும்பு NGX_OK;
 }
 
 
-static void *
+நிலையான வெறுமை *
 ngx_core_module_create_conf(ngx_cycle_t *cycle)
 {
     ngx_core_conf_t  *ccf;
 
-    ccf = ngx_pcalloc(cycle->pool, sizeof(ngx_core_conf_t));
-    if (ccf == NULL) {
-        return NULL;
+    ccf = ngx_pcalloc(cycle->pool, அளவு(ngx_core_conf_t));
+    எனில் (ccf == வெற்று) {
+        திரும்பு வெற்று;
     }
 
     /*
@@ -1173,32 +1173,32 @@ ngx_core_module_create_conf(ngx_cycle_t *cycle)
     ccf->user = (ngx_uid_t) NGX_CONF_UNSET_UINT;
     ccf->group = (ngx_gid_t) NGX_CONF_UNSET_UINT;
 
-    if (ngx_array_init(&ccf->env, cycle->pool, 1, sizeof(ngx_str_t))
+    எனில் (ngx_array_init(&ccf->env, cycle->pool, 1, அளவு(ngx_str_t))
         != NGX_OK)
     {
-        return NULL;
+        திரும்பு வெற்று;
     }
 
-    return ccf;
+    திரும்பு ccf;
 }
 
 
-static char *
-ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
+நிலையான எழுத்து *
+ngx_core_module_init_conf(ngx_cycle_t *cycle, வெறுமை *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_conf_init_value(ccf->daemon, 1);
-    ngx_conf_init_value(ccf->master, 1);
-    ngx_conf_init_msec_value(ccf->timer_resolution, 0);
-    ngx_conf_init_msec_value(ccf->shutdown_timeout, 0);
+    ngx_conf_init_மதிப்பு(ccf->daemon, 1);
+    ngx_conf_init_மதிப்பு(ccf->master, 1);
+    ngx_conf_init_msec_மதிப்பு(ccf->timer_resolution, 0);
+    ngx_conf_init_msec_மதிப்பு(ccf->shutdown_timeout, 0);
 
-    ngx_conf_init_value(ccf->worker_processes, 1);
-    ngx_conf_init_value(ccf->debug_points, 0);
+    ngx_conf_init_மதிப்பு(ccf->worker_processes, 1);
+    ngx_conf_init_மதிப்பு(ccf->debug_points, 0);
 
-#if (NGX_HAVE_CPU_AFFINITY)
+#எனில் (NGX_HAVE_CPU_AFFINITY)
 
-    if (!ccf->cpu_affinity_auto
+    எனில் (!ccf->cpu_affinity_auto
         && ccf->cpu_affinity_n
         && ccf->cpu_affinity_n != 1
         && ccf->cpu_affinity_n != (ngx_uint_t) ccf->worker_processes)
@@ -1212,60 +1212,60 @@ ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
 #endif
 
 
-    if (ccf->pid.len == 0) {
+    எனில் (ccf->pid.len == 0) {
         ngx_str_set(&ccf->pid, NGX_PID_PATH);
     }
 
-    if (ngx_conf_full_name(cycle, &ccf->pid, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    எனில் (ngx_conf_full_name(cycle, &ccf->pid, 0) != NGX_OK) {
+        திரும்பு NGX_CONF_ERROR;
     }
 
-    ccf->oldpid.len = ccf->pid.len + sizeof(NGX_OLDPID_EXT);
+    ccf->oldpid.len = ccf->pid.len + அளவு(NGX_OLDPID_EXT);
 
     ccf->oldpid.data = ngx_pnalloc(cycle->pool, ccf->oldpid.len);
-    if (ccf->oldpid.data == NULL) {
-        return NGX_CONF_ERROR;
+    எனில் (ccf->oldpid.data == வெற்று) {
+        திரும்பு NGX_CONF_ERROR;
     }
 
     ngx_memcpy(ngx_cpymem(ccf->oldpid.data, ccf->pid.data, ccf->pid.len),
-               NGX_OLDPID_EXT, sizeof(NGX_OLDPID_EXT));
+               NGX_OLDPID_EXT, அளவு(NGX_OLDPID_EXT));
 
 
-    if (ccf->working_directory.len) {
+    எனில் (ccf->working_directory.len) {
         ngx_file_info_t  fi;
 
-        if (ngx_conf_full_name(cycle, &ccf->working_directory, 0) != NGX_OK) {
-            return NGX_CONF_ERROR;
+        எனில் (ngx_conf_full_name(cycle, &ccf->working_directory, 0) != NGX_OK) {
+            திரும்பு NGX_CONF_ERROR;
         }
 
-        if (ngx_file_info(ccf->working_directory.data, &fi) == NGX_FILE_ERROR) {
+        எனில் (ngx_file_info(ccf->working_directory.data, &fi) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
                           ngx_file_info_n " \"%s\" failed",
                           ccf->working_directory.data);
-            return NGX_CONF_ERROR;
+            திரும்பு NGX_CONF_ERROR;
         }
 
-        if (!ngx_is_dir(&fi)) {
+        எனில் (!ngx_is_dir(&fi)) {
             ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
                           "\"%s\" is not a directory",
                           ccf->working_directory.data);
-            return NGX_CONF_ERROR;
+            திரும்பு NGX_CONF_ERROR;
         }
     }
 
 
-#if !(NGX_WIN32)
+#எனில் !(NGX_WIN32)
 
-    if (ccf->user == (uid_t) NGX_CONF_UNSET_UINT && geteuid() == 0) {
-        struct group   *grp;
-        struct passwd  *pwd;
+    எனில் (ccf->user == (uid_t) NGX_CONF_UNSET_UINT && geteuid() == 0) {
+        கட்டமைப்பு group   *grp;
+        கட்டமைப்பு passwd  *pwd;
 
         ngx_set_errno(0);
         pwd = getpwnam(NGX_USER);
-        if (pwd == NULL) {
+        எனில் (pwd == வெற்று) {
             ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
                           "getpwnam(\"" NGX_USER "\") failed");
-            return NGX_CONF_ERROR;
+            திரும்பு NGX_CONF_ERROR;
         }
 
         ccf->username = NGX_USER;
@@ -1273,22 +1273,22 @@ ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
 
         ngx_set_errno(0);
         grp = getgrnam(NGX_GROUP);
-        if (grp == NULL) {
+        எனில் (grp == வெற்று) {
             ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
                           "getgrnam(\"" NGX_GROUP "\") failed");
-            return NGX_CONF_ERROR;
+            திரும்பு NGX_CONF_ERROR;
         }
 
         ccf->group = grp->gr_gid;
     }
 
 
-    if (ccf->lock_file.len == 0) {
+    எனில் (ccf->lock_file.len == 0) {
         ngx_str_set(&ccf->lock_file, NGX_LOCK_PATH);
     }
 
-    if (ngx_conf_full_name(cycle, &ccf->lock_file, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    எனில் (ngx_conf_full_name(cycle, &ccf->lock_file, 0) != NGX_OK) {
+        திரும்பு NGX_CONF_ERROR;
     }
 
     {
@@ -1296,10 +1296,10 @@ ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
 
     lock_file = cycle->old_cycle->lock_file;
 
-    if (lock_file.len) {
+    எனில் (lock_file.len) {
         lock_file.len--;
 
-        if (ccf->lock_file.len != lock_file.len
+        எனில் (ccf->lock_file.len != lock_file.len
             || ngx_strncmp(ccf->lock_file.data, lock_file.data, lock_file.len)
                != 0)
         {
@@ -1308,293 +1308,293 @@ ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
         }
 
         cycle->lock_file.len = lock_file.len + 1;
-        lock_file.len += sizeof(".accept");
+        lock_file.len += அளவு(".accept");
 
         cycle->lock_file.data = ngx_pstrdup(cycle->pool, &lock_file);
-        if (cycle->lock_file.data == NULL) {
-            return NGX_CONF_ERROR;
+        எனில் (cycle->lock_file.data == வெற்று) {
+            திரும்பு NGX_CONF_ERROR;
         }
 
-    } else {
+    } இல்லையெனில் {
         cycle->lock_file.len = ccf->lock_file.len + 1;
         cycle->lock_file.data = ngx_pnalloc(cycle->pool,
-                                      ccf->lock_file.len + sizeof(".accept"));
-        if (cycle->lock_file.data == NULL) {
-            return NGX_CONF_ERROR;
+                                      ccf->lock_file.len + அளவு(".accept"));
+        எனில் (cycle->lock_file.data == வெற்று) {
+            திரும்பு NGX_CONF_ERROR;
         }
 
         ngx_memcpy(ngx_cpymem(cycle->lock_file.data, ccf->lock_file.data,
                               ccf->lock_file.len),
-                   ".accept", sizeof(".accept"));
+                   ".accept", அளவு(".accept"));
     }
     }
 
 #endif
 
-    return NGX_CONF_OK;
+    திரும்பு NGX_CONF_OK;
 }
 
 
-static char *
-ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+நிலையான எழுத்து *
+ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, வெறுமை *conf)
 {
-#if (NGX_WIN32)
+#எனில் (NGX_WIN32)
 
     ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                        "\"user\" is not supported, ignored");
 
-    return NGX_CONF_OK;
+    திரும்பு NGX_CONF_OK;
 
-#else
+#இல்லையெனில்
 
     ngx_core_conf_t  *ccf = conf;
 
-    char             *group;
-    struct passwd    *pwd;
-    struct group     *grp;
-    ngx_str_t        *value;
+    எழுத்து             *group;
+    கட்டமைப்பு passwd    *pwd;
+    கட்டமைப்பு group     *grp;
+    ngx_str_t        *மதிப்பு;
 
-    if (ccf->user != (uid_t) NGX_CONF_UNSET_UINT) {
-        return "is duplicate";
+    எனில் (ccf->user != (uid_t) NGX_CONF_UNSET_UINT) {
+        திரும்பு "is duplicate";
     }
 
-    if (geteuid() != 0) {
+    எனில் (geteuid() != 0) {
         ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                            "the \"user\" directive makes sense only "
                            "if the master process runs "
                            "with super-user privileges, ignored");
-        return NGX_CONF_OK;
+        திரும்பு NGX_CONF_OK;
     }
 
-    value = cf->args->elts;
+    மதிப்பு = cf->args->elts;
 
-    ccf->username = (char *) value[1].data;
+    ccf->username = (எழுத்து *) மதிப்பு[1].data;
 
     ngx_set_errno(0);
-    pwd = getpwnam((const char *) value[1].data);
-    if (pwd == NULL) {
+    pwd = getpwnam((மாறிலி எழுத்து *) மதிப்பு[1].data);
+    எனில் (pwd == வெற்று) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
-                           "getpwnam(\"%s\") failed", value[1].data);
-        return NGX_CONF_ERROR;
+                           "getpwnam(\"%s\") failed", மதிப்பு[1].data);
+        திரும்பு NGX_CONF_ERROR;
     }
 
     ccf->user = pwd->pw_uid;
 
-    group = (char *) ((cf->args->nelts == 2) ? value[1].data : value[2].data);
+    group = (எழுத்து *) ((cf->args->nelts == 2) ? மதிப்பு[1].data : மதிப்பு[2].data);
 
     ngx_set_errno(0);
     grp = getgrnam(group);
-    if (grp == NULL) {
+    எனில் (grp == வெற்று) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
                            "getgrnam(\"%s\") failed", group);
-        return NGX_CONF_ERROR;
+        திரும்பு NGX_CONF_ERROR;
     }
 
     ccf->group = grp->gr_gid;
 
-    return NGX_CONF_OK;
+    திரும்பு NGX_CONF_OK;
 
 #endif
 }
 
 
-static char *
-ngx_set_env(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+நிலையான எழுத்து *
+ngx_set_env(ngx_conf_t *cf, ngx_command_t *cmd, வெறுமை *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_str_t   *value, *var;
+    ngx_str_t   *மதிப்பு, *var;
     ngx_uint_t   i;
 
-    var = ngx_array_push(&ccf->env);
-    if (var == NULL) {
-        return NGX_CONF_ERROR;
+    var = ngx_array_தள்ளு(&ccf->env);
+    எனில் (var == வெற்று) {
+        திரும்பு NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
-    *var = value[1];
+    மதிப்பு = cf->args->elts;
+    *var = மதிப்பு[1];
 
-    for (i = 0; i < value[1].len; i++) {
+    க்கு (i = 0; i < மதிப்பு[1].len; i++) {
 
-        if (value[1].data[i] == '=') {
+        எனில் (மதிப்பு[1].data[i] == '=') {
 
             var->len = i;
 
-            return NGX_CONF_OK;
+            திரும்பு NGX_CONF_OK;
         }
     }
 
-    return NGX_CONF_OK;
+    திரும்பு NGX_CONF_OK;
 }
 
 
-static char *
-ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+நிலையான எழுத்து *
+ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, வெறுமை *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_str_t        *value;
+    ngx_str_t        *மதிப்பு;
     ngx_uint_t        n, minus;
 
-    if (ccf->priority != 0) {
-        return "is duplicate";
+    எனில் (ccf->priority != 0) {
+        திரும்பு "is duplicate";
     }
 
-    value = cf->args->elts;
+    மதிப்பு = cf->args->elts;
 
-    if (value[1].data[0] == '-') {
+    எனில் (மதிப்பு[1].data[0] == '-') {
         n = 1;
         minus = 1;
 
-    } else if (value[1].data[0] == '+') {
+    } இல்லையெனில் எனில் (மதிப்பு[1].data[0] == '+') {
         n = 1;
         minus = 0;
 
-    } else {
+    } இல்லையெனில் {
         n = 0;
         minus = 0;
     }
 
-    ccf->priority = ngx_atoi(&value[1].data[n], value[1].len - n);
-    if (ccf->priority == NGX_ERROR) {
-        return "invalid number";
+    ccf->priority = ngx_atoi(&மதிப்பு[1].data[n], மதிப்பு[1].len - n);
+    எனில் (ccf->priority == NGX_ERROR) {
+        திரும்பு "invalid number";
     }
 
-    if (minus) {
+    எனில் (minus) {
         ccf->priority = -ccf->priority;
     }
 
-    return NGX_CONF_OK;
+    திரும்பு NGX_CONF_OK;
 }
 
 
-static char *
-ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+நிலையான எழுத்து *
+ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd, வெறுமை *conf)
 {
-#if (NGX_HAVE_CPU_AFFINITY)
+#எனில் (NGX_HAVE_CPU_AFFINITY)
     ngx_core_conf_t  *ccf = conf;
 
     u_char            ch, *p;
-    ngx_str_t        *value;
+    ngx_str_t        *மதிப்பு;
     ngx_uint_t        i, n;
     ngx_cpuset_t     *mask;
 
-    if (ccf->cpu_affinity) {
-        return "is duplicate";
+    எனில் (ccf->cpu_affinity) {
+        திரும்பு "is duplicate";
     }
 
-    mask = ngx_palloc(cf->pool, (cf->args->nelts - 1) * sizeof(ngx_cpuset_t));
-    if (mask == NULL) {
-        return NGX_CONF_ERROR;
+    mask = ngx_palloc(cf->pool, (cf->args->nelts - 1) * அளவு(ngx_cpuset_t));
+    எனில் (mask == வெற்று) {
+        திரும்பு NGX_CONF_ERROR;
     }
 
     ccf->cpu_affinity_n = cf->args->nelts - 1;
     ccf->cpu_affinity = mask;
 
-    value = cf->args->elts;
+    மதிப்பு = cf->args->elts;
 
-    if (ngx_strcmp(value[1].data, "auto") == 0) {
+    எனில் (ngx_strcmp(மதிப்பு[1].data, "auto") == 0) {
 
-        if (cf->args->nelts > 3) {
+        எனில் (cf->args->nelts > 3) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "invalid number of arguments in "
                                "\"worker_cpu_affinity\" directive");
-            return NGX_CONF_ERROR;
+            திரும்பு NGX_CONF_ERROR;
         }
 
         ccf->cpu_affinity_auto = 1;
 
         CPU_ZERO(&mask[0]);
-        for (i = 0; i < (ngx_uint_t) ngx_min(ngx_ncpu, CPU_SETSIZE); i++) {
+        க்கு (i = 0; i < (ngx_uint_t) ngx_min(ngx_ncpu, CPU_SETSIZE); i++) {
             CPU_SET(i, &mask[0]);
         }
 
         n = 2;
 
-    } else {
+    } இல்லையெனில் {
         n = 1;
     }
 
-    for ( /* void */ ; n < cf->args->nelts; n++) {
+    க்கு ( /* void */ ; n < cf->args->nelts; n++) {
 
-        if (value[n].len > CPU_SETSIZE) {
+        எனில் (மதிப்பு[n].len > CPU_SETSIZE) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                          "\"worker_cpu_affinity\" supports up to %d CPUs only",
                          CPU_SETSIZE);
-            return NGX_CONF_ERROR;
+            திரும்பு NGX_CONF_ERROR;
         }
 
         i = 0;
         CPU_ZERO(&mask[n - 1]);
 
-        for (p = value[n].data + value[n].len - 1;
-             p >= value[n].data;
+        க்கு (p = மதிப்பு[n].data + மதிப்பு[n].len - 1;
+             p >= மதிப்பு[n].data;
              p--)
         {
             ch = *p;
 
-            if (ch == ' ') {
-                continue;
+            எனில் (ch == ' ') {
+                தொடர்;
             }
 
             i++;
 
-            if (ch == '0') {
-                continue;
+            எனில் (ch == '0') {
+                தொடர்;
             }
 
-            if (ch == '1') {
+            எனில் (ch == '1') {
                 CPU_SET(i - 1, &mask[n - 1]);
-                continue;
+                தொடர்;
             }
 
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                           "invalid character \"%c\" in \"worker_cpu_affinity\"",
                           ch);
-            return NGX_CONF_ERROR;
+            திரும்பு NGX_CONF_ERROR;
         }
     }
 
-#else
+#இல்லையெனில்
 
     ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                        "\"worker_cpu_affinity\" is not supported "
                        "on this platform, ignored");
 #endif
 
-    return NGX_CONF_OK;
+    திரும்பு NGX_CONF_OK;
 }
 
 
 ngx_cpuset_t *
 ngx_get_cpu_affinity(ngx_uint_t n)
 {
-#if (NGX_HAVE_CPU_AFFINITY)
+#எனில் (NGX_HAVE_CPU_AFFINITY)
     ngx_uint_t        i, j;
     ngx_cpuset_t     *mask;
     ngx_core_conf_t  *ccf;
 
-    static ngx_cpuset_t  result;
+    நிலையான ngx_cpuset_t  result;
 
     ccf = (ngx_core_conf_t *) ngx_get_conf(ngx_cycle->conf_ctx,
                                            ngx_core_module);
 
-    if (ccf->cpu_affinity == NULL) {
-        return NULL;
+    எனில் (ccf->cpu_affinity == வெற்று) {
+        திரும்பு வெற்று;
     }
 
-    if (ccf->cpu_affinity_auto) {
+    எனில் (ccf->cpu_affinity_auto) {
         mask = &ccf->cpu_affinity[ccf->cpu_affinity_n - 1];
 
-        for (i = 0, j = n; /* void */ ; i++) {
+        க்கு (i = 0, j = n; /* void */ ; i++) {
 
-            if (CPU_ISSET(i % CPU_SETSIZE, mask) && j-- == 0) {
-                break;
+            எனில் (CPU_ISSET(i % CPU_SETSIZE, mask) && j-- == 0) {
+                நிறுத்து;
             }
 
-            if (i == CPU_SETSIZE && j == n) {
+            எனில் (i == CPU_SETSIZE && j == n) {
                 /* empty mask */
-                return NULL;
+                திரும்பு வெற்று;
             }
 
             /* void */
@@ -1603,142 +1603,142 @@ ngx_get_cpu_affinity(ngx_uint_t n)
         CPU_ZERO(&result);
         CPU_SET(i % CPU_SETSIZE, &result);
 
-        return &result;
+        திரும்பு &result;
     }
 
-    if (ccf->cpu_affinity_n > n) {
-        return &ccf->cpu_affinity[n];
+    எனில் (ccf->cpu_affinity_n > n) {
+        திரும்பு &ccf->cpu_affinity[n];
     }
 
-    return &ccf->cpu_affinity[ccf->cpu_affinity_n - 1];
+    திரும்பு &ccf->cpu_affinity[ccf->cpu_affinity_n - 1];
 
-#else
+#இல்லையெனில்
 
-    return NULL;
+    திரும்பு வெற்று;
 
 #endif
 }
 
 
-static char *
-ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+நிலையான எழுத்து *
+ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd, வெறுமை *conf)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *மதிப்பு;
     ngx_core_conf_t  *ccf;
 
     ccf = (ngx_core_conf_t *) conf;
 
-    if (ccf->worker_processes != NGX_CONF_UNSET) {
-        return "is duplicate";
+    எனில் (ccf->worker_processes != NGX_CONF_UNSET) {
+        திரும்பு "is duplicate";
     }
 
-    value = cf->args->elts;
+    மதிப்பு = cf->args->elts;
 
-    if (ngx_strcmp(value[1].data, "auto") == 0) {
+    எனில் (ngx_strcmp(மதிப்பு[1].data, "auto") == 0) {
         ccf->worker_processes = ngx_ncpu;
-        return NGX_CONF_OK;
+        திரும்பு NGX_CONF_OK;
     }
 
-    ccf->worker_processes = ngx_atoi(value[1].data, value[1].len);
+    ccf->worker_processes = ngx_atoi(மதிப்பு[1].data, மதிப்பு[1].len);
 
-    if (ccf->worker_processes == NGX_ERROR) {
-        return "invalid value";
+    எனில் (ccf->worker_processes == NGX_ERROR) {
+        திரும்பு "invalid value";
     }
 
-    return NGX_CONF_OK;
+    திரும்பு NGX_CONF_OK;
 }
 
 
-static char *
-ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+நிலையான எழுத்து *
+ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, வெறுமை *conf)
 {
-#if (NGX_HAVE_DLOPEN)
-    void                *handle;
-    char               **names, **order;
-    ngx_str_t           *value, file;
+#எனில் (NGX_HAVE_DLOPEN)
+    வெறுமை                *handle;
+    எழுத்து               **names, **order;
+    ngx_str_t           *மதிப்பு, file;
     ngx_uint_t           i;
     ngx_module_t        *module, **modules;
     ngx_pool_cleanup_t  *cln;
 
-    if (cf->cycle->modules_used) {
-        return "is specified too late";
+    எனில் (cf->cycle->modules_used) {
+        திரும்பு "is specified too late";
     }
 
-    value = cf->args->elts;
+    மதிப்பு = cf->args->elts;
 
-    file = value[1];
+    file = மதிப்பு[1];
 
-    if (ngx_conf_full_name(cf->cycle, &file, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    எனில் (ngx_conf_full_name(cf->cycle, &file, 0) != NGX_OK) {
+        திரும்பு NGX_CONF_ERROR;
     }
 
     cln = ngx_pool_cleanup_add(cf->cycle->pool, 0);
-    if (cln == NULL) {
-        return NGX_CONF_ERROR;
+    எனில் (cln == வெற்று) {
+        திரும்பு NGX_CONF_ERROR;
     }
 
     handle = ngx_dlopen(file.data);
-    if (handle == NULL) {
+    எனில் (handle == வெற்று) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            ngx_dlopen_n " \"%s\" failed (%s)",
                            file.data, ngx_dlerror());
-        return NGX_CONF_ERROR;
+        திரும்பு NGX_CONF_ERROR;
     }
 
     cln->handler = ngx_unload_module;
     cln->data = handle;
 
     modules = ngx_dlsym(handle, "ngx_modules");
-    if (modules == NULL) {
+    எனில் (modules == வெற்று) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            ngx_dlsym_n " \"%V\", \"%s\" failed (%s)",
-                           &value[1], "ngx_modules", ngx_dlerror());
-        return NGX_CONF_ERROR;
+                           &மதிப்பு[1], "ngx_modules", ngx_dlerror());
+        திரும்பு NGX_CONF_ERROR;
     }
 
     names = ngx_dlsym(handle, "ngx_module_names");
-    if (names == NULL) {
+    எனில் (names == வெற்று) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            ngx_dlsym_n " \"%V\", \"%s\" failed (%s)",
-                           &value[1], "ngx_module_names", ngx_dlerror());
-        return NGX_CONF_ERROR;
+                           &மதிப்பு[1], "ngx_module_names", ngx_dlerror());
+        திரும்பு NGX_CONF_ERROR;
     }
 
     order = ngx_dlsym(handle, "ngx_module_order");
 
-    for (i = 0; modules[i]; i++) {
+    க்கு (i = 0; modules[i]; i++) {
         module = modules[i];
         module->name = names[i];
 
-        if (ngx_add_module(cf, &file, module, order) != NGX_OK) {
-            return NGX_CONF_ERROR;
+        எனில் (ngx_add_module(cf, &file, module, order) != NGX_OK) {
+            திரும்பு NGX_CONF_ERROR;
         }
 
         ngx_log_debug2(NGX_LOG_DEBUG_CORE, cf->log, 0, "module: %s i:%ui",
                        module->name, module->index);
     }
 
-    return NGX_CONF_OK;
+    திரும்பு NGX_CONF_OK;
 
-#else
+#இல்லையெனில்
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                        "\"load_module\" is not supported "
                        "on this platform");
-    return NGX_CONF_ERROR;
+    திரும்பு NGX_CONF_ERROR;
 
 #endif
 }
 
 
-#if (NGX_HAVE_DLOPEN)
+#எனில் (NGX_HAVE_DLOPEN)
 
-static void
-ngx_unload_module(void *data)
+நிலையான வெறுமை
+ngx_unload_module(வெறுமை *data)
 {
-    void  *handle = data;
+    வெறுமை  *handle = data;
 
-    if (ngx_dlclose(handle) != 0) {
+    எனில் (ngx_dlclose(handle) != 0) {
         ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0,
                       ngx_dlclose_n " failed (%s)", ngx_dlerror());
     }

@@ -8,8 +8,8 @@
 #define _NGX_SIPHASH_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
 
 
 uint64_t ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len);

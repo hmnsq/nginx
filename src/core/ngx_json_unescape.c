@@ -10,12 +10,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_json_unescape.h>
+#அந்தர்பாவ <ngx_config.h>
+#அந்தர்பாவ <ngx_core.h>
+#அந்தர்பாவ <ngx_json_unescape.h>
 
 
-static ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
+நிலையான ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
     uint32_t codepoint);
 
 
@@ -24,11 +24,11 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 {
     size_t       size;
     u_char      *d, *s, ch;
-    uint32_t     codepoint, high_surrogate;
+    uint32_t     codepoint, உயர்வு_surrogate;
     ngx_int_t    n;
-    ngx_uint_t   hex_left;
+    ngx_uint_t   hex_இடது;
 
-    enum {
+    எண்ணிக்கை {
         sw_usual = 0,
         sw_quoted,
         sw_hex,
@@ -62,13 +62,13 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
      * surrounding double quotes).
      */
 
-    if (src->len == 0) {
+    எனில் (src->len == 0) {
         dst->len = 0;
-        return NGX_OK;
+        திரும்பு NGX_OK;
     }
 
-    if (dst->len < src->len) {
-        return NGX_ERROR;
+    எனில் (dst->len < src->len) {
+        திரும்பு NGX_ERROR;
     }
 
     s = src->data;
@@ -78,200 +78,200 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 
     state = sw_usual;
     codepoint = 0;
-    high_surrogate = 0;
-    hex_left = 0;
+    உயர்வு_surrogate = 0;
+    hex_இடது = 0;
 
-    while (size--) {
+    போது (size--) {
 
         ch = *s++;
 
-        switch (state) {
-        case sw_usual:
+        தேர்வு (state) {
+        நிலை sw_usual:
 
-            if (ch == '"') {
-                return NGX_ERROR;
+            எனில் (ch == '"') {
+                திரும்பு NGX_ERROR;
             }
 
-            if (ch == '\\') {
+            எனில் (ch == '\\') {
                 state = sw_quoted;
-                break;
+                நிறுத்து;
             }
 
-            if (ch < 0x20) {
+            எனில் (ch < 0x20) {
                 /* RFC 8259: control characters must be escaped */
-                return NGX_ERROR;
+                திரும்பு NGX_ERROR;
             }
 
             *d++ = ch;
-            break;
+            நிறுத்து;
 
-        case sw_quoted:
+        நிலை sw_quoted:
 
-            switch (ch) {
+            தேர்வு (ch) {
 
-            case 'u':
+            நிலை 'u':
                 codepoint = 0;
-                hex_left = 4;
+                hex_இடது = 4;
                 state = sw_hex;
-                break;
+                நிறுத்து;
 
-            case '"':
-            case '/':
-            case '\\':
+            நிலை '"':
+            நிலை '/':
+            நிலை '\\':
                 *d++ = ch;
                 state = sw_usual;
-                break;
+                நிறுத்து;
 
-            case 'b':
+            நிலை 'b':
                 *d++ = '\b';
                 state = sw_usual;
-                break;
+                நிறுத்து;
 
-            case 'f':
+            நிலை 'f':
                 *d++ = '\f';
                 state = sw_usual;
-                break;
+                நிறுத்து;
 
-            case 'n':
+            நிலை 'n':
                 *d++ = '\n';
                 state = sw_usual;
-                break;
+                நிறுத்து;
 
-            case 'r':
+            நிலை 'r':
                 *d++ = '\r';
                 state = sw_usual;
-                break;
+                நிறுத்து;
 
-            case 't':
+            நிலை 't':
                 *d++ = '\t';
                 state = sw_usual;
-                break;
+                நிறுத்து;
 
-            default:
-                return NGX_ERROR;
+            இயல்பு:
+                திரும்பு NGX_ERROR;
             }
 
-            break;
+            நிறுத்து;
 
-        case sw_hex:
+        நிலை sw_hex:
 
             n = ngx_json_hex_digit(ch);
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            எனில் (n == NGX_ERROR) {
+                திரும்பு NGX_ERROR;
             }
 
             codepoint = (codepoint << 4) | (uint32_t) n;
 
-            if (--hex_left > 0) {
-                break;
+            எனில் (--hex_இடது > 0) {
+                நிறுத்து;
             }
 
-            if (high_surrogate) {
-                if (codepoint < 0xDC00 || codepoint > 0xDFFF) {
-                    return NGX_ERROR;
+            எனில் (உயர்வு_surrogate) {
+                எனில் (codepoint < 0xDC00 || codepoint > 0xDFFF) {
+                    திரும்பு NGX_ERROR;
                 }
 
                 codepoint = 0x10000
-                            + ((high_surrogate - 0xD800) << 10)
+                            + ((உயர்வு_surrogate - 0xD800) << 10)
                             + (codepoint - 0xDC00);
                 d = ngx_json_utf8_encode(d, codepoint);
-                high_surrogate = 0;
+                உயர்வு_surrogate = 0;
                 state = sw_usual;
-                break;
+                நிறுத்து;
             }
 
-            if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+            எனில் (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
                 /* high surrogate - wait for the low surrogate */
-                high_surrogate = codepoint;
+                உயர்வு_surrogate = codepoint;
                 state = sw_surrogate_start;
-                break;
+                நிறுத்து;
             }
 
-            if (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
+            எனில் (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_ERROR;
+                திரும்பு NGX_ERROR;
             }
 
             d = ngx_json_utf8_encode(d, codepoint);
             state = sw_usual;
-            break;
+            நிறுத்து;
 
-        case sw_surrogate_start:
+        நிலை sw_surrogate_start:
             /*
              * Expect '\' to begin the low-surrogate escape.
              * Lone surrogates are not valid Unicode scalar values
              * (RFC 8259, Section 8.2).
              */
-            if (ch == '\\') {
+            எனில் (ch == '\\') {
                 state = sw_surrogate_u;
-                break;
+                நிறுத்து;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            திரும்பு NGX_ERROR;
 
-        case sw_surrogate_u:
-            if (ch == 'u') {
+        நிலை sw_surrogate_u:
+            எனில் (ch == 'u') {
                 codepoint = 0;
-                hex_left = 4;
+                hex_இடது = 4;
                 state = sw_hex;
-                break;
+                நிறுத்து;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            திரும்பு NGX_ERROR;
         }
     }
 
-    if (state != sw_usual) {
+    எனில் (state != sw_usual) {
         /* truncated escape sequence or unpaired high surrogate */
-        return NGX_ERROR;
+        திரும்பு NGX_ERROR;
     }
 
     dst->len = d - dst->data;
 
-    return NGX_OK;
+    திரும்பு NGX_OK;
 }
 
 
-static ngx_inline u_char *
+நிலையான ngx_inline u_char *
 ngx_json_utf8_encode(u_char *dst, uint32_t codepoint)
 {
-    if (codepoint <= 0x7F) {
+    எனில் (codepoint <= 0x7F) {
         *dst++ = (u_char) codepoint;
 
-    } else if (codepoint <= 0x7FF) {
+    } இல்லையெனில் எனில் (codepoint <= 0x7FF) {
         *dst++ = (u_char) (0xC0 | (codepoint >> 6));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else if (codepoint <= 0xFFFF) {
+    } இல்லையெனில் எனில் (codepoint <= 0xFFFF) {
         *dst++ = (u_char) (0xE0 | (codepoint >> 12));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else {
+    } இல்லையெனில் {
         *dst++ = (u_char) (0xF0 | (codepoint >> 18));
         *dst++ = (u_char) (0x80 | ((codepoint >> 12) & 0x3F));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
     }
 
-    return dst;
+    திரும்பு dst;
 }
 
 
 ngx_int_t
 ngx_json_hex_digit(u_char ch)
 {
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0';
+    எனில் (ch >= '0' && ch <= '9') {
+        திரும்பு ch - '0';
     }
 
     ch = (u_char) (ch | 0x20);
 
-    if (ch >= 'a' && ch <= 'f') {
-        return ch - 'a' + 10;
+    எனில் (ch >= 'a' && ch <= 'f') {
+        திரும்பு ch - 'a' + 10;
     }
 
-    return NGX_ERROR;
+    திரும்பு NGX_ERROR;
 }
