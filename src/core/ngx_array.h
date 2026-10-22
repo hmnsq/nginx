@@ -42,11 +42,11 @@ ngx_array_init(ngx_array_t *array, ngx_pool_t *pool, ngx_uint_t n, size_t size)
     array->pool = pool;
 
     array->elts = ngx_palloc(pool, n * size);
-    if (array->elts == NULL) {
-        return NGX_ERROR;
+    만약 (array->elts == NULL) {
+        반환 NGX_ERROR;
     }
 
-    return NGX_OK;
+    반환 NGX_OK;
 }
 
 

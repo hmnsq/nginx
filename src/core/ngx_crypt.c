@@ -11,7 +11,7 @@
 #include <ngx_sha1.h>
 
 
-#if (NGX_CRYPT)
+#만약 (NGX_CRYPT)
 
 static ngx_int_t ngx_crypt_apr1(ngx_pool_t *pool, u_char *key, u_char *salt,
     u_char **encrypted);
@@ -29,22 +29,22 @@ static u_char *ngx_crypt_to64(u_char *p, uint32_t v, size_t n);
 ngx_int_t
 ngx_crypt(ngx_pool_t *pool, u_char *key, u_char *salt, u_char **encrypted)
 {
-    if (ngx_strncmp(salt, "$apr1$", sizeof("$apr1$") - 1) == 0) {
-        return ngx_crypt_apr1(pool, key, salt, encrypted);
+    만약 (ngx_strncmp(salt, "$apr1$", sizeof("$apr1$") - 1) == 0) {
+        반환 ngx_crypt_apr1(pool, key, salt, encrypted);
 
-    } else if (ngx_strncmp(salt, "{PLAIN}", sizeof("{PLAIN}") - 1) == 0) {
-        return ngx_crypt_plain(pool, key, salt, encrypted);
+    } 아니면 만약 (ngx_strncmp(salt, "{PLAIN}", sizeof("{PLAIN}") - 1) == 0) {
+        반환 ngx_crypt_plain(pool, key, salt, encrypted);
 
-    } else if (ngx_strncmp(salt, "{SSHA}", sizeof("{SSHA}") - 1) == 0) {
-        return ngx_crypt_ssha(pool, key, salt, encrypted);
+    } 아니면 만약 (ngx_strncmp(salt, "{SSHA}", sizeof("{SSHA}") - 1) == 0) {
+        반환 ngx_crypt_ssha(pool, key, salt, encrypted);
 
-    } else if (ngx_strncmp(salt, "{SHA}", sizeof("{SHA}") - 1) == 0) {
-        return ngx_crypt_sha(pool, key, salt, encrypted);
+    } 아니면 만약 (ngx_strncmp(salt, "{SHA}", sizeof("{SHA}") - 1) == 0) {
+        반환 ngx_crypt_sha(pool, key, salt, encrypted);
     }
 
     /* fallback to libc crypt() */
 
-    return ngx_libc_crypt(pool, key, salt, encrypted);
+    반환 ngx_libc_crypt(pool, key, salt, encrypted);
 }
 
 
@@ -65,7 +65,7 @@ ngx_crypt_apr1(ngx_pool_t *pool, u_char *key, u_char *salt, u_char **encrypted)
 
     salt += sizeof("$apr1$") - 1;
     last = salt + 8;
-    for (p = salt; *p && *p != '$' && p < last; p++) { /* void */ }
+    위해 (p = salt; *p && *p != '$' && p < last; p++) { /* void */ }
     saltlen = p - salt;
 
     /* hash key and salt */
@@ -81,45 +81,45 @@ ngx_crypt_apr1(ngx_pool_t *pool, u_char *key, u_char *salt, u_char **encrypted)
     ngx_md5_update(&ctx1, key, keylen);
     ngx_md5_final(final, &ctx1);
 
-    for (n = keylen; n > 0; n -= 16) {
+    위해 (n = keylen; n > 0; n -= 16) {
         ngx_md5_update(&md5, final, n > 16 ? 16 : n);
     }
 
     ngx_memzero(final, sizeof(final));
 
-    for (i = keylen; i; i >>= 1) {
-        if (i & 1) {
+    위해 (i = keylen; i; i >>= 1) {
+        만약 (i & 1) {
             ngx_md5_update(&md5, final, 1);
 
-        } else {
+        } 아니면 {
             ngx_md5_update(&md5, key, 1);
         }
     }
 
     ngx_md5_final(final, &md5);
 
-    for (i = 0; i < 1000; i++) {
+    위해 (i = 0; i < 1000; i++) {
         ngx_md5_init(&ctx1);
 
-        if (i & 1) {
+        만약 (i & 1) {
             ngx_md5_update(&ctx1, key, keylen);
 
-        } else {
+        } 아니면 {
             ngx_md5_update(&ctx1, final, 16);
         }
 
-        if (i % 3) {
+        만약 (i % 3) {
             ngx_md5_update(&ctx1, salt, saltlen);
         }
 
-        if (i % 7) {
+        만약 (i % 7) {
             ngx_md5_update(&ctx1, key, keylen);
         }
 
-        if (i & 1) {
+        만약 (i & 1) {
             ngx_md5_update(&ctx1, final, 16);
 
-        } else {
+        } 아니면 {
             ngx_md5_update(&ctx1, key, keylen);
         }
 
@@ -129,8 +129,8 @@ ngx_crypt_apr1(ngx_pool_t *pool, u_char *key, u_char *salt, u_char **encrypted)
     /* output */
 
     *encrypted = ngx_pnalloc(pool, sizeof("$apr1$") - 1 + saltlen + 1 + 22 + 1);
-    if (*encrypted == NULL) {
-        return NGX_ERROR;
+    만약 (*encrypted == NULL) {
+        반환 NGX_ERROR;
     }
 
     p = ngx_cpymem(*encrypted, "$apr1$", sizeof("$apr1$") - 1);
@@ -145,7 +145,7 @@ ngx_crypt_apr1(ngx_pool_t *pool, u_char *key, u_char *salt, u_char **encrypted)
     p = ngx_crypt_to64(p, final[11], 2);
     *p = '\0';
 
-    return NGX_OK;
+    반환 NGX_OK;
 }
 
 
@@ -155,12 +155,12 @@ ngx_crypt_to64(u_char *p, uint32_t v, size_t n)
     static u_char   itoa64[] =
         "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-    while (n--) {
+    동안 (n--) {
         *p++ = itoa64[v & 0x3f];
         v >>= 6;
     }
 
-    return p;
+    반환 p;
 }
 
 
@@ -173,14 +173,14 @@ ngx_crypt_plain(ngx_pool_t *pool, u_char *key, u_char *salt, u_char **encrypted)
     len = ngx_strlen(key);
 
     *encrypted = ngx_pnalloc(pool, sizeof("{PLAIN}") - 1 + len + 1);
-    if (*encrypted == NULL) {
-        return NGX_ERROR;
+    만약 (*encrypted == NULL) {
+        반환 NGX_ERROR;
     }
 
     p = ngx_cpymem(*encrypted, "{PLAIN}", sizeof("{PLAIN}") - 1);
     ngx_memcpy(p, key, len + 1);
 
-    return NGX_OK;
+    반환 NGX_OK;
 }
 
 
@@ -202,13 +202,13 @@ ngx_crypt_ssha(ngx_pool_t *pool, u_char *key, u_char *salt, u_char **encrypted)
     len = ngx_max(ngx_base64_decoded_length(encoded.len), 20);
 
     decoded.data = ngx_pnalloc(pool, len);
-    if (decoded.data == NULL) {
-        return NGX_ERROR;
+    만약 (decoded.data == NULL) {
+        반환 NGX_ERROR;
     }
 
     rc = ngx_decode_base64(&decoded, &encoded);
 
-    if (rc != NGX_OK || decoded.len < 20) {
+    만약 (rc != NGX_OK || decoded.len < 20) {
         decoded.len = 20;
     }
 
@@ -224,15 +224,15 @@ ngx_crypt_ssha(ngx_pool_t *pool, u_char *key, u_char *salt, u_char **encrypted)
     len = sizeof("{SSHA}") - 1 + ngx_base64_encoded_length(decoded.len) + 1;
 
     *encrypted = ngx_pnalloc(pool, len);
-    if (*encrypted == NULL) {
-        return NGX_ERROR;
+    만약 (*encrypted == NULL) {
+        반환 NGX_ERROR;
     }
 
     encoded.data = ngx_cpymem(*encrypted, "{SSHA}", sizeof("{SSHA}") - 1);
     ngx_encode_base64(&encoded, &decoded);
     encoded.data[encoded.len] = '\0';
 
-    return NGX_OK;
+    반환 NGX_OK;
 }
 
 
@@ -256,15 +256,15 @@ ngx_crypt_sha(ngx_pool_t *pool, u_char *key, u_char *salt, u_char **encrypted)
     len = sizeof("{SHA}") - 1 + ngx_base64_encoded_length(decoded.len) + 1;
 
     *encrypted = ngx_pnalloc(pool, len);
-    if (*encrypted == NULL) {
-        return NGX_ERROR;
+    만약 (*encrypted == NULL) {
+        반환 NGX_ERROR;
     }
 
     encoded.data = ngx_cpymem(*encrypted, "{SHA}", sizeof("{SHA}") - 1);
     ngx_encode_base64(&encoded, &decoded);
     encoded.data[encoded.len] = '\0';
 
-    return NGX_OK;
+    반환 NGX_OK;
 }
 
 #endif /* NGX_CRYPT */

@@ -25,25 +25,25 @@ ngx_queue_middle(ngx_queue_t *queue)
 
     middle = ngx_queue_head(queue);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    만약 (middle == ngx_queue_last(queue)) {
+        반환 middle;
     }
 
     next = ngx_queue_head(queue);
 
-    for ( ;; ) {
+    위해 ( ;; ) {
         middle = ngx_queue_next(middle);
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        만약 (next == ngx_queue_last(queue)) {
+            반환 middle;
         }
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        만약 (next == ngx_queue_last(queue)) {
+            반환 middle;
         }
     }
 }
@@ -59,8 +59,8 @@ ngx_queue_sort(ngx_queue_t *queue,
 
     q = ngx_queue_head(queue);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    만약 (q == ngx_queue_last(queue)) {
+        반환;
     }
 
     q = ngx_queue_middle(queue);
@@ -83,17 +83,17 @@ ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
     q1 = ngx_queue_head(queue);
     q2 = ngx_queue_head(tail);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
+    위해 ( ;; ) {
+        만약 (q1 == ngx_queue_sentinel(queue)) {
             ngx_queue_add(queue, tail);
             break;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
+        만약 (q2 == ngx_queue_sentinel(tail)) {
             break;
         }
 
-        if (cmp(q1, q2) <= 0) {
+        만약 (cmp(q1, q2) <= 0) {
             q1 = ngx_queue_next(q1);
             continue;
         }

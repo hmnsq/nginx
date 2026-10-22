@@ -15,7 +15,7 @@ ngx_murmur_hash2(u_char *data, size_t len)
 
     h = 0 ^ len;
 
-    while (len >= 4) {
+    동안 (len >= 4) {
         k  = data[0];
         k |= data[1] << 8;
         k |= data[2] << 16;
@@ -48,5 +48,5 @@ ngx_murmur_hash2(u_char *data, size_t len)
     h *= 0x5bd1e995;
     h ^= h >> 15;
 
-    return h;
+    반환 h;
 }

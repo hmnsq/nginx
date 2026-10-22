@@ -23,14 +23,14 @@ struct ngx_file_s {
 
     ngx_log_t                 *log;
 
-#if (NGX_THREADS || NGX_COMPAT)
+#만약 (NGX_THREADS || NGX_COMPAT)
     ngx_int_t                (*thread_handler)(ngx_thread_task_t *task,
                                                ngx_file_t *file);
     void                      *thread_ctx;
     ngx_thread_task_t         *thread_task;
 #endif
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#만약 (NGX_HAVE_FILE_AIO || NGX_COMPAT)
     ngx_event_aio_t           *aio;
 #endif
 

@@ -15,15 +15,15 @@ ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size)
     ngx_list_t  *list;
 
     list = ngx_palloc(pool, sizeof(ngx_list_t));
-    if (list == NULL) {
-        return NULL;
+    만약 (list == NULL) {
+        반환 NULL;
     }
 
-    if (ngx_list_init(list, pool, n, size) != NGX_OK) {
-        return NULL;
+    만약 (ngx_list_init(list, pool, n, size) != NGX_OK) {
+        반환 NULL;
     }
 
-    return list;
+    반환 list;
 }
 
 
@@ -35,18 +35,18 @@ ngx_list_push(ngx_list_t *l)
 
     last = l->last;
 
-    if (last->nelts == l->nalloc) {
+    만약 (last->nelts == l->nalloc) {
 
         /* the last part is full, allocate a new list part */
 
         last = ngx_palloc(l->pool, sizeof(ngx_list_part_t));
-        if (last == NULL) {
-            return NULL;
+        만약 (last == NULL) {
+            반환 NULL;
         }
 
         last->elts = ngx_palloc(l->pool, l->nalloc * l->size);
-        if (last->elts == NULL) {
-            return NULL;
+        만약 (last->elts == NULL) {
+            반환 NULL;
         }
 
         last->nelts = 0;
@@ -59,5 +59,5 @@ ngx_list_push(ngx_list_t *l)
     elt = (char *) last->elts + l->size * last->nelts;
     last->nelts++;
 
-    return elt;
+    반환 elt;
 }

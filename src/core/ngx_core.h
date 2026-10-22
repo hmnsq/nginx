@@ -72,7 +72,7 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 #include <ngx_crc32.h>
 #include <ngx_murmurhash.h>
 #include <ngx_siphash.h>
-#if (NGX_PCRE)
+#만약 (NGX_PCRE)
 #include <ngx_regex.h>
 #endif
 #include <ngx_radix_tree.h>
@@ -85,14 +85,14 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 #include <ngx_inet.h>
 #include <ngx_cycle.h>
 #include <ngx_resolver.h>
-#if (NGX_OPENSSL)
+#만약 (NGX_OPENSSL)
 #include <ngx_event_openssl.h>
-#if (NGX_QUIC)
+#만약 (NGX_QUIC)
 #include <ngx_event_quic.h>
 #endif
 #endif
 #include <ngx_process_cycle.h>
-#if (NGX_CONTROL_API)
+#만약 (NGX_CONTROL_API)
 #include <ngx_control.h>
 #endif
 #include <ngx_conf_file.h>
@@ -102,7 +102,7 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 #include <ngx_connection.h>
 #include <ngx_syslog.h>
 #include <ngx_proxy_protocol.h>
-#if (NGX_HAVE_BPF)
+#만약 (NGX_HAVE_BPF)
 #include <ngx_bpf.h>
 #endif
 
@@ -118,7 +118,7 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 
 void ngx_cpuinfo(void);
 
-#if (NGX_HAVE_OPENAT)
+#만약 (NGX_HAVE_OPENAT)
 #define NGX_DISABLE_SYMLINKS_OFF        0
 #define NGX_DISABLE_SYMLINKS_ON         1
 #define NGX_DISABLE_SYMLINKS_NOTOWNER   2

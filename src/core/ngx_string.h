@@ -62,21 +62,21 @@ void ngx_strlow(u_char *dst, u_char *src, size_t n);
 
 size_t ngx_strnlen(u_char *p, size_t n);
 
-#define ngx_strchr(s1, c)   strchr((const char *) s1, (int) c)
+#define ngx_strchr(s1, c)   strchr((const char *) s1, (정수) c)
 
 static ngx_inline u_char *
 ngx_strlchr(u_char *p, u_char *last, u_char c)
 {
-    while (p < last) {
+    동안 (p < last) {
 
-        if (*p == c) {
-            return p;
+        만약 (*p == c) {
+            반환 p;
         }
 
         p++;
     }
 
-    return NULL;
+    반환 NULL;
 }
 
 
@@ -91,12 +91,12 @@ ngx_strlchr(u_char *p, u_char *last, u_char c)
 void ngx_explicit_memzero(void *buf, size_t n);
 
 
-#if (NGX_MEMCPY_LIMIT)
+#만약 (NGX_MEMCPY_LIMIT)
 
 void *ngx_memcpy(void *dst, const void *src, size_t n);
 #define ngx_cpymem(dst, src, n)   (((u_char *) ngx_memcpy(dst, src, n)) + (n))
 
-#else
+#아니면
 
 /*
  * gcc3, msvc, and icc7 compile memcpy() to the inline "rep movs".
@@ -109,7 +109,7 @@ void *ngx_memcpy(void *dst, const void *src, size_t n);
 #endif
 
 
-#if ( __INTEL_COMPILER >= 800 )
+#만약 ( __INTEL_COMPILER >= 800 )
 
 /*
  * the simple inline cycle copies the variable length strings up to 16
@@ -119,21 +119,21 @@ void *ngx_memcpy(void *dst, const void *src, size_t n);
 static ngx_inline u_char *
 ngx_copy(u_char *dst, u_char *src, size_t len)
 {
-    if (len < 17) {
+    만약 (len < 17) {
 
-        while (len) {
+        동안 (len) {
             *dst++ = *src++;
             len--;
         }
 
-        return dst;
+        반환 dst;
 
-    } else {
-        return ngx_cpymem(dst, src, len);
+    } 아니면 {
+        반환 ngx_cpymem(dst, src, len);
     }
 }
 
-#else
+#아니면
 
 #define ngx_copy                  ngx_cpymem
 

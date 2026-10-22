@@ -70,7 +70,7 @@ struct ngx_queue_s {
     (q)->prev
 
 
-#if (NGX_DEBUG)
+#만약 (NGX_DEBUG)
 
 #define ngx_queue_remove(x)                                                   \
     (x)->next->prev = (x)->prev;                                              \
@@ -78,7 +78,7 @@ struct ngx_queue_s {
     (x)->prev = NULL;                                                         \
     (x)->next = NULL
 
-#else
+#아니면
 
 #define ngx_queue_remove(x)                                                   \
     (x)->next->prev = (x)->prev;                                              \
