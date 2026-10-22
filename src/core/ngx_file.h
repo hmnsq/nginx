@@ -13,7 +13,7 @@
 #include <ngx_core.h>
 
 
-struct ngx_file_s {
+sa_nracanaa ngx_file_s {
     ngx_fd_t                   fd;
     ngx_str_t                  name;
     ngx_file_info_t            info;
@@ -23,14 +23,14 @@ struct ngx_file_s {
 
     ngx_log_t                 *log;
 
-#if (NGX_THREADS || NGX_COMPAT)
+#ຖ້າ (NGX_THREADS || NGX_COMPAT)
     ngx_int_t                (*thread_handler)(ngx_thread_task_t *task,
                                                ngx_file_t *file);
     void                      *thread_ctx;
     ngx_thread_task_t         *thread_task;
 #endif
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#ຖ້າ (NGX_HAVE_FILE_AIO || NGX_COMPAT)
     ngx_event_aio_t           *aio;
 #endif
 
@@ -47,7 +47,7 @@ typedef ngx_msec_t (*ngx_path_purger_pt) (void *data);
 typedef void (*ngx_path_loader_pt) (void *data);
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_str_t                  name;
     size_t                     len;
     size_t                     level[NGX_MAX_PATH_LEVEL];
@@ -62,18 +62,18 @@ typedef struct {
 } ngx_path_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_str_t                  name;
     size_t                     level[NGX_MAX_PATH_LEVEL];
 } ngx_path_init_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_file_t                 file;
     off_t                      offset;
     ngx_path_t                *path;
     ngx_pool_t                *pool;
-    char                      *warn;
+    var_na                      *warn;
 
     ngx_uint_t                 access;
 
@@ -84,7 +84,7 @@ typedef struct {
 } ngx_temp_file_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_uint_t                 access;
     ngx_uint_t                 path_access;
     time_t                     time;
@@ -97,7 +97,7 @@ typedef struct {
 } ngx_ext_rename_file_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     off_t                      size;
     size_t                     buf_size;
 
@@ -108,12 +108,12 @@ typedef struct {
 } ngx_copy_file_t;
 
 
-typedef struct ngx_tree_ctx_s  ngx_tree_ctx_t;
+typedef sa_nracanaa ngx_tree_ctx_s  ngx_tree_ctx_t;
 
 typedef ngx_int_t (*ngx_tree_init_handler_pt) (void *ctx, void *prev);
 typedef ngx_int_t (*ngx_tree_handler_pt) (ngx_tree_ctx_t *ctx, ngx_str_t *name);
 
-struct ngx_tree_ctx_s {
+sa_nracanaa ngx_tree_ctx_s {
     off_t                      size;
     off_t                      fs_size;
     ngx_uint_t                 access;
@@ -151,10 +151,10 @@ ngx_int_t ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree);
 
 ngx_atomic_uint_t ngx_next_temp_number(ngx_uint_t collision);
 
-char *ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_merge_path_value(ngx_conf_t *cf, ngx_path_t **path,
+var_na *ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+var_na *ngx_conf_merge_path_value(ngx_conf_t *cf, ngx_path_t **path,
     ngx_path_t *prev, ngx_path_init_t *init);
-char *ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+var_na *ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 
 
 extern ngx_atomic_t      *ngx_temp_number;

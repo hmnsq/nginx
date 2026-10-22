@@ -15,37 +15,37 @@ ngx_hash_find(ngx_hash_t *hash, ngx_uint_t key, u_char *name, size_t len)
     ngx_uint_t       i;
     ngx_hash_elt_t  *elt;
 
-#if 0
+#ຖ້າ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "hf:\"%*s\"", len, name);
 #endif
 
     elt = hash->buckets[key % hash->size];
 
-    if (elt == NULL) {
-        return NULL;
+    ຖ້າ (elt == NULL) {
+        ສົ່ງຄືນ NULL;
     }
 
-    while (elt->value) {
-        if (len != (size_t) elt->len) {
+    ໃນຂະນະທີ່ (elt->value) {
+        ຖ້າ (len != (size_t) elt->len) {
             goto next;
         }
 
-        for (i = 0; i < len; i++) {
-            if (name[i] != elt->name[i]) {
+        ສຳລັບ (i = 0; i < len; i++) {
+            ຖ້າ (name[i] != elt->name[i]) {
                 goto next;
             }
         }
 
-        return elt->value;
+        ສົ່ງຄືນ elt->value;
 
     next:
 
         elt = (ngx_hash_elt_t *) ngx_align_ptr(&elt->name[0] + elt->len,
-                                               sizeof(void *));
+                                               parimaa_na(void *));
         continue;
     }
 
-    return NULL;
+    ສົ່ງຄືນ NULL;
 }
 
 
@@ -55,15 +55,15 @@ ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
     void        *value;
     ngx_uint_t   i, n, key;
 
-#if 0
+#ຖ້າ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "wch:\"%*s\"", len, name);
 #endif
 
     n = len;
 
-    while (n) {
-        if (name[n - 1] == '.') {
-            break;
+    ໃນຂະນະທີ່ (n) {
+        ຖ້າ (name[n - 1] == '.') {
+            bha_nga;
         }
 
         n--;
@@ -71,21 +71,21 @@ ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
 
     key = 0;
 
-    for (i = n; i < len; i++) {
+    ສຳລັບ (i = n; i < len; i++) {
         key = ngx_hash(key, name[i]);
     }
 
-#if 0
+#ຖ້າ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", key);
 #endif
 
     value = ngx_hash_find(&hwc->hash, key, &name[n], len - n);
 
-#if 0
+#ຖ້າ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", value);
 #endif
 
-    if (value) {
+    ຖ້າ (value) {
 
         /*
          * the 2 low bits of value have the special meaning:
@@ -98,48 +98,48 @@ ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
          *          "*.example.com" only.
          */
 
-        if ((uintptr_t) value & 2) {
+        ຖ້າ ((uintptr_t) value & 2) {
 
-            if (n == 0) {
+            ຖ້າ (n == 0) {
 
                 /* "example.com" */
 
-                if ((uintptr_t) value & 1) {
-                    return NULL;
+                ຖ້າ ((uintptr_t) value & 1) {
+                    ສົ່ງຄືນ NULL;
                 }
 
                 hwc = (ngx_hash_wildcard_t *)
                                           ((uintptr_t) value & (uintptr_t) ~3);
-                return hwc->value;
+                ສົ່ງຄືນ hwc->value;
             }
 
             hwc = (ngx_hash_wildcard_t *) ((uintptr_t) value & (uintptr_t) ~3);
 
             value = ngx_hash_find_wc_head(hwc, name, n - 1);
 
-            if (value) {
-                return value;
+            ຖ້າ (value) {
+                ສົ່ງຄືນ value;
             }
 
-            return hwc->value;
+            ສົ່ງຄືນ hwc->value;
         }
 
-        if ((uintptr_t) value & 1) {
+        ຖ້າ ((uintptr_t) value & 1) {
 
-            if (n == 0) {
+            ຖ້າ (n == 0) {
 
                 /* "example.com" */
 
-                return NULL;
+                ສົ່ງຄືນ NULL;
             }
 
-            return (void *) ((uintptr_t) value & (uintptr_t) ~3);
+            ສົ່ງຄືນ (void *) ((uintptr_t) value & (uintptr_t) ~3);
         }
 
-        return value;
+        ສົ່ງຄືນ value;
     }
 
-    return hwc->value;
+    ສົ່ງຄືນ hwc->value;
 }
 
 
@@ -149,35 +149,35 @@ ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
     void        *value;
     ngx_uint_t   i, key;
 
-#if 0
+#ຖ້າ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "wct:\"%*s\"", len, name);
 #endif
 
     key = 0;
 
-    for (i = 0; i < len; i++) {
-        if (name[i] == '.') {
-            break;
+    ສຳລັບ (i = 0; i < len; i++) {
+        ຖ້າ (name[i] == '.') {
+            bha_nga;
         }
 
         key = ngx_hash(key, name[i]);
     }
 
-    if (i == len) {
-        return NULL;
+    ຖ້າ (i == len) {
+        ສົ່ງຄືນ NULL;
     }
 
-#if 0
+#ຖ້າ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", key);
 #endif
 
     value = ngx_hash_find(&hwc->hash, key, name, i);
 
-#if 0
+#ຖ້າ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", value);
 #endif
 
-    if (value) {
+    ຖ້າ (value) {
 
         /*
          * the 2 low bits of value have the special meaning:
@@ -185,7 +185,7 @@ ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
          *     11 - value is pointer to wildcard hash allowing "example.*".
          */
 
-        if ((uintptr_t) value & 2) {
+        ຖ້າ ((uintptr_t) value & 2) {
 
             i++;
 
@@ -193,17 +193,17 @@ ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
 
             value = ngx_hash_find_wc_tail(hwc, &name[i], len - i);
 
-            if (value) {
-                return value;
+            ຖ້າ (value) {
+                ສົ່ງຄືນ value;
             }
 
-            return hwc->value;
+            ສົ່ງຄືນ hwc->value;
         }
 
-        return value;
+        ສົ່ງຄືນ value;
     }
 
-    return hwc->value;
+    ສົ່ງຄືນ hwc->value;
 }
 
 
@@ -213,40 +213,40 @@ ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t key, u_char *name,
 {
     void  *value;
 
-    if (hash->hash.buckets) {
+    ຖ້າ (hash->hash.buckets) {
         value = ngx_hash_find(&hash->hash, key, name, len);
 
-        if (value) {
-            return value;
+        ຖ້າ (value) {
+            ສົ່ງຄືນ value;
         }
     }
 
-    if (len == 0) {
-        return NULL;
+    ຖ້າ (len == 0) {
+        ສົ່ງຄືນ NULL;
     }
 
-    if (hash->wc_head && hash->wc_head->hash.buckets) {
+    ຖ້າ (hash->wc_head && hash->wc_head->hash.buckets) {
         value = ngx_hash_find_wc_head(hash->wc_head, name, len);
 
-        if (value) {
-            return value;
+        ຖ້າ (value) {
+            ສົ່ງຄືນ value;
         }
     }
 
-    if (hash->wc_tail && hash->wc_tail->hash.buckets) {
+    ຖ້າ (hash->wc_tail && hash->wc_tail->hash.buckets) {
         value = ngx_hash_find_wc_tail(hash->wc_tail, name, len);
 
-        if (value) {
-            return value;
+        ຖ້າ (value) {
+            ສົ່ງຄືນ value;
         }
     }
 
-    return NULL;
+    ສົ່ງຄືນ NULL;
 }
 
 
 #define NGX_HASH_ELT_SIZE(name)                                               \
-    (sizeof(void *) + ngx_align((name)->key.len + 2, sizeof(void *)))
+    (parimaa_na(void *) + ngx_align((name)->key.len + 2, parimaa_na(void *)))
 
 ngx_int_t
 ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names, ngx_uint_t nelts)
@@ -257,70 +257,70 @@ ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names, ngx_uint_t nelts)
     ngx_uint_t       i, n, key, size, start, bucket_size;
     ngx_hash_elt_t  *elt, **buckets;
 
-    if (hinit->max_size == 0) {
+    ຖ້າ (hinit->max_size == 0) {
         ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                       "could not build %s, you should "
                       "increase %s_max_size: %i",
                       hinit->name, hinit->name, hinit->max_size);
-        return NGX_ERROR;
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
-    if (hinit->bucket_size > 65536 - ngx_cacheline_size) {
+    ຖ້າ (hinit->bucket_size > 65536 - ngx_cacheline_size) {
         ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                       "could not build %s, too large "
                       "%s_bucket_size: %i",
                       hinit->name, hinit->name, hinit->bucket_size);
-        return NGX_ERROR;
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
+    ສຳລັບ (n = 0; n < nelts; n++) {
+        ຖ້າ (names[n].key.data == NULL) {
             continue;
         }
 
-        if (hinit->bucket_size < NGX_HASH_ELT_SIZE(&names[n]) + sizeof(void *))
+        ຖ້າ (hinit->bucket_size < NGX_HASH_ELT_SIZE(&names[n]) + parimaa_na(void *))
         {
             ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                           "could not build %s, you should "
                           "increase %s_bucket_size: %i",
                           hinit->name, hinit->name, hinit->bucket_size);
-            return NGX_ERROR;
+            ສົ່ງຄືນ NGX_ERROR;
         }
     }
 
-    test = ngx_alloc(hinit->max_size * sizeof(u_short), hinit->pool->log);
-    if (test == NULL) {
-        return NGX_ERROR;
+    test = ngx_alloc(hinit->max_size * parimaa_na(u_short), hinit->pool->log);
+    ຖ້າ (test == NULL) {
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
-    bucket_size = hinit->bucket_size - sizeof(void *);
+    bucket_size = hinit->bucket_size - parimaa_na(void *);
 
-    start = nelts / (bucket_size / (2 * sizeof(void *)));
+    start = nelts / (bucket_size / (2 * parimaa_na(void *)));
     start = start ? start : 1;
 
-    if (hinit->max_size > 10000 && nelts && hinit->max_size / nelts < 100) {
+    ຖ້າ (hinit->max_size > 10000 && nelts && hinit->max_size / nelts < 100) {
         start = hinit->max_size - 1000;
     }
 
-    for (size = start; size <= hinit->max_size; size++) {
+    ສຳລັບ (size = start; size <= hinit->max_size; size++) {
 
-        ngx_memzero(test, size * sizeof(u_short));
+        ngx_memzero(test, size * parimaa_na(u_short));
 
-        for (n = 0; n < nelts; n++) {
-            if (names[n].key.data == NULL) {
+        ສຳລັບ (n = 0; n < nelts; n++) {
+            ຖ້າ (names[n].key.data == NULL) {
                 continue;
             }
 
             key = names[n].key_hash % size;
             len = test[key] + NGX_HASH_ELT_SIZE(&names[n]);
 
-#if 0
+#ຖ້າ 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "%ui: %ui %uz \"%V\"",
                           size, key, len, &names[n].key);
 #endif
 
-            if (len > bucket_size) {
+            ຖ້າ (len > bucket_size) {
                 goto next;
             }
 
@@ -345,25 +345,25 @@ ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names, ngx_uint_t nelts)
 
 found:
 
-    for (i = 0; i < size; i++) {
-        test[i] = sizeof(void *);
+    ສຳລັບ (i = 0; i < size; i++) {
+        test[i] = parimaa_na(void *);
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
+    ສຳລັບ (n = 0; n < nelts; n++) {
+        ຖ້າ (names[n].key.data == NULL) {
             continue;
         }
 
         key = names[n].key_hash % size;
         len = test[key] + NGX_HASH_ELT_SIZE(&names[n]);
 
-        if (len > 65536 - ngx_cacheline_size) {
+        ຖ້າ (len > 65536 - ngx_cacheline_size) {
             ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                           "could not build %s, you should "
                           "increase %s_max_size: %i",
                           hinit->name, hinit->name, hinit->max_size);
             ngx_free(test);
-            return NGX_ERROR;
+            ສົ່ງຄືນ NGX_ERROR;
         }
 
         test[key] = (u_short) len;
@@ -371,8 +371,8 @@ found:
 
     len = 0;
 
-    for (i = 0; i < size; i++) {
-        if (test[i] == sizeof(void *)) {
+    ສຳລັບ (i = 0; i < size; i++) {
+        ຖ້າ (test[i] == parimaa_na(void *)) {
             continue;
         }
 
@@ -381,35 +381,35 @@ found:
         len += test[i];
     }
 
-    if (hinit->hash == NULL) {
-        hinit->hash = ngx_pcalloc(hinit->pool, sizeof(ngx_hash_wildcard_t)
-                                             + size * sizeof(ngx_hash_elt_t *));
-        if (hinit->hash == NULL) {
+    ຖ້າ (hinit->hash == NULL) {
+        hinit->hash = ngx_pcalloc(hinit->pool, parimaa_na(ngx_hash_wildcard_t)
+                                             + size * parimaa_na(ngx_hash_elt_t *));
+        ຖ້າ (hinit->hash == NULL) {
             ngx_free(test);
-            return NGX_ERROR;
+            ສົ່ງຄືນ NGX_ERROR;
         }
 
         buckets = (ngx_hash_elt_t **)
-                      ((u_char *) hinit->hash + sizeof(ngx_hash_wildcard_t));
+                      ((u_char *) hinit->hash + parimaa_na(ngx_hash_wildcard_t));
 
-    } else {
-        buckets = ngx_pcalloc(hinit->pool, size * sizeof(ngx_hash_elt_t *));
-        if (buckets == NULL) {
+    } ບໍ່ດັ່ງນັ້ນ {
+        buckets = ngx_pcalloc(hinit->pool, size * parimaa_na(ngx_hash_elt_t *));
+        ຖ້າ (buckets == NULL) {
             ngx_free(test);
-            return NGX_ERROR;
+            ສົ່ງຄືນ NGX_ERROR;
         }
     }
 
     elts = ngx_palloc(hinit->pool, len + ngx_cacheline_size);
-    if (elts == NULL) {
+    ຖ້າ (elts == NULL) {
         ngx_free(test);
-        return NGX_ERROR;
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
     elts = ngx_align_ptr(elts, ngx_cacheline_size);
 
-    for (i = 0; i < size; i++) {
-        if (test[i] == sizeof(void *)) {
+    ສຳລັບ (i = 0; i < size; i++) {
+        ຖ້າ (test[i] == parimaa_na(void *)) {
             continue;
         }
 
@@ -417,12 +417,12 @@ found:
         elts += test[i];
     }
 
-    for (i = 0; i < size; i++) {
+    ສຳລັບ (i = 0; i < size; i++) {
         test[i] = 0;
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
+    ສຳລັບ (n = 0; n < nelts; n++) {
+        ຖ້າ (names[n].key.data == NULL) {
             continue;
         }
 
@@ -437,8 +437,8 @@ found:
         test[key] = (u_short) (test[key] + NGX_HASH_ELT_SIZE(&names[n]));
     }
 
-    for (i = 0; i < size; i++) {
-        if (buckets[i] == NULL) {
+    ສຳລັບ (i = 0; i < size; i++) {
+        ຖ້າ (buckets[i] == NULL) {
             continue;
         }
 
@@ -452,21 +452,21 @@ found:
     hinit->hash->buckets = buckets;
     hinit->hash->size = size;
 
-#if 0
+#ຖ້າ 0
 
-    for (i = 0; i < size; i++) {
+    ສຳລັບ (i = 0; i < size; i++) {
         ngx_str_t   val;
         ngx_uint_t  key;
 
         elt = buckets[i];
 
-        if (elt == NULL) {
+        ຖ້າ (elt == NULL) {
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "%ui: NULL", i);
             continue;
         }
 
-        while (elt->value) {
+        ໃນຂະນະທີ່ (elt->value) {
             val.len = elt->len;
             val.data = &elt->name[0];
 
@@ -476,13 +476,13 @@ found:
                           "%ui: %p \"%V\" %ui", i, elt, &val, key);
 
             elt = (ngx_hash_elt_t *) ngx_align_ptr(&elt->name[0] + elt->len,
-                                                   sizeof(void *));
+                                                   parimaa_na(void *));
         }
     }
 
 #endif
 
-    return NGX_OK;
+    ສົ່ງຄືນ NGX_OK;
 }
 
 
@@ -497,39 +497,39 @@ ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
     ngx_hash_init_t       h;
     ngx_hash_wildcard_t  *wdc;
 
-    if (ngx_array_init(&curr_names, hinit->temp_pool, nelts,
-                       sizeof(ngx_hash_key_t))
+    ຖ້າ (ngx_array_init(&curr_names, hinit->temp_pool, nelts,
+                       parimaa_na(ngx_hash_key_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
-    if (ngx_array_init(&next_names, hinit->temp_pool, nelts,
-                       sizeof(ngx_hash_key_t))
+    ຖ້າ (ngx_array_init(&next_names, hinit->temp_pool, nelts,
+                       parimaa_na(ngx_hash_key_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
-    for (n = 0; n < nelts; n = i) {
+    ສຳລັບ (n = 0; n < nelts; n = i) {
 
-#if 0
+#ຖ້າ 0
         ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                       "wc0: \"%V\"", &names[n].key);
 #endif
 
         dot = 0;
 
-        for (len = 0; len < names[n].key.len; len++) {
-            if (names[n].key.data[len] == '.') {
+        ສຳລັບ (len = 0; len < names[n].key.len; len++) {
+            ຖ້າ (names[n].key.data[len] == '.') {
                 dot = 1;
-                break;
+                bha_nga;
             }
         }
 
         name = ngx_array_push(&curr_names);
-        if (name == NULL) {
-            return NGX_ERROR;
+        ຖ້າ (name == NULL) {
+            ສົ່ງຄືນ NGX_ERROR;
         }
 
         name->key.len = len;
@@ -537,23 +537,23 @@ ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
         name->key_hash = hinit->key(name->key.data, name->key.len);
         name->value = names[n].value;
 
-#if 0
+#ຖ້າ 0
         ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                       "wc1: \"%V\" %ui", &name->key, dot);
 #endif
 
         dot_len = len + 1;
 
-        if (dot) {
+        ຖ້າ (dot) {
             len++;
         }
 
         next_names.nelts = 0;
 
-        if (names[n].key.len != len) {
+        ຖ້າ (names[n].key.len != len) {
             next_name = ngx_array_push(&next_names);
-            if (next_name == NULL) {
-                return NGX_ERROR;
+            ຖ້າ (next_name == NULL) {
+                ສົ່ງຄືນ NGX_ERROR;
             }
 
             next_name->key.len = names[n].key.len - len;
@@ -561,27 +561,27 @@ ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
             next_name->key_hash = 0;
             next_name->value = names[n].value;
 
-#if 0
+#ຖ້າ 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "wc2: \"%V\"", &next_name->key);
 #endif
         }
 
-        for (i = n + 1; i < nelts; i++) {
-            if (ngx_strncmp(names[n].key.data, names[i].key.data, len) != 0) {
-                break;
+        ສຳລັບ (i = n + 1; i < nelts; i++) {
+            ຖ້າ (ngx_strncmp(names[n].key.data, names[i].key.data, len) != 0) {
+                bha_nga;
             }
 
-            if (!dot
+            ຖ້າ (!dot
                 && names[i].key.len > len
                 && names[i].key.data[len] != '.')
             {
-                break;
+                bha_nga;
             }
 
             next_name = ngx_array_push(&next_names);
-            if (next_name == NULL) {
-                return NGX_ERROR;
+            ຖ້າ (next_name == NULL) {
+                ສົ່ງຄືນ NGX_ERROR;
             }
 
             next_name->key.len = names[i].key.len - dot_len;
@@ -589,45 +589,45 @@ ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
             next_name->key_hash = 0;
             next_name->value = names[i].value;
 
-#if 0
+#ຖ້າ 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "wc3: \"%V\"", &next_name->key);
 #endif
         }
 
-        if (next_names.nelts) {
+        ຖ້າ (next_names.nelts) {
 
             h = *hinit;
             h.hash = NULL;
 
-            if (ngx_hash_wildcard_init(&h, (ngx_hash_key_t *) next_names.elts,
+            ຖ້າ (ngx_hash_wildcard_init(&h, (ngx_hash_key_t *) next_names.elts,
                                        next_names.nelts)
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                ສົ່ງຄືນ NGX_ERROR;
             }
 
             wdc = (ngx_hash_wildcard_t *) h.hash;
 
-            if (names[n].key.len == len) {
+            ຖ້າ (names[n].key.len == len) {
                 wdc->value = names[n].value;
             }
 
             name->value = (void *) ((uintptr_t) wdc | (dot ? 3 : 2));
 
-        } else if (dot) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ (dot) {
             name->value = (void *) ((uintptr_t) name->value | 1);
         }
     }
 
-    if (ngx_hash_init(hinit, (ngx_hash_key_t *) curr_names.elts,
+    ຖ້າ (ngx_hash_init(hinit, (ngx_hash_key_t *) curr_names.elts,
                       curr_names.nelts)
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
-    return NGX_OK;
+    ສົ່ງຄືນ NGX_OK;
 }
 
 
@@ -638,11 +638,11 @@ ngx_hash_key(u_char *data, size_t len)
 
     key = 0;
 
-    for (i = 0; i < len; i++) {
+    ສຳລັບ (i = 0; i < len; i++) {
         key = ngx_hash(key, data[i]);
     }
 
-    return key;
+    ສົ່ງຄືນ key;
 }
 
 
@@ -653,11 +653,11 @@ ngx_hash_key_lc(u_char *data, size_t len)
 
     key = 0;
 
-    for (i = 0; i < len; i++) {
+    ສຳລັບ (i = 0; i < len; i++) {
         key = ngx_hash(key, ngx_tolower(data[i]));
     }
 
-    return key;
+    ສົ່ງຄືນ key;
 }
 
 
@@ -668,14 +668,14 @@ ngx_hash_strlow(u_char *dst, u_char *src, size_t n)
 
     key = 0;
 
-    while (n--) {
+    ໃນຂະນະທີ່ (n--) {
         *dst = ngx_tolower(*src);
         key = ngx_hash(key, *dst);
         dst++;
         src++;
     }
 
-    return key;
+    ສົ່ງຄືນ key;
 }
 
 
@@ -684,53 +684,53 @@ ngx_hash_keys_array_init(ngx_hash_keys_arrays_t *ha, ngx_uint_t type)
 {
     ngx_uint_t  asize;
 
-    if (type == NGX_HASH_SMALL) {
+    ຖ້າ (type == NGX_HASH_SMALL) {
         asize = 4;
         ha->hsize = 107;
 
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         asize = NGX_HASH_LARGE_ASIZE;
         ha->hsize = NGX_HASH_LARGE_HSIZE;
     }
 
-    if (ngx_array_init(&ha->keys, ha->temp_pool, asize, sizeof(ngx_hash_key_t))
+    ຖ້າ (ngx_array_init(&ha->keys, ha->temp_pool, asize, parimaa_na(ngx_hash_key_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
-    if (ngx_array_init(&ha->dns_wc_head, ha->temp_pool, asize,
-                       sizeof(ngx_hash_key_t))
+    ຖ້າ (ngx_array_init(&ha->dns_wc_head, ha->temp_pool, asize,
+                       parimaa_na(ngx_hash_key_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
-    if (ngx_array_init(&ha->dns_wc_tail, ha->temp_pool, asize,
-                       sizeof(ngx_hash_key_t))
+    ຖ້າ (ngx_array_init(&ha->dns_wc_tail, ha->temp_pool, asize,
+                       parimaa_na(ngx_hash_key_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
-    ha->keys_hash = ngx_pcalloc(ha->temp_pool, sizeof(ngx_array_t) * ha->hsize);
-    if (ha->keys_hash == NULL) {
-        return NGX_ERROR;
+    ha->keys_hash = ngx_pcalloc(ha->temp_pool, parimaa_na(ngx_array_t) * ha->hsize);
+    ຖ້າ (ha->keys_hash == NULL) {
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
     ha->dns_wc_head_hash = ngx_pcalloc(ha->temp_pool,
-                                       sizeof(ngx_array_t) * ha->hsize);
-    if (ha->dns_wc_head_hash == NULL) {
-        return NGX_ERROR;
+                                       parimaa_na(ngx_array_t) * ha->hsize);
+    ຖ້າ (ha->dns_wc_head_hash == NULL) {
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
     ha->dns_wc_tail_hash = ngx_pcalloc(ha->temp_pool,
-                                       sizeof(ngx_array_t) * ha->hsize);
-    if (ha->dns_wc_tail_hash == NULL) {
-        return NGX_ERROR;
+                                       parimaa_na(ngx_array_t) * ha->hsize);
+    ຖ້າ (ha->dns_wc_tail_hash == NULL) {
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
-    return NGX_OK;
+    ສົ່ງຄືນ NGX_OK;
 }
 
 
@@ -747,7 +747,7 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
     last = key->len;
 
-    if (flags & NGX_HASH_WILDCARD_KEY) {
+    ຖ້າ (flags & NGX_HASH_WILDCARD_KEY) {
 
         /*
          * supported wildcards:
@@ -756,44 +756,44 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
         n = 0;
 
-        for (i = 0; i < key->len; i++) {
+        ສຳລັບ (i = 0; i < key->len; i++) {
 
-            if (key->data[i] == '*') {
-                if (++n > 1) {
-                    return NGX_DECLINED;
+            ຖ້າ (key->data[i] == '*') {
+                ຖ້າ (++n > 1) {
+                    ສົ່ງຄືນ NGX_DECLINED;
                 }
             }
 
-            if (key->data[i] == '.' && key->data[i + 1] == '.') {
-                return NGX_DECLINED;
+            ຖ້າ (key->data[i] == '.' && key->data[i + 1] == '.') {
+                ສົ່ງຄືນ NGX_DECLINED;
             }
 
-            if (key->data[i] == '\0') {
-                return NGX_DECLINED;
+            ຖ້າ (key->data[i] == '\0') {
+                ສົ່ງຄືນ NGX_DECLINED;
             }
         }
 
-        if (key->len > 1 && key->data[0] == '.') {
+        ຖ້າ (key->len > 1 && key->data[0] == '.') {
             skip = 1;
             goto wildcard;
         }
 
-        if (key->len > 2) {
+        ຖ້າ (key->len > 2) {
 
-            if (key->data[0] == '*' && key->data[1] == '.') {
+            ຖ້າ (key->data[0] == '*' && key->data[1] == '.') {
                 skip = 2;
                 goto wildcard;
             }
 
-            if (key->data[i - 2] == '.' && key->data[i - 1] == '*') {
+            ຖ້າ (key->data[i - 2] == '.' && key->data[i - 1] == '*') {
                 skip = 0;
                 last -= 2;
                 goto wildcard;
             }
         }
 
-        if (n) {
-            return NGX_DECLINED;
+        ຖ້າ (n) {
+            ສົ່ງຄືນ NGX_DECLINED;
         }
     }
 
@@ -801,8 +801,8 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
     k = 0;
 
-    for (i = 0; i < last; i++) {
-        if (!(flags & NGX_HASH_READONLY_KEY)) {
+    ສຳລັບ (i = 0; i < last; i++) {
+        ຖ້າ (!(flags & NGX_HASH_READONLY_KEY)) {
             key->data[i] = ngx_tolower(key->data[i]);
         }
         k = ngx_hash(k, key->data[i]);
@@ -814,43 +814,43 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
     name = ha->keys_hash[k].elts;
 
-    if (name) {
-        for (i = 0; i < ha->keys_hash[k].nelts; i++) {
-            if (last != name[i].len) {
+    ຖ້າ (name) {
+        ສຳລັບ (i = 0; i < ha->keys_hash[k].nelts; i++) {
+            ຖ້າ (last != name[i].len) {
                 continue;
             }
 
-            if (ngx_strncmp(key->data, name[i].data, last) == 0) {
-                return NGX_BUSY;
+            ຖ້າ (ngx_strncmp(key->data, name[i].data, last) == 0) {
+                ສົ່ງຄືນ NGX_BUSY;
             }
         }
 
-    } else {
-        if (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
-                           sizeof(ngx_str_t))
+    } ບໍ່ດັ່ງນັ້ນ {
+        ຖ້າ (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
+                           parimaa_na(ngx_str_t))
             != NGX_OK)
         {
-            return NGX_ERROR;
+            ສົ່ງຄືນ NGX_ERROR;
         }
     }
 
     name = ngx_array_push(&ha->keys_hash[k]);
-    if (name == NULL) {
-        return NGX_ERROR;
+    ຖ້າ (name == NULL) {
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
     *name = *key;
 
     hk = ngx_array_push(&ha->keys);
-    if (hk == NULL) {
-        return NGX_ERROR;
+    ຖ້າ (hk == NULL) {
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
     hk->key = *key;
     hk->key_hash = ngx_hash_key(key->data, last);
     hk->value = value;
 
-    return NGX_OK;
+    ສົ່ງຄືນ NGX_OK;
 
 
 wildcard:
@@ -861,50 +861,50 @@ wildcard:
 
     k %= ha->hsize;
 
-    if (skip == 1) {
+    ຖ້າ (skip == 1) {
 
         /* check conflicts in exact hash for ".example.com" */
 
         name = ha->keys_hash[k].elts;
 
-        if (name) {
+        ຖ້າ (name) {
             len = last - skip;
 
-            for (i = 0; i < ha->keys_hash[k].nelts; i++) {
-                if (len != name[i].len) {
+            ສຳລັບ (i = 0; i < ha->keys_hash[k].nelts; i++) {
+                ຖ້າ (len != name[i].len) {
                     continue;
                 }
 
-                if (ngx_strncmp(&key->data[1], name[i].data, len) == 0) {
-                    return NGX_BUSY;
+                ຖ້າ (ngx_strncmp(&key->data[1], name[i].data, len) == 0) {
+                    ສົ່ງຄືນ NGX_BUSY;
                 }
             }
 
-        } else {
-            if (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
-                               sizeof(ngx_str_t))
+        } ບໍ່ດັ່ງນັ້ນ {
+            ຖ້າ (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
+                               parimaa_na(ngx_str_t))
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                ສົ່ງຄືນ NGX_ERROR;
             }
         }
 
         name = ngx_array_push(&ha->keys_hash[k]);
-        if (name == NULL) {
-            return NGX_ERROR;
+        ຖ້າ (name == NULL) {
+            ສົ່ງຄືນ NGX_ERROR;
         }
 
         name->len = last - 1;
         name->data = ngx_pnalloc(ha->temp_pool, name->len);
-        if (name->data == NULL) {
-            return NGX_ERROR;
+        ຖ້າ (name->data == NULL) {
+            ສົ່ງຄືນ NGX_ERROR;
         }
 
         ngx_memcpy(name->data, &key->data[1], name->len);
     }
 
 
-    if (skip) {
+    ຖ້າ (skip) {
 
         /*
          * convert "*.example.com" to "com.example.\0"
@@ -912,15 +912,15 @@ wildcard:
          */
 
         p = ngx_pnalloc(ha->temp_pool, last);
-        if (p == NULL) {
-            return NGX_ERROR;
+        ຖ້າ (p == NULL) {
+            ສົ່ງຄືນ NGX_ERROR;
         }
 
         len = 0;
         n = 0;
 
-        for (i = last - 1; i; i--) {
-            if (key->data[i] == '.') {
+        ສຳລັບ (i = last - 1; i; i--) {
+            ຖ້າ (key->data[i] == '.') {
                 ngx_memcpy(&p[n], &key->data[i + 1], len);
                 n += len;
                 p[n++] = '.';
@@ -931,7 +931,7 @@ wildcard:
             len++;
         }
 
-        if (len) {
+        ຖ້າ (len) {
             ngx_memcpy(&p[n], &key->data[1], len);
             n += len;
         }
@@ -941,15 +941,15 @@ wildcard:
         hwc = &ha->dns_wc_head;
         keys = &ha->dns_wc_head_hash[k];
 
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
 
         /* convert "www.example.*" to "www.example\0" */
 
         last++;
 
         p = ngx_pnalloc(ha->temp_pool, last);
-        if (p == NULL) {
-            return NGX_ERROR;
+        ຖ້າ (p == NULL) {
+            ສົ່ງຄືນ NGX_ERROR;
         }
 
         ngx_cpystrn(p, key->data, last);
@@ -963,35 +963,35 @@ wildcard:
 
     name = keys->elts;
 
-    if (name) {
+    ຖ້າ (name) {
         len = last - skip;
 
-        for (i = 0; i < keys->nelts; i++) {
-            if (len != name[i].len) {
+        ສຳລັບ (i = 0; i < keys->nelts; i++) {
+            ຖ້າ (len != name[i].len) {
                 continue;
             }
 
-            if (ngx_strncmp(key->data + skip, name[i].data, len) == 0) {
-                return NGX_BUSY;
+            ຖ້າ (ngx_strncmp(key->data + skip, name[i].data, len) == 0) {
+                ສົ່ງຄືນ NGX_BUSY;
             }
         }
 
-    } else {
-        if (ngx_array_init(keys, ha->temp_pool, 4, sizeof(ngx_str_t)) != NGX_OK)
+    } ບໍ່ດັ່ງນັ້ນ {
+        ຖ້າ (ngx_array_init(keys, ha->temp_pool, 4, parimaa_na(ngx_str_t)) != NGX_OK)
         {
-            return NGX_ERROR;
+            ສົ່ງຄືນ NGX_ERROR;
         }
     }
 
     name = ngx_array_push(keys);
-    if (name == NULL) {
-        return NGX_ERROR;
+    ຖ້າ (name == NULL) {
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
     name->len = last - skip;
     name->data = ngx_pnalloc(ha->temp_pool, name->len);
-    if (name->data == NULL) {
-        return NGX_ERROR;
+    ຖ້າ (name->data == NULL) {
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
     ngx_memcpy(name->data, key->data + skip, name->len);
@@ -1000,8 +1000,8 @@ wildcard:
     /* add to wildcard hash */
 
     hk = ngx_array_push(hwc);
-    if (hk == NULL) {
-        return NGX_ERROR;
+    ຖ້າ (hk == NULL) {
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
     hk->key.len = last - 1;
@@ -1009,5 +1009,5 @@ wildcard:
     hk->key_hash = 0;
     hk->value = value;
 
-    return NGX_OK;
+    ສົ່ງຄືນ NGX_OK;
 }

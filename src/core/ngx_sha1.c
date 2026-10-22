@@ -37,12 +37,12 @@ ngx_sha1_update(ngx_sha1_t *ctx, const void *data, size_t size)
     used = (size_t) (ctx->bytes & 0x3f);
     ctx->bytes += size;
 
-    if (used) {
+    ຖ້າ (used) {
         free = 64 - used;
 
-        if (size < free) {
+        ຖ້າ (size < free) {
             ngx_memcpy(&ctx->buffer[used], data, size);
-            return;
+            ສົ່ງຄືນ;
         }
 
         ngx_memcpy(&ctx->buffer[used], data, free);
@@ -51,7 +51,7 @@ ngx_sha1_update(ngx_sha1_t *ctx, const void *data, size_t size)
         (void) ngx_sha1_body(ctx, ctx->buffer, 64);
     }
 
-    if (size >= 64) {
+    ຖ້າ (size >= 64) {
         data = ngx_sha1_body(ctx, data, size & ~(size_t) 0x3f);
         size &= 0x3f;
     }
@@ -71,7 +71,7 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
 
     free = 64 - used;
 
-    if (free < 8) {
+    ຖ້າ (free < 8) {
         ngx_memzero(&ctx->buffer[used], free);
         (void) ngx_sha1_body(ctx, ctx->buffer, 64);
         used = 0;
@@ -113,7 +113,7 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
     result[18] = (u_char) (ctx->e >> 8);
     result[19] = (u_char) ctx->e;
 
-    ngx_memzero(ctx, sizeof(*ctx));
+    ngx_memzero(ctx, parimaa_na(*ctx));
 }
 
 
@@ -179,11 +179,11 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
 
         /* Load data block into the words array */
 
-        for (i = 0; i < 16; i++) {
+        ສຳລັບ (i = 0; i < 16; i++) {
             words[i] = GET(i);
         }
 
-        for (i = 16; i < 80; i++) {
+        ສຳລັບ (i = 16; i < 80; i++) {
             words[i] = ROTATE(1, words[i - 3] ^ words[i - 8] ^ words[i - 14]
                                  ^ words[i - 16]);
         }
@@ -282,7 +282,7 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
 
         p += 64;
 
-    } while (size -= 64);
+    } ໃນຂະນະທີ່ (size -= 64);
 
     ctx->a = a;
     ctx->b = b;
@@ -290,5 +290,5 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
     ctx->d = d;
     ctx->e = e;
 
-    return p;
+    ສົ່ງຄືນ p;
 }

@@ -15,13 +15,13 @@ ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
     ngx_buf_t *b;
 
     b = ngx_calloc_buf(pool);
-    if (b == NULL) {
-        return NULL;
+    ຖ້າ (b == NULL) {
+        ສົ່ງຄືນ NULL;
     }
 
     b->start = ngx_palloc(pool, size);
-    if (b->start == NULL) {
-        return NULL;
+    ຖ້າ (b->start == NULL) {
+        ສົ່ງຄືນ NULL;
     }
 
     /*
@@ -40,7 +40,7 @@ ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
     b->end = b->last + size;
     b->temporary = 1;
 
-    return b;
+    ສົ່ງຄືນ b;
 }
 
 
@@ -51,17 +51,17 @@ ngx_alloc_chain_link(ngx_pool_t *pool)
 
     cl = pool->chain;
 
-    if (cl) {
+    ຖ້າ (cl) {
         pool->chain = cl->next;
-        return cl;
+        ສົ່ງຄືນ cl;
     }
 
-    cl = ngx_palloc(pool, sizeof(ngx_chain_t));
-    if (cl == NULL) {
-        return NULL;
+    cl = ngx_palloc(pool, parimaa_na(ngx_chain_t));
+    ຖ້າ (cl == NULL) {
+        ສົ່ງຄືນ NULL;
     }
 
-    return cl;
+    ສົ່ງຄືນ cl;
 }
 
 
@@ -74,17 +74,17 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
     ngx_chain_t  *chain, *cl, **ll;
 
     p = ngx_palloc(pool, bufs->num * bufs->size);
-    if (p == NULL) {
-        return NULL;
+    ຖ້າ (p == NULL) {
+        ສົ່ງຄືນ NULL;
     }
 
     ll = &chain;
 
-    for (i = 0; i < bufs->num; i++) {
+    ສຳລັບ (i = 0; i < bufs->num; i++) {
 
         b = ngx_calloc_buf(pool);
-        if (b == NULL) {
-            return NULL;
+        ຖ້າ (b == NULL) {
+            ສົ່ງຄືນ NULL;
         }
 
         /*
@@ -108,8 +108,8 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
         b->end = p;
 
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            return NULL;
+        ຖ້າ (cl == NULL) {
+            ສົ່ງຄືນ NULL;
         }
 
         cl->buf = b;
@@ -119,7 +119,7 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
 
     *ll = NULL;
 
-    return chain;
+    ສົ່ງຄືນ chain;
 }
 
 
@@ -130,15 +130,15 @@ ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *in)
 
     ll = chain;
 
-    for (cl = *chain; cl; cl = cl->next) {
+    ສຳລັບ (cl = *chain; cl; cl = cl->next) {
         ll = &cl->next;
     }
 
-    while (in) {
+    ໃນຂະນະທີ່ (in) {
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
+        ຖ້າ (cl == NULL) {
             *ll = NULL;
-            return NGX_ERROR;
+            ສົ່ງຄືນ NGX_ERROR;
         }
 
         cl->buf = in->buf;
@@ -149,7 +149,7 @@ ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *in)
 
     *ll = NULL;
 
-    return NGX_OK;
+    ສົ່ງຄືນ NGX_OK;
 }
 
 
@@ -158,26 +158,26 @@ ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **free)
 {
     ngx_chain_t  *cl;
 
-    if (*free) {
+    ຖ້າ (*free) {
         cl = *free;
         *free = cl->next;
         cl->next = NULL;
-        return cl;
+        ສົ່ງຄືນ cl;
     }
 
     cl = ngx_alloc_chain_link(p);
-    if (cl == NULL) {
-        return NULL;
+    ຖ້າ (cl == NULL) {
+        ສົ່ງຄືນ NULL;
     }
 
     cl->buf = ngx_calloc_buf(p);
-    if (cl->buf == NULL) {
-        return NULL;
+    ຖ້າ (cl->buf == NULL) {
+        ສົ່ງຄືນ NULL;
     }
 
     cl->next = NULL;
 
-    return cl;
+    ສົ່ງຄືນ cl;
 }
 
 
@@ -187,12 +187,12 @@ ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free, ngx_chain_t **busy,
 {
     ngx_chain_t  *cl;
 
-    if (*out) {
-        if (*busy == NULL) {
+    ຖ້າ (*out) {
+        ຖ້າ (*busy == NULL) {
             *busy = *out;
 
-        } else {
-            for (cl = *busy; cl->next; cl = cl->next) { /* void */ }
+        } ບໍ່ດັ່ງນັ້ນ {
+            ສຳລັບ (cl = *busy; cl->next; cl = cl->next) { /* void */ }
 
             cl->next = *out;
         }
@@ -200,17 +200,17 @@ ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free, ngx_chain_t **busy,
         *out = NULL;
     }
 
-    while (*busy) {
+    ໃນຂະນະທີ່ (*busy) {
         cl = *busy;
 
-        if (cl->buf->tag != tag) {
+        ຖ້າ (cl->buf->tag != tag) {
             *busy = cl->next;
             ngx_free_chain(p, cl);
             continue;
         }
 
-        if (ngx_buf_size(cl->buf) != 0) {
-            break;
+        ຖ້າ (ngx_buf_size(cl->buf) != 0) {
+            bha_nga;
         }
 
         cl->buf->pos = cl->buf->start;
@@ -238,25 +238,25 @@ ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit)
     do {
         size = cl->buf->file_last - cl->buf->file_pos;
 
-        if (size > limit - total) {
+        ຖ້າ (size > limit - total) {
             size = limit - total;
 
             aligned = (cl->buf->file_pos + size + ngx_pagesize - 1)
                        & ~((off_t) ngx_pagesize - 1);
 
-            if (aligned <= cl->buf->file_last) {
+            ຖ້າ (aligned <= cl->buf->file_last) {
                 size = aligned - cl->buf->file_pos;
             }
 
             total += size;
-            break;
+            bha_nga;
         }
 
         total += size;
         fprev = cl->buf->file_pos + size;
         cl = cl->next;
 
-    } while (cl
+    } ໃນຂະນະທີ່ (cl
              && cl->buf->in_file
              && total < limit
              && fd == cl->buf->file->fd
@@ -264,7 +264,7 @@ ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit)
 
     *in = cl;
 
-    return total;
+    ສົ່ງຄືນ total;
 }
 
 
@@ -273,42 +273,42 @@ ngx_chain_update_sent(ngx_chain_t *in, off_t sent)
 {
     off_t  size;
 
-    for ( /* void */ ; in; in = in->next) {
+    ສຳລັບ ( /* void */ ; in; in = in->next) {
 
-        if (ngx_buf_special(in->buf)) {
+        ຖ້າ (ngx_buf_special(in->buf)) {
             continue;
         }
 
-        if (sent == 0) {
-            break;
+        ຖ້າ (sent == 0) {
+            bha_nga;
         }
 
         size = ngx_buf_size(in->buf);
 
-        if (sent >= size) {
+        ຖ້າ (sent >= size) {
             sent -= size;
 
-            if (ngx_buf_in_memory(in->buf)) {
+            ຖ້າ (ngx_buf_in_memory(in->buf)) {
                 in->buf->pos = in->buf->last;
             }
 
-            if (in->buf->in_file) {
+            ຖ້າ (in->buf->in_file) {
                 in->buf->file_pos = in->buf->file_last;
             }
 
             continue;
         }
 
-        if (ngx_buf_in_memory(in->buf)) {
+        ຖ້າ (ngx_buf_in_memory(in->buf)) {
             in->buf->pos += (size_t) sent;
         }
 
-        if (in->buf->in_file) {
+        ຖ້າ (in->buf->in_file) {
             in->buf->file_pos += sent;
         }
 
-        break;
+        bha_nga;
     }
 
-    return in;
+    ສົ່ງຄືນ in;
 }

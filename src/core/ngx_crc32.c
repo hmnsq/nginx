@@ -180,23 +180,23 @@ ngx_crc32_table_init(void)
 {
     void  *p;
 
-    if (((uintptr_t) ngx_crc32_table_short
+    ຖ້າ (((uintptr_t) ngx_crc32_table_short
           & ~((uintptr_t) ngx_cacheline_size - 1))
         == (uintptr_t) ngx_crc32_table_short)
     {
-        return NGX_OK;
+        ສົ່ງຄືນ NGX_OK;
     }
 
-    p = ngx_alloc(16 * sizeof(uint32_t) + ngx_cacheline_size, ngx_cycle->log);
-    if (p == NULL) {
-        return NGX_ERROR;
+    p = ngx_alloc(16 * parimaa_na(uint32_t) + ngx_cacheline_size, ngx_cycle->log);
+    ຖ້າ (p == NULL) {
+        ສົ່ງຄືນ NGX_ERROR;
     }
 
     p = ngx_align_ptr(p, ngx_cacheline_size);
 
-    ngx_memcpy(p, ngx_crc32_table16, 16 * sizeof(uint32_t));
+    ngx_memcpy(p, ngx_crc32_table16, 16 * parimaa_na(uint32_t));
 
     ngx_crc32_table_short = p;
 
-    return NGX_OK;
+    ສົ່ງຄືນ NGX_OK;
 }

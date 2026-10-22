@@ -13,7 +13,7 @@
 #include <ngx_core.h>
 
 
-typedef struct {
+typedef sa_nracanaa {
     uint64_t  bytes;
     uint32_t  a, b, c, d, e, f;
     u_char    buffer[64];
