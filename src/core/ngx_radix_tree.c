@@ -5,11 +5,11 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-static ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
+ساكن ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
 
 
 ngx_radix_tree_t *
@@ -18,28 +18,28 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     uint32_t           key, mask, inc;
     ngx_radix_tree_t  *tree;
 
-    tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
-        return NULL;
+    tree = ngx_palloc(pool, حجم(ngx_radix_tree_t));
+    אם (tree == عدم) {
+        החזר عدم;
     }
 
     tree->pool = pool;
-    tree->free = NULL;
-    tree->start = NULL;
+    tree->حرر = عدم;
+    tree->start = عدم;
     tree->size = 0;
 
     tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
-        return NULL;
+    אם (tree->root == عدم) {
+        החזר عدم;
     }
 
-    tree->root->right = NULL;
-    tree->root->left = NULL;
-    tree->root->parent = NULL;
+    tree->root->right = عدم;
+    tree->root->left = عدم;
+    tree->root->parent = عدم;
     tree->root->value = NGX_RADIX_NO_VALUE;
 
-    if (preallocate == 0) {
-        return tree;
+    אם (preallocate == 0) {
+        החזר tree;
     }
 
     /*
@@ -59,21 +59,21 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      *     8 bits on sparc64 in 32-bit mode (8K pages)
      */
 
-    if (preallocate == -1) {
-        switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
+    אם (preallocate == -1) {
+        بدل (ngx_pagesize / حجم(ngx_radix_node_t)) {
 
         /* amd64 */
-        case 128:
+        حالة 128:
             preallocate = 6;
-            break;
+            اكسر;
 
         /* i386, sparc64 */
-        case 256:
+        حالة 256:
             preallocate = 7;
-            break;
+            اكسر;
 
         /* sparc64 in 32-bit mode */
-        default:
+        افتراضي:
             preallocate = 8;
         }
     }
@@ -81,27 +81,27 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     mask = 0;
     inc = 0x80000000;
 
-    while (preallocate--) {
+    כלעוד (preallocate--) {
 
         key = 0;
         mask >>= 1;
         mask |= 0x80000000;
 
-        do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+        עשה {
+            אם (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
                 != NGX_OK)
             {
-                return NULL;
+                החזר عدم;
             }
 
             key += inc;
 
-        } while (key);
+        } כלעוד (key);
 
         inc >>= 1;
     }
 
-    return tree;
+    החזר tree;
 }
 
 
@@ -117,46 +117,46 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
     node = tree->root;
     next = tree->root;
 
-    while (bit & mask) {
-        if (key & bit) {
+    כלעוד (bit & mask) {
+        אם (key & bit) {
             next = node->right;
 
-        } else {
+        } אחרת {
             next = node->left;
         }
 
-        if (next == NULL) {
-            break;
+        אם (next == عدم) {
+            اكسر;
         }
 
         bit >>= 1;
         node = next;
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    אם (next) {
+        אם (node->value != NGX_RADIX_NO_VALUE) {
+            החזר NGX_BUSY;
         }
 
         node->value = value;
-        return NGX_OK;
+        החזר NGX_OK;
     }
 
-    while (bit & mask) {
+    כלעוד (bit & mask) {
         next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+        אם (next == عدم) {
+            החזר NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
+        next->right = عدم;
+        next->left = عدم;
         next->parent = node;
         next->value = NGX_RADIX_NO_VALUE;
 
-        if (key & bit) {
+        אם (key & bit) {
             node->right = next;
 
-        } else {
+        } אחרת {
             node->left = next;
         }
 
@@ -166,7 +166,7 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
 
     node->value = value;
 
-    return NGX_OK;
+    החזר NGX_OK;
 }
 
 
@@ -179,57 +179,57 @@ ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
     bit = 0x80000000;
     node = tree->root;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
+    כלעוד (node && (bit & mask)) {
+        אם (key & bit) {
             node = node->right;
 
-        } else {
+        } אחרת {
             node = node->left;
         }
 
         bit >>= 1;
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    אם (node == عدم) {
+        החזר NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    אם (node->right || node->left) {
+        אם (node->value != NGX_RADIX_NO_VALUE) {
             node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+            החזר NGX_OK;
         }
 
-        return NGX_ERROR;
+        החזר NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    עבור ( ;; ) {
+        אם (node->parent->right == node) {
+            node->parent->right = عدم;
 
-        } else {
-            node->parent->left = NULL;
+        } אחרת {
+            node->parent->left = عدم;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        node->right = tree->حرر;
+        tree->حرر = node;
 
         node = node->parent;
 
-        if (node->right || node->left) {
-            break;
+        אם (node->right || node->left) {
+            اكسر;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        אם (node->value != NGX_RADIX_NO_VALUE) {
+            اكسر;
         }
 
-        if (node->parent == NULL) {
-            break;
+        אם (node->parent == عدم) {
+            اكسر;
         }
     }
 
-    return NGX_OK;
+    החזר NGX_OK;
 }
 
 
@@ -244,26 +244,26 @@ ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
     value = NGX_RADIX_NO_VALUE;
     node = tree->root;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    כלעוד (node) {
+        אם (node->value != NGX_RADIX_NO_VALUE) {
             value = node->value;
         }
 
-        if (key & bit) {
+        אם (key & bit) {
             node = node->right;
 
-        } else {
+        } אחרת {
             node = node->left;
         }
 
         bit >>= 1;
     }
 
-    return value;
+    החזר value;
 }
 
 
-#if (NGX_HAVE_INET6)
+#אם (NGX_HAVE_INET6)
 
 ngx_int_t
 ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
@@ -279,63 +279,63 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
     node = tree->root;
     next = tree->root;
 
-    while (bit & mask[i]) {
-        if (key[i] & bit) {
+    כלעוד (bit & mask[i]) {
+        אם (key[i] & bit) {
             next = node->right;
 
-        } else {
+        } אחרת {
             next = node->left;
         }
 
-        if (next == NULL) {
-            break;
+        אם (next == عدم) {
+            اكسر;
         }
 
         bit >>= 1;
         node = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        אם (bit == 0) {
+            אם (++i == 16) {
+                اكسر;
             }
 
             bit = 0x80;
         }
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    אם (next) {
+        אם (node->value != NGX_RADIX_NO_VALUE) {
+            החזר NGX_BUSY;
         }
 
         node->value = value;
-        return NGX_OK;
+        החזר NGX_OK;
     }
 
-    while (bit & mask[i]) {
+    כלעוד (bit & mask[i]) {
         next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+        אם (next == عدم) {
+            החזר NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
+        next->right = عدم;
+        next->left = عدم;
         next->parent = node;
         next->value = NGX_RADIX_NO_VALUE;
 
-        if (key[i] & bit) {
+        אם (key[i] & bit) {
             node->right = next;
 
-        } else {
+        } אחרת {
             node->left = next;
         }
 
         bit >>= 1;
         node = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        אם (bit == 0) {
+            אם (++i == 16) {
+                اكسر;
             }
 
             bit = 0x80;
@@ -344,7 +344,7 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
 
     node->value = value;
 
-    return NGX_OK;
+    החזר NGX_OK;
 }
 
 
@@ -359,65 +359,65 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
     bit = 0x80;
     node = tree->root;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
+    כלעוד (node && (bit & mask[i])) {
+        אם (key[i] & bit) {
             node = node->right;
 
-        } else {
+        } אחרת {
             node = node->left;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        אם (bit == 0) {
+            אם (++i == 16) {
+                اكسر;
             }
 
             bit = 0x80;
         }
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    אם (node == عدم) {
+        החזר NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    אם (node->right || node->left) {
+        אם (node->value != NGX_RADIX_NO_VALUE) {
             node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+            החזר NGX_OK;
         }
 
-        return NGX_ERROR;
+        החזר NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    עבור ( ;; ) {
+        אם (node->parent->right == node) {
+            node->parent->right = عدم;
 
-        } else {
-            node->parent->left = NULL;
+        } אחרת {
+            node->parent->left = عدم;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        node->right = tree->حرر;
+        tree->حرر = node;
 
         node = node->parent;
 
-        if (node->right || node->left) {
-            break;
+        אם (node->right || node->left) {
+            اكسر;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        אם (node->value != NGX_RADIX_NO_VALUE) {
+            اكسر;
         }
 
-        if (node->parent == NULL) {
-            break;
+        אם (node->parent == عدم) {
+            اكسر;
         }
     }
 
-    return NGX_OK;
+    החזר NGX_OK;
 }
 
 
@@ -434,55 +434,55 @@ ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
     value = NGX_RADIX_NO_VALUE;
     node = tree->root;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    כלעוד (node) {
+        אם (node->value != NGX_RADIX_NO_VALUE) {
             value = node->value;
         }
 
-        if (key[i] & bit) {
+        אם (key[i] & bit) {
             node = node->right;
 
-        } else {
+        } אחרת {
             node = node->left;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
+        אם (bit == 0) {
             i++;
             bit = 0x80;
         }
     }
 
-    return value;
+    החזר value;
 }
 
 #endif
 
 
-static ngx_radix_node_t *
+ساكن ngx_radix_node_t *
 ngx_radix_alloc(ngx_radix_tree_t *tree)
 {
     ngx_radix_node_t  *p;
 
-    if (tree->free) {
-        p = tree->free;
-        tree->free = tree->free->right;
-        return p;
+    אם (tree->حرر) {
+        p = tree->حرر;
+        tree->حرر = tree->حرر->right;
+        החזר p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
+    אם (tree->size < حجم(ngx_radix_node_t)) {
         tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
-            return NULL;
+        אם (tree->start == عدم) {
+            החזר عدم;
         }
 
         tree->size = ngx_pagesize;
     }
 
     p = (ngx_radix_node_t *) tree->start;
-    tree->start += sizeof(ngx_radix_node_t);
-    tree->size -= sizeof(ngx_radix_node_t);
+    tree->start += حجم(ngx_radix_node_t);
+    tree->size -= حجم(ngx_radix_node_t);
 
-    return p;
+    החזר p;
 }

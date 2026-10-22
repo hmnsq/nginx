@@ -9,8 +9,8 @@
 #define _NGX_PARSE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 ssize_t ngx_parse_size(ngx_str_t *line);

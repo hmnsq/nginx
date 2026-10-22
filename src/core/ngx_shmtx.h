@@ -9,27 +9,27 @@
 #define _NGX_SHMTX_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_atomic_t   lock;
-#if (NGX_HAVE_POSIX_SEM)
+#אם (NGX_HAVE_POSIX_SEM)
     ngx_atomic_t   wait;
 #endif
 } ngx_shmtx_sh_t;
 
 
-typedef struct {
-#if (NGX_HAVE_ATOMIC_OPS)
+تعريفنوع بنية {
+#אם (NGX_HAVE_ATOMIC_OPS)
     ngx_atomic_t  *lock;
-#if (NGX_HAVE_POSIX_SEM)
+#אם (NGX_HAVE_POSIX_SEM)
     ngx_atomic_t  *wait;
     ngx_uint_t     semaphore;
     sem_t          sem;
 #endif
-#else
+#אחרת
     ngx_fd_t       fd;
     u_char        *name;
 #endif
@@ -39,10 +39,10 @@ typedef struct {
 
 ngx_int_t ngx_shmtx_create(ngx_shmtx_t *mtx, ngx_shmtx_sh_t *addr,
     u_char *name);
-void ngx_shmtx_destroy(ngx_shmtx_t *mtx);
+فراغ ngx_shmtx_destroy(ngx_shmtx_t *mtx);
 ngx_uint_t ngx_shmtx_trylock(ngx_shmtx_t *mtx);
-void ngx_shmtx_lock(ngx_shmtx_t *mtx);
-void ngx_shmtx_unlock(ngx_shmtx_t *mtx);
+فراغ ngx_shmtx_lock(ngx_shmtx_t *mtx);
+فراغ ngx_shmtx_unlock(ngx_shmtx_t *mtx);
 ngx_uint_t ngx_shmtx_force_unlock(ngx_shmtx_t *mtx, ngx_pid_t pid);
 
 

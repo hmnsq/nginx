@@ -6,16 +6,16 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_md5.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
+#ضمن <ngx_md5.h>
 
 
-static const u_char *ngx_md5_body(ngx_md5_t *ctx, const u_char *data,
+ساكن ثابت u_char *ngx_md5_body(ngx_md5_t *ctx, ثابت u_char *data,
     size_t size);
 
 
-void
+فراغ
 ngx_md5_init(ngx_md5_t *ctx)
 {
     ctx->a = 0x67452301;
@@ -27,29 +27,29 @@ ngx_md5_init(ngx_md5_t *ctx)
 }
 
 
-void
-ngx_md5_update(ngx_md5_t *ctx, const void *data, size_t size)
+فراغ
+ngx_md5_update(ngx_md5_t *ctx, ثابت فراغ *data, size_t size)
 {
-    size_t  used, free;
+    size_t  used, حرر;
 
     used = (size_t) (ctx->bytes & 0x3f);
     ctx->bytes += size;
 
-    if (used) {
-        free = 64 - used;
+    אם (used) {
+        حرر = 64 - used;
 
-        if (size < free) {
+        אם (size < حرر) {
             ngx_memcpy(&ctx->buffer[used], data, size);
-            return;
+            החזר;
         }
 
-        ngx_memcpy(&ctx->buffer[used], data, free);
-        data = (u_char *) data + free;
-        size -= free;
-        (void) ngx_md5_body(ctx, ctx->buffer, 64);
+        ngx_memcpy(&ctx->buffer[used], data, حرر);
+        data = (u_char *) data + حرر;
+        size -= حرر;
+        (فراغ) ngx_md5_body(ctx, ctx->buffer, 64);
     }
 
-    if (size >= 64) {
+    אם (size >= 64) {
         data = ngx_md5_body(ctx, data, size & ~(size_t) 0x3f);
         size &= 0x3f;
     }
@@ -58,25 +58,25 @@ ngx_md5_update(ngx_md5_t *ctx, const void *data, size_t size)
 }
 
 
-void
+فراغ
 ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
 {
-    size_t  used, free;
+    size_t  used, حرر;
 
     used = (size_t) (ctx->bytes & 0x3f);
 
     ctx->buffer[used++] = 0x80;
 
-    free = 64 - used;
+    حرر = 64 - used;
 
-    if (free < 8) {
-        ngx_memzero(&ctx->buffer[used], free);
-        (void) ngx_md5_body(ctx, ctx->buffer, 64);
+    אם (حرر < 8) {
+        ngx_memzero(&ctx->buffer[used], حرر);
+        (فراغ) ngx_md5_body(ctx, ctx->buffer, 64);
         used = 0;
-        free = 64;
+        حرر = 64;
     }
 
-    ngx_memzero(&ctx->buffer[used], free - 8);
+    ngx_memzero(&ctx->buffer[used], حرر - 8);
 
     ctx->bytes <<= 3;
     ctx->buffer[56] = (u_char) ctx->bytes;
@@ -88,7 +88,7 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
     ctx->buffer[62] = (u_char) (ctx->bytes >> 48);
     ctx->buffer[63] = (u_char) (ctx->bytes >> 56);
 
-    (void) ngx_md5_body(ctx, ctx->buffer, 64);
+    (فراغ) ngx_md5_body(ctx, ctx->buffer, 64);
 
     result[0] = (u_char) ctx->a;
     result[1] = (u_char) (ctx->a >> 8);
@@ -107,7 +107,7 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
     result[14] = (u_char) (ctx->d >> 16);
     result[15] = (u_char) (ctx->d >> 24);
 
-    ngx_memzero(ctx, sizeof(*ctx));
+    ngx_memzero(ctx, حجم(*ctx));
 }
 
 
@@ -142,12 +142,12 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
  * does not work.
  */
 
-#if (NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
+#אם (NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
 
 #define SET(n)      (*(uint32_t *) &p[n * 4])
 #define GET(n)      (*(uint32_t *) &p[n * 4])
 
-#else
+#אחרת
 
 #define SET(n)                                                                \
     (block[n] =                                                               \
@@ -166,13 +166,13 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
  * the bit counters.  There are no alignment requirements.
  */
 
-static const u_char *
-ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
+ساكن ثابت u_char *
+ngx_md5_body(ngx_md5_t *ctx, ثابت u_char *data, size_t size)
 {
     uint32_t       a, b, c, d;
     uint32_t       saved_a, saved_b, saved_c, saved_d;
-    const u_char  *p;
-#if !(NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
+    ثابت u_char  *p;
+#אם !(NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
     uint32_t       block[16];
 #endif
 
@@ -183,7 +183,7 @@ ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
     c = ctx->c;
     d = ctx->d;
 
-    do {
+    עשה {
         saved_a = a;
         saved_b = b;
         saved_c = c;
@@ -272,12 +272,12 @@ ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
 
         p += 64;
 
-    } while (size -= 64);
+    } כלעוד (size -= 64);
 
     ctx->a = a;
     ctx->b = b;
     ctx->c = c;
     ctx->d = d;
 
-    return p;
+    החזר p;
 }

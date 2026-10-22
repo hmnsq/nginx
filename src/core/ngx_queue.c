@@ -5,12 +5,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ساكن فراغ ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
+    ngx_int_t (*cmp)(ثابت ngx_queue_t *, ثابت ngx_queue_t *));
 
 
 /*
@@ -25,25 +25,25 @@ ngx_queue_middle(ngx_queue_t *queue)
 
     middle = ngx_queue_head(queue);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    אם (middle == ngx_queue_last(queue)) {
+        החזר middle;
     }
 
     next = ngx_queue_head(queue);
 
-    for ( ;; ) {
+    עבור ( ;; ) {
         middle = ngx_queue_next(middle);
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        אם (next == ngx_queue_last(queue)) {
+            החזר middle;
         }
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        אם (next == ngx_queue_last(queue)) {
+            החזר middle;
         }
     }
 }
@@ -51,16 +51,16 @@ ngx_queue_middle(ngx_queue_t *queue)
 
 /* the stable merge sort */
 
-void
+فراغ
 ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+    ngx_int_t (*cmp)(ثابت ngx_queue_t *, ثابت ngx_queue_t *))
 {
     ngx_queue_t  *q, tail;
 
     q = ngx_queue_head(queue);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    אם (q == ngx_queue_last(queue)) {
+        החזר;
     }
 
     q = ngx_queue_middle(queue);
@@ -74,28 +74,28 @@ ngx_queue_sort(ngx_queue_t *queue,
 }
 
 
-static void
+ساكن فراغ
 ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+    ngx_int_t (*cmp)(ثابت ngx_queue_t *, ثابت ngx_queue_t *))
 {
     ngx_queue_t  *q1, *q2;
 
     q1 = ngx_queue_head(queue);
     q2 = ngx_queue_head(tail);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
+    עבור ( ;; ) {
+        אם (q1 == ngx_queue_sentinel(queue)) {
             ngx_queue_add(queue, tail);
-            break;
+            اكسر;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        אם (q2 == ngx_queue_sentinel(tail)) {
+            اكسر;
         }
 
-        if (cmp(q1, q2) <= 0) {
+        אם (cmp(q1, q2) <= 0) {
             q1 = ngx_queue_next(q1);
-            continue;
+            استمر;
         }
 
         ngx_queue_remove(q2);

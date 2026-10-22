@@ -5,34 +5,34 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-void
+فراغ
 ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
 {
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#אם (NGX_HAVE_ATOMIC_OPS)
 
     ngx_uint_t  i, n;
 
-    for ( ;; ) {
+    עבור ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-            return;
+        אם (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
+            החזר;
         }
 
-        if (ngx_ncpu > 1) {
+        אם (ngx_ncpu > 1) {
 
-            for (n = 1; n < spin; n <<= 1) {
+            עבור (n = 1; n < spin; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                עבור (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-                    return;
+                אם (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
+                    החזר;
                 }
             }
         }
@@ -40,9 +40,9 @@ ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
         ngx_sched_yield();
     }
 
-#else
+#אחרת
 
-#if (NGX_THREADS)
+#אם (NGX_THREADS)
 
 #error ngx_spinlock() or ngx_atomic_cmp_set() are not defined !
 

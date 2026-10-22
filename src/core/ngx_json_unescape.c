@@ -10,12 +10,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_json_unescape.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
+#ضمن <ngx_json_unescape.h>
 
 
-static ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
+ساكن ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
     uint32_t codepoint);
 
 
@@ -28,7 +28,7 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
     ngx_int_t    n;
     ngx_uint_t   hex_left;
 
-    enum {
+    تعداد {
         sw_usual = 0,
         sw_quoted,
         sw_hex,
@@ -62,13 +62,13 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
      * surrounding double quotes).
      */
 
-    if (src->len == 0) {
+    אם (src->len == 0) {
         dst->len = 0;
-        return NGX_OK;
+        החזר NGX_OK;
     }
 
-    if (dst->len < src->len) {
-        return NGX_ERROR;
+    אם (dst->len < src->len) {
+        החזר NGX_ERROR;
     }
 
     s = src->data;
@@ -81,94 +81,94 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
     high_surrogate = 0;
     hex_left = 0;
 
-    while (size--) {
+    כלעוד (size--) {
 
         ch = *s++;
 
-        switch (state) {
-        case sw_usual:
+        بدل (state) {
+        حالة sw_usual:
 
-            if (ch == '"') {
-                return NGX_ERROR;
+            אם (ch == '"') {
+                החזר NGX_ERROR;
             }
 
-            if (ch == '\\') {
+            אם (ch == '\\') {
                 state = sw_quoted;
-                break;
+                اكسر;
             }
 
-            if (ch < 0x20) {
+            אם (ch < 0x20) {
                 /* RFC 8259: control characters must be escaped */
-                return NGX_ERROR;
+                החזר NGX_ERROR;
             }
 
             *d++ = ch;
-            break;
+            اكسر;
 
-        case sw_quoted:
+        حالة sw_quoted:
 
-            switch (ch) {
+            بدل (ch) {
 
-            case 'u':
+            حالة 'u':
                 codepoint = 0;
                 hex_left = 4;
                 state = sw_hex;
-                break;
+                اكسر;
 
-            case '"':
-            case '/':
-            case '\\':
+            حالة '"':
+            حالة '/':
+            حالة '\\':
                 *d++ = ch;
                 state = sw_usual;
-                break;
+                اكسر;
 
-            case 'b':
+            حالة 'b':
                 *d++ = '\b';
                 state = sw_usual;
-                break;
+                اكسر;
 
-            case 'f':
+            حالة 'f':
                 *d++ = '\f';
                 state = sw_usual;
-                break;
+                اكسر;
 
-            case 'n':
+            حالة 'n':
                 *d++ = '\n';
                 state = sw_usual;
-                break;
+                اكسر;
 
-            case 'r':
+            حالة 'r':
                 *d++ = '\r';
                 state = sw_usual;
-                break;
+                اكسر;
 
-            case 't':
+            حالة 't':
                 *d++ = '\t';
                 state = sw_usual;
-                break;
+                اكسر;
 
-            default:
-                return NGX_ERROR;
+            افتراضي:
+                החזר NGX_ERROR;
             }
 
-            break;
+            اكسر;
 
-        case sw_hex:
+        حالة sw_hex:
 
             n = ngx_json_hex_digit(ch);
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            אם (n == NGX_ERROR) {
+                החזר NGX_ERROR;
             }
 
             codepoint = (codepoint << 4) | (uint32_t) n;
 
-            if (--hex_left > 0) {
-                break;
+            אם (--hex_left > 0) {
+                اكسر;
             }
 
-            if (high_surrogate) {
-                if (codepoint < 0xDC00 || codepoint > 0xDFFF) {
-                    return NGX_ERROR;
+            אם (high_surrogate) {
+                אם (codepoint < 0xDC00 || codepoint > 0xDFFF) {
+                    החזר NGX_ERROR;
                 }
 
                 codepoint = 0x10000
@@ -177,101 +177,101 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
                 d = ngx_json_utf8_encode(d, codepoint);
                 high_surrogate = 0;
                 state = sw_usual;
-                break;
+                اكسر;
             }
 
-            if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+            אם (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
                 /* high surrogate - wait for the low surrogate */
                 high_surrogate = codepoint;
                 state = sw_surrogate_start;
-                break;
+                اكسر;
             }
 
-            if (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
+            אם (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_ERROR;
+                החזר NGX_ERROR;
             }
 
             d = ngx_json_utf8_encode(d, codepoint);
             state = sw_usual;
-            break;
+            اكسر;
 
-        case sw_surrogate_start:
+        حالة sw_surrogate_start:
             /*
              * Expect '\' to begin the low-surrogate escape.
              * Lone surrogates are not valid Unicode scalar values
              * (RFC 8259, Section 8.2).
              */
-            if (ch == '\\') {
+            אם (ch == '\\') {
                 state = sw_surrogate_u;
-                break;
+                اكسر;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            החזר NGX_ERROR;
 
-        case sw_surrogate_u:
-            if (ch == 'u') {
+        حالة sw_surrogate_u:
+            אם (ch == 'u') {
                 codepoint = 0;
                 hex_left = 4;
                 state = sw_hex;
-                break;
+                اكسر;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            החזר NGX_ERROR;
         }
     }
 
-    if (state != sw_usual) {
+    אם (state != sw_usual) {
         /* truncated escape sequence or unpaired high surrogate */
-        return NGX_ERROR;
+        החזר NGX_ERROR;
     }
 
     dst->len = d - dst->data;
 
-    return NGX_OK;
+    החזר NGX_OK;
 }
 
 
-static ngx_inline u_char *
+ساكن ngx_inline u_char *
 ngx_json_utf8_encode(u_char *dst, uint32_t codepoint)
 {
-    if (codepoint <= 0x7F) {
+    אם (codepoint <= 0x7F) {
         *dst++ = (u_char) codepoint;
 
-    } else if (codepoint <= 0x7FF) {
+    } אחרת אם (codepoint <= 0x7FF) {
         *dst++ = (u_char) (0xC0 | (codepoint >> 6));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else if (codepoint <= 0xFFFF) {
+    } אחרת אם (codepoint <= 0xFFFF) {
         *dst++ = (u_char) (0xE0 | (codepoint >> 12));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else {
+    } אחרת {
         *dst++ = (u_char) (0xF0 | (codepoint >> 18));
         *dst++ = (u_char) (0x80 | ((codepoint >> 12) & 0x3F));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
     }
 
-    return dst;
+    החזר dst;
 }
 
 
 ngx_int_t
 ngx_json_hex_digit(u_char ch)
 {
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0';
+    אם (ch >= '0' && ch <= '9') {
+        החזר ch - '0';
     }
 
     ch = (u_char) (ch | 0x20);
 
-    if (ch >= 'a' && ch <= 'f') {
-        return ch - 'a' + 10;
+    אם (ch >= 'a' && ch <= 'f') {
+        החזר ch - 'a' + 10;
     }
 
-    return NGX_ERROR;
+    החזר NGX_ERROR;
 }
