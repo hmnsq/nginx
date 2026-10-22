@@ -18,8 +18,8 @@ ngx_parse_size(ngx_str_t *line)
 
     len = line->len;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    если (len == 0) {
+        вернуть NGX_ERROR;
     }
 
     unit = line->data[len - 1];
@@ -45,13 +45,13 @@ ngx_parse_size(ngx_str_t *line)
     }
 
     size = ngx_atosz(line->data, len);
-    if (size == NGX_ERROR || size > max) {
-        return NGX_ERROR;
+    если (size == NGX_ERROR || size > max) {
+        вернуть NGX_ERROR;
     }
 
     size *= scale;
 
-    return size;
+    вернуть size;
 }
 
 
@@ -64,8 +64,8 @@ ngx_parse_offset(ngx_str_t *line)
 
     len = line->len;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    если (len == 0) {
+        вернуть NGX_ERROR;
     }
 
     unit = line->data[len - 1];
@@ -98,13 +98,13 @@ ngx_parse_offset(ngx_str_t *line)
     }
 
     offset = ngx_atoof(line->data, len);
-    if (offset == NGX_ERROR || offset > max) {
-        return NGX_ERROR;
+    если (offset == NGX_ERROR || offset > max) {
+        вернуть NGX_ERROR;
     }
 
     offset *= scale;
 
-    return offset;
+    вернуть offset;
 }
 
 
@@ -138,11 +138,11 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
     p = line->data;
     last = p + line->len;
 
-    while (p < last) {
+    пока (p < last) {
 
-        if (*p >= '0' && *p <= '9') {
-            if (value >= cutoff && (value > cutoff || *p - '0' > cutlim)) {
-                return NGX_ERROR;
+        если (*p >= '0' && *p <= '9') {
+            если (value >= cutoff && (value > cutoff || *p - '0' > cutlim)) {
+                вернуть NGX_ERROR;
             }
 
             value = value * 10 + (*p++ - '0');
@@ -153,8 +153,8 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
         switch (*p++) {
 
         case 'y':
-            if (step > st_start) {
-                return NGX_ERROR;
+            если (step > st_start) {
+                вернуть NGX_ERROR;
             }
             step = st_year;
             max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 365);
@@ -162,8 +162,8 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
             break;
 
         case 'M':
-            if (step >= st_month) {
-                return NGX_ERROR;
+            если (step >= st_month) {
+                вернуть NGX_ERROR;
             }
             step = st_month;
             max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 30);
@@ -171,8 +171,8 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
             break;
 
         case 'w':
-            if (step >= st_week) {
-                return NGX_ERROR;
+            если (step >= st_week) {
+                вернуть NGX_ERROR;
             }
             step = st_week;
             max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 7);
@@ -180,8 +180,8 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
             break;
 
         case 'd':
-            if (step >= st_day) {
-                return NGX_ERROR;
+            если (step >= st_day) {
+                вернуть NGX_ERROR;
             }
             step = st_day;
             max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24);
@@ -189,8 +189,8 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
             break;
 
         case 'h':
-            if (step >= st_hour) {
-                return NGX_ERROR;
+            если (step >= st_hour) {
+                вернуть NGX_ERROR;
             }
             step = st_hour;
             max = NGX_MAX_INT_T_VALUE / (60 * 60);
@@ -198,9 +198,9 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
             break;
 
         case 'm':
-            if (p < last && *p == 's') {
-                if (is_sec || step >= st_msec) {
-                    return NGX_ERROR;
+            если (p < last && *p == 's') {
+                если (is_sec || step >= st_msec) {
+                    вернуть NGX_ERROR;
                 }
                 p++;
                 step = st_msec;
@@ -209,8 +209,8 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
                 break;
             }
 
-            if (step >= st_min) {
-                return NGX_ERROR;
+            если (step >= st_min) {
+                вернуть NGX_ERROR;
             }
             step = st_min;
             max = NGX_MAX_INT_T_VALUE / 60;
@@ -218,8 +218,8 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
             break;
 
         case 's':
-            if (step >= st_sec) {
-                return NGX_ERROR;
+            если (step >= st_sec) {
+                вернуть NGX_ERROR;
             }
             step = st_sec;
             max = NGX_MAX_INT_T_VALUE;
@@ -227,8 +227,8 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
             break;
 
         case ' ':
-            if (step >= st_sec) {
-                return NGX_ERROR;
+            если (step >= st_sec) {
+                вернуть NGX_ERROR;
             }
             step = st_last;
             max = NGX_MAX_INT_T_VALUE;
@@ -236,48 +236,48 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
             break;
 
         default:
-            return NGX_ERROR;
+            вернуть NGX_ERROR;
         }
 
-        if (step != st_msec && !is_sec) {
+        если (step != st_msec && !is_sec) {
             scale *= 1000;
             max /= 1000;
         }
 
-        if (value > max) {
-            return NGX_ERROR;
+        если (value > max) {
+            вернуть NGX_ERROR;
         }
 
         value *= scale;
 
-        if (total > NGX_MAX_INT_T_VALUE - value) {
-            return NGX_ERROR;
+        если (total > NGX_MAX_INT_T_VALUE - value) {
+            вернуть NGX_ERROR;
         }
 
         total += value;
 
         value = 0;
 
-        while (p < last && *p == ' ') {
+        пока (p < last && *p == ' ') {
             p++;
         }
     }
 
-    if (!valid) {
-        return NGX_ERROR;
+    если (!valid) {
+        вернуть NGX_ERROR;
     }
 
-    if (!is_sec) {
-        if (value > NGX_MAX_INT_T_VALUE / 1000) {
-            return NGX_ERROR;
+    если (!is_sec) {
+        если (value > NGX_MAX_INT_T_VALUE / 1000) {
+            вернуть NGX_ERROR;
         }
 
         value *= 1000;
     }
 
-    if (total > NGX_MAX_INT_T_VALUE - value) {
-        return NGX_ERROR;
+    если (total > NGX_MAX_INT_T_VALUE - value) {
+        вернуть NGX_ERROR;
     }
 
-    return total + value;
+    вернуть total + value;
 }

@@ -28,51 +28,51 @@ ngx_parse_http_time(u_char *value, size_t len)
     fmt = 0;
     end = value + len;
 
-#if (NGX_SUPPRESS_WARN)
+#если (NGX_SUPPRESS_WARN)
     day = 32;
     year = 2038;
 #endif
 
-    for (p = value; p < end; p++) {
-        if (*p == ',') {
+    для (p = value; p < end; p++) {
+        если (*p == ',') {
             break;
         }
 
-        if (*p == ' ') {
+        если (*p == ' ') {
             fmt = isoc;
             break;
         }
     }
 
-    for (p++; p < end; p++) {
-        if (*p != ' ') {
+    для (p++; p < end; p++) {
+        если (*p != ' ') {
             break;
         }
     }
 
-    if (end - p < 18) {
-        return NGX_ERROR;
+    если (end - p < 18) {
+        вернуть NGX_ERROR;
     }
 
-    if (fmt != isoc) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    если (fmt != isoc) {
+        если (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            вернуть NGX_ERROR;
         }
 
         day = (*p - '0') * 10 + (*(p + 1) - '0');
         p += 2;
 
-        if (*p == ' ') {
-            if (end - p < 18) {
-                return NGX_ERROR;
+        если (*p == ' ') {
+            если (end - p < 18) {
+                вернуть NGX_ERROR;
             }
             fmt = rfc822;
 
-        } else if (*p == '-') {
+        } иначе если (*p == '-') {
             fmt = rfc850;
 
-        } else {
-            return NGX_ERROR;
+        } иначе {
+            вернуть NGX_ERROR;
         }
 
         p++;
@@ -113,32 +113,32 @@ ngx_parse_http_time(u_char *value, size_t len)
         break;
 
     default:
-        return NGX_ERROR;
+        вернуть NGX_ERROR;
     }
 
     p += 3;
 
-    if ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
-        return NGX_ERROR;
+    если ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
+        вернуть NGX_ERROR;
     }
 
     p++;
 
-    if (fmt == rfc822) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+    если (fmt == rfc822) {
+        если (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            вернуть NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
         p += 4;
 
-    } else if (fmt == rfc850) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    } иначе если (fmt == rfc850) {
+        если (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            вернуть NGX_ERROR;
         }
 
         year = (*p - '0') * 10 + (*(p + 1) - '0');
@@ -146,91 +146,91 @@ ngx_parse_http_time(u_char *value, size_t len)
         p += 2;
     }
 
-    if (fmt == isoc) {
-        if (*p == ' ') {
+    если (fmt == isoc) {
+        если (*p == ' ') {
             p++;
         }
 
-        if (*p < '0' || *p > '9') {
-            return NGX_ERROR;
+        если (*p < '0' || *p > '9') {
+            вернуть NGX_ERROR;
         }
 
         day = *p++ - '0';
 
-        if (*p != ' ') {
-            if (*p < '0' || *p > '9') {
-                return NGX_ERROR;
+        если (*p != ' ') {
+            если (*p < '0' || *p > '9') {
+                вернуть NGX_ERROR;
             }
 
             day = day * 10 + (*p++ - '0');
         }
 
-        if (end - p < 14) {
-            return NGX_ERROR;
+        если (end - p < 14) {
+            вернуть NGX_ERROR;
         }
     }
 
-    if (*p++ != ' ') {
-        return NGX_ERROR;
+    если (*p++ != ' ') {
+        вернуть NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    если (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        вернуть NGX_ERROR;
     }
 
     hour = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    если (*p++ != ':') {
+        вернуть NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    если (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        вернуть NGX_ERROR;
     }
 
     min = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    если (*p++ != ':') {
+        вернуть NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    если (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        вернуть NGX_ERROR;
     }
 
     sec = (*p - '0') * 10 + (*(p + 1) - '0');
 
-    if (fmt == isoc) {
+    если (fmt == isoc) {
         p += 2;
 
-        if (*p++ != ' ') {
-            return NGX_ERROR;
+        если (*p++ != ' ') {
+            вернуть NGX_ERROR;
         }
 
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+        если (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            вернуть NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
     }
 
-    if (hour > 23 || min > 59 || sec > 59) {
-        return NGX_ERROR;
+    если (hour > 23 || min > 59 || sec > 59) {
+        вернуть NGX_ERROR;
     }
 
-    if (day == 29 && month == 1) {
-        if ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
-            return NGX_ERROR;
+    если (day == 29 && month == 1) {
+        если ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
+            вернуть NGX_ERROR;
         }
 
-    } else if (day > mday[month]) {
-        return NGX_ERROR;
+    } иначе если (day > mday[month]) {
+        вернуть NGX_ERROR;
     }
 
     /*
@@ -238,7 +238,7 @@ ngx_parse_http_time(u_char *value, size_t len)
      * it is needed for Gauss' formula
      */
 
-    if (--month <= 0) {
+    если (--month <= 0) {
         month += 12;
         year -= 1;
     }
@@ -265,13 +265,13 @@ ngx_parse_http_time(u_char *value, size_t len)
 
             - 719527 + 31 + 28) * 86400 + hour * 3600 + min * 60 + sec;
 
-#if (NGX_TIME_T_SIZE <= 4)
+#если (NGX_TIME_T_SIZE <= 4)
 
-    if (time > 0x7fffffff) {
-        return NGX_ERROR;
+    если (time > 0x7fffffff) {
+        вернуть NGX_ERROR;
     }
 
 #endif
 
-    return (time_t) time;
+    вернуть (time_t) time;
 }
