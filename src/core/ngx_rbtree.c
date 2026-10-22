@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 /*
@@ -15,13 +15,13 @@
  */
 
 
-static ngx_inline void ngx_rbtree_left_rotate(ngx_rbtree_node_t **root,
+ساكن ngx_inline فراغ ngx_rbtree_left_rotate(ngx_rbtree_node_t **root,
     ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
-static ngx_inline void ngx_rbtree_right_rotate(ngx_rbtree_node_t **root,
+ساكن ngx_inline فراغ ngx_rbtree_right_rotate(ngx_rbtree_node_t **root,
     ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
 
 
-void
+فراغ
 ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
 {
     ngx_rbtree_node_t  **root, *temp, *sentinel;
@@ -31,33 +31,33 @@ ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
     root = &tree->root;
     sentinel = tree->sentinel;
 
-    if (*root == sentinel) {
-        node->parent = NULL;
+    ܐܢ (*root == sentinel) {
+        node->parent = عدم;
         node->left = sentinel;
         node->right = sentinel;
         ngx_rbt_black(node);
         *root = node;
 
-        return;
+        ܦܢܐ;
     }
 
     tree->insert(*root, node, sentinel);
 
     /* re-balance tree */
 
-    while (node != *root && ngx_rbt_is_red(node->parent)) {
+    ܟܡܐ (node != *root && ngx_rbt_is_red(node->parent)) {
 
-        if (node->parent == node->parent->parent->left) {
+        ܐܢ (node->parent == node->parent->parent->left) {
             temp = node->parent->parent->right;
 
-            if (ngx_rbt_is_red(temp)) {
+            ܐܢ (ngx_rbt_is_red(temp)) {
                 ngx_rbt_black(node->parent);
                 ngx_rbt_black(temp);
                 ngx_rbt_red(node->parent->parent);
                 node = node->parent->parent;
 
-            } else {
-                if (node == node->parent->right) {
+            } ܐܚܪܢܐ {
+                ܐܢ (node == node->parent->right) {
                     node = node->parent;
                     ngx_rbtree_left_rotate(root, sentinel, node);
                 }
@@ -67,17 +67,17 @@ ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
                 ngx_rbtree_right_rotate(root, sentinel, node->parent->parent);
             }
 
-        } else {
+        } ܐܚܪܢܐ {
             temp = node->parent->parent->left;
 
-            if (ngx_rbt_is_red(temp)) {
+            ܐܢ (ngx_rbt_is_red(temp)) {
                 ngx_rbt_black(node->parent);
                 ngx_rbt_black(temp);
                 ngx_rbt_red(node->parent->parent);
                 node = node->parent->parent;
 
-            } else {
-                if (node == node->parent->left) {
+            } ܐܚܪܢܐ {
+                ܐܢ (node == node->parent->left) {
                     node = node->parent;
                     ngx_rbtree_right_rotate(root, sentinel, node);
                 }
@@ -93,18 +93,18 @@ ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
 }
 
 
-void
+فراغ
 ngx_rbtree_insert_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
     ngx_rbtree_node_t *sentinel)
 {
     ngx_rbtree_node_t  **p;
 
-    for ( ;; ) {
+    لكل ( ;; ) {
 
         p = (node->key < temp->key) ? &temp->left : &temp->right;
 
-        if (*p == sentinel) {
-            break;
+        ܐܢ (*p == sentinel) {
+            اكسر;
         }
 
         temp = *p;
@@ -118,13 +118,13 @@ ngx_rbtree_insert_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 }
 
 
-void
+فراغ
 ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
     ngx_rbtree_node_t *sentinel)
 {
     ngx_rbtree_node_t  **p;
 
-    for ( ;; ) {
+    لكل ( ;; ) {
 
         /*
          * Timer values
@@ -138,8 +138,8 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
         p = ((ngx_rbtree_key_int_t) (node->key - temp->key) < 0)
             ? &temp->left : &temp->right;
 
-        if (*p == sentinel) {
-            break;
+        ܐܢ (*p == sentinel) {
+            اكسر;
         }
 
         temp = *p;
@@ -153,7 +153,7 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 }
 
 
-void
+فراغ
 ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
 {
     ngx_uint_t           red;
@@ -164,51 +164,51 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
     root = &tree->root;
     sentinel = tree->sentinel;
 
-    if (node->left == sentinel) {
+    ܐܢ (node->left == sentinel) {
         temp = node->right;
         subst = node;
 
-    } else if (node->right == sentinel) {
+    } ܐܚܪܢܐ ܐܢ (node->right == sentinel) {
         temp = node->left;
         subst = node;
 
-    } else {
+    } ܐܚܪܢܐ {
         subst = ngx_rbtree_min(node->right, sentinel);
         temp = subst->right;
     }
 
-    if (subst == *root) {
+    ܐܢ (subst == *root) {
         *root = temp;
         ngx_rbt_black(temp);
 
         /* DEBUG stuff */
-        node->left = NULL;
-        node->right = NULL;
-        node->parent = NULL;
+        node->left = عدم;
+        node->right = عدم;
+        node->parent = عدم;
         node->key = 0;
 
-        return;
+        ܦܢܐ;
     }
 
     red = ngx_rbt_is_red(subst);
 
-    if (subst == subst->parent->left) {
+    ܐܢ (subst == subst->parent->left) {
         subst->parent->left = temp;
 
-    } else {
+    } ܐܚܪܢܐ {
         subst->parent->right = temp;
     }
 
-    if (subst == node) {
+    ܐܢ (subst == node) {
 
         temp->parent = subst->parent;
 
-    } else {
+    } ܐܚܪܢܐ {
 
-        if (subst->parent == node) {
+        ܐܢ (subst->parent == node) {
             temp->parent = subst;
 
-        } else {
+        } ܐܚܪܢܐ {
             temp->parent = subst->parent;
         }
 
@@ -217,56 +217,56 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
         subst->parent = node->parent;
         ngx_rbt_copy_color(subst, node);
 
-        if (node == *root) {
+        ܐܢ (node == *root) {
             *root = subst;
 
-        } else {
-            if (node == node->parent->left) {
+        } ܐܚܪܢܐ {
+            ܐܢ (node == node->parent->left) {
                 node->parent->left = subst;
-            } else {
+            } ܐܚܪܢܐ {
                 node->parent->right = subst;
             }
         }
 
-        if (subst->left != sentinel) {
+        ܐܢ (subst->left != sentinel) {
             subst->left->parent = subst;
         }
 
-        if (subst->right != sentinel) {
+        ܐܢ (subst->right != sentinel) {
             subst->right->parent = subst;
         }
     }
 
     /* DEBUG stuff */
-    node->left = NULL;
-    node->right = NULL;
-    node->parent = NULL;
+    node->left = عدم;
+    node->right = عدم;
+    node->parent = عدم;
     node->key = 0;
 
-    if (red) {
-        return;
+    ܐܢ (red) {
+        ܦܢܐ;
     }
 
     /* a delete fixup */
 
-    while (temp != *root && ngx_rbt_is_black(temp)) {
+    ܟܡܐ (temp != *root && ngx_rbt_is_black(temp)) {
 
-        if (temp == temp->parent->left) {
+        ܐܢ (temp == temp->parent->left) {
             w = temp->parent->right;
 
-            if (ngx_rbt_is_red(w)) {
+            ܐܢ (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
                 ngx_rbtree_left_rotate(root, sentinel, temp->parent);
                 w = temp->parent->right;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            ܐܢ (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->right)) {
+            } ܐܚܪܢܐ {
+                ܐܢ (ngx_rbt_is_black(w->right)) {
                     ngx_rbt_black(w->left);
                     ngx_rbt_red(w);
                     ngx_rbtree_right_rotate(root, sentinel, w);
@@ -280,22 +280,22 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
                 temp = *root;
             }
 
-        } else {
+        } ܐܚܪܢܐ {
             w = temp->parent->left;
 
-            if (ngx_rbt_is_red(w)) {
+            ܐܢ (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
                 ngx_rbtree_right_rotate(root, sentinel, temp->parent);
                 w = temp->parent->left;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            ܐܢ (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->left)) {
+            } ܐܚܪܢܐ {
+                ܐܢ (ngx_rbt_is_black(w->left)) {
                     ngx_rbt_black(w->right);
                     ngx_rbt_red(w);
                     ngx_rbtree_left_rotate(root, sentinel, w);
@@ -315,7 +315,7 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
 }
 
 
-static ngx_inline void
+ساكن ngx_inline فراغ
 ngx_rbtree_left_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
     ngx_rbtree_node_t *node)
 {
@@ -324,19 +324,19 @@ ngx_rbtree_left_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
     temp = node->right;
     node->right = temp->left;
 
-    if (temp->left != sentinel) {
+    ܐܢ (temp->left != sentinel) {
         temp->left->parent = node;
     }
 
     temp->parent = node->parent;
 
-    if (node == *root) {
+    ܐܢ (node == *root) {
         *root = temp;
 
-    } else if (node == node->parent->left) {
+    } ܐܚܪܢܐ ܐܢ (node == node->parent->left) {
         node->parent->left = temp;
 
-    } else {
+    } ܐܚܪܢܐ {
         node->parent->right = temp;
     }
 
@@ -345,7 +345,7 @@ ngx_rbtree_left_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
 }
 
 
-static ngx_inline void
+ساكن ngx_inline فراغ
 ngx_rbtree_right_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
     ngx_rbtree_node_t *node)
 {
@@ -354,19 +354,19 @@ ngx_rbtree_right_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
     temp = node->left;
     node->left = temp->right;
 
-    if (temp->right != sentinel) {
+    ܐܢ (temp->right != sentinel) {
         temp->right->parent = node;
     }
 
     temp->parent = node->parent;
 
-    if (node == *root) {
+    ܐܢ (node == *root) {
         *root = temp;
 
-    } else if (node == node->parent->right) {
+    } ܐܚܪܢܐ ܐܢ (node == node->parent->right) {
         node->parent->right = temp;
 
-    } else {
+    } ܐܚܪܢܐ {
         node->parent->left = temp;
     }
 
@@ -382,21 +382,21 @@ ngx_rbtree_next(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
 
     sentinel = tree->sentinel;
 
-    if (node->right != sentinel) {
-        return ngx_rbtree_min(node->right, sentinel);
+    ܐܢ (node->right != sentinel) {
+        ܦܢܐ ngx_rbtree_min(node->right, sentinel);
     }
 
     root = tree->root;
 
-    for ( ;; ) {
+    لكل ( ;; ) {
         parent = node->parent;
 
-        if (node == root) {
-            return NULL;
+        ܐܢ (node == root) {
+            ܦܢܐ عدم;
         }
 
-        if (node == parent->left) {
-            return parent;
+        ܐܢ (node == parent->left) {
+            ܦܢܐ parent;
         }
 
         node = parent;

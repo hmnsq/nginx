@@ -9,54 +9,54 @@
 #define _NGX_HASH_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef struct {
-    void             *value;
+تعريفنوع بنية {
+    فراغ             *value;
     u_short           len;
     u_char            name[1];
 } ngx_hash_elt_t;
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_hash_elt_t  **buckets;
     ngx_uint_t        size;
 } ngx_hash_t;
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_hash_t        hash;
-    void             *value;
+    فراغ             *value;
 } ngx_hash_wildcard_t;
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_str_t         key;
     ngx_uint_t        key_hash;
-    void             *value;
+    فراغ             *value;
 } ngx_hash_key_t;
 
 
-typedef ngx_uint_t (*ngx_hash_key_pt) (u_char *data, size_t len);
+تعريفنوع ngx_uint_t (*ngx_hash_key_pt) (u_char *data, size_t len);
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_hash_t            hash;
     ngx_hash_wildcard_t  *wc_head;
     ngx_hash_wildcard_t  *wc_tail;
 } ngx_hash_combined_t;
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_hash_t       *hash;
     ngx_hash_key_pt   key;
 
     ngx_uint_t        max_size;
     ngx_uint_t        bucket_size;
 
-    char             *name;
+    حرف             *name;
     ngx_pool_t       *pool;
     ngx_pool_t       *temp_pool;
 } ngx_hash_init_t;
@@ -72,7 +72,7 @@ typedef struct {
 #define NGX_HASH_READONLY_KEY     2
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_uint_t        hsize;
 
     ngx_pool_t       *pool;
@@ -89,9 +89,9 @@ typedef struct {
 } ngx_hash_keys_arrays_t;
 
 
-typedef struct ngx_table_elt_s  ngx_table_elt_t;
+تعريفنوع بنية ngx_table_elt_s  ngx_table_elt_t;
 
-struct ngx_table_elt_s {
+بنية ngx_table_elt_s {
     ngx_uint_t        hash;
     ngx_str_t         key;
     ngx_str_t         value;
@@ -100,10 +100,10 @@ struct ngx_table_elt_s {
 };
 
 
-void *ngx_hash_find(ngx_hash_t *hash, ngx_uint_t key, u_char *name, size_t len);
-void *ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len);
-void *ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len);
-void *ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t key,
+فراغ *ngx_hash_find(ngx_hash_t *hash, ngx_uint_t key, u_char *name, size_t len);
+فراغ *ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len);
+فراغ *ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len);
+فراغ *ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t key,
     u_char *name, size_t len);
 
 ngx_int_t ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
@@ -119,7 +119,7 @@ ngx_uint_t ngx_hash_strlow(u_char *dst, u_char *src, size_t n);
 
 ngx_int_t ngx_hash_keys_array_init(ngx_hash_keys_arrays_t *ha, ngx_uint_t type);
 ngx_int_t ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key,
-    void *value, ngx_uint_t flags);
+    فراغ *value, ngx_uint_t flags);
 
 
 #endif /* _NGX_HASH_H_INCLUDED_ */

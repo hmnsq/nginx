@@ -5,65 +5,65 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-void *
+فراغ *
 ngx_hash_find(ngx_hash_t *hash, ngx_uint_t key, u_char *name, size_t len)
 {
     ngx_uint_t       i;
     ngx_hash_elt_t  *elt;
 
-#if 0
+#ܐܢ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "hf:\"%*s\"", len, name);
 #endif
 
     elt = hash->buckets[key % hash->size];
 
-    if (elt == NULL) {
-        return NULL;
+    ܐܢ (elt == عدم) {
+        ܦܢܐ عدم;
     }
 
-    while (elt->value) {
-        if (len != (size_t) elt->len) {
-            goto next;
+    ܟܡܐ (elt->value) {
+        ܐܢ (len != (size_t) elt->len) {
+            اذهب next;
         }
 
-        for (i = 0; i < len; i++) {
-            if (name[i] != elt->name[i]) {
-                goto next;
+        لكل (i = 0; i < len; i++) {
+            ܐܢ (name[i] != elt->name[i]) {
+                اذهب next;
             }
         }
 
-        return elt->value;
+        ܦܢܐ elt->value;
 
     next:
 
         elt = (ngx_hash_elt_t *) ngx_align_ptr(&elt->name[0] + elt->len,
-                                               sizeof(void *));
-        continue;
+                                               حجم(فراغ *));
+        استمر;
     }
 
-    return NULL;
+    ܦܢܐ عدم;
 }
 
 
-void *
+فراغ *
 ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
 {
-    void        *value;
+    فراغ        *value;
     ngx_uint_t   i, n, key;
 
-#if 0
+#ܐܢ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "wch:\"%*s\"", len, name);
 #endif
 
     n = len;
 
-    while (n) {
-        if (name[n - 1] == '.') {
-            break;
+    ܟܡܐ (n) {
+        ܐܢ (name[n - 1] == '.') {
+            اكسر;
         }
 
         n--;
@@ -71,21 +71,21 @@ ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
 
     key = 0;
 
-    for (i = n; i < len; i++) {
+    لكل (i = n; i < len; i++) {
         key = ngx_hash(key, name[i]);
     }
 
-#if 0
+#ܐܢ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", key);
 #endif
 
     value = ngx_hash_find(&hwc->hash, key, &name[n], len - n);
 
-#if 0
+#ܐܢ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", value);
 #endif
 
-    if (value) {
+    ܐܢ (value) {
 
         /*
          * the 2 low bits of value have the special meaning:
@@ -98,86 +98,86 @@ ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
          *          "*.example.com" only.
          */
 
-        if ((uintptr_t) value & 2) {
+        ܐܢ ((uintptr_t) value & 2) {
 
-            if (n == 0) {
+            ܐܢ (n == 0) {
 
                 /* "example.com" */
 
-                if ((uintptr_t) value & 1) {
-                    return NULL;
+                ܐܢ ((uintptr_t) value & 1) {
+                    ܦܢܐ عدم;
                 }
 
                 hwc = (ngx_hash_wildcard_t *)
                                           ((uintptr_t) value & (uintptr_t) ~3);
-                return hwc->value;
+                ܦܢܐ hwc->value;
             }
 
             hwc = (ngx_hash_wildcard_t *) ((uintptr_t) value & (uintptr_t) ~3);
 
             value = ngx_hash_find_wc_head(hwc, name, n - 1);
 
-            if (value) {
-                return value;
+            ܐܢ (value) {
+                ܦܢܐ value;
             }
 
-            return hwc->value;
+            ܦܢܐ hwc->value;
         }
 
-        if ((uintptr_t) value & 1) {
+        ܐܢ ((uintptr_t) value & 1) {
 
-            if (n == 0) {
+            ܐܢ (n == 0) {
 
                 /* "example.com" */
 
-                return NULL;
+                ܦܢܐ عدم;
             }
 
-            return (void *) ((uintptr_t) value & (uintptr_t) ~3);
+            ܦܢܐ (فراغ *) ((uintptr_t) value & (uintptr_t) ~3);
         }
 
-        return value;
+        ܦܢܐ value;
     }
 
-    return hwc->value;
+    ܦܢܐ hwc->value;
 }
 
 
-void *
+فراغ *
 ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
 {
-    void        *value;
+    فراغ        *value;
     ngx_uint_t   i, key;
 
-#if 0
+#ܐܢ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "wct:\"%*s\"", len, name);
 #endif
 
     key = 0;
 
-    for (i = 0; i < len; i++) {
-        if (name[i] == '.') {
-            break;
+    لكل (i = 0; i < len; i++) {
+        ܐܢ (name[i] == '.') {
+            اكسر;
         }
 
         key = ngx_hash(key, name[i]);
     }
 
-    if (i == len) {
-        return NULL;
+    ܐܢ (i == len) {
+        ܦܢܐ عدم;
     }
 
-#if 0
+#ܐܢ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", key);
 #endif
 
     value = ngx_hash_find(&hwc->hash, key, name, i);
 
-#if 0
+#ܐܢ 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", value);
 #endif
 
-    if (value) {
+    ܐܢ (value) {
 
         /*
          * the 2 low bits of value have the special meaning:
@@ -185,7 +185,7 @@ ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
          *     11 - value is pointer to wildcard hash allowing "example.*".
          */
 
-        if ((uintptr_t) value & 2) {
+        ܐܢ ((uintptr_t) value & 2) {
 
             i++;
 
@@ -193,60 +193,60 @@ ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
 
             value = ngx_hash_find_wc_tail(hwc, &name[i], len - i);
 
-            if (value) {
-                return value;
+            ܐܢ (value) {
+                ܦܢܐ value;
             }
 
-            return hwc->value;
+            ܦܢܐ hwc->value;
         }
 
-        return value;
+        ܦܢܐ value;
     }
 
-    return hwc->value;
+    ܦܢܐ hwc->value;
 }
 
 
-void *
+فراغ *
 ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t key, u_char *name,
     size_t len)
 {
-    void  *value;
+    فراغ  *value;
 
-    if (hash->hash.buckets) {
+    ܐܢ (hash->hash.buckets) {
         value = ngx_hash_find(&hash->hash, key, name, len);
 
-        if (value) {
-            return value;
+        ܐܢ (value) {
+            ܦܢܐ value;
         }
     }
 
-    if (len == 0) {
-        return NULL;
+    ܐܢ (len == 0) {
+        ܦܢܐ عدم;
     }
 
-    if (hash->wc_head && hash->wc_head->hash.buckets) {
+    ܐܢ (hash->wc_head && hash->wc_head->hash.buckets) {
         value = ngx_hash_find_wc_head(hash->wc_head, name, len);
 
-        if (value) {
-            return value;
+        ܐܢ (value) {
+            ܦܢܐ value;
         }
     }
 
-    if (hash->wc_tail && hash->wc_tail->hash.buckets) {
+    ܐܢ (hash->wc_tail && hash->wc_tail->hash.buckets) {
         value = ngx_hash_find_wc_tail(hash->wc_tail, name, len);
 
-        if (value) {
-            return value;
+        ܐܢ (value) {
+            ܦܢܐ value;
         }
     }
 
-    return NULL;
+    ܦܢܐ عدم;
 }
 
 
 #define NGX_HASH_ELT_SIZE(name)                                               \
-    (sizeof(void *) + ngx_align((name)->key.len + 2, sizeof(void *)))
+    (حجم(فراغ *) + ngx_align((name)->key.len + 2, حجم(فراغ *)))
 
 ngx_int_t
 ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names, ngx_uint_t nelts)
@@ -257,81 +257,81 @@ ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names, ngx_uint_t nelts)
     ngx_uint_t       i, n, key, size, start, bucket_size;
     ngx_hash_elt_t  *elt, **buckets;
 
-    if (hinit->max_size == 0) {
+    ܐܢ (hinit->max_size == 0) {
         ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                       "could not build %s, you should "
                       "increase %s_max_size: %i",
                       hinit->name, hinit->name, hinit->max_size);
-        return NGX_ERROR;
+        ܦܢܐ NGX_ERROR;
     }
 
-    if (hinit->bucket_size > 65536 - ngx_cacheline_size) {
+    ܐܢ (hinit->bucket_size > 65536 - ngx_cacheline_size) {
         ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                       "could not build %s, too large "
                       "%s_bucket_size: %i",
                       hinit->name, hinit->name, hinit->bucket_size);
-        return NGX_ERROR;
+        ܦܢܐ NGX_ERROR;
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    لكل (n = 0; n < nelts; n++) {
+        ܐܢ (names[n].key.data == عدم) {
+            استمر;
         }
 
-        if (hinit->bucket_size < NGX_HASH_ELT_SIZE(&names[n]) + sizeof(void *))
+        ܐܢ (hinit->bucket_size < NGX_HASH_ELT_SIZE(&names[n]) + حجم(فراغ *))
         {
             ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                           "could not build %s, you should "
                           "increase %s_bucket_size: %i",
                           hinit->name, hinit->name, hinit->bucket_size);
-            return NGX_ERROR;
+            ܦܢܐ NGX_ERROR;
         }
     }
 
-    test = ngx_alloc(hinit->max_size * sizeof(u_short), hinit->pool->log);
-    if (test == NULL) {
-        return NGX_ERROR;
+    test = ngx_alloc(hinit->max_size * حجم(u_short), hinit->pool->log);
+    ܐܢ (test == عدم) {
+        ܦܢܐ NGX_ERROR;
     }
 
-    bucket_size = hinit->bucket_size - sizeof(void *);
+    bucket_size = hinit->bucket_size - حجم(فراغ *);
 
-    start = nelts / (bucket_size / (2 * sizeof(void *)));
+    start = nelts / (bucket_size / (2 * حجم(فراغ *)));
     start = start ? start : 1;
 
-    if (hinit->max_size > 10000 && nelts && hinit->max_size / nelts < 100) {
+    ܐܢ (hinit->max_size > 10000 && nelts && hinit->max_size / nelts < 100) {
         start = hinit->max_size - 1000;
     }
 
-    for (size = start; size <= hinit->max_size; size++) {
+    لكل (size = start; size <= hinit->max_size; size++) {
 
-        ngx_memzero(test, size * sizeof(u_short));
+        ngx_memzero(test, size * حجم(u_short));
 
-        for (n = 0; n < nelts; n++) {
-            if (names[n].key.data == NULL) {
-                continue;
+        لكل (n = 0; n < nelts; n++) {
+            ܐܢ (names[n].key.data == عدم) {
+                استمر;
             }
 
             key = names[n].key_hash % size;
             len = test[key] + NGX_HASH_ELT_SIZE(&names[n]);
 
-#if 0
+#ܐܢ 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "%ui: %ui %uz \"%V\"",
                           size, key, len, &names[n].key);
 #endif
 
-            if (len > bucket_size) {
-                goto next;
+            ܐܢ (len > bucket_size) {
+                اذهب next;
             }
 
             test[key] = (u_short) len;
         }
 
-        goto found;
+        اذهب found;
 
     next:
 
-        continue;
+        استمر;
     }
 
     size = hinit->max_size;
@@ -345,25 +345,25 @@ ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names, ngx_uint_t nelts)
 
 found:
 
-    for (i = 0; i < size; i++) {
-        test[i] = sizeof(void *);
+    لكل (i = 0; i < size; i++) {
+        test[i] = حجم(فراغ *);
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    لكل (n = 0; n < nelts; n++) {
+        ܐܢ (names[n].key.data == عدم) {
+            استمر;
         }
 
         key = names[n].key_hash % size;
         len = test[key] + NGX_HASH_ELT_SIZE(&names[n]);
 
-        if (len > 65536 - ngx_cacheline_size) {
+        ܐܢ (len > 65536 - ngx_cacheline_size) {
             ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                           "could not build %s, you should "
                           "increase %s_max_size: %i",
                           hinit->name, hinit->name, hinit->max_size);
             ngx_free(test);
-            return NGX_ERROR;
+            ܦܢܐ NGX_ERROR;
         }
 
         test[key] = (u_short) len;
@@ -371,9 +371,9 @@ found:
 
     len = 0;
 
-    for (i = 0; i < size; i++) {
-        if (test[i] == sizeof(void *)) {
-            continue;
+    لكل (i = 0; i < size; i++) {
+        ܐܢ (test[i] == حجم(فراغ *)) {
+            استمر;
         }
 
         test[i] = (u_short) (ngx_align(test[i], ngx_cacheline_size));
@@ -381,49 +381,49 @@ found:
         len += test[i];
     }
 
-    if (hinit->hash == NULL) {
-        hinit->hash = ngx_pcalloc(hinit->pool, sizeof(ngx_hash_wildcard_t)
-                                             + size * sizeof(ngx_hash_elt_t *));
-        if (hinit->hash == NULL) {
+    ܐܢ (hinit->hash == عدم) {
+        hinit->hash = ngx_pcalloc(hinit->pool, حجم(ngx_hash_wildcard_t)
+                                             + size * حجم(ngx_hash_elt_t *));
+        ܐܢ (hinit->hash == عدم) {
             ngx_free(test);
-            return NGX_ERROR;
+            ܦܢܐ NGX_ERROR;
         }
 
         buckets = (ngx_hash_elt_t **)
-                      ((u_char *) hinit->hash + sizeof(ngx_hash_wildcard_t));
+                      ((u_char *) hinit->hash + حجم(ngx_hash_wildcard_t));
 
-    } else {
-        buckets = ngx_pcalloc(hinit->pool, size * sizeof(ngx_hash_elt_t *));
-        if (buckets == NULL) {
+    } ܐܚܪܢܐ {
+        buckets = ngx_pcalloc(hinit->pool, size * حجم(ngx_hash_elt_t *));
+        ܐܢ (buckets == عدم) {
             ngx_free(test);
-            return NGX_ERROR;
+            ܦܢܐ NGX_ERROR;
         }
     }
 
     elts = ngx_palloc(hinit->pool, len + ngx_cacheline_size);
-    if (elts == NULL) {
+    ܐܢ (elts == عدم) {
         ngx_free(test);
-        return NGX_ERROR;
+        ܦܢܐ NGX_ERROR;
     }
 
     elts = ngx_align_ptr(elts, ngx_cacheline_size);
 
-    for (i = 0; i < size; i++) {
-        if (test[i] == sizeof(void *)) {
-            continue;
+    لكل (i = 0; i < size; i++) {
+        ܐܢ (test[i] == حجم(فراغ *)) {
+            استمر;
         }
 
         buckets[i] = (ngx_hash_elt_t *) elts;
         elts += test[i];
     }
 
-    for (i = 0; i < size; i++) {
+    لكل (i = 0; i < size; i++) {
         test[i] = 0;
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    لكل (n = 0; n < nelts; n++) {
+        ܐܢ (names[n].key.data == عدم) {
+            استمر;
         }
 
         key = names[n].key_hash % size;
@@ -437,14 +437,14 @@ found:
         test[key] = (u_short) (test[key] + NGX_HASH_ELT_SIZE(&names[n]));
     }
 
-    for (i = 0; i < size; i++) {
-        if (buckets[i] == NULL) {
-            continue;
+    لكل (i = 0; i < size; i++) {
+        ܐܢ (buckets[i] == عدم) {
+            استمر;
         }
 
         elt = (ngx_hash_elt_t *) ((u_char *) buckets[i] + test[i]);
 
-        elt->value = NULL;
+        elt->value = عدم;
     }
 
     ngx_free(test);
@@ -452,21 +452,21 @@ found:
     hinit->hash->buckets = buckets;
     hinit->hash->size = size;
 
-#if 0
+#ܐܢ 0
 
-    for (i = 0; i < size; i++) {
+    لكل (i = 0; i < size; i++) {
         ngx_str_t   val;
         ngx_uint_t  key;
 
         elt = buckets[i];
 
-        if (elt == NULL) {
+        ܐܢ (elt == عدم) {
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "%ui: NULL", i);
-            continue;
+            استمر;
         }
 
-        while (elt->value) {
+        ܟܡܐ (elt->value) {
             val.len = elt->len;
             val.data = &elt->name[0];
 
@@ -476,13 +476,13 @@ found:
                           "%ui: %p \"%V\" %ui", i, elt, &val, key);
 
             elt = (ngx_hash_elt_t *) ngx_align_ptr(&elt->name[0] + elt->len,
-                                                   sizeof(void *));
+                                                   حجم(فراغ *));
         }
     }
 
 #endif
 
-    return NGX_OK;
+    ܦܢܐ NGX_OK;
 }
 
 
@@ -497,39 +497,39 @@ ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
     ngx_hash_init_t       h;
     ngx_hash_wildcard_t  *wdc;
 
-    if (ngx_array_init(&curr_names, hinit->temp_pool, nelts,
-                       sizeof(ngx_hash_key_t))
+    ܐܢ (ngx_array_init(&curr_names, hinit->temp_pool, nelts,
+                       حجم(ngx_hash_key_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ܦܢܐ NGX_ERROR;
     }
 
-    if (ngx_array_init(&next_names, hinit->temp_pool, nelts,
-                       sizeof(ngx_hash_key_t))
+    ܐܢ (ngx_array_init(&next_names, hinit->temp_pool, nelts,
+                       حجم(ngx_hash_key_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ܦܢܐ NGX_ERROR;
     }
 
-    for (n = 0; n < nelts; n = i) {
+    لكل (n = 0; n < nelts; n = i) {
 
-#if 0
+#ܐܢ 0
         ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                       "wc0: \"%V\"", &names[n].key);
 #endif
 
         dot = 0;
 
-        for (len = 0; len < names[n].key.len; len++) {
-            if (names[n].key.data[len] == '.') {
+        لكل (len = 0; len < names[n].key.len; len++) {
+            ܐܢ (names[n].key.data[len] == '.') {
                 dot = 1;
-                break;
+                اكسر;
             }
         }
 
         name = ngx_array_push(&curr_names);
-        if (name == NULL) {
-            return NGX_ERROR;
+        ܐܢ (name == عدم) {
+            ܦܢܐ NGX_ERROR;
         }
 
         name->key.len = len;
@@ -537,23 +537,23 @@ ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
         name->key_hash = hinit->key(name->key.data, name->key.len);
         name->value = names[n].value;
 
-#if 0
+#ܐܢ 0
         ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                       "wc1: \"%V\" %ui", &name->key, dot);
 #endif
 
         dot_len = len + 1;
 
-        if (dot) {
+        ܐܢ (dot) {
             len++;
         }
 
         next_names.nelts = 0;
 
-        if (names[n].key.len != len) {
+        ܐܢ (names[n].key.len != len) {
             next_name = ngx_array_push(&next_names);
-            if (next_name == NULL) {
-                return NGX_ERROR;
+            ܐܢ (next_name == عدم) {
+                ܦܢܐ NGX_ERROR;
             }
 
             next_name->key.len = names[n].key.len - len;
@@ -561,27 +561,27 @@ ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
             next_name->key_hash = 0;
             next_name->value = names[n].value;
 
-#if 0
+#ܐܢ 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "wc2: \"%V\"", &next_name->key);
 #endif
         }
 
-        for (i = n + 1; i < nelts; i++) {
-            if (ngx_strncmp(names[n].key.data, names[i].key.data, len) != 0) {
-                break;
+        لكل (i = n + 1; i < nelts; i++) {
+            ܐܢ (ngx_strncmp(names[n].key.data, names[i].key.data, len) != 0) {
+                اكسر;
             }
 
-            if (!dot
+            ܐܢ (!dot
                 && names[i].key.len > len
                 && names[i].key.data[len] != '.')
             {
-                break;
+                اكسر;
             }
 
             next_name = ngx_array_push(&next_names);
-            if (next_name == NULL) {
-                return NGX_ERROR;
+            ܐܢ (next_name == عدم) {
+                ܦܢܐ NGX_ERROR;
             }
 
             next_name->key.len = names[i].key.len - dot_len;
@@ -589,45 +589,45 @@ ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
             next_name->key_hash = 0;
             next_name->value = names[i].value;
 
-#if 0
+#ܐܢ 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "wc3: \"%V\"", &next_name->key);
 #endif
         }
 
-        if (next_names.nelts) {
+        ܐܢ (next_names.nelts) {
 
             h = *hinit;
-            h.hash = NULL;
+            h.hash = عدم;
 
-            if (ngx_hash_wildcard_init(&h, (ngx_hash_key_t *) next_names.elts,
+            ܐܢ (ngx_hash_wildcard_init(&h, (ngx_hash_key_t *) next_names.elts,
                                        next_names.nelts)
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                ܦܢܐ NGX_ERROR;
             }
 
             wdc = (ngx_hash_wildcard_t *) h.hash;
 
-            if (names[n].key.len == len) {
+            ܐܢ (names[n].key.len == len) {
                 wdc->value = names[n].value;
             }
 
-            name->value = (void *) ((uintptr_t) wdc | (dot ? 3 : 2));
+            name->value = (فراغ *) ((uintptr_t) wdc | (dot ? 3 : 2));
 
-        } else if (dot) {
-            name->value = (void *) ((uintptr_t) name->value | 1);
+        } ܐܚܪܢܐ ܐܢ (dot) {
+            name->value = (فراغ *) ((uintptr_t) name->value | 1);
         }
     }
 
-    if (ngx_hash_init(hinit, (ngx_hash_key_t *) curr_names.elts,
+    ܐܢ (ngx_hash_init(hinit, (ngx_hash_key_t *) curr_names.elts,
                       curr_names.nelts)
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ܦܢܐ NGX_ERROR;
     }
 
-    return NGX_OK;
+    ܦܢܐ NGX_OK;
 }
 
 
@@ -638,11 +638,11 @@ ngx_hash_key(u_char *data, size_t len)
 
     key = 0;
 
-    for (i = 0; i < len; i++) {
+    لكل (i = 0; i < len; i++) {
         key = ngx_hash(key, data[i]);
     }
 
-    return key;
+    ܦܢܐ key;
 }
 
 
@@ -653,11 +653,11 @@ ngx_hash_key_lc(u_char *data, size_t len)
 
     key = 0;
 
-    for (i = 0; i < len; i++) {
+    لكل (i = 0; i < len; i++) {
         key = ngx_hash(key, ngx_tolower(data[i]));
     }
 
-    return key;
+    ܦܢܐ key;
 }
 
 
@@ -668,14 +668,14 @@ ngx_hash_strlow(u_char *dst, u_char *src, size_t n)
 
     key = 0;
 
-    while (n--) {
+    ܟܡܐ (n--) {
         *dst = ngx_tolower(*src);
         key = ngx_hash(key, *dst);
         dst++;
         src++;
     }
 
-    return key;
+    ܦܢܐ key;
 }
 
 
@@ -684,58 +684,58 @@ ngx_hash_keys_array_init(ngx_hash_keys_arrays_t *ha, ngx_uint_t type)
 {
     ngx_uint_t  asize;
 
-    if (type == NGX_HASH_SMALL) {
+    ܐܢ (type == NGX_HASH_SMALL) {
         asize = 4;
         ha->hsize = 107;
 
-    } else {
+    } ܐܚܪܢܐ {
         asize = NGX_HASH_LARGE_ASIZE;
         ha->hsize = NGX_HASH_LARGE_HSIZE;
     }
 
-    if (ngx_array_init(&ha->keys, ha->temp_pool, asize, sizeof(ngx_hash_key_t))
+    ܐܢ (ngx_array_init(&ha->keys, ha->temp_pool, asize, حجم(ngx_hash_key_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ܦܢܐ NGX_ERROR;
     }
 
-    if (ngx_array_init(&ha->dns_wc_head, ha->temp_pool, asize,
-                       sizeof(ngx_hash_key_t))
+    ܐܢ (ngx_array_init(&ha->dns_wc_head, ha->temp_pool, asize,
+                       حجم(ngx_hash_key_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ܦܢܐ NGX_ERROR;
     }
 
-    if (ngx_array_init(&ha->dns_wc_tail, ha->temp_pool, asize,
-                       sizeof(ngx_hash_key_t))
+    ܐܢ (ngx_array_init(&ha->dns_wc_tail, ha->temp_pool, asize,
+                       حجم(ngx_hash_key_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ܦܢܐ NGX_ERROR;
     }
 
-    ha->keys_hash = ngx_pcalloc(ha->temp_pool, sizeof(ngx_array_t) * ha->hsize);
-    if (ha->keys_hash == NULL) {
-        return NGX_ERROR;
+    ha->keys_hash = ngx_pcalloc(ha->temp_pool, حجم(ngx_array_t) * ha->hsize);
+    ܐܢ (ha->keys_hash == عدم) {
+        ܦܢܐ NGX_ERROR;
     }
 
     ha->dns_wc_head_hash = ngx_pcalloc(ha->temp_pool,
-                                       sizeof(ngx_array_t) * ha->hsize);
-    if (ha->dns_wc_head_hash == NULL) {
-        return NGX_ERROR;
+                                       حجم(ngx_array_t) * ha->hsize);
+    ܐܢ (ha->dns_wc_head_hash == عدم) {
+        ܦܢܐ NGX_ERROR;
     }
 
     ha->dns_wc_tail_hash = ngx_pcalloc(ha->temp_pool,
-                                       sizeof(ngx_array_t) * ha->hsize);
-    if (ha->dns_wc_tail_hash == NULL) {
-        return NGX_ERROR;
+                                       حجم(ngx_array_t) * ha->hsize);
+    ܐܢ (ha->dns_wc_tail_hash == عدم) {
+        ܦܢܐ NGX_ERROR;
     }
 
-    return NGX_OK;
+    ܦܢܐ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
+ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, فراغ *value,
     ngx_uint_t flags)
 {
     size_t           len;
@@ -747,7 +747,7 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
     last = key->len;
 
-    if (flags & NGX_HASH_WILDCARD_KEY) {
+    ܐܢ (flags & NGX_HASH_WILDCARD_KEY) {
 
         /*
          * supported wildcards:
@@ -756,44 +756,44 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
         n = 0;
 
-        for (i = 0; i < key->len; i++) {
+        لكل (i = 0; i < key->len; i++) {
 
-            if (key->data[i] == '*') {
-                if (++n > 1) {
-                    return NGX_DECLINED;
+            ܐܢ (key->data[i] == '*') {
+                ܐܢ (++n > 1) {
+                    ܦܢܐ NGX_DECLINED;
                 }
             }
 
-            if (key->data[i] == '.' && key->data[i + 1] == '.') {
-                return NGX_DECLINED;
+            ܐܢ (key->data[i] == '.' && key->data[i + 1] == '.') {
+                ܦܢܐ NGX_DECLINED;
             }
 
-            if (key->data[i] == '\0') {
-                return NGX_DECLINED;
+            ܐܢ (key->data[i] == '\0') {
+                ܦܢܐ NGX_DECLINED;
             }
         }
 
-        if (key->len > 1 && key->data[0] == '.') {
+        ܐܢ (key->len > 1 && key->data[0] == '.') {
             skip = 1;
-            goto wildcard;
+            اذهب wildcard;
         }
 
-        if (key->len > 2) {
+        ܐܢ (key->len > 2) {
 
-            if (key->data[0] == '*' && key->data[1] == '.') {
+            ܐܢ (key->data[0] == '*' && key->data[1] == '.') {
                 skip = 2;
-                goto wildcard;
+                اذهب wildcard;
             }
 
-            if (key->data[i - 2] == '.' && key->data[i - 1] == '*') {
+            ܐܢ (key->data[i - 2] == '.' && key->data[i - 1] == '*') {
                 skip = 0;
                 last -= 2;
-                goto wildcard;
+                اذهب wildcard;
             }
         }
 
-        if (n) {
-            return NGX_DECLINED;
+        ܐܢ (n) {
+            ܦܢܐ NGX_DECLINED;
         }
     }
 
@@ -801,8 +801,8 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
     k = 0;
 
-    for (i = 0; i < last; i++) {
-        if (!(flags & NGX_HASH_READONLY_KEY)) {
+    لكل (i = 0; i < last; i++) {
+        ܐܢ (!(flags & NGX_HASH_READONLY_KEY)) {
             key->data[i] = ngx_tolower(key->data[i]);
         }
         k = ngx_hash(k, key->data[i]);
@@ -814,43 +814,43 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
     name = ha->keys_hash[k].elts;
 
-    if (name) {
-        for (i = 0; i < ha->keys_hash[k].nelts; i++) {
-            if (last != name[i].len) {
-                continue;
+    ܐܢ (name) {
+        لكل (i = 0; i < ha->keys_hash[k].nelts; i++) {
+            ܐܢ (last != name[i].len) {
+                استمر;
             }
 
-            if (ngx_strncmp(key->data, name[i].data, last) == 0) {
-                return NGX_BUSY;
+            ܐܢ (ngx_strncmp(key->data, name[i].data, last) == 0) {
+                ܦܢܐ NGX_BUSY;
             }
         }
 
-    } else {
-        if (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
-                           sizeof(ngx_str_t))
+    } ܐܚܪܢܐ {
+        ܐܢ (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
+                           حجم(ngx_str_t))
             != NGX_OK)
         {
-            return NGX_ERROR;
+            ܦܢܐ NGX_ERROR;
         }
     }
 
     name = ngx_array_push(&ha->keys_hash[k]);
-    if (name == NULL) {
-        return NGX_ERROR;
+    ܐܢ (name == عدم) {
+        ܦܢܐ NGX_ERROR;
     }
 
     *name = *key;
 
     hk = ngx_array_push(&ha->keys);
-    if (hk == NULL) {
-        return NGX_ERROR;
+    ܐܢ (hk == عدم) {
+        ܦܢܐ NGX_ERROR;
     }
 
     hk->key = *key;
     hk->key_hash = ngx_hash_key(key->data, last);
     hk->value = value;
 
-    return NGX_OK;
+    ܦܢܐ NGX_OK;
 
 
 wildcard:
@@ -861,50 +861,50 @@ wildcard:
 
     k %= ha->hsize;
 
-    if (skip == 1) {
+    ܐܢ (skip == 1) {
 
         /* check conflicts in exact hash for ".example.com" */
 
         name = ha->keys_hash[k].elts;
 
-        if (name) {
+        ܐܢ (name) {
             len = last - skip;
 
-            for (i = 0; i < ha->keys_hash[k].nelts; i++) {
-                if (len != name[i].len) {
-                    continue;
+            لكل (i = 0; i < ha->keys_hash[k].nelts; i++) {
+                ܐܢ (len != name[i].len) {
+                    استمر;
                 }
 
-                if (ngx_strncmp(&key->data[1], name[i].data, len) == 0) {
-                    return NGX_BUSY;
+                ܐܢ (ngx_strncmp(&key->data[1], name[i].data, len) == 0) {
+                    ܦܢܐ NGX_BUSY;
                 }
             }
 
-        } else {
-            if (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
-                               sizeof(ngx_str_t))
+        } ܐܚܪܢܐ {
+            ܐܢ (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
+                               حجم(ngx_str_t))
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                ܦܢܐ NGX_ERROR;
             }
         }
 
         name = ngx_array_push(&ha->keys_hash[k]);
-        if (name == NULL) {
-            return NGX_ERROR;
+        ܐܢ (name == عدم) {
+            ܦܢܐ NGX_ERROR;
         }
 
         name->len = last - 1;
         name->data = ngx_pnalloc(ha->temp_pool, name->len);
-        if (name->data == NULL) {
-            return NGX_ERROR;
+        ܐܢ (name->data == عدم) {
+            ܦܢܐ NGX_ERROR;
         }
 
         ngx_memcpy(name->data, &key->data[1], name->len);
     }
 
 
-    if (skip) {
+    ܐܢ (skip) {
 
         /*
          * convert "*.example.com" to "com.example.\0"
@@ -912,26 +912,26 @@ wildcard:
          */
 
         p = ngx_pnalloc(ha->temp_pool, last);
-        if (p == NULL) {
-            return NGX_ERROR;
+        ܐܢ (p == عدم) {
+            ܦܢܐ NGX_ERROR;
         }
 
         len = 0;
         n = 0;
 
-        for (i = last - 1; i; i--) {
-            if (key->data[i] == '.') {
+        لكل (i = last - 1; i; i--) {
+            ܐܢ (key->data[i] == '.') {
                 ngx_memcpy(&p[n], &key->data[i + 1], len);
                 n += len;
                 p[n++] = '.';
                 len = 0;
-                continue;
+                استمر;
             }
 
             len++;
         }
 
-        if (len) {
+        ܐܢ (len) {
             ngx_memcpy(&p[n], &key->data[1], len);
             n += len;
         }
@@ -941,15 +941,15 @@ wildcard:
         hwc = &ha->dns_wc_head;
         keys = &ha->dns_wc_head_hash[k];
 
-    } else {
+    } ܐܚܪܢܐ {
 
         /* convert "www.example.*" to "www.example\0" */
 
         last++;
 
         p = ngx_pnalloc(ha->temp_pool, last);
-        if (p == NULL) {
-            return NGX_ERROR;
+        ܐܢ (p == عدم) {
+            ܦܢܐ NGX_ERROR;
         }
 
         ngx_cpystrn(p, key->data, last);
@@ -963,35 +963,35 @@ wildcard:
 
     name = keys->elts;
 
-    if (name) {
+    ܐܢ (name) {
         len = last - skip;
 
-        for (i = 0; i < keys->nelts; i++) {
-            if (len != name[i].len) {
-                continue;
+        لكل (i = 0; i < keys->nelts; i++) {
+            ܐܢ (len != name[i].len) {
+                استمر;
             }
 
-            if (ngx_strncmp(key->data + skip, name[i].data, len) == 0) {
-                return NGX_BUSY;
+            ܐܢ (ngx_strncmp(key->data + skip, name[i].data, len) == 0) {
+                ܦܢܐ NGX_BUSY;
             }
         }
 
-    } else {
-        if (ngx_array_init(keys, ha->temp_pool, 4, sizeof(ngx_str_t)) != NGX_OK)
+    } ܐܚܪܢܐ {
+        ܐܢ (ngx_array_init(keys, ha->temp_pool, 4, حجم(ngx_str_t)) != NGX_OK)
         {
-            return NGX_ERROR;
+            ܦܢܐ NGX_ERROR;
         }
     }
 
     name = ngx_array_push(keys);
-    if (name == NULL) {
-        return NGX_ERROR;
+    ܐܢ (name == عدم) {
+        ܦܢܐ NGX_ERROR;
     }
 
     name->len = last - skip;
     name->data = ngx_pnalloc(ha->temp_pool, name->len);
-    if (name->data == NULL) {
-        return NGX_ERROR;
+    ܐܢ (name->data == عدم) {
+        ܦܢܐ NGX_ERROR;
     }
 
     ngx_memcpy(name->data, key->data + skip, name->len);
@@ -1000,8 +1000,8 @@ wildcard:
     /* add to wildcard hash */
 
     hk = ngx_array_push(hwc);
-    if (hk == NULL) {
-        return NGX_ERROR;
+    ܐܢ (hk == عدم) {
+        ܦܢܐ NGX_ERROR;
     }
 
     hk->key.len = last - 1;
@@ -1009,5 +1009,5 @@ wildcard:
     hk->key_hash = 0;
     hk->value = value;
 
-    return NGX_OK;
+    ܦܢܐ NGX_OK;
 }

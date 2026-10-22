@@ -5,11 +5,11 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-static ngx_uint_t  mday[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+ساكن ngx_uint_t  mday[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 time_t
 ngx_parse_http_time(u_char *value, size_t len)
@@ -18,7 +18,7 @@ ngx_parse_http_time(u_char *value, size_t len)
     ngx_int_t    month;
     ngx_uint_t   day, year, hour, min, sec;
     uint64_t     time;
-    enum {
+    تعداد {
         no = 0,
         rfc822,   /* Tue, 10 Nov 2002 23:50:13   */
         rfc850,   /* Tuesday, 10-Dec-02 23:50:13 */
@@ -28,117 +28,117 @@ ngx_parse_http_time(u_char *value, size_t len)
     fmt = 0;
     end = value + len;
 
-#if (NGX_SUPPRESS_WARN)
+#ܐܢ (NGX_SUPPRESS_WARN)
     day = 32;
     year = 2038;
 #endif
 
-    for (p = value; p < end; p++) {
-        if (*p == ',') {
-            break;
+    لكل (p = value; p < end; p++) {
+        ܐܢ (*p == ',') {
+            اكسر;
         }
 
-        if (*p == ' ') {
+        ܐܢ (*p == ' ') {
             fmt = isoc;
-            break;
+            اكسر;
         }
     }
 
-    for (p++; p < end; p++) {
-        if (*p != ' ') {
-            break;
+    لكل (p++; p < end; p++) {
+        ܐܢ (*p != ' ') {
+            اكسر;
         }
     }
 
-    if (end - p < 18) {
-        return NGX_ERROR;
+    ܐܢ (end - p < 18) {
+        ܦܢܐ NGX_ERROR;
     }
 
-    if (fmt != isoc) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    ܐܢ (fmt != isoc) {
+        ܐܢ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            ܦܢܐ NGX_ERROR;
         }
 
         day = (*p - '0') * 10 + (*(p + 1) - '0');
         p += 2;
 
-        if (*p == ' ') {
-            if (end - p < 18) {
-                return NGX_ERROR;
+        ܐܢ (*p == ' ') {
+            ܐܢ (end - p < 18) {
+                ܦܢܐ NGX_ERROR;
             }
             fmt = rfc822;
 
-        } else if (*p == '-') {
+        } ܐܚܪܢܐ ܐܢ (*p == '-') {
             fmt = rfc850;
 
-        } else {
-            return NGX_ERROR;
+        } ܐܚܪܢܐ {
+            ܦܢܐ NGX_ERROR;
         }
 
         p++;
     }
 
-    switch (*p) {
+    بدل (*p) {
 
-    case 'J':
+    حالة 'J':
         month = *(p + 1) == 'a' ? 0 : *(p + 2) == 'n' ? 5 : 6;
-        break;
+        اكسر;
 
-    case 'F':
+    حالة 'F':
         month = 1;
-        break;
+        اكسر;
 
-    case 'M':
+    حالة 'M':
         month = *(p + 2) == 'r' ? 2 : 4;
-        break;
+        اكسر;
 
-    case 'A':
+    حالة 'A':
         month = *(p + 1) == 'p' ? 3 : 7;
-        break;
+        اكسر;
 
-    case 'S':
+    حالة 'S':
         month = 8;
-        break;
+        اكسر;
 
-    case 'O':
+    حالة 'O':
         month = 9;
-        break;
+        اكسر;
 
-    case 'N':
+    حالة 'N':
         month = 10;
-        break;
+        اكسر;
 
-    case 'D':
+    حالة 'D':
         month = 11;
-        break;
+        اكسر;
 
-    default:
-        return NGX_ERROR;
+    افتراضي:
+        ܦܢܐ NGX_ERROR;
     }
 
     p += 3;
 
-    if ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
-        return NGX_ERROR;
+    ܐܢ ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
+        ܦܢܐ NGX_ERROR;
     }
 
     p++;
 
-    if (fmt == rfc822) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+    ܐܢ (fmt == rfc822) {
+        ܐܢ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            ܦܢܐ NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
         p += 4;
 
-    } else if (fmt == rfc850) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    } ܐܚܪܢܐ ܐܢ (fmt == rfc850) {
+        ܐܢ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            ܦܢܐ NGX_ERROR;
         }
 
         year = (*p - '0') * 10 + (*(p + 1) - '0');
@@ -146,91 +146,91 @@ ngx_parse_http_time(u_char *value, size_t len)
         p += 2;
     }
 
-    if (fmt == isoc) {
-        if (*p == ' ') {
+    ܐܢ (fmt == isoc) {
+        ܐܢ (*p == ' ') {
             p++;
         }
 
-        if (*p < '0' || *p > '9') {
-            return NGX_ERROR;
+        ܐܢ (*p < '0' || *p > '9') {
+            ܦܢܐ NGX_ERROR;
         }
 
         day = *p++ - '0';
 
-        if (*p != ' ') {
-            if (*p < '0' || *p > '9') {
-                return NGX_ERROR;
+        ܐܢ (*p != ' ') {
+            ܐܢ (*p < '0' || *p > '9') {
+                ܦܢܐ NGX_ERROR;
             }
 
             day = day * 10 + (*p++ - '0');
         }
 
-        if (end - p < 14) {
-            return NGX_ERROR;
+        ܐܢ (end - p < 14) {
+            ܦܢܐ NGX_ERROR;
         }
     }
 
-    if (*p++ != ' ') {
-        return NGX_ERROR;
+    ܐܢ (*p++ != ' ') {
+        ܦܢܐ NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ܐܢ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        ܦܢܐ NGX_ERROR;
     }
 
     hour = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    ܐܢ (*p++ != ':') {
+        ܦܢܐ NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ܐܢ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        ܦܢܐ NGX_ERROR;
     }
 
     min = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    ܐܢ (*p++ != ':') {
+        ܦܢܐ NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ܐܢ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        ܦܢܐ NGX_ERROR;
     }
 
     sec = (*p - '0') * 10 + (*(p + 1) - '0');
 
-    if (fmt == isoc) {
+    ܐܢ (fmt == isoc) {
         p += 2;
 
-        if (*p++ != ' ') {
-            return NGX_ERROR;
+        ܐܢ (*p++ != ' ') {
+            ܦܢܐ NGX_ERROR;
         }
 
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+        ܐܢ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            ܦܢܐ NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
     }
 
-    if (hour > 23 || min > 59 || sec > 59) {
-        return NGX_ERROR;
+    ܐܢ (hour > 23 || min > 59 || sec > 59) {
+        ܦܢܐ NGX_ERROR;
     }
 
-    if (day == 29 && month == 1) {
-        if ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
-            return NGX_ERROR;
+    ܐܢ (day == 29 && month == 1) {
+        ܐܢ ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
+            ܦܢܐ NGX_ERROR;
         }
 
-    } else if (day > mday[month]) {
-        return NGX_ERROR;
+    } ܐܚܪܢܐ ܐܢ (day > mday[month]) {
+        ܦܢܐ NGX_ERROR;
     }
 
     /*
@@ -238,7 +238,7 @@ ngx_parse_http_time(u_char *value, size_t len)
      * it is needed for Gauss' formula
      */
 
-    if (--month <= 0) {
+    ܐܢ (--month <= 0) {
         month += 12;
         year -= 1;
     }
@@ -265,13 +265,13 @@ ngx_parse_http_time(u_char *value, size_t len)
 
             - 719527 + 31 + 28) * 86400 + hour * 3600 + min * 60 + sec;
 
-#if (NGX_TIME_T_SIZE <= 4)
+#ܐܢ (NGX_TIME_T_SIZE <= 4)
 
-    if (time > 0x7fffffff) {
-        return NGX_ERROR;
+    ܐܢ (time > 0x7fffffff) {
+        ܦܢܐ NGX_ERROR;
     }
 
 #endif
 
-    return (time_t) time;
+    ܦܢܐ (time_t) time;
 }
