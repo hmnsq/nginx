@@ -1,0 +1,514 @@
+# What is still missing
+
+76 languages. Each line says in how many languages it is missing.
+
+## Files in languages BURP cannot read yet
+
+
+## Keywords with no word in a language's table
+
+- guru:size_t: 71
+- guru:tm: 71
+- guru:time_t: 71
+- guru:va_arg: 71
+- guru:offsetof: 71
+- guru:time: 71
+- guru:close: 71
+- guru:va_list: 71
+- guru:va_start: 71
+- guru:va_end: 71
+- guru:times: 71
+- guru:tolower: 71
+- guru:memmove: 71
+- guru:mktime: 71
+- guru:getenv: 71
+- guru:abort: 71
+- guru:strchr: 71
+- guru:memcmp: 71
+- guru:SIGILL: 71
+- guru:SIGFPE: 71
+- guru:SIGSEGV: 71
+- guru:wait: 70
+- guru:open: 70
+- guru:memset: 70
+- guru:strcmp: 70
+- guru:qsort: 70
+- guru:log: 67
+- guru:sin: 67
+- guru:#define: 66
+- guru:#endif: 66
+- guru:#ifndef: 66
+- guru:#ifdef: 66
+- guru:#error: 66
+- guru:unsigned: 62
+- guru:exit: 62
+- guru:memcpy: 62
+- guru:long: 62
+- guru:malloc: 62
+- guru:strncmp: 62
+- guru:strstr: 62
+- guru:strlen: 62
+- guru:main: 54
+- guru:NULL: 25
+- guru:void: 25
+- guru:static: 25
+- guru:goto: 25
+- guru:continue: 25
+- guru:typedef: 25
+- guru:const: 25
+- guru:default: 25
+- guru:switch: 25
+- guru:free: 25
+- guru:read: 25
+- guru:do: 25
+- guru:extern: 25
+- guru:write: 25
+- guru:#elif: 25
+- guru:for: 9
+- guru:sizeof: 9
+- guru:break: 9
+- guru:struct: 9
+- guru:case: 9
+- guru:char: 9
+- guru:volatile: 9
+- guru:union: 9
+- guru:enum: 9
+- guru:double: 9
+- guru:inline: 9
+- guru:if: 1
+- guru:return: 1
+- guru:#if: 1
+- guru:else: 1
+- guru:while: 1
+- guru:int: 1
+- guru:#else: 1
+
+## Names with no dictionary entry (the most common first)
+
+- `i`: 76
+- `p`: 76
+- `len`: 76
+- `u_char`: 76
+- `n`: 76
+- `ctx`: 76
+- `name`: 76
+- `c`: 76
+- `pool`: 76
+- `r`: 76
+- `buf`: 76
+- `ngx_uint_t`: 76
+- `rn`: 76
+- `file`: 76
+- `NGX_ERROR`: 76
+- `cf`: 76
+- `ngx_int_t`: 76
+- `b`: 76
+- `err`: 76
+- `NGX_OK`: 76
+- `d`: 76
+- `ls`: 76
+- `rc`: 76
+- `fd`: 76
+- `ngx_log_error`: 76
+- `a`: 76
+- `ngx_str_t`: 76
+- `u`: 76
+- `dst`: 76
+- `src`: 76
+- `failed`: 76
+- `conf`: 76
+- `addr`: 76
+- `ngx_pool_t`: 76
+- `sockaddr`: 76
+- `s`: 76
+- `cl`: 76
+- `type`: 76
+- `uintptr_t`: 76
+- `state`: 76
+- `ccf`: 76
+- `NGX_LOG_ALERT`: 76
+- `elts`: 76
+- `NGX_LOG_EMERG`: 76
+- `ch`: 76
+- `rec`: 76
+- `uint32_t`: 76
+- `fmt`: 76
+- `part`: 76
+- `tp`: 76
+- `level`: 76
+- `nelts`: 76
+- `NGX_HAVE_INET6`: 76
+- `ngx_errno`: 76
+- `e`: 76
+- `cmd`: 76
+- `ngx_log_t`: 76
+- `sentinel`: 76
+- `event`: 76
+- `ngx_conf_t`: 76
+- `query`: 76
+- `m`: 76
+- `peer`: 76
+- `NGX_LOG_DEBUG_CORE`: 76
+- `naddrs`: 76
+- `conf_file`: 76
+- `NGX_CONF_ERROR`: 76
+- `ngx_conf_log_error`: 76
+- `c1`: 76
+- `hash`: 76
+- `mtx`: 76
+- `addrs`: 76
+- `valid`: 76
+- `ngx_resolver_t`: 76
+- `handler`: 76
+- `NGX_DECLINED`: 76
+- `pos`: 76
+- `srvs`: 76
+- `log_level`: 76
+- `ngx_socket_errno`: 76
+- `NGX_FILE_ERROR`: 76
+- `c2`: 76
+- `ngx_connection_t`: 76
+- `post`: 76
+- `cache`: 76
+- `socklen`: 76
+- `u_short`: 76
+- `ngx_memcpy`: 76
+- `shm_zone`: 76
+- `fi`: 76
+- `hinit`: 76
+- `module`: 76
+- `ngx_resolver_free`: 76
+- `ngx_command_t`: 76
+- `max`: 76
+- `shm`: 76
+- `ngx_log_debug1`: 76
+- `NGX_CONF_OK`: 76
+- `ngx_array_t`: 76
+- `ngx_chain_t`: 76
+- `ngx_memzero`: 76
+- `cln`: 76
+- `off_t`: 76
+- `h`: 76
+- `s1`: 76
+- `GET`: 76
+- `NGX_INVALID_FILE`: 76
+- `sa`: 76
+- `w`: 76
+- `j`: 76
+- `q`: 76
+- `host`: 76
+- `ngx_free`: 76
+- `attr`: 76
+- `modules`: 76
+- `l`: 76
+- `slab`: 76
+- `s2`: 76
+- `ngx_string`: 76
+- `ha`: 76
+- `codepoint`: 76
+- `an`: 76
+- `elt`: 76
+- `sin6`: 76
+- `ident`: 76
+- `ngx_strncmp`: 76
+- `k`: 76
+- `ngx_event_t`: 76
+- `access`: 76
+- `ngx_inline`: 76
+- `task`: 76
+- `ttl`: 76
+- `F2`: 76
+- `ngx_core_conf_t`: 76
+- `ngx_err_t`: 76
+- `sockaddr_in6`: 76
+- `arg1`: 76
+- `new_log`: 76
+- `ngx_resolver_ctx_t`: 76
+- `env`: 76
+- `uint64_t`: 76
+- `errstr`: 76
+- `sa_family`: 76
+- `pid`: 76
+- `ngx_buf_t`: 76
+- `str`: 76
+- `var`: 76
+- `ssize_t`: 76
+- `AF_INET6`: 76
+- `sec`: 76
+- `family`: 76
+- `x`: 76
+- `ngx_strcmp`: 76
+- `pp`: 76
+- `tlv`: 76
+- `slots`: 76
+- `arg2`: 76
+- `listening`: 76
+- `ngx_pnalloc`: 76
+- `file_pos`: 76
+- `argv`: 76
+- `uri`: 76
+- `nsrvs`: 76
+- `ngx_pcalloc`: 76
+- `invalid`: 76
+- `ngx_socket_t`: 76
+- `ngx_cpymem`: 76
+- `ngx_palloc`: 76
+- `nls`: 76
+- `ngx_pagesize`: 76
+- `sp`: 76
+- `arg3`: 76
+- `large`: 76
+- `naddrs6`: 76
+- `NGX_LINEFEED`: 76
+- `ngx_sprintf`: 76
+- `chain`: 76
+- `ngx_fd_t`: 76
+- `NGX_LOG_CRIT`: 76
+- `nlen`: 76
+- `subst`: 76
+- `cctx`: 76
+- `salt`: 76
+- `scale`: 76
+- `cutoff`: 76
+- `qlen`: 76
+- `tcp`: 76
+- `ui64`: 76
+- `ngx_close_file`: 76
+- `ngx_close_file_n`: 76
+- `encrypted`: 76
+- `oshm_zone`: 76
+- `obj`: 76
+- `year`: 76
+- `join`: 76
+- `conf_ctx`: 76
+- `NGX_WIN32`: 76
+- `rv`: 76
+- `test`: 76
+- `AF_INET`: 76
+- `setsockopt`: 76
+- `rev`: 76
+- `ngx_rbtree_t`: 76
+- `final`: 76
+- `ngx_destroy_pool`: 76
+- `zero`: 76
+- `cidr`: 76
+- `re`: 76
+- `ngx_resolver_hdr_t`: 76
+- `wev`: 76
+- `s6_addr`: 76
+- `sin_addr`: 76
+- `ngx_slab_pool_t`: 76
+- `arg4`: 76
+- `expire`: 76
+- `tcf`: 76
+- `tpp`: 76
+- `ngx_strlen`: 76
+- `ev`: 76
+- `ngx_snprintf`: 76
+- `user`: 76
+- `ngx_log_debug0`: 76
+- `ngx_msec_t`: 76
+- `NGX_AGAIN`: 76
+- `dir`: 76
+- `ext`: 76
+- `ngx_cached_open_file_t`: 76
+- `verify`: 76
+- `addr6`: 76
+- `basis`: 76
+- `NGX_MAIN_CONF`: 76
+- `ngx_alloc`: 76
+- `nalloc`: 76
+- `socklen_t`: 76
+- `olen`: 76
+- `decoded`: 76
+- `opart`: 76
+- `tlvs`: 76
+- `cname`: 76
+- `ngx_shmtx_t`: 76
+- `hex`: 76
+- `ngx_test_config`: 76
+- `ngx_listening_t`: 76
+- `ngx_atoi`: 76
+- `reuseport`: 76
+- `tf`: 76
+- `t`: 76
+- `nan`: 76
+- `F1`: 76
+- `F3`: 76
+- `ngx_array_init`: 76
+- `NGX_CONF_UNSET`: 76
+- `ngx_log_debug2`: 76
+- `bufs`: 76
+- `sin6_addr`: 76
+- `s_addr`: 76
+- `hwc`: 76
+- `dash`: 76
+- `arg5`: 76
+- `at_fd`: 76
+- `is_dir`: 76
+- `now`: 76
+- `ngx_proxy_protocol_tlv_t`: 76
+- `ngx_rbt_black`: 76
+- `ngx_resolver_connection_t`: 76
+- `ngx_resolver_free_locked`: 76
+- `query6`: 76
+- `qs`: 76
+- `sign`: 76
+- `ngx_thread_pool_t`: 76
+- `NGX_CONF_TAKE1`: 76
+- `ngx_module_t`: 76
+- `error_log`: 76
+- `ngx_thread_task_t`: 76
+- `SOL_SOCKET`: 76
+- `connections`: 76
+- `ssl`: 76
+- `ngx_atomic_t`: 76
+- `in6`: 76
+- `regex`: 76
+- `p2`: 76
+- `ngx_cdecl`: 76
+- `ngx_pool_cleanup_t`: 76
+- `NGX_CONF_UNSET_UINT`: 76
+- `filename`: 76
+- `np`: 76
+- `NGX_HAVE_UNIX_DOMAIN`: 76
+- `rbtree`: 76
+- `ngx_url_t`: 76
+- `octet`: 76
+- `sockaddr_un`: 76
+- `ngx_open_file_cache_t`: 76
+- `ngx_rbtree_delete`: 76
+- `bsize`: 76
+- `cutlim`: 76
+- `ngx_resolver_an_t`: 76
+- `ngx_resolver_alloc`: 76
+- `stats`: 76
+- `bitmap`: 76
+- `ngx_get_conf`: 76
+
+## Comments with no translation
+
+- void: 76
+- unlock name mutex: 76
+- AF_INET: 76
+- unlock addr mutex: 76
+- fall through: 76
+- _^]\ [ZYX WVUT SRQP  ONML KJIH GFED CBA@: 76
+- ~}| {zyx wvut srqp  onml kjih gfed cba`: 76
+- lock alloc mutex: 76
+- unlock alloc mutex: 76
+- lock addr mutex: 76
+- NGX_RESOLVE_A: 76
+- module context: 76
+- module directives: 76
+- module type: 76
+- init master: 76
+- init module: 76
+- init process: 76
+- init thread: 76
+- exit thread: 76
+- exit process: 76
+- exit master: 76
+- not found: 76
+- lock name mutex: 76
+- hash == node->key: 76
+- STUB: 76
+- MP: ngx_shared_palloc(): 76
+- node->key == temp->key: 76
+- recursion query: 76
+- one question: 76
+- the array is full: 76
+- * the array allocation is the last in the pool
+             * and there is space for new allocation: 76
+- allocate a new array: 76
+- TODO: close on exit: 76
+- NGX_DATA_OBJECT_TYPE: 76
+- NGX_DATA_LIST_TYPE: 76
+- NGX_DATA_STRING_TYPE: 76
+- NGX_DATA_INTEGER_TYPE: 76
+- NGX_DATA_BOOLEAN_TYPE: 76
+- NGX_DATA_NULL_TYPE: 76
+- "example.com": 76
+- compatibility: 76
+- lone low surrogate: 76
+- No sense, but permitted by RFC: 76
+- lone high surrogate: 76
+- no variadic macros: 76
+- * This processes one or more 64-byte data blocks, but does not update
+ * the bit counters.  There ar: 76
+- check previous cycle: 76
+- DEBUG stuff: 76
+- ensure that there is no current pool: 76
+- do not study at runtime: 76
+- immediately retry once on failure: 76
+- CNAME only: 76
+- query type: 76
+- IN query class: 76
+- UDP sockets are always ready to write: 76
+- select, poll, /dev/poll: 76
+- NGX_EINPROGRESS: 76
+- event ident must be after 3 pointers as in ngx_connection_t: 76
+- only "next" is used in list head: 76
+- shift > ngx_slab_exact_shift: 76
+- the "(uint32_t)" cast disables the BCC's warning: 76
+- hexadecimal == 2: 76
+- invalid UTF-8: 76
+- the invalid quoted character: 76
+- TODO: 76
+- * init_cycle->log is required for signal handlers and
+     * ngx_process_options(): 76
+- * ngx_crc32_table_init() requires ngx_cacheline_size set in ngx_os_init(): 76
+- * ngx_slab_sizes_init() requires ngx_pagesize set in ngx_os_init(): 76
+- * if the environment is still used, as it happens on exit,
+         * the only option is to leak it: 76
+- * if an environment variable is still used, as it happens on exit,
+         * the only option is to : 76
+- allocate the spare 300 bytes for the new binary process title: 76
+- * set by ngx_pcalloc()
+     *
+     *     ccf->pid = NULL;
+     *     ccf->oldpid = NULL;
+     *     : 76
+- empty mask: 76
+- _NGINX_H_INCLUDED_: 76
+- * set "array->nelts" before "array->elts", otherwise MSVC thinks
+     * that "array->nelts" may be u: 76
+- _NGX_ARRAY_H_INCLUDED_: 76
+- for verifier errors: 76
+- _NGX_BPF_H_INCLUDED_: 76
+- * set by ngx_calloc_buf():
+     *
+     *     b->file_pos = 0;
+     *     b->file_last = 0;
+     *   : 76
+- * set by ngx_calloc_buf():
+         *
+         *     b->file_pos = 0;
+         *     b->file_last = : 76
+- start of buffer: 76
+- end of buffer: 76
+- the buf's content could be changed: 76
+- * the buf's content is in a memory cache or in a read only memory
+     * and must not be changed: 76
+- the buf's content is mmap()ed and must not be changed: 76
+- _NGX_BUF_H_INCLUDED_: 76
+- The eight fixed arguments: 76
+- open configuration file: 76
+- * ngx_conf_read_token() may return
+         *
+         *    NGX_ERROR             there is error
+   : 76
+- rc == NGX_OK || rc == NGX_CONF_BLOCK_START: 76
+- * the custom handler, i.e., that is used in the http's
+             * "types { ... }" directive: 76
+- is the directive's location right ?: 76
+- is the directive's argument count right ?: 76
+- set up the directive's configuration context: 76
+- *        AAAA  number of arguments
+ *      FF      command flags
+ *    TT        command type, i.e. : 76
+- "CORE": 76
+- "CONF": 76
+- _NGX_CONF_FILE_H_INCLUDED_: 76
+- POSIX: 76
+- TODO: #ifndef: 76
