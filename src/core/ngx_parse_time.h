@@ -9,8 +9,8 @@
 #define _NGX_PARSE_TIME_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 time_t ngx_parse_http_time(u_char *value, size_t len);

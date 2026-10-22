@@ -9,16 +9,16 @@
 #define _NGX_JSON_PARSE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_json_unescape.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
+#ضمن <ngx_json_unescape.h>
 
 
 #define NGX_JSON_SKIP                    -7
 #define NGX_JSON_DEFAULT_MAX_DEPTH       64
 
 
-typedef enum {
+تعريفنوع تعداد {
     NGX_JSON_OBJECT_OPEN = 0,
     NGX_JSON_OBJECT_CLOSE,
     NGX_JSON_ARRAY_OPEN,
@@ -33,7 +33,7 @@ typedef enum {
 } ngx_json_event_e;
 
 
-typedef enum {
+تعريفنوع تعداد {
     ngx_json_start = 0,
     ngx_json_done,
     ngx_json_object,
@@ -70,21 +70,21 @@ typedef enum {
 } ngx_json_state_e;
 
 
-typedef enum {
+تعريفنوع تعداد {
     ngx_json_ctx_none = 0,
     ngx_json_ctx_object,
     ngx_json_ctx_array
 } ngx_json_container_e;
 
 
-typedef struct ngx_json_ctx_s  ngx_json_ctx_t;
+تعريفنوع بنية ngx_json_ctx_s  ngx_json_ctx_t;
 
 
-typedef ngx_int_t (*ngx_json_handler_pt)(ngx_json_ctx_t *ctx,
+تعريفنوع ngx_int_t (*ngx_json_handler_pt)(ngx_json_ctx_t *ctx,
     ngx_json_event_e event, ngx_str_t *token);
 
 
-struct ngx_json_ctx_s {
+بنية ngx_json_ctx_s {
     ngx_json_state_e       state;
 
     ngx_json_container_e  *stack;
@@ -98,17 +98,17 @@ struct ngx_json_ctx_s {
 
     ngx_pool_t            *pool;
     ngx_json_handler_pt    handler;
-    void                  *data;
+    فراغ                  *data;
 
     ngx_uint_t             in_key;           /* unsigned in_key:1; */
     ngx_uint_t             escaped;          /* unsigned escaped:1; */
 };
 
 
-void ngx_json_ctx_init(ngx_json_ctx_t *ctx, ngx_pool_t *pool);
+فراغ ngx_json_ctx_init(ngx_json_ctx_t *ctx, ngx_pool_t *pool);
 ngx_int_t ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len);
 ngx_int_t ngx_json_parse(ngx_pool_t *pool, ngx_str_t *json,
-    ngx_json_handler_pt handler, void *data);
+    ngx_json_handler_pt handler, فراغ *data);
 
 
 #endif /* _NGX_JSON_PARSE_H_INCLUDED_ */
