@@ -5,35 +5,35 @@
  */
 
 
-#ifndef _NGX_CRC_H_INCLUDED_
-#define _NGX_CRC_H_INCLUDED_
+#جے_بنا_تعریف NGX_چکری_جانچ_H_INCLUDED
+#تعریف_کرو NGX_چکری_جانچ_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 /* 32-bit crc16 */
 
-static ngx_inline uint32_t
-ngx_crc(u_char *data, size_t len)
+ساكن ngx_inline uint32_t
+ngx_چکری_جانچ(u_char *انکڑے, ناپ_t len)
 {
-    uint32_t  sum;
+    uint32_t  جوڑ;
 
-    for (sum = 0; len; len--) {
+    لكل (جوڑ = 0; len; len--) {
 
         /*
          * gcc 2.95.2 x86 and icc 7.1.006 compile
          * that operator into the single "rol" opcode,
          * msvc 6.0sp2 compiles it into four opcodes.
          */
-        sum = sum >> 1 | sum << 31;
+        جوڑ = جوڑ >> 1 | جوڑ << 31;
 
-        sum += *data++;
+        جوڑ += *انکڑے++;
     }
 
-    return sum;
+    أرجع جوڑ;
 }
 
 
-#endif /* _NGX_CRC_H_INCLUDED_ */
+#جے_انت /* _NGX_CRC_H_INCLUDED_ */

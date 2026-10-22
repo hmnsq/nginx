@@ -5,54 +5,54 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
+#ضمن <ngx_event.h>
 
 
-static void ngx_destroy_cycle_pools(ngx_conf_t *conf);
-static ngx_int_t ngx_init_zone_pool(ngx_cycle_t *cycle,
+ساكن فراغ ngx_destroy_چکر_pools(ngx_conf_t *conf);
+ساكن ngx_int_t ngx_init_zone_pool(ngx_چکر_t *چکر,
     ngx_shm_zone_t *shm_zone);
-static ngx_int_t ngx_test_lockfile(u_char *file, ngx_log_t *log);
-static void ngx_clean_old_cycles(ngx_event_t *ev);
-static void ngx_shutdown_timer_handler(ngx_event_t *ev);
+ساكن ngx_int_t ngx_test_lockfile(u_char *file, ngx_log_t *لوگارتھم);
+ساكن فراغ ngx_clean_old_چکراں(ngx_event_t *ev);
+ساكن فراغ ngx_shutdown_timer_handler(ngx_event_t *ev);
 
 
-volatile ngx_cycle_t  *ngx_cycle;
-ngx_array_t            ngx_old_cycles;
+متطاير ngx_چکر_t  *ngx_چکر;
+ngx_array_t            ngx_old_چکراں;
 
-static ngx_pool_t     *ngx_temp_pool;
-static ngx_event_t     ngx_cleaner_event;
-static ngx_event_t     ngx_shutdown_event;
+ساكن ngx_pool_t     *ngx_عارضی_pool;
+ساكن ngx_event_t     ngx_cleaner_event;
+ساكن ngx_event_t     ngx_shutdown_event;
 
 ngx_uint_t             ngx_test_config;
 ngx_uint_t             ngx_dump_config;
-ngx_uint_t             ngx_quiet_mode;
+ngx_uint_t             ngx_quiet_منوال;
 
 
 /* STUB NAME */
-static ngx_connection_t  dumb;
+ساكن ngx_connection_t  dumb;
 /* STUB */
 
 
-ngx_cycle_t *
-ngx_init_cycle(ngx_cycle_t *old_cycle)
+ngx_چکر_t *
+ngx_init_چکر(ngx_چکر_t *old_چکر)
 {
-    void                *rv, *data;
-    char               **senv;
+    فراغ                *rv, *انکڑے;
+    حرف               **senv;
     ngx_uint_t           i, n;
-    ngx_log_t           *log;
-    ngx_time_t          *tp;
+    ngx_log_t           *لوگارتھم;
+    ngx_ویلا_t          *tp;
     ngx_conf_t           conf;
     ngx_pool_t          *pool;
-    ngx_cycle_t         *cycle, **old;
+    ngx_چکر_t         *چکر, **old;
     ngx_shm_zone_t      *shm_zone, *oshm_zone;
     ngx_list_part_t     *part, *opart;
     ngx_open_file_t     *file;
     ngx_listening_t     *ls, *nls;
     ngx_core_conf_t     *ccf, *old_ccf;
     ngx_core_module_t   *module;
-    char                 hostname[NGX_MAXHOSTNAMELEN];
+    حرف                 hostname[NGX_MAXHOSTNAMELEN];
 
     ngx_timezone_update();
 
@@ -61,189 +61,189 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
     tp = ngx_timeofday();
     tp->sec = 0;
 
-    ngx_time_update();
+    ngx_ویلا_update();
 
 
-    log = old_cycle->log;
+    لوگارتھم = old_چکر->لوگارتھم;
 
-    pool = ngx_create_pool(NGX_CYCLE_POOL_SIZE, log);
-    if (pool == NULL) {
-        return NULL;
+    pool = ngx_create_pool(NGX_چکر_POOL_ناپ, لوگارتھم);
+    إذا (pool == عدم) {
+        أرجع عدم;
     }
-    pool->log = log;
+    pool->لوگارتھم = لوگارتھم;
 
-    cycle = ngx_pcalloc(pool, sizeof(ngx_cycle_t));
-    if (cycle == NULL) {
+    چکر = ngx_pcalloc(pool, حجم(ngx_چکر_t));
+    إذا (چکر == عدم) {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
-    cycle->pool = pool;
-    cycle->log = log;
-    cycle->old_cycle = old_cycle;
+    چکر->pool = pool;
+    چکر->لوگارتھم = لوگارتھم;
+    چکر->old_چکر = old_چکر;
 
-    cycle->conf_prefix.len = old_cycle->conf_prefix.len;
-    cycle->conf_prefix.data = ngx_pstrdup(pool, &old_cycle->conf_prefix);
-    if (cycle->conf_prefix.data == NULL) {
+    چکر->conf_اگیتر.len = old_چکر->conf_اگیتر.len;
+    چکر->conf_اگیتر.انکڑے = ngx_pstrdup(pool, &old_چکر->conf_اگیتر);
+    إذا (چکر->conf_اگیتر.انکڑے == عدم) {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
-    cycle->prefix.len = old_cycle->prefix.len;
-    cycle->prefix.data = ngx_pstrdup(pool, &old_cycle->prefix);
-    if (cycle->prefix.data == NULL) {
+    چکر->اگیتر.len = old_چکر->اگیتر.len;
+    چکر->اگیتر.انکڑے = ngx_pstrdup(pool, &old_چکر->اگیتر);
+    إذا (چکر->اگیتر.انکڑے == عدم) {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
-    cycle->error_log.len = old_cycle->error_log.len;
-    cycle->error_log.data = ngx_pnalloc(pool, old_cycle->error_log.len + 1);
-    if (cycle->error_log.data == NULL) {
+    چکر->error_log.len = old_چکر->error_log.len;
+    چکر->error_log.انکڑے = ngx_pnalloc(pool, old_چکر->error_log.len + 1);
+    إذا (چکر->error_log.انکڑے == عدم) {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
-    ngx_cpystrn(cycle->error_log.data, old_cycle->error_log.data,
-                old_cycle->error_log.len + 1);
+    ngx_cpystrn(چکر->error_log.انکڑے, old_چکر->error_log.انکڑے,
+                old_چکر->error_log.len + 1);
 
-    cycle->conf_file.len = old_cycle->conf_file.len;
-    cycle->conf_file.data = ngx_pnalloc(pool, old_cycle->conf_file.len + 1);
-    if (cycle->conf_file.data == NULL) {
+    چکر->conf_file.len = old_چکر->conf_file.len;
+    چکر->conf_file.انکڑے = ngx_pnalloc(pool, old_چکر->conf_file.len + 1);
+    إذا (چکر->conf_file.انکڑے == عدم) {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
-    ngx_cpystrn(cycle->conf_file.data, old_cycle->conf_file.data,
-                old_cycle->conf_file.len + 1);
+    ngx_cpystrn(چکر->conf_file.انکڑے, old_چکر->conf_file.انکڑے,
+                old_چکر->conf_file.len + 1);
 
-    if (old_cycle->conf_param.len) {
-        cycle->conf_param.len = old_cycle->conf_param.len;
-        cycle->conf_param.data = ngx_pstrdup(pool, &old_cycle->conf_param);
-        if (cycle->conf_param.data == NULL) {
+    إذا (old_چکر->conf_param.len) {
+        چکر->conf_param.len = old_چکر->conf_param.len;
+        چکر->conf_param.انکڑے = ngx_pstrdup(pool, &old_چکر->conf_param);
+        إذا (چکر->conf_param.انکڑے == عدم) {
             ngx_destroy_pool(pool);
-            return NULL;
+            أرجع عدم;
         }
     }
 
 
-    n = old_cycle->paths.nelts ? old_cycle->paths.nelts : 10;
+    n = old_چکر->paths.nelts ? old_چکر->paths.nelts : 10;
 
-    if (ngx_array_init(&cycle->paths, pool, n, sizeof(ngx_path_t *))
+    إذا (ngx_array_init(&چکر->paths, pool, n, حجم(ngx_رستہ_t *))
         != NGX_OK)
     {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
-    ngx_memzero(cycle->paths.elts, n * sizeof(ngx_path_t *));
+    ngx_memzero(چکر->paths.elts, n * حجم(ngx_رستہ_t *));
 
 
-    if (ngx_array_init(&cycle->config_dump, pool, 1, sizeof(ngx_conf_dump_t))
+    إذا (ngx_array_init(&چکر->config_dump, pool, 1, حجم(ngx_conf_dump_t))
         != NGX_OK)
     {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
-    ngx_rbtree_init(&cycle->config_dump_rbtree, &cycle->config_dump_sentinel,
-                    ngx_str_rbtree_insert_value);
+    ngx_rbtree_init(&چکر->config_dump_rbtree, &چکر->config_dump_sentinel,
+                    ngx_str_rbtree_داخل_کرو_قدر);
 
-    if (old_cycle->open_files.part.nelts) {
-        n = old_cycle->open_files.part.nelts;
-        for (part = old_cycle->open_files.part.next; part; part = part->next) {
+    إذا (old_چکر->open_files.part.nelts) {
+        n = old_چکر->open_files.part.nelts;
+        لكل (part = old_چکر->open_files.part.اگلا; part; part = part->اگلا) {
             n += part->nelts;
         }
 
-    } else {
+    } وإلا {
         n = 20;
     }
 
-    if (ngx_list_init(&cycle->open_files, pool, n, sizeof(ngx_open_file_t))
+    إذا (ngx_list_init(&چکر->open_files, pool, n, حجم(ngx_open_file_t))
         != NGX_OK)
     {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
 
-    if (old_cycle->shared_memory.part.nelts) {
-        n = old_cycle->shared_memory.part.nelts;
-        for (part = old_cycle->shared_memory.part.next; part; part = part->next)
+    إذا (old_چکر->shared_حافظہ.part.nelts) {
+        n = old_چکر->shared_حافظہ.part.nelts;
+        لكل (part = old_چکر->shared_حافظہ.part.اگلا; part; part = part->اگلا)
         {
             n += part->nelts;
         }
 
-    } else {
+    } وإلا {
         n = 1;
     }
 
-    if (ngx_list_init(&cycle->shared_memory, pool, n, sizeof(ngx_shm_zone_t))
+    إذا (ngx_list_init(&چکر->shared_حافظہ, pool, n, حجم(ngx_shm_zone_t))
         != NGX_OK)
     {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
-    n = old_cycle->listening.nelts ? old_cycle->listening.nelts : 10;
+    n = old_چکر->listening.nelts ? old_چکر->listening.nelts : 10;
 
-    if (ngx_array_init(&cycle->listening, pool, n, sizeof(ngx_listening_t))
+    إذا (ngx_array_init(&چکر->listening, pool, n, حجم(ngx_listening_t))
         != NGX_OK)
     {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
-    ngx_memzero(cycle->listening.elts, n * sizeof(ngx_listening_t));
+    ngx_memzero(چکر->listening.elts, n * حجم(ngx_listening_t));
 
 
-    ngx_queue_init(&cycle->reusable_connections_queue);
+    ngx_قطار_init(&چکر->reusable_connections_قطار);
 
 
-    cycle->conf_ctx = ngx_pcalloc(pool, ngx_max_module * sizeof(void *));
-    if (cycle->conf_ctx == NULL) {
+    چکر->conf_ctx = ngx_pcalloc(pool, ngx_max_module * حجم(فراغ *));
+    إذا (چکر->conf_ctx == عدم) {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
 
-    if (gethostname(hostname, NGX_MAXHOSTNAMELEN) == -1) {
-        ngx_log_error(NGX_LOG_EMERG, log, ngx_errno, "gethostname() failed");
+    إذا (gethostname(hostname, NGX_MAXHOSTNAMELEN) == -1) {
+        ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_errno, "gethostname() failed");
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
     /* on Linux gethostname() silently truncates name that does not fit */
 
     hostname[NGX_MAXHOSTNAMELEN - 1] = '\0';
-    cycle->hostname.len = ngx_strlen(hostname);
+    چکر->hostname.len = ngx_strlen(hostname);
 
-    cycle->hostname.data = ngx_pnalloc(pool, cycle->hostname.len);
-    if (cycle->hostname.data == NULL) {
+    چکر->hostname.انکڑے = ngx_pnalloc(pool, چکر->hostname.len);
+    إذا (چکر->hostname.انکڑے == عدم) {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
-    ngx_strlow(cycle->hostname.data, (u_char *) hostname, cycle->hostname.len);
+    ngx_strlow(چکر->hostname.انکڑے, (u_char *) hostname, چکر->hostname.len);
 
 
-    if (ngx_cycle_modules(cycle) != NGX_OK) {
+    إذا (ngx_چکر_modules(چکر) != NGX_OK) {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
 
-    for (i = 0; cycle->modules[i]; i++) {
-        if (cycle->modules[i]->type != NGX_CORE_MODULE) {
-            continue;
+    لكل (i = 0; چکر->modules[i]; i++) {
+        إذا (چکر->modules[i]->type != NGX_CORE_MODULE) {
+            استمر;
         }
 
-        module = cycle->modules[i]->ctx;
+        module = چکر->modules[i]->ctx;
 
-        if (module->create_conf) {
-            rv = module->create_conf(cycle);
-            if (rv == NULL) {
+        إذا (module->create_conf) {
+            rv = module->create_conf(چکر);
+            إذا (rv == عدم) {
                 ngx_destroy_pool(pool);
-                return NULL;
+                أرجع عدم;
             }
-            cycle->conf_ctx[cycle->modules[i]->index] = rv;
+            چکر->conf_ctx[چکر->modules[i]->اشاریہ] = rv;
         }
     }
 
@@ -251,307 +251,307 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
     senv = environ;
 
 
-    ngx_memzero(&conf, sizeof(ngx_conf_t));
+    ngx_memzero(&conf, حجم(ngx_conf_t));
     /* STUB: init array ? */
-    conf.args = ngx_array_create(pool, 10, sizeof(ngx_str_t));
-    if (conf.args == NULL) {
+    conf.دلیلاں = ngx_array_create(pool, 10, حجم(ngx_str_t));
+    إذا (conf.دلیلاں == عدم) {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
-    conf.temp_pool = ngx_create_pool(NGX_CYCLE_POOL_SIZE, log);
-    if (conf.temp_pool == NULL) {
+    conf.عارضی_pool = ngx_create_pool(NGX_چکر_POOL_ناپ, لوگارتھم);
+    إذا (conf.عارضی_pool == عدم) {
         ngx_destroy_pool(pool);
-        return NULL;
+        أرجع عدم;
     }
 
 
-    conf.ctx = cycle->conf_ctx;
-    conf.cycle = cycle;
+    conf.ctx = چکر->conf_ctx;
+    conf.چکر = چکر;
     conf.pool = pool;
-    conf.log = log;
+    conf.لوگارتھم = لوگارتھم;
     conf.module_type = NGX_CORE_MODULE;
     conf.cmd_type = NGX_MAIN_CONF;
 
-#if 0
-    log->log_level = NGX_LOG_DEBUG_ALL;
-#endif
+#إذا 0
+    لوگارتھم->log_level = NGX_LOG_DEBUG_ALL;
+#جے_انت
 
-    if (ngx_conf_param(&conf) != NGX_CONF_OK) {
+    إذا (ngx_conf_param(&conf) != NGX_CONF_OK) {
         environ = senv;
-        ngx_destroy_cycle_pools(&conf);
-        return NULL;
+        ngx_destroy_چکر_pools(&conf);
+        أرجع عدم;
     }
 
-    if (ngx_conf_parse(&conf, &cycle->conf_file) != NGX_CONF_OK) {
+    إذا (ngx_conf_parse(&conf, &چکر->conf_file) != NGX_CONF_OK) {
         environ = senv;
-        ngx_destroy_cycle_pools(&conf);
-        return NULL;
+        ngx_destroy_چکر_pools(&conf);
+        أرجع عدم;
     }
 
-    if (ngx_test_config && !ngx_quiet_mode) {
+    إذا (ngx_test_config && !ngx_quiet_منوال) {
         ngx_log_stderr(0, "the configuration file %s syntax is ok",
-                       cycle->conf_file.data);
+                       چکر->conf_file.انکڑے);
     }
 
-    for (i = 0; cycle->modules[i]; i++) {
-        if (cycle->modules[i]->type != NGX_CORE_MODULE) {
-            continue;
+    لكل (i = 0; چکر->modules[i]; i++) {
+        إذا (چکر->modules[i]->type != NGX_CORE_MODULE) {
+            استمر;
         }
 
-        module = cycle->modules[i]->ctx;
+        module = چکر->modules[i]->ctx;
 
-        if (module->init_conf) {
-            if (module->init_conf(cycle,
-                                  cycle->conf_ctx[cycle->modules[i]->index])
+        إذا (module->init_conf) {
+            إذا (module->init_conf(چکر,
+                                  چکر->conf_ctx[چکر->modules[i]->اشاریہ])
                 == NGX_CONF_ERROR)
             {
                 environ = senv;
-                ngx_destroy_cycle_pools(&conf);
-                return NULL;
+                ngx_destroy_چکر_pools(&conf);
+                أرجع عدم;
             }
         }
     }
 
-    if (ngx_process == NGX_PROCESS_SIGNALLER) {
-        return cycle;
+    إذا (ngx_process == NGX_PROCESS_SIGNALLER) {
+        أرجع چکر;
     }
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(چکر->conf_ctx, ngx_core_module);
 
-    if (ngx_test_config) {
+    إذا (ngx_test_config) {
 
-        if (ngx_create_pidfile(&ccf->pid, log) != NGX_OK) {
-            goto failed;
+        إذا (ngx_create_pidfile(&ccf->pid, لوگارتھم) != NGX_OK) {
+            اذهب failed;
         }
 
-    } else if (!ngx_is_init_cycle(old_cycle)) {
+    } وإلا إذا (!ngx_is_init_چکر(old_چکر)) {
 
         /*
          * we do not create the pid file in the first ngx_init_cycle() call
          * because we need to write the demonized process pid
          */
 
-        old_ccf = (ngx_core_conf_t *) ngx_get_conf(old_cycle->conf_ctx,
+        old_ccf = (ngx_core_conf_t *) ngx_get_conf(old_چکر->conf_ctx,
                                                    ngx_core_module);
-        if (ccf->pid.len != old_ccf->pid.len
-            || ngx_strcmp(ccf->pid.data, old_ccf->pid.data) != 0)
+        إذا (ccf->pid.len != old_ccf->pid.len
+            || ngx_strcmp(ccf->pid.انکڑے, old_ccf->pid.انکڑے) != 0)
         {
             /* new pid file name */
 
-            if (ngx_create_pidfile(&ccf->pid, log) != NGX_OK) {
-                goto failed;
+            إذا (ngx_create_pidfile(&ccf->pid, لوگارتھم) != NGX_OK) {
+                اذهب failed;
             }
 
-            ngx_delete_pidfile(old_cycle);
+            ngx_delete_pidfile(old_چکر);
         }
     }
 
 
-    if (ngx_test_lockfile(cycle->lock_file.data, log) != NGX_OK) {
-        goto failed;
+    إذا (ngx_test_lockfile(چکر->جندرا_file.انکڑے, لوگارتھم) != NGX_OK) {
+        اذهب failed;
     }
 
 
-    if (ngx_create_paths(cycle, ccf->user) != NGX_OK) {
-        goto failed;
+    إذا (ngx_create_paths(چکر, ccf->user) != NGX_OK) {
+        اذهب failed;
     }
 
 
-    if (ngx_log_open_default(cycle) != NGX_OK) {
-        goto failed;
+    إذا (ngx_log_open_default(چکر) != NGX_OK) {
+        اذهب failed;
     }
 
     /* open the new files */
 
-    part = &cycle->open_files.part;
+    part = &چکر->open_files.part;
     file = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    لكل (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        إذا (i >= part->nelts) {
+            إذا (part->اگلا == عدم) {
+                اكسر;
             }
-            part = part->next;
+            part = part->اگلا;
             file = part->elts;
             i = 0;
         }
 
-        if (file[i].name.len == 0) {
-            continue;
+        إذا (file[i].name.len == 0) {
+            استمر;
         }
 
-        file[i].fd = ngx_open_file(file[i].name.data,
+        file[i].fd = ngx_open_file(file[i].name.انکڑے,
                                    NGX_FILE_APPEND,
                                    NGX_FILE_CREATE_OR_OPEN,
                                    NGX_FILE_DEFAULT_ACCESS);
 
-        ngx_log_debug3(NGX_LOG_DEBUG_CORE, log, 0,
+        ngx_log_debug3(NGX_LOG_DEBUG_CORE, لوگارتھم, 0,
                        "log: %p %d \"%s\"",
-                       &file[i], file[i].fd, file[i].name.data);
+                       &file[i], file[i].fd, file[i].name.انکڑے);
 
-        if (file[i].fd == NGX_INVALID_FILE) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
+        إذا (file[i].fd == NGX_INVALID_FILE) {
+            ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_errno,
                           ngx_open_file_n " \"%s\" failed",
-                          file[i].name.data);
-            goto failed;
+                          file[i].name.انکڑے);
+            اذهب failed;
         }
 
-#if !(NGX_WIN32)
-        if (fcntl(file[i].fd, F_SETFD, FD_CLOEXEC) == -1) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
+#إذا !(NGX_WIN32)
+        إذا (fcntl(file[i].fd, F_SETFD, FD_CLOEXEC) == -1) {
+            ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_errno,
                           "fcntl(FD_CLOEXEC) \"%s\" failed",
-                          file[i].name.data);
-            goto failed;
+                          file[i].name.انکڑے);
+            اذهب failed;
         }
-#endif
+#جے_انت
     }
 
-    cycle->log = &cycle->new_log;
-    pool->log = &cycle->new_log;
+    چکر->لوگارتھم = &چکر->new_log;
+    pool->لوگارتھم = &چکر->new_log;
 
 
     /* create shared memory */
 
-    part = &cycle->shared_memory.part;
+    part = &چکر->shared_حافظہ.part;
     shm_zone = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    لكل (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        إذا (i >= part->nelts) {
+            إذا (part->اگلا == عدم) {
+                اكسر;
             }
-            part = part->next;
+            part = part->اگلا;
             shm_zone = part->elts;
             i = 0;
         }
 
-        if (shm_zone[i].shm.size == 0) {
-            ngx_log_error(NGX_LOG_EMERG, log, 0,
+        إذا (shm_zone[i].shm.ناپ == 0) {
+            ngx_log_error(NGX_LOG_EMERG, لوگارتھم, 0,
                           "zero size shared memory zone \"%V\"",
                           &shm_zone[i].shm.name);
-            goto failed;
+            اذهب failed;
         }
 
-        shm_zone[i].shm.log = cycle->log;
+        shm_zone[i].shm.لوگارتھم = چکر->لوگارتھم;
 
-        opart = &old_cycle->shared_memory.part;
+        opart = &old_چکر->shared_حافظہ.part;
         oshm_zone = opart->elts;
 
-        data = NULL;
+        انکڑے = عدم;
 
-        for (n = 0; /* void */ ; n++) {
+        لكل (n = 0; /* void */ ; n++) {
 
-            if (n >= opart->nelts) {
-                if (opart->next == NULL) {
-                    break;
+            إذا (n >= opart->nelts) {
+                إذا (opart->اگلا == عدم) {
+                    اكسر;
                 }
-                opart = opart->next;
+                opart = opart->اگلا;
                 oshm_zone = opart->elts;
                 n = 0;
             }
 
-            if (shm_zone[i].shm.name.len != oshm_zone[n].shm.name.len) {
-                continue;
+            إذا (shm_zone[i].shm.name.len != oshm_zone[n].shm.name.len) {
+                استمر;
             }
 
-            if (ngx_strncmp(shm_zone[i].shm.name.data,
-                            oshm_zone[n].shm.name.data,
+            إذا (ngx_strncmp(shm_zone[i].shm.name.انکڑے,
+                            oshm_zone[n].shm.name.انکڑے,
                             shm_zone[i].shm.name.len)
                 != 0)
             {
-                continue;
+                استمر;
             }
 
-            if (shm_zone[i].tag == oshm_zone[n].tag && shm_zone[i].noreuse) {
-                data = oshm_zone[n].data;
-                break;
+            إذا (shm_zone[i].ٹیگ == oshm_zone[n].ٹیگ && shm_zone[i].noreuse) {
+                انکڑے = oshm_zone[n].انکڑے;
+                اكسر;
             }
 
-            if (shm_zone[i].tag == oshm_zone[n].tag
-                && shm_zone[i].shm.size == oshm_zone[n].shm.size)
+            إذا (shm_zone[i].ٹیگ == oshm_zone[n].ٹیگ
+                && shm_zone[i].shm.ناپ == oshm_zone[n].shm.ناپ)
             {
                 shm_zone[i].shm.addr = oshm_zone[n].shm.addr;
-#if (NGX_WIN32)
+#إذا (NGX_WIN32)
                 shm_zone[i].shm.handle = oshm_zone[n].shm.handle;
-#endif
+#جے_انت
 
-                if (shm_zone[i].init(&shm_zone[i], oshm_zone[n].data)
+                إذا (shm_zone[i].init(&shm_zone[i], oshm_zone[n].انکڑے)
                     != NGX_OK)
                 {
-                    goto failed;
+                    اذهب failed;
                 }
 
-                goto shm_zone_found;
+                اذهب shm_zone_لبھیا;
             }
 
-            break;
+            اكسر;
         }
 
-        if (ngx_shm_alloc(&shm_zone[i].shm) != NGX_OK) {
-            goto failed;
+        إذا (ngx_shm_alloc(&shm_zone[i].shm) != NGX_OK) {
+            اذهب failed;
         }
 
-        if (ngx_init_zone_pool(cycle, &shm_zone[i]) != NGX_OK) {
-            goto failed;
+        إذا (ngx_init_zone_pool(چکر, &shm_zone[i]) != NGX_OK) {
+            اذهب failed;
         }
 
-        if (shm_zone[i].init(&shm_zone[i], data) != NGX_OK) {
-            goto failed;
+        إذا (shm_zone[i].init(&shm_zone[i], انکڑے) != NGX_OK) {
+            اذهب failed;
         }
 
-    shm_zone_found:
+    shm_zone_لبھیا:
 
-        continue;
+        استمر;
     }
 
 
     /* handle the listening sockets */
 
-    if (old_cycle->listening.nelts) {
-        ls = old_cycle->listening.elts;
-        for (i = 0; i < old_cycle->listening.nelts; i++) {
+    إذا (old_چکر->listening.nelts) {
+        ls = old_چکر->listening.elts;
+        لكل (i = 0; i < old_چکر->listening.nelts; i++) {
             ls[i].remain = 0;
         }
 
-        nls = cycle->listening.elts;
-        for (n = 0; n < cycle->listening.nelts; n++) {
+        nls = چکر->listening.elts;
+        لكل (n = 0; n < چکر->listening.nelts; n++) {
 
-            for (i = 0; i < old_cycle->listening.nelts; i++) {
-                if (ls[i].ignore) {
-                    continue;
+            لكل (i = 0; i < old_چکر->listening.nelts; i++) {
+                إذا (ls[i].ignore) {
+                    استمر;
                 }
 
-                if (ls[i].remain) {
-                    continue;
+                إذا (ls[i].remain) {
+                    استمر;
                 }
 
-                if (ls[i].type != nls[n].type) {
-                    continue;
+                إذا (ls[i].type != nls[n].type) {
+                    استمر;
                 }
 
-                if (ngx_cmp_sockaddr(nls[n].sockaddr, nls[n].socklen,
+                إذا (ngx_cmp_sockaddr(nls[n].sockaddr, nls[n].socklen,
                                      ls[i].sockaddr, ls[i].socklen, 1)
                     == NGX_OK)
                 {
                     nls[n].fd = ls[i].fd;
-                    nls[n].previous = &ls[i];
+                    nls[n].پچھلا = &ls[i];
 
-                    if (ls[i].protocol != nls[n].protocol) {
+                    إذا (ls[i].protocol != nls[n].protocol) {
                         nls[n].change_protocol = 1;
 
-                    } else {
+                    } وإلا {
                         nls[n].inherited = ls[i].inherited;
                         ls[i].remain = 1;
                     }
 
-                    if (ls[i].backlog != nls[n].backlog) {
+                    إذا (ls[i].backlog != nls[n].backlog) {
                         nls[n].listen = 1;
                     }
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+#إذا (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
 
                     /*
                      * FreeBSD, except the most recent versions,
@@ -559,96 +559,96 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
                      */
                     nls[n].deferred_accept = ls[i].deferred_accept;
 
-                    if (ls[i].accept_filter && nls[n].accept_filter) {
-                        if (ngx_strcmp(ls[i].accept_filter,
+                    إذا (ls[i].accept_filter && nls[n].accept_filter) {
+                        إذا (ngx_strcmp(ls[i].accept_filter,
                                        nls[n].accept_filter)
                             != 0)
                         {
                             nls[n].delete_deferred = 1;
-                            nls[n].add_deferred = 1;
+                            nls[n].جوڑو_deferred = 1;
                         }
 
-                    } else if (ls[i].accept_filter) {
+                    } وإلا إذا (ls[i].accept_filter) {
                         nls[n].delete_deferred = 1;
 
-                    } else if (nls[n].accept_filter) {
-                        nls[n].add_deferred = 1;
+                    } وإلا إذا (nls[n].accept_filter) {
+                        nls[n].جوڑو_deferred = 1;
                     }
-#endif
+#جے_انت
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
+#إذا (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
 
-                    if (ls[i].deferred_accept && !nls[n].deferred_accept) {
+                    إذا (ls[i].deferred_accept && !nls[n].deferred_accept) {
                         nls[n].delete_deferred = 1;
 
-                    } else if (ls[i].deferred_accept != nls[n].deferred_accept)
+                    } وإلا إذا (ls[i].deferred_accept != nls[n].deferred_accept)
                     {
-                        nls[n].add_deferred = 1;
+                        nls[n].جوڑو_deferred = 1;
                     }
-#endif
+#جے_انت
 
-#if (NGX_HAVE_REUSEPORT)
-                    if (nls[n].reuseport && !ls[i].reuseport) {
-                        nls[n].add_reuseport = 1;
+#إذا (NGX_HAVE_REUSEPORT)
+                    إذا (nls[n].reuseport && !ls[i].reuseport) {
+                        nls[n].جوڑو_reuseport = 1;
                     }
-#endif
+#جے_انت
 
-                    break;
+                    اكسر;
                 }
             }
 
-            if (nls[n].fd == (ngx_socket_t) -1) {
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
-                if (nls[n].accept_filter) {
-                    nls[n].add_deferred = 1;
+            إذا (nls[n].fd == (ngx_socket_t) -1) {
+#إذا (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+                إذا (nls[n].accept_filter) {
+                    nls[n].جوڑو_deferred = 1;
                 }
-#endif
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
-                if (nls[n].deferred_accept) {
-                    nls[n].add_deferred = 1;
+#جے_انت
+#إذا (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
+                إذا (nls[n].deferred_accept) {
+                    nls[n].جوڑو_deferred = 1;
                 }
-#endif
+#جے_انت
             }
         }
 
-    } else {
-#if (NGX_HAVE_DEFERRED_ACCEPT)
-        ls = cycle->listening.elts;
-        for (i = 0; i < cycle->listening.nelts; i++) {
-#ifdef SO_ACCEPTFILTER
-            if (ls[i].accept_filter) {
-                ls[i].add_deferred = 1;
+    } وإلا {
+#إذا (NGX_HAVE_DEFERRED_ACCEPT)
+        ls = چکر->listening.elts;
+        لكل (i = 0; i < چکر->listening.nelts; i++) {
+#جے_تعریف_شدہ SO_ACCEPTFILTER
+            إذا (ls[i].accept_filter) {
+                ls[i].جوڑو_deferred = 1;
             }
-#endif
-#ifdef TCP_DEFER_ACCEPT
-            if (ls[i].deferred_accept) {
-                ls[i].add_deferred = 1;
+#جے_انت
+#جے_تعریف_شدہ TCP_DEFER_ACCEPT
+            إذا (ls[i].deferred_accept) {
+                ls[i].جوڑو_deferred = 1;
             }
-#endif
+#جے_انت
         }
-#endif
+#جے_انت
     }
 
-    if (ngx_open_listening_sockets(cycle) != NGX_OK) {
-        goto failed;
+    إذا (ngx_open_listening_sockets(چکر) != NGX_OK) {
+        اذهب failed;
     }
 
-    if (!ngx_test_config) {
-        ngx_configure_listening_sockets(cycle);
+    إذا (!ngx_test_config) {
+        ngx_configure_listening_sockets(چکر);
     }
 
 
     /* commit the new cycle configuration */
 
-    if (!ngx_use_stderr) {
-        (void) ngx_log_redirect_stderr(cycle);
+    إذا (!ngx_use_stderr) {
+        (فراغ) ngx_log_redirect_stderr(چکر);
     }
 
-    pool->log = cycle->log;
+    pool->لوگارتھم = چکر->لوگارتھم;
 
-    if (ngx_init_modules(cycle) != NGX_OK) {
+    إذا (ngx_init_modules(چکر) != NGX_OK) {
         /* fatal */
-        exit(1);
+        باہر_نکلو(1);
     }
 
 
@@ -656,445 +656,445 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
 
     /* free the unnecessary shared memory */
 
-    opart = &old_cycle->shared_memory.part;
+    opart = &old_چکر->shared_حافظہ.part;
     oshm_zone = opart->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    لكل (i = 0; /* void */ ; i++) {
 
-        if (i >= opart->nelts) {
-            if (opart->next == NULL) {
-                goto old_shm_zone_done;
+        إذا (i >= opart->nelts) {
+            إذا (opart->اگلا == عدم) {
+                اذهب old_shm_zone_پورا;
             }
-            opart = opart->next;
+            opart = opart->اگلا;
             oshm_zone = opart->elts;
             i = 0;
         }
 
-        part = &cycle->shared_memory.part;
+        part = &چکر->shared_حافظہ.part;
         shm_zone = part->elts;
 
-        for (n = 0; /* void */ ; n++) {
+        لكل (n = 0; /* void */ ; n++) {
 
-            if (n >= part->nelts) {
-                if (part->next == NULL) {
-                    break;
+            إذا (n >= part->nelts) {
+                إذا (part->اگلا == عدم) {
+                    اكسر;
                 }
-                part = part->next;
+                part = part->اگلا;
                 shm_zone = part->elts;
                 n = 0;
             }
 
-            if (oshm_zone[i].shm.name.len != shm_zone[n].shm.name.len) {
-                continue;
+            إذا (oshm_zone[i].shm.name.len != shm_zone[n].shm.name.len) {
+                استمر;
             }
 
-            if (ngx_strncmp(oshm_zone[i].shm.name.data,
-                            shm_zone[n].shm.name.data,
+            إذا (ngx_strncmp(oshm_zone[i].shm.name.انکڑے,
+                            shm_zone[n].shm.name.انکڑے,
                             oshm_zone[i].shm.name.len)
                 != 0)
             {
-                continue;
+                استمر;
             }
 
-            if (oshm_zone[i].tag == shm_zone[n].tag
-                && oshm_zone[i].shm.size == shm_zone[n].shm.size
+            إذا (oshm_zone[i].ٹیگ == shm_zone[n].ٹیگ
+                && oshm_zone[i].shm.ناپ == shm_zone[n].shm.ناپ
                 && !oshm_zone[i].noreuse)
             {
-                goto live_shm_zone;
+                اذهب جیوندا_shm_zone;
             }
 
-            break;
+            اكسر;
         }
 
         ngx_shm_free(&oshm_zone[i].shm);
 
-    live_shm_zone:
+    جیوندا_shm_zone:
 
-        continue;
+        استمر;
     }
 
-old_shm_zone_done:
+old_shm_zone_پورا:
 
 
     /* close the unnecessary listening sockets */
 
-    ls = old_cycle->listening.elts;
-    for (i = 0; i < old_cycle->listening.nelts; i++) {
+    ls = old_چکر->listening.elts;
+    لكل (i = 0; i < old_چکر->listening.nelts; i++) {
 
-        if (ls[i].remain || ls[i].fd == (ngx_socket_t) -1) {
-            continue;
+        إذا (ls[i].remain || ls[i].fd == (ngx_socket_t) -1) {
+            استمر;
         }
 
-        if (ngx_close_socket(ls[i].fd) == -1) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+        إذا (ngx_close_socket(ls[i].fd) == -1) {
+            ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                           ngx_close_socket_n " listening socket on %V failed",
-                          &ls[i].addr_text);
+                          &ls[i].addr_متن);
         }
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#إذا (NGX_HAVE_UNIX_DOMAIN)
 
-        if (ls[i].sockaddr->sa_family == AF_UNIX) {
+        إذا (ls[i].sockaddr->sa_family == AF_UNIX) {
             u_char  *name;
 
-            name = ls[i].addr_text.data + sizeof("unix:") - 1;
+            name = ls[i].addr_متن.انکڑے + حجم("unix:") - 1;
 
-            ngx_log_error(NGX_LOG_WARN, cycle->log, 0,
+            ngx_log_error(NGX_LOG_WARN, چکر->لوگارتھم, 0,
                           "deleting socket %s", name);
 
-            if (ngx_delete_file(name) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_socket_errno,
+            إذا (ngx_delete_file(name) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_socket_errno,
                               ngx_delete_file_n " %s failed", name);
             }
         }
 
-#endif
+#جے_انت
     }
 
 
     /* close the unnecessary open files */
 
-    part = &old_cycle->open_files.part;
+    part = &old_چکر->open_files.part;
     file = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    لكل (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        إذا (i >= part->nelts) {
+            إذا (part->اگلا == عدم) {
+                اكسر;
             }
-            part = part->next;
+            part = part->اگلا;
             file = part->elts;
             i = 0;
         }
 
-        if (file[i].fd == NGX_INVALID_FILE || file[i].fd == ngx_stderr) {
-            continue;
+        إذا (file[i].fd == NGX_INVALID_FILE || file[i].fd == ngx_stderr) {
+            استمر;
         }
 
-        if (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
+        إذا (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_errno,
                           ngx_close_file_n " \"%s\" failed",
-                          file[i].name.data);
+                          file[i].name.انکڑے);
         }
     }
 
-    ngx_destroy_pool(conf.temp_pool);
+    ngx_destroy_pool(conf.عارضی_pool);
 
-    if (ngx_process == NGX_PROCESS_MASTER || ngx_is_init_cycle(old_cycle)) {
+    إذا (ngx_process == NGX_PROCESS_MASTER || ngx_is_init_چکر(old_چکر)) {
 
-        ngx_destroy_pool(old_cycle->pool);
-        cycle->old_cycle = NULL;
+        ngx_destroy_pool(old_چکر->pool);
+        چکر->old_چکر = عدم;
 
-        return cycle;
+        أرجع چکر;
     }
 
 
-    if (ngx_temp_pool == NULL) {
-        ngx_temp_pool = ngx_create_pool(128, cycle->log);
-        if (ngx_temp_pool == NULL) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
+    إذا (ngx_عارضی_pool == عدم) {
+        ngx_عارضی_pool = ngx_create_pool(128, چکر->لوگارتھم);
+        إذا (ngx_عارضی_pool == عدم) {
+            ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, 0,
                           "could not create ngx_temp_pool");
-            exit(1);
+            باہر_نکلو(1);
         }
 
         n = 10;
 
-        if (ngx_array_init(&ngx_old_cycles, ngx_temp_pool, n,
-                           sizeof(ngx_cycle_t *))
+        إذا (ngx_array_init(&ngx_old_چکراں, ngx_عارضی_pool, n,
+                           حجم(ngx_چکر_t *))
             != NGX_OK)
         {
-            exit(1);
+            باہر_نکلو(1);
         }
 
-        ngx_memzero(ngx_old_cycles.elts, n * sizeof(ngx_cycle_t *));
+        ngx_memzero(ngx_old_چکراں.elts, n * حجم(ngx_چکر_t *));
 
-        ngx_cleaner_event.handler = ngx_clean_old_cycles;
-        ngx_cleaner_event.log = cycle->log;
-        ngx_cleaner_event.data = &dumb;
+        ngx_cleaner_event.handler = ngx_clean_old_چکراں;
+        ngx_cleaner_event.لوگارتھم = چکر->لوگارتھم;
+        ngx_cleaner_event.انکڑے = &dumb;
         dumb.fd = (ngx_socket_t) -1;
     }
 
-    ngx_temp_pool->log = cycle->log;
+    ngx_عارضی_pool->لوگارتھم = چکر->لوگارتھم;
 
-    old = ngx_array_push(&ngx_old_cycles);
-    if (old == NULL) {
-        exit(1);
+    old = ngx_array_ڈالو(&ngx_old_چکراں);
+    إذا (old == عدم) {
+        باہر_نکلو(1);
     }
-    *old = old_cycle;
+    *old = old_چکر;
 
-    if (!ngx_cleaner_event.timer_set) {
-        ngx_add_timer(&ngx_cleaner_event, 30000);
-        ngx_cleaner_event.timer_set = 1;
+    إذا (!ngx_cleaner_event.timer_سیٹ) {
+        ngx_جوڑو_timer(&ngx_cleaner_event, 30000);
+        ngx_cleaner_event.timer_سیٹ = 1;
     }
 
-    return cycle;
+    أرجع چکر;
 
 
 failed:
 
-    if (!ngx_is_init_cycle(old_cycle)) {
-        old_ccf = (ngx_core_conf_t *) ngx_get_conf(old_cycle->conf_ctx,
+    إذا (!ngx_is_init_چکر(old_چکر)) {
+        old_ccf = (ngx_core_conf_t *) ngx_get_conf(old_چکر->conf_ctx,
                                                    ngx_core_module);
-        if (old_ccf->environment) {
+        إذا (old_ccf->environment) {
             environ = old_ccf->environment;
         }
     }
 
     /* rollback the new cycle configuration */
 
-    part = &cycle->open_files.part;
+    part = &چکر->open_files.part;
     file = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    لكل (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        إذا (i >= part->nelts) {
+            إذا (part->اگلا == عدم) {
+                اكسر;
             }
-            part = part->next;
+            part = part->اگلا;
             file = part->elts;
             i = 0;
         }
 
-        if (file[i].fd == NGX_INVALID_FILE || file[i].fd == ngx_stderr) {
-            continue;
+        إذا (file[i].fd == NGX_INVALID_FILE || file[i].fd == ngx_stderr) {
+            استمر;
         }
 
-        if (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
+        إذا (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_errno,
                           ngx_close_file_n " \"%s\" failed",
-                          file[i].name.data);
+                          file[i].name.انکڑے);
         }
     }
 
     /* free the newly created shared memory */
 
-    part = &cycle->shared_memory.part;
+    part = &چکر->shared_حافظہ.part;
     shm_zone = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    لكل (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        إذا (i >= part->nelts) {
+            إذا (part->اگلا == عدم) {
+                اكسر;
             }
-            part = part->next;
+            part = part->اگلا;
             shm_zone = part->elts;
             i = 0;
         }
 
-        if (shm_zone[i].shm.addr == NULL) {
-            continue;
+        إذا (shm_zone[i].shm.addr == عدم) {
+            استمر;
         }
 
-        opart = &old_cycle->shared_memory.part;
+        opart = &old_چکر->shared_حافظہ.part;
         oshm_zone = opart->elts;
 
-        for (n = 0; /* void */ ; n++) {
+        لكل (n = 0; /* void */ ; n++) {
 
-            if (n >= opart->nelts) {
-                if (opart->next == NULL) {
-                    break;
+            إذا (n >= opart->nelts) {
+                إذا (opart->اگلا == عدم) {
+                    اكسر;
                 }
-                opart = opart->next;
+                opart = opart->اگلا;
                 oshm_zone = opart->elts;
                 n = 0;
             }
 
-            if (shm_zone[i].shm.name.len != oshm_zone[n].shm.name.len) {
-                continue;
+            إذا (shm_zone[i].shm.name.len != oshm_zone[n].shm.name.len) {
+                استمر;
             }
 
-            if (ngx_strncmp(shm_zone[i].shm.name.data,
-                            oshm_zone[n].shm.name.data,
+            إذا (ngx_strncmp(shm_zone[i].shm.name.انکڑے,
+                            oshm_zone[n].shm.name.انکڑے,
                             shm_zone[i].shm.name.len)
                 != 0)
             {
-                continue;
+                استمر;
             }
 
-            if (shm_zone[i].tag == oshm_zone[n].tag
-                && shm_zone[i].shm.size == oshm_zone[n].shm.size
+            إذا (shm_zone[i].ٹیگ == oshm_zone[n].ٹیگ
+                && shm_zone[i].shm.ناپ == oshm_zone[n].shm.ناپ
                 && !shm_zone[i].noreuse)
             {
-                goto old_shm_zone_found;
+                اذهب old_shm_zone_لبھیا;
             }
 
-            break;
+            اكسر;
         }
 
         ngx_shm_free(&shm_zone[i].shm);
 
-    old_shm_zone_found:
+    old_shm_zone_لبھیا:
 
-        continue;
+        استمر;
     }
 
-    if (ngx_test_config) {
-        ngx_destroy_cycle_pools(&conf);
-        return NULL;
+    إذا (ngx_test_config) {
+        ngx_destroy_چکر_pools(&conf);
+        أرجع عدم;
     }
 
-    ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
-        if (ls[i].fd == (ngx_socket_t) -1 || !ls[i].open) {
-            continue;
+    ls = چکر->listening.elts;
+    لكل (i = 0; i < چکر->listening.nelts; i++) {
+        إذا (ls[i].fd == (ngx_socket_t) -1 || !ls[i].open) {
+            استمر;
         }
 
-        if (ngx_close_socket(ls[i].fd) == -1) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+        إذا (ngx_close_socket(ls[i].fd) == -1) {
+            ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                           ngx_close_socket_n " %V failed",
-                          &ls[i].addr_text);
+                          &ls[i].addr_متن);
         }
     }
 
-    ngx_destroy_cycle_pools(&conf);
+    ngx_destroy_چکر_pools(&conf);
 
-    return NULL;
+    أرجع عدم;
 }
 
 
-static void
-ngx_destroy_cycle_pools(ngx_conf_t *conf)
+ساكن فراغ
+ngx_destroy_چکر_pools(ngx_conf_t *conf)
 {
-    ngx_destroy_pool(conf->temp_pool);
+    ngx_destroy_pool(conf->عارضی_pool);
     ngx_destroy_pool(conf->pool);
 }
 
 
-static ngx_int_t
-ngx_init_zone_pool(ngx_cycle_t *cycle, ngx_shm_zone_t *zn)
+ساكن ngx_int_t
+ngx_init_zone_pool(ngx_چکر_t *چکر, ngx_shm_zone_t *zn)
 {
     u_char           *file;
     ngx_slab_pool_t  *sp;
 
     sp = (ngx_slab_pool_t *) zn->shm.addr;
 
-    if (zn->shm.exists) {
+    إذا (zn->shm.exists) {
 
-        if (sp == sp->addr) {
-            return NGX_OK;
+        إذا (sp == sp->addr) {
+            أرجع NGX_OK;
         }
 
-#if (NGX_WIN32)
+#إذا (NGX_WIN32)
 
         /* remap at the required address */
 
-        if (ngx_shm_remap(&zn->shm, sp->addr) != NGX_OK) {
-            return NGX_ERROR;
+        إذا (ngx_shm_remap(&zn->shm, sp->addr) != NGX_OK) {
+            أرجع NGX_ERROR;
         }
 
         sp = (ngx_slab_pool_t *) zn->shm.addr;
 
-        if (sp == sp->addr) {
-            return NGX_OK;
+        إذا (sp == sp->addr) {
+            أرجع NGX_OK;
         }
 
-#endif
+#جے_انت
 
-        ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
+        ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, 0,
                       "shared zone \"%V\" has no equal addresses: %p vs %p",
                       &zn->shm.name, sp->addr, sp);
-        return NGX_ERROR;
+        أرجع NGX_ERROR;
     }
 
-    sp->end = zn->shm.addr + zn->shm.size;
-    sp->min_shift = 3;
+    sp->سرا = zn->shm.addr + zn->shm.ناپ;
+    sp->min_کھسکاؤ = 3;
     sp->addr = zn->shm.addr;
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#إذا (NGX_HAVE_ATOMIC_OPS)
 
-    file = NULL;
+    file = عدم;
 
-#else
+#وإلا
 
-    file = ngx_pnalloc(cycle->pool,
-                       cycle->lock_file.len + zn->shm.name.len + 1);
-    if (file == NULL) {
-        return NGX_ERROR;
+    file = ngx_pnalloc(چکر->pool,
+                       چکر->جندرا_file.len + zn->shm.name.len + 1);
+    إذا (file == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    (void) ngx_sprintf(file, "%V%V%Z", &cycle->lock_file, &zn->shm.name);
+    (فراغ) ngx_sprintf(file, "%V%V%Z", &چکر->جندرا_file, &zn->shm.name);
 
-#endif
+#جے_انت
 
-    if (ngx_shmtx_create(&sp->mutex, &sp->lock, file) != NGX_OK) {
-        return NGX_ERROR;
+    إذا (ngx_shmtx_create(&sp->mutex, &sp->جندرا, file) != NGX_OK) {
+        أرجع NGX_ERROR;
     }
 
     ngx_slab_init(sp);
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
 ngx_int_t
-ngx_create_pidfile(ngx_str_t *name, ngx_log_t *log)
+ngx_create_pidfile(ngx_str_t *name, ngx_log_t *لوگارتھم)
 {
-    size_t      len;
+    ناپ_t      len;
     ngx_int_t   rc;
     ngx_uint_t  create;
     ngx_file_t  file;
     u_char      pid[NGX_INT64_LEN + 2];
 
-    if (ngx_process > NGX_PROCESS_MASTER) {
-        return NGX_OK;
+    إذا (ngx_process > NGX_PROCESS_MASTER) {
+        أرجع NGX_OK;
     }
 
-    ngx_memzero(&file, sizeof(ngx_file_t));
+    ngx_memzero(&file, حجم(ngx_file_t));
 
     file.name = *name;
-    file.log = log;
+    file.لوگارتھم = لوگارتھم;
 
     create = ngx_test_config ? NGX_FILE_CREATE_OR_OPEN : NGX_FILE_TRUNCATE;
 
-    file.fd = ngx_open_file(file.name.data, NGX_FILE_RDWR,
+    file.fd = ngx_open_file(file.name.انکڑے, NGX_FILE_RDWR,
                             create, NGX_FILE_DEFAULT_ACCESS);
 
-    if (file.fd == NGX_INVALID_FILE) {
-        ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
-                      ngx_open_file_n " \"%s\" failed", file.name.data);
-        return NGX_ERROR;
+    إذا (file.fd == NGX_INVALID_FILE) {
+        ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_errno,
+                      ngx_open_file_n " \"%s\" failed", file.name.انکڑے);
+        أرجع NGX_ERROR;
     }
 
     rc = NGX_OK;
 
-    if (!ngx_test_config) {
+    إذا (!ngx_test_config) {
         len = ngx_snprintf(pid, NGX_INT64_LEN + 2, "%P%N", ngx_pid) - pid;
 
-        if (ngx_write_file(&file, pid, len, 0) == NGX_ERROR) {
+        إذا (ngx_write_file(&file, pid, len, 0) == NGX_ERROR) {
             rc = NGX_ERROR;
         }
     }
 
-    if (ngx_close_file(file.fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
-                      ngx_close_file_n " \"%s\" failed", file.name.data);
+    إذا (ngx_close_file(file.fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, لوگارتھم, ngx_errno,
+                      ngx_close_file_n " \"%s\" failed", file.name.انکڑے);
     }
 
-    return rc;
+    أرجع rc;
 }
 
 
-void
-ngx_delete_pidfile(ngx_cycle_t *cycle)
+فراغ
+ngx_delete_pidfile(ngx_چکر_t *چکر)
 {
     u_char           *name;
     ngx_core_conf_t  *ccf;
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(چکر->conf_ctx, ngx_core_module);
 
-    name = ngx_new_binary ? ccf->oldpid.data : ccf->pid.data;
+    name = ngx_new_ثنائی ? ccf->oldpid.انکڑے : ccf->pid.انکڑے;
 
-    if (ngx_delete_file(name) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
+    إذا (ngx_delete_file(name) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_errno,
                       ngx_delete_file_n " \"%s\" failed", name);
     }
 }
 
 
 ngx_int_t
-ngx_signal_process(ngx_cycle_t *cycle, char *sig)
+ngx_signal_process(ngx_چکر_t *چکر, حرف *sig)
 {
     ssize_t           n;
     ngx_pid_t         pid;
@@ -1102,383 +1102,383 @@ ngx_signal_process(ngx_cycle_t *cycle, char *sig)
     ngx_core_conf_t  *ccf;
     u_char            buf[NGX_INT64_LEN + 2];
 
-    ngx_log_error(NGX_LOG_NOTICE, cycle->log, 0, "signal process started");
+    ngx_log_error(NGX_LOG_NOTICE, چکر->لوگارتھم, 0, "signal process started");
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(چکر->conf_ctx, ngx_core_module);
 
-    ngx_memzero(&file, sizeof(ngx_file_t));
+    ngx_memzero(&file, حجم(ngx_file_t));
 
     file.name = ccf->pid;
-    file.log = cycle->log;
+    file.لوگارتھم = چکر->لوگارتھم;
 
-    file.fd = ngx_open_file(file.name.data, NGX_FILE_RDONLY,
+    file.fd = ngx_open_file(file.name.انکڑے, NGX_FILE_RDONLY,
                             NGX_FILE_OPEN, NGX_FILE_DEFAULT_ACCESS);
 
-    if (file.fd == NGX_INVALID_FILE) {
-        ngx_log_error(NGX_LOG_ERR, cycle->log, ngx_errno,
-                      ngx_open_file_n " \"%s\" failed", file.name.data);
-        return 1;
+    إذا (file.fd == NGX_INVALID_FILE) {
+        ngx_log_error(NGX_LOG_ERR, چکر->لوگارتھم, ngx_errno,
+                      ngx_open_file_n " \"%s\" failed", file.name.انکڑے);
+        أرجع 1;
     }
 
     n = ngx_read_file(&file, buf, NGX_INT64_LEN + 2, 0);
 
-    if (ngx_close_file(file.fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
-                      ngx_close_file_n " \"%s\" failed", file.name.data);
+    إذا (ngx_close_file(file.fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_errno,
+                      ngx_close_file_n " \"%s\" failed", file.name.انکڑے);
     }
 
-    if (n == NGX_ERROR) {
-        return 1;
+    إذا (n == NGX_ERROR) {
+        أرجع 1;
     }
 
-    while (n-- && (buf[n] == CR || buf[n] == LF)) { /* void */ }
+    طالما (n-- && (buf[n] == CR || buf[n] == LF)) { /* void */ }
 
     pid = ngx_atoi(buf, ++n);
 
-    if (pid == (ngx_pid_t) NGX_ERROR) {
-        ngx_log_error(NGX_LOG_ERR, cycle->log, 0,
+    إذا (pid == (ngx_pid_t) NGX_ERROR) {
+        ngx_log_error(NGX_LOG_ERR, چکر->لوگارتھم, 0,
                       "invalid PID number \"%*s\" in \"%s\"",
-                      n, buf, file.name.data);
-        return 1;
+                      n, buf, file.name.انکڑے);
+        أرجع 1;
     }
 
-    return ngx_os_signal_process(cycle, sig, pid);
+    أرجع ngx_os_signal_process(چکر, sig, pid);
 
 }
 
 
-static ngx_int_t
-ngx_test_lockfile(u_char *file, ngx_log_t *log)
+ساكن ngx_int_t
+ngx_test_lockfile(u_char *file, ngx_log_t *لوگارتھم)
 {
-#if !(NGX_HAVE_ATOMIC_OPS)
+#إذا !(NGX_HAVE_ATOMIC_OPS)
     ngx_fd_t  fd;
 
     fd = ngx_open_file(file, NGX_FILE_RDWR, NGX_FILE_CREATE_OR_OPEN,
                        NGX_FILE_DEFAULT_ACCESS);
 
-    if (fd == NGX_INVALID_FILE) {
-        ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
+    إذا (fd == NGX_INVALID_FILE) {
+        ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_errno,
                       ngx_open_file_n " \"%s\" failed", file);
-        return NGX_ERROR;
+        أرجع NGX_ERROR;
     }
 
-    if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    إذا (ngx_close_file(fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, لوگارتھم, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", file);
     }
 
-    if (ngx_delete_file(file) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    إذا (ngx_delete_file(file) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, لوگارتھم, ngx_errno,
                       ngx_delete_file_n " \"%s\" failed", file);
     }
 
-#endif
+#جے_انت
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
-void
-ngx_reopen_files(ngx_cycle_t *cycle, ngx_uid_t user)
+فراغ
+ngx_reopen_files(ngx_چکر_t *چکر, ngx_uid_t user)
 {
     ngx_fd_t          fd;
     ngx_uint_t        i;
     ngx_list_part_t  *part;
     ngx_open_file_t  *file;
 
-    part = &cycle->open_files.part;
+    part = &چکر->open_files.part;
     file = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    لكل (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        إذا (i >= part->nelts) {
+            إذا (part->اگلا == عدم) {
+                اكسر;
             }
-            part = part->next;
+            part = part->اگلا;
             file = part->elts;
             i = 0;
         }
 
-        if (file[i].name.len == 0) {
-            continue;
+        إذا (file[i].name.len == 0) {
+            استمر;
         }
 
-        if (file[i].flush) {
-            file[i].flush(&file[i], cycle->log);
+        إذا (file[i].flush) {
+            file[i].flush(&file[i], چکر->لوگارتھم);
         }
 
-        fd = ngx_open_file(file[i].name.data, NGX_FILE_APPEND,
+        fd = ngx_open_file(file[i].name.انکڑے, NGX_FILE_APPEND,
                            NGX_FILE_CREATE_OR_OPEN, NGX_FILE_DEFAULT_ACCESS);
 
-        ngx_log_debug3(NGX_LOG_DEBUG_EVENT, cycle->log, 0,
+        ngx_log_debug3(NGX_LOG_DEBUG_EVENT, چکر->لوگارتھم, 0,
                        "reopen file \"%s\", old:%d new:%d",
-                       file[i].name.data, file[i].fd, fd);
+                       file[i].name.انکڑے, file[i].fd, fd);
 
-        if (fd == NGX_INVALID_FILE) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
-                          ngx_open_file_n " \"%s\" failed", file[i].name.data);
-            continue;
+        إذا (fd == NGX_INVALID_FILE) {
+            ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
+                          ngx_open_file_n " \"%s\" failed", file[i].name.انکڑے);
+            استمر;
         }
 
-#if !(NGX_WIN32)
-        if (user != (ngx_uid_t) NGX_CONF_UNSET_UINT) {
+#إذا !(NGX_WIN32)
+        إذا (user != (ngx_uid_t) NGX_CONF_UNSET_UINT) {
             ngx_file_info_t  fi;
 
-            if (ngx_file_info(file[i].name.data, &fi) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+            إذا (ngx_file_info(file[i].name.انکڑے, &fi) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
                               ngx_file_info_n " \"%s\" failed",
-                              file[i].name.data);
+                              file[i].name.انکڑے);
 
-                if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-                    ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+                إذا (ngx_close_file(fd) == NGX_FILE_ERROR) {
+                    ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
                                   ngx_close_file_n " \"%s\" failed",
-                                  file[i].name.data);
+                                  file[i].name.انکڑے);
                 }
 
-                continue;
+                استمر;
             }
 
-            if (fi.st_uid != user) {
-                if (chown((const char *) file[i].name.data, user, -1) == -1) {
-                    ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+            إذا (fi.st_uid != user) {
+                إذا (chown((ثابت حرف *) file[i].name.انکڑے, user, -1) == -1) {
+                    ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
                                   "chown(\"%s\", %d) failed",
-                                  file[i].name.data, user);
+                                  file[i].name.انکڑے, user);
 
-                    if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-                        ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+                    إذا (ngx_close_file(fd) == NGX_FILE_ERROR) {
+                        ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
                                       ngx_close_file_n " \"%s\" failed",
-                                      file[i].name.data);
+                                      file[i].name.انکڑے);
                     }
 
-                    continue;
+                    استمر;
                 }
             }
 
-            if ((fi.st_mode & (S_IRUSR|S_IWUSR)) != (S_IRUSR|S_IWUSR)) {
+            إذا ((fi.st_منوال & (S_IRUSR|S_IWUSR)) != (S_IRUSR|S_IWUSR)) {
 
-                fi.st_mode |= (S_IRUSR|S_IWUSR);
+                fi.st_منوال |= (S_IRUSR|S_IWUSR);
 
-                if (chmod((const char *) file[i].name.data, fi.st_mode) == -1) {
-                    ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
-                                  "chmod() \"%s\" failed", file[i].name.data);
+                إذا (chmod((ثابت حرف *) file[i].name.انکڑے, fi.st_منوال) == -1) {
+                    ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
+                                  "chmod() \"%s\" failed", file[i].name.انکڑے);
 
-                    if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-                        ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+                    إذا (ngx_close_file(fd) == NGX_FILE_ERROR) {
+                        ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
                                       ngx_close_file_n " \"%s\" failed",
-                                      file[i].name.data);
+                                      file[i].name.انکڑے);
                     }
 
-                    continue;
+                    استمر;
                 }
             }
         }
 
-        if (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+        إذا (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1) {
+            ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
                           "fcntl(FD_CLOEXEC) \"%s\" failed",
-                          file[i].name.data);
+                          file[i].name.انکڑے);
 
-            if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+            إذا (ngx_close_file(fd) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
                               ngx_close_file_n " \"%s\" failed",
-                              file[i].name.data);
+                              file[i].name.انکڑے);
             }
 
-            continue;
+            استمر;
         }
-#endif
+#جے_انت
 
-        if (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+        إذا (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
                           ngx_close_file_n " \"%s\" failed",
-                          file[i].name.data);
+                          file[i].name.انکڑے);
         }
 
         file[i].fd = fd;
     }
 
-    (void) ngx_log_redirect_stderr(cycle);
+    (فراغ) ngx_log_redirect_stderr(چکر);
 }
 
 
 ngx_shm_zone_t *
-ngx_shared_memory_add(ngx_conf_t *cf, ngx_str_t *name, size_t size, void *tag)
+ngx_shared_حافظہ_جوڑو(ngx_conf_t *cf, ngx_str_t *name, ناپ_t ناپ, فراغ *ٹیگ)
 {
     ngx_uint_t        i;
     ngx_shm_zone_t   *shm_zone;
     ngx_list_part_t  *part;
 
-    part = &cf->cycle->shared_memory.part;
+    part = &cf->چکر->shared_حافظہ.part;
     shm_zone = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    لكل (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        إذا (i >= part->nelts) {
+            إذا (part->اگلا == عدم) {
+                اكسر;
             }
-            part = part->next;
+            part = part->اگلا;
             shm_zone = part->elts;
             i = 0;
         }
 
-        if (name->len != shm_zone[i].shm.name.len) {
-            continue;
+        إذا (name->len != shm_zone[i].shm.name.len) {
+            استمر;
         }
 
-        if (ngx_strncmp(name->data, shm_zone[i].shm.name.data, name->len)
+        إذا (ngx_strncmp(name->انکڑے, shm_zone[i].shm.name.انکڑے, name->len)
             != 0)
         {
-            continue;
+            استمر;
         }
 
-        if (tag != shm_zone[i].tag) {
+        إذا (ٹیگ != shm_zone[i].ٹیگ) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                             "the shared memory zone \"%V\" is "
                             "already declared for a different use",
                             &shm_zone[i].shm.name);
-            return NULL;
+            أرجع عدم;
         }
 
-        if (shm_zone[i].shm.size == 0) {
-            shm_zone[i].shm.size = size;
+        إذا (shm_zone[i].shm.ناپ == 0) {
+            shm_zone[i].shm.ناپ = ناپ;
         }
 
-        if (size && size != shm_zone[i].shm.size) {
+        إذا (ناپ && ناپ != shm_zone[i].shm.ناپ) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                             "the size %uz of shared memory zone \"%V\" "
                             "conflicts with already declared size %uz",
-                            size, &shm_zone[i].shm.name, shm_zone[i].shm.size);
-            return NULL;
+                            ناپ, &shm_zone[i].shm.name, shm_zone[i].shm.ناپ);
+            أرجع عدم;
         }
 
-        return &shm_zone[i];
+        أرجع &shm_zone[i];
     }
 
-    shm_zone = ngx_list_push(&cf->cycle->shared_memory);
+    shm_zone = ngx_list_ڈالو(&cf->چکر->shared_حافظہ);
 
-    if (shm_zone == NULL) {
-        return NULL;
+    إذا (shm_zone == عدم) {
+        أرجع عدم;
     }
 
-    shm_zone->data = NULL;
-    shm_zone->shm.log = cf->cycle->log;
-    shm_zone->shm.addr = NULL;
-    shm_zone->shm.size = size;
+    shm_zone->انکڑے = عدم;
+    shm_zone->shm.لوگارتھم = cf->چکر->لوگارتھم;
+    shm_zone->shm.addr = عدم;
+    shm_zone->shm.ناپ = ناپ;
     shm_zone->shm.name = *name;
     shm_zone->shm.exists = 0;
-    shm_zone->init = NULL;
-    shm_zone->tag = tag;
+    shm_zone->init = عدم;
+    shm_zone->ٹیگ = ٹیگ;
     shm_zone->noreuse = 0;
 
-    return shm_zone;
+    أرجع shm_zone;
 }
 
 
-static void
-ngx_clean_old_cycles(ngx_event_t *ev)
+ساكن فراغ
+ngx_clean_old_چکراں(ngx_event_t *ev)
 {
-    ngx_uint_t     i, n, found, live;
-    ngx_log_t     *log;
-    ngx_cycle_t  **cycle;
+    ngx_uint_t     i, n, لبھیا, جیوندا;
+    ngx_log_t     *لوگارتھم;
+    ngx_چکر_t  **چکر;
 
-    log = ngx_cycle->log;
-    ngx_temp_pool->log = log;
+    لوگارتھم = ngx_چکر->لوگارتھم;
+    ngx_عارضی_pool->لوگارتھم = لوگارتھم;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, log, 0, "clean old cycles");
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, لوگارتھم, 0, "clean old cycles");
 
-    live = 0;
+    جیوندا = 0;
 
-    cycle = ngx_old_cycles.elts;
-    for (i = 0; i < ngx_old_cycles.nelts; i++) {
+    چکر = ngx_old_چکراں.elts;
+    لكل (i = 0; i < ngx_old_چکراں.nelts; i++) {
 
-        if (cycle[i] == NULL) {
-            continue;
+        إذا (چکر[i] == عدم) {
+            استمر;
         }
 
-        found = 0;
+        لبھیا = 0;
 
-        for (n = 0; n < cycle[i]->connection_n; n++) {
-            if (cycle[i]->connections[n].fd != (ngx_socket_t) -1) {
-                found = 1;
+        لكل (n = 0; n < چکر[i]->connection_n; n++) {
+            إذا (چکر[i]->connections[n].fd != (ngx_socket_t) -1) {
+                لبھیا = 1;
 
-                ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0, "live fd:%ui", n);
+                ngx_log_debug1(NGX_LOG_DEBUG_CORE, لوگارتھم, 0, "live fd:%ui", n);
 
-                break;
+                اكسر;
             }
         }
 
-        if (found) {
-            live = 1;
-            continue;
+        إذا (لبھیا) {
+            جیوندا = 1;
+            استمر;
         }
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0, "clean old cycle: %ui", i);
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, لوگارتھم, 0, "clean old cycle: %ui", i);
 
-        ngx_destroy_pool(cycle[i]->pool);
-        cycle[i] = NULL;
+        ngx_destroy_pool(چکر[i]->pool);
+        چکر[i] = عدم;
     }
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0, "old cycles status: %ui", live);
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, لوگارتھم, 0, "old cycles status: %ui", جیوندا);
 
-    if (live) {
-        ngx_add_timer(ev, 30000);
+    إذا (جیوندا) {
+        ngx_جوڑو_timer(ev, 30000);
 
-    } else {
-        ngx_destroy_pool(ngx_temp_pool);
-        ngx_temp_pool = NULL;
-        ngx_old_cycles.nelts = 0;
+    } وإلا {
+        ngx_destroy_pool(ngx_عارضی_pool);
+        ngx_عارضی_pool = عدم;
+        ngx_old_چکراں.nelts = 0;
     }
 }
 
 
-void
-ngx_set_shutdown_timer(ngx_cycle_t *cycle)
+فراغ
+ngx_سیٹ_shutdown_timer(ngx_چکر_t *چکر)
 {
     ngx_core_conf_t  *ccf;
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(چکر->conf_ctx, ngx_core_module);
 
-    if (ccf->shutdown_timeout) {
+    إذا (ccf->shutdown_timeout) {
         ngx_shutdown_event.handler = ngx_shutdown_timer_handler;
-        ngx_shutdown_event.data = cycle;
-        ngx_shutdown_event.log = cycle->log;
+        ngx_shutdown_event.انکڑے = چکر;
+        ngx_shutdown_event.لوگارتھم = چکر->لوگارتھم;
         ngx_shutdown_event.cancelable = 1;
 
-        ngx_add_timer(&ngx_shutdown_event, ccf->shutdown_timeout);
+        ngx_جوڑو_timer(&ngx_shutdown_event, ccf->shutdown_timeout);
     }
 }
 
 
-static void
+ساكن فراغ
 ngx_shutdown_timer_handler(ngx_event_t *ev)
 {
     ngx_uint_t         i;
-    ngx_cycle_t       *cycle;
+    ngx_چکر_t       *چکر;
     ngx_connection_t  *c;
 
-    cycle = ev->data;
+    چکر = ev->انکڑے;
 
-    c = cycle->connections;
+    c = چکر->connections;
 
-    for (i = 0; i < cycle->connection_n; i++) {
+    لكل (i = 0; i < چکر->connection_n; i++) {
 
-        if (c[i].fd == (ngx_socket_t) -1
-            || c[i].read == NULL
-            || c[i].read->accept
-            || c[i].read->channel
-            || c[i].read->resolver)
+        إذا (c[i].fd == (ngx_socket_t) -1
+            || c[i].اقرأ == عدم
+            || c[i].اقرأ->accept
+            || c[i].اقرأ->channel
+            || c[i].اقرأ->resolver)
         {
-            continue;
+            استمر;
         }
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ev->log, 0,
-                       "*%uA shutdown timeout", c[i].number);
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ev->لوگارتھم, 0,
+                       "*%uA shutdown timeout", c[i].نمبر);
 
         c[i].close = 1;
         c[i].error = 1;
 
-        c[i].read->handler(c[i].read);
+        c[i].اقرأ->handler(c[i].اقرأ);
     }
 }

@@ -5,111 +5,111 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-#ifndef _NGX_QUEUE_H_INCLUDED_
-#define _NGX_QUEUE_H_INCLUDED_
+#جے_بنا_تعریف NGX_قطار_H_INCLUDED
+#تعریف_کرو NGX_قطار_H_INCLUDED
 
 
-typedef struct ngx_queue_s  ngx_queue_t;
+تعريفنوع بنية ngx_قطار_s  ngx_قطار_t;
 
-struct ngx_queue_s {
-    ngx_queue_t  *prev;
-    ngx_queue_t  *next;
+بنية ngx_قطار_s {
+    ngx_قطار_t  *prev;
+    ngx_قطار_t  *اگلا;
 };
 
 
-#define ngx_queue_init(q)                                                     \
+#تعریف_کرو ngx_قطار_init(q)                                                     \
     (q)->prev = q;                                                            \
-    (q)->next = q
+    (q)->اگلا = q
 
 
-#define ngx_queue_empty(h)                                                    \
+#تعریف_کرو ngx_قطار_خالی_تھاواں(h)                                                    \
     (h == (h)->prev)
 
 
-#define ngx_queue_insert_head(h, x)                                           \
-    (x)->next = (h)->next;                                                    \
-    (x)->next->prev = x;                                                      \
+#تعریف_کرو ngx_قطار_داخل_کرو_سر(h, x)                                           \
+    (x)->اگلا = (h)->اگلا;                                                    \
+    (x)->اگلا->prev = x;                                                      \
     (x)->prev = h;                                                            \
-    (h)->next = x
+    (h)->اگلا = x
 
 
-#define ngx_queue_insert_after   ngx_queue_insert_head
+#تعریف_کرو ngx_قطار_داخل_کرو_after   ngx_قطار_داخل_کرو_سر
 
 
-#define ngx_queue_insert_tail(h, x)                                           \
+#تعریف_کرو ngx_قطار_داخل_کرو_پوچھ(h, x)                                           \
     (x)->prev = (h)->prev;                                                    \
-    (x)->prev->next = x;                                                      \
-    (x)->next = h;                                                            \
+    (x)->prev->اگلا = x;                                                      \
+    (x)->اگلا = h;                                                            \
     (h)->prev = x
 
 
-#define ngx_queue_insert_before   ngx_queue_insert_tail
+#تعریف_کرو ngx_قطار_داخل_کرو_before   ngx_قطار_داخل_کرو_پوچھ
 
 
-#define ngx_queue_head(h)                                                     \
-    (h)->next
+#تعریف_کرو ngx_قطار_سر(h)                                                     \
+    (h)->اگلا
 
 
-#define ngx_queue_last(h)                                                     \
+#تعریف_کرو ngx_قطار_آخری(h)                                                     \
     (h)->prev
 
 
-#define ngx_queue_sentinel(h)                                                 \
+#تعریف_کرو ngx_قطار_sentinel(h)                                                 \
     (h)
 
 
-#define ngx_queue_next(q)                                                     \
-    (q)->next
+#تعریف_کرو ngx_قطار_اگلا(q)                                                     \
+    (q)->اگلا
 
 
-#define ngx_queue_prev(q)                                                     \
+#تعریف_کرو ngx_قطار_prev(q)                                                     \
     (q)->prev
 
 
-#if (NGX_DEBUG)
+#إذا (NGX_DEBUG)
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next;                                              \
-    (x)->prev = NULL;                                                         \
-    (x)->next = NULL
+#تعریف_کرو ngx_قطار_remove(x)                                                   \
+    (x)->اگلا->prev = (x)->prev;                                              \
+    (x)->prev->اگلا = (x)->اگلا;                                              \
+    (x)->prev = عدم;                                                         \
+    (x)->اگلا = عدم
 
-#else
+#وإلا
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next
+#تعریف_کرو ngx_قطار_remove(x)                                                   \
+    (x)->اگلا->prev = (x)->prev;                                              \
+    (x)->prev->اگلا = (x)->اگلا
 
-#endif
+#جے_انت
 
 
-#define ngx_queue_split(h, q, n)                                              \
+#تعریف_کرو ngx_قطار_ونڈو(h, q, n)                                              \
     (n)->prev = (h)->prev;                                                    \
-    (n)->prev->next = n;                                                      \
-    (n)->next = q;                                                            \
+    (n)->prev->اگلا = n;                                                      \
+    (n)->اگلا = q;                                                            \
     (h)->prev = (q)->prev;                                                    \
-    (h)->prev->next = h;                                                      \
+    (h)->prev->اگلا = h;                                                      \
     (q)->prev = n;
 
 
-#define ngx_queue_add(h, n)                                                   \
-    (h)->prev->next = (n)->next;                                              \
-    (n)->next->prev = (h)->prev;                                              \
+#تعریف_کرو ngx_قطار_جوڑو(h, n)                                                   \
+    (h)->prev->اگلا = (n)->اگلا;                                              \
+    (n)->اگلا->prev = (h)->prev;                                              \
     (h)->prev = (n)->prev;                                                    \
-    (h)->prev->next = h;
+    (h)->prev->اگلا = h;
 
 
-#define ngx_queue_data(q, type, link)                                         \
+#تعریف_کرو ngx_قطار_انکڑے(q, type, link)                                         \
     (type *) ((u_char *) q - offsetof(type, link))
 
 
-ngx_queue_t *ngx_queue_middle(ngx_queue_t *queue);
-void ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ngx_قطار_t *ngx_قطار_درمیان(ngx_قطار_t *قطار);
+فراغ ngx_قطار_ترتیب_دیو(ngx_قطار_t *قطار,
+    ngx_int_t (*cmp)(ثابت ngx_قطار_t *, ثابت ngx_قطار_t *));
 
 
-#endif /* _NGX_QUEUE_H_INCLUDED_ */
+#جے_انت /* _NGX_QUEUE_H_INCLUDED_ */

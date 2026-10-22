@@ -5,95 +5,95 @@
  */
 
 
-#ifndef _NGX_CONNECTION_H_INCLUDED_
-#define _NGX_CONNECTION_H_INCLUDED_
+#جے_بنا_تعریف _NGX_CONNECTION_H_INCLUDED_
+#تعریف_کرو _NGX_CONNECTION_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef struct ngx_listening_s  ngx_listening_t;
+تعريفنوع بنية ngx_listening_s  ngx_listening_t;
 
-struct ngx_listening_s {
+بنية ngx_listening_s {
     ngx_socket_t        fd;
 
-    struct sockaddr    *sockaddr;
+    بنية sockaddr    *sockaddr;
     socklen_t           socklen;    /* size of sockaddr */
-    size_t              addr_text_max_len;
-    ngx_str_t           addr_text;
+    ناپ_t              addr_متن_max_len;
+    ngx_str_t           addr_متن;
 
-    int                 type;
-    int                 protocol;
+    صحيح                 type;
+    صحيح                 protocol;
 
-    int                 backlog;
-    int                 rcvbuf;
-    int                 sndbuf;
-#if (NGX_HAVE_KEEPALIVE_TUNABLE)
-    int                 keepidle;
-    int                 keepintvl;
-    int                 keepcnt;
-#endif
+    صحيح                 backlog;
+    صحيح                 rcvbuf;
+    صحيح                 sndbuf;
+#إذا (NGX_HAVE_KEEPALIVE_TUNABLE)
+    صحيح                 keepidle;
+    صحيح                 keepintvl;
+    صحيح                 keepcnt;
+#جے_انت
 
     /* handler of accepted connection */
     ngx_connection_handler_pt   handler;
 
-    void               *servers;  /* array of ngx_http_in_addr_t, for example */
+    فراغ               *servers;  /* array of ngx_http_in_addr_t, for example */
 
-    ngx_log_t           log;
+    ngx_log_t           لوگارتھم;
     ngx_log_t          *logp;
 
-    size_t              pool_size;
+    ناپ_t              pool_ناپ;
 
-    ngx_listening_t    *previous;
+    ngx_listening_t    *پچھلا;
     ngx_connection_t   *connection;
 
     ngx_rbtree_t        rbtree;
-    ngx_rbtree_node_t   sentinel;
+    ngx_rbtree_گرہ_t   sentinel;
 
-    ngx_uint_t          worker;
+    ngx_uint_t          کامہ;
 
-    unsigned            open:1;
-    unsigned            remain:1;
-    unsigned            ignore:1;
+    بنانشانی            open:1;
+    بنانشانی            remain:1;
+    بنانشانی            ignore:1;
 
-    unsigned            bound:1;       /* already bound */
-    unsigned            inherited:1;   /* inherited from previous process */
-    unsigned            nonblocking_accept:1;
-    unsigned            listen:1;
-    unsigned            nonblocking:1;
-    unsigned            shared:1;    /* shared between threads or processes */
-    unsigned            addr_ntop:1;
-    unsigned            wildcard:1;
+    بنانشانی            bound:1;       /* already bound */
+    بنانشانی            inherited:1;   /* inherited from previous process */
+    بنانشانی            nonblocking_accept:1;
+    بنانشانی            listen:1;
+    بنانشانی            nonblocking:1;
+    بنانشانی            shared:1;    /* shared between threads or processes */
+    بنانشانی            addr_ntop:1;
+    بنانشانی            wildcard:1;
 
-#if (NGX_HAVE_INET6)
-    unsigned            ipv6only:1;
-#endif
-    unsigned            reuseport:1;
-    unsigned            add_reuseport:1;
-    unsigned            keepalive:2;
-    unsigned            quic:1;
+#إذا (NGX_HAVE_INET6)
+    بنانشانی            ipv6only:1;
+#جے_انت
+    بنانشانی            reuseport:1;
+    بنانشانی            جوڑو_reuseport:1;
+    بنانشانی            keepalive:2;
+    بنانشانی            quic:1;
 
-    unsigned            change_protocol:1;
+    بنانشانی            change_protocol:1;
 
-    unsigned            deferred_accept:1;
-    unsigned            delete_deferred:1;
-    unsigned            add_deferred:1;
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
-    char               *accept_filter;
-#endif
-#if (NGX_HAVE_SETFIB)
-    int                 setfib;
-#endif
+    بنانشانی            deferred_accept:1;
+    بنانشانی            delete_deferred:1;
+    بنانشانی            جوڑو_deferred:1;
+#إذا (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+    حرف               *accept_filter;
+#جے_انت
+#إذا (NGX_HAVE_SETFIB)
+    صحيح                 setfib;
+#جے_انت
 
-#if (NGX_HAVE_TCP_FASTOPEN)
-    int                 fastopen;
-#endif
+#إذا (NGX_HAVE_TCP_FASTOPEN)
+    صحيح                 fastopen;
+#جے_انت
 
 };
 
 
-typedef enum {
+تعريفنوع تعداد {
     NGX_ERROR_ALERT = 0,
     NGX_ERROR_ERR,
     NGX_ERROR_INFO,
@@ -103,29 +103,29 @@ typedef enum {
 } ngx_connection_log_error_e;
 
 
-typedef enum {
+تعريفنوع تعداد {
     NGX_TCP_NODELAY_UNSET = 0,
-    NGX_TCP_NODELAY_SET,
+    NGX_TCP_NODELAY_سیٹ,
     NGX_TCP_NODELAY_DISABLED
 } ngx_connection_tcp_nodelay_e;
 
 
-typedef enum {
+تعريفنوع تعداد {
     NGX_TCP_NOPUSH_UNSET = 0,
-    NGX_TCP_NOPUSH_SET,
+    NGX_TCP_NOPUSH_سیٹ,
     NGX_TCP_NOPUSH_DISABLED
 } ngx_connection_tcp_nopush_e;
 
 
-#define NGX_LOWLEVEL_BUFFERED  0x0f
-#define NGX_SSL_BUFFERED       0x01
-#define NGX_HTTP_V2_BUFFERED   0x02
+#تعریف_کرو NGX_LOWLEVEL_BUFFERED  0x0f
+#تعریف_کرو NGX_SSL_BUFFERED       0x01
+#تعریف_کرو NGX_HTTP_V2_BUFFERED   0x02
 
 
-struct ngx_connection_s {
-    void               *data;
-    ngx_event_t        *read;
-    ngx_event_t        *write;
+بنية ngx_connection_s {
+    فراغ               *انکڑے;
+    ngx_event_t        *اقرأ;
+    ngx_event_t        *اكتب;
 
     ngx_socket_t        fd;
 
@@ -136,104 +136,104 @@ struct ngx_connection_s {
 
     ngx_listening_t    *listening;
 
-    off_t               sent;
+    off_t               گھلیا;
 
-    ngx_log_t          *log;
+    ngx_log_t          *لوگارتھم;
 
     ngx_pool_t         *pool;
 
-    int                 type;
+    صحيح                 type;
 
-    struct sockaddr    *sockaddr;
+    بنية sockaddr    *sockaddr;
     socklen_t           socklen;
-    ngx_str_t           addr_text;
+    ngx_str_t           addr_متن;
 
     ngx_proxy_protocol_t  *proxy_protocol;
 
-#if (NGX_QUIC || NGX_COMPAT)
-    ngx_quic_stream_t     *quic;
-#endif
+#إذا (NGX_QUIC || NGX_COMPAT)
+    ngx_quic_دھارا_t     *quic;
+#جے_انت
 
-#if (NGX_SSL || NGX_COMPAT)
+#إذا (NGX_SSL || NGX_COMPAT)
     ngx_ssl_connection_t  *ssl;
-#endif
+#جے_انت
 
     ngx_udp_connection_t  *udp;
 
-    struct sockaddr    *local_sockaddr;
+    بنية sockaddr    *local_sockaddr;
     socklen_t           local_socklen;
 
-    ngx_buf_t          *buffer;
+    ngx_buf_t          *بفر;
 
-    ngx_queue_t         queue;
+    ngx_قطار_t         قطار;
 
-    ngx_atomic_uint_t   number;
+    ngx_atomic_uint_t   نمبر;
 
-    ngx_msec_t          start_time;
-    ngx_uint_t          requests;
+    ngx_msec_t          شروع_ویلا;
+    ngx_uint_t          بینتیاں;
 
-    unsigned            buffered:8;
+    بنانشانی            buffered:8;
 
-    unsigned            log_error:3;     /* ngx_connection_log_error_e */
+    بنانشانی            log_error:3;     /* ngx_connection_log_error_e */
 
-    unsigned            timedout:1;
-    unsigned            error:1;
-    unsigned            destroyed:1;
-    unsigned            pipeline:1;
+    بنانشانی            timedout:1;
+    بنانشانی            error:1;
+    بنانشانی            destroyed:1;
+    بنانشانی            pipeline:1;
 
-    unsigned            idle:1;
-    unsigned            reusable:1;
-    unsigned            close:1;
-    unsigned            shared:1;
+    بنانشانی            idle:1;
+    بنانشانی            reusable:1;
+    بنانشانی            close:1;
+    بنانشانی            shared:1;
 
-    unsigned            sendfile:1;
-    unsigned            sndlowat:1;
-    unsigned            tcp_nodelay:2;   /* ngx_connection_tcp_nodelay_e */
-    unsigned            tcp_nopush:2;    /* ngx_connection_tcp_nopush_e */
+    بنانشانی            sendfile:1;
+    بنانشانی            sndlowat:1;
+    بنانشانی            tcp_nodelay:2;   /* ngx_connection_tcp_nodelay_e */
+    بنانشانی            tcp_nopush:2;    /* ngx_connection_tcp_nopush_e */
 
-    unsigned            need_last_buf:1;
-    unsigned            need_flush_buf:1;
+    بنانشانی            need_آخری_buf:1;
+    بنانشانی            need_flush_buf:1;
 
-#if (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
-    unsigned            busy_count:2;
-#endif
+#إذا (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
+    بنانشانی            busy_گنتی:2;
+#جے_انت
 
-    unsigned            ktls_recv:1;
+    بنانشانی            ktls_recv:1;
 
-#if (NGX_THREADS || NGX_COMPAT)
+#إذا (NGX_دھاگے || NGX_COMPAT)
     ngx_thread_task_t  *sendfile_task;
-#endif
+#جے_انت
 };
 
 
-#define ngx_set_connection_log(c, l)                                         \
+#تعریف_کرو ngx_سیٹ_connection_log(c, l)                                         \
                                                                              \
-    c->log->file = l->file;                                                  \
-    c->log->next = l->next;                                                  \
-    c->log->writer = l->writer;                                              \
-    c->log->wdata = l->wdata;                                                \
-    if (!(c->log->log_level & NGX_LOG_DEBUG_CONNECTION)) {                   \
-        c->log->log_level = l->log_level;                                    \
+    c->لوگارتھم->file = l->file;                                                  \
+    c->لوگارتھم->اگلا = l->اگلا;                                                  \
+    c->لوگارتھم->writer = l->writer;                                              \
+    c->لوگارتھم->wdata = l->wdata;                                                \
+    إذا (!(c->لوگارتھم->log_level & NGX_LOG_DEBUG_CONNECTION)) {                   \
+        c->لوگارتھم->log_level = l->log_level;                                    \
     }
 
 
-ngx_listening_t *ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
+ngx_listening_t *ngx_create_listening(ngx_conf_t *cf, بنية sockaddr *sockaddr,
     socklen_t socklen);
-ngx_int_t ngx_clone_listening(ngx_cycle_t *cycle, ngx_listening_t *ls);
-ngx_int_t ngx_set_inherited_sockets(ngx_cycle_t *cycle);
-ngx_int_t ngx_open_listening_sockets(ngx_cycle_t *cycle);
-void ngx_configure_listening_sockets(ngx_cycle_t *cycle);
-void ngx_close_listening_sockets(ngx_cycle_t *cycle);
-void ngx_close_connection(ngx_connection_t *c);
-void ngx_close_idle_connections(ngx_cycle_t *cycle);
+ngx_int_t ngx_clone_listening(ngx_چکر_t *چکر, ngx_listening_t *ls);
+ngx_int_t ngx_سیٹ_inherited_sockets(ngx_چکر_t *چکر);
+ngx_int_t ngx_open_listening_sockets(ngx_چکر_t *چکر);
+فراغ ngx_configure_listening_sockets(ngx_چکر_t *چکر);
+فراغ ngx_close_listening_sockets(ngx_چکر_t *چکر);
+فراغ ngx_close_connection(ngx_connection_t *c);
+فراغ ngx_close_idle_connections(ngx_چکر_t *چکر);
 ngx_int_t ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
-    ngx_uint_t port);
+    ngx_uint_t پورٹ);
 ngx_int_t ngx_tcp_nodelay(ngx_connection_t *c);
-ngx_int_t ngx_connection_error(ngx_connection_t *c, ngx_err_t err, char *text);
+ngx_int_t ngx_connection_error(ngx_connection_t *c, ngx_err_t err, حرف *متن);
 
-ngx_connection_t *ngx_get_connection(ngx_socket_t s, ngx_log_t *log);
-void ngx_free_connection(ngx_connection_t *c);
+ngx_connection_t *ngx_get_connection(ngx_socket_t s, ngx_log_t *لوگارتھم);
+فراغ ngx_free_connection(ngx_connection_t *c);
 
-void ngx_reusable_connection(ngx_connection_t *c, ngx_uint_t reusable);
+فراغ ngx_reusable_connection(ngx_connection_t *c, ngx_uint_t reusable);
 
-#endif /* _NGX_CONNECTION_H_INCLUDED_ */
+#جے_انت /* _NGX_CONNECTION_H_INCLUDED_ */

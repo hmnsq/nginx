@@ -5,141 +5,141 @@
  */
 
 
-#ifndef _NGX_CONFIG_H_INCLUDED_
-#define _NGX_CONFIG_H_INCLUDED_
+#جے_بنا_تعریف _NGX_CONFIG_H_INCLUDED_
+#تعریف_کرو _NGX_CONFIG_H_INCLUDED_
 
 
-#include <ngx_auto_headers.h>
+#ضمن <ngx_auto_headers.h>
 
 
-#if defined __DragonFly__ && !defined __FreeBSD__
-#define __FreeBSD__        4
-#define __FreeBSD_version  480101
-#endif
+#إذا defined __DragonFly__ && !defined __FreeBSD__
+#تعریف_کرو __FreeBSD__        4
+#تعریف_کرو __FreeBSD_version  480101
+#جے_انت
 
 
-#if (NGX_FREEBSD)
-#include <ngx_freebsd_config.h>
+#إذا (NGX_FREEBSD)
+#ضمن <ngx_freebsd_config.h>
 
 
-#elif (NGX_LINUX)
-#include <ngx_linux_config.h>
+#وإلاإذا (NGX_LINUX)
+#ضمن <ngx_linux_config.h>
 
 
-#elif (NGX_SOLARIS)
-#include <ngx_solaris_config.h>
+#وإلاإذا (NGX_SOLARIS)
+#ضمن <ngx_solaris_config.h>
 
 
-#elif (NGX_DARWIN)
-#include <ngx_darwin_config.h>
+#وإلاإذا (NGX_DARWIN)
+#ضمن <ngx_darwin_config.h>
 
 
-#elif (NGX_WIN32)
-#include <ngx_win32_config.h>
+#وإلاإذا (NGX_WIN32)
+#ضمن <ngx_win32_config.h>
 
 
-#else /* POSIX */
-#include <ngx_posix_config.h>
+#وإلا /* POSIX */
+#ضمن <ngx_posix_config.h>
 
-#endif
-
-
-#ifndef NGX_HAVE_SO_SNDLOWAT
-#define NGX_HAVE_SO_SNDLOWAT     1
-#endif
+#جے_انت
 
 
-#if !(NGX_WIN32)
+#جے_بنا_تعریف NGX_HAVE_SO_SNDLOWAT
+#تعریف_کرو NGX_HAVE_SO_SNDLOWAT     1
+#جے_انت
 
-#define ngx_signal_helper(n)     SIG##n
-#define ngx_signal_value(n)      ngx_signal_helper(n)
 
-#define ngx_random               random
+#إذا !(NGX_WIN32)
+
+#تعریف_کرو ngx_signal_helper(n)     SIG##n
+#تعریف_کرو ngx_signal_قدر(n)      ngx_signal_helper(n)
+
+#تعریف_کرو ngx_random               random
 
 /* TODO: #ifndef */
-#define NGX_SHUTDOWN_SIGNAL      QUIT
-#define NGX_TERMINATE_SIGNAL     TERM
-#define NGX_NOACCEPT_SIGNAL      WINCH
-#define NGX_RECONFIGURE_SIGNAL   HUP
+#تعریف_کرو NGX_SHUTDOWN_SIGNAL      QUIT
+#تعریف_کرو NGX_TERMINATE_SIGNAL     رکن
+#تعریف_کرو NGX_NOACCEPT_SIGNAL      WINCH
+#تعریف_کرو NGX_RECONFIGURE_SIGNAL   HUP
 
-#if (NGX_LINUXTHREADS)
-#define NGX_REOPEN_SIGNAL        INFO
-#define NGX_CHANGEBIN_SIGNAL     XCPU
-#else
-#define NGX_REOPEN_SIGNAL        USR1
-#define NGX_CHANGEBIN_SIGNAL     USR2
-#endif
+#إذا (NGX_LINUXTHREADS)
+#تعریف_کرو NGX_REOPEN_SIGNAL        INFO
+#تعریف_کرو NGX_CHANGEBIN_SIGNAL     XCPU
+#وإلا
+#تعریف_کرو NGX_REOPEN_SIGNAL        USR1
+#تعریف_کرو NGX_CHANGEBIN_SIGNAL     USR2
+#جے_انت
 
-#define ngx_cdecl
-#define ngx_libc_cdecl
+#تعریف_کرو ngx_cdecl
+#تعریف_کرو ngx_libc_cdecl
 
-#endif
+#جے_انت
 
-typedef intptr_t        ngx_int_t;
-typedef uintptr_t       ngx_uint_t;
-typedef intptr_t        ngx_flag_t;
-
-
-#define NGX_INT32_LEN   (sizeof("-2147483648") - 1)
-#define NGX_INT64_LEN   (sizeof("-9223372036854775808") - 1)
-
-#if (NGX_PTR_SIZE == 4)
-#define NGX_INT_T_LEN   NGX_INT32_LEN
-#define NGX_MAX_INT_T_VALUE  2147483647
-
-#else
-#define NGX_INT_T_LEN   NGX_INT64_LEN
-#define NGX_MAX_INT_T_VALUE  9223372036854775807
-#endif
+تعريفنوع intptr_t        ngx_int_t;
+تعريفنوع uintptr_t       ngx_uint_t;
+تعريفنوع intptr_t        ngx_flag_t;
 
 
-#ifndef NGX_ALIGNMENT
-#define NGX_ALIGNMENT   sizeof(uintptr_t)    /* platform word */
-#endif
+#تعریف_کرو NGX_INT32_LEN   (حجم("-2147483648") - 1)
+#تعریف_کرو NGX_INT64_LEN   (حجم("-9223372036854775808") - 1)
 
-#define ngx_align(d, a)     (((d) + (a - 1)) & ~(a - 1))
-#define ngx_align_ptr(p, a)                                                   \
+#إذا (NGX_PTR_ناپ == 4)
+#تعریف_کرو NGX_INT_T_LEN   NGX_INT32_LEN
+#تعریف_کرو NGX_MAX_INT_T_قدر  2147483647
+
+#وإلا
+#تعریف_کرو NGX_INT_T_LEN   NGX_INT64_LEN
+#تعریف_کرو NGX_MAX_INT_T_قدر  9223372036854775807
+#جے_انت
+
+
+#جے_بنا_تعریف NGX_ALIGNMENT
+#تعریف_کرو NGX_ALIGNMENT   حجم(uintptr_t)    /* platform word */
+#جے_انت
+
+#تعریف_کرو ngx_align(d, a)     (((d) + (a - 1)) & ~(a - 1))
+#تعریف_کرو ngx_align_ptr(p, a)                                                   \
     (u_char *) (((uintptr_t) (p) + ((uintptr_t) a - 1)) & ~((uintptr_t) a - 1))
 
 
-#define ngx_abort       abort
+#تعریف_کرو ngx_abort       abort
 
 
 /* TODO: platform specific: array[NGX_INVALID_ARRAY_INDEX] must cause SIGSEGV */
-#define NGX_INVALID_ARRAY_INDEX 0x80000000
+#تعریف_کرو NGX_INVALID_ARRAY_اشاریہ 0x80000000
 
 
 /* TODO: auto_conf: ngx_inline   inline __inline __inline__ */
-#ifndef ngx_inline
-#define ngx_inline      inline
-#endif
+#جے_بنا_تعریف ngx_inline
+#تعریف_کرو ngx_inline      مضمن
+#جے_انت
 
-#ifndef INADDR_NONE  /* Solaris */
-#define INADDR_NONE  ((unsigned int) -1)
-#endif
+#جے_بنا_تعریف INADDR_NONE  /* Solaris */
+#تعریف_کرو INADDR_NONE  ((بنانشانی صحيح) -1)
+#جے_انت
 
-#ifdef MAXHOSTNAMELEN
-#define NGX_MAXHOSTNAMELEN  MAXHOSTNAMELEN
-#else
-#define NGX_MAXHOSTNAMELEN  256
-#endif
-
-
-#define NGX_MAX_UINT32_VALUE  (uint32_t) 0xffffffff
-#define NGX_MAX_INT32_VALUE   (uint32_t) 0x7fffffff
+#جے_تعریف_شدہ MAXHOSTNAMELEN
+#تعریف_کرو NGX_MAXHOSTNAMELEN  MAXHOSTNAMELEN
+#وإلا
+#تعریف_کرو NGX_MAXHOSTNAMELEN  256
+#جے_انت
 
 
-#if (NGX_COMPAT)
-
-#define NGX_COMPAT_BEGIN(slots)  uint64_t spare[slots];
-#define NGX_COMPAT_END
-
-#else
-
-#define NGX_COMPAT_BEGIN(slots)
-#define NGX_COMPAT_END
-
-#endif
+#تعریف_کرو NGX_MAX_UINT32_قدر  (uint32_t) 0xffffffff
+#تعریف_کرو NGX_MAX_INT32_قدر   (uint32_t) 0x7fffffff
 
 
-#endif /* _NGX_CONFIG_H_INCLUDED_ */
+#إذا (NGX_COMPAT)
+
+#تعریف_کرو NGX_COMPAT_BEGIN(slots)  uint64_t وادھو[slots];
+#تعریف_کرو NGX_COMPAT_سرا
+
+#وإلا
+
+#تعریف_کرو NGX_COMPAT_BEGIN(slots)
+#تعریف_کرو NGX_COMPAT_سرا
+
+#جے_انت
+
+
+#جے_انت /* _NGX_CONFIG_H_INCLUDED_ */

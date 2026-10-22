@@ -5,23 +5,23 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 ngx_buf_t *
-ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
+ngx_create_عارضی_buf(ngx_pool_t *pool, ناپ_t ناپ)
 {
     ngx_buf_t *b;
 
     b = ngx_calloc_buf(pool);
-    if (b == NULL) {
-        return NULL;
+    إذا (b == عدم) {
+        أرجع عدم;
     }
 
-    b->start = ngx_palloc(pool, size);
-    if (b->start == NULL) {
-        return NULL;
+    b->شروع = ngx_palloc(pool, ناپ);
+    إذا (b->شروع == عدم) {
+        أرجع عدم;
     }
 
     /*
@@ -35,12 +35,12 @@ ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
      *     and flags
      */
 
-    b->pos = b->start;
-    b->last = b->start;
-    b->end = b->last + size;
+    b->pos = b->شروع;
+    b->آخری = b->شروع;
+    b->سرا = b->آخری + ناپ;
     b->temporary = 1;
 
-    return b;
+    أرجع b;
 }
 
 
@@ -51,40 +51,40 @@ ngx_alloc_chain_link(ngx_pool_t *pool)
 
     cl = pool->chain;
 
-    if (cl) {
-        pool->chain = cl->next;
-        return cl;
+    إذا (cl) {
+        pool->chain = cl->اگلا;
+        أرجع cl;
     }
 
-    cl = ngx_palloc(pool, sizeof(ngx_chain_t));
-    if (cl == NULL) {
-        return NULL;
+    cl = ngx_palloc(pool, حجم(ngx_chain_t));
+    إذا (cl == عدم) {
+        أرجع عدم;
     }
 
-    return cl;
+    أرجع cl;
 }
 
 
 ngx_chain_t *
-ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
+ngx_create_chain_دا_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
 {
     u_char       *p;
     ngx_int_t     i;
     ngx_buf_t    *b;
     ngx_chain_t  *chain, *cl, **ll;
 
-    p = ngx_palloc(pool, bufs->num * bufs->size);
-    if (p == NULL) {
-        return NULL;
+    p = ngx_palloc(pool, bufs->عدد * bufs->ناپ);
+    إذا (p == عدم) {
+        أرجع عدم;
     }
 
     ll = &chain;
 
-    for (i = 0; i < bufs->num; i++) {
+    لكل (i = 0; i < bufs->عدد; i++) {
 
         b = ngx_calloc_buf(pool);
-        if (b == NULL) {
-            return NULL;
+        إذا (b == عدم) {
+            أرجع عدم;
         }
 
         /*
@@ -100,215 +100,215 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
          */
 
         b->pos = p;
-        b->last = p;
+        b->آخری = p;
         b->temporary = 1;
 
-        b->start = p;
-        p += bufs->size;
-        b->end = p;
+        b->شروع = p;
+        p += bufs->ناپ;
+        b->سرا = p;
 
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            return NULL;
+        إذا (cl == عدم) {
+            أرجع عدم;
         }
 
         cl->buf = b;
         *ll = cl;
-        ll = &cl->next;
+        ll = &cl->اگلا;
     }
 
-    *ll = NULL;
+    *ll = عدم;
 
-    return chain;
+    أرجع chain;
 }
 
 
 ngx_int_t
-ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *in)
+ngx_chain_جوڑو_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *وچ)
 {
     ngx_chain_t  *cl, **ll;
 
     ll = chain;
 
-    for (cl = *chain; cl; cl = cl->next) {
-        ll = &cl->next;
+    لكل (cl = *chain; cl; cl = cl->اگلا) {
+        ll = &cl->اگلا;
     }
 
-    while (in) {
+    طالما (وچ) {
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            *ll = NULL;
-            return NGX_ERROR;
+        إذا (cl == عدم) {
+            *ll = عدم;
+            أرجع NGX_ERROR;
         }
 
-        cl->buf = in->buf;
+        cl->buf = وچ->buf;
         *ll = cl;
-        ll = &cl->next;
-        in = in->next;
+        ll = &cl->اگلا;
+        وچ = وچ->اگلا;
     }
 
-    *ll = NULL;
+    *ll = عدم;
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
 ngx_chain_t *
-ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **free)
+ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **حرر)
 {
     ngx_chain_t  *cl;
 
-    if (*free) {
-        cl = *free;
-        *free = cl->next;
-        cl->next = NULL;
-        return cl;
+    إذا (*حرر) {
+        cl = *حرر;
+        *حرر = cl->اگلا;
+        cl->اگلا = عدم;
+        أرجع cl;
     }
 
     cl = ngx_alloc_chain_link(p);
-    if (cl == NULL) {
-        return NULL;
+    إذا (cl == عدم) {
+        أرجع عدم;
     }
 
     cl->buf = ngx_calloc_buf(p);
-    if (cl->buf == NULL) {
-        return NULL;
+    إذا (cl->buf == عدم) {
+        أرجع عدم;
     }
 
-    cl->next = NULL;
+    cl->اگلا = عدم;
 
-    return cl;
+    أرجع cl;
 }
 
 
-void
-ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free, ngx_chain_t **busy,
-    ngx_chain_t **out, ngx_buf_tag_t tag)
+فراغ
+ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **حرر, ngx_chain_t **busy,
+    ngx_chain_t **باہرلا, ngx_buf_ٹیگ_t ٹیگ)
 {
     ngx_chain_t  *cl;
 
-    if (*out) {
-        if (*busy == NULL) {
-            *busy = *out;
+    إذا (*باہرلا) {
+        إذا (*busy == عدم) {
+            *busy = *باہرلا;
 
-        } else {
-            for (cl = *busy; cl->next; cl = cl->next) { /* void */ }
+        } وإلا {
+            لكل (cl = *busy; cl->اگلا; cl = cl->اگلا) { /* void */ }
 
-            cl->next = *out;
+            cl->اگلا = *باہرلا;
         }
 
-        *out = NULL;
+        *باہرلا = عدم;
     }
 
-    while (*busy) {
+    طالما (*busy) {
         cl = *busy;
 
-        if (cl->buf->tag != tag) {
-            *busy = cl->next;
+        إذا (cl->buf->ٹیگ != ٹیگ) {
+            *busy = cl->اگلا;
             ngx_free_chain(p, cl);
-            continue;
+            استمر;
         }
 
-        if (ngx_buf_size(cl->buf) != 0) {
-            break;
+        إذا (ngx_buf_ناپ(cl->buf) != 0) {
+            اكسر;
         }
 
-        cl->buf->pos = cl->buf->start;
-        cl->buf->last = cl->buf->start;
+        cl->buf->pos = cl->buf->شروع;
+        cl->buf->آخری = cl->buf->شروع;
 
-        *busy = cl->next;
-        cl->next = *free;
-        *free = cl;
+        *busy = cl->اگلا;
+        cl->اگلا = *حرر;
+        *حرر = cl;
     }
 }
 
 
 off_t
-ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit)
+ngx_chain_coalesce_file(ngx_chain_t **وچ, off_t حد_بندی)
 {
-    off_t         total, size, aligned, fprev;
+    off_t         کل, ناپ, aligned, fprev;
     ngx_fd_t      fd;
     ngx_chain_t  *cl;
 
-    total = 0;
+    کل = 0;
 
-    cl = *in;
+    cl = *وچ;
     fd = cl->buf->file->fd;
 
-    do {
-        size = cl->buf->file_last - cl->buf->file_pos;
+    افعل {
+        ناپ = cl->buf->file_آخری - cl->buf->file_pos;
 
-        if (size > limit - total) {
-            size = limit - total;
+        إذا (ناپ > حد_بندی - کل) {
+            ناپ = حد_بندی - کل;
 
-            aligned = (cl->buf->file_pos + size + ngx_pagesize - 1)
+            aligned = (cl->buf->file_pos + ناپ + ngx_pagesize - 1)
                        & ~((off_t) ngx_pagesize - 1);
 
-            if (aligned <= cl->buf->file_last) {
-                size = aligned - cl->buf->file_pos;
+            إذا (aligned <= cl->buf->file_آخری) {
+                ناپ = aligned - cl->buf->file_pos;
             }
 
-            total += size;
-            break;
+            کل += ناپ;
+            اكسر;
         }
 
-        total += size;
-        fprev = cl->buf->file_pos + size;
-        cl = cl->next;
+        کل += ناپ;
+        fprev = cl->buf->file_pos + ناپ;
+        cl = cl->اگلا;
 
-    } while (cl
-             && cl->buf->in_file
-             && total < limit
+    } طالما (cl
+             && cl->buf->وچ_file
+             && کل < حد_بندی
              && fd == cl->buf->file->fd
              && fprev == cl->buf->file_pos);
 
-    *in = cl;
+    *وچ = cl;
 
-    return total;
+    أرجع کل;
 }
 
 
 ngx_chain_t *
-ngx_chain_update_sent(ngx_chain_t *in, off_t sent)
+ngx_chain_update_گھلیا(ngx_chain_t *وچ, off_t گھلیا)
 {
-    off_t  size;
+    off_t  ناپ;
 
-    for ( /* void */ ; in; in = in->next) {
+    لكل ( /* void */ ; وچ; وچ = وچ->اگلا) {
 
-        if (ngx_buf_special(in->buf)) {
-            continue;
+        إذا (ngx_buf_special(وچ->buf)) {
+            استمر;
         }
 
-        if (sent == 0) {
-            break;
+        إذا (گھلیا == 0) {
+            اكسر;
         }
 
-        size = ngx_buf_size(in->buf);
+        ناپ = ngx_buf_ناپ(وچ->buf);
 
-        if (sent >= size) {
-            sent -= size;
+        إذا (گھلیا >= ناپ) {
+            گھلیا -= ناپ;
 
-            if (ngx_buf_in_memory(in->buf)) {
-                in->buf->pos = in->buf->last;
+            إذا (ngx_buf_وچ_حافظہ(وچ->buf)) {
+                وچ->buf->pos = وچ->buf->آخری;
             }
 
-            if (in->buf->in_file) {
-                in->buf->file_pos = in->buf->file_last;
+            إذا (وچ->buf->وچ_file) {
+                وچ->buf->file_pos = وچ->buf->file_آخری;
             }
 
-            continue;
+            استمر;
         }
 
-        if (ngx_buf_in_memory(in->buf)) {
-            in->buf->pos += (size_t) sent;
+        إذا (ngx_buf_وچ_حافظہ(وچ->buf)) {
+            وچ->buf->pos += (ناپ_t) گھلیا;
         }
 
-        if (in->buf->in_file) {
-            in->buf->file_pos += sent;
+        إذا (وچ->buf->وچ_file) {
+            وچ->buf->file_pos += گھلیا;
         }
 
-        break;
+        اكسر;
     }
 
-    return in;
+    أرجع وچ;
 }

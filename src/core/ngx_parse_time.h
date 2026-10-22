@@ -5,18 +5,18 @@
  */
 
 
-#ifndef _NGX_PARSE_TIME_H_INCLUDED_
-#define _NGX_PARSE_TIME_H_INCLUDED_
+#جے_بنا_تعریف NGX_PARSE_ویلا_H_INCLUDED
+#تعریف_کرو NGX_PARSE_ویلا_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-time_t ngx_parse_http_time(u_char *value, size_t len);
+ویلا_t ngx_parse_http_ویلا(u_char *قدر, ناپ_t len);
 
 /* compatibility */
-#define ngx_http_parse_time(value, len)  ngx_parse_http_time(value, len)
+#تعریف_کرو ngx_http_parse_ویلا(قدر, len)  ngx_parse_http_ویلا(قدر, len)
 
 
-#endif /* _NGX_PARSE_TIME_H_INCLUDED_ */
+#جے_انت /* _NGX_PARSE_TIME_H_INCLUDED_ */

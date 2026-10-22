@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 /*
@@ -15,116 +15,116 @@
  */
 
 
-static ngx_inline void ngx_rbtree_left_rotate(ngx_rbtree_node_t **root,
-    ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
-static ngx_inline void ngx_rbtree_right_rotate(ngx_rbtree_node_t **root,
-    ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
+ساكن ngx_inline فراغ ngx_rbtree_بایاں_rotate(ngx_rbtree_گرہ_t **جڑ,
+    ngx_rbtree_گرہ_t *sentinel, ngx_rbtree_گرہ_t *گرہ);
+ساكن ngx_inline فراغ ngx_rbtree_دایاں_rotate(ngx_rbtree_گرہ_t **جڑ,
+    ngx_rbtree_گرہ_t *sentinel, ngx_rbtree_گرہ_t *گرہ);
 
 
-void
-ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+فراغ
+ngx_rbtree_داخل_کرو(ngx_rbtree_t *درخت, ngx_rbtree_گرہ_t *گرہ)
 {
-    ngx_rbtree_node_t  **root, *temp, *sentinel;
+    ngx_rbtree_گرہ_t  **جڑ, *عارضی, *sentinel;
 
     /* a binary tree insert */
 
-    root = &tree->root;
-    sentinel = tree->sentinel;
+    جڑ = &درخت->جڑ;
+    sentinel = درخت->sentinel;
 
-    if (*root == sentinel) {
-        node->parent = NULL;
-        node->left = sentinel;
-        node->right = sentinel;
-        ngx_rbt_black(node);
-        *root = node;
+    إذا (*جڑ == sentinel) {
+        گرہ->ماپا = عدم;
+        گرہ->بایاں = sentinel;
+        گرہ->دایاں = sentinel;
+        ngx_rbt_black(گرہ);
+        *جڑ = گرہ;
 
-        return;
+        أرجع;
     }
 
-    tree->insert(*root, node, sentinel);
+    درخت->داخل_کرو(*جڑ, گرہ, sentinel);
 
     /* re-balance tree */
 
-    while (node != *root && ngx_rbt_is_red(node->parent)) {
+    طالما (گرہ != *جڑ && ngx_rbt_is_red(گرہ->ماپا)) {
 
-        if (node->parent == node->parent->parent->left) {
-            temp = node->parent->parent->right;
+        إذا (گرہ->ماپا == گرہ->ماپا->ماپا->بایاں) {
+            عارضی = گرہ->ماپا->ماپا->دایاں;
 
-            if (ngx_rbt_is_red(temp)) {
-                ngx_rbt_black(node->parent);
-                ngx_rbt_black(temp);
-                ngx_rbt_red(node->parent->parent);
-                node = node->parent->parent;
+            إذا (ngx_rbt_is_red(عارضی)) {
+                ngx_rbt_black(گرہ->ماپا);
+                ngx_rbt_black(عارضی);
+                ngx_rbt_red(گرہ->ماپا->ماپا);
+                گرہ = گرہ->ماپا->ماپا;
 
-            } else {
-                if (node == node->parent->right) {
-                    node = node->parent;
-                    ngx_rbtree_left_rotate(root, sentinel, node);
+            } وإلا {
+                إذا (گرہ == گرہ->ماپا->دایاں) {
+                    گرہ = گرہ->ماپا;
+                    ngx_rbtree_بایاں_rotate(جڑ, sentinel, گرہ);
                 }
 
-                ngx_rbt_black(node->parent);
-                ngx_rbt_red(node->parent->parent);
-                ngx_rbtree_right_rotate(root, sentinel, node->parent->parent);
+                ngx_rbt_black(گرہ->ماپا);
+                ngx_rbt_red(گرہ->ماپا->ماپا);
+                ngx_rbtree_دایاں_rotate(جڑ, sentinel, گرہ->ماپا->ماپا);
             }
 
-        } else {
-            temp = node->parent->parent->left;
+        } وإلا {
+            عارضی = گرہ->ماپا->ماپا->بایاں;
 
-            if (ngx_rbt_is_red(temp)) {
-                ngx_rbt_black(node->parent);
-                ngx_rbt_black(temp);
-                ngx_rbt_red(node->parent->parent);
-                node = node->parent->parent;
+            إذا (ngx_rbt_is_red(عارضی)) {
+                ngx_rbt_black(گرہ->ماپا);
+                ngx_rbt_black(عارضی);
+                ngx_rbt_red(گرہ->ماپا->ماپا);
+                گرہ = گرہ->ماپا->ماپا;
 
-            } else {
-                if (node == node->parent->left) {
-                    node = node->parent;
-                    ngx_rbtree_right_rotate(root, sentinel, node);
+            } وإلا {
+                إذا (گرہ == گرہ->ماپا->بایاں) {
+                    گرہ = گرہ->ماپا;
+                    ngx_rbtree_دایاں_rotate(جڑ, sentinel, گرہ);
                 }
 
-                ngx_rbt_black(node->parent);
-                ngx_rbt_red(node->parent->parent);
-                ngx_rbtree_left_rotate(root, sentinel, node->parent->parent);
+                ngx_rbt_black(گرہ->ماپا);
+                ngx_rbt_red(گرہ->ماپا->ماپا);
+                ngx_rbtree_بایاں_rotate(جڑ, sentinel, گرہ->ماپا->ماپا);
             }
         }
     }
 
-    ngx_rbt_black(*root);
+    ngx_rbt_black(*جڑ);
 }
 
 
-void
-ngx_rbtree_insert_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel)
+فراغ
+ngx_rbtree_داخل_کرو_قدر(ngx_rbtree_گرہ_t *عارضی, ngx_rbtree_گرہ_t *گرہ,
+    ngx_rbtree_گرہ_t *sentinel)
 {
-    ngx_rbtree_node_t  **p;
+    ngx_rbtree_گرہ_t  **p;
 
-    for ( ;; ) {
+    لكل ( ;; ) {
 
-        p = (node->key < temp->key) ? &temp->left : &temp->right;
+        p = (گرہ->کلید < عارضی->کلید) ? &عارضی->بایاں : &عارضی->دایاں;
 
-        if (*p == sentinel) {
-            break;
+        إذا (*p == sentinel) {
+            اكسر;
         }
 
-        temp = *p;
+        عارضی = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = گرہ;
+    گرہ->ماپا = عارضی;
+    گرہ->بایاں = sentinel;
+    گرہ->دایاں = sentinel;
+    ngx_rbt_red(گرہ);
 }
 
 
-void
-ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel)
+فراغ
+ngx_rbtree_داخل_کرو_timer_قدر(ngx_rbtree_گرہ_t *عارضی, ngx_rbtree_گرہ_t *گرہ,
+    ngx_rbtree_گرہ_t *sentinel)
 {
-    ngx_rbtree_node_t  **p;
+    ngx_rbtree_گرہ_t  **p;
 
-    for ( ;; ) {
+    لكل ( ;; ) {
 
         /*
          * Timer values
@@ -135,270 +135,270 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 
         /*  node->key < temp->key */
 
-        p = ((ngx_rbtree_key_int_t) (node->key - temp->key) < 0)
-            ? &temp->left : &temp->right;
+        p = ((ngx_rbtree_کلید_int_t) (گرہ->کلید - عارضی->کلید) < 0)
+            ? &عارضی->بایاں : &عارضی->دایاں;
 
-        if (*p == sentinel) {
-            break;
+        إذا (*p == sentinel) {
+            اكسر;
         }
 
-        temp = *p;
+        عارضی = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = گرہ;
+    گرہ->ماپا = عارضی;
+    گرہ->بایاں = sentinel;
+    گرہ->دایاں = sentinel;
+    ngx_rbt_red(گرہ);
 }
 
 
-void
-ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+فراغ
+ngx_rbtree_delete(ngx_rbtree_t *درخت, ngx_rbtree_گرہ_t *گرہ)
 {
     ngx_uint_t           red;
-    ngx_rbtree_node_t  **root, *sentinel, *subst, *temp, *w;
+    ngx_rbtree_گرہ_t  **جڑ, *sentinel, *subst, *عارضی, *w;
 
     /* a binary tree delete */
 
-    root = &tree->root;
-    sentinel = tree->sentinel;
+    جڑ = &درخت->جڑ;
+    sentinel = درخت->sentinel;
 
-    if (node->left == sentinel) {
-        temp = node->right;
-        subst = node;
+    إذا (گرہ->بایاں == sentinel) {
+        عارضی = گرہ->دایاں;
+        subst = گرہ;
 
-    } else if (node->right == sentinel) {
-        temp = node->left;
-        subst = node;
+    } وإلا إذا (گرہ->دایاں == sentinel) {
+        عارضی = گرہ->بایاں;
+        subst = گرہ;
 
-    } else {
-        subst = ngx_rbtree_min(node->right, sentinel);
-        temp = subst->right;
+    } وإلا {
+        subst = ngx_rbtree_min(گرہ->دایاں, sentinel);
+        عارضی = subst->دایاں;
     }
 
-    if (subst == *root) {
-        *root = temp;
-        ngx_rbt_black(temp);
+    إذا (subst == *جڑ) {
+        *جڑ = عارضی;
+        ngx_rbt_black(عارضی);
 
         /* DEBUG stuff */
-        node->left = NULL;
-        node->right = NULL;
-        node->parent = NULL;
-        node->key = 0;
+        گرہ->بایاں = عدم;
+        گرہ->دایاں = عدم;
+        گرہ->ماپا = عدم;
+        گرہ->کلید = 0;
 
-        return;
+        أرجع;
     }
 
     red = ngx_rbt_is_red(subst);
 
-    if (subst == subst->parent->left) {
-        subst->parent->left = temp;
+    إذا (subst == subst->ماپا->بایاں) {
+        subst->ماپا->بایاں = عارضی;
 
-    } else {
-        subst->parent->right = temp;
+    } وإلا {
+        subst->ماپا->دایاں = عارضی;
     }
 
-    if (subst == node) {
+    إذا (subst == گرہ) {
 
-        temp->parent = subst->parent;
+        عارضی->ماپا = subst->ماپا;
 
-    } else {
+    } وإلا {
 
-        if (subst->parent == node) {
-            temp->parent = subst;
+        إذا (subst->ماپا == گرہ) {
+            عارضی->ماپا = subst;
 
-        } else {
-            temp->parent = subst->parent;
+        } وإلا {
+            عارضی->ماپا = subst->ماپا;
         }
 
-        subst->left = node->left;
-        subst->right = node->right;
-        subst->parent = node->parent;
-        ngx_rbt_copy_color(subst, node);
+        subst->بایاں = گرہ->بایاں;
+        subst->دایاں = گرہ->دایاں;
+        subst->ماپا = گرہ->ماپا;
+        ngx_rbt_copy_color(subst, گرہ);
 
-        if (node == *root) {
-            *root = subst;
+        إذا (گرہ == *جڑ) {
+            *جڑ = subst;
 
-        } else {
-            if (node == node->parent->left) {
-                node->parent->left = subst;
-            } else {
-                node->parent->right = subst;
+        } وإلا {
+            إذا (گرہ == گرہ->ماپا->بایاں) {
+                گرہ->ماپا->بایاں = subst;
+            } وإلا {
+                گرہ->ماپا->دایاں = subst;
             }
         }
 
-        if (subst->left != sentinel) {
-            subst->left->parent = subst;
+        إذا (subst->بایاں != sentinel) {
+            subst->بایاں->ماپا = subst;
         }
 
-        if (subst->right != sentinel) {
-            subst->right->parent = subst;
+        إذا (subst->دایاں != sentinel) {
+            subst->دایاں->ماپا = subst;
         }
     }
 
     /* DEBUG stuff */
-    node->left = NULL;
-    node->right = NULL;
-    node->parent = NULL;
-    node->key = 0;
+    گرہ->بایاں = عدم;
+    گرہ->دایاں = عدم;
+    گرہ->ماپا = عدم;
+    گرہ->کلید = 0;
 
-    if (red) {
-        return;
+    إذا (red) {
+        أرجع;
     }
 
     /* a delete fixup */
 
-    while (temp != *root && ngx_rbt_is_black(temp)) {
+    طالما (عارضی != *جڑ && ngx_rbt_is_black(عارضی)) {
 
-        if (temp == temp->parent->left) {
-            w = temp->parent->right;
+        إذا (عارضی == عارضی->ماپا->بایاں) {
+            w = عارضی->ماپا->دایاں;
 
-            if (ngx_rbt_is_red(w)) {
+            إذا (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
-                ngx_rbt_red(temp->parent);
-                ngx_rbtree_left_rotate(root, sentinel, temp->parent);
-                w = temp->parent->right;
+                ngx_rbt_red(عارضی->ماپا);
+                ngx_rbtree_بایاں_rotate(جڑ, sentinel, عارضی->ماپا);
+                w = عارضی->ماپا->دایاں;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            إذا (ngx_rbt_is_black(w->بایاں) && ngx_rbt_is_black(w->دایاں)) {
                 ngx_rbt_red(w);
-                temp = temp->parent;
+                عارضی = عارضی->ماپا;
 
-            } else {
-                if (ngx_rbt_is_black(w->right)) {
-                    ngx_rbt_black(w->left);
+            } وإلا {
+                إذا (ngx_rbt_is_black(w->دایاں)) {
+                    ngx_rbt_black(w->بایاں);
                     ngx_rbt_red(w);
-                    ngx_rbtree_right_rotate(root, sentinel, w);
-                    w = temp->parent->right;
+                    ngx_rbtree_دایاں_rotate(جڑ, sentinel, w);
+                    w = عارضی->ماپا->دایاں;
                 }
 
-                ngx_rbt_copy_color(w, temp->parent);
-                ngx_rbt_black(temp->parent);
-                ngx_rbt_black(w->right);
-                ngx_rbtree_left_rotate(root, sentinel, temp->parent);
-                temp = *root;
+                ngx_rbt_copy_color(w, عارضی->ماپا);
+                ngx_rbt_black(عارضی->ماپا);
+                ngx_rbt_black(w->دایاں);
+                ngx_rbtree_بایاں_rotate(جڑ, sentinel, عارضی->ماپا);
+                عارضی = *جڑ;
             }
 
-        } else {
-            w = temp->parent->left;
+        } وإلا {
+            w = عارضی->ماپا->بایاں;
 
-            if (ngx_rbt_is_red(w)) {
+            إذا (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
-                ngx_rbt_red(temp->parent);
-                ngx_rbtree_right_rotate(root, sentinel, temp->parent);
-                w = temp->parent->left;
+                ngx_rbt_red(عارضی->ماپا);
+                ngx_rbtree_دایاں_rotate(جڑ, sentinel, عارضی->ماپا);
+                w = عارضی->ماپا->بایاں;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            إذا (ngx_rbt_is_black(w->بایاں) && ngx_rbt_is_black(w->دایاں)) {
                 ngx_rbt_red(w);
-                temp = temp->parent;
+                عارضی = عارضی->ماپا;
 
-            } else {
-                if (ngx_rbt_is_black(w->left)) {
-                    ngx_rbt_black(w->right);
+            } وإلا {
+                إذا (ngx_rbt_is_black(w->بایاں)) {
+                    ngx_rbt_black(w->دایاں);
                     ngx_rbt_red(w);
-                    ngx_rbtree_left_rotate(root, sentinel, w);
-                    w = temp->parent->left;
+                    ngx_rbtree_بایاں_rotate(جڑ, sentinel, w);
+                    w = عارضی->ماپا->بایاں;
                 }
 
-                ngx_rbt_copy_color(w, temp->parent);
-                ngx_rbt_black(temp->parent);
-                ngx_rbt_black(w->left);
-                ngx_rbtree_right_rotate(root, sentinel, temp->parent);
-                temp = *root;
+                ngx_rbt_copy_color(w, عارضی->ماپا);
+                ngx_rbt_black(عارضی->ماپا);
+                ngx_rbt_black(w->بایاں);
+                ngx_rbtree_دایاں_rotate(جڑ, sentinel, عارضی->ماپا);
+                عارضی = *جڑ;
             }
         }
     }
 
-    ngx_rbt_black(temp);
+    ngx_rbt_black(عارضی);
 }
 
 
-static ngx_inline void
-ngx_rbtree_left_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
-    ngx_rbtree_node_t *node)
+ساكن ngx_inline فراغ
+ngx_rbtree_بایاں_rotate(ngx_rbtree_گرہ_t **جڑ, ngx_rbtree_گرہ_t *sentinel,
+    ngx_rbtree_گرہ_t *گرہ)
 {
-    ngx_rbtree_node_t  *temp;
+    ngx_rbtree_گرہ_t  *عارضی;
 
-    temp = node->right;
-    node->right = temp->left;
+    عارضی = گرہ->دایاں;
+    گرہ->دایاں = عارضی->بایاں;
 
-    if (temp->left != sentinel) {
-        temp->left->parent = node;
+    إذا (عارضی->بایاں != sentinel) {
+        عارضی->بایاں->ماپا = گرہ;
     }
 
-    temp->parent = node->parent;
+    عارضی->ماپا = گرہ->ماپا;
 
-    if (node == *root) {
-        *root = temp;
+    إذا (گرہ == *جڑ) {
+        *جڑ = عارضی;
 
-    } else if (node == node->parent->left) {
-        node->parent->left = temp;
+    } وإلا إذا (گرہ == گرہ->ماپا->بایاں) {
+        گرہ->ماپا->بایاں = عارضی;
 
-    } else {
-        node->parent->right = temp;
+    } وإلا {
+        گرہ->ماپا->دایاں = عارضی;
     }
 
-    temp->left = node;
-    node->parent = temp;
+    عارضی->بایاں = گرہ;
+    گرہ->ماپا = عارضی;
 }
 
 
-static ngx_inline void
-ngx_rbtree_right_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
-    ngx_rbtree_node_t *node)
+ساكن ngx_inline فراغ
+ngx_rbtree_دایاں_rotate(ngx_rbtree_گرہ_t **جڑ, ngx_rbtree_گرہ_t *sentinel,
+    ngx_rbtree_گرہ_t *گرہ)
 {
-    ngx_rbtree_node_t  *temp;
+    ngx_rbtree_گرہ_t  *عارضی;
 
-    temp = node->left;
-    node->left = temp->right;
+    عارضی = گرہ->بایاں;
+    گرہ->بایاں = عارضی->دایاں;
 
-    if (temp->right != sentinel) {
-        temp->right->parent = node;
+    إذا (عارضی->دایاں != sentinel) {
+        عارضی->دایاں->ماپا = گرہ;
     }
 
-    temp->parent = node->parent;
+    عارضی->ماپا = گرہ->ماپا;
 
-    if (node == *root) {
-        *root = temp;
+    إذا (گرہ == *جڑ) {
+        *جڑ = عارضی;
 
-    } else if (node == node->parent->right) {
-        node->parent->right = temp;
+    } وإلا إذا (گرہ == گرہ->ماپا->دایاں) {
+        گرہ->ماپا->دایاں = عارضی;
 
-    } else {
-        node->parent->left = temp;
+    } وإلا {
+        گرہ->ماپا->بایاں = عارضی;
     }
 
-    temp->right = node;
-    node->parent = temp;
+    عارضی->دایاں = گرہ;
+    گرہ->ماپا = عارضی;
 }
 
 
-ngx_rbtree_node_t *
-ngx_rbtree_next(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+ngx_rbtree_گرہ_t *
+ngx_rbtree_اگلا(ngx_rbtree_t *درخت, ngx_rbtree_گرہ_t *گرہ)
 {
-    ngx_rbtree_node_t  *root, *sentinel, *parent;
+    ngx_rbtree_گرہ_t  *جڑ, *sentinel, *ماپا;
 
-    sentinel = tree->sentinel;
+    sentinel = درخت->sentinel;
 
-    if (node->right != sentinel) {
-        return ngx_rbtree_min(node->right, sentinel);
+    إذا (گرہ->دایاں != sentinel) {
+        أرجع ngx_rbtree_min(گرہ->دایاں, sentinel);
     }
 
-    root = tree->root;
+    جڑ = درخت->جڑ;
 
-    for ( ;; ) {
-        parent = node->parent;
+    لكل ( ;; ) {
+        ماپا = گرہ->ماپا;
 
-        if (node == root) {
-            return NULL;
+        إذا (گرہ == جڑ) {
+            أرجع عدم;
         }
 
-        if (node == parent->left) {
-            return parent;
+        إذا (گرہ == ماپا->بایاں) {
+            أرجع ماپا;
         }
 
-        node = parent;
+        گرہ = ماپا;
     }
 }

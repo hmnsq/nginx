@@ -5,22 +5,22 @@
  */
 
 
-#ifndef _NGINX_H_INCLUDED_
-#define _NGINX_H_INCLUDED_
+#جے_بنا_تعریف _NGINX_H_INCLUDED_
+#تعریف_کرو _NGINX_H_INCLUDED_
 
 
-#define nginx_version      1031009
-#define NGINX_VERSION      "1.31.9"
-#define NGINX_VER          "nginx/" NGINX_VERSION
+#تعریف_کرو nginx_نسخہ      1031009
+#تعریف_کرو NGINX_نسخہ      "1.31.9"
+#تعریف_کرو NGINX_VER          "nginx/" NGINX_نسخہ
 
-#ifdef NGX_BUILD
-#define NGINX_VER_BUILD    NGINX_VER " (" NGX_BUILD ")"
-#else
-#define NGINX_VER_BUILD    NGINX_VER
-#endif
+#جے_تعریف_شدہ NGX_BUILD
+#تعریف_کرو NGINX_VER_BUILD    NGINX_VER " (" NGX_BUILD ")"
+#وإلا
+#تعریف_کرو NGINX_VER_BUILD    NGINX_VER
+#جے_انت
 
-#define NGINX_VAR          "NGINX"
-#define NGX_OLDPID_EXT     ".oldbin"
+#تعریف_کرو NGINX_VAR          "NGINX"
+#تعریف_کرو NGX_OLDPID_EXT     ".oldbin"
 
 
-#endif /* _NGINX_H_INCLUDED_ */
+#جے_انت /* _NGINX_H_INCLUDED_ */
