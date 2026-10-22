@@ -13,16 +13,16 @@
 #include <ngx_core.h>
 
 
-typedef struct ngx_slab_page_s  ngx_slab_page_t;
+typedef sa_nracanaa ngx_slab_page_s  ngx_slab_page_t;
 
-struct ngx_slab_page_s {
+sa_nracanaa ngx_slab_page_s {
     uintptr_t         slab;
     ngx_slab_page_t  *next;
     uintptr_t         prev;
 };
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_uint_t        total;
     ngx_uint_t        used;
 
@@ -31,7 +31,7 @@ typedef struct {
 } ngx_slab_stat_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_shmtx_sh_t    lock;
 
     size_t            min_size;
