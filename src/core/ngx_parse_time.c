@@ -5,20 +5,20 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-static ngx_uint_t  mday[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+स्थिर ngx_uint_t  mday[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 time_t
-ngx_parse_http_time(u_char *value, size_t len)
+ngx_parse_http_time(u_char *मूल्य, size_t len)
 {
     u_char      *p, *end;
     ngx_int_t    month;
     ngx_uint_t   day, year, hour, min, sec;
     uint64_t     time;
-    enum {
+    गणना {
         no = 0,
         rfc822,   /* Tue, 10 Nov 2002 23:50:13   */
         rfc850,   /* Tuesday, 10-Dec-02 23:50:13 */
@@ -26,119 +26,119 @@ ngx_parse_http_time(u_char *value, size_t len)
     } fmt;
 
     fmt = 0;
-    end = value + len;
+    end = मूल्य + len;
 
-#if (NGX_SUPPRESS_WARN)
+#यदि (NGX_SUPPRESS_WARN)
     day = 32;
     year = 2038;
 #endif
 
-    for (p = value; p < end; p++) {
-        if (*p == ',') {
-            break;
+    प्रति (p = मूल्य; p < end; p++) {
+        यदि (*p == ',') {
+            भङ्ग;
         }
 
-        if (*p == ' ') {
+        यदि (*p == ' ') {
             fmt = isoc;
-            break;
+            भङ्ग;
         }
     }
 
-    for (p++; p < end; p++) {
-        if (*p != ' ') {
-            break;
+    प्रति (p++; p < end; p++) {
+        यदि (*p != ' ') {
+            भङ्ग;
         }
     }
 
-    if (end - p < 18) {
-        return NGX_ERROR;
+    यदि (end - p < 18) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    if (fmt != isoc) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    यदि (fmt != isoc) {
+        यदि (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            प्रत्यागम NGX_ERROR;
         }
 
         day = (*p - '0') * 10 + (*(p + 1) - '0');
         p += 2;
 
-        if (*p == ' ') {
-            if (end - p < 18) {
-                return NGX_ERROR;
+        यदि (*p == ' ') {
+            यदि (end - p < 18) {
+                प्रत्यागम NGX_ERROR;
             }
             fmt = rfc822;
 
-        } else if (*p == '-') {
+        } अन्यथा यदि (*p == '-') {
             fmt = rfc850;
 
-        } else {
-            return NGX_ERROR;
+        } अन्यथा {
+            प्रत्यागम NGX_ERROR;
         }
 
         p++;
     }
 
-    switch (*p) {
+    विकल्प (*p) {
 
-    case 'J':
+    पक्ष 'J':
         month = *(p + 1) == 'a' ? 0 : *(p + 2) == 'n' ? 5 : 6;
-        break;
+        भङ्ग;
 
-    case 'F':
+    पक्ष 'F':
         month = 1;
-        break;
+        भङ्ग;
 
-    case 'M':
+    पक्ष 'M':
         month = *(p + 2) == 'r' ? 2 : 4;
-        break;
+        भङ्ग;
 
-    case 'A':
+    पक्ष 'A':
         month = *(p + 1) == 'p' ? 3 : 7;
-        break;
+        भङ्ग;
 
-    case 'S':
+    पक्ष 'S':
         month = 8;
-        break;
+        भङ्ग;
 
-    case 'O':
+    पक्ष 'O':
         month = 9;
-        break;
+        भङ्ग;
 
-    case 'N':
+    पक्ष 'N':
         month = 10;
-        break;
+        भङ्ग;
 
-    case 'D':
+    पक्ष 'D':
         month = 11;
-        break;
+        भङ्ग;
 
-    default:
-        return NGX_ERROR;
+    स्वभाव:
+        प्रत्यागम NGX_ERROR;
     }
 
     p += 3;
 
-    if ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
-        return NGX_ERROR;
+    यदि ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
+        प्रत्यागम NGX_ERROR;
     }
 
     p++;
 
-    if (fmt == rfc822) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+    यदि (fmt == rfc822) {
+        यदि (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            प्रत्यागम NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
         p += 4;
 
-    } else if (fmt == rfc850) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    } अन्यथा यदि (fmt == rfc850) {
+        यदि (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            प्रत्यागम NGX_ERROR;
         }
 
         year = (*p - '0') * 10 + (*(p + 1) - '0');
@@ -146,91 +146,91 @@ ngx_parse_http_time(u_char *value, size_t len)
         p += 2;
     }
 
-    if (fmt == isoc) {
-        if (*p == ' ') {
+    यदि (fmt == isoc) {
+        यदि (*p == ' ') {
             p++;
         }
 
-        if (*p < '0' || *p > '9') {
-            return NGX_ERROR;
+        यदि (*p < '0' || *p > '9') {
+            प्रत्यागम NGX_ERROR;
         }
 
         day = *p++ - '0';
 
-        if (*p != ' ') {
-            if (*p < '0' || *p > '9') {
-                return NGX_ERROR;
+        यदि (*p != ' ') {
+            यदि (*p < '0' || *p > '9') {
+                प्रत्यागम NGX_ERROR;
             }
 
             day = day * 10 + (*p++ - '0');
         }
 
-        if (end - p < 14) {
-            return NGX_ERROR;
+        यदि (end - p < 14) {
+            प्रत्यागम NGX_ERROR;
         }
     }
 
-    if (*p++ != ' ') {
-        return NGX_ERROR;
+    यदि (*p++ != ' ') {
+        प्रत्यागम NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    यदि (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        प्रत्यागम NGX_ERROR;
     }
 
     hour = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    यदि (*p++ != ':') {
+        प्रत्यागम NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    यदि (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        प्रत्यागम NGX_ERROR;
     }
 
     min = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    यदि (*p++ != ':') {
+        प्रत्यागम NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    यदि (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        प्रत्यागम NGX_ERROR;
     }
 
     sec = (*p - '0') * 10 + (*(p + 1) - '0');
 
-    if (fmt == isoc) {
+    यदि (fmt == isoc) {
         p += 2;
 
-        if (*p++ != ' ') {
-            return NGX_ERROR;
+        यदि (*p++ != ' ') {
+            प्रत्यागम NGX_ERROR;
         }
 
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+        यदि (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            प्रत्यागम NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
     }
 
-    if (hour > 23 || min > 59 || sec > 59) {
-        return NGX_ERROR;
+    यदि (hour > 23 || min > 59 || sec > 59) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    if (day == 29 && month == 1) {
-        if ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
-            return NGX_ERROR;
+    यदि (day == 29 && month == 1) {
+        यदि ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
+            प्रत्यागम NGX_ERROR;
         }
 
-    } else if (day > mday[month]) {
-        return NGX_ERROR;
+    } अन्यथा यदि (day > mday[month]) {
+        प्रत्यागम NGX_ERROR;
     }
 
     /*
@@ -238,7 +238,7 @@ ngx_parse_http_time(u_char *value, size_t len)
      * it is needed for Gauss' formula
      */
 
-    if (--month <= 0) {
+    यदि (--month <= 0) {
         month += 12;
         year -= 1;
     }
@@ -265,13 +265,13 @@ ngx_parse_http_time(u_char *value, size_t len)
 
             - 719527 + 31 + 28) * 86400 + hour * 3600 + min * 60 + sec;
 
-#if (NGX_TIME_T_SIZE <= 4)
+#यदि (NGX_TIME_T_SIZE <= 4)
 
-    if (time > 0x7fffffff) {
-        return NGX_ERROR;
+    यदि (time > 0x7fffffff) {
+        प्रत्यागम NGX_ERROR;
     }
 
 #endif
 
-    return (time_t) time;
+    प्रत्यागम (time_t) time;
 }
