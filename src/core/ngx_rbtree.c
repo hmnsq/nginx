@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
 /*
@@ -15,116 +15,116 @@
  */
 
 
-static ngx_inline void ngx_rbtree_left_rotate(ngx_rbtree_node_t **root,
-    ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
-static ngx_inline void ngx_rbtree_right_rotate(ngx_rbtree_node_t **root,
-    ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
+स्थिर ngx_inline शून्य ngx_rbtree_बायाँ_rotate(ngx_rbtree_गाँठ_t **मूल,
+    ngx_rbtree_गाँठ_t *sentinel, ngx_rbtree_गाँठ_t *गाँठ);
+स्थिर ngx_inline शून्य ngx_rbtree_दायाँ_rotate(ngx_rbtree_गाँठ_t **मूल,
+    ngx_rbtree_गाँठ_t *sentinel, ngx_rbtree_गाँठ_t *गाँठ);
 
 
-void
-ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+शून्य
+ngx_rbtree_जोड़ो(ngx_rbtree_t *वृक्ष, ngx_rbtree_गाँठ_t *गाँठ)
 {
-    ngx_rbtree_node_t  **root, *temp, *sentinel;
+    ngx_rbtree_गाँठ_t  **मूल, *temp, *sentinel;
 
     /* a binary tree insert */
 
-    root = &tree->root;
-    sentinel = tree->sentinel;
+    मूल = &वृक्ष->मूल;
+    sentinel = वृक्ष->sentinel;
 
-    if (*root == sentinel) {
-        node->parent = NULL;
-        node->left = sentinel;
-        node->right = sentinel;
-        ngx_rbt_black(node);
-        *root = node;
+    यदि (*मूल == sentinel) {
+        गाँठ->parent = रिक्त;
+        गाँठ->बायाँ = sentinel;
+        गाँठ->दायाँ = sentinel;
+        ngx_rbt_black(गाँठ);
+        *मूल = गाँठ;
 
-        return;
+        प्रत्यागम;
     }
 
-    tree->insert(*root, node, sentinel);
+    वृक्ष->जोड़ो(*मूल, गाँठ, sentinel);
 
     /* re-balance tree */
 
-    while (node != *root && ngx_rbt_is_red(node->parent)) {
+    यावत् (गाँठ != *मूल && ngx_rbt_is_red(गाँठ->parent)) {
 
-        if (node->parent == node->parent->parent->left) {
-            temp = node->parent->parent->right;
+        यदि (गाँठ->parent == गाँठ->parent->parent->बायाँ) {
+            temp = गाँठ->parent->parent->दायाँ;
 
-            if (ngx_rbt_is_red(temp)) {
-                ngx_rbt_black(node->parent);
+            यदि (ngx_rbt_is_red(temp)) {
+                ngx_rbt_black(गाँठ->parent);
                 ngx_rbt_black(temp);
-                ngx_rbt_red(node->parent->parent);
-                node = node->parent->parent;
+                ngx_rbt_red(गाँठ->parent->parent);
+                गाँठ = गाँठ->parent->parent;
 
-            } else {
-                if (node == node->parent->right) {
-                    node = node->parent;
-                    ngx_rbtree_left_rotate(root, sentinel, node);
+            } अन्यथा {
+                यदि (गाँठ == गाँठ->parent->दायाँ) {
+                    गाँठ = गाँठ->parent;
+                    ngx_rbtree_बायाँ_rotate(मूल, sentinel, गाँठ);
                 }
 
-                ngx_rbt_black(node->parent);
-                ngx_rbt_red(node->parent->parent);
-                ngx_rbtree_right_rotate(root, sentinel, node->parent->parent);
+                ngx_rbt_black(गाँठ->parent);
+                ngx_rbt_red(गाँठ->parent->parent);
+                ngx_rbtree_दायाँ_rotate(मूल, sentinel, गाँठ->parent->parent);
             }
 
-        } else {
-            temp = node->parent->parent->left;
+        } अन्यथा {
+            temp = गाँठ->parent->parent->बायाँ;
 
-            if (ngx_rbt_is_red(temp)) {
-                ngx_rbt_black(node->parent);
+            यदि (ngx_rbt_is_red(temp)) {
+                ngx_rbt_black(गाँठ->parent);
                 ngx_rbt_black(temp);
-                ngx_rbt_red(node->parent->parent);
-                node = node->parent->parent;
+                ngx_rbt_red(गाँठ->parent->parent);
+                गाँठ = गाँठ->parent->parent;
 
-            } else {
-                if (node == node->parent->left) {
-                    node = node->parent;
-                    ngx_rbtree_right_rotate(root, sentinel, node);
+            } अन्यथा {
+                यदि (गाँठ == गाँठ->parent->बायाँ) {
+                    गाँठ = गाँठ->parent;
+                    ngx_rbtree_दायाँ_rotate(मूल, sentinel, गाँठ);
                 }
 
-                ngx_rbt_black(node->parent);
-                ngx_rbt_red(node->parent->parent);
-                ngx_rbtree_left_rotate(root, sentinel, node->parent->parent);
+                ngx_rbt_black(गाँठ->parent);
+                ngx_rbt_red(गाँठ->parent->parent);
+                ngx_rbtree_बायाँ_rotate(मूल, sentinel, गाँठ->parent->parent);
             }
         }
     }
 
-    ngx_rbt_black(*root);
+    ngx_rbt_black(*मूल);
 }
 
 
-void
-ngx_rbtree_insert_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel)
+शून्य
+ngx_rbtree_जोड़ो_मूल्य(ngx_rbtree_गाँठ_t *temp, ngx_rbtree_गाँठ_t *गाँठ,
+    ngx_rbtree_गाँठ_t *sentinel)
 {
-    ngx_rbtree_node_t  **p;
+    ngx_rbtree_गाँठ_t  **p;
 
-    for ( ;; ) {
+    प्रति ( ;; ) {
 
-        p = (node->key < temp->key) ? &temp->left : &temp->right;
+        p = (गाँठ->कुंजी < temp->कुंजी) ? &temp->बायाँ : &temp->दायाँ;
 
-        if (*p == sentinel) {
-            break;
+        यदि (*p == sentinel) {
+            भङ्ग;
         }
 
         temp = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = गाँठ;
+    गाँठ->parent = temp;
+    गाँठ->बायाँ = sentinel;
+    गाँठ->दायाँ = sentinel;
+    ngx_rbt_red(गाँठ);
 }
 
 
-void
-ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel)
+शून्य
+ngx_rbtree_जोड़ो_timer_मूल्य(ngx_rbtree_गाँठ_t *temp, ngx_rbtree_गाँठ_t *गाँठ,
+    ngx_rbtree_गाँठ_t *sentinel)
 {
-    ngx_rbtree_node_t  **p;
+    ngx_rbtree_गाँठ_t  **p;
 
-    for ( ;; ) {
+    प्रति ( ;; ) {
 
         /*
          * Timer values
@@ -135,178 +135,178 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 
         /*  node->key < temp->key */
 
-        p = ((ngx_rbtree_key_int_t) (node->key - temp->key) < 0)
-            ? &temp->left : &temp->right;
+        p = ((ngx_rbtree_कुंजी_int_t) (गाँठ->कुंजी - temp->कुंजी) < 0)
+            ? &temp->बायाँ : &temp->दायाँ;
 
-        if (*p == sentinel) {
-            break;
+        यदि (*p == sentinel) {
+            भङ्ग;
         }
 
         temp = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = गाँठ;
+    गाँठ->parent = temp;
+    गाँठ->बायाँ = sentinel;
+    गाँठ->दायाँ = sentinel;
+    ngx_rbt_red(गाँठ);
 }
 
 
-void
-ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+शून्य
+ngx_rbtree_delete(ngx_rbtree_t *वृक्ष, ngx_rbtree_गाँठ_t *गाँठ)
 {
     ngx_uint_t           red;
-    ngx_rbtree_node_t  **root, *sentinel, *subst, *temp, *w;
+    ngx_rbtree_गाँठ_t  **मूल, *sentinel, *subst, *temp, *w;
 
     /* a binary tree delete */
 
-    root = &tree->root;
-    sentinel = tree->sentinel;
+    मूल = &वृक्ष->मूल;
+    sentinel = वृक्ष->sentinel;
 
-    if (node->left == sentinel) {
-        temp = node->right;
-        subst = node;
+    यदि (गाँठ->बायाँ == sentinel) {
+        temp = गाँठ->दायाँ;
+        subst = गाँठ;
 
-    } else if (node->right == sentinel) {
-        temp = node->left;
-        subst = node;
+    } अन्यथा यदि (गाँठ->दायाँ == sentinel) {
+        temp = गाँठ->बायाँ;
+        subst = गाँठ;
 
-    } else {
-        subst = ngx_rbtree_min(node->right, sentinel);
-        temp = subst->right;
+    } अन्यथा {
+        subst = ngx_rbtree_min(गाँठ->दायाँ, sentinel);
+        temp = subst->दायाँ;
     }
 
-    if (subst == *root) {
-        *root = temp;
+    यदि (subst == *मूल) {
+        *मूल = temp;
         ngx_rbt_black(temp);
 
         /* DEBUG stuff */
-        node->left = NULL;
-        node->right = NULL;
-        node->parent = NULL;
-        node->key = 0;
+        गाँठ->बायाँ = रिक्त;
+        गाँठ->दायाँ = रिक्त;
+        गाँठ->parent = रिक्त;
+        गाँठ->कुंजी = 0;
 
-        return;
+        प्रत्यागम;
     }
 
     red = ngx_rbt_is_red(subst);
 
-    if (subst == subst->parent->left) {
-        subst->parent->left = temp;
+    यदि (subst == subst->parent->बायाँ) {
+        subst->parent->बायाँ = temp;
 
-    } else {
-        subst->parent->right = temp;
+    } अन्यथा {
+        subst->parent->दायाँ = temp;
     }
 
-    if (subst == node) {
+    यदि (subst == गाँठ) {
 
         temp->parent = subst->parent;
 
-    } else {
+    } अन्यथा {
 
-        if (subst->parent == node) {
+        यदि (subst->parent == गाँठ) {
             temp->parent = subst;
 
-        } else {
+        } अन्यथा {
             temp->parent = subst->parent;
         }
 
-        subst->left = node->left;
-        subst->right = node->right;
-        subst->parent = node->parent;
-        ngx_rbt_copy_color(subst, node);
+        subst->बायाँ = गाँठ->बायाँ;
+        subst->दायाँ = गाँठ->दायाँ;
+        subst->parent = गाँठ->parent;
+        ngx_rbt_copy_color(subst, गाँठ);
 
-        if (node == *root) {
-            *root = subst;
+        यदि (गाँठ == *मूल) {
+            *मूल = subst;
 
-        } else {
-            if (node == node->parent->left) {
-                node->parent->left = subst;
-            } else {
-                node->parent->right = subst;
+        } अन्यथा {
+            यदि (गाँठ == गाँठ->parent->बायाँ) {
+                गाँठ->parent->बायाँ = subst;
+            } अन्यथा {
+                गाँठ->parent->दायाँ = subst;
             }
         }
 
-        if (subst->left != sentinel) {
-            subst->left->parent = subst;
+        यदि (subst->बायाँ != sentinel) {
+            subst->बायाँ->parent = subst;
         }
 
-        if (subst->right != sentinel) {
-            subst->right->parent = subst;
+        यदि (subst->दायाँ != sentinel) {
+            subst->दायाँ->parent = subst;
         }
     }
 
     /* DEBUG stuff */
-    node->left = NULL;
-    node->right = NULL;
-    node->parent = NULL;
-    node->key = 0;
+    गाँठ->बायाँ = रिक्त;
+    गाँठ->दायाँ = रिक्त;
+    गाँठ->parent = रिक्त;
+    गाँठ->कुंजी = 0;
 
-    if (red) {
-        return;
+    यदि (red) {
+        प्रत्यागम;
     }
 
     /* a delete fixup */
 
-    while (temp != *root && ngx_rbt_is_black(temp)) {
+    यावत् (temp != *मूल && ngx_rbt_is_black(temp)) {
 
-        if (temp == temp->parent->left) {
-            w = temp->parent->right;
+        यदि (temp == temp->parent->बायाँ) {
+            w = temp->parent->दायाँ;
 
-            if (ngx_rbt_is_red(w)) {
+            यदि (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
-                ngx_rbtree_left_rotate(root, sentinel, temp->parent);
-                w = temp->parent->right;
+                ngx_rbtree_बायाँ_rotate(मूल, sentinel, temp->parent);
+                w = temp->parent->दायाँ;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            यदि (ngx_rbt_is_black(w->बायाँ) && ngx_rbt_is_black(w->दायाँ)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->right)) {
-                    ngx_rbt_black(w->left);
+            } अन्यथा {
+                यदि (ngx_rbt_is_black(w->दायाँ)) {
+                    ngx_rbt_black(w->बायाँ);
                     ngx_rbt_red(w);
-                    ngx_rbtree_right_rotate(root, sentinel, w);
-                    w = temp->parent->right;
+                    ngx_rbtree_दायाँ_rotate(मूल, sentinel, w);
+                    w = temp->parent->दायाँ;
                 }
 
                 ngx_rbt_copy_color(w, temp->parent);
                 ngx_rbt_black(temp->parent);
-                ngx_rbt_black(w->right);
-                ngx_rbtree_left_rotate(root, sentinel, temp->parent);
-                temp = *root;
+                ngx_rbt_black(w->दायाँ);
+                ngx_rbtree_बायाँ_rotate(मूल, sentinel, temp->parent);
+                temp = *मूल;
             }
 
-        } else {
-            w = temp->parent->left;
+        } अन्यथा {
+            w = temp->parent->बायाँ;
 
-            if (ngx_rbt_is_red(w)) {
+            यदि (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
-                ngx_rbtree_right_rotate(root, sentinel, temp->parent);
-                w = temp->parent->left;
+                ngx_rbtree_दायाँ_rotate(मूल, sentinel, temp->parent);
+                w = temp->parent->बायाँ;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            यदि (ngx_rbt_is_black(w->बायाँ) && ngx_rbt_is_black(w->दायाँ)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->left)) {
-                    ngx_rbt_black(w->right);
+            } अन्यथा {
+                यदि (ngx_rbt_is_black(w->बायाँ)) {
+                    ngx_rbt_black(w->दायाँ);
                     ngx_rbt_red(w);
-                    ngx_rbtree_left_rotate(root, sentinel, w);
-                    w = temp->parent->left;
+                    ngx_rbtree_बायाँ_rotate(मूल, sentinel, w);
+                    w = temp->parent->बायाँ;
                 }
 
                 ngx_rbt_copy_color(w, temp->parent);
                 ngx_rbt_black(temp->parent);
-                ngx_rbt_black(w->left);
-                ngx_rbtree_right_rotate(root, sentinel, temp->parent);
-                temp = *root;
+                ngx_rbt_black(w->बायाँ);
+                ngx_rbtree_दायाँ_rotate(मूल, sentinel, temp->parent);
+                temp = *मूल;
             }
         }
     }
@@ -315,90 +315,90 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
 }
 
 
-static ngx_inline void
-ngx_rbtree_left_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
-    ngx_rbtree_node_t *node)
+स्थिर ngx_inline शून्य
+ngx_rbtree_बायाँ_rotate(ngx_rbtree_गाँठ_t **मूल, ngx_rbtree_गाँठ_t *sentinel,
+    ngx_rbtree_गाँठ_t *गाँठ)
 {
-    ngx_rbtree_node_t  *temp;
+    ngx_rbtree_गाँठ_t  *temp;
 
-    temp = node->right;
-    node->right = temp->left;
+    temp = गाँठ->दायाँ;
+    गाँठ->दायाँ = temp->बायाँ;
 
-    if (temp->left != sentinel) {
-        temp->left->parent = node;
+    यदि (temp->बायाँ != sentinel) {
+        temp->बायाँ->parent = गाँठ;
     }
 
-    temp->parent = node->parent;
+    temp->parent = गाँठ->parent;
 
-    if (node == *root) {
-        *root = temp;
+    यदि (गाँठ == *मूल) {
+        *मूल = temp;
 
-    } else if (node == node->parent->left) {
-        node->parent->left = temp;
+    } अन्यथा यदि (गाँठ == गाँठ->parent->बायाँ) {
+        गाँठ->parent->बायाँ = temp;
 
-    } else {
-        node->parent->right = temp;
+    } अन्यथा {
+        गाँठ->parent->दायाँ = temp;
     }
 
-    temp->left = node;
-    node->parent = temp;
+    temp->बायाँ = गाँठ;
+    गाँठ->parent = temp;
 }
 
 
-static ngx_inline void
-ngx_rbtree_right_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
-    ngx_rbtree_node_t *node)
+स्थिर ngx_inline शून्य
+ngx_rbtree_दायाँ_rotate(ngx_rbtree_गाँठ_t **मूल, ngx_rbtree_गाँठ_t *sentinel,
+    ngx_rbtree_गाँठ_t *गाँठ)
 {
-    ngx_rbtree_node_t  *temp;
+    ngx_rbtree_गाँठ_t  *temp;
 
-    temp = node->left;
-    node->left = temp->right;
+    temp = गाँठ->बायाँ;
+    गाँठ->बायाँ = temp->दायाँ;
 
-    if (temp->right != sentinel) {
-        temp->right->parent = node;
+    यदि (temp->दायाँ != sentinel) {
+        temp->दायाँ->parent = गाँठ;
     }
 
-    temp->parent = node->parent;
+    temp->parent = गाँठ->parent;
 
-    if (node == *root) {
-        *root = temp;
+    यदि (गाँठ == *मूल) {
+        *मूल = temp;
 
-    } else if (node == node->parent->right) {
-        node->parent->right = temp;
+    } अन्यथा यदि (गाँठ == गाँठ->parent->दायाँ) {
+        गाँठ->parent->दायाँ = temp;
 
-    } else {
-        node->parent->left = temp;
+    } अन्यथा {
+        गाँठ->parent->बायाँ = temp;
     }
 
-    temp->right = node;
-    node->parent = temp;
+    temp->दायाँ = गाँठ;
+    गाँठ->parent = temp;
 }
 
 
-ngx_rbtree_node_t *
-ngx_rbtree_next(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+ngx_rbtree_गाँठ_t *
+ngx_rbtree_next(ngx_rbtree_t *वृक्ष, ngx_rbtree_गाँठ_t *गाँठ)
 {
-    ngx_rbtree_node_t  *root, *sentinel, *parent;
+    ngx_rbtree_गाँठ_t  *मूल, *sentinel, *parent;
 
-    sentinel = tree->sentinel;
+    sentinel = वृक्ष->sentinel;
 
-    if (node->right != sentinel) {
-        return ngx_rbtree_min(node->right, sentinel);
+    यदि (गाँठ->दायाँ != sentinel) {
+        प्रत्यागम ngx_rbtree_min(गाँठ->दायाँ, sentinel);
     }
 
-    root = tree->root;
+    मूल = वृक्ष->मूल;
 
-    for ( ;; ) {
-        parent = node->parent;
+    प्रति ( ;; ) {
+        parent = गाँठ->parent;
 
-        if (node == root) {
-            return NULL;
+        यदि (गाँठ == मूल) {
+            प्रत्यागम रिक्त;
         }
 
-        if (node == parent->left) {
-            return parent;
+        यदि (गाँठ == parent->बायाँ) {
+            प्रत्यागम parent;
         }
 
-        node = parent;
+        गाँठ = parent;
     }
 }
