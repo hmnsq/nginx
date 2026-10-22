@@ -4,214 +4,214 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-static size_t  ngx_data_sizes[] = {
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_OBJECT_TYPE */
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_LIST_TYPE */
-    sizeof(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
-    sizeof(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
-    sizeof(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
+स्थिर आकार_t  ngx_दत्त_sizes[] = {
+    परिमाण(ngx_दत्त_obj_t),            /* NGX_DATA_OBJECT_TYPE */
+    परिमाण(ngx_दत्त_obj_t),            /* NGX_DATA_LIST_TYPE */
+    परिमाण(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
+    परिमाण(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
+    परिमाण(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
     0,                                 /* NGX_DATA_NULL_TYPE */
 };
 
 
-ngx_data_item_t *
-ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type)
+ngx_दत्त_item_t *
+ngx_दत्त_new_item(ngx_pool_t *pool, ngx_uint_t type)
 {
-    ngx_data_item_t  *item;
+    ngx_दत्त_item_t  *item;
 
-    item = ngx_pcalloc(pool, offsetof(ngx_data_item_t, data)
-                             + ngx_data_sizes[type]);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_pcalloc(pool, offsetof(ngx_दत्त_item_t, दत्त)
+                             + ngx_दत्त_sizes[type]);
+    यदि (item == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
     item->type = type;
 
-    return item;
+    प्रत्यागम item;
 }
 
 
-void
-ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name, ngx_data_item_t *item)
+शून्य
+ngx_दत्त_सङ्कलय_item(ngx_दत्त_item_t *obj, ngx_str_t *name, ngx_दत्त_item_t *item)
 {
-    ngx_data_obj_t  *object;
+    ngx_दत्त_obj_t  *object;
 
-    if (obj->type != NGX_DATA_OBJECT_TYPE && obj->type != NGX_DATA_LIST_TYPE) {
-        return;
+    यदि (obj->type != NGX_दत्त_OBJECT_TYPE && obj->type != NGX_दत्त_LIST_TYPE) {
+        प्रत्यागम;
     }
 
-    object = &obj->data.object;
+    object = &obj->दत्त.object;
 
-    if (name) {
+    यदि (name) {
         item->name = *name;
     }
 
-    if (object->next == NULL) {
-        object->next = &object->item;
+    यदि (object->अग्र == रिक्त) {
+        object->अग्र = &object->item;
     }
 
-    *object->next = item;
-    object->next = &item->next;
+    *object->अग्र = item;
+    object->अग्र = &item->अग्र;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_दत्त_item_t *
+ngx_दत्त_obj_handler(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx)
 {
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_दत्त_item_t  *obj, *item;
+    ngx_दत्त_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_दत्त_new_object(pool);
+    यदि (obj == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_दत्त_decl_t *) दत्त;
 
-    while (decl->name.len) {
+    यावत् (decl->name.len) {
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        item = decl->handler(decl->दत्त, pool, ctx);
+        यदि (item == रिक्त) {
+            प्रत्यागम रिक्त;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        यदि (item != NGX_दत्त_DECLINE) {
+            ngx_दत्त_सङ्कलय_item(obj, &decl->name, item);
         }
 
         decl++;
     }
 
-    return obj;
+    प्रत्यागम obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
+ngx_दत्त_item_t *
+ngx_दत्त_obj_fields_handler(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx,
     ngx_array_t *fields)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *मानम्;
     ngx_uint_t        i;
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_दत्त_item_t  *obj, *item;
+    ngx_दत्त_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_दत्त_new_object(pool);
+    यदि (obj == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_दत्त_decl_t *) दत्त;
 
-    while (decl->name.len) {
+    यावत् (decl->name.len) {
 
-        if (fields) {
-            value = fields->elts;
+        यदि (fields) {
+            मानम् = fields->elts;
 
-            for (i = 0; i < fields->nelts; i++) {
+            प्रति (i = 0; i < fields->nelts; i++) {
 
-                if (decl->name.len == value[i].len
-                    && ngx_strncmp(decl->name.data, value[i].data,
-                                   value[i].len)
+                यदि (decl->name.len == मानम्[i].len
+                    && ngx_strncmp(decl->name.दत्त, मानम्[i].दत्त,
+                                   मानम्[i].len)
                     == 0)
                 {
-                    goto found;
+                    गच्छ प्राप्तम्;
                 }
             }
 
             decl++;
-            continue;
+            अनुवर्त;
         }
 
-found:
+प्राप्तम्:
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        item = decl->handler(decl->दत्त, pool, ctx);
+        यदि (item == रिक्त) {
+            प्रत्यागम रिक्त;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        यदि (item != NGX_दत्त_DECLINE) {
+            ngx_दत्त_सङ्कलय_item(obj, &decl->name, item);
         }
 
         decl++;
     }
 
-    return obj;
+    प्रत्यागम obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_दत्त_item_t *
+ngx_दत्त_सङ्ख्या_handler(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_दत्त_item_t  *item;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_दत्त_new_integer(pool);
+    यदि (item == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    item->data.integer = data;
+    item->दत्त.integer = दत्त;
 
-    return item;
+    प्रत्यागम item;
 }
 
 
-ngx_data_item_t *
-ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_दत्त_item_t *
+ngx_दत्त_string_handler(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *मानम्, *src;
+    ngx_दत्त_item_t  *item;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_दत्त_new_string(pool);
+    यदि (item == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    value = &item->data.string;
+    मानम् = &item->दत्त.string;
 
-    src = (ngx_str_t *) data;
+    src = (ngx_str_t *) दत्त;
 
-    value->len = src->len;
+    मानम्->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    मानम्->दत्त = ngx_pstrdup(pool, src);
+    यदि (मानम्->दत्त == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    return item;
+    प्रत्यागम item;
 }
 
 
-ngx_data_item_t *
-ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_दत्त_item_t *
+ngx_दत्त_boolean_handler(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_दत्त_item_t  *item;
 
-    item = ngx_data_new_boolean(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_दत्त_new_boolean(pool);
+    यदि (item == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    item->data.boolean = data;
+    item->दत्त.boolean = दत्त;
 
-    return item;
+    प्रत्यागम item;
 }
 
 
-ngx_data_item_t *
-ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_दत्त_item_t *
+ngx_दत्त_time_handler(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx)
 {
     u_char      *p;
     ngx_tm_t     tm;
     ngx_str_t    src;
     ngx_time_t  *tp;
-    u_char       iso8601[sizeof("1974-01-19T13:00:00.000Z") - 1];
+    u_char       iso8601[परिमाण("1974-01-19T13:00:00.000Z") - 1];
 
-    tp = (ngx_time_t *) data;
+    tp = (ngx_time_t *) दत्त;
 
     ngx_gmtime(tp->sec, &tm);
 
@@ -219,94 +219,94 @@ ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
                     tm.ngx_tm_year, tm.ngx_tm_mon, tm.ngx_tm_mday,
                     tm.ngx_tm_hour, tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    if (tp->msec) {
+    यदि (tp->msec) {
         p = ngx_sprintf(p, ".%03ui", tp->msec);
     }
 
     *p++ = 'Z';
 
-    src.data = iso8601;
+    src.दत्त = iso8601;
     src.len = p - iso8601;
 
-    return ngx_data_string_handler((uintptr_t) &src, pool, NULL);
+    प्रत्यागम ngx_दत्त_string_handler((uintptr_t) &src, pool, रिक्त);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_दत्त_item_t *
+ngx_दत्त_struct_int64_handler(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_दत्त_item_t  *item;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_दत्त_new_integer(pool);
+    यदि (item == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    item->data.integer = *(int64_t *) ((u_char *) ctx + data);
+    item->दत्त.integer = *(int64_t *) ((u_char *) ctx + दत्त);
 
-    return item;
+    प्रत्यागम item;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_दत्त_item_t *
+ngx_दत्त_struct_int_handler(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx)
 {
-    ngx_int_t  value;
+    ngx_int_t  मानम्;
 
-    value = *(ngx_int_t *) ((u_char *) ctx + data);
+    मानम् = *(ngx_int_t *) ((u_char *) ctx + दत्त);
 
-    return ngx_data_number_handler(value, pool, NULL);
+    प्रत्यागम ngx_दत्त_सङ्ख्या_handler(मानम्, pool, रिक्त);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_atomic_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_दत्त_item_t *
+ngx_दत्त_struct_atomic_handler(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_दत्त_item_t  *item;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_दत्त_new_integer(pool);
+    यदि (item == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    item->data.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + data);
+    item->दत्त.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + दत्त);
 
-    return item;
+    प्रत्यागम item;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_दत्त_item_t *
+ngx_दत्त_struct_str_handler(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *मानम्, *src;
+    ngx_दत्त_item_t  *item;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_दत्त_new_string(pool);
+    यदि (item == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    value = &item->data.string;
+    मानम् = &item->दत्त.string;
 
-    src = (ngx_str_t *) ((u_char *) ctx + data);
+    src = (ngx_str_t *) ((u_char *) ctx + दत्त);
 
-    value->len = src->len;
+    मानम्->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    मानम्->दत्त = ngx_pstrdup(pool, src);
+    यदि (मानम्->दत्त == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    return item;
+    प्रत्यागम item;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_दत्त_item_t *
+ngx_दत्त_struct_boolean_handler(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx)
 {
-    ngx_uint_t  value;
+    ngx_uint_t  मानम्;
 
-    value = *(ngx_uint_t *) ((u_char *) ctx + data);
+    मानम् = *(ngx_uint_t *) ((u_char *) ctx + दत्त);
 
-    return ngx_data_boolean_handler(value, pool, NULL);
+    प्रत्यागम ngx_दत्त_boolean_handler(मानम्, pool, रिक्त);
 }

@@ -5,87 +5,87 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-void *
-ngx_hash_find(ngx_hash_t *hash, ngx_uint_t key, u_char *name, size_t len)
+शून्य *
+ngx_hash_find(ngx_hash_t *hash, ngx_uint_t कुञ्चिका, u_char *name, आकार_t len)
 {
     ngx_uint_t       i;
     ngx_hash_elt_t  *elt;
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "hf:\"%*s\"", len, name);
-#endif
+#यदि 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_आवृत्तिः->लघुगणकः, 0, "hf:\"%*s\"", len, name);
+#यदि_अन्तः
 
-    elt = hash->buckets[key % hash->size];
+    elt = hash->buckets[कुञ्चिका % hash->आकार];
 
-    if (elt == NULL) {
-        return NULL;
+    यदि (elt == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    while (elt->value) {
-        if (len != (size_t) elt->len) {
-            goto next;
+    यावत् (elt->मानम्) {
+        यदि (len != (आकार_t) elt->len) {
+            गच्छ अग्र;
         }
 
-        for (i = 0; i < len; i++) {
-            if (name[i] != elt->name[i]) {
-                goto next;
+        प्रति (i = 0; i < len; i++) {
+            यदि (name[i] != elt->name[i]) {
+                गच्छ अग्र;
             }
         }
 
-        return elt->value;
+        प्रत्यागम elt->मानम्;
 
-    next:
+    अग्र:
 
         elt = (ngx_hash_elt_t *) ngx_align_ptr(&elt->name[0] + elt->len,
-                                               sizeof(void *));
-        continue;
+                                               परिमाण(शून्य *));
+        अनुवर्त;
     }
 
-    return NULL;
+    प्रत्यागम रिक्त;
 }
 
 
-void *
-ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
+शून्य *
+ngx_hash_find_wc_शीर्ष(ngx_hash_wildcard_t *hwc, u_char *name, आकार_t len)
 {
-    void        *value;
-    ngx_uint_t   i, n, key;
+    शून्य        *मानम्;
+    ngx_uint_t   i, n, कुञ्चिका;
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "wch:\"%*s\"", len, name);
-#endif
+#यदि 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_आवृत्तिः->लघुगणकः, 0, "wch:\"%*s\"", len, name);
+#यदि_अन्तः
 
     n = len;
 
-    while (n) {
-        if (name[n - 1] == '.') {
-            break;
+    यावत् (n) {
+        यदि (name[n - 1] == '.') {
+            भङ्ग;
         }
 
         n--;
     }
 
-    key = 0;
+    कुञ्चिका = 0;
 
-    for (i = n; i < len; i++) {
-        key = ngx_hash(key, name[i]);
+    प्रति (i = n; i < len; i++) {
+        कुञ्चिका = ngx_hash(कुञ्चिका, name[i]);
     }
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", key);
-#endif
+#यदि 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_आवृत्तिः->लघुगणकः, 0, "key:\"%ui\"", कुञ्चिका);
+#यदि_अन्तः
 
-    value = ngx_hash_find(&hwc->hash, key, &name[n], len - n);
+    मानम् = ngx_hash_find(&hwc->hash, कुञ्चिका, &name[n], len - n);
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", value);
-#endif
+#यदि 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_आवृत्तिः->लघुगणकः, 0, "value:\"%p\"", मानम्);
+#यदि_अन्तः
 
-    if (value) {
+    यदि (मानम्) {
 
         /*
          * the 2 low bits of value have the special meaning:
@@ -98,86 +98,86 @@ ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
          *          "*.example.com" only.
          */
 
-        if ((uintptr_t) value & 2) {
+        यदि ((uintptr_t) मानम् & 2) {
 
-            if (n == 0) {
+            यदि (n == 0) {
 
                 /* "example.com" */
 
-                if ((uintptr_t) value & 1) {
-                    return NULL;
+                यदि ((uintptr_t) मानम् & 1) {
+                    प्रत्यागम रिक्त;
                 }
 
                 hwc = (ngx_hash_wildcard_t *)
-                                          ((uintptr_t) value & (uintptr_t) ~3);
-                return hwc->value;
+                                          ((uintptr_t) मानम् & (uintptr_t) ~3);
+                प्रत्यागम hwc->मानम्;
             }
 
-            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) value & (uintptr_t) ~3);
+            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) मानम् & (uintptr_t) ~3);
 
-            value = ngx_hash_find_wc_head(hwc, name, n - 1);
+            मानम् = ngx_hash_find_wc_शीर्ष(hwc, name, n - 1);
 
-            if (value) {
-                return value;
+            यदि (मानम्) {
+                प्रत्यागम मानम्;
             }
 
-            return hwc->value;
+            प्रत्यागम hwc->मानम्;
         }
 
-        if ((uintptr_t) value & 1) {
+        यदि ((uintptr_t) मानम् & 1) {
 
-            if (n == 0) {
+            यदि (n == 0) {
 
                 /* "example.com" */
 
-                return NULL;
+                प्रत्यागम रिक्त;
             }
 
-            return (void *) ((uintptr_t) value & (uintptr_t) ~3);
+            प्रत्यागम (शून्य *) ((uintptr_t) मानम् & (uintptr_t) ~3);
         }
 
-        return value;
+        प्रत्यागम मानम्;
     }
 
-    return hwc->value;
+    प्रत्यागम hwc->मानम्;
 }
 
 
-void *
-ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
+शून्य *
+ngx_hash_find_wc_पुच्छ(ngx_hash_wildcard_t *hwc, u_char *name, आकार_t len)
 {
-    void        *value;
-    ngx_uint_t   i, key;
+    शून्य        *मानम्;
+    ngx_uint_t   i, कुञ्चिका;
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "wct:\"%*s\"", len, name);
-#endif
+#यदि 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_आवृत्तिः->लघुगणकः, 0, "wct:\"%*s\"", len, name);
+#यदि_अन्तः
 
-    key = 0;
+    कुञ्चिका = 0;
 
-    for (i = 0; i < len; i++) {
-        if (name[i] == '.') {
-            break;
+    प्रति (i = 0; i < len; i++) {
+        यदि (name[i] == '.') {
+            भङ्ग;
         }
 
-        key = ngx_hash(key, name[i]);
+        कुञ्चिका = ngx_hash(कुञ्चिका, name[i]);
     }
 
-    if (i == len) {
-        return NULL;
+    यदि (i == len) {
+        प्रत्यागम रिक्त;
     }
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", key);
-#endif
+#यदि 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_आवृत्तिः->लघुगणकः, 0, "key:\"%ui\"", कुञ्चिका);
+#यदि_अन्तः
 
-    value = ngx_hash_find(&hwc->hash, key, name, i);
+    मानम् = ngx_hash_find(&hwc->hash, कुञ्चिका, name, i);
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", value);
-#endif
+#यदि 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_आवृत्तिः->लघुगणकः, 0, "value:\"%p\"", मानम्);
+#यदि_अन्तः
 
-    if (value) {
+    यदि (मानम्) {
 
         /*
          * the 2 low bits of value have the special meaning:
@@ -185,569 +185,569 @@ ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
          *     11 - value is pointer to wildcard hash allowing "example.*".
          */
 
-        if ((uintptr_t) value & 2) {
+        यदि ((uintptr_t) मानम् & 2) {
 
             i++;
 
-            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) value & (uintptr_t) ~3);
+            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) मानम् & (uintptr_t) ~3);
 
-            value = ngx_hash_find_wc_tail(hwc, &name[i], len - i);
+            मानम् = ngx_hash_find_wc_पुच्छ(hwc, &name[i], len - i);
 
-            if (value) {
-                return value;
+            यदि (मानम्) {
+                प्रत्यागम मानम्;
             }
 
-            return hwc->value;
+            प्रत्यागम hwc->मानम्;
         }
 
-        return value;
+        प्रत्यागम मानम्;
     }
 
-    return hwc->value;
+    प्रत्यागम hwc->मानम्;
 }
 
 
-void *
-ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t key, u_char *name,
-    size_t len)
+शून्य *
+ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t कुञ्चिका, u_char *name,
+    आकार_t len)
 {
-    void  *value;
+    शून्य  *मानम्;
 
-    if (hash->hash.buckets) {
-        value = ngx_hash_find(&hash->hash, key, name, len);
+    यदि (hash->hash.buckets) {
+        मानम् = ngx_hash_find(&hash->hash, कुञ्चिका, name, len);
 
-        if (value) {
-            return value;
+        यदि (मानम्) {
+            प्रत्यागम मानम्;
         }
     }
 
-    if (len == 0) {
-        return NULL;
+    यदि (len == 0) {
+        प्रत्यागम रिक्त;
     }
 
-    if (hash->wc_head && hash->wc_head->hash.buckets) {
-        value = ngx_hash_find_wc_head(hash->wc_head, name, len);
+    यदि (hash->wc_शीर्ष && hash->wc_शीर्ष->hash.buckets) {
+        मानम् = ngx_hash_find_wc_शीर्ष(hash->wc_शीर्ष, name, len);
 
-        if (value) {
-            return value;
+        यदि (मानम्) {
+            प्रत्यागम मानम्;
         }
     }
 
-    if (hash->wc_tail && hash->wc_tail->hash.buckets) {
-        value = ngx_hash_find_wc_tail(hash->wc_tail, name, len);
+    यदि (hash->wc_पुच्छ && hash->wc_पुच्छ->hash.buckets) {
+        मानम् = ngx_hash_find_wc_पुच्छ(hash->wc_पुच्छ, name, len);
 
-        if (value) {
-            return value;
+        यदि (मानम्) {
+            प्रत्यागम मानम्;
         }
     }
 
-    return NULL;
+    प्रत्यागम रिक्त;
 }
 
 
-#define NGX_HASH_ELT_SIZE(name)                                               \
-    (sizeof(void *) + ngx_align((name)->key.len + 2, sizeof(void *)))
+#परिभाषय NGX_HASH_ELT_आकार(name)                                               \
+    (परिमाण(शून्य *) + ngx_align((name)->कुञ्चिका.len + 2, परिमाण(शून्य *)))
 
 ngx_int_t
-ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names, ngx_uint_t nelts)
+ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_कुञ्चिका_t *नामानि, ngx_uint_t nelts)
 {
     u_char          *elts;
-    size_t           len;
+    आकार_t           len;
     u_short         *test;
-    ngx_uint_t       i, n, key, size, start, bucket_size;
+    ngx_uint_t       i, n, कुञ्चिका, आकार, start, bucket_आकार;
     ngx_hash_elt_t  *elt, **buckets;
 
-    if (hinit->max_size == 0) {
-        ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
+    यदि (hinit->max_आकार == 0) {
+        ngx_log_error(NGX_LOG_EMERG, hinit->pool->लघुगणकः, 0,
                       "could not build %s, you should "
                       "increase %s_max_size: %i",
-                      hinit->name, hinit->name, hinit->max_size);
-        return NGX_ERROR;
+                      hinit->name, hinit->name, hinit->max_आकार);
+        प्रत्यागम NGX_ERROR;
     }
 
-    if (hinit->bucket_size > 65536 - ngx_cacheline_size) {
-        ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
+    यदि (hinit->bucket_आकार > 65536 - ngx_cacheline_आकार) {
+        ngx_log_error(NGX_LOG_EMERG, hinit->pool->लघुगणकः, 0,
                       "could not build %s, too large "
                       "%s_bucket_size: %i",
-                      hinit->name, hinit->name, hinit->bucket_size);
-        return NGX_ERROR;
+                      hinit->name, hinit->name, hinit->bucket_आकार);
+        प्रत्यागम NGX_ERROR;
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    प्रति (n = 0; n < nelts; n++) {
+        यदि (नामानि[n].कुञ्चिका.दत्त == रिक्त) {
+            अनुवर्त;
         }
 
-        if (hinit->bucket_size < NGX_HASH_ELT_SIZE(&names[n]) + sizeof(void *))
+        यदि (hinit->bucket_आकार < NGX_HASH_ELT_आकार(&नामानि[n]) + परिमाण(शून्य *))
         {
-            ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
+            ngx_log_error(NGX_LOG_EMERG, hinit->pool->लघुगणकः, 0,
                           "could not build %s, you should "
                           "increase %s_bucket_size: %i",
-                          hinit->name, hinit->name, hinit->bucket_size);
-            return NGX_ERROR;
+                          hinit->name, hinit->name, hinit->bucket_आकार);
+            प्रत्यागम NGX_ERROR;
         }
     }
 
-    test = ngx_alloc(hinit->max_size * sizeof(u_short), hinit->pool->log);
-    if (test == NULL) {
-        return NGX_ERROR;
+    test = ngx_alloc(hinit->max_आकार * परिमाण(u_short), hinit->pool->लघुगणकः);
+    यदि (test == रिक्त) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    bucket_size = hinit->bucket_size - sizeof(void *);
+    bucket_आकार = hinit->bucket_आकार - परिमाण(शून्य *);
 
-    start = nelts / (bucket_size / (2 * sizeof(void *)));
+    start = nelts / (bucket_आकार / (2 * परिमाण(शून्य *)));
     start = start ? start : 1;
 
-    if (hinit->max_size > 10000 && nelts && hinit->max_size / nelts < 100) {
-        start = hinit->max_size - 1000;
+    यदि (hinit->max_आकार > 10000 && nelts && hinit->max_आकार / nelts < 100) {
+        start = hinit->max_आकार - 1000;
     }
 
-    for (size = start; size <= hinit->max_size; size++) {
+    प्रति (आकार = start; आकार <= hinit->max_आकार; आकार++) {
 
-        ngx_memzero(test, size * sizeof(u_short));
+        ngx_memzero(test, आकार * परिमाण(u_short));
 
-        for (n = 0; n < nelts; n++) {
-            if (names[n].key.data == NULL) {
-                continue;
+        प्रति (n = 0; n < nelts; n++) {
+            यदि (नामानि[n].कुञ्चिका.दत्त == रिक्त) {
+                अनुवर्त;
             }
 
-            key = names[n].key_hash % size;
-            len = test[key] + NGX_HASH_ELT_SIZE(&names[n]);
+            कुञ्चिका = नामानि[n].कुञ्चिका_hash % आकार;
+            len = test[कुञ्चिका] + NGX_HASH_ELT_आकार(&नामानि[n]);
 
-#if 0
-            ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
+#यदि 0
+            ngx_log_error(NGX_LOG_ALERT, hinit->pool->लघुगणकः, 0,
                           "%ui: %ui %uz \"%V\"",
-                          size, key, len, &names[n].key);
-#endif
+                          आकार, कुञ्चिका, len, &नामानि[n].कुञ्चिका);
+#यदि_अन्तः
 
-            if (len > bucket_size) {
-                goto next;
+            यदि (len > bucket_आकार) {
+                गच्छ अग्र;
             }
 
-            test[key] = (u_short) len;
+            test[कुञ्चिका] = (u_short) len;
         }
 
-        goto found;
+        गच्छ प्राप्तम्;
 
-    next:
+    अग्र:
 
-        continue;
+        अनुवर्त;
     }
 
-    size = hinit->max_size;
+    आकार = hinit->max_आकार;
 
-    ngx_log_error(NGX_LOG_WARN, hinit->pool->log, 0,
+    ngx_log_error(NGX_LOG_WARN, hinit->pool->लघुगणकः, 0,
                   "could not build optimal %s, you should increase "
                   "either %s_max_size: %i or %s_bucket_size: %i; "
                   "ignoring %s_bucket_size",
-                  hinit->name, hinit->name, hinit->max_size,
-                  hinit->name, hinit->bucket_size, hinit->name);
+                  hinit->name, hinit->name, hinit->max_आकार,
+                  hinit->name, hinit->bucket_आकार, hinit->name);
 
-found:
+प्राप्तम्:
 
-    for (i = 0; i < size; i++) {
-        test[i] = sizeof(void *);
+    प्रति (i = 0; i < आकार; i++) {
+        test[i] = परिमाण(शून्य *);
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    प्रति (n = 0; n < nelts; n++) {
+        यदि (नामानि[n].कुञ्चिका.दत्त == रिक्त) {
+            अनुवर्त;
         }
 
-        key = names[n].key_hash % size;
-        len = test[key] + NGX_HASH_ELT_SIZE(&names[n]);
+        कुञ्चिका = नामानि[n].कुञ्चिका_hash % आकार;
+        len = test[कुञ्चिका] + NGX_HASH_ELT_आकार(&नामानि[n]);
 
-        if (len > 65536 - ngx_cacheline_size) {
-            ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
+        यदि (len > 65536 - ngx_cacheline_आकार) {
+            ngx_log_error(NGX_LOG_EMERG, hinit->pool->लघुगणकः, 0,
                           "could not build %s, you should "
                           "increase %s_max_size: %i",
-                          hinit->name, hinit->name, hinit->max_size);
+                          hinit->name, hinit->name, hinit->max_आकार);
             ngx_free(test);
-            return NGX_ERROR;
+            प्रत्यागम NGX_ERROR;
         }
 
-        test[key] = (u_short) len;
+        test[कुञ्चिका] = (u_short) len;
     }
 
     len = 0;
 
-    for (i = 0; i < size; i++) {
-        if (test[i] == sizeof(void *)) {
-            continue;
+    प्रति (i = 0; i < आकार; i++) {
+        यदि (test[i] == परिमाण(शून्य *)) {
+            अनुवर्त;
         }
 
-        test[i] = (u_short) (ngx_align(test[i], ngx_cacheline_size));
+        test[i] = (u_short) (ngx_align(test[i], ngx_cacheline_आकार));
 
         len += test[i];
     }
 
-    if (hinit->hash == NULL) {
-        hinit->hash = ngx_pcalloc(hinit->pool, sizeof(ngx_hash_wildcard_t)
-                                             + size * sizeof(ngx_hash_elt_t *));
-        if (hinit->hash == NULL) {
+    यदि (hinit->hash == रिक्त) {
+        hinit->hash = ngx_pcalloc(hinit->pool, परिमाण(ngx_hash_wildcard_t)
+                                             + आकार * परिमाण(ngx_hash_elt_t *));
+        यदि (hinit->hash == रिक्त) {
             ngx_free(test);
-            return NGX_ERROR;
+            प्रत्यागम NGX_ERROR;
         }
 
         buckets = (ngx_hash_elt_t **)
-                      ((u_char *) hinit->hash + sizeof(ngx_hash_wildcard_t));
+                      ((u_char *) hinit->hash + परिमाण(ngx_hash_wildcard_t));
 
-    } else {
-        buckets = ngx_pcalloc(hinit->pool, size * sizeof(ngx_hash_elt_t *));
-        if (buckets == NULL) {
+    } अन्यथा {
+        buckets = ngx_pcalloc(hinit->pool, आकार * परिमाण(ngx_hash_elt_t *));
+        यदि (buckets == रिक्त) {
             ngx_free(test);
-            return NGX_ERROR;
+            प्रत्यागम NGX_ERROR;
         }
     }
 
-    elts = ngx_palloc(hinit->pool, len + ngx_cacheline_size);
-    if (elts == NULL) {
+    elts = ngx_palloc(hinit->pool, len + ngx_cacheline_आकार);
+    यदि (elts == रिक्त) {
         ngx_free(test);
-        return NGX_ERROR;
+        प्रत्यागम NGX_ERROR;
     }
 
-    elts = ngx_align_ptr(elts, ngx_cacheline_size);
+    elts = ngx_align_ptr(elts, ngx_cacheline_आकार);
 
-    for (i = 0; i < size; i++) {
-        if (test[i] == sizeof(void *)) {
-            continue;
+    प्रति (i = 0; i < आकार; i++) {
+        यदि (test[i] == परिमाण(शून्य *)) {
+            अनुवर्त;
         }
 
         buckets[i] = (ngx_hash_elt_t *) elts;
         elts += test[i];
     }
 
-    for (i = 0; i < size; i++) {
+    प्रति (i = 0; i < आकार; i++) {
         test[i] = 0;
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    प्रति (n = 0; n < nelts; n++) {
+        यदि (नामानि[n].कुञ्चिका.दत्त == रिक्त) {
+            अनुवर्त;
         }
 
-        key = names[n].key_hash % size;
-        elt = (ngx_hash_elt_t *) ((u_char *) buckets[key] + test[key]);
+        कुञ्चिका = नामानि[n].कुञ्चिका_hash % आकार;
+        elt = (ngx_hash_elt_t *) ((u_char *) buckets[कुञ्चिका] + test[कुञ्चिका]);
 
-        elt->value = names[n].value;
-        elt->len = (u_short) names[n].key.len;
+        elt->मानम् = नामानि[n].मानम्;
+        elt->len = (u_short) नामानि[n].कुञ्चिका.len;
 
-        ngx_strlow(elt->name, names[n].key.data, names[n].key.len);
+        ngx_strlow(elt->name, नामानि[n].कुञ्चिका.दत्त, नामानि[n].कुञ्चिका.len);
 
-        test[key] = (u_short) (test[key] + NGX_HASH_ELT_SIZE(&names[n]));
+        test[कुञ्चिका] = (u_short) (test[कुञ्चिका] + NGX_HASH_ELT_आकार(&नामानि[n]));
     }
 
-    for (i = 0; i < size; i++) {
-        if (buckets[i] == NULL) {
-            continue;
+    प्रति (i = 0; i < आकार; i++) {
+        यदि (buckets[i] == रिक्त) {
+            अनुवर्त;
         }
 
         elt = (ngx_hash_elt_t *) ((u_char *) buckets[i] + test[i]);
 
-        elt->value = NULL;
+        elt->मानम् = रिक्त;
     }
 
     ngx_free(test);
 
     hinit->hash->buckets = buckets;
-    hinit->hash->size = size;
+    hinit->hash->आकार = आकार;
 
-#if 0
+#यदि 0
 
-    for (i = 0; i < size; i++) {
+    प्रति (i = 0; i < आकार; i++) {
         ngx_str_t   val;
-        ngx_uint_t  key;
+        ngx_uint_t  कुञ्चिका;
 
         elt = buckets[i];
 
-        if (elt == NULL) {
-            ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
+        यदि (elt == रिक्त) {
+            ngx_log_error(NGX_LOG_ALERT, hinit->pool->लघुगणकः, 0,
                           "%ui: NULL", i);
-            continue;
+            अनुवर्त;
         }
 
-        while (elt->value) {
+        यावत् (elt->मानम्) {
             val.len = elt->len;
-            val.data = &elt->name[0];
+            val.दत्त = &elt->name[0];
 
-            key = hinit->key(val.data, val.len);
+            कुञ्चिका = hinit->कुञ्चिका(val.दत्त, val.len);
 
-            ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                          "%ui: %p \"%V\" %ui", i, elt, &val, key);
+            ngx_log_error(NGX_LOG_ALERT, hinit->pool->लघुगणकः, 0,
+                          "%ui: %p \"%V\" %ui", i, elt, &val, कुञ्चिका);
 
             elt = (ngx_hash_elt_t *) ngx_align_ptr(&elt->name[0] + elt->len,
-                                                   sizeof(void *));
+                                                   परिमाण(शून्य *));
         }
     }
 
-#endif
+#यदि_अन्तः
 
-    return NGX_OK;
+    प्रत्यागम NGX_OK;
 }
 
 
 ngx_int_t
-ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
+ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_कुञ्चिका_t *नामानि,
     ngx_uint_t nelts)
 {
-    size_t                len, dot_len;
+    आकार_t                len, dot_len;
     ngx_uint_t            i, n, dot;
-    ngx_array_t           curr_names, next_names;
-    ngx_hash_key_t       *name, *next_name;
+    ngx_array_t           curr_नामानि, अग्र_नामानि;
+    ngx_hash_कुञ्चिका_t       *name, *अग्र_name;
     ngx_hash_init_t       h;
     ngx_hash_wildcard_t  *wdc;
 
-    if (ngx_array_init(&curr_names, hinit->temp_pool, nelts,
-                       sizeof(ngx_hash_key_t))
+    यदि (ngx_array_init(&curr_नामानि, hinit->अस्थायी_pool, nelts,
+                       परिमाण(ngx_hash_कुञ्चिका_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        प्रत्यागम NGX_ERROR;
     }
 
-    if (ngx_array_init(&next_names, hinit->temp_pool, nelts,
-                       sizeof(ngx_hash_key_t))
+    यदि (ngx_array_init(&अग्र_नामानि, hinit->अस्थायी_pool, nelts,
+                       परिमाण(ngx_hash_कुञ्चिका_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        प्रत्यागम NGX_ERROR;
     }
 
-    for (n = 0; n < nelts; n = i) {
+    प्रति (n = 0; n < nelts; n = i) {
 
-#if 0
-        ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                      "wc0: \"%V\"", &names[n].key);
-#endif
+#यदि 0
+        ngx_log_error(NGX_LOG_ALERT, hinit->pool->लघुगणकः, 0,
+                      "wc0: \"%V\"", &नामानि[n].कुञ्चिका);
+#यदि_अन्तः
 
         dot = 0;
 
-        for (len = 0; len < names[n].key.len; len++) {
-            if (names[n].key.data[len] == '.') {
+        प्रति (len = 0; len < नामानि[n].कुञ्चिका.len; len++) {
+            यदि (नामानि[n].कुञ्चिका.दत्त[len] == '.') {
                 dot = 1;
-                break;
+                भङ्ग;
             }
         }
 
-        name = ngx_array_push(&curr_names);
-        if (name == NULL) {
-            return NGX_ERROR;
+        name = ngx_array_प्रक्षिप(&curr_नामानि);
+        यदि (name == रिक्त) {
+            प्रत्यागम NGX_ERROR;
         }
 
-        name->key.len = len;
-        name->key.data = names[n].key.data;
-        name->key_hash = hinit->key(name->key.data, name->key.len);
-        name->value = names[n].value;
+        name->कुञ्चिका.len = len;
+        name->कुञ्चिका.दत्त = नामानि[n].कुञ्चिका.दत्त;
+        name->कुञ्चिका_hash = hinit->कुञ्चिका(name->कुञ्चिका.दत्त, name->कुञ्चिका.len);
+        name->मानम् = नामानि[n].मानम्;
 
-#if 0
-        ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                      "wc1: \"%V\" %ui", &name->key, dot);
-#endif
+#यदि 0
+        ngx_log_error(NGX_LOG_ALERT, hinit->pool->लघुगणकः, 0,
+                      "wc1: \"%V\" %ui", &name->कुञ्चिका, dot);
+#यदि_अन्तः
 
         dot_len = len + 1;
 
-        if (dot) {
+        यदि (dot) {
             len++;
         }
 
-        next_names.nelts = 0;
+        अग्र_नामानि.nelts = 0;
 
-        if (names[n].key.len != len) {
-            next_name = ngx_array_push(&next_names);
-            if (next_name == NULL) {
-                return NGX_ERROR;
+        यदि (नामानि[n].कुञ्चिका.len != len) {
+            अग्र_name = ngx_array_प्रक्षिप(&अग्र_नामानि);
+            यदि (अग्र_name == रिक्त) {
+                प्रत्यागम NGX_ERROR;
             }
 
-            next_name->key.len = names[n].key.len - len;
-            next_name->key.data = names[n].key.data + len;
-            next_name->key_hash = 0;
-            next_name->value = names[n].value;
+            अग्र_name->कुञ्चिका.len = नामानि[n].कुञ्चिका.len - len;
+            अग्र_name->कुञ्चिका.दत्त = नामानि[n].कुञ्चिका.दत्त + len;
+            अग्र_name->कुञ्चिका_hash = 0;
+            अग्र_name->मानम् = नामानि[n].मानम्;
 
-#if 0
-            ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                          "wc2: \"%V\"", &next_name->key);
-#endif
+#यदि 0
+            ngx_log_error(NGX_LOG_ALERT, hinit->pool->लघुगणकः, 0,
+                          "wc2: \"%V\"", &अग्र_name->कुञ्चिका);
+#यदि_अन्तः
         }
 
-        for (i = n + 1; i < nelts; i++) {
-            if (ngx_strncmp(names[n].key.data, names[i].key.data, len) != 0) {
-                break;
+        प्रति (i = n + 1; i < nelts; i++) {
+            यदि (ngx_strncmp(नामानि[n].कुञ्चिका.दत्त, नामानि[i].कुञ्चिका.दत्त, len) != 0) {
+                भङ्ग;
             }
 
-            if (!dot
-                && names[i].key.len > len
-                && names[i].key.data[len] != '.')
+            यदि (!dot
+                && नामानि[i].कुञ्चिका.len > len
+                && नामानि[i].कुञ्चिका.दत्त[len] != '.')
             {
-                break;
+                भङ्ग;
             }
 
-            next_name = ngx_array_push(&next_names);
-            if (next_name == NULL) {
-                return NGX_ERROR;
+            अग्र_name = ngx_array_प्रक्षिप(&अग्र_नामानि);
+            यदि (अग्र_name == रिक्त) {
+                प्रत्यागम NGX_ERROR;
             }
 
-            next_name->key.len = names[i].key.len - dot_len;
-            next_name->key.data = names[i].key.data + dot_len;
-            next_name->key_hash = 0;
-            next_name->value = names[i].value;
+            अग्र_name->कुञ्चिका.len = नामानि[i].कुञ्चिका.len - dot_len;
+            अग्र_name->कुञ्चिका.दत्त = नामानि[i].कुञ्चिका.दत्त + dot_len;
+            अग्र_name->कुञ्चिका_hash = 0;
+            अग्र_name->मानम् = नामानि[i].मानम्;
 
-#if 0
-            ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                          "wc3: \"%V\"", &next_name->key);
-#endif
+#यदि 0
+            ngx_log_error(NGX_LOG_ALERT, hinit->pool->लघुगणकः, 0,
+                          "wc3: \"%V\"", &अग्र_name->कुञ्चिका);
+#यदि_अन्तः
         }
 
-        if (next_names.nelts) {
+        यदि (अग्र_नामानि.nelts) {
 
             h = *hinit;
-            h.hash = NULL;
+            h.hash = रिक्त;
 
-            if (ngx_hash_wildcard_init(&h, (ngx_hash_key_t *) next_names.elts,
-                                       next_names.nelts)
+            यदि (ngx_hash_wildcard_init(&h, (ngx_hash_कुञ्चिका_t *) अग्र_नामानि.elts,
+                                       अग्र_नामानि.nelts)
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                प्रत्यागम NGX_ERROR;
             }
 
             wdc = (ngx_hash_wildcard_t *) h.hash;
 
-            if (names[n].key.len == len) {
-                wdc->value = names[n].value;
+            यदि (नामानि[n].कुञ्चिका.len == len) {
+                wdc->मानम् = नामानि[n].मानम्;
             }
 
-            name->value = (void *) ((uintptr_t) wdc | (dot ? 3 : 2));
+            name->मानम् = (शून्य *) ((uintptr_t) wdc | (dot ? 3 : 2));
 
-        } else if (dot) {
-            name->value = (void *) ((uintptr_t) name->value | 1);
+        } अन्यथा यदि (dot) {
+            name->मानम् = (शून्य *) ((uintptr_t) name->मानम् | 1);
         }
     }
 
-    if (ngx_hash_init(hinit, (ngx_hash_key_t *) curr_names.elts,
-                      curr_names.nelts)
+    यदि (ngx_hash_init(hinit, (ngx_hash_कुञ्चिका_t *) curr_नामानि.elts,
+                      curr_नामानि.nelts)
         != NGX_OK)
     {
-        return NGX_ERROR;
+        प्रत्यागम NGX_ERROR;
     }
 
-    return NGX_OK;
+    प्रत्यागम NGX_OK;
 }
 
 
 ngx_uint_t
-ngx_hash_key(u_char *data, size_t len)
+ngx_hash_कुञ्चिका(u_char *दत्त, आकार_t len)
 {
-    ngx_uint_t  i, key;
+    ngx_uint_t  i, कुञ्चिका;
 
-    key = 0;
+    कुञ्चिका = 0;
 
-    for (i = 0; i < len; i++) {
-        key = ngx_hash(key, data[i]);
+    प्रति (i = 0; i < len; i++) {
+        कुञ्चिका = ngx_hash(कुञ्चिका, दत्त[i]);
     }
 
-    return key;
+    प्रत्यागम कुञ्चिका;
 }
 
 
 ngx_uint_t
-ngx_hash_key_lc(u_char *data, size_t len)
+ngx_hash_कुञ्चिका_lc(u_char *दत्त, आकार_t len)
 {
-    ngx_uint_t  i, key;
+    ngx_uint_t  i, कुञ्चिका;
 
-    key = 0;
+    कुञ्चिका = 0;
 
-    for (i = 0; i < len; i++) {
-        key = ngx_hash(key, ngx_tolower(data[i]));
+    प्रति (i = 0; i < len; i++) {
+        कुञ्चिका = ngx_hash(कुञ्चिका, ngx_tolower(दत्त[i]));
     }
 
-    return key;
+    प्रत्यागम कुञ्चिका;
 }
 
 
 ngx_uint_t
-ngx_hash_strlow(u_char *dst, u_char *src, size_t n)
+ngx_hash_strlow(u_char *dst, u_char *src, आकार_t n)
 {
-    ngx_uint_t  key;
+    ngx_uint_t  कुञ्चिका;
 
-    key = 0;
+    कुञ्चिका = 0;
 
-    while (n--) {
+    यावत् (n--) {
         *dst = ngx_tolower(*src);
-        key = ngx_hash(key, *dst);
+        कुञ्चिका = ngx_hash(कुञ्चिका, *dst);
         dst++;
         src++;
     }
 
-    return key;
+    प्रत्यागम कुञ्चिका;
 }
 
 
 ngx_int_t
-ngx_hash_keys_array_init(ngx_hash_keys_arrays_t *ha, ngx_uint_t type)
+ngx_hash_कुञ्चिकाः_array_init(ngx_hash_कुञ्चिकाः_arrays_t *ha, ngx_uint_t type)
 {
     ngx_uint_t  asize;
 
-    if (type == NGX_HASH_SMALL) {
+    यदि (type == NGX_HASH_SMALL) {
         asize = 4;
         ha->hsize = 107;
 
-    } else {
+    } अन्यथा {
         asize = NGX_HASH_LARGE_ASIZE;
         ha->hsize = NGX_HASH_LARGE_HSIZE;
     }
 
-    if (ngx_array_init(&ha->keys, ha->temp_pool, asize, sizeof(ngx_hash_key_t))
+    यदि (ngx_array_init(&ha->कुञ्चिकाः, ha->अस्थायी_pool, asize, परिमाण(ngx_hash_कुञ्चिका_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        प्रत्यागम NGX_ERROR;
     }
 
-    if (ngx_array_init(&ha->dns_wc_head, ha->temp_pool, asize,
-                       sizeof(ngx_hash_key_t))
+    यदि (ngx_array_init(&ha->dns_wc_शीर्ष, ha->अस्थायी_pool, asize,
+                       परिमाण(ngx_hash_कुञ्चिका_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        प्रत्यागम NGX_ERROR;
     }
 
-    if (ngx_array_init(&ha->dns_wc_tail, ha->temp_pool, asize,
-                       sizeof(ngx_hash_key_t))
+    यदि (ngx_array_init(&ha->dns_wc_पुच्छ, ha->अस्थायी_pool, asize,
+                       परिमाण(ngx_hash_कुञ्चिका_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        प्रत्यागम NGX_ERROR;
     }
 
-    ha->keys_hash = ngx_pcalloc(ha->temp_pool, sizeof(ngx_array_t) * ha->hsize);
-    if (ha->keys_hash == NULL) {
-        return NGX_ERROR;
+    ha->कुञ्चिकाः_hash = ngx_pcalloc(ha->अस्थायी_pool, परिमाण(ngx_array_t) * ha->hsize);
+    यदि (ha->कुञ्चिकाः_hash == रिक्त) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    ha->dns_wc_head_hash = ngx_pcalloc(ha->temp_pool,
-                                       sizeof(ngx_array_t) * ha->hsize);
-    if (ha->dns_wc_head_hash == NULL) {
-        return NGX_ERROR;
+    ha->dns_wc_शीर्ष_hash = ngx_pcalloc(ha->अस्थायी_pool,
+                                       परिमाण(ngx_array_t) * ha->hsize);
+    यदि (ha->dns_wc_शीर्ष_hash == रिक्त) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    ha->dns_wc_tail_hash = ngx_pcalloc(ha->temp_pool,
-                                       sizeof(ngx_array_t) * ha->hsize);
-    if (ha->dns_wc_tail_hash == NULL) {
-        return NGX_ERROR;
+    ha->dns_wc_पुच्छ_hash = ngx_pcalloc(ha->अस्थायी_pool,
+                                       परिमाण(ngx_array_t) * ha->hsize);
+    यदि (ha->dns_wc_पुच्छ_hash == रिक्त) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    return NGX_OK;
+    प्रत्यागम NGX_OK;
 }
 
 
 ngx_int_t
-ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
+ngx_hash_सङ्कलय_कुञ्चिका(ngx_hash_कुञ्चिकाः_arrays_t *ha, ngx_str_t *कुञ्चिका, शून्य *मानम्,
     ngx_uint_t flags)
 {
-    size_t           len;
+    आकार_t           len;
     u_char          *p;
     ngx_str_t       *name;
-    ngx_uint_t       i, k, n, skip, last;
-    ngx_array_t     *keys, *hwc;
-    ngx_hash_key_t  *hk;
+    ngx_uint_t       i, k, n, skip, चरमः;
+    ngx_array_t     *कुञ्चिकाः, *hwc;
+    ngx_hash_कुञ्चिका_t  *hk;
 
-    last = key->len;
+    चरमः = कुञ्चिका->len;
 
-    if (flags & NGX_HASH_WILDCARD_KEY) {
+    यदि (flags & NGX_HASH_WILDCARD_कुञ्चिका) {
 
         /*
          * supported wildcards:
@@ -756,44 +756,44 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
         n = 0;
 
-        for (i = 0; i < key->len; i++) {
+        प्रति (i = 0; i < कुञ्चिका->len; i++) {
 
-            if (key->data[i] == '*') {
-                if (++n > 1) {
-                    return NGX_DECLINED;
+            यदि (कुञ्चिका->दत्त[i] == '*') {
+                यदि (++n > 1) {
+                    प्रत्यागम NGX_DECLINED;
                 }
             }
 
-            if (key->data[i] == '.' && key->data[i + 1] == '.') {
-                return NGX_DECLINED;
+            यदि (कुञ्चिका->दत्त[i] == '.' && कुञ्चिका->दत्त[i + 1] == '.') {
+                प्रत्यागम NGX_DECLINED;
             }
 
-            if (key->data[i] == '\0') {
-                return NGX_DECLINED;
+            यदि (कुञ्चिका->दत्त[i] == '\0') {
+                प्रत्यागम NGX_DECLINED;
             }
         }
 
-        if (key->len > 1 && key->data[0] == '.') {
+        यदि (कुञ्चिका->len > 1 && कुञ्चिका->दत्त[0] == '.') {
             skip = 1;
-            goto wildcard;
+            गच्छ wildcard;
         }
 
-        if (key->len > 2) {
+        यदि (कुञ्चिका->len > 2) {
 
-            if (key->data[0] == '*' && key->data[1] == '.') {
+            यदि (कुञ्चिका->दत्त[0] == '*' && कुञ्चिका->दत्त[1] == '.') {
                 skip = 2;
-                goto wildcard;
+                गच्छ wildcard;
             }
 
-            if (key->data[i - 2] == '.' && key->data[i - 1] == '*') {
+            यदि (कुञ्चिका->दत्त[i - 2] == '.' && कुञ्चिका->दत्त[i - 1] == '*') {
                 skip = 0;
-                last -= 2;
-                goto wildcard;
+                चरमः -= 2;
+                गच्छ wildcard;
             }
         }
 
-        if (n) {
-            return NGX_DECLINED;
+        यदि (n) {
+            प्रत्यागम NGX_DECLINED;
         }
     }
 
@@ -801,213 +801,213 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
     k = 0;
 
-    for (i = 0; i < last; i++) {
-        if (!(flags & NGX_HASH_READONLY_KEY)) {
-            key->data[i] = ngx_tolower(key->data[i]);
+    प्रति (i = 0; i < चरमः; i++) {
+        यदि (!(flags & NGX_HASH_READONLY_कुञ्चिका)) {
+            कुञ्चिका->दत्त[i] = ngx_tolower(कुञ्चिका->दत्त[i]);
         }
-        k = ngx_hash(k, key->data[i]);
+        k = ngx_hash(k, कुञ्चिका->दत्त[i]);
     }
 
     k %= ha->hsize;
 
     /* check conflicts in exact hash */
 
-    name = ha->keys_hash[k].elts;
+    name = ha->कुञ्चिकाः_hash[k].elts;
 
-    if (name) {
-        for (i = 0; i < ha->keys_hash[k].nelts; i++) {
-            if (last != name[i].len) {
-                continue;
+    यदि (name) {
+        प्रति (i = 0; i < ha->कुञ्चिकाः_hash[k].nelts; i++) {
+            यदि (चरमः != name[i].len) {
+                अनुवर्त;
             }
 
-            if (ngx_strncmp(key->data, name[i].data, last) == 0) {
-                return NGX_BUSY;
+            यदि (ngx_strncmp(कुञ्चिका->दत्त, name[i].दत्त, चरमः) == 0) {
+                प्रत्यागम NGX_BUSY;
             }
         }
 
-    } else {
-        if (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
-                           sizeof(ngx_str_t))
+    } अन्यथा {
+        यदि (ngx_array_init(&ha->कुञ्चिकाः_hash[k], ha->अस्थायी_pool, 4,
+                           परिमाण(ngx_str_t))
             != NGX_OK)
         {
-            return NGX_ERROR;
+            प्रत्यागम NGX_ERROR;
         }
     }
 
-    name = ngx_array_push(&ha->keys_hash[k]);
-    if (name == NULL) {
-        return NGX_ERROR;
+    name = ngx_array_प्रक्षिप(&ha->कुञ्चिकाः_hash[k]);
+    यदि (name == रिक्त) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    *name = *key;
+    *name = *कुञ्चिका;
 
-    hk = ngx_array_push(&ha->keys);
-    if (hk == NULL) {
-        return NGX_ERROR;
+    hk = ngx_array_प्रक्षिप(&ha->कुञ्चिकाः);
+    यदि (hk == रिक्त) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    hk->key = *key;
-    hk->key_hash = ngx_hash_key(key->data, last);
-    hk->value = value;
+    hk->कुञ्चिका = *कुञ्चिका;
+    hk->कुञ्चिका_hash = ngx_hash_कुञ्चिका(कुञ्चिका->दत्त, चरमः);
+    hk->मानम् = मानम्;
 
-    return NGX_OK;
+    प्रत्यागम NGX_OK;
 
 
 wildcard:
 
     /* wildcard hash */
 
-    k = ngx_hash_strlow(&key->data[skip], &key->data[skip], last - skip);
+    k = ngx_hash_strlow(&कुञ्चिका->दत्त[skip], &कुञ्चिका->दत्त[skip], चरमः - skip);
 
     k %= ha->hsize;
 
-    if (skip == 1) {
+    यदि (skip == 1) {
 
         /* check conflicts in exact hash for ".example.com" */
 
-        name = ha->keys_hash[k].elts;
+        name = ha->कुञ्चिकाः_hash[k].elts;
 
-        if (name) {
-            len = last - skip;
+        यदि (name) {
+            len = चरमः - skip;
 
-            for (i = 0; i < ha->keys_hash[k].nelts; i++) {
-                if (len != name[i].len) {
-                    continue;
+            प्रति (i = 0; i < ha->कुञ्चिकाः_hash[k].nelts; i++) {
+                यदि (len != name[i].len) {
+                    अनुवर्त;
                 }
 
-                if (ngx_strncmp(&key->data[1], name[i].data, len) == 0) {
-                    return NGX_BUSY;
+                यदि (ngx_strncmp(&कुञ्चिका->दत्त[1], name[i].दत्त, len) == 0) {
+                    प्रत्यागम NGX_BUSY;
                 }
             }
 
-        } else {
-            if (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
-                               sizeof(ngx_str_t))
+        } अन्यथा {
+            यदि (ngx_array_init(&ha->कुञ्चिकाः_hash[k], ha->अस्थायी_pool, 4,
+                               परिमाण(ngx_str_t))
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                प्रत्यागम NGX_ERROR;
             }
         }
 
-        name = ngx_array_push(&ha->keys_hash[k]);
-        if (name == NULL) {
-            return NGX_ERROR;
+        name = ngx_array_प्रक्षिप(&ha->कुञ्चिकाः_hash[k]);
+        यदि (name == रिक्त) {
+            प्रत्यागम NGX_ERROR;
         }
 
-        name->len = last - 1;
-        name->data = ngx_pnalloc(ha->temp_pool, name->len);
-        if (name->data == NULL) {
-            return NGX_ERROR;
+        name->len = चरमः - 1;
+        name->दत्त = ngx_pnalloc(ha->अस्थायी_pool, name->len);
+        यदि (name->दत्त == रिक्त) {
+            प्रत्यागम NGX_ERROR;
         }
 
-        ngx_memcpy(name->data, &key->data[1], name->len);
+        ngx_memcpy(name->दत्त, &कुञ्चिका->दत्त[1], name->len);
     }
 
 
-    if (skip) {
+    यदि (skip) {
 
         /*
          * convert "*.example.com" to "com.example.\0"
          *      and ".example.com" to "com.example\0"
          */
 
-        p = ngx_pnalloc(ha->temp_pool, last);
-        if (p == NULL) {
-            return NGX_ERROR;
+        p = ngx_pnalloc(ha->अस्थायी_pool, चरमः);
+        यदि (p == रिक्त) {
+            प्रत्यागम NGX_ERROR;
         }
 
         len = 0;
         n = 0;
 
-        for (i = last - 1; i; i--) {
-            if (key->data[i] == '.') {
-                ngx_memcpy(&p[n], &key->data[i + 1], len);
+        प्रति (i = चरमः - 1; i; i--) {
+            यदि (कुञ्चिका->दत्त[i] == '.') {
+                ngx_memcpy(&p[n], &कुञ्चिका->दत्त[i + 1], len);
                 n += len;
                 p[n++] = '.';
                 len = 0;
-                continue;
+                अनुवर्त;
             }
 
             len++;
         }
 
-        if (len) {
-            ngx_memcpy(&p[n], &key->data[1], len);
+        यदि (len) {
+            ngx_memcpy(&p[n], &कुञ्चिका->दत्त[1], len);
             n += len;
         }
 
         p[n] = '\0';
 
-        hwc = &ha->dns_wc_head;
-        keys = &ha->dns_wc_head_hash[k];
+        hwc = &ha->dns_wc_शीर्ष;
+        कुञ्चिकाः = &ha->dns_wc_शीर्ष_hash[k];
 
-    } else {
+    } अन्यथा {
 
         /* convert "www.example.*" to "www.example\0" */
 
-        last++;
+        चरमः++;
 
-        p = ngx_pnalloc(ha->temp_pool, last);
-        if (p == NULL) {
-            return NGX_ERROR;
+        p = ngx_pnalloc(ha->अस्थायी_pool, चरमः);
+        यदि (p == रिक्त) {
+            प्रत्यागम NGX_ERROR;
         }
 
-        ngx_cpystrn(p, key->data, last);
+        ngx_cpystrn(p, कुञ्चिका->दत्त, चरमः);
 
-        hwc = &ha->dns_wc_tail;
-        keys = &ha->dns_wc_tail_hash[k];
+        hwc = &ha->dns_wc_पुच्छ;
+        कुञ्चिकाः = &ha->dns_wc_पुच्छ_hash[k];
     }
 
 
     /* check conflicts in wildcard hash */
 
-    name = keys->elts;
+    name = कुञ्चिकाः->elts;
 
-    if (name) {
-        len = last - skip;
+    यदि (name) {
+        len = चरमः - skip;
 
-        for (i = 0; i < keys->nelts; i++) {
-            if (len != name[i].len) {
-                continue;
+        प्रति (i = 0; i < कुञ्चिकाः->nelts; i++) {
+            यदि (len != name[i].len) {
+                अनुवर्त;
             }
 
-            if (ngx_strncmp(key->data + skip, name[i].data, len) == 0) {
-                return NGX_BUSY;
+            यदि (ngx_strncmp(कुञ्चिका->दत्त + skip, name[i].दत्त, len) == 0) {
+                प्रत्यागम NGX_BUSY;
             }
         }
 
-    } else {
-        if (ngx_array_init(keys, ha->temp_pool, 4, sizeof(ngx_str_t)) != NGX_OK)
+    } अन्यथा {
+        यदि (ngx_array_init(कुञ्चिकाः, ha->अस्थायी_pool, 4, परिमाण(ngx_str_t)) != NGX_OK)
         {
-            return NGX_ERROR;
+            प्रत्यागम NGX_ERROR;
         }
     }
 
-    name = ngx_array_push(keys);
-    if (name == NULL) {
-        return NGX_ERROR;
+    name = ngx_array_प्रक्षिप(कुञ्चिकाः);
+    यदि (name == रिक्त) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    name->len = last - skip;
-    name->data = ngx_pnalloc(ha->temp_pool, name->len);
-    if (name->data == NULL) {
-        return NGX_ERROR;
+    name->len = चरमः - skip;
+    name->दत्त = ngx_pnalloc(ha->अस्थायी_pool, name->len);
+    यदि (name->दत्त == रिक्त) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    ngx_memcpy(name->data, key->data + skip, name->len);
+    ngx_memcpy(name->दत्त, कुञ्चिका->दत्त + skip, name->len);
 
 
     /* add to wildcard hash */
 
-    hk = ngx_array_push(hwc);
-    if (hk == NULL) {
-        return NGX_ERROR;
+    hk = ngx_array_प्रक्षिप(hwc);
+    यदि (hk == रिक्त) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    hk->key.len = last - 1;
-    hk->key.data = p;
-    hk->key_hash = 0;
-    hk->value = value;
+    hk->कुञ्चिका.len = चरमः - 1;
+    hk->कुञ्चिका.दत्त = p;
+    hk->कुञ्चिका_hash = 0;
+    hk->मानम् = मानम्;
 
-    return NGX_OK;
+    प्रत्यागम NGX_OK;
 }

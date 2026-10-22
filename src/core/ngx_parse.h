@@ -5,17 +5,17 @@
  */
 
 
-#ifndef _NGX_PARSE_H_INCLUDED_
-#define _NGX_PARSE_H_INCLUDED_
+#यदि_अपरिभाषितम् _NGX_PARSE_H_INCLUDED_
+#परिभाषय _NGX_PARSE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-ssize_t ngx_parse_size(ngx_str_t *line);
-off_t ngx_parse_offset(ngx_str_t *line);
-ngx_int_t ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec);
+ssize_t ngx_parse_आकार(ngx_str_t *पङ्क्तिः);
+off_t ngx_parse_विस्थापनम्(ngx_str_t *पङ्क्तिः);
+ngx_int_t ngx_parse_time(ngx_str_t *पङ्क्तिः, ngx_uint_t is_sec);
 
 
-#endif /* _NGX_PARSE_H_INCLUDED_ */
+#यदि_अन्तः /* _NGX_PARSE_H_INCLUDED_ */

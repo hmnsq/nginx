@@ -5,23 +5,23 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
 ngx_buf_t *
-ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
+ngx_create_अस्थायी_buf(ngx_pool_t *pool, आकार_t आकार)
 {
     ngx_buf_t *b;
 
     b = ngx_calloc_buf(pool);
-    if (b == NULL) {
-        return NULL;
+    यदि (b == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    b->start = ngx_palloc(pool, size);
-    if (b->start == NULL) {
-        return NULL;
+    b->start = ngx_palloc(pool, आकार);
+    यदि (b->start == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
     /*
@@ -36,11 +36,11 @@ ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
      */
 
     b->pos = b->start;
-    b->last = b->start;
-    b->end = b->last + size;
+    b->चरमः = b->start;
+    b->अन्तः = b->चरमः + आकार;
     b->temporary = 1;
 
-    return b;
+    प्रत्यागम b;
 }
 
 
@@ -51,40 +51,40 @@ ngx_alloc_chain_link(ngx_pool_t *pool)
 
     cl = pool->chain;
 
-    if (cl) {
-        pool->chain = cl->next;
-        return cl;
+    यदि (cl) {
+        pool->chain = cl->अग्र;
+        प्रत्यागम cl;
     }
 
-    cl = ngx_palloc(pool, sizeof(ngx_chain_t));
-    if (cl == NULL) {
-        return NULL;
+    cl = ngx_palloc(pool, परिमाण(ngx_chain_t));
+    यदि (cl == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    return cl;
+    प्रत्यागम cl;
 }
 
 
 ngx_chain_t *
-ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
+ngx_create_chain_सम्बन्धि_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
 {
     u_char       *p;
     ngx_int_t     i;
     ngx_buf_t    *b;
     ngx_chain_t  *chain, *cl, **ll;
 
-    p = ngx_palloc(pool, bufs->num * bufs->size);
-    if (p == NULL) {
-        return NULL;
+    p = ngx_palloc(pool, bufs->अङ्कः * bufs->आकार);
+    यदि (p == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
     ll = &chain;
 
-    for (i = 0; i < bufs->num; i++) {
+    प्रति (i = 0; i < bufs->अङ्कः; i++) {
 
         b = ngx_calloc_buf(pool);
-        if (b == NULL) {
-            return NULL;
+        यदि (b == रिक्त) {
+            प्रत्यागम रिक्त;
         }
 
         /*
@@ -100,215 +100,215 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
          */
 
         b->pos = p;
-        b->last = p;
+        b->चरमः = p;
         b->temporary = 1;
 
         b->start = p;
-        p += bufs->size;
-        b->end = p;
+        p += bufs->आकार;
+        b->अन्तः = p;
 
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            return NULL;
+        यदि (cl == रिक्त) {
+            प्रत्यागम रिक्त;
         }
 
         cl->buf = b;
         *ll = cl;
-        ll = &cl->next;
+        ll = &cl->अग्र;
     }
 
-    *ll = NULL;
+    *ll = रिक्त;
 
-    return chain;
+    प्रत्यागम chain;
 }
 
 
 ngx_int_t
-ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *in)
+ngx_chain_सङ्कलय_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *अन्तर्)
 {
     ngx_chain_t  *cl, **ll;
 
     ll = chain;
 
-    for (cl = *chain; cl; cl = cl->next) {
-        ll = &cl->next;
+    प्रति (cl = *chain; cl; cl = cl->अग्र) {
+        ll = &cl->अग्र;
     }
 
-    while (in) {
+    यावत् (अन्तर्) {
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            *ll = NULL;
-            return NGX_ERROR;
+        यदि (cl == रिक्त) {
+            *ll = रिक्त;
+            प्रत्यागम NGX_ERROR;
         }
 
-        cl->buf = in->buf;
+        cl->buf = अन्तर्->buf;
         *ll = cl;
-        ll = &cl->next;
-        in = in->next;
+        ll = &cl->अग्र;
+        अन्तर् = अन्तर्->अग्र;
     }
 
-    *ll = NULL;
+    *ll = रिक्त;
 
-    return NGX_OK;
+    प्रत्यागम NGX_OK;
 }
 
 
 ngx_chain_t *
-ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **free)
+ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **मुक्त)
 {
     ngx_chain_t  *cl;
 
-    if (*free) {
-        cl = *free;
-        *free = cl->next;
-        cl->next = NULL;
-        return cl;
+    यदि (*मुक्त) {
+        cl = *मुक्त;
+        *मुक्त = cl->अग्र;
+        cl->अग्र = रिक्त;
+        प्रत्यागम cl;
     }
 
     cl = ngx_alloc_chain_link(p);
-    if (cl == NULL) {
-        return NULL;
+    यदि (cl == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
     cl->buf = ngx_calloc_buf(p);
-    if (cl->buf == NULL) {
-        return NULL;
+    यदि (cl->buf == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    cl->next = NULL;
+    cl->अग्र = रिक्त;
 
-    return cl;
+    प्रत्यागम cl;
 }
 
 
-void
-ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free, ngx_chain_t **busy,
-    ngx_chain_t **out, ngx_buf_tag_t tag)
+शून्य
+ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **मुक्त, ngx_chain_t **busy,
+    ngx_chain_t **बहिर्गमनम्, ngx_buf_चिह्नकम्_t चिह्नकम्)
 {
     ngx_chain_t  *cl;
 
-    if (*out) {
-        if (*busy == NULL) {
-            *busy = *out;
+    यदि (*बहिर्गमनम्) {
+        यदि (*busy == रिक्त) {
+            *busy = *बहिर्गमनम्;
 
-        } else {
-            for (cl = *busy; cl->next; cl = cl->next) { /* void */ }
+        } अन्यथा {
+            प्रति (cl = *busy; cl->अग्र; cl = cl->अग्र) { /* void */ }
 
-            cl->next = *out;
+            cl->अग्र = *बहिर्गमनम्;
         }
 
-        *out = NULL;
+        *बहिर्गमनम् = रिक्त;
     }
 
-    while (*busy) {
+    यावत् (*busy) {
         cl = *busy;
 
-        if (cl->buf->tag != tag) {
-            *busy = cl->next;
+        यदि (cl->buf->चिह्नकम् != चिह्नकम्) {
+            *busy = cl->अग्र;
             ngx_free_chain(p, cl);
-            continue;
+            अनुवर्त;
         }
 
-        if (ngx_buf_size(cl->buf) != 0) {
-            break;
+        यदि (ngx_buf_आकार(cl->buf) != 0) {
+            भङ्ग;
         }
 
         cl->buf->pos = cl->buf->start;
-        cl->buf->last = cl->buf->start;
+        cl->buf->चरमः = cl->buf->start;
 
-        *busy = cl->next;
-        cl->next = *free;
-        *free = cl;
+        *busy = cl->अग्र;
+        cl->अग्र = *मुक्त;
+        *मुक्त = cl;
     }
 }
 
 
 off_t
-ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit)
+ngx_chain_coalesce_file(ngx_chain_t **अन्तर्, off_t सीमा)
 {
-    off_t         total, size, aligned, fprev;
+    off_t         योग, आकार, aligned, fprev;
     ngx_fd_t      fd;
     ngx_chain_t  *cl;
 
-    total = 0;
+    योग = 0;
 
-    cl = *in;
+    cl = *अन्तर्;
     fd = cl->buf->file->fd;
 
-    do {
-        size = cl->buf->file_last - cl->buf->file_pos;
+    कुरु {
+        आकार = cl->buf->file_चरमः - cl->buf->file_pos;
 
-        if (size > limit - total) {
-            size = limit - total;
+        यदि (आकार > सीमा - योग) {
+            आकार = सीमा - योग;
 
-            aligned = (cl->buf->file_pos + size + ngx_pagesize - 1)
+            aligned = (cl->buf->file_pos + आकार + ngx_pagesize - 1)
                        & ~((off_t) ngx_pagesize - 1);
 
-            if (aligned <= cl->buf->file_last) {
-                size = aligned - cl->buf->file_pos;
+            यदि (aligned <= cl->buf->file_चरमः) {
+                आकार = aligned - cl->buf->file_pos;
             }
 
-            total += size;
-            break;
+            योग += आकार;
+            भङ्ग;
         }
 
-        total += size;
-        fprev = cl->buf->file_pos + size;
-        cl = cl->next;
+        योग += आकार;
+        fprev = cl->buf->file_pos + आकार;
+        cl = cl->अग्र;
 
-    } while (cl
-             && cl->buf->in_file
-             && total < limit
+    } यावत् (cl
+             && cl->buf->अन्तर्_file
+             && योग < सीमा
              && fd == cl->buf->file->fd
              && fprev == cl->buf->file_pos);
 
-    *in = cl;
+    *अन्तर् = cl;
 
-    return total;
+    प्रत्यागम योग;
 }
 
 
 ngx_chain_t *
-ngx_chain_update_sent(ngx_chain_t *in, off_t sent)
+ngx_chain_update_प्रेषितम्(ngx_chain_t *अन्तर्, off_t प्रेषितम्)
 {
-    off_t  size;
+    off_t  आकार;
 
-    for ( /* void */ ; in; in = in->next) {
+    प्रति ( /* void */ ; अन्तर्; अन्तर् = अन्तर्->अग्र) {
 
-        if (ngx_buf_special(in->buf)) {
-            continue;
+        यदि (ngx_buf_special(अन्तर्->buf)) {
+            अनुवर्त;
         }
 
-        if (sent == 0) {
-            break;
+        यदि (प्रेषितम् == 0) {
+            भङ्ग;
         }
 
-        size = ngx_buf_size(in->buf);
+        आकार = ngx_buf_आकार(अन्तर्->buf);
 
-        if (sent >= size) {
-            sent -= size;
+        यदि (प्रेषितम् >= आकार) {
+            प्रेषितम् -= आकार;
 
-            if (ngx_buf_in_memory(in->buf)) {
-                in->buf->pos = in->buf->last;
+            यदि (ngx_buf_अन्तर्_स्मृतिः(अन्तर्->buf)) {
+                अन्तर्->buf->pos = अन्तर्->buf->चरमः;
             }
 
-            if (in->buf->in_file) {
-                in->buf->file_pos = in->buf->file_last;
+            यदि (अन्तर्->buf->अन्तर्_file) {
+                अन्तर्->buf->file_pos = अन्तर्->buf->file_चरमः;
             }
 
-            continue;
+            अनुवर्त;
         }
 
-        if (ngx_buf_in_memory(in->buf)) {
-            in->buf->pos += (size_t) sent;
+        यदि (ngx_buf_अन्तर्_स्मृतिः(अन्तर्->buf)) {
+            अन्तर्->buf->pos += (आकार_t) प्रेषितम्;
         }
 
-        if (in->buf->in_file) {
-            in->buf->file_pos += sent;
+        यदि (अन्तर्->buf->अन्तर्_file) {
+            अन्तर्->buf->file_pos += प्रेषितम्;
         }
 
-        break;
+        भङ्ग;
     }
 
-    return in;
+    प्रत्यागम अन्तर्;
 }

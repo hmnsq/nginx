@@ -4,173 +4,173 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-typedef ssize_t   (*ngx_json_length_pt)(ngx_data_item_t *item);
-typedef u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_data_item_t *item);
+प्रकारनिर्देश ssize_t   (*ngx_json_दीर्घता_pt)(ngx_दत्त_item_t *item);
+प्रकारनिर्देश u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_दत्त_item_t *item);
 
 
-typedef struct {
-    ngx_json_length_pt        length;
+प्रकारनिर्देश संरचना {
+    ngx_json_दीर्घता_pt        दीर्घता;
     ngx_json_encode_pt        encode;
 } ngx_json_encode_t;
 
 
-static ssize_t ngx_json_obj_length(ngx_data_item_t *item);
-static ssize_t ngx_json_list_length(ngx_data_item_t *item);
-static ssize_t ngx_json_string_length(ngx_data_item_t *item);
-static ssize_t ngx_json_integer_length(ngx_data_item_t *item);
-static ssize_t ngx_json_boolean_length(ngx_data_item_t *item);
-static ssize_t ngx_json_null_length(ngx_data_item_t *item);
+स्थिर ssize_t ngx_json_obj_दीर्घता(ngx_दत्त_item_t *item);
+स्थिर ssize_t ngx_json_list_दीर्घता(ngx_दत्त_item_t *item);
+स्थिर ssize_t ngx_json_string_दीर्घता(ngx_दत्त_item_t *item);
+स्थिर ssize_t ngx_json_integer_दीर्घता(ngx_दत्त_item_t *item);
+स्थिर ssize_t ngx_json_boolean_दीर्घता(ngx_दत्त_item_t *item);
+स्थिर ssize_t ngx_json_null_दीर्घता(ngx_दत्त_item_t *item);
 
-static u_char *ngx_json_obj_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_list_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_string_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_integer_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_null_encode(u_char *p, ngx_data_item_t *item);
+स्थिर u_char *ngx_json_obj_encode(u_char *p, ngx_दत्त_item_t *item);
+स्थिर u_char *ngx_json_list_encode(u_char *p, ngx_दत्त_item_t *item);
+स्थिर u_char *ngx_json_string_encode(u_char *p, ngx_दत्त_item_t *item);
+स्थिर u_char *ngx_json_integer_encode(u_char *p, ngx_दत्त_item_t *item);
+स्थिर u_char *ngx_json_boolean_encode(u_char *p, ngx_दत्त_item_t *item);
+स्थिर u_char *ngx_json_null_encode(u_char *p, ngx_दत्त_item_t *item);
 
 
-static ngx_json_encode_t  ngx_json_encode[] = {
+स्थिर ngx_json_encode_t  ngx_json_encode[] = {
 
     /* NGX_DATA_OBJECT_TYPE */
-    { ngx_json_obj_length,
+    { ngx_json_obj_दीर्घता,
       ngx_json_obj_encode },
 
     /* NGX_DATA_LIST_TYPE */
-    { ngx_json_list_length,
+    { ngx_json_list_दीर्घता,
       ngx_json_list_encode },
 
     /* NGX_DATA_STRING_TYPE */
-    { ngx_json_string_length,
+    { ngx_json_string_दीर्घता,
       ngx_json_string_encode },
 
     /* NGX_DATA_INTEGER_TYPE */
-    { ngx_json_integer_length,
+    { ngx_json_integer_दीर्घता,
       ngx_json_integer_encode },
 
     /* NGX_DATA_BOOLEAN_TYPE */
-    { ngx_json_boolean_length,
+    { ngx_json_boolean_दीर्घता,
       ngx_json_boolean_encode },
 
     /* NGX_DATA_NULL_TYPE */
-    { ngx_json_null_length,
+    { ngx_json_null_दीर्घता,
       ngx_json_null_encode },
 };
 
 
 ngx_buf_t *
-ngx_json_render(ngx_pool_t *pool, ngx_data_item_t *item)
+ngx_json_render(ngx_pool_t *pool, ngx_दत्त_item_t *item)
 {
-    size_t      length;
+    आकार_t      दीर्घता;
     ngx_buf_t  *buf;
 
-    length = ngx_json_encode[item->type].length(item);
-    if (length == (size_t) NGX_ERROR) {
-        return NULL;
+    दीर्घता = ngx_json_encode[item->type].दीर्घता(item);
+    यदि (दीर्घता == (आकार_t) NGX_ERROR) {
+        प्रत्यागम रिक्त;
     }
 
-    buf = ngx_create_temp_buf(pool, length);
-    if (buf == NULL) {
-        return NULL;
+    buf = ngx_create_अस्थायी_buf(pool, दीर्घता);
+    यदि (buf == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    buf->last = ngx_json_encode[item->type].encode(buf->last, item);
+    buf->चरमः = ngx_json_encode[item->type].encode(buf->चरमः, item);
 
-    return buf;
+    प्रत्यागम buf;
 }
 
 
-static ssize_t
-ngx_json_obj_length(ngx_data_item_t *item)
+स्थिर ssize_t
+ngx_json_obj_दीर्घता(ngx_दत्त_item_t *item)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    आकार_t            len, योग;
+    ngx_दत्त_obj_t   *obj;
+    ngx_दत्त_item_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("{}") - 1;
+    obj = &item->दत्त.object;
+    योग = परिमाण("{}") - 1;
     i = obj->item;
 
-    if (i) {
-        for ( ;; ) {
-            if (i->name.len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\":") - 1)) {
-                return NGX_ERROR;
+    यदि (i) {
+        प्रति ( ;; ) {
+            यदि (i->name.len > NGX_MAX_आकार_T_मानम् - (परिमाण("\"\":") - 1)) {
+                प्रत्यागम NGX_ERROR;
             }
 
-            len = sizeof("\"\":") - 1 + i->name.len;
+            len = परिमाण("\"\":") - 1 + i->name.len;
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            यदि (len > NGX_MAX_आकार_T_मानम् - योग) {
+                प्रत्यागम NGX_ERROR;
             }
 
-            total += len;
+            योग += len;
 
-            len = ngx_escape_json(NULL, i->name.data, i->name.len);
+            len = ngx_escape_json(रिक्त, i->name.दत्त, i->name.len);
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            यदि (len > NGX_MAX_आकार_T_मानम् - योग) {
+                प्रत्यागम NGX_ERROR;
             }
 
-            total += len;
+            योग += len;
 
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+            len = ngx_json_encode[i->type].दीर्घता(i);
+            यदि (len == (आकार_t) NGX_ERROR) {
+                प्रत्यागम NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            यदि (len > NGX_MAX_आकार_T_मानम् - योग) {
+                प्रत्यागम NGX_ERROR;
             }
 
-            total += len;
+            योग += len;
 
-            i = i->next;
+            i = i->अग्र;
 
-            if (i == NULL) {
-                break;
+            यदि (i == रिक्त) {
+                भङ्ग;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            यदि (योग > NGX_MAX_आकार_T_मानम् - (परिमाण(",") - 1)) {
+                प्रत्यागम NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            योग += परिमाण(",") - 1;
         }
     }
 
-    return total;
+    प्रत्यागम योग;
 }
 
 
-static u_char *
-ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
+स्थिर u_char *
+ngx_json_obj_encode(u_char *p, ngx_दत्त_item_t *item)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_दत्त_obj_t   *obj;
+    ngx_दत्त_item_t  *i;
 
-    obj = &item->data.object;
+    obj = &item->दत्त.object;
     i = obj->item;
 
     *p++ = '{';
 
-    if (i) {
-        for ( ;; ) {
+    यदि (i) {
+        प्रति ( ;; ) {
             *p++ = '"';
 
-            p = (u_char *) ngx_escape_json(p, i->name.data, i->name.len);
+            p = (u_char *) ngx_escape_json(p, i->name.दत्त, i->name.len);
 
             *p++ = '"';
             *p++ = ':';
 
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->अग्र;
 
-            if (i == NULL) {
-                break;
+            यदि (i == रिक्त) {
+                भङ्ग;
             }
 
             *p++ = ',';
@@ -179,71 +179,71 @@ ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = '}';
 
-    return p;
+    प्रत्यागम p;
 }
 
 
-static ssize_t
-ngx_json_list_length(ngx_data_item_t *item)
+स्थिर ssize_t
+ngx_json_list_दीर्घता(ngx_दत्त_item_t *item)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    आकार_t            len, योग;
+    ngx_दत्त_obj_t   *obj;
+    ngx_दत्त_item_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("[]") - 1;
+    obj = &item->दत्त.object;
+    योग = परिमाण("[]") - 1;
     i = obj->item;
 
-    if (i) {
-        for ( ;; ) {
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+    यदि (i) {
+        प्रति ( ;; ) {
+            len = ngx_json_encode[i->type].दीर्घता(i);
+            यदि (len == (आकार_t) NGX_ERROR) {
+                प्रत्यागम NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            यदि (len > NGX_MAX_आकार_T_मानम् - योग) {
+                प्रत्यागम NGX_ERROR;
             }
 
-            total += len;
+            योग += len;
 
-            i = i->next;
+            i = i->अग्र;
 
-            if (i == NULL) {
-                break;
+            यदि (i == रिक्त) {
+                भङ्ग;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            यदि (योग > NGX_MAX_आकार_T_मानम् - (परिमाण(",") - 1)) {
+                प्रत्यागम NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            योग += परिमाण(",") - 1;
         }
     }
 
-    return total;
+    प्रत्यागम योग;
 }
 
 
-static u_char *
-ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
+स्थिर u_char *
+ngx_json_list_encode(u_char *p, ngx_दत्त_item_t *item)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_दत्त_obj_t   *obj;
+    ngx_दत्त_item_t  *i;
 
-    obj = &item->data.object;
+    obj = &item->दत्त.object;
     i = obj->item;
 
     *p++ = '[';
 
-    if (i) {
-        for ( ;; ) {
+    यदि (i) {
+        प्रति ( ;; ) {
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->अग्र;
 
-            if (i == NULL) {
-                break;
+            यदि (i == रिक्त) {
+                भङ्ग;
             }
 
             *p++ = ',';
@@ -252,89 +252,89 @@ ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = ']';
 
-    return p;
+    प्रत्यागम p;
 }
 
 
-static ssize_t
-ngx_json_string_length(ngx_data_item_t *item)
+स्थिर ssize_t
+ngx_json_string_दीर्घता(ngx_दत्त_item_t *item)
 {
-    size_t      len, total;
+    आकार_t      len, योग;
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &item->दत्त.string;
 
-    if (str->len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\"") - 1)) {
-        return NGX_ERROR;
+    यदि (str->len > NGX_MAX_आकार_T_मानम् - (परिमाण("\"\"") - 1)) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    total = sizeof("\"\"") - 1 + str->len;
+    योग = परिमाण("\"\"") - 1 + str->len;
 
-    len = ngx_escape_json(NULL, str->data, str->len);
+    len = ngx_escape_json(रिक्त, str->दत्त, str->len);
 
-    if (len > NGX_MAX_SIZE_T_VALUE - total) {
-        return NGX_ERROR;
+    यदि (len > NGX_MAX_आकार_T_मानम् - योग) {
+        प्रत्यागम NGX_ERROR;
     }
 
-    return total + len;
+    प्रत्यागम योग + len;
 }
 
 
-static u_char *
-ngx_json_string_encode(u_char *p, ngx_data_item_t *item)
+स्थिर u_char *
+ngx_json_string_encode(u_char *p, ngx_दत्त_item_t *item)
 {
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &item->दत्त.string;
 
     *p++ = '"';
 
-    p = (u_char *) ngx_escape_json(p, str->data, str->len);
+    p = (u_char *) ngx_escape_json(p, str->दत्त, str->len);
 
     *p++ = '"';
 
-    return p;
+    प्रत्यागम p;
 }
 
 
-static ssize_t
-ngx_json_integer_length(ngx_data_item_t *item)
+स्थिर ssize_t
+ngx_json_integer_दीर्घता(ngx_दत्त_item_t *item)
 {
-    return NGX_INT64_LEN;
+    प्रत्यागम NGX_INT64_LEN;
 }
 
 
-static u_char *
-ngx_json_integer_encode(u_char *p, ngx_data_item_t *item)
+स्थिर u_char *
+ngx_json_integer_encode(u_char *p, ngx_दत्त_item_t *item)
 {
-    return ngx_sprintf(p, "%L", item->data.integer);
+    प्रत्यागम ngx_sprintf(p, "%L", item->दत्त.integer);
 }
 
 
-static ssize_t
-ngx_json_boolean_length(ngx_data_item_t *item)
+स्थिर ssize_t
+ngx_json_boolean_दीर्घता(ngx_दत्त_item_t *item)
 {
-    return sizeof("false") - 1;
+    प्रत्यागम परिमाण("false") - 1;
 }
 
 
-static u_char *
-ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item)
+स्थिर u_char *
+ngx_json_boolean_encode(u_char *p, ngx_दत्त_item_t *item)
 {
-    return item->data.boolean ? ngx_cpymem(p, "true", 4)
+    प्रत्यागम item->दत्त.boolean ? ngx_cpymem(p, "true", 4)
                               : ngx_cpymem(p, "false", 5);
 }
 
 
-static ssize_t
-ngx_json_null_length(ngx_data_item_t *item)
+स्थिर ssize_t
+ngx_json_null_दीर्घता(ngx_दत्त_item_t *item)
 {
-    return sizeof("null") - 1;
+    प्रत्यागम परिमाण("null") - 1;
 }
 
 
-static u_char *
-ngx_json_null_encode(u_char *p, ngx_data_item_t *item)
+स्थिर u_char *
+ngx_json_null_encode(u_char *p, ngx_दत्त_item_t *item)
 {
-    return ngx_cpymem(p, "null", 4);
+    प्रत्यागम ngx_cpymem(p, "null", 4);
 }

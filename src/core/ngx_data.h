@@ -4,98 +4,98 @@
  */
 
 
-#ifndef _NGX_DATA_H_INCLUDED_
-#define _NGX_DATA_H_INCLUDED_
+#यदि_अपरिभाषितम् NGX_दत्त_H_INCLUDED
+#परिभाषय NGX_दत्त_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-typedef struct ngx_data_item_s ngx_data_item_t;
+प्रकारनिर्देश संरचना ngx_दत्त_item_s ngx_दत्त_item_t;
 
 
-typedef struct {
-    ngx_data_item_t          *item;
-    ngx_data_item_t         **next;
-} ngx_data_obj_t;
+प्रकारनिर्देश संरचना {
+    ngx_दत्त_item_t          *item;
+    ngx_दत्त_item_t         **अग्र;
+} ngx_दत्त_obj_t;
 
 
-struct ngx_data_item_s {
-    ngx_data_item_t          *next;
+संरचना ngx_दत्त_item_s {
+    ngx_दत्त_item_t          *अग्र;
     ngx_str_t                 name;
     ngx_uint_t                type;
 
-    union {
-        ngx_data_obj_t        object;
+    सङ्घ {
+        ngx_दत्त_obj_t        object;
         ngx_str_t             string;
         int64_t               integer;
         ngx_uint_t            boolean;
-    } data;
+    } दत्त;
 };
 
 
-ngx_data_item_t *ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type);
+ngx_दत्त_item_t *ngx_दत्त_new_item(ngx_pool_t *pool, ngx_uint_t type);
 
-void ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name,
-    ngx_data_item_t *item);
+शून्य ngx_दत्त_सङ्कलय_item(ngx_दत्त_item_t *obj, ngx_str_t *name,
+    ngx_दत्त_item_t *item);
 
-#define NGX_DATA_OBJECT_TYPE  0
-#define NGX_DATA_LIST_TYPE    1
-#define NGX_DATA_STRING_TYPE  2
-#define NGX_DATA_INTEGER_TYPE 3
-#define NGX_DATA_BOOLEAN_TYPE 4
-#define NGX_DATA_NULL_TYPE    5
-
-
-#define ngx_data_new_object(pool)                                             \
-    ngx_data_new_item(pool, NGX_DATA_OBJECT_TYPE)
-#define ngx_data_new_list(pool)                                               \
-    ngx_data_new_item(pool, NGX_DATA_LIST_TYPE)
-#define ngx_data_new_string(pool)                                             \
-    ngx_data_new_item(pool, NGX_DATA_STRING_TYPE)
-#define ngx_data_new_integer(pool)                                            \
-    ngx_data_new_item(pool, NGX_DATA_INTEGER_TYPE)
-#define ngx_data_new_boolean(pool)                                            \
-    ngx_data_new_item(pool, NGX_DATA_BOOLEAN_TYPE)
-#define ngx_data_new_null(pool)                                               \
-    ngx_data_new_item(pool, NGX_DATA_NULL_TYPE)
+#परिभाषय NGX_दत्त_OBJECT_TYPE  0
+#परिभाषय NGX_दत्त_LIST_TYPE    1
+#परिभाषय NGX_दत्त_STRING_TYPE  2
+#परिभाषय NGX_दत्त_INTEGER_TYPE 3
+#परिभाषय NGX_दत्त_BOOLEAN_TYPE 4
+#परिभाषय NGX_दत्त_NULL_TYPE    5
 
 
-typedef struct {
+#परिभाषय ngx_दत्त_new_object(pool)                                             \
+    ngx_दत्त_new_item(pool, NGX_दत्त_OBJECT_TYPE)
+#परिभाषय ngx_दत्त_new_list(pool)                                               \
+    ngx_दत्त_new_item(pool, NGX_दत्त_LIST_TYPE)
+#परिभाषय ngx_दत्त_new_string(pool)                                             \
+    ngx_दत्त_new_item(pool, NGX_दत्त_STRING_TYPE)
+#परिभाषय ngx_दत्त_new_integer(pool)                                            \
+    ngx_दत्त_new_item(pool, NGX_दत्त_INTEGER_TYPE)
+#परिभाषय ngx_दत्त_new_boolean(pool)                                            \
+    ngx_दत्त_new_item(pool, NGX_दत्त_BOOLEAN_TYPE)
+#परिभाषय ngx_दत्त_new_null(pool)                                               \
+    ngx_दत्त_new_item(pool, NGX_दत्त_NULL_TYPE)
+
+
+प्रकारनिर्देश संरचना {
     ngx_str_t            name;
-    ngx_data_item_t   *(*handler)(uintptr_t data, ngx_pool_t *pool, void *ctx);
-    uintptr_t            data;
-} ngx_data_decl_t;
+    ngx_दत्त_item_t   *(*handler)(uintptr_t दत्त, ngx_pool_t *pool, शून्य *ctx);
+    uintptr_t            दत्त;
+} ngx_दत्त_decl_t;
 
-#define ngx_data_null_decl  { ngx_null_string, NULL, 0 }
+#परिभाषय ngx_दत्त_null_decl  { ngx_null_string, रिक्त, 0 }
 
-#define NGX_DATA_DECLINE  (ngx_data_item_t *) -1
+#परिभाषय NGX_दत्त_DECLINE  (ngx_दत्त_item_t *) -1
 
 
-ngx_data_item_t *ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx, ngx_array_t *fields);
+ngx_दत्त_item_t *ngx_दत्त_obj_handler(uintptr_t दत्त, ngx_pool_t *pool,
+    शून्य *ctx);
+ngx_दत्त_item_t *ngx_दत्त_obj_fields_handler(uintptr_t दत्त, ngx_pool_t *pool,
+    शून्य *ctx, ngx_array_t *fields);
 
-ngx_data_item_t *ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
+ngx_दत्त_item_t *ngx_दत्त_सङ्ख्या_handler(uintptr_t दत्त, ngx_pool_t *pool,
+    शून्य *ctx);
+ngx_दत्त_item_t *ngx_दत्त_string_handler(uintptr_t दत्त, ngx_pool_t *pool,
+    शून्य *ctx);
+ngx_दत्त_item_t *ngx_दत्त_boolean_handler(uintptr_t दत्त, ngx_pool_t *pool,
+    शून्य *ctx);
+ngx_दत्त_item_t *ngx_दत्त_time_handler(uintptr_t दत्त, ngx_pool_t *pool,
+    शून्य *ctx);
 
-ngx_data_item_t *ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_struct_atomic_handler(uintptr_t data,
-    ngx_pool_t *pool, void *ctx);
-ngx_data_item_t *ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_struct_boolean_handler(uintptr_t data,
-    ngx_pool_t *pool, void *ctx);
+ngx_दत्त_item_t *ngx_दत्त_struct_int64_handler(uintptr_t दत्त, ngx_pool_t *pool,
+    शून्य *ctx);
+ngx_दत्त_item_t *ngx_दत्त_struct_int_handler(uintptr_t दत्त, ngx_pool_t *pool,
+    शून्य *ctx);
+ngx_दत्त_item_t *ngx_दत्त_struct_atomic_handler(uintptr_t दत्त,
+    ngx_pool_t *pool, शून्य *ctx);
+ngx_दत्त_item_t *ngx_दत्त_struct_str_handler(uintptr_t दत्त, ngx_pool_t *pool,
+    शून्य *ctx);
+ngx_दत्त_item_t *ngx_दत्त_struct_boolean_handler(uintptr_t दत्त,
+    ngx_pool_t *pool, शून्य *ctx);
 
-#endif /* _NGX_DATA_H_INCLUDED_ */
+#यदि_अन्तः /* _NGX_DATA_H_INCLUDED_ */

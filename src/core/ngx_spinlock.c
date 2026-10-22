@@ -5,34 +5,34 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-void
-ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
+शून्य
+ngx_spinlock(ngx_atomic_t *तालकम्, ngx_atomic_int_t मानम्, ngx_uint_t spin)
 {
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#यदि (NGX_HAVE_ATOMIC_OPS)
 
     ngx_uint_t  i, n;
 
-    for ( ;; ) {
+    प्रति ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-            return;
+        यदि (*तालकम् == 0 && ngx_atomic_cmp_समुच्चयः(तालकम्, 0, मानम्)) {
+            प्रत्यागम;
         }
 
-        if (ngx_ncpu > 1) {
+        यदि (ngx_ncpu > 1) {
 
-            for (n = 1; n < spin; n <<= 1) {
+            प्रति (n = 1; n < spin; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                प्रति (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-                    return;
+                यदि (*तालकम् == 0 && ngx_atomic_cmp_समुच्चयः(तालकम्, 0, मानम्)) {
+                    प्रत्यागम;
                 }
             }
         }
@@ -40,14 +40,14 @@ ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
         ngx_sched_yield();
     }
 
-#else
+#अन्यथा
 
-#if (NGX_THREADS)
+#यदि (NGX_तन्तवः)
 
-#error ngx_spinlock() or ngx_atomic_cmp_set() are not defined !
+#दोषः ngx_spinlock() or ngx_atomic_cmp_समुच्चयः() are not defined !
 
-#endif
+#यदि_अन्तः
 
-#endif
+#यदि_अन्तः
 
 }

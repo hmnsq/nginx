@@ -5,111 +5,111 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-#ifndef _NGX_QUEUE_H_INCLUDED_
-#define _NGX_QUEUE_H_INCLUDED_
+#यदि_अपरिभाषितम् _NGX_QUEUE_H_INCLUDED_
+#परिभाषय _NGX_QUEUE_H_INCLUDED_
 
 
-typedef struct ngx_queue_s  ngx_queue_t;
+प्रकारनिर्देश संरचना ngx_queue_s  ngx_queue_t;
 
-struct ngx_queue_s {
-    ngx_queue_t  *prev;
-    ngx_queue_t  *next;
+संरचना ngx_queue_s {
+    ngx_queue_t  *पूर्व;
+    ngx_queue_t  *अग्र;
 };
 
 
-#define ngx_queue_init(q)                                                     \
-    (q)->prev = q;                                                            \
-    (q)->next = q
+#परिभाषय ngx_queue_init(q)                                                     \
+    (q)->पूर्व = q;                                                            \
+    (q)->अग्र = q
 
 
-#define ngx_queue_empty(h)                                                    \
-    (h == (h)->prev)
+#परिभाषय ngx_queue_रिक्तानि(h)                                                    \
+    (h == (h)->पूर्व)
 
 
-#define ngx_queue_insert_head(h, x)                                           \
-    (x)->next = (h)->next;                                                    \
-    (x)->next->prev = x;                                                      \
-    (x)->prev = h;                                                            \
-    (h)->next = x
+#परिभाषय ngx_queue_निवेशय_शीर्ष(h, x)                                           \
+    (x)->अग्र = (h)->अग्र;                                                    \
+    (x)->अग्र->पूर्व = x;                                                      \
+    (x)->पूर्व = h;                                                            \
+    (h)->अग्र = x
 
 
-#define ngx_queue_insert_after   ngx_queue_insert_head
+#परिभाषय ngx_queue_निवेशय_after   ngx_queue_निवेशय_शीर्ष
 
 
-#define ngx_queue_insert_tail(h, x)                                           \
-    (x)->prev = (h)->prev;                                                    \
-    (x)->prev->next = x;                                                      \
-    (x)->next = h;                                                            \
-    (h)->prev = x
+#परिभाषय ngx_queue_निवेशय_पुच्छ(h, x)                                           \
+    (x)->पूर्व = (h)->पूर्व;                                                    \
+    (x)->पूर्व->अग्र = x;                                                      \
+    (x)->अग्र = h;                                                            \
+    (h)->पूर्व = x
 
 
-#define ngx_queue_insert_before   ngx_queue_insert_tail
+#परिभाषय ngx_queue_निवेशय_before   ngx_queue_निवेशय_पुच्छ
 
 
-#define ngx_queue_head(h)                                                     \
-    (h)->next
+#परिभाषय ngx_queue_शीर्ष(h)                                                     \
+    (h)->अग्र
 
 
-#define ngx_queue_last(h)                                                     \
-    (h)->prev
+#परिभाषय ngx_queue_चरमः(h)                                                     \
+    (h)->पूर्व
 
 
-#define ngx_queue_sentinel(h)                                                 \
+#परिभाषय ngx_queue_sentinel(h)                                                 \
     (h)
 
 
-#define ngx_queue_next(q)                                                     \
-    (q)->next
+#परिभाषय ngx_queue_अग्र(q)                                                     \
+    (q)->अग्र
 
 
-#define ngx_queue_prev(q)                                                     \
-    (q)->prev
+#परिभाषय ngx_queue_पूर्व(q)                                                     \
+    (q)->पूर्व
 
 
-#if (NGX_DEBUG)
+#यदि (NGX_DEBUG)
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next;                                              \
-    (x)->prev = NULL;                                                         \
-    (x)->next = NULL
+#परिभाषय ngx_queue_remove(x)                                                   \
+    (x)->अग्र->पूर्व = (x)->पूर्व;                                              \
+    (x)->पूर्व->अग्र = (x)->अग्र;                                              \
+    (x)->पूर्व = रिक्त;                                                         \
+    (x)->अग्र = रिक्त
 
-#else
+#अन्यथा
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next
+#परिभाषय ngx_queue_remove(x)                                                   \
+    (x)->अग्र->पूर्व = (x)->पूर्व;                                              \
+    (x)->पूर्व->अग्र = (x)->अग्र
 
-#endif
-
-
-#define ngx_queue_split(h, q, n)                                              \
-    (n)->prev = (h)->prev;                                                    \
-    (n)->prev->next = n;                                                      \
-    (n)->next = q;                                                            \
-    (h)->prev = (q)->prev;                                                    \
-    (h)->prev->next = h;                                                      \
-    (q)->prev = n;
+#यदि_अन्तः
 
 
-#define ngx_queue_add(h, n)                                                   \
-    (h)->prev->next = (n)->next;                                              \
-    (n)->next->prev = (h)->prev;                                              \
-    (h)->prev = (n)->prev;                                                    \
-    (h)->prev->next = h;
+#परिभाषय ngx_queue_विभज(h, q, n)                                              \
+    (n)->पूर्व = (h)->पूर्व;                                                    \
+    (n)->पूर्व->अग्र = n;                                                      \
+    (n)->अग्र = q;                                                            \
+    (h)->पूर्व = (q)->पूर्व;                                                    \
+    (h)->पूर्व->अग्र = h;                                                      \
+    (q)->पूर्व = n;
 
 
-#define ngx_queue_data(q, type, link)                                         \
+#परिभाषय ngx_queue_सङ्कलय(h, n)                                                   \
+    (h)->पूर्व->अग्र = (n)->अग्र;                                              \
+    (n)->अग्र->पूर्व = (h)->पूर्व;                                              \
+    (h)->पूर्व = (n)->पूर्व;                                                    \
+    (h)->पूर्व->अग्र = h;
+
+
+#परिभाषय ngx_queue_दत्त(q, type, link)                                         \
     (type *) ((u_char *) q - offsetof(type, link))
 
 
-ngx_queue_t *ngx_queue_middle(ngx_queue_t *queue);
-void ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ngx_queue_t *ngx_queue_मध्यः(ngx_queue_t *queue);
+शून्य ngx_queue_क्रमय(ngx_queue_t *queue,
+    ngx_int_t (*cmp)(ध्रुव ngx_queue_t *, ध्रुव ngx_queue_t *));
 
 
-#endif /* _NGX_QUEUE_H_INCLUDED_ */
+#यदि_अन्तः /* _NGX_QUEUE_H_INCLUDED_ */

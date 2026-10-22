@@ -4,8 +4,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
 /*
@@ -15,25 +15,25 @@
  */
 
 
-#define ngx_siphash_rotl(x, b)                                                \
+#परिभाषय ngx_siphash_rotl(x, b)                                                \
     (uint64_t) (((x) << (b)) | ((x) >> (64 - (b))))
 
-#define ngx_sipround                                                          \
-    do {                                                                      \
+#परिभाषय ngx_sipround                                                          \
+    कुरु {                                                                      \
         v0 += v1; v1 = ngx_siphash_rotl(v1, 13); v1 ^= v0;                    \
         v0 = ngx_siphash_rotl(v0, 32);                                        \
         v2 += v3; v3 = ngx_siphash_rotl(v3, 16); v3 ^= v2;                    \
         v0 += v3; v3 = ngx_siphash_rotl(v3, 21); v3 ^= v0;                    \
         v2 += v1; v1 = ngx_siphash_rotl(v1, 17); v1 ^= v2;                    \
         v2 = ngx_siphash_rotl(v2, 32);                                        \
-    } while (0)
+    } यावत् (0)
 
 
 uint64_t
-ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
+ngx_siphash(uint64_t k0, uint64_t k1, u_char *दत्त, आकार_t len)
 {
-    u_char    *end;
-    size_t     remainder;
+    u_char    *अन्तः;
+    आकार_t     remainder;
     uint64_t   v0, v1, v2, v3, m;
 
     v0 = k0 ^ 0x736f6d6570736575ULL;
@@ -42,10 +42,10 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
     v3 = k1 ^ 0x7465646279746573ULL;
 
     remainder = len & 7;
-    end = data + len - remainder;
+    अन्तः = दत्त + len - remainder;
 
-    for ( /* void */ ; data != end; data += 8) {
-        ngx_memcpy(&m, data, 8);
+    प्रति ( /* void */ ; दत्त != अन्तः; दत्त += 8) {
+        ngx_memcpy(&m, दत्त, 8);
         v3 ^= m;
         ngx_sipround;
         ngx_sipround;
@@ -54,30 +54,30 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
 
     m = (uint64_t) len << 56;
 
-    switch (remainder) {
-    case 7:
-        m |= (uint64_t) data[6] << 48;
+    विकल्प (remainder) {
+    पक्ष 7:
+        m |= (uint64_t) दत्त[6] << 48;
         /* fall through */
-    case 6:
-        m |= (uint64_t) data[5] << 40;
+    पक्ष 6:
+        m |= (uint64_t) दत्त[5] << 40;
         /* fall through */
-    case 5:
-        m |= (uint64_t) data[4] << 32;
+    पक्ष 5:
+        m |= (uint64_t) दत्त[4] << 32;
         /* fall through */
-    case 4:
-        m |= (uint64_t) data[3] << 24;
+    पक्ष 4:
+        m |= (uint64_t) दत्त[3] << 24;
         /* fall through */
-    case 3:
-        m |= (uint64_t) data[2] << 16;
+    पक्ष 3:
+        m |= (uint64_t) दत्त[2] << 16;
         /* fall through */
-    case 2:
-        m |= (uint64_t) data[1] << 8;
+    पक्ष 2:
+        m |= (uint64_t) दत्त[1] << 8;
         /* fall through */
-    case 1:
-        m |= (uint64_t) data[0];
-        break;
-    case 0:
-        break;
+    पक्ष 1:
+        m |= (uint64_t) दत्त[0];
+        भङ्ग;
+    पक्ष 0:
+        भङ्ग;
     }
 
     v3 ^= m;
@@ -91,5 +91,5 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
     ngx_sipround;
     ngx_sipround;
 
-    return v0 ^ v1 ^ v2 ^ v3;
+    प्रत्यागम v0 ^ v1 ^ v2 ^ v3;
 }

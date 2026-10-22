@@ -5,137 +5,137 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
 ngx_array_t *
-ngx_array_create(ngx_pool_t *p, ngx_uint_t n, size_t size)
+ngx_array_create(ngx_pool_t *p, ngx_uint_t n, आकार_t आकार)
 {
     ngx_array_t *a;
 
-    a = ngx_palloc(p, sizeof(ngx_array_t));
-    if (a == NULL) {
-        return NULL;
+    a = ngx_palloc(p, परिमाण(ngx_array_t));
+    यदि (a == रिक्त) {
+        प्रत्यागम रिक्त;
     }
 
-    if (ngx_array_init(a, p, n, size) != NGX_OK) {
-        return NULL;
+    यदि (ngx_array_init(a, p, n, आकार) != NGX_OK) {
+        प्रत्यागम रिक्त;
     }
 
-    return a;
+    प्रत्यागम a;
 }
 
 
-void
+शून्य
 ngx_array_destroy(ngx_array_t *a)
 {
     ngx_pool_t  *p;
 
     p = a->pool;
 
-    if ((u_char *) a->elts + a->size * a->nalloc == p->d.last) {
-        p->d.last -= a->size * a->nalloc;
+    यदि ((u_char *) a->elts + a->आकार * a->nalloc == p->d.चरमः) {
+        p->d.चरमः -= a->आकार * a->nalloc;
     }
 
-    if ((u_char *) a + sizeof(ngx_array_t) == p->d.last) {
-        p->d.last = (u_char *) a;
+    यदि ((u_char *) a + परिमाण(ngx_array_t) == p->d.चरमः) {
+        p->d.चरमः = (u_char *) a;
     }
 }
 
 
-void *
-ngx_array_push(ngx_array_t *a)
+शून्य *
+ngx_array_प्रक्षिप(ngx_array_t *a)
 {
-    void        *elt, *new;
-    size_t       size;
+    शून्य        *elt, *new;
+    आकार_t       आकार;
     ngx_pool_t  *p;
 
-    if (a->nelts == a->nalloc) {
+    यदि (a->nelts == a->nalloc) {
 
         /* the array is full */
 
-        size = a->size * a->nalloc;
+        आकार = a->आकार * a->nalloc;
 
         p = a->pool;
 
-        if ((u_char *) a->elts + size == p->d.last
-            && p->d.last + a->size <= p->d.end)
+        यदि ((u_char *) a->elts + आकार == p->d.चरमः
+            && p->d.चरमः + a->आकार <= p->d.अन्तः)
         {
             /*
              * the array allocation is the last in the pool
              * and there is space for new allocation
              */
 
-            p->d.last += a->size;
+            p->d.चरमः += a->आकार;
             a->nalloc++;
 
-        } else {
+        } अन्यथा {
             /* allocate a new array */
 
-            new = ngx_palloc(p, 2 * size);
-            if (new == NULL) {
-                return NULL;
+            new = ngx_palloc(p, 2 * आकार);
+            यदि (new == रिक्त) {
+                प्रत्यागम रिक्त;
             }
 
-            ngx_memcpy(new, a->elts, size);
+            ngx_memcpy(new, a->elts, आकार);
             a->elts = new;
             a->nalloc *= 2;
         }
     }
 
-    elt = (u_char *) a->elts + a->size * a->nelts;
+    elt = (u_char *) a->elts + a->आकार * a->nelts;
     a->nelts++;
 
-    return elt;
+    प्रत्यागम elt;
 }
 
 
-void *
-ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
+शून्य *
+ngx_array_प्रक्षिप_n(ngx_array_t *a, ngx_uint_t n)
 {
-    void        *elt, *new;
-    size_t       size;
+    शून्य        *elt, *new;
+    आकार_t       आकार;
     ngx_uint_t   nalloc;
     ngx_pool_t  *p;
 
-    size = n * a->size;
+    आकार = n * a->आकार;
 
-    if (a->nelts + n > a->nalloc) {
+    यदि (a->nelts + n > a->nalloc) {
 
         /* the array is full */
 
         p = a->pool;
 
-        if ((u_char *) a->elts + a->size * a->nalloc == p->d.last
-            && p->d.last + size <= p->d.end)
+        यदि ((u_char *) a->elts + a->आकार * a->nalloc == p->d.चरमः
+            && p->d.चरमः + आकार <= p->d.अन्तः)
         {
             /*
              * the array allocation is the last in the pool
              * and there is space for new allocation
              */
 
-            p->d.last += size;
+            p->d.चरमः += आकार;
             a->nalloc += n;
 
-        } else {
+        } अन्यथा {
             /* allocate a new array */
 
             nalloc = 2 * ((n >= a->nalloc) ? n : a->nalloc);
 
-            new = ngx_palloc(p, nalloc * a->size);
-            if (new == NULL) {
-                return NULL;
+            new = ngx_palloc(p, nalloc * a->आकार);
+            यदि (new == रिक्त) {
+                प्रत्यागम रिक्त;
             }
 
-            ngx_memcpy(new, a->elts, a->nelts * a->size);
+            ngx_memcpy(new, a->elts, a->nelts * a->आकार);
             a->elts = new;
             a->nalloc = nalloc;
         }
     }
 
-    elt = (u_char *) a->elts + a->size * a->nelts;
+    elt = (u_char *) a->elts + a->आकार * a->nelts;
     a->nelts += n;
 
-    return elt;
+    प्रत्यागम elt;
 }

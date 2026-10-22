@@ -5,68 +5,68 @@
  */
 
 
-#ifndef _NGX_SLAB_H_INCLUDED_
-#define _NGX_SLAB_H_INCLUDED_
+#यदि_अपरिभाषितम् _NGX_SLAB_H_INCLUDED_
+#परिभाषय _NGX_SLAB_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-typedef struct ngx_slab_page_s  ngx_slab_page_t;
+प्रकारनिर्देश संरचना ngx_slab_page_s  ngx_slab_page_t;
 
-struct ngx_slab_page_s {
+संरचना ngx_slab_page_s {
     uintptr_t         slab;
-    ngx_slab_page_t  *next;
-    uintptr_t         prev;
+    ngx_slab_page_t  *अग्र;
+    uintptr_t         पूर्व;
 };
 
 
-typedef struct {
-    ngx_uint_t        total;
-    ngx_uint_t        used;
+प्रकारनिर्देश संरचना {
+    ngx_uint_t        योग;
+    ngx_uint_t        प्रयुक्तम्;
 
     ngx_uint_t        reqs;
     ngx_uint_t        fails;
 } ngx_slab_stat_t;
 
 
-typedef struct {
-    ngx_shmtx_sh_t    lock;
+प्रकारनिर्देश संरचना {
+    ngx_shmtx_sh_t    तालकम्;
 
-    size_t            min_size;
-    size_t            min_shift;
+    आकार_t            min_आकार;
+    आकार_t            min_सरणम्;
 
-    ngx_slab_page_t  *pages;
-    ngx_slab_page_t  *last;
-    ngx_slab_page_t   free;
+    ngx_slab_page_t  *पृष्ठानि;
+    ngx_slab_page_t  *चरमः;
+    ngx_slab_page_t   मुक्त;
 
     ngx_slab_stat_t  *stats;
     ngx_uint_t        pfree;
 
     u_char           *start;
-    u_char           *end;
+    u_char           *अन्तः;
 
     ngx_shmtx_t       mutex;
 
     u_char           *log_ctx;
     u_char            zero;
 
-    unsigned          log_nomem:1;
+    अचिह्नित          log_nomem:1;
 
-    void             *data;
-    void             *addr;
+    शून्य             *दत्त;
+    शून्य             *addr;
 } ngx_slab_pool_t;
 
 
-void ngx_slab_sizes_init(void);
-void ngx_slab_init(ngx_slab_pool_t *pool);
-void *ngx_slab_alloc(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_calloc(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_calloc_locked(ngx_slab_pool_t *pool, size_t size);
-void ngx_slab_free(ngx_slab_pool_t *pool, void *p);
-void ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p);
+शून्य ngx_slab_sizes_init(शून्य);
+शून्य ngx_slab_init(ngx_slab_pool_t *pool);
+शून्य *ngx_slab_alloc(ngx_slab_pool_t *pool, आकार_t आकार);
+शून्य *ngx_slab_alloc_locked(ngx_slab_pool_t *pool, आकार_t आकार);
+शून्य *ngx_slab_calloc(ngx_slab_pool_t *pool, आकार_t आकार);
+शून्य *ngx_slab_calloc_locked(ngx_slab_pool_t *pool, आकार_t आकार);
+शून्य ngx_slab_free(ngx_slab_pool_t *pool, शून्य *p);
+शून्य ngx_slab_free_locked(ngx_slab_pool_t *pool, शून्य *p);
 
 
-#endif /* _NGX_SLAB_H_INCLUDED_ */
+#यदि_अन्तः /* _NGX_SLAB_H_INCLUDED_ */

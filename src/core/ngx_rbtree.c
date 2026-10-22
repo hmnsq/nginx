@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
 /*
@@ -15,116 +15,116 @@
  */
 
 
-static ngx_inline void ngx_rbtree_left_rotate(ngx_rbtree_node_t **root,
-    ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
-static ngx_inline void ngx_rbtree_right_rotate(ngx_rbtree_node_t **root,
-    ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
+स्थिर ngx_inline शून्य ngx_rbtree_वामः_rotate(ngx_rbtree_ग्रन्थिः_t **मूलम्,
+    ngx_rbtree_ग्रन्थिः_t *sentinel, ngx_rbtree_ग्रन्थिः_t *ग्रन्थिः);
+स्थिर ngx_inline शून्य ngx_rbtree_दक्षिणः_rotate(ngx_rbtree_ग्रन्थिः_t **मूलम्,
+    ngx_rbtree_ग्रन्थिः_t *sentinel, ngx_rbtree_ग्रन्थिः_t *ग्रन्थिः);
 
 
-void
-ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+शून्य
+ngx_rbtree_निवेशय(ngx_rbtree_t *वृक्षः, ngx_rbtree_ग्रन्थिः_t *ग्रन्थिः)
 {
-    ngx_rbtree_node_t  **root, *temp, *sentinel;
+    ngx_rbtree_ग्रन्थिः_t  **मूलम्, *अस्थायी, *sentinel;
 
     /* a binary tree insert */
 
-    root = &tree->root;
-    sentinel = tree->sentinel;
+    मूलम् = &वृक्षः->मूलम्;
+    sentinel = वृक्षः->sentinel;
 
-    if (*root == sentinel) {
-        node->parent = NULL;
-        node->left = sentinel;
-        node->right = sentinel;
-        ngx_rbt_black(node);
-        *root = node;
+    यदि (*मूलम् == sentinel) {
+        ग्रन्थिः->parent = रिक्त;
+        ग्रन्थिः->वामः = sentinel;
+        ग्रन्थिः->दक्षिणः = sentinel;
+        ngx_rbt_black(ग्रन्थिः);
+        *मूलम् = ग्रन्थिः;
 
-        return;
+        प्रत्यागम;
     }
 
-    tree->insert(*root, node, sentinel);
+    वृक्षः->निवेशय(*मूलम्, ग्रन्थिः, sentinel);
 
     /* re-balance tree */
 
-    while (node != *root && ngx_rbt_is_red(node->parent)) {
+    यावत् (ग्रन्थिः != *मूलम् && ngx_rbt_is_red(ग्रन्थिः->parent)) {
 
-        if (node->parent == node->parent->parent->left) {
-            temp = node->parent->parent->right;
+        यदि (ग्रन्थिः->parent == ग्रन्थिः->parent->parent->वामः) {
+            अस्थायी = ग्रन्थिः->parent->parent->दक्षिणः;
 
-            if (ngx_rbt_is_red(temp)) {
-                ngx_rbt_black(node->parent);
-                ngx_rbt_black(temp);
-                ngx_rbt_red(node->parent->parent);
-                node = node->parent->parent;
+            यदि (ngx_rbt_is_red(अस्थायी)) {
+                ngx_rbt_black(ग्रन्थिः->parent);
+                ngx_rbt_black(अस्थायी);
+                ngx_rbt_red(ग्रन्थिः->parent->parent);
+                ग्रन्थिः = ग्रन्थिः->parent->parent;
 
-            } else {
-                if (node == node->parent->right) {
-                    node = node->parent;
-                    ngx_rbtree_left_rotate(root, sentinel, node);
+            } अन्यथा {
+                यदि (ग्रन्थिः == ग्रन्थिः->parent->दक्षिणः) {
+                    ग्रन्थिः = ग्रन्थिः->parent;
+                    ngx_rbtree_वामः_rotate(मूलम्, sentinel, ग्रन्थिः);
                 }
 
-                ngx_rbt_black(node->parent);
-                ngx_rbt_red(node->parent->parent);
-                ngx_rbtree_right_rotate(root, sentinel, node->parent->parent);
+                ngx_rbt_black(ग्रन्थिः->parent);
+                ngx_rbt_red(ग्रन्थिः->parent->parent);
+                ngx_rbtree_दक्षिणः_rotate(मूलम्, sentinel, ग्रन्थिः->parent->parent);
             }
 
-        } else {
-            temp = node->parent->parent->left;
+        } अन्यथा {
+            अस्थायी = ग्रन्थिः->parent->parent->वामः;
 
-            if (ngx_rbt_is_red(temp)) {
-                ngx_rbt_black(node->parent);
-                ngx_rbt_black(temp);
-                ngx_rbt_red(node->parent->parent);
-                node = node->parent->parent;
+            यदि (ngx_rbt_is_red(अस्थायी)) {
+                ngx_rbt_black(ग्रन्थिः->parent);
+                ngx_rbt_black(अस्थायी);
+                ngx_rbt_red(ग्रन्थिः->parent->parent);
+                ग्रन्थिः = ग्रन्थिः->parent->parent;
 
-            } else {
-                if (node == node->parent->left) {
-                    node = node->parent;
-                    ngx_rbtree_right_rotate(root, sentinel, node);
+            } अन्यथा {
+                यदि (ग्रन्थिः == ग्रन्थिः->parent->वामः) {
+                    ग्रन्थिः = ग्रन्थिः->parent;
+                    ngx_rbtree_दक्षिणः_rotate(मूलम्, sentinel, ग्रन्थिः);
                 }
 
-                ngx_rbt_black(node->parent);
-                ngx_rbt_red(node->parent->parent);
-                ngx_rbtree_left_rotate(root, sentinel, node->parent->parent);
+                ngx_rbt_black(ग्रन्थिः->parent);
+                ngx_rbt_red(ग्रन्थिः->parent->parent);
+                ngx_rbtree_वामः_rotate(मूलम्, sentinel, ग्रन्थिः->parent->parent);
             }
         }
     }
 
-    ngx_rbt_black(*root);
+    ngx_rbt_black(*मूलम्);
 }
 
 
-void
-ngx_rbtree_insert_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel)
+शून्य
+ngx_rbtree_निवेशय_मानम्(ngx_rbtree_ग्रन्थिः_t *अस्थायी, ngx_rbtree_ग्रन्थिः_t *ग्रन्थिः,
+    ngx_rbtree_ग्रन्थिः_t *sentinel)
 {
-    ngx_rbtree_node_t  **p;
+    ngx_rbtree_ग्रन्थिः_t  **p;
 
-    for ( ;; ) {
+    प्रति ( ;; ) {
 
-        p = (node->key < temp->key) ? &temp->left : &temp->right;
+        p = (ग्रन्थिः->कुञ्चिका < अस्थायी->कुञ्चिका) ? &अस्थायी->वामः : &अस्थायी->दक्षिणः;
 
-        if (*p == sentinel) {
-            break;
+        यदि (*p == sentinel) {
+            भङ्ग;
         }
 
-        temp = *p;
+        अस्थायी = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = ग्रन्थिः;
+    ग्रन्थिः->parent = अस्थायी;
+    ग्रन्थिः->वामः = sentinel;
+    ग्रन्थिः->दक्षिणः = sentinel;
+    ngx_rbt_red(ग्रन्थिः);
 }
 
 
-void
-ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel)
+शून्य
+ngx_rbtree_निवेशय_timer_मानम्(ngx_rbtree_ग्रन्थिः_t *अस्थायी, ngx_rbtree_ग्रन्थिः_t *ग्रन्थिः,
+    ngx_rbtree_ग्रन्थिः_t *sentinel)
 {
-    ngx_rbtree_node_t  **p;
+    ngx_rbtree_ग्रन्थिः_t  **p;
 
-    for ( ;; ) {
+    प्रति ( ;; ) {
 
         /*
          * Timer values
@@ -135,270 +135,270 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 
         /*  node->key < temp->key */
 
-        p = ((ngx_rbtree_key_int_t) (node->key - temp->key) < 0)
-            ? &temp->left : &temp->right;
+        p = ((ngx_rbtree_कुञ्चिका_int_t) (ग्रन्थिः->कुञ्चिका - अस्थायी->कुञ्चिका) < 0)
+            ? &अस्थायी->वामः : &अस्थायी->दक्षिणः;
 
-        if (*p == sentinel) {
-            break;
+        यदि (*p == sentinel) {
+            भङ्ग;
         }
 
-        temp = *p;
+        अस्थायी = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = ग्रन्थिः;
+    ग्रन्थिः->parent = अस्थायी;
+    ग्रन्थिः->वामः = sentinel;
+    ग्रन्थिः->दक्षिणः = sentinel;
+    ngx_rbt_red(ग्रन्थिः);
 }
 
 
-void
-ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+शून्य
+ngx_rbtree_delete(ngx_rbtree_t *वृक्षः, ngx_rbtree_ग्रन्थिः_t *ग्रन्थिः)
 {
     ngx_uint_t           red;
-    ngx_rbtree_node_t  **root, *sentinel, *subst, *temp, *w;
+    ngx_rbtree_ग्रन्थिः_t  **मूलम्, *sentinel, *subst, *अस्थायी, *w;
 
     /* a binary tree delete */
 
-    root = &tree->root;
-    sentinel = tree->sentinel;
+    मूलम् = &वृक्षः->मूलम्;
+    sentinel = वृक्षः->sentinel;
 
-    if (node->left == sentinel) {
-        temp = node->right;
-        subst = node;
+    यदि (ग्रन्थिः->वामः == sentinel) {
+        अस्थायी = ग्रन्थिः->दक्षिणः;
+        subst = ग्रन्थिः;
 
-    } else if (node->right == sentinel) {
-        temp = node->left;
-        subst = node;
+    } अन्यथा यदि (ग्रन्थिः->दक्षिणः == sentinel) {
+        अस्थायी = ग्रन्थिः->वामः;
+        subst = ग्रन्थिः;
 
-    } else {
-        subst = ngx_rbtree_min(node->right, sentinel);
-        temp = subst->right;
+    } अन्यथा {
+        subst = ngx_rbtree_min(ग्रन्थिः->दक्षिणः, sentinel);
+        अस्थायी = subst->दक्षिणः;
     }
 
-    if (subst == *root) {
-        *root = temp;
-        ngx_rbt_black(temp);
+    यदि (subst == *मूलम्) {
+        *मूलम् = अस्थायी;
+        ngx_rbt_black(अस्थायी);
 
         /* DEBUG stuff */
-        node->left = NULL;
-        node->right = NULL;
-        node->parent = NULL;
-        node->key = 0;
+        ग्रन्थिः->वामः = रिक्त;
+        ग्रन्थिः->दक्षिणः = रिक्त;
+        ग्रन्थिः->parent = रिक्त;
+        ग्रन्थिः->कुञ्चिका = 0;
 
-        return;
+        प्रत्यागम;
     }
 
     red = ngx_rbt_is_red(subst);
 
-    if (subst == subst->parent->left) {
-        subst->parent->left = temp;
+    यदि (subst == subst->parent->वामः) {
+        subst->parent->वामः = अस्थायी;
 
-    } else {
-        subst->parent->right = temp;
+    } अन्यथा {
+        subst->parent->दक्षिणः = अस्थायी;
     }
 
-    if (subst == node) {
+    यदि (subst == ग्रन्थिः) {
 
-        temp->parent = subst->parent;
+        अस्थायी->parent = subst->parent;
 
-    } else {
+    } अन्यथा {
 
-        if (subst->parent == node) {
-            temp->parent = subst;
+        यदि (subst->parent == ग्रन्थिः) {
+            अस्थायी->parent = subst;
 
-        } else {
-            temp->parent = subst->parent;
+        } अन्यथा {
+            अस्थायी->parent = subst->parent;
         }
 
-        subst->left = node->left;
-        subst->right = node->right;
-        subst->parent = node->parent;
-        ngx_rbt_copy_color(subst, node);
+        subst->वामः = ग्रन्थिः->वामः;
+        subst->दक्षिणः = ग्रन्थिः->दक्षिणः;
+        subst->parent = ग्रन्थिः->parent;
+        ngx_rbt_copy_color(subst, ग्रन्थिः);
 
-        if (node == *root) {
-            *root = subst;
+        यदि (ग्रन्थिः == *मूलम्) {
+            *मूलम् = subst;
 
-        } else {
-            if (node == node->parent->left) {
-                node->parent->left = subst;
-            } else {
-                node->parent->right = subst;
+        } अन्यथा {
+            यदि (ग्रन्थिः == ग्रन्थिः->parent->वामः) {
+                ग्रन्थिः->parent->वामः = subst;
+            } अन्यथा {
+                ग्रन्थिः->parent->दक्षिणः = subst;
             }
         }
 
-        if (subst->left != sentinel) {
-            subst->left->parent = subst;
+        यदि (subst->वामः != sentinel) {
+            subst->वामः->parent = subst;
         }
 
-        if (subst->right != sentinel) {
-            subst->right->parent = subst;
+        यदि (subst->दक्षिणः != sentinel) {
+            subst->दक्षिणः->parent = subst;
         }
     }
 
     /* DEBUG stuff */
-    node->left = NULL;
-    node->right = NULL;
-    node->parent = NULL;
-    node->key = 0;
+    ग्रन्थिः->वामः = रिक्त;
+    ग्रन्थिः->दक्षिणः = रिक्त;
+    ग्रन्थिः->parent = रिक्त;
+    ग्रन्थिः->कुञ्चिका = 0;
 
-    if (red) {
-        return;
+    यदि (red) {
+        प्रत्यागम;
     }
 
     /* a delete fixup */
 
-    while (temp != *root && ngx_rbt_is_black(temp)) {
+    यावत् (अस्थायी != *मूलम् && ngx_rbt_is_black(अस्थायी)) {
 
-        if (temp == temp->parent->left) {
-            w = temp->parent->right;
+        यदि (अस्थायी == अस्थायी->parent->वामः) {
+            w = अस्थायी->parent->दक्षिणः;
 
-            if (ngx_rbt_is_red(w)) {
+            यदि (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
-                ngx_rbt_red(temp->parent);
-                ngx_rbtree_left_rotate(root, sentinel, temp->parent);
-                w = temp->parent->right;
+                ngx_rbt_red(अस्थायी->parent);
+                ngx_rbtree_वामः_rotate(मूलम्, sentinel, अस्थायी->parent);
+                w = अस्थायी->parent->दक्षिणः;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            यदि (ngx_rbt_is_black(w->वामः) && ngx_rbt_is_black(w->दक्षिणः)) {
                 ngx_rbt_red(w);
-                temp = temp->parent;
+                अस्थायी = अस्थायी->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->right)) {
-                    ngx_rbt_black(w->left);
+            } अन्यथा {
+                यदि (ngx_rbt_is_black(w->दक्षिणः)) {
+                    ngx_rbt_black(w->वामः);
                     ngx_rbt_red(w);
-                    ngx_rbtree_right_rotate(root, sentinel, w);
-                    w = temp->parent->right;
+                    ngx_rbtree_दक्षिणः_rotate(मूलम्, sentinel, w);
+                    w = अस्थायी->parent->दक्षिणः;
                 }
 
-                ngx_rbt_copy_color(w, temp->parent);
-                ngx_rbt_black(temp->parent);
-                ngx_rbt_black(w->right);
-                ngx_rbtree_left_rotate(root, sentinel, temp->parent);
-                temp = *root;
+                ngx_rbt_copy_color(w, अस्थायी->parent);
+                ngx_rbt_black(अस्थायी->parent);
+                ngx_rbt_black(w->दक्षिणः);
+                ngx_rbtree_वामः_rotate(मूलम्, sentinel, अस्थायी->parent);
+                अस्थायी = *मूलम्;
             }
 
-        } else {
-            w = temp->parent->left;
+        } अन्यथा {
+            w = अस्थायी->parent->वामः;
 
-            if (ngx_rbt_is_red(w)) {
+            यदि (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
-                ngx_rbt_red(temp->parent);
-                ngx_rbtree_right_rotate(root, sentinel, temp->parent);
-                w = temp->parent->left;
+                ngx_rbt_red(अस्थायी->parent);
+                ngx_rbtree_दक्षिणः_rotate(मूलम्, sentinel, अस्थायी->parent);
+                w = अस्थायी->parent->वामः;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            यदि (ngx_rbt_is_black(w->वामः) && ngx_rbt_is_black(w->दक्षिणः)) {
                 ngx_rbt_red(w);
-                temp = temp->parent;
+                अस्थायी = अस्थायी->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->left)) {
-                    ngx_rbt_black(w->right);
+            } अन्यथा {
+                यदि (ngx_rbt_is_black(w->वामः)) {
+                    ngx_rbt_black(w->दक्षिणः);
                     ngx_rbt_red(w);
-                    ngx_rbtree_left_rotate(root, sentinel, w);
-                    w = temp->parent->left;
+                    ngx_rbtree_वामः_rotate(मूलम्, sentinel, w);
+                    w = अस्थायी->parent->वामः;
                 }
 
-                ngx_rbt_copy_color(w, temp->parent);
-                ngx_rbt_black(temp->parent);
-                ngx_rbt_black(w->left);
-                ngx_rbtree_right_rotate(root, sentinel, temp->parent);
-                temp = *root;
+                ngx_rbt_copy_color(w, अस्थायी->parent);
+                ngx_rbt_black(अस्थायी->parent);
+                ngx_rbt_black(w->वामः);
+                ngx_rbtree_दक्षिणः_rotate(मूलम्, sentinel, अस्थायी->parent);
+                अस्थायी = *मूलम्;
             }
         }
     }
 
-    ngx_rbt_black(temp);
+    ngx_rbt_black(अस्थायी);
 }
 
 
-static ngx_inline void
-ngx_rbtree_left_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
-    ngx_rbtree_node_t *node)
+स्थिर ngx_inline शून्य
+ngx_rbtree_वामः_rotate(ngx_rbtree_ग्रन्थिः_t **मूलम्, ngx_rbtree_ग्रन्थिः_t *sentinel,
+    ngx_rbtree_ग्रन्थिः_t *ग्रन्थिः)
 {
-    ngx_rbtree_node_t  *temp;
+    ngx_rbtree_ग्रन्थिः_t  *अस्थायी;
 
-    temp = node->right;
-    node->right = temp->left;
+    अस्थायी = ग्रन्थिः->दक्षिणः;
+    ग्रन्थिः->दक्षिणः = अस्थायी->वामः;
 
-    if (temp->left != sentinel) {
-        temp->left->parent = node;
+    यदि (अस्थायी->वामः != sentinel) {
+        अस्थायी->वामः->parent = ग्रन्थिः;
     }
 
-    temp->parent = node->parent;
+    अस्थायी->parent = ग्रन्थिः->parent;
 
-    if (node == *root) {
-        *root = temp;
+    यदि (ग्रन्थिः == *मूलम्) {
+        *मूलम् = अस्थायी;
 
-    } else if (node == node->parent->left) {
-        node->parent->left = temp;
+    } अन्यथा यदि (ग्रन्थिः == ग्रन्थिः->parent->वामः) {
+        ग्रन्थिः->parent->वामः = अस्थायी;
 
-    } else {
-        node->parent->right = temp;
+    } अन्यथा {
+        ग्रन्थिः->parent->दक्षिणः = अस्थायी;
     }
 
-    temp->left = node;
-    node->parent = temp;
+    अस्थायी->वामः = ग्रन्थिः;
+    ग्रन्थिः->parent = अस्थायी;
 }
 
 
-static ngx_inline void
-ngx_rbtree_right_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
-    ngx_rbtree_node_t *node)
+स्थिर ngx_inline शून्य
+ngx_rbtree_दक्षिणः_rotate(ngx_rbtree_ग्रन्थिः_t **मूलम्, ngx_rbtree_ग्रन्थिः_t *sentinel,
+    ngx_rbtree_ग्रन्थिः_t *ग्रन्थिः)
 {
-    ngx_rbtree_node_t  *temp;
+    ngx_rbtree_ग्रन्थिः_t  *अस्थायी;
 
-    temp = node->left;
-    node->left = temp->right;
+    अस्थायी = ग्रन्थिः->वामः;
+    ग्रन्थिः->वामः = अस्थायी->दक्षिणः;
 
-    if (temp->right != sentinel) {
-        temp->right->parent = node;
+    यदि (अस्थायी->दक्षिणः != sentinel) {
+        अस्थायी->दक्षिणः->parent = ग्रन्थिः;
     }
 
-    temp->parent = node->parent;
+    अस्थायी->parent = ग्रन्थिः->parent;
 
-    if (node == *root) {
-        *root = temp;
+    यदि (ग्रन्थिः == *मूलम्) {
+        *मूलम् = अस्थायी;
 
-    } else if (node == node->parent->right) {
-        node->parent->right = temp;
+    } अन्यथा यदि (ग्रन्थिः == ग्रन्थिः->parent->दक्षिणः) {
+        ग्रन्थिः->parent->दक्षिणः = अस्थायी;
 
-    } else {
-        node->parent->left = temp;
+    } अन्यथा {
+        ग्रन्थिः->parent->वामः = अस्थायी;
     }
 
-    temp->right = node;
-    node->parent = temp;
+    अस्थायी->दक्षिणः = ग्रन्थिः;
+    ग्रन्थिः->parent = अस्थायी;
 }
 
 
-ngx_rbtree_node_t *
-ngx_rbtree_next(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+ngx_rbtree_ग्रन्थिः_t *
+ngx_rbtree_अग्र(ngx_rbtree_t *वृक्षः, ngx_rbtree_ग्रन्थिः_t *ग्रन्थिः)
 {
-    ngx_rbtree_node_t  *root, *sentinel, *parent;
+    ngx_rbtree_ग्रन्थिः_t  *मूलम्, *sentinel, *parent;
 
-    sentinel = tree->sentinel;
+    sentinel = वृक्षः->sentinel;
 
-    if (node->right != sentinel) {
-        return ngx_rbtree_min(node->right, sentinel);
+    यदि (ग्रन्थिः->दक्षिणः != sentinel) {
+        प्रत्यागम ngx_rbtree_min(ग्रन्थिः->दक्षिणः, sentinel);
     }
 
-    root = tree->root;
+    मूलम् = वृक्षः->मूलम्;
 
-    for ( ;; ) {
-        parent = node->parent;
+    प्रति ( ;; ) {
+        parent = ग्रन्थिः->parent;
 
-        if (node == root) {
-            return NULL;
+        यदि (ग्रन्थिः == मूलम्) {
+            प्रत्यागम रिक्त;
         }
 
-        if (node == parent->left) {
-            return parent;
+        यदि (ग्रन्थिः == parent->वामः) {
+            प्रत्यागम parent;
         }
 
-        node = parent;
+        ग्रन्थिः = parent;
     }
 }

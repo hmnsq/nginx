@@ -5,18 +5,18 @@
  */
 
 
-#ifndef _NGX_RWLOCK_H_INCLUDED_
-#define _NGX_RWLOCK_H_INCLUDED_
+#यदि_अपरिभाषितम् _NGX_RWLOCK_H_INCLUDED_
+#परिभाषय _NGX_RWLOCK_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-void ngx_rwlock_wlock(ngx_atomic_t *lock);
-void ngx_rwlock_rlock(ngx_atomic_t *lock);
-void ngx_rwlock_unlock(ngx_atomic_t *lock);
-void ngx_rwlock_downgrade(ngx_atomic_t *lock);
+शून्य ngx_rwlock_wlock(ngx_atomic_t *तालकम्);
+शून्य ngx_rwlock_rlock(ngx_atomic_t *तालकम्);
+शून्य ngx_rwlock_unlock(ngx_atomic_t *तालकम्);
+शून्य ngx_rwlock_downgrade(ngx_atomic_t *तालकम्);
 
 
-#endif /* _NGX_RWLOCK_H_INCLUDED_ */
+#यदि_अन्तः /* _NGX_RWLOCK_H_INCLUDED_ */
