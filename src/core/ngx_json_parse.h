@@ -18,7 +18,7 @@
 #define NGX_JSON_DEFAULT_MAX_DEPTH       64
 
 
-typedef enum {
+typedef ga_nanaa {
     NGX_JSON_OBJECT_OPEN = 0,
     NGX_JSON_OBJECT_CLOSE,
     NGX_JSON_ARRAY_OPEN,
@@ -33,7 +33,7 @@ typedef enum {
 } ngx_json_event_e;
 
 
-typedef enum {
+typedef ga_nanaa {
     ngx_json_start = 0,
     ngx_json_done,
     ngx_json_object,
@@ -70,21 +70,21 @@ typedef enum {
 } ngx_json_state_e;
 
 
-typedef enum {
+typedef ga_nanaa {
     ngx_json_ctx_none = 0,
     ngx_json_ctx_object,
     ngx_json_ctx_array
 } ngx_json_container_e;
 
 
-typedef struct ngx_json_ctx_s  ngx_json_ctx_t;
+typedef sa_nracanaa ngx_json_ctx_s  ngx_json_ctx_t;
 
 
 typedef ngx_int_t (*ngx_json_handler_pt)(ngx_json_ctx_t *ctx,
     ngx_json_event_e event, ngx_str_t *token);
 
 
-struct ngx_json_ctx_s {
+sa_nracanaa ngx_json_ctx_s {
     ngx_json_state_e       state;
 
     ngx_json_container_e  *stack;

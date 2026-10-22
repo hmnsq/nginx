@@ -65,16 +65,16 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
     ngx_json_event_e   event;
     ngx_json_state_e   state;
 
-    if (len == 0) {
-        return NGX_DECLINED;
+    ᱡᱩᱫᱤ (len == 0) {
+        ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
     }
 
-    if (data == NULL) {
-        return NGX_ERROR;
+    ᱡᱩᱫᱤ (data == NULL) {
+        ᱨᱩᱣᱟᱹᱲ NGX_ERROR;
     }
 
-    if (ctx->state == ngx_json_done) {
-        return NGX_DECLINED;
+    ᱡᱩᱫᱤ (ctx->state == ngx_json_done) {
+        ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
     }
 
     last = data + len;
@@ -86,7 +86,7 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
         /* skipping suppresses emission only; the machine still validates */
 
-        if (ngx_json_skipping(skip_depth) && ctx->depth <= skip_depth
+        ᱡᱩᱫᱤ (ngx_json_skipping(skip_depth) && ctx->depth <= skip_depth
             && (state == ngx_json_object_value_separator
                 || state == ngx_json_array_value_separator
                 || state == ngx_json_done))
@@ -100,550 +100,550 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
         switch (state) {
 
-        case ngx_json_start:
-            if (ngx_json_ws(*p)) {
-                break;
+        pak_sa ngx_json_start:
+            ᱡᱩᱫᱤ (ngx_json_ws(*p)) {
+                bha_nga;
             }
 
             p--;
             state = ngx_json_value;
-            break;
+            bha_nga;
 
-        case ngx_json_object:
-            if (ngx_json_ws(*p)) {
-                break;
+        pak_sa ngx_json_object:
+            ᱡᱩᱫᱤ (ngx_json_ws(*p)) {
+                bha_nga;
             }
 
-            if (*p == '}') {
+            ᱡᱩᱫᱤ (*p == '}') {
                 rc = ngx_json_close(ctx, NGX_JSON_OBJECT_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                ᱡᱩᱫᱤ (rc != NGX_OK) {
+                    ᱨᱩᱣᱟᱹᱲ rc;
                 }
 
-                break;
+                bha_nga;
             }
 
             /* fall through */
 
-        case ngx_json_object_next:
-            if (ngx_json_ws(*p)) {
-                break;
+        pak_sa ngx_json_object_next:
+            ᱡᱩᱫᱤ (ngx_json_ws(*p)) {
+                bha_nga;
             }
 
-            if (*p == '"') {
+            ᱡᱩᱫᱤ (*p == '"') {
                 ctx->in_key = 1;
                 ctx->escaped = 0;
                 start = p + 1;
                 state = ngx_json_string;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_object_name_separator:
-            if (ngx_json_ws(*p)) {
-                break;
+        pak_sa ngx_json_object_name_separator:
+            ᱡᱩᱫᱤ (ngx_json_ws(*p)) {
+                bha_nga;
             }
 
-            if (*p == ':') {
+            ᱡᱩᱫᱤ (*p == ':') {
                 state = ngx_json_value;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_object_value_separator:
-            if (ngx_json_ws(*p)) {
-                break;
+        pak_sa ngx_json_object_value_separator:
+            ᱡᱩᱫᱤ (ngx_json_ws(*p)) {
+                bha_nga;
             }
 
-            if (*p == ',') {
+            ᱡᱩᱫᱤ (*p == ',') {
                 state = ngx_json_object_next;
-                break;
+                bha_nga;
             }
 
-            if (*p == '}') {
+            ᱡᱩᱫᱤ (*p == '}') {
                 rc = ngx_json_close(ctx, NGX_JSON_OBJECT_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                ᱡᱩᱫᱤ (rc != NGX_OK) {
+                    ᱨᱩᱣᱟᱹᱲ rc;
                 }
 
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_array_value_separator:
-            if (ngx_json_ws(*p)) {
-                break;
+        pak_sa ngx_json_array_value_separator:
+            ᱡᱩᱫᱤ (ngx_json_ws(*p)) {
+                bha_nga;
             }
 
-            if (*p == ',') {
+            ᱡᱩᱫᱤ (*p == ',') {
                 state = ngx_json_value;
-                break;
+                bha_nga;
             }
 
-            if (*p == ']') {
+            ᱡᱩᱫᱤ (*p == ']') {
                 rc = ngx_json_close(ctx, NGX_JSON_ARRAY_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                ᱡᱩᱫᱤ (rc != NGX_OK) {
+                    ᱨᱩᱣᱟᱹᱲ rc;
                 }
 
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_array:
-            if (ngx_json_ws(*p)) {
-                break;
+        pak_sa ngx_json_array:
+            ᱡᱩᱫᱤ (ngx_json_ws(*p)) {
+                bha_nga;
             }
 
-            if (*p == ']') {
+            ᱡᱩᱫᱤ (*p == ']') {
                 rc = ngx_json_close(ctx, NGX_JSON_ARRAY_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                ᱡᱩᱫᱤ (rc != NGX_OK) {
+                    ᱨᱩᱣᱟᱹᱲ rc;
                 }
 
-                break;
+                bha_nga;
             }
 
             /* fall through */
 
-        case ngx_json_value:
-            if (ngx_json_ws(*p)) {
-                break;
+        pak_sa ngx_json_value:
+            ᱡᱩᱫᱤ (ngx_json_ws(*p)) {
+                bha_nga;
             }
 
             start = p;
 
-            if (*p == '"') {
+            ᱡᱩᱫᱤ (*p == '"') {
                 ctx->in_key = 0;
                 ctx->escaped = 0;
                 start = p + 1;
                 state = ngx_json_string;
-                break;
+                bha_nga;
             }
 
-            if (*p == '{') {
+            ᱡᱩᱫᱤ (*p == '{') {
                 rc = ngx_json_emit(ctx, NGX_JSON_OBJECT_OPEN, p, 1);
-                if (rc != NGX_OK) {
-                    return rc;
+                ᱡᱩᱫᱤ (rc != NGX_OK) {
+                    ᱨᱩᱣᱟᱹᱲ rc;
                 }
 
                 rc = ngx_json_push_state(ctx, ngx_json_ctx_object);
-                if (rc != NGX_OK) {
-                    return rc;
+                ᱡᱩᱫᱤ (rc != NGX_OK) {
+                    ᱨᱩᱣᱟᱹᱲ rc;
                 }
 
                 state = ngx_json_object;
-                break;
+                bha_nga;
             }
 
-            if (*p == '[') {
+            ᱡᱩᱫᱤ (*p == '[') {
                 rc = ngx_json_emit(ctx, NGX_JSON_ARRAY_OPEN, p, 1);
-                if (rc != NGX_OK) {
-                    return rc;
+                ᱡᱩᱫᱤ (rc != NGX_OK) {
+                    ᱨᱩᱣᱟᱹᱲ rc;
                 }
 
                 rc = ngx_json_push_state(ctx, ngx_json_ctx_array);
-                if (rc != NGX_OK) {
-                    return rc;
+                ᱡᱩᱫᱤ (rc != NGX_OK) {
+                    ᱨᱩᱣᱟᱹᱲ rc;
                 }
 
                 state = ngx_json_array;
-                break;
+                bha_nga;
             }
 
-            if (*p == '-') {
+            ᱡᱩᱫᱤ (*p == '-') {
                 state = ngx_json_number_minus;
-                break;
+                bha_nga;
             }
 
-            if (*p == '0') {
+            ᱡᱩᱫᱤ (*p == '0') {
                 state = ngx_json_number_int_zero;
-                break;
+                bha_nga;
             }
 
-            if (*p >= '1' && *p <= '9') {
+            ᱡᱩᱫᱤ (*p >= '1' && *p <= '9') {
                 state = ngx_json_number_int;
-                break;
+                bha_nga;
             }
 
-            if (*p == 't') {
+            ᱡᱩᱫᱤ (*p == 't') {
                 state = ngx_json_true_t;
-                break;
+                bha_nga;
             }
 
-            if (*p == 'f') {
+            ᱡᱩᱫᱤ (*p == 'f') {
                 state = ngx_json_false_f;
-                break;
+                bha_nga;
             }
 
-            if (*p == 'n') {
+            ᱡᱩᱫᱤ (*p == 'n') {
                 state = ngx_json_null_n;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_string:
-            if (*p == '"') {
+        pak_sa ngx_json_string:
+            ᱡᱩᱫᱤ (*p == '"') {
 
-                if (ctx->in_key) {
+                ᱡᱩᱫᱤ (ctx->in_key) {
                     event = ctx->escaped ? NGX_JSON_KEY_ESCAPED
                                          : NGX_JSON_KEY;
 
                     rc = ngx_json_emit(ctx, event, start, p - start);
-                    if (rc != NGX_OK) {
-                        return rc;
+                    ᱡᱩᱫᱤ (rc != NGX_OK) {
+                        ᱨᱩᱣᱟᱹᱲ rc;
                     }
 
                     ctx->in_key = 0;
                     state = ngx_json_object_name_separator;
 
-                } else {
+                } ᱵᱟᱝ {
                     event = ctx->escaped ? NGX_JSON_VALUE_STRING_ESCAPED
                                          : NGX_JSON_VALUE_STRING;
 
                     rc = ngx_json_emit(ctx, event, start, p - start);
-                    if (rc != NGX_OK) {
-                        return rc;
+                    ᱡᱩᱫᱤ (rc != NGX_OK) {
+                        ᱨᱩᱣᱟᱹᱲ rc;
                     }
 
                     state = ngx_json_after_value(ctx);
                 }
 
-                break;
+                bha_nga;
             }
 
-            if (*p == '\\') {
+            ᱡᱩᱫᱤ (*p == '\\') {
                 ctx->escaped = 1;
                 state = ngx_json_escaped;
-                break;
+                bha_nga;
             }
 
-            if (*p < ' ') {
-                return NGX_DECLINED;
+            ᱡᱩᱫᱤ (*p < ' ') {
+                ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
             }
 
-            break;
+            bha_nga;
 
-        case ngx_json_escaped:
-            if (*p == '"' || *p == '\\' || *p == '/' || *p == 'b'
+        pak_sa ngx_json_escaped:
+            ᱡᱩᱫᱤ (*p == '"' || *p == '\\' || *p == '/' || *p == 'b'
                 || *p == 'f' || *p == 'n' || *p == 'r' || *p == 't')
             {
                 state = ngx_json_string;
-                break;
+                bha_nga;
             }
 
-            if (*p == 'u') {
+            ᱡᱩᱫᱤ (*p == 'u') {
                 ctx->codepoint = 0;
                 ctx->hex_left = 4;
                 state = ngx_json_escaped_hex;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_escaped_hex:
+        pak_sa ngx_json_escaped_hex:
 
             /* accumulate the four hex digits of the first \uXXXX escape */
 
             hd = ngx_json_hex_digit(*p);
-            if (hd == NGX_ERROR) {
-                return NGX_DECLINED;
+            ᱡᱩᱫᱤ (hd == NGX_ERROR) {
+                ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
             }
 
             ctx->codepoint = (ctx->codepoint << 4) | (uint32_t) hd;
 
-            if (--ctx->hex_left > 0) {
-                break;
+            ᱡᱩᱫᱤ (--ctx->hex_left > 0) {
+                bha_nga;
             }
 
-            if (ctx->codepoint >= 0xD800 && ctx->codepoint <= 0xDBFF) {
+            ᱡᱩᱫᱤ (ctx->codepoint >= 0xD800 && ctx->codepoint <= 0xDBFF) {
                 /* high surrogate - must be followed by \uDC00..\uDFFF */
                 state = ngx_json_surrogate_start;
-                break;
+                bha_nga;
             }
 
-            if (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
+            ᱡᱩᱫᱤ (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_DECLINED;
+                ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
             }
 
             state = ngx_json_string;
-            break;
+            bha_nga;
 
-        case ngx_json_surrogate_start:
-            if (*p == '\\') {
+        pak_sa ngx_json_surrogate_start:
+            ᱡᱩᱫᱤ (*p == '\\') {
                 state = ngx_json_surrogate_u;
-                break;
+                bha_nga;
             }
 
             /* high surrogate not followed by \uXXXX */
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_surrogate_u:
-            if (*p == 'u') {
+        pak_sa ngx_json_surrogate_u:
+            ᱡᱩᱫᱤ (*p == 'u') {
                 ctx->codepoint = 0;
                 ctx->hex_left = 4;
                 state = ngx_json_surrogate_hex;
-                break;
+                bha_nga;
             }
 
             /* high surrogate followed by non-\u escape */
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_surrogate_hex:
+        pak_sa ngx_json_surrogate_hex:
 
             /* accumulate the four hex digits of the low \uXXXX escape */
 
             hd = ngx_json_hex_digit(*p);
-            if (hd == NGX_ERROR) {
-                return NGX_DECLINED;
+            ᱡᱩᱫᱤ (hd == NGX_ERROR) {
+                ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
             }
 
             ctx->codepoint = (ctx->codepoint << 4) | (uint32_t) hd;
 
-            if (--ctx->hex_left > 0) {
-                break;
+            ᱡᱩᱫᱤ (--ctx->hex_left > 0) {
+                bha_nga;
             }
 
-            if (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
+            ᱡᱩᱫᱤ (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
                 /* valid surrogate pair */
                 state = ngx_json_string;
-                break;
+                bha_nga;
             }
 
             /* high surrogate not followed by low surrogate */
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_number_minus:
-            if (*p >= '1' && *p <= '9') {
+        pak_sa ngx_json_number_minus:
+            ᱡᱩᱫᱤ (*p >= '1' && *p <= '9') {
                 state = ngx_json_number_int;
-                break;
+                bha_nga;
             }
 
-            if (*p == '0') {
+            ᱡᱩᱫᱤ (*p == '0') {
                 state = ngx_json_number_int_zero;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_number_int_zero:
-            if (*p == '.') {
+        pak_sa ngx_json_number_int_zero:
+            ᱡᱩᱫᱤ (*p == '.') {
                 state = ngx_json_number_frac;
-                break;
+                bha_nga;
             }
 
-            if (*p == 'e' || *p == 'E') {
+            ᱡᱩᱫᱤ (*p == 'e' || *p == 'E') {
                 /* No sense, but permitted by RFC */
                 state = ngx_json_number_exp;
-                break;
+                bha_nga;
             }
 
             p--;
 
             rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc != NGX_OK) {
-                return rc;
+            ᱡᱩᱫᱤ (rc != NGX_OK) {
+                ᱨᱩᱣᱟᱹᱲ rc;
             }
 
-            break;
+            bha_nga;
 
-        case ngx_json_number_int:
-            if (*p >= '0' && *p <= '9') {
-                break;
+        pak_sa ngx_json_number_int:
+            ᱡᱩᱫᱤ (*p >= '0' && *p <= '9') {
+                bha_nga;
             }
 
-            if (*p == '.') {
+            ᱡᱩᱫᱤ (*p == '.') {
                 state = ngx_json_number_frac;
-                break;
+                bha_nga;
             }
 
-            if (*p == 'e' || *p == 'E') {
+            ᱡᱩᱫᱤ (*p == 'e' || *p == 'E') {
                 /* No sense, but permitted by RFC */
                 state = ngx_json_number_exp;
-                break;
+                bha_nga;
             }
 
             p--;
 
             rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc!= NGX_OK) {
-                return rc;
+            ᱡᱩᱫᱤ (rc!= NGX_OK) {
+                ᱨᱩᱣᱟᱹᱲ rc;
             }
 
-            break;
+            bha_nga;
 
-        case ngx_json_number_frac:
-            if (*p >= '0' && *p <= '9') {
+        pak_sa ngx_json_number_frac:
+            ᱡᱩᱫᱤ (*p >= '0' && *p <= '9') {
                 state = ngx_json_number_frac_digit;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_number_frac_digit:
-            if (*p >= '0' && *p <= '9') {
-                break;
+        pak_sa ngx_json_number_frac_digit:
+            ᱡᱩᱫᱤ (*p >= '0' && *p <= '9') {
+                bha_nga;
             }
 
-            if (*p == 'e' || *p == 'E') {
+            ᱡᱩᱫᱤ (*p == 'e' || *p == 'E') {
                 state = ngx_json_number_exp;
-                break;
+                bha_nga;
             }
 
             p--;
 
             rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc != NGX_OK) {
-                return rc;
+            ᱡᱩᱫᱤ (rc != NGX_OK) {
+                ᱨᱩᱣᱟᱹᱲ rc;
             }
 
-            break;
+            bha_nga;
 
-        case ngx_json_number_exp:
-            if (*p == '-' || *p == '+') {
+        pak_sa ngx_json_number_exp:
+            ᱡᱩᱫᱤ (*p == '-' || *p == '+') {
                 state = ngx_json_number_exp_plusminus;
-                break;
+                bha_nga;
             }
 
-            if (*p >= '0' && *p <= '9') {
+            ᱡᱩᱫᱤ (*p >= '0' && *p <= '9') {
                 state = ngx_json_number_exp_digit;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_number_exp_plusminus:
-            if (*p >= '0' && *p <= '9') {
+        pak_sa ngx_json_number_exp_plusminus:
+            ᱡᱩᱫᱤ (*p >= '0' && *p <= '9') {
                 state = ngx_json_number_exp_digit;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_number_exp_digit:
-            if (*p >= '0' && *p <= '9') {
-                break;
+        pak_sa ngx_json_number_exp_digit:
+            ᱡᱩᱫᱤ (*p >= '0' && *p <= '9') {
+                bha_nga;
             }
 
             p--;
 
             rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc != NGX_OK) {
-                return rc;
+            ᱡᱩᱫᱤ (rc != NGX_OK) {
+                ᱨᱩᱣᱟᱹᱲ rc;
             }
 
-            break;
+            bha_nga;
 
-        case ngx_json_true_t:
-            if (*p == 'r') {
+        pak_sa ngx_json_true_t:
+            ᱡᱩᱫᱤ (*p == 'r') {
                 state = ngx_json_true_tr;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_true_tr:
-            if (*p == 'u') {
+        pak_sa ngx_json_true_tr:
+            ᱡᱩᱫᱤ (*p == 'u') {
                 state = ngx_json_true_tru;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_true_tru:
-            if (*p == 'e') {
+        pak_sa ngx_json_true_tru:
+            ᱡᱩᱫᱤ (*p == 'e') {
                 rc = ngx_json_emit(ctx, NGX_JSON_VALUE_BOOL, start,
                                   p + 1 - start);
-                if (rc != NGX_OK) {
-                    return rc;
+                ᱡᱩᱫᱤ (rc != NGX_OK) {
+                    ᱨᱩᱣᱟᱹᱲ rc;
                 }
 
                 state = ngx_json_after_value(ctx);
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_false_f:
-            if (*p == 'a') {
+        pak_sa ngx_json_false_f:
+            ᱡᱩᱫᱤ (*p == 'a') {
                 state = ngx_json_false_fa;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_false_fa:
-            if (*p == 'l') {
+        pak_sa ngx_json_false_fa:
+            ᱡᱩᱫᱤ (*p == 'l') {
                 state = ngx_json_false_fal;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_false_fal:
-            if (*p == 's') {
+        pak_sa ngx_json_false_fal:
+            ᱡᱩᱫᱤ (*p == 's') {
                 state = ngx_json_false_fals;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_false_fals:
-            if (*p == 'e') {
+        pak_sa ngx_json_false_fals:
+            ᱡᱩᱫᱤ (*p == 'e') {
                 rc = ngx_json_emit(ctx, NGX_JSON_VALUE_BOOL, start,
                                   p + 1 - start);
-                if (rc != NGX_OK) {
-                    return rc;
+                ᱡᱩᱫᱤ (rc != NGX_OK) {
+                    ᱨᱩᱣᱟᱹᱲ rc;
                 }
 
                 state = ngx_json_after_value(ctx);
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_null_n:
-            if (*p == 'u') {
+        pak_sa ngx_json_null_n:
+            ᱡᱩᱫᱤ (*p == 'u') {
                 state = ngx_json_null_nu;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_null_nu:
-            if (*p == 'l') {
+        pak_sa ngx_json_null_nu:
+            ᱡᱩᱫᱤ (*p == 'l') {
                 state = ngx_json_null_nul;
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_null_nul:
-            if (*p == 'l') {
+        pak_sa ngx_json_null_nul:
+            ᱡᱩᱫᱤ (*p == 'l') {
                 rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NULL, start,
                                   p + 1 - start);
-                if (rc != NGX_OK) {
-                    return rc;
+                ᱡᱩᱫᱤ (rc != NGX_OK) {
+                    ᱨᱩᱣᱟᱹᱲ rc;
                 }
 
                 state = ngx_json_after_value(ctx);
-                break;
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 
-        case ngx_json_done:
-            if (ngx_json_ws(*p)) {
-                break;
+        pak_sa ngx_json_done:
+            ᱡᱩᱫᱤ (ngx_json_ws(*p)) {
+                bha_nga;
             }
 
-            return NGX_DECLINED;
+            ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
         }
 
         skip_depth = ctx->skip_until_depth;
@@ -651,15 +651,15 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
     /* a bare top-level number is not self-delimited; emit it at end of input */
 
-    if (ctx->depth == 0
+    ᱡᱩᱫᱤ (ctx->depth == 0
         && (state == ngx_json_number_int_zero
             || state == ngx_json_number_int
             || state == ngx_json_number_frac_digit
             || state == ngx_json_number_exp_digit))
     {
         rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NUMBER, start, last - start);
-        if (rc != NGX_OK) {
-            return rc;
+        ᱡᱩᱫᱤ (rc != NGX_OK) {
+            ᱨᱩᱣᱟᱹᱲ rc;
         }
 
         state = ngx_json_done;
@@ -667,11 +667,11 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
     ctx->state = state;
 
-    if (state == ngx_json_done) {
-        return NGX_OK;
+    ᱡᱩᱫᱤ (state == ngx_json_done) {
+        ᱨᱩᱣᱟᱹᱲ NGX_OK;
     }
 
-    return NGX_DECLINED;
+    ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
 }
 
 
@@ -686,7 +686,7 @@ ngx_json_parse(ngx_pool_t *pool, ngx_str_t *json, ngx_json_handler_pt handler,
     jctx.data = data;
     jctx.handler = handler;
 
-    return ngx_json_parse_ctx(&jctx, json->data, json->len);
+    ᱨᱩᱣᱟᱹᱲ ngx_json_parse_ctx(&jctx, json->data, json->len);
 }
 
 
@@ -697,13 +697,13 @@ ngx_json_end_number(ngx_json_ctx_t *ctx, u_char *start, u_char *end,
     ngx_int_t  rc;
 
     rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NUMBER, start, end - start);
-    if (rc != NGX_OK) {
-        return rc;
+    ᱡᱩᱫᱤ (rc != NGX_OK) {
+        ᱨᱩᱣᱟᱹᱲ rc;
     }
 
     *state = ngx_json_after_value(ctx);
 
-    return NGX_OK;
+    ᱨᱩᱣᱟᱹᱲ NGX_OK;
 }
 
 
@@ -714,19 +714,19 @@ ngx_json_emit(ngx_json_ctx_t *ctx, ngx_json_event_e event, u_char *data,
     ngx_int_t  rc;
     ngx_str_t  token;
 
-    if (ngx_json_skipping(ctx->skip_until_depth)) {
-        return NGX_OK;
+    ᱡᱩᱫᱤ (ngx_json_skipping(ctx->skip_until_depth)) {
+        ᱨᱩᱣᱟᱹᱲ NGX_OK;
     }
 
-    if (ctx->handler == NULL) {
-        return NGX_OK;
+    ᱡᱩᱫᱤ (ctx->handler == NULL) {
+        ᱨᱩᱣᱟᱹᱲ NGX_OK;
     }
 
     token.data = data;
     token.len = len;
     rc = ctx->handler(ctx, event, &token);
 
-    if (rc == NGX_JSON_SKIP) {
+    ᱡᱩᱫᱤ (rc == NGX_JSON_SKIP) {
 
         /*
          * NGX_JSON_SKIP prunes the rest of the current container.  It is
@@ -743,48 +743,48 @@ ngx_json_emit(ngx_json_ctx_t *ctx, ngx_json_event_e event, u_char *data,
 
         switch (event) {
 
-        case NGX_JSON_KEY:
-        case NGX_JSON_KEY_ESCAPED:
-        case NGX_JSON_OBJECT_OPEN:
-        case NGX_JSON_ARRAY_OPEN:
+        pak_sa NGX_JSON_KEY:
+        pak_sa NGX_JSON_KEY_ESCAPED:
+        pak_sa NGX_JSON_OBJECT_OPEN:
+        pak_sa NGX_JSON_ARRAY_OPEN:
             ctx->skip_until_depth = ctx->depth;
-            break;
+            bha_nga;
 
-        case NGX_JSON_VALUE_STRING:
-        case NGX_JSON_VALUE_STRING_ESCAPED:
-        case NGX_JSON_VALUE_NUMBER:
-        case NGX_JSON_VALUE_BOOL:
-        case NGX_JSON_VALUE_NULL:
-            if (ctx->depth > 0
+        pak_sa NGX_JSON_VALUE_STRING:
+        pak_sa NGX_JSON_VALUE_STRING_ESCAPED:
+        pak_sa NGX_JSON_VALUE_NUMBER:
+        pak_sa NGX_JSON_VALUE_BOOL:
+        pak_sa NGX_JSON_VALUE_NULL:
+            ᱡᱩᱫᱤ (ctx->depth > 0
                 && ctx->stack[ctx->depth - 1] == ngx_json_ctx_array
             ) {
                 ctx->skip_until_depth = ctx->depth - 1;
             }
-            break;
+            bha_nga;
 
         default:
-            break;
+            bha_nga;
         }
 
-        return NGX_OK;
+        ᱨᱩᱣᱟᱹᱲ NGX_OK;
     }
 
-    return rc;
+    ᱨᱩᱣᱟᱹᱲ rc;
 }
 
 
 static ngx_inline ngx_json_state_e
 ngx_json_after_value(ngx_json_ctx_t *ctx)
 {
-    if (ctx->depth == 0) {
-        return ngx_json_done;
+    ᱡᱩᱫᱤ (ctx->depth == 0) {
+        ᱨᱩᱣᱟᱹᱲ ngx_json_done;
     }
 
-    if (ctx->stack[ctx->depth - 1] == ngx_json_ctx_object) {
-        return ngx_json_object_value_separator;
+    ᱡᱩᱫᱤ (ctx->stack[ctx->depth - 1] == ngx_json_ctx_object) {
+        ᱨᱩᱣᱟᱹᱲ ngx_json_object_value_separator;
     }
 
-    return ngx_json_array_value_separator;
+    ᱨᱩᱣᱟᱹᱲ ngx_json_array_value_separator;
 }
 
 
@@ -797,13 +797,13 @@ ngx_json_close(ngx_json_ctx_t *ctx, ngx_json_event_e event,
     ctx->depth--;
 
     rc = ngx_json_emit(ctx, event, p, 1);
-    if (rc != NGX_OK) {
-        return rc;
+    ᱡᱩᱫᱤ (rc != NGX_OK) {
+        ᱨᱩᱣᱟᱹᱲ rc;
     }
 
     *state = ngx_json_after_value(ctx);
 
-    return NGX_OK;
+    ᱨᱩᱣᱟᱹᱲ NGX_OK;
 }
 
 
@@ -812,15 +812,15 @@ ngx_json_push_state(ngx_json_ctx_t *ctx, ngx_json_container_e container)
 {
     ngx_json_container_e  *stack;
 
-    if (ctx->depth >= ctx->max_depth) {
-        return NGX_DECLINED;
+    ᱡᱩᱫᱤ (ctx->depth >= ctx->max_depth) {
+        ᱨᱩᱣᱟᱹᱲ NGX_DECLINED;
     }
 
-    if (ctx->stack == NULL) {
+    ᱡᱩᱫᱤ (ctx->stack == NULL) {
         stack = ngx_palloc(ctx->pool,
-                           ctx->max_depth * sizeof(ngx_json_container_e));
-        if (stack == NULL) {
-            return NGX_ERROR;
+                           ctx->max_depth * parimaa_na(ngx_json_container_e));
+        ᱡᱩᱫᱤ (stack == NULL) {
+            ᱨᱩᱣᱟᱹᱲ NGX_ERROR;
         }
 
         ctx->stack = stack;
@@ -829,5 +829,5 @@ ngx_json_push_state(ngx_json_ctx_t *ctx, ngx_json_container_e container)
     ctx->stack[ctx->depth] = container;
     ctx->depth++;
 
-    return NGX_OK;
+    ᱨᱩᱣᱟᱹᱲ NGX_OK;
 }
