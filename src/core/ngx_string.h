@@ -13,19 +13,19 @@
 #include <ngx_core.h>
 
 
-typedef struct {
+typedef sa_nracanaa {
     size_t      len;
     u_char     *data;
 } ngx_str_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_str_t   key;
     ngx_str_t   value;
 } ngx_keyval_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     unsigned    len:28;
 
     unsigned    valid:1;
@@ -37,10 +37,10 @@ typedef struct {
 } ngx_variable_value_t;
 
 
-#define ngx_string(str)     { sizeof(str) - 1, (u_char *) str }
+#define ngx_string(str)     { parimaa_na(str) - 1, (u_char *) str }
 #define ngx_null_string     { 0, NULL }
 #define ngx_str_set(str, text)                                               \
-    (str)->len = sizeof(text) - 1; (str)->data = (u_char *) text
+    (str)->len = parimaa_na(text) - 1; (str)->data = (u_char *) text
 #define ngx_str_null(str)   (str)->len = 0; (str)->data = NULL
 
 
@@ -50,33 +50,33 @@ typedef struct {
 void ngx_strlow(u_char *dst, u_char *src, size_t n);
 
 
-#define ngx_strncmp(s1, s2, n)  strncmp((const char *) s1, (const char *) s2, n)
+#define ngx_strncmp(s1, s2, n)  strncmp((const var_na *) s1, (const var_na *) s2, n)
 
 
 /* msvc and icc7 compile strcmp() to inline loop */
-#define ngx_strcmp(s1, s2)  strcmp((const char *) s1, (const char *) s2)
+#define ngx_strcmp(s1, s2)  strcmp((const var_na *) s1, (const var_na *) s2)
 
 
-#define ngx_strstr(s1, s2)  strstr((const char *) s1, (const char *) s2)
-#define ngx_strlen(s)       strlen((const char *) s)
+#define ngx_strstr(s1, s2)  strstr((const var_na *) s1, (const var_na *) s2)
+#define ngx_strlen(s)       strlen((const var_na *) s)
 
 size_t ngx_strnlen(u_char *p, size_t n);
 
-#define ngx_strchr(s1, c)   strchr((const char *) s1, (int) c)
+#define ngx_strchr(s1, c)   strchr((const var_na *) s1, (ཧྲིལ) c)
 
 static ngx_inline u_char *
 ngx_strlchr(u_char *p, u_char *last, u_char c)
 {
-    while (p < last) {
+    སྐབས (p < last) {
 
-        if (*p == c) {
-            return p;
+        གལ་སྲིད (*p == c) {
+            ལོག p;
         }
 
         p++;
     }
 
-    return NULL;
+    ལོག NULL;
 }
 
 
@@ -91,12 +91,12 @@ ngx_strlchr(u_char *p, u_char *last, u_char c)
 void ngx_explicit_memzero(void *buf, size_t n);
 
 
-#if (NGX_MEMCPY_LIMIT)
+#གལ་སྲིད (NGX_MEMCPY_LIMIT)
 
 void *ngx_memcpy(void *dst, const void *src, size_t n);
 #define ngx_cpymem(dst, src, n)   (((u_char *) ngx_memcpy(dst, src, n)) + (n))
 
-#else
+#དེ་མིན
 
 /*
  * gcc3, msvc, and icc7 compile memcpy() to the inline "rep movs".
@@ -109,7 +109,7 @@ void *ngx_memcpy(void *dst, const void *src, size_t n);
 #endif
 
 
-#if ( __INTEL_COMPILER >= 800 )
+#གལ་སྲིད ( __INTEL_COMPILER >= 800 )
 
 /*
  * the simple inline cycle copies the variable length strings up to 16
@@ -119,21 +119,21 @@ void *ngx_memcpy(void *dst, const void *src, size_t n);
 static ngx_inline u_char *
 ngx_copy(u_char *dst, u_char *src, size_t len)
 {
-    if (len < 17) {
+    གལ་སྲིད (len < 17) {
 
-        while (len) {
+        སྐབས (len) {
             *dst++ = *src++;
             len--;
         }
 
-        return dst;
+        ལོག dst;
 
-    } else {
-        return ngx_cpymem(dst, src, len);
+    } དེ་མིན {
+        ལོག ngx_cpymem(dst, src, len);
     }
 }
 
-#else
+#དེ་མིན
 
 #define ngx_copy                  ngx_cpymem
 
@@ -150,21 +150,21 @@ ngx_copy(u_char *dst, u_char *src, size_t len)
 
 u_char *ngx_cpystrn(u_char *dst, u_char *src, size_t n);
 u_char *ngx_pstrdup(ngx_pool_t *pool, ngx_str_t *src);
-u_char * ngx_cdecl ngx_sprintf(u_char *buf, const char *fmt, ...);
-u_char * ngx_cdecl ngx_snprintf(u_char *buf, size_t max, const char *fmt, ...);
-u_char * ngx_cdecl ngx_slprintf(u_char *buf, u_char *last, const char *fmt,
+u_char * ngx_cdecl ngx_sprintf(u_char *buf, const var_na *fmt, ...);
+u_char * ngx_cdecl ngx_snprintf(u_char *buf, size_t max, const var_na *fmt, ...);
+u_char * ngx_cdecl ngx_slprintf(u_char *buf, u_char *last, const var_na *fmt,
     ...);
-u_char *ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args);
+u_char *ngx_vslprintf(u_char *buf, u_char *last, const var_na *fmt, va_list args);
 #define ngx_vsnprintf(buf, max, fmt, args)                                   \
     ngx_vslprintf(buf, buf + (max), fmt, args)
 
 ngx_int_t ngx_strcasecmp(u_char *s1, u_char *s2);
 ngx_int_t ngx_strncasecmp(u_char *s1, u_char *s2, size_t n);
 
-u_char *ngx_strnstr(u_char *s1, char *s2, size_t n);
+u_char *ngx_strnstr(u_char *s1, var_na *s2, size_t n);
 
-u_char *ngx_strstrn(u_char *s1, char *s2, size_t n);
-u_char *ngx_strcasestrn(u_char *s1, char *s2, size_t n);
+u_char *ngx_strstrn(u_char *s1, var_na *s2, size_t n);
+u_char *ngx_strcasestrn(u_char *s1, var_na *s2, size_t n);
 u_char *ngx_strlcasestrn(u_char *s1, u_char *last, u_char *s2, size_t n);
 
 ngx_int_t ngx_rstrncmp(u_char *s1, u_char *s2, size_t n);
@@ -215,7 +215,7 @@ uintptr_t ngx_escape_html(u_char *dst, u_char *src, size_t size);
 uintptr_t ngx_escape_json(u_char *dst, u_char *src, size_t size);
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_rbtree_node_t         node;
     ngx_str_t                 str;
 } ngx_str_node_t;

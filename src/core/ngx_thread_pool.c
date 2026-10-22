@@ -11,12 +11,12 @@
 #include <ngx_thread_pool.h>
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_array_t               pools;
 } ngx_thread_pool_conf_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_thread_task_t        *first;
     ngx_thread_task_t       **last;
 } ngx_thread_pool_queue_t;
@@ -26,7 +26,7 @@ typedef struct {
     (q)->last = &(q)->first
 
 
-struct ngx_thread_pool_s {
+sa_nracanaa ngx_thread_pool_s {
     ngx_thread_mutex_t        mtx;
     ngx_thread_pool_queue_t   queue;
     ngx_int_t                 waiting;
@@ -51,10 +51,10 @@ static void ngx_thread_pool_exit_handler(void *data, ngx_log_t *log);
 static void *ngx_thread_pool_cycle(void *data);
 static void ngx_thread_pool_handler(ngx_event_t *ev);
 
-static char *ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+static var_na *ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 
 static void *ngx_thread_pool_create_conf(ngx_cycle_t *cycle);
-static char *ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf);
+static var_na *ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf);
 
 static ngx_int_t ngx_thread_pool_init_worker(ngx_cycle_t *cycle);
 static void ngx_thread_pool_exit_worker(ngx_cycle_t *cycle);
@@ -106,65 +106,65 @@ static ngx_thread_pool_queue_t  ngx_thread_pool_done;
 static ngx_int_t
 ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *log, ngx_pool_t *pool)
 {
-    int             err;
+    ཧྲིལ             err;
     pthread_t       tid;
     ngx_uint_t      n;
     pthread_attr_t  attr;
 
-    if (ngx_notify == NULL) {
+    གལ་སྲིད (ngx_notify == NULL) {
         ngx_log_error(NGX_LOG_ALERT, log, 0,
                "the configured event method cannot be used with thread pools");
-        return NGX_ERROR;
+        ལོག NGX_ERROR;
     }
 
     ngx_thread_pool_queue_init(&tp->queue);
 
-    if (ngx_thread_mutex_create(&tp->mtx, log) != NGX_OK) {
-        return NGX_ERROR;
+    གལ་སྲིད (ngx_thread_mutex_create(&tp->mtx, log) != NGX_OK) {
+        ལོག NGX_ERROR;
     }
 
-    if (ngx_thread_cond_create(&tp->cond, log) != NGX_OK) {
+    གལ་སྲིད (ngx_thread_cond_create(&tp->cond, log) != NGX_OK) {
         (void) ngx_thread_mutex_destroy(&tp->mtx, log);
-        return NGX_ERROR;
+        ལོག NGX_ERROR;
     }
 
     tp->log = log;
 
     err = pthread_attr_init(&attr);
-    if (err) {
+    གལ་སྲིད (err) {
         ngx_log_error(NGX_LOG_ALERT, log, err,
                       "pthread_attr_init() failed");
-        return NGX_ERROR;
+        ལོག NGX_ERROR;
     }
 
     err = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    if (err) {
+    གལ་སྲིད (err) {
         ngx_log_error(NGX_LOG_ALERT, log, err,
                       "pthread_attr_setdetachstate() failed");
-        return NGX_ERROR;
+        ལོག NGX_ERROR;
     }
 
-#if 0
+#གལ་སྲིད 0
     err = pthread_attr_setstacksize(&attr, PTHREAD_STACK_MIN);
-    if (err) {
+    གལ་སྲིད (err) {
         ngx_log_error(NGX_LOG_ALERT, log, err,
                       "pthread_attr_setstacksize() failed");
-        return NGX_ERROR;
+        ལོག NGX_ERROR;
     }
 #endif
 
-    for (n = 0; n < tp->threads; n++) {
+    དོན་ལུ (n = 0; n < tp->threads; n++) {
         err = pthread_create(&tid, &attr, ngx_thread_pool_cycle, tp);
-        if (err) {
+        གལ་སྲིད (err) {
             ngx_log_error(NGX_LOG_ALERT, log, err,
                           "pthread_create() failed");
-            return NGX_ERROR;
+            ལོག NGX_ERROR;
         }
     }
 
     (void) pthread_attr_destroy(&attr);
 
-    return NGX_OK;
+    ལོག NGX_OK;
 }
 
 
@@ -173,21 +173,21 @@ ngx_thread_pool_destroy(ngx_thread_pool_t *tp)
 {
     ngx_uint_t           n;
     ngx_thread_task_t    task;
-    volatile ngx_uint_t  lock;
+    ca_ncala ngx_uint_t  lock;
 
-    ngx_memzero(&task, sizeof(ngx_thread_task_t));
+    ngx_memzero(&task, parimaa_na(ngx_thread_task_t));
 
     task.handler = ngx_thread_pool_exit_handler;
     task.ctx = (void *) &lock;
 
-    for (n = 0; n < tp->threads; n++) {
+    དོན་ལུ (n = 0; n < tp->threads; n++) {
         lock = 1;
 
-        if (ngx_thread_task_post(tp, &task) != NGX_OK) {
-            return;
+        གལ་སྲིད (ngx_thread_task_post(tp, &task) != NGX_OK) {
+            ལོག;
         }
 
-        while (lock) {
+        སྐབས (lock) {
             ngx_sched_yield();
         }
 
@@ -216,37 +216,37 @@ ngx_thread_task_alloc(ngx_pool_t *pool, size_t size)
 {
     ngx_thread_task_t  *task;
 
-    task = ngx_pcalloc(pool, sizeof(ngx_thread_task_t) + size);
-    if (task == NULL) {
-        return NULL;
+    task = ngx_pcalloc(pool, parimaa_na(ngx_thread_task_t) + size);
+    གལ་སྲིད (task == NULL) {
+        ལོག NULL;
     }
 
     task->ctx = task + 1;
 
-    return task;
+    ལོག task;
 }
 
 
 ngx_int_t
 ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
 {
-    if (task->event.active) {
+    གལ་སྲིད (task->event.active) {
         ngx_log_error(NGX_LOG_ALERT, tp->log, 0,
                       "task #%ui already active", task->id);
-        return NGX_ERROR;
+        ལོག NGX_ERROR;
     }
 
-    if (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
-        return NGX_ERROR;
+    གལ་སྲིད (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
+        ལོག NGX_ERROR;
     }
 
-    if (tp->waiting >= tp->max_queue) {
+    གལ་སྲིད (tp->waiting >= tp->max_queue) {
         (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
 
         ngx_log_error(NGX_LOG_ERR, tp->log, 0,
                       "thread pool \"%V\" queue overflow: %i tasks waiting",
                       &tp->name, tp->waiting);
-        return NGX_ERROR;
+        ལོག NGX_ERROR;
     }
 
     task->event.active = 1;
@@ -254,9 +254,9 @@ ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
     task->id = ngx_thread_pool_task_id++;
     task->next = NULL;
 
-    if (ngx_thread_cond_signal(&tp->cond, tp->log) != NGX_OK) {
+    གལ་སྲིད (ngx_thread_cond_signal(&tp->cond, tp->log) != NGX_OK) {
         (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
-        return NGX_ERROR;
+        ལོག NGX_ERROR;
     }
 
     *tp->queue.last = task;
@@ -270,7 +270,7 @@ ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
                    "task #%ui added to thread pool \"%V\"",
                    task->id, &tp->name);
 
-    return NGX_OK;
+    ལོག NGX_OK;
 }
 
 
@@ -279,11 +279,11 @@ ngx_thread_pool_cycle(void *data)
 {
     ngx_thread_pool_t *tp = data;
 
-    int                 err;
+    ཧྲིལ                 err;
     sigset_t            set;
     ngx_thread_task_t  *task;
 
-#if 0
+#གལ་སྲིད 0
     ngx_time_update();
 #endif
 
@@ -298,40 +298,40 @@ ngx_thread_pool_cycle(void *data)
     sigdelset(&set, SIGBUS);
 
     err = pthread_sigmask(SIG_BLOCK, &set, NULL);
-    if (err) {
+    གལ་སྲིད (err) {
         ngx_log_error(NGX_LOG_ALERT, tp->log, err, "pthread_sigmask() failed");
-        return NULL;
+        ལོག NULL;
     }
 
-    for ( ;; ) {
-        if (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
-            return NULL;
+    དོན་ལུ ( ;; ) {
+        གལ་སྲིད (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
+            ལོག NULL;
         }
 
         /* the number may become negative */
         tp->waiting--;
 
-        while (tp->queue.first == NULL) {
-            if (ngx_thread_cond_wait(&tp->cond, &tp->mtx, tp->log)
+        སྐབས (tp->queue.first == NULL) {
+            གལ་སྲིད (ngx_thread_cond_wait(&tp->cond, &tp->mtx, tp->log)
                 != NGX_OK)
             {
                 (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
-                return NULL;
+                ལོག NULL;
             }
         }
 
         task = tp->queue.first;
         tp->queue.first = task->next;
 
-        if (tp->queue.first == NULL) {
+        གལ་སྲིད (tp->queue.first == NULL) {
             tp->queue.last = &tp->queue.first;
         }
 
-        if (ngx_thread_mutex_unlock(&tp->mtx, tp->log) != NGX_OK) {
-            return NULL;
+        གལ་སྲིད (ngx_thread_mutex_unlock(&tp->mtx, tp->log) != NGX_OK) {
+            ལོག NULL;
         }
 
-#if 0
+#གལ་སྲིད 0
         ngx_time_update();
 #endif
 
@@ -379,7 +379,7 @@ ngx_thread_pool_handler(ngx_event_t *ev)
 
     ngx_unlock(&ngx_thread_pool_done_lock);
 
-    while (task) {
+    སྐབས (task) {
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, ev->log, 0,
                        "run completion handler for task #%ui", task->id);
 
@@ -399,23 +399,23 @@ ngx_thread_pool_create_conf(ngx_cycle_t *cycle)
 {
     ngx_thread_pool_conf_t  *tcf;
 
-    tcf = ngx_pcalloc(cycle->pool, sizeof(ngx_thread_pool_conf_t));
-    if (tcf == NULL) {
-        return NULL;
+    tcf = ngx_pcalloc(cycle->pool, parimaa_na(ngx_thread_pool_conf_t));
+    གལ་སྲིད (tcf == NULL) {
+        ལོག NULL;
     }
 
-    if (ngx_array_init(&tcf->pools, cycle->pool, 4,
-                       sizeof(ngx_thread_pool_t *))
+    གལ་སྲིད (ngx_array_init(&tcf->pools, cycle->pool, 4,
+                       parimaa_na(ngx_thread_pool_t *))
         != NGX_OK)
     {
-        return NULL;
+        ལོག NULL;
     }
 
-    return tcf;
+    ལོག tcf;
 }
 
 
-static char *
+static var_na *
 ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
 {
     ngx_thread_pool_conf_t *tcf = conf;
@@ -425,13 +425,13 @@ ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    དོན་ལུ (i = 0; i < tcf->pools.nelts; i++) {
 
-        if (tpp[i]->threads) {
+        གལ་སྲིད (tpp[i]->threads) {
             continue;
         }
 
-        if (tpp[i]->name.len == ngx_thread_pool_default.len
+        གལ་སྲིད (tpp[i]->name.len == ngx_thread_pool_default.len
             && ngx_strncmp(tpp[i]->name.data, ngx_thread_pool_default.data,
                            ngx_thread_pool_default.len)
                == 0)
@@ -445,14 +445,14 @@ ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
                       "unknown thread pool \"%V\" in %s:%ui",
                       &tpp[i]->name, tpp[i]->file, tpp[i]->line);
 
-        return NGX_CONF_ERROR;
+        ལོག NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    ལོག NGX_CONF_OK;
 }
 
 
-static char *
+static var_na *
 ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     ngx_str_t          *value;
@@ -463,55 +463,55 @@ ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     tp = ngx_thread_pool_add(cf, &value[1]);
 
-    if (tp == NULL) {
-        return NGX_CONF_ERROR;
+    གལ་སྲིད (tp == NULL) {
+        ལོག NGX_CONF_ERROR;
     }
 
-    if (tp->threads) {
+    གལ་སྲིད (tp->threads) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "duplicate thread pool \"%V\"", &tp->name);
-        return NGX_CONF_ERROR;
+        ལོག NGX_CONF_ERROR;
     }
 
     tp->max_queue = 65536;
 
-    for (i = 2; i < cf->args->nelts; i++) {
+    དོན་ལུ (i = 2; i < cf->args->nelts; i++) {
 
-        if (ngx_strncmp(value[i].data, "threads=", 8) == 0) {
+        གལ་སྲིད (ngx_strncmp(value[i].data, "threads=", 8) == 0) {
 
             tp->threads = ngx_atoi(value[i].data + 8, value[i].len - 8);
 
-            if (tp->threads == (ngx_uint_t) NGX_ERROR || tp->threads == 0) {
+            གལ་སྲིད (tp->threads == (ngx_uint_t) NGX_ERROR || tp->threads == 0) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "invalid threads value \"%V\"", &value[i]);
-                return NGX_CONF_ERROR;
+                ལོག NGX_CONF_ERROR;
             }
 
             continue;
         }
 
-        if (ngx_strncmp(value[i].data, "max_queue=", 10) == 0) {
+        གལ་སྲིད (ngx_strncmp(value[i].data, "max_queue=", 10) == 0) {
 
             tp->max_queue = ngx_atoi(value[i].data + 10, value[i].len - 10);
 
-            if (tp->max_queue == NGX_ERROR) {
+            གལ་སྲིད (tp->max_queue == NGX_ERROR) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "invalid max_queue value \"%V\"", &value[i]);
-                return NGX_CONF_ERROR;
+                ལོག NGX_CONF_ERROR;
             }
 
             continue;
         }
     }
 
-    if (tp->threads == 0) {
+    གལ་སྲིད (tp->threads == 0) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "\"%V\" must have \"threads\" parameter",
                            &cmd->name);
-        return NGX_CONF_ERROR;
+        ལོག NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    ལོག NGX_CONF_OK;
 }
 
 
@@ -521,19 +521,19 @@ ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name)
     ngx_thread_pool_t       *tp, **tpp;
     ngx_thread_pool_conf_t  *tcf;
 
-    if (name == NULL) {
+    གལ་སྲིད (name == NULL) {
         name = &ngx_thread_pool_default;
     }
 
     tp = ngx_thread_pool_get(cf->cycle, name);
 
-    if (tp) {
-        return tp;
+    གལ་སྲིད (tp) {
+        ལོག tp;
     }
 
-    tp = ngx_pcalloc(cf->pool, sizeof(ngx_thread_pool_t));
-    if (tp == NULL) {
-        return NULL;
+    tp = ngx_pcalloc(cf->pool, parimaa_na(ngx_thread_pool_t));
+    གལ་སྲིད (tp == NULL) {
+        ལོག NULL;
     }
 
     tp->name = *name;
@@ -544,13 +544,13 @@ ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name)
                                                   ngx_thread_pool_module);
 
     tpp = ngx_array_push(&tcf->pools);
-    if (tpp == NULL) {
-        return NULL;
+    གལ་སྲིད (tpp == NULL) {
+        ལོག NULL;
     }
 
     *tpp = tp;
 
-    return tp;
+    ལོག tp;
 }
 
 
@@ -566,16 +566,16 @@ ngx_thread_pool_get(ngx_cycle_t *cycle, ngx_str_t *name)
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    དོན་ལུ (i = 0; i < tcf->pools.nelts; i++) {
 
-        if (tpp[i]->name.len == name->len
+        གལ་སྲིད (tpp[i]->name.len == name->len
             && ngx_strncmp(tpp[i]->name.data, name->data, name->len) == 0)
         {
-            return tpp[i];
+            ལོག tpp[i];
         }
     }
 
-    return NULL;
+    ལོག NULL;
 }
 
 
@@ -586,30 +586,30 @@ ngx_thread_pool_init_worker(ngx_cycle_t *cycle)
     ngx_thread_pool_t       **tpp;
     ngx_thread_pool_conf_t   *tcf;
 
-    if (ngx_process != NGX_PROCESS_WORKER
+    གལ་སྲིད (ngx_process != NGX_PROCESS_WORKER
         && ngx_process != NGX_PROCESS_SINGLE)
     {
-        return NGX_OK;
+        ལོག NGX_OK;
     }
 
     tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cycle->conf_ctx,
                                                   ngx_thread_pool_module);
 
-    if (tcf == NULL) {
-        return NGX_OK;
+    གལ་སྲིད (tcf == NULL) {
+        ལོག NGX_OK;
     }
 
     ngx_thread_pool_queue_init(&ngx_thread_pool_done);
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
-        if (ngx_thread_pool_init(tpp[i], cycle->log, cycle->pool) != NGX_OK) {
-            return NGX_ERROR;
+    དོན་ལུ (i = 0; i < tcf->pools.nelts; i++) {
+        གལ་སྲིད (ngx_thread_pool_init(tpp[i], cycle->log, cycle->pool) != NGX_OK) {
+            ལོག NGX_ERROR;
         }
     }
 
-    return NGX_OK;
+    ལོག NGX_OK;
 }
 
 
@@ -620,22 +620,22 @@ ngx_thread_pool_exit_worker(ngx_cycle_t *cycle)
     ngx_thread_pool_t       **tpp;
     ngx_thread_pool_conf_t   *tcf;
 
-    if (ngx_process != NGX_PROCESS_WORKER
+    གལ་སྲིད (ngx_process != NGX_PROCESS_WORKER
         && ngx_process != NGX_PROCESS_SINGLE)
     {
-        return;
+        ལོག;
     }
 
     tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cycle->conf_ctx,
                                                   ngx_thread_pool_module);
 
-    if (tcf == NULL) {
-        return;
+    གལ་སྲིད (tcf == NULL) {
+        ལོག;
     }
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    དོན་ལུ (i = 0; i < tcf->pools.nelts; i++) {
         ngx_thread_pool_destroy(tpp[i]);
     }
 }
