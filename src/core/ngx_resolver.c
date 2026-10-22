@@ -5,18 +5,18 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
+#شامل <ngx_event.h>
 
 
-#define NGX_RESOLVER_UDP_SIZE   4096
+#تعریف_کرو NGX_RESOLVER_UDP_سائز   4096
 
-#define NGX_RESOLVER_TCP_RSIZE  (2 + 65535)
-#define NGX_RESOLVER_TCP_WSIZE  8192
+#تعریف_کرو NGX_RESOLVER_TCP_RSIZE  (2 + 65535)
+#تعریف_کرو NGX_RESOLVER_TCP_WSIZE  8192
 
 
-typedef struct {
+قسمتعریف ساخت {
     u_char  ident_hi;
     u_char  ident_lo;
     u_char  flags_hi;
@@ -32,7 +32,7 @@ typedef struct {
 } ngx_resolver_hdr_t;
 
 
-typedef struct {
+قسمتعریف ساخت {
     u_char  type_hi;
     u_char  type_lo;
     u_char  class_hi;
@@ -40,7 +40,7 @@ typedef struct {
 } ngx_resolver_qs_t;
 
 
-typedef struct {
+قسمتعریف ساخت {
     u_char  type_hi;
     u_char  type_lo;
     u_char  class_hi;
@@ -51,86 +51,86 @@ typedef struct {
 } ngx_resolver_an_t;
 
 
-#define ngx_resolver_node(n)  ngx_rbtree_data(n, ngx_resolver_node_t, node)
+#تعریف_کرو ngx_resolver_گرہ(n)  ngx_rbtree_ڈیٹا(n, ngx_resolver_گرہ_t, گرہ)
 
 
-static ngx_int_t ngx_udp_connect(ngx_resolver_connection_t *rec);
-static ngx_int_t ngx_tcp_connect(ngx_resolver_connection_t *rec);
+ساکن ngx_int_t ngx_udp_connect(ngx_resolver_connection_t *rec);
+ساکن ngx_int_t ngx_tcp_connect(ngx_resolver_connection_t *rec);
 
 
-static void ngx_resolver_cleanup(void *data);
-static void ngx_resolver_cleanup_tree(ngx_resolver_t *r, ngx_rbtree_t *tree);
-static ngx_int_t ngx_resolve_name_locked(ngx_resolver_t *r,
+ساکن خالی ngx_resolver_cleanup(خالی *ڈیٹا);
+ساکن خالی ngx_resolver_cleanup_درخت(ngx_resolver_t *r, ngx_rbtree_t *درخت);
+ساکن ngx_int_t ngx_resolve_name_locked(ngx_resolver_t *r,
     ngx_resolver_ctx_t *ctx, ngx_str_t *name);
-static void ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *tree,
-    ngx_queue_t *queue);
-static ngx_int_t ngx_resolver_send_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn);
-static ngx_int_t ngx_resolver_send_udp_query(ngx_resolver_t *r,
+ساکن خالی ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *درخت,
+    ngx_قطار_t *قطار);
+ساکن ngx_int_t ngx_resolver_send_query(ngx_resolver_t *r,
+    ngx_resolver_گرہ_t *rn);
+ساکن ngx_int_t ngx_resolver_send_udp_query(ngx_resolver_t *r,
     ngx_resolver_connection_t *rec, u_char *query, u_short qlen);
-static ngx_int_t ngx_resolver_send_tcp_query(ngx_resolver_t *r,
+ساکن ngx_int_t ngx_resolver_send_tcp_query(ngx_resolver_t *r,
     ngx_resolver_connection_t *rec, u_char *query, u_short qlen);
-static ngx_int_t ngx_resolver_create_name_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_str_t *name);
-static ngx_int_t ngx_resolver_create_srv_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_str_t *name);
-static ngx_int_t ngx_resolver_create_addr_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_resolver_addr_t *addr);
-static void ngx_resolver_resend_handler(ngx_event_t *ev);
-static time_t ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *tree,
-    ngx_queue_t *queue);
-static ngx_uint_t ngx_resolver_resend_empty(ngx_resolver_t *r);
-static void ngx_resolver_udp_read(ngx_event_t *rev);
-static void ngx_resolver_tcp_write(ngx_event_t *wev);
-static void ngx_resolver_tcp_read(ngx_event_t *rev);
-static void ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf,
-    size_t n, ngx_uint_t tcp);
-static void ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
-    ngx_uint_t ident, ngx_uint_t code, ngx_uint_t qtype,
+ساکن ngx_int_t ngx_resolver_create_name_query(ngx_resolver_t *r,
+    ngx_resolver_گرہ_t *rn, ngx_str_t *name);
+ساکن ngx_int_t ngx_resolver_create_srv_query(ngx_resolver_t *r,
+    ngx_resolver_گرہ_t *rn, ngx_str_t *name);
+ساکن ngx_int_t ngx_resolver_create_addr_query(ngx_resolver_t *r,
+    ngx_resolver_گرہ_t *rn, ngx_resolver_addr_t *addr);
+ساکن خالی ngx_resolver_resend_handler(ngx_event_t *ev);
+ساکن وقت_t ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *درخت,
+    ngx_قطار_t *قطار);
+ساکن ngx_uint_t ngx_resolver_resend_خالی_خانے(ngx_resolver_t *r);
+ساکن خالی ngx_resolver_udp_read(ngx_event_t *rev);
+ساکن خالی ngx_resolver_tcp_write(ngx_event_t *wev);
+ساکن خالی ngx_resolver_tcp_read(ngx_event_t *rev);
+ساکن خالی ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf,
+    سائز_t n, ngx_uint_t tcp);
+ساکن خالی ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, سائز_t n,
+    ngx_uint_t ident, ngx_uint_t رمز, ngx_uint_t qtype,
     ngx_uint_t nan, ngx_uint_t trunc, ngx_uint_t ans);
-static void ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
-    ngx_uint_t ident, ngx_uint_t code, ngx_uint_t nan,
+ساکن خالی ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, سائز_t n,
+    ngx_uint_t ident, ngx_uint_t رمز, ngx_uint_t nan,
     ngx_uint_t trunc, ngx_uint_t ans);
-static void ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, size_t n,
-    ngx_uint_t ident, ngx_uint_t code, ngx_uint_t nan);
-static ngx_resolver_node_t *ngx_resolver_lookup_name(ngx_resolver_t *r,
+ساکن خالی ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, سائز_t n,
+    ngx_uint_t ident, ngx_uint_t رمز, ngx_uint_t nan);
+ساکن ngx_resolver_گرہ_t *ngx_resolver_lookup_name(ngx_resolver_t *r,
     ngx_str_t *name, uint32_t hash);
-static ngx_resolver_node_t *ngx_resolver_lookup_srv(ngx_resolver_t *r,
+ساکن ngx_resolver_گرہ_t *ngx_resolver_lookup_srv(ngx_resolver_t *r,
     ngx_str_t *name, uint32_t hash);
-static ngx_resolver_node_t *ngx_resolver_lookup_addr(ngx_resolver_t *r,
-    in_addr_t addr);
-static void ngx_resolver_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-static ngx_int_t ngx_resolver_copy(ngx_resolver_t *r, ngx_str_t *name,
-    u_char *buf, u_char *src, u_char *last);
-static ngx_int_t ngx_resolver_set_timeout(ngx_resolver_t *r,
+ساکن ngx_resolver_گرہ_t *ngx_resolver_lookup_addr(ngx_resolver_t *r,
+    اندر_addr_t addr);
+ساکن خالی ngx_resolver_rbtree_داخل_کرو_قدر(ngx_rbtree_گرہ_t *عارضی,
+    ngx_rbtree_گرہ_t *گرہ, ngx_rbtree_گرہ_t *sentinel);
+ساکن ngx_int_t ngx_resolver_copy(ngx_resolver_t *r, ngx_str_t *name,
+    u_char *buf, u_char *src, u_char *آخری);
+ساکن ngx_int_t ngx_resolver_سیٹ_timeout(ngx_resolver_t *r,
     ngx_resolver_ctx_t *ctx);
-static void ngx_resolver_timeout_handler(ngx_event_t *ev);
-static void ngx_resolver_free_node(ngx_resolver_t *r, ngx_resolver_node_t *rn);
-static void *ngx_resolver_alloc(ngx_resolver_t *r, size_t size);
-static void *ngx_resolver_calloc(ngx_resolver_t *r, size_t size);
-static void ngx_resolver_free(ngx_resolver_t *r, void *p);
-static void ngx_resolver_free_locked(ngx_resolver_t *r, void *p);
-static void *ngx_resolver_dup(ngx_resolver_t *r, void *src, size_t size);
-static ngx_resolver_addr_t *ngx_resolver_export(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_uint_t rotate);
-static void ngx_resolver_report_srv(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx);
-static u_char *ngx_resolver_log_error(ngx_log_t *log, u_char *buf, size_t len);
-static void ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx,
-    ngx_resolver_node_t *rn);
-static void ngx_resolver_srv_names_handler(ngx_resolver_ctx_t *ctx);
-static ngx_int_t ngx_resolver_cmp_srvs(const void *one, const void *two);
+ساکن خالی ngx_resolver_timeout_handler(ngx_event_t *ev);
+ساکن خالی ngx_resolver_free_گرہ(ngx_resolver_t *r, ngx_resolver_گرہ_t *rn);
+ساکن خالی *ngx_resolver_alloc(ngx_resolver_t *r, سائز_t سائز);
+ساکن خالی *ngx_resolver_calloc(ngx_resolver_t *r, سائز_t سائز);
+ساکن خالی ngx_resolver_free(ngx_resolver_t *r, خالی *p);
+ساکن خالی ngx_resolver_free_locked(ngx_resolver_t *r, خالی *p);
+ساکن خالی *ngx_resolver_dup(ngx_resolver_t *r, خالی *src, سائز_t سائز);
+ساکن ngx_resolver_addr_t *ngx_resolver_export(ngx_resolver_t *r,
+    ngx_resolver_گرہ_t *rn, ngx_uint_t rotate);
+ساکن خالی ngx_resolver_report_srv(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx);
+ساکن u_char *ngx_resolver_log_error(ngx_log_t *لوگارتھم, u_char *buf, سائز_t len);
+ساکن خالی ngx_resolver_resolve_srv_نام(ngx_resolver_ctx_t *ctx,
+    ngx_resolver_گرہ_t *rn);
+ساکن خالی ngx_resolver_srv_نام_handler(ngx_resolver_ctx_t *ctx);
+ساکن ngx_int_t ngx_resolver_cmp_srvs(ثابت خالی *one, ثابت خالی *two);
 
-#if (NGX_HAVE_INET6)
-static void ngx_resolver_rbtree_insert_addr6_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-static ngx_resolver_node_t *ngx_resolver_lookup_addr6(ngx_resolver_t *r,
-    struct in6_addr *addr, uint32_t hash);
-#endif
+#اگر (NGX_HAVE_INET6)
+ساکن خالی ngx_resolver_rbtree_داخل_کرو_addr6_قدر(ngx_rbtree_گرہ_t *عارضی,
+    ngx_rbtree_گرہ_t *گرہ, ngx_rbtree_گرہ_t *sentinel);
+ساکن ngx_resolver_گرہ_t *ngx_resolver_lookup_addr6(ngx_resolver_t *r,
+    ساخت in6_addr *addr, uint32_t hash);
+#اگر_ختم
 
 
 ngx_resolver_t *
-ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
+ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *نام, ngx_uint_t n)
 {
     ngx_str_t                   s;
     ngx_url_t                   u;
@@ -139,57 +139,57 @@ ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
     ngx_pool_cleanup_t         *cln;
     ngx_resolver_connection_t  *rec;
 
-    r = ngx_pcalloc(cf->pool, sizeof(ngx_resolver_t));
-    if (r == NULL) {
-        return NULL;
+    r = ngx_pcalloc(cf->pool, حجم(ngx_resolver_t));
+    اگر (r == تہی) {
+        واپس تہی;
     }
 
-    r->event = ngx_pcalloc(cf->pool, sizeof(ngx_event_t));
-    if (r->event == NULL) {
-        return NULL;
+    r->event = ngx_pcalloc(cf->pool, حجم(ngx_event_t));
+    اگر (r->event == تہی) {
+        واپس تہی;
     }
 
-    cln = ngx_pool_cleanup_add(cf->pool, 0);
-    if (cln == NULL) {
-        return NULL;
+    cln = ngx_pool_cleanup_جوڑو(cf->pool, 0);
+    اگر (cln == تہی) {
+        واپس تہی;
     }
 
     cln->handler = ngx_resolver_cleanup;
-    cln->data = r;
+    cln->ڈیٹا = r;
 
     r->ipv4 = 1;
 
     ngx_rbtree_init(&r->name_rbtree, &r->name_sentinel,
-                    ngx_resolver_rbtree_insert_value);
+                    ngx_resolver_rbtree_داخل_کرو_قدر);
 
     ngx_rbtree_init(&r->srv_rbtree, &r->srv_sentinel,
-                    ngx_resolver_rbtree_insert_value);
+                    ngx_resolver_rbtree_داخل_کرو_قدر);
 
     ngx_rbtree_init(&r->addr_rbtree, &r->addr_sentinel,
-                    ngx_rbtree_insert_value);
+                    ngx_rbtree_داخل_کرو_قدر);
 
-    ngx_queue_init(&r->name_resend_queue);
-    ngx_queue_init(&r->srv_resend_queue);
-    ngx_queue_init(&r->addr_resend_queue);
+    ngx_قطار_init(&r->name_resend_قطار);
+    ngx_قطار_init(&r->srv_resend_قطار);
+    ngx_قطار_init(&r->addr_resend_قطار);
 
-    ngx_queue_init(&r->name_expire_queue);
-    ngx_queue_init(&r->srv_expire_queue);
-    ngx_queue_init(&r->addr_expire_queue);
+    ngx_قطار_init(&r->name_expire_قطار);
+    ngx_قطار_init(&r->srv_expire_قطار);
+    ngx_قطار_init(&r->addr_expire_قطار);
 
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
     r->ipv6 = 1;
 
     ngx_rbtree_init(&r->addr6_rbtree, &r->addr6_sentinel,
-                    ngx_resolver_rbtree_insert_addr6_value);
+                    ngx_resolver_rbtree_داخل_کرو_addr6_قدر);
 
-    ngx_queue_init(&r->addr6_resend_queue);
+    ngx_قطار_init(&r->addr6_resend_قطار);
 
-    ngx_queue_init(&r->addr6_expire_queue);
-#endif
+    ngx_قطار_init(&r->addr6_expire_قطار);
+#اگر_ختم
 
     r->event->handler = ngx_resolver_resend_handler;
-    r->event->data = r;
-    r->event->log = &cf->cycle->new_log;
+    r->event->ڈیٹا = r;
+    r->event->لوگارتھم = &cf->چکر->new_log;
     r->event->cancelable = 1;
     r->ident = -1;
 
@@ -198,93 +198,93 @@ ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
     r->expire = 30;
     r->valid = 0;
 
-    r->log = &cf->cycle->new_log;
+    r->لوگارتھم = &cf->چکر->new_log;
     r->log_level = NGX_LOG_ERR;
 
-    if (n) {
-        if (ngx_array_init(&r->connections, cf->pool, n,
-                           sizeof(ngx_resolver_connection_t))
+    اگر (n) {
+        اگر (ngx_array_init(&r->connections, cf->pool, n,
+                           حجم(ngx_resolver_connection_t))
             != NGX_OK)
         {
-            return NULL;
+            واپس تہی;
         }
     }
 
-    for (i = 0; i < n; i++) {
-        if (ngx_strncmp(names[i].data, "valid=", 6) == 0) {
-            s.len = names[i].len - 6;
-            s.data = names[i].data + 6;
+    برائے (i = 0; i < n; i++) {
+        اگر (ngx_strncmp(نام[i].ڈیٹا, "valid=", 6) == 0) {
+            s.len = نام[i].len - 6;
+            s.ڈیٹا = نام[i].ڈیٹا + 6;
 
-            r->valid = ngx_parse_time(&s, 1);
+            r->valid = ngx_parse_وقت(&s, 1);
 
-            if (r->valid == (time_t) NGX_ERROR) {
+            اگر (r->valid == (وقت_t) NGX_ERROR) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                                   "invalid parameter: %V", &names[i]);
-                return NULL;
+                                   "invalid parameter: %V", &نام[i]);
+                واپس تہی;
             }
 
-            continue;
+            جاری;
         }
 
-#if (NGX_HAVE_INET6)
-        if (ngx_strncmp(names[i].data, "ipv4=", 5) == 0) {
+#اگر (NGX_HAVE_INET6)
+        اگر (ngx_strncmp(نام[i].ڈیٹا, "ipv4=", 5) == 0) {
 
-            if (ngx_strcmp(&names[i].data[5], "on") == 0) {
+            اگر (ngx_strcmp(&نام[i].ڈیٹا[5], "on") == 0) {
                 r->ipv4 = 1;
 
-            } else if (ngx_strcmp(&names[i].data[5], "off") == 0) {
+            } ورنہ اگر (ngx_strcmp(&نام[i].ڈیٹا[5], "off") == 0) {
                 r->ipv4 = 0;
 
-            } else {
+            } ورنہ {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                                   "invalid parameter: %V", &names[i]);
-                return NULL;
+                                   "invalid parameter: %V", &نام[i]);
+                واپس تہی;
             }
 
-            continue;
+            جاری;
         }
 
-        if (ngx_strncmp(names[i].data, "ipv6=", 5) == 0) {
+        اگر (ngx_strncmp(نام[i].ڈیٹا, "ipv6=", 5) == 0) {
 
-            if (ngx_strcmp(&names[i].data[5], "on") == 0) {
+            اگر (ngx_strcmp(&نام[i].ڈیٹا[5], "on") == 0) {
                 r->ipv6 = 1;
 
-            } else if (ngx_strcmp(&names[i].data[5], "off") == 0) {
+            } ورنہ اگر (ngx_strcmp(&نام[i].ڈیٹا[5], "off") == 0) {
                 r->ipv6 = 0;
 
-            } else {
+            } ورنہ {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                                   "invalid parameter: %V", &names[i]);
-                return NULL;
+                                   "invalid parameter: %V", &نام[i]);
+                واپس تہی;
             }
 
-            continue;
+            جاری;
         }
-#endif
+#اگر_ختم
 
-        ngx_memzero(&u, sizeof(ngx_url_t));
+        ngx_memzero(&u, حجم(ngx_url_t));
 
-        u.url = names[i];
-        u.default_port = 53;
+        u.url = نام[i];
+        u.default_پورٹ = 53;
 
-        if (ngx_parse_url(cf->pool, &u) != NGX_OK) {
-            if (u.err) {
+        اگر (ngx_parse_url(cf->pool, &u) != NGX_OK) {
+            اگر (u.err) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "%s in resolver \"%V\"",
                                    u.err, &u.url);
             }
 
-            return NULL;
+            واپس تہی;
         }
 
-        rec = ngx_array_push_n(&r->connections, u.naddrs);
-        if (rec == NULL) {
-            return NULL;
+        rec = ngx_array_ڈالو_n(&r->connections, u.naddrs);
+        اگر (rec == تہی) {
+            واپس تہی;
         }
 
-        ngx_memzero(rec, u.naddrs * sizeof(ngx_resolver_connection_t));
+        ngx_memzero(rec, u.naddrs * حجم(ngx_resolver_connection_t));
 
-        for (j = 0; j < u.naddrs; j++) {
+        برائے (j = 0; j < u.naddrs; j++) {
             rec[j].sockaddr = u.addrs[j].sockaddr;
             rec[j].socklen = u.addrs[j].socklen;
             rec[j].server = u.addrs[j].name;
@@ -292,88 +292,88 @@ ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
         }
     }
 
-#if (NGX_HAVE_INET6)
-    if (r->ipv4 + r->ipv6 == 0) {
+#اگر (NGX_HAVE_INET6)
+    اگر (r->ipv4 + r->ipv6 == 0) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "\"ipv4\" and \"ipv6\" cannot both be \"off\"");
-        return NULL;
+        واپس تہی;
     }
-#endif
+#اگر_ختم
 
-    if (n && r->connections.nelts == 0) {
+    اگر (n && r->connections.nelts == 0) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "no name servers defined");
-        return NULL;
+        واپس تہی;
     }
 
-    return r;
+    واپس r;
 }
 
 
-static void
-ngx_resolver_cleanup(void *data)
+ساکن خالی
+ngx_resolver_cleanup(خالی *ڈیٹا)
 {
-    ngx_resolver_t  *r = data;
+    ngx_resolver_t  *r = ڈیٹا;
 
     ngx_uint_t                  i;
     ngx_resolver_connection_t  *rec;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, ngx_cycle->log, 0, "cleanup resolver");
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, ngx_چکر->لوگارتھم, 0, "cleanup resolver");
 
-    ngx_resolver_cleanup_tree(r, &r->name_rbtree);
+    ngx_resolver_cleanup_درخت(r, &r->name_rbtree);
 
-    ngx_resolver_cleanup_tree(r, &r->srv_rbtree);
+    ngx_resolver_cleanup_درخت(r, &r->srv_rbtree);
 
-    ngx_resolver_cleanup_tree(r, &r->addr_rbtree);
+    ngx_resolver_cleanup_درخت(r, &r->addr_rbtree);
 
-#if (NGX_HAVE_INET6)
-    ngx_resolver_cleanup_tree(r, &r->addr6_rbtree);
-#endif
+#اگر (NGX_HAVE_INET6)
+    ngx_resolver_cleanup_درخت(r, &r->addr6_rbtree);
+#اگر_ختم
 
-    if (r->event->timer_set) {
+    اگر (r->event->timer_سیٹ) {
         ngx_del_timer(r->event);
     }
 
     rec = r->connections.elts;
 
-    for (i = 0; i < r->connections.nelts; i++) {
-        if (rec[i].udp) {
+    برائے (i = 0; i < r->connections.nelts; i++) {
+        اگر (rec[i].udp) {
             ngx_close_connection(rec[i].udp);
         }
 
-        if (rec[i].tcp) {
+        اگر (rec[i].tcp) {
             ngx_close_connection(rec[i].tcp);
         }
 
-        if (rec[i].read_buf) {
-            ngx_resolver_free(r, rec[i].read_buf->start);
+        اگر (rec[i].read_buf) {
+            ngx_resolver_free(r, rec[i].read_buf->آغاز);
             ngx_resolver_free(r, rec[i].read_buf);
         }
 
-        if (rec[i].write_buf) {
-            ngx_resolver_free(r, rec[i].write_buf->start);
+        اگر (rec[i].write_buf) {
+            ngx_resolver_free(r, rec[i].write_buf->آغاز);
             ngx_resolver_free(r, rec[i].write_buf);
         }
     }
 }
 
 
-static void
-ngx_resolver_cleanup_tree(ngx_resolver_t *r, ngx_rbtree_t *tree)
+ساکن خالی
+ngx_resolver_cleanup_درخت(ngx_resolver_t *r, ngx_rbtree_t *درخت)
 {
-    ngx_resolver_ctx_t   *ctx, *next;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_ctx_t   *ctx, *اگلا;
+    ngx_resolver_گرہ_t  *rn;
 
-    while (tree->root != tree->sentinel) {
+    جب (درخت->جڑ != درخت->sentinel) {
 
-        rn = ngx_resolver_node(ngx_rbtree_min(tree->root, tree->sentinel));
+        rn = ngx_resolver_گرہ(ngx_rbtree_min(درخت->جڑ, درخت->sentinel));
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
-        for (ctx = rn->waiting; ctx; ctx = next) {
-            next = ctx->next;
+        برائے (ctx = rn->انتظار; ctx; ctx = اگلا) {
+            اگلا = ctx->اگلا;
 
-            if (ctx->event) {
-                if (ctx->event->timer_set) {
+            اگر (ctx->event) {
+                اگر (ctx->event->timer_سیٹ) {
                     ngx_del_timer(ctx->event);
                 }
 
@@ -383,123 +383,123 @@ ngx_resolver_cleanup_tree(ngx_resolver_t *r, ngx_rbtree_t *tree)
             ngx_resolver_free(r, ctx);
         }
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(درخت, &rn->گرہ);
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_گرہ(r, rn);
     }
 }
 
 
 ngx_resolver_ctx_t *
-ngx_resolve_start(ngx_resolver_t *r, ngx_resolver_ctx_t *temp)
+ngx_resolve_آغاز(ngx_resolver_t *r, ngx_resolver_ctx_t *عارضی)
 {
-    in_addr_t            addr;
+    اندر_addr_t            addr;
     ngx_resolver_ctx_t  *ctx;
 
-    if (temp) {
-        addr = ngx_inet_addr(temp->name.data, temp->name.len);
+    اگر (عارضی) {
+        addr = ngx_inet_addr(عارضی->name.ڈیٹا, عارضی->name.len);
 
-        if (addr != INADDR_NONE) {
-            temp->resolver = r;
-            temp->state = NGX_OK;
-            temp->naddrs = 1;
-            temp->addrs = &temp->addr;
-            temp->addr.sockaddr = (struct sockaddr *) &temp->sin;
-            temp->addr.socklen = sizeof(struct sockaddr_in);
-            ngx_memzero(&temp->sin, sizeof(struct sockaddr_in));
-            temp->sin.sin_family = AF_INET;
-            temp->sin.sin_addr.s_addr = addr;
-            temp->quick = 1;
+        اگر (addr != INADDR_NONE) {
+            عارضی->resolver = r;
+            عارضی->state = NGX_OK;
+            عارضی->naddrs = 1;
+            عارضی->addrs = &عارضی->addr;
+            عارضی->addr.sockaddr = (ساخت sockaddr *) &عارضی->جیب;
+            عارضی->addr.socklen = حجم(ساخت sockaddr_اندر);
+            ngx_memzero(&عارضی->جیب, حجم(ساخت sockaddr_اندر));
+            عارضی->جیب.sin_family = AF_INET;
+            عارضی->جیب.sin_addr.s_addr = addr;
+            عارضی->تیز = 1;
 
-            return temp;
+            واپس عارضی;
         }
     }
 
-    if (r->connections.nelts == 0) {
-        return NGX_NO_RESOLVER;
+    اگر (r->connections.nelts == 0) {
+        واپس NGX_NO_RESOLVER;
     }
 
-    ctx = ngx_resolver_calloc(r, sizeof(ngx_resolver_ctx_t));
+    ctx = ngx_resolver_calloc(r, حجم(ngx_resolver_ctx_t));
 
-    if (ctx) {
+    اگر (ctx) {
         ctx->resolver = r;
     }
 
-    return ctx;
+    واپس ctx;
 }
 
 
 ngx_int_t
 ngx_resolve_name(ngx_resolver_ctx_t *ctx)
 {
-    size_t           slen;
+    سائز_t           slen;
     ngx_int_t        rc;
     ngx_str_t        name;
     ngx_resolver_t  *r;
 
     r = ctx->resolver;
 
-    if (ctx->name.len > 0 && ctx->name.data[ctx->name.len - 1] == '.') {
+    اگر (ctx->name.len > 0 && ctx->name.ڈیٹا[ctx->name.len - 1] == '.') {
         ctx->name.len--;
     }
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0,
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                    "resolve: \"%V\"", &ctx->name);
 
-    if (ctx->quick) {
+    اگر (ctx->تیز) {
         ctx->handler(ctx);
-        return NGX_OK;
+        واپس NGX_OK;
     }
 
-    if (ctx->service.len) {
+    اگر (ctx->service.len) {
         slen = ctx->service.len;
 
-        if (ngx_strlchr(ctx->service.data,
-                        ctx->service.data + ctx->service.len, '.')
-            == NULL)
+        اگر (ngx_strlchr(ctx->service.ڈیٹا,
+                        ctx->service.ڈیٹا + ctx->service.len, '.')
+            == تہی)
         {
-            slen += sizeof("_._tcp") - 1;
+            slen += حجم("_._tcp") - 1;
         }
 
         name.len = slen + 1 + ctx->name.len;
 
-        name.data = ngx_resolver_alloc(r, name.len);
-        if (name.data == NULL) {
-            goto failed;
+        name.ڈیٹا = ngx_resolver_alloc(r, name.len);
+        اگر (name.ڈیٹا == تہی) {
+            جاؤ failed;
         }
 
-        if (slen == ctx->service.len) {
-            ngx_sprintf(name.data, "%V.%V", &ctx->service, &ctx->name);
+        اگر (slen == ctx->service.len) {
+            ngx_sprintf(name.ڈیٹا, "%V.%V", &ctx->service, &ctx->name);
 
-        } else {
-            ngx_sprintf(name.data, "_%V._tcp.%V", &ctx->service, &ctx->name);
+        } ورنہ {
+            ngx_sprintf(name.ڈیٹا, "_%V._tcp.%V", &ctx->service, &ctx->name);
         }
 
         /* lock name mutex */
 
         rc = ngx_resolve_name_locked(r, ctx, &name);
 
-        ngx_resolver_free(r, name.data);
+        ngx_resolver_free(r, name.ڈیٹا);
 
-    } else {
+    } ورنہ {
         /* lock name mutex */
 
         rc = ngx_resolve_name_locked(r, ctx, &ctx->name);
     }
 
-    if (rc == NGX_OK) {
-        return NGX_OK;
+    اگر (rc == NGX_OK) {
+        واپس NGX_OK;
     }
 
     /* unlock name mutex */
 
-    if (rc == NGX_AGAIN) {
-        return NGX_OK;
+    اگر (rc == NGX_AGAIN) {
+        واپس NGX_OK;
     }
 
     /* NGX_ERROR */
 
-    if (ctx->event) {
+    اگر (ctx->event) {
         ngx_resolver_free(r, ctx->event);
     }
 
@@ -507,88 +507,88 @@ failed:
 
     ngx_resolver_free(r, ctx);
 
-    return NGX_ERROR;
+    واپس NGX_ERROR;
 }
 
 
-void
-ngx_resolve_name_done(ngx_resolver_ctx_t *ctx)
+خالی
+ngx_resolve_name_مکمل(ngx_resolver_ctx_t *ctx)
 {
     ngx_uint_t            i;
     ngx_resolver_t       *r;
     ngx_resolver_ctx_t   *w, **p;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_گرہ_t  *rn;
 
     r = ctx->resolver;
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0,
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                    "resolve name done: %i", ctx->state);
 
-    if (ctx->quick) {
-        return;
+    اگر (ctx->تیز) {
+        واپس;
     }
 
-    if (ctx->event && ctx->event->timer_set) {
+    اگر (ctx->event && ctx->event->timer_سیٹ) {
         ngx_del_timer(ctx->event);
     }
 
     /* lock name mutex */
 
-    if (ctx->nsrvs) {
-        for (i = 0; i < ctx->nsrvs; i++) {
-            if (ctx->srvs[i].ctx) {
-                ngx_resolve_name_done(ctx->srvs[i].ctx);
+    اگر (ctx->nsrvs) {
+        برائے (i = 0; i < ctx->nsrvs; i++) {
+            اگر (ctx->srvs[i].ctx) {
+                ngx_resolve_name_مکمل(ctx->srvs[i].ctx);
             }
 
-            if (ctx->srvs[i].addrs) {
+            اگر (ctx->srvs[i].addrs) {
                 ngx_resolver_free(r, ctx->srvs[i].addrs->sockaddr);
                 ngx_resolver_free(r, ctx->srvs[i].addrs);
             }
 
-            ngx_resolver_free(r, ctx->srvs[i].name.data);
+            ngx_resolver_free(r, ctx->srvs[i].name.ڈیٹا);
         }
 
         ngx_resolver_free(r, ctx->srvs);
     }
 
-    if (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
+    اگر (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
 
-        rn = ctx->node;
+        rn = ctx->گرہ;
 
-        if (rn) {
-            p = &rn->waiting;
-            w = rn->waiting;
+        اگر (rn) {
+            p = &rn->انتظار;
+            w = rn->انتظار;
 
-            while (w) {
-                if (w == ctx) {
-                    *p = w->next;
+            جب (w) {
+                اگر (w == ctx) {
+                    *p = w->اگلا;
 
-                    goto done;
+                    جاؤ مکمل;
                 }
 
-                p = &w->next;
-                w = w->next;
+                p = &w->اگلا;
+                w = w->اگلا;
             }
 
-            ngx_log_error(NGX_LOG_ALERT, r->log, 0,
+            ngx_log_error(NGX_LOG_ALERT, r->لوگارتھم, 0,
                           "could not cancel %V resolving", &ctx->name);
         }
     }
 
-done:
+مکمل:
 
-    if (ctx->service.len) {
-        ngx_resolver_expire(r, &r->srv_rbtree, &r->srv_expire_queue);
+    اگر (ctx->service.len) {
+        ngx_resolver_expire(r, &r->srv_rbtree, &r->srv_expire_قطار);
 
-    } else {
-        ngx_resolver_expire(r, &r->name_rbtree, &r->name_expire_queue);
+    } ورنہ {
+        ngx_resolver_expire(r, &r->name_rbtree, &r->name_expire_قطار);
     }
 
     /* unlock name mutex */
 
     /* lock alloc mutex */
 
-    if (ctx->event) {
+    اگر (ctx->event) {
         ngx_resolver_free_locked(r, ctx->event);
     }
 
@@ -596,13 +596,13 @@ done:
 
     /* unlock alloc mutex */
 
-    if (r->event->timer_set && ngx_resolver_resend_empty(r)) {
+    اگر (r->event->timer_سیٹ && ngx_resolver_resend_خالی_خانے(r)) {
         ngx_del_timer(r->event);
     }
 }
 
 
-static ngx_int_t
+ساکن ngx_int_t
 ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
     ngx_str_t *name)
 {
@@ -610,193 +610,193 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
     ngx_int_t             rc;
     ngx_str_t             cname;
     ngx_uint_t            i, naddrs;
-    ngx_queue_t          *resend_queue, *expire_queue;
-    ngx_rbtree_t         *tree;
-    ngx_resolver_ctx_t   *next, *last;
+    ngx_قطار_t          *resend_قطار, *expire_قطار;
+    ngx_rbtree_t         *درخت;
+    ngx_resolver_ctx_t   *اگلا, *آخری;
     ngx_resolver_addr_t  *addrs;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_گرہ_t  *rn;
 
-    ngx_strlow(name->data, name->data, name->len);
+    ngx_strlow(name->ڈیٹا, name->ڈیٹا, name->len);
 
-    hash = ngx_crc32_short(name->data, name->len);
+    hash = ngx_چکری_جانچ_32_short(name->ڈیٹا, name->len);
 
-    if (ctx->service.len) {
+    اگر (ctx->service.len) {
         rn = ngx_resolver_lookup_srv(r, name, hash);
 
-        tree = &r->srv_rbtree;
-        resend_queue = &r->srv_resend_queue;
-        expire_queue = &r->srv_expire_queue;
+        درخت = &r->srv_rbtree;
+        resend_قطار = &r->srv_resend_قطار;
+        expire_قطار = &r->srv_expire_قطار;
 
-    } else {
+    } ورنہ {
         rn = ngx_resolver_lookup_name(r, name, hash);
 
-        tree = &r->name_rbtree;
-        resend_queue = &r->name_resend_queue;
-        expire_queue = &r->name_expire_queue;
+        درخت = &r->name_rbtree;
+        resend_قطار = &r->name_resend_قطار;
+        expire_قطار = &r->name_expire_قطار;
     }
 
-    if (rn) {
+    اگر (rn) {
 
         /* ctx can be a list after NGX_RESOLVE_CNAME */
-        for (last = ctx; last->next; last = last->next);
+        برائے (آخری = ctx; آخری->اگلا; آخری = آخری->اگلا);
 
-        if (rn->valid >= ngx_time()) {
+        اگر (rn->valid >= ngx_وقت()) {
 
-            ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->log, 0, "resolve cached");
+            ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0, "resolve cached");
 
-            ngx_queue_remove(&rn->queue);
+            ngx_قطار_remove(&rn->قطار);
 
-            rn->expire = ngx_time() + r->expire;
+            rn->expire = ngx_وقت() + r->expire;
 
-            ngx_queue_insert_head(expire_queue, &rn->queue);
+            ngx_قطار_داخل_کرو_سر(expire_قطار, &rn->قطار);
 
             naddrs = (rn->naddrs == (u_short) -1) ? 0 : rn->naddrs;
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
             naddrs += (rn->naddrs6 == (u_short) -1) ? 0 : rn->naddrs6;
-#endif
+#اگر_ختم
 
-            if (naddrs) {
+            اگر (naddrs) {
 
-                if (naddrs == 1 && rn->naddrs == 1) {
-                    addrs = NULL;
+                اگر (naddrs == 1 && rn->naddrs == 1) {
+                    addrs = تہی;
 
-                } else {
+                } ورنہ {
                     addrs = ngx_resolver_export(r, rn, 1);
-                    if (addrs == NULL) {
-                        return NGX_ERROR;
+                    اگر (addrs == تہی) {
+                        واپس NGX_ERROR;
                     }
                 }
 
-                last->next = rn->waiting;
-                rn->waiting = NULL;
+                آخری->اگلا = rn->انتظار;
+                rn->انتظار = تہی;
 
                 /* unlock name mutex */
 
-                do {
+                کرو {
                     ctx->state = NGX_OK;
                     ctx->valid = rn->valid;
                     ctx->naddrs = naddrs;
 
-                    if (addrs == NULL) {
+                    اگر (addrs == تہی) {
                         ctx->addrs = &ctx->addr;
-                        ctx->addr.sockaddr = (struct sockaddr *) &ctx->sin;
-                        ctx->addr.socklen = sizeof(struct sockaddr_in);
-                        ngx_memzero(&ctx->sin, sizeof(struct sockaddr_in));
-                        ctx->sin.sin_family = AF_INET;
-                        ctx->sin.sin_addr.s_addr = rn->u.addr;
+                        ctx->addr.sockaddr = (ساخت sockaddr *) &ctx->جیب;
+                        ctx->addr.socklen = حجم(ساخت sockaddr_اندر);
+                        ngx_memzero(&ctx->جیب, حجم(ساخت sockaddr_اندر));
+                        ctx->جیب.sin_family = AF_INET;
+                        ctx->جیب.sin_addr.s_addr = rn->u.addr;
 
-                    } else {
+                    } ورنہ {
                         ctx->addrs = addrs;
                     }
 
-                    next = ctx->next;
+                    اگلا = ctx->اگلا;
 
                     ctx->handler(ctx);
 
-                    ctx = next;
-                } while (ctx);
+                    ctx = اگلا;
+                } جب (ctx);
 
-                if (addrs != NULL) {
+                اگر (addrs != تہی) {
                     ngx_resolver_free(r, addrs->sockaddr);
                     ngx_resolver_free(r, addrs);
                 }
 
-                return NGX_OK;
+                واپس NGX_OK;
             }
 
-            if (rn->nsrvs) {
-                last->next = rn->waiting;
-                rn->waiting = NULL;
+            اگر (rn->nsrvs) {
+                آخری->اگلا = rn->انتظار;
+                rn->انتظار = تہی;
 
                 /* unlock name mutex */
 
-                do {
-                    next = ctx->next;
+                کرو {
+                    اگلا = ctx->اگلا;
 
-                    ngx_resolver_resolve_srv_names(ctx, rn);
+                    ngx_resolver_resolve_srv_نام(ctx, rn);
 
-                    ctx = next;
-                } while (ctx);
+                    ctx = اگلا;
+                } جب (ctx);
 
-                return NGX_OK;
+                واپس NGX_OK;
             }
 
             /* NGX_RESOLVE_CNAME */
 
-            if (ctx->recursion++ < NGX_RESOLVER_MAX_RECURSION) {
+            اگر (ctx->recursion++ < NGX_RESOLVER_MAX_RECURSION) {
 
                 cname.len = rn->cnlen;
-                cname.data = rn->u.cname;
+                cname.ڈیٹا = rn->u.cname;
 
-                return ngx_resolve_name_locked(r, ctx, &cname);
+                واپس ngx_resolve_name_locked(r, ctx, &cname);
             }
 
-            last->next = rn->waiting;
-            rn->waiting = NULL;
+            آخری->اگلا = rn->انتظار;
+            rn->انتظار = تہی;
 
             /* unlock name mutex */
 
-            do {
+            کرو {
                 ctx->state = NGX_RESOLVE_NXDOMAIN;
-                ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
-                next = ctx->next;
+                ctx->valid = ngx_وقت() + (r->valid ? r->valid : 10);
+                اگلا = ctx->اگلا;
 
                 ctx->handler(ctx);
 
-                ctx = next;
-            } while (ctx);
+                ctx = اگلا;
+            } جب (ctx);
 
-            return NGX_OK;
+            واپس NGX_OK;
         }
 
-        if (rn->waiting) {
-            if (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
-                return NGX_ERROR;
+        اگر (rn->انتظار) {
+            اگر (ngx_resolver_سیٹ_timeout(r, ctx) != NGX_OK) {
+                واپس NGX_ERROR;
             }
 
-            last->next = rn->waiting;
-            rn->waiting = ctx;
+            آخری->اگلا = rn->انتظار;
+            rn->انتظار = ctx;
             ctx->state = NGX_AGAIN;
             ctx->async = 1;
 
-            do {
-                ctx->node = rn;
-                ctx = ctx->next;
-            } while (ctx);
+            کرو {
+                ctx->گرہ = rn;
+                ctx = ctx->اگلا;
+            } جب (ctx);
 
-            return NGX_AGAIN;
+            واپس NGX_AGAIN;
         }
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
         /* lock alloc mutex */
 
-        if (rn->query) {
+        اگر (rn->query) {
             ngx_resolver_free_locked(r, rn->query);
-            rn->query = NULL;
-#if (NGX_HAVE_INET6)
-            rn->query6 = NULL;
-#endif
+            rn->query = تہی;
+#اگر (NGX_HAVE_INET6)
+            rn->query6 = تہی;
+#اگر_ختم
         }
 
-        if (rn->cnlen) {
+        اگر (rn->cnlen) {
             ngx_resolver_free_locked(r, rn->u.cname);
         }
 
-        if (rn->naddrs > 1 && rn->naddrs != (u_short) -1) {
+        اگر (rn->naddrs > 1 && rn->naddrs != (u_short) -1) {
             ngx_resolver_free_locked(r, rn->u.addrs);
         }
 
-#if (NGX_HAVE_INET6)
-        if (rn->naddrs6 > 1 && rn->naddrs6 != (u_short) -1) {
+#اگر (NGX_HAVE_INET6)
+        اگر (rn->naddrs6 > 1 && rn->naddrs6 != (u_short) -1) {
             ngx_resolver_free_locked(r, rn->u6.addrs6);
         }
-#endif
+#اگر_ختم
 
-        if (rn->nsrvs) {
-            for (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
-                if (rn->u.srvs[i].name.data) {
-                    ngx_resolver_free_locked(r, rn->u.srvs[i].name.data);
+        اگر (rn->nsrvs) {
+            برائے (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
+                اگر (rn->u.srvs[i].name.ڈیٹا) {
+                    ngx_resolver_free_locked(r, rn->u.srvs[i].name.ڈیٹا);
                 }
             }
 
@@ -805,117 +805,117 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
 
         /* unlock alloc mutex */
 
-    } else {
+    } ورنہ {
 
-        rn = ngx_resolver_alloc(r, sizeof(ngx_resolver_node_t));
-        if (rn == NULL) {
-            return NGX_ERROR;
+        rn = ngx_resolver_alloc(r, حجم(ngx_resolver_گرہ_t));
+        اگر (rn == تہی) {
+            واپس NGX_ERROR;
         }
 
-        rn->name = ngx_resolver_dup(r, name->data, name->len);
-        if (rn->name == NULL) {
+        rn->name = ngx_resolver_dup(r, name->ڈیٹا, name->len);
+        اگر (rn->name == تہی) {
             ngx_resolver_free(r, rn);
-            return NGX_ERROR;
+            واپس NGX_ERROR;
         }
 
-        rn->node.key = hash;
+        rn->گرہ.کلید = hash;
         rn->nlen = (u_short) name->len;
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
-#endif
+        rn->query = تہی;
+#اگر (NGX_HAVE_INET6)
+        rn->query6 = تہی;
+#اگر_ختم
 
-        ngx_rbtree_insert(tree, &rn->node);
+        ngx_rbtree_داخل_کرو(درخت, &rn->گرہ);
     }
 
-    if (ctx->service.len) {
+    اگر (ctx->service.len) {
         rc = ngx_resolver_create_srv_query(r, rn, name);
 
-    } else {
+    } ورنہ {
         rc = ngx_resolver_create_name_query(r, rn, name);
     }
 
-    if (rc == NGX_ERROR) {
-        goto failed;
+    اگر (rc == NGX_ERROR) {
+        جاؤ failed;
     }
 
-    if (rc == NGX_DECLINED) {
-        ngx_rbtree_delete(tree, &rn->node);
+    اگر (rc == NGX_DECLINED) {
+        ngx_rbtree_delete(درخت, &rn->گرہ);
 
         ngx_resolver_free(r, rn->query);
         ngx_resolver_free(r, rn->name);
         ngx_resolver_free(r, rn);
 
-        do {
+        کرو {
             ctx->state = NGX_RESOLVE_NXDOMAIN;
-            next = ctx->next;
+            اگلا = ctx->اگلا;
 
             ctx->handler(ctx);
 
-            ctx = next;
-        } while (ctx);
+            ctx = اگلا;
+        } جب (ctx);
 
-        return NGX_OK;
+        واپس NGX_OK;
     }
 
-    rn->last_connection = r->last_connection++;
-    if (r->last_connection == r->connections.nelts) {
-        r->last_connection = 0;
+    rn->آخری_connection = r->آخری_connection++;
+    اگر (r->آخری_connection == r->connections.nelts) {
+        r->آخری_connection = 0;
     }
 
     rn->naddrs = r->ipv4 ? (u_short) -1 : 0;
     rn->tcp = 0;
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
     rn->naddrs6 = r->ipv6 ? (u_short) -1 : 0;
     rn->tcp6 = 0;
-#endif
+#اگر_ختم
     rn->nsrvs = 0;
 
-    if (ngx_resolver_send_query(r, rn) != NGX_OK) {
+    اگر (ngx_resolver_send_query(r, rn) != NGX_OK) {
 
         /* immediately retry once on failure */
 
-        rn->last_connection++;
-        if (rn->last_connection == r->connections.nelts) {
-            rn->last_connection = 0;
+        rn->آخری_connection++;
+        اگر (rn->آخری_connection == r->connections.nelts) {
+            rn->آخری_connection = 0;
         }
 
-        (void) ngx_resolver_send_query(r, rn);
+        (خالی) ngx_resolver_send_query(r, rn);
     }
 
-    if (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
-        goto failed;
+    اگر (ngx_resolver_سیٹ_timeout(r, ctx) != NGX_OK) {
+        جاؤ failed;
     }
 
-    if (ngx_resolver_resend_empty(r)) {
-        ngx_add_timer(r->event, (ngx_msec_t) (r->resend_timeout * 1000));
+    اگر (ngx_resolver_resend_خالی_خانے(r)) {
+        ngx_جوڑو_timer(r->event, (ngx_msec_t) (r->resend_timeout * 1000));
     }
 
-    rn->expire = ngx_time() + r->resend_timeout;
+    rn->expire = ngx_وقت() + r->resend_timeout;
 
-    ngx_queue_insert_head(resend_queue, &rn->queue);
+    ngx_قطار_داخل_کرو_سر(resend_قطار, &rn->قطار);
 
-    rn->code = 0;
+    rn->رمز = 0;
     rn->cnlen = 0;
     rn->valid = 0;
-    rn->ttl = NGX_MAX_UINT32_VALUE;
-    rn->waiting = ctx;
+    rn->ttl = NGX_MAX_UINT32_قدر;
+    rn->انتظار = ctx;
 
     ctx->state = NGX_AGAIN;
     ctx->async = 1;
 
-    do {
-        ctx->node = rn;
-        ctx = ctx->next;
-    } while (ctx);
+    کرو {
+        ctx->گرہ = rn;
+        ctx = ctx->اگلا;
+    } جب (ctx);
 
-    return NGX_AGAIN;
+    واپس NGX_AGAIN;
 
 failed:
 
-    ngx_rbtree_delete(tree, &rn->node);
+    ngx_rbtree_delete(درخت, &rn->گرہ);
 
-    if (rn->query) {
+    اگر (rn->query) {
         ngx_resolver_free(r, rn->query);
     }
 
@@ -923,7 +923,7 @@ failed:
 
     ngx_resolver_free(r, rn);
 
-    return NGX_ERROR;
+    واپس NGX_ERROR;
 }
 
 
@@ -931,78 +931,78 @@ ngx_int_t
 ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
 {
     u_char               *name;
-    in_addr_t             addr;
-    ngx_queue_t          *resend_queue, *expire_queue;
-    ngx_rbtree_t         *tree;
+    اندر_addr_t             addr;
+    ngx_قطار_t          *resend_قطار, *expire_قطار;
+    ngx_rbtree_t         *درخت;
     ngx_resolver_t       *r;
-    struct sockaddr_in   *sin;
-    ngx_resolver_node_t  *rn;
-#if (NGX_HAVE_INET6)
+    ساخت sockaddr_اندر   *جیب;
+    ngx_resolver_گرہ_t  *rn;
+#اگر (NGX_HAVE_INET6)
     uint32_t              hash;
-    struct sockaddr_in6  *sin6;
-#endif
+    ساخت sockaddr_in6  *sin6;
+#اگر_ختم
 
-#if (NGX_SUPPRESS_WARN)
+#اگر (NGX_SUPPRESS_WARN)
     addr = 0;
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
     hash = 0;
-    sin6 = NULL;
-#endif
-#endif
+    sin6 = تہی;
+#اگر_ختم
+#اگر_ختم
 
     r = ctx->resolver;
 
-    switch (ctx->addr.sockaddr->sa_family) {
+    انتخاب (ctx->addr.sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        sin6 = (struct sockaddr_in6 *) ctx->addr.sockaddr;
-        hash = ngx_crc32_short(sin6->sin6_addr.s6_addr, 16);
+#اگر (NGX_HAVE_INET6)
+    حالت AF_INET6:
+        sin6 = (ساخت sockaddr_in6 *) ctx->addr.sockaddr;
+        hash = ngx_چکری_جانچ_32_short(sin6->sin6_addr.s6_addr, 16);
 
         /* lock addr mutex */
 
         rn = ngx_resolver_lookup_addr6(r, &sin6->sin6_addr, hash);
 
-        tree = &r->addr6_rbtree;
-        resend_queue = &r->addr6_resend_queue;
-        expire_queue = &r->addr6_expire_queue;
+        درخت = &r->addr6_rbtree;
+        resend_قطار = &r->addr6_resend_قطار;
+        expire_قطار = &r->addr6_expire_قطار;
 
-        break;
-#endif
+        توڑو;
+#اگر_ختم
 
-    default: /* AF_INET */
-        sin = (struct sockaddr_in *) ctx->addr.sockaddr;
-        addr = ntohl(sin->sin_addr.s_addr);
+    طےشدہ: /* AF_INET */
+        جیب = (ساخت sockaddr_اندر *) ctx->addr.sockaddr;
+        addr = ntohl(جیب->sin_addr.s_addr);
 
         /* lock addr mutex */
 
         rn = ngx_resolver_lookup_addr(r, addr);
 
-        tree = &r->addr_rbtree;
-        resend_queue = &r->addr_resend_queue;
-        expire_queue = &r->addr_expire_queue;
+        درخت = &r->addr_rbtree;
+        resend_قطار = &r->addr_resend_قطار;
+        expire_قطار = &r->addr_expire_قطار;
     }
 
-    if (rn) {
+    اگر (rn) {
 
-        if (rn->valid >= ngx_time()) {
+        اگر (rn->valid >= ngx_وقت()) {
 
-            ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->log, 0, "resolve cached");
+            ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0, "resolve cached");
 
-            ngx_queue_remove(&rn->queue);
+            ngx_قطار_remove(&rn->قطار);
 
-            rn->expire = ngx_time() + r->expire;
+            rn->expire = ngx_وقت() + r->expire;
 
-            ngx_queue_insert_head(expire_queue, &rn->queue);
+            ngx_قطار_داخل_کرو_سر(expire_قطار, &rn->قطار);
 
             name = ngx_resolver_dup(r, rn->name, rn->nlen);
-            if (name == NULL) {
+            اگر (name == تہی) {
                 ngx_resolver_free(r, ctx);
-                return NGX_ERROR;
+                واپس NGX_ERROR;
             }
 
             ctx->name.len = rn->nlen;
-            ctx->name.data = name;
+            ctx->name.ڈیٹا = name;
 
             /* unlock addr mutex */
 
@@ -1013,123 +1013,123 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
 
             ngx_resolver_free(r, name);
 
-            return NGX_OK;
+            واپس NGX_OK;
         }
 
-        if (rn->waiting) {
-            if (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
-                return NGX_ERROR;
+        اگر (rn->انتظار) {
+            اگر (ngx_resolver_سیٹ_timeout(r, ctx) != NGX_OK) {
+                واپس NGX_ERROR;
             }
 
-            ctx->next = rn->waiting;
-            rn->waiting = ctx;
+            ctx->اگلا = rn->انتظار;
+            rn->انتظار = ctx;
             ctx->state = NGX_AGAIN;
             ctx->async = 1;
-            ctx->node = rn;
+            ctx->گرہ = rn;
 
             /* unlock addr mutex */
 
-            return NGX_OK;
+            واپس NGX_OK;
         }
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
         ngx_resolver_free(r, rn->query);
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
-#endif
+        rn->query = تہی;
+#اگر (NGX_HAVE_INET6)
+        rn->query6 = تہی;
+#اگر_ختم
 
-    } else {
-        rn = ngx_resolver_alloc(r, sizeof(ngx_resolver_node_t));
-        if (rn == NULL) {
-            goto failed;
+    } ورنہ {
+        rn = ngx_resolver_alloc(r, حجم(ngx_resolver_گرہ_t));
+        اگر (rn == تہی) {
+            جاؤ failed;
         }
 
-        switch (ctx->addr.sockaddr->sa_family) {
+        انتخاب (ctx->addr.sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-        case AF_INET6:
+#اگر (NGX_HAVE_INET6)
+        حالت AF_INET6:
             rn->addr6 = sin6->sin6_addr;
-            rn->node.key = hash;
-            break;
-#endif
+            rn->گرہ.کلید = hash;
+            توڑو;
+#اگر_ختم
 
-        default: /* AF_INET */
-            rn->node.key = addr;
+        طےشدہ: /* AF_INET */
+            rn->گرہ.کلید = addr;
         }
 
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
-#endif
+        rn->query = تہی;
+#اگر (NGX_HAVE_INET6)
+        rn->query6 = تہی;
+#اگر_ختم
 
-        ngx_rbtree_insert(tree, &rn->node);
+        ngx_rbtree_داخل_کرو(درخت, &rn->گرہ);
     }
 
-    if (ngx_resolver_create_addr_query(r, rn, &ctx->addr) != NGX_OK) {
-        goto failed;
+    اگر (ngx_resolver_create_addr_query(r, rn, &ctx->addr) != NGX_OK) {
+        جاؤ failed;
     }
 
-    rn->last_connection = r->last_connection++;
-    if (r->last_connection == r->connections.nelts) {
-        r->last_connection = 0;
+    rn->آخری_connection = r->آخری_connection++;
+    اگر (r->آخری_connection == r->connections.nelts) {
+        r->آخری_connection = 0;
     }
 
     rn->naddrs = (u_short) -1;
     rn->tcp = 0;
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
     rn->naddrs6 = (u_short) -1;
     rn->tcp6 = 0;
-#endif
+#اگر_ختم
     rn->nsrvs = 0;
 
-    if (ngx_resolver_send_query(r, rn) != NGX_OK) {
+    اگر (ngx_resolver_send_query(r, rn) != NGX_OK) {
 
         /* immediately retry once on failure */
 
-        rn->last_connection++;
-        if (rn->last_connection == r->connections.nelts) {
-            rn->last_connection = 0;
+        rn->آخری_connection++;
+        اگر (rn->آخری_connection == r->connections.nelts) {
+            rn->آخری_connection = 0;
         }
 
-        (void) ngx_resolver_send_query(r, rn);
+        (خالی) ngx_resolver_send_query(r, rn);
     }
 
-    if (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
-        goto failed;
+    اگر (ngx_resolver_سیٹ_timeout(r, ctx) != NGX_OK) {
+        جاؤ failed;
     }
 
-    if (ngx_resolver_resend_empty(r)) {
-        ngx_add_timer(r->event, (ngx_msec_t) (r->resend_timeout * 1000));
+    اگر (ngx_resolver_resend_خالی_خانے(r)) {
+        ngx_جوڑو_timer(r->event, (ngx_msec_t) (r->resend_timeout * 1000));
     }
 
-    rn->expire = ngx_time() + r->resend_timeout;
+    rn->expire = ngx_وقت() + r->resend_timeout;
 
-    ngx_queue_insert_head(resend_queue, &rn->queue);
+    ngx_قطار_داخل_کرو_سر(resend_قطار, &rn->قطار);
 
-    rn->code = 0;
+    rn->رمز = 0;
     rn->cnlen = 0;
-    rn->name = NULL;
+    rn->name = تہی;
     rn->nlen = 0;
     rn->valid = 0;
-    rn->ttl = NGX_MAX_UINT32_VALUE;
-    rn->waiting = ctx;
+    rn->ttl = NGX_MAX_UINT32_قدر;
+    rn->انتظار = ctx;
 
     /* unlock addr mutex */
 
     ctx->state = NGX_AGAIN;
     ctx->async = 1;
-    ctx->node = rn;
+    ctx->گرہ = rn;
 
-    return NGX_OK;
+    واپس NGX_OK;
 
 failed:
 
-    if (rn) {
-        ngx_rbtree_delete(tree, &rn->node);
+    اگر (rn) {
+        ngx_rbtree_delete(درخت, &rn->گرہ);
 
-        if (rn->query) {
+        اگر (rn->query) {
             ngx_resolver_free(r, rn->query);
         }
 
@@ -1138,92 +1138,92 @@ failed:
 
     /* unlock addr mutex */
 
-    if (ctx->event) {
+    اگر (ctx->event) {
         ngx_resolver_free(r, ctx->event);
     }
 
     ngx_resolver_free(r, ctx);
 
-    return NGX_ERROR;
+    واپس NGX_ERROR;
 }
 
 
-void
-ngx_resolve_addr_done(ngx_resolver_ctx_t *ctx)
+خالی
+ngx_resolve_addr_مکمل(ngx_resolver_ctx_t *ctx)
 {
-    ngx_queue_t          *expire_queue;
-    ngx_rbtree_t         *tree;
+    ngx_قطار_t          *expire_قطار;
+    ngx_rbtree_t         *درخت;
     ngx_resolver_t       *r;
     ngx_resolver_ctx_t   *w, **p;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_گرہ_t  *rn;
 
     r = ctx->resolver;
 
-    switch (ctx->addr.sockaddr->sa_family) {
+    انتخاب (ctx->addr.sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        tree = &r->addr6_rbtree;
-        expire_queue = &r->addr6_expire_queue;
-        break;
-#endif
+#اگر (NGX_HAVE_INET6)
+    حالت AF_INET6:
+        درخت = &r->addr6_rbtree;
+        expire_قطار = &r->addr6_expire_قطار;
+        توڑو;
+#اگر_ختم
 
-    default: /* AF_INET */
-        tree = &r->addr_rbtree;
-        expire_queue = &r->addr_expire_queue;
+    طےشدہ: /* AF_INET */
+        درخت = &r->addr_rbtree;
+        expire_قطار = &r->addr_expire_قطار;
     }
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0,
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                    "resolve addr done: %i", ctx->state);
 
-    if (ctx->event && ctx->event->timer_set) {
+    اگر (ctx->event && ctx->event->timer_سیٹ) {
         ngx_del_timer(ctx->event);
     }
 
     /* lock addr mutex */
 
-    if (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
+    اگر (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
 
-        rn = ctx->node;
+        rn = ctx->گرہ;
 
-        if (rn) {
-            p = &rn->waiting;
-            w = rn->waiting;
+        اگر (rn) {
+            p = &rn->انتظار;
+            w = rn->انتظار;
 
-            while (w) {
-                if (w == ctx) {
-                    *p = w->next;
+            جب (w) {
+                اگر (w == ctx) {
+                    *p = w->اگلا;
 
-                    goto done;
+                    جاؤ مکمل;
                 }
 
-                p = &w->next;
-                w = w->next;
+                p = &w->اگلا;
+                w = w->اگلا;
             }
         }
 
         {
-            u_char     text[NGX_SOCKADDR_STRLEN];
+            u_char     متن[NGX_SOCKADDR_STRLEN];
             ngx_str_t  addrtext;
 
-            addrtext.data = text;
+            addrtext.ڈیٹا = متن;
             addrtext.len = ngx_sock_ntop(ctx->addr.sockaddr, ctx->addr.socklen,
-                                         text, NGX_SOCKADDR_STRLEN, 0);
+                                         متن, NGX_SOCKADDR_STRLEN, 0);
 
-            ngx_log_error(NGX_LOG_ALERT, r->log, 0,
+            ngx_log_error(NGX_LOG_ALERT, r->لوگارتھم, 0,
                           "could not cancel %V resolving", &addrtext);
         }
     }
 
-done:
+مکمل:
 
-    ngx_resolver_expire(r, tree, expire_queue);
+    ngx_resolver_expire(r, درخت, expire_قطار);
 
     /* unlock addr mutex */
 
     /* lock alloc mutex */
 
-    if (ctx->event) {
+    اگر (ctx->event) {
         ngx_resolver_free_locked(r, ctx->event);
     }
 
@@ -1231,131 +1231,131 @@ done:
 
     /* unlock alloc mutex */
 
-    if (r->event->timer_set && ngx_resolver_resend_empty(r)) {
+    اگر (r->event->timer_سیٹ && ngx_resolver_resend_خالی_خانے(r)) {
         ngx_del_timer(r->event);
     }
 }
 
 
-static void
-ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *tree, ngx_queue_t *queue)
+ساکن خالی
+ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *درخت, ngx_قطار_t *قطار)
 {
-    time_t                now;
+    وقت_t                now;
     ngx_uint_t            i;
-    ngx_queue_t          *q;
-    ngx_resolver_node_t  *rn;
+    ngx_قطار_t          *q;
+    ngx_resolver_گرہ_t  *rn;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->log, 0, "resolver expire");
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0, "resolver expire");
 
-    now = ngx_time();
+    now = ngx_وقت();
 
-    for (i = 0; i < 2; i++) {
-        if (ngx_queue_empty(queue)) {
-            return;
+    برائے (i = 0; i < 2; i++) {
+        اگر (ngx_قطار_خالی_خانے(قطار)) {
+            واپس;
         }
 
-        q = ngx_queue_last(queue);
+        q = ngx_قطار_آخری(قطار);
 
-        rn = ngx_queue_data(q, ngx_resolver_node_t, queue);
+        rn = ngx_قطار_ڈیٹا(q, ngx_resolver_گرہ_t, قطار);
 
-        if (now <= rn->expire) {
-            return;
+        اگر (now <= rn->expire) {
+            واپس;
         }
 
-        ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->log, 0,
-                       "resolver expire \"%*s\"", (size_t) rn->nlen, rn->name);
+        ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
+                       "resolver expire \"%*s\"", (سائز_t) rn->nlen, rn->name);
 
-        ngx_queue_remove(q);
+        ngx_قطار_remove(q);
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(درخت, &rn->گرہ);
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_گرہ(r, rn);
     }
 }
 
 
-static ngx_int_t
-ngx_resolver_send_query(ngx_resolver_t *r, ngx_resolver_node_t *rn)
+ساکن ngx_int_t
+ngx_resolver_send_query(ngx_resolver_t *r, ngx_resolver_گرہ_t *rn)
 {
     ngx_int_t                   rc;
     ngx_resolver_connection_t  *rec;
 
     rec = r->connections.elts;
-    rec = &rec[rn->last_connection];
+    rec = &rec[rn->آخری_connection];
 
-    if (rec->log.handler == NULL) {
-        rec->log = *r->log;
-        rec->log.handler = ngx_resolver_log_error;
-        rec->log.data = rec;
-        rec->log.action = "resolving";
+    اگر (rec->لوگارتھم.handler == تہی) {
+        rec->لوگارتھم = *r->لوگارتھم;
+        rec->لوگارتھم.handler = ngx_resolver_log_error;
+        rec->لوگارتھم.ڈیٹا = rec;
+        rec->لوگارتھم.action = "resolving";
     }
 
-    if (rn->query && rn->naddrs == (u_short) -1) {
+    اگر (rn->query && rn->naddrs == (u_short) -1) {
         rc = rn->tcp ? ngx_resolver_send_tcp_query(r, rec, rn->query, rn->qlen)
                      : ngx_resolver_send_udp_query(r, rec, rn->query, rn->qlen);
 
-        if (rc != NGX_OK) {
-            return rc;
+        اگر (rc != NGX_OK) {
+            واپس rc;
         }
     }
 
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
 
-    if (rn->query6 && rn->naddrs6 == (u_short) -1) {
+    اگر (rn->query6 && rn->naddrs6 == (u_short) -1) {
         rc = rn->tcp6
                     ? ngx_resolver_send_tcp_query(r, rec, rn->query6, rn->qlen)
                     : ngx_resolver_send_udp_query(r, rec, rn->query6, rn->qlen);
 
-        if (rc != NGX_OK) {
-            return rc;
+        اگر (rc != NGX_OK) {
+            واپس rc;
         }
     }
 
-#endif
+#اگر_ختم
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
-static ngx_int_t
+ساکن ngx_int_t
 ngx_resolver_send_udp_query(ngx_resolver_t *r, ngx_resolver_connection_t  *rec,
     u_char *query, u_short qlen)
 {
     ssize_t  n;
 
-    if (rec->udp == NULL) {
-        if (ngx_udp_connect(rec) != NGX_OK) {
-            return NGX_ERROR;
+    اگر (rec->udp == تہی) {
+        اگر (ngx_udp_connect(rec) != NGX_OK) {
+            واپس NGX_ERROR;
         }
 
-        rec->udp->data = rec;
-        rec->udp->read->handler = ngx_resolver_udp_read;
-        rec->udp->read->resolver = 1;
+        rec->udp->ڈیٹا = rec;
+        rec->udp->اقرأ->handler = ngx_resolver_udp_read;
+        rec->udp->اقرأ->resolver = 1;
     }
 
     n = ngx_send(rec->udp, query, qlen);
 
-    if (n == NGX_ERROR) {
-        goto failed;
+    اگر (n == NGX_ERROR) {
+        جاؤ failed;
     }
 
-    if ((size_t) n != (size_t) qlen) {
-        ngx_log_error(NGX_LOG_CRIT, &rec->log, 0, "send() incomplete");
-        goto failed;
+    اگر ((سائز_t) n != (سائز_t) qlen) {
+        ngx_log_error(NGX_LOG_CRIT, &rec->لوگارتھم, 0, "send() incomplete");
+        جاؤ failed;
     }
 
-    return NGX_OK;
+    واپس NGX_OK;
 
 failed:
 
     ngx_close_connection(rec->udp);
-    rec->udp = NULL;
+    rec->udp = تہی;
 
-    return NGX_ERROR;
+    واپس NGX_ERROR;
 }
 
 
-static ngx_int_t
+ساکن ngx_int_t
 ngx_resolver_send_tcp_query(ngx_resolver_t *r, ngx_resolver_connection_t *rec,
     u_char *query, u_short qlen)
 {
@@ -1364,318 +1364,318 @@ ngx_resolver_send_tcp_query(ngx_resolver_t *r, ngx_resolver_connection_t *rec,
 
     rc = NGX_OK;
 
-    if (rec->tcp == NULL) {
+    اگر (rec->tcp == تہی) {
         b = rec->read_buf;
 
-        if (b == NULL) {
-            b = ngx_resolver_calloc(r, sizeof(ngx_buf_t));
-            if (b == NULL) {
-                return NGX_ERROR;
+        اگر (b == تہی) {
+            b = ngx_resolver_calloc(r, حجم(ngx_buf_t));
+            اگر (b == تہی) {
+                واپس NGX_ERROR;
             }
 
-            b->start = ngx_resolver_alloc(r, NGX_RESOLVER_TCP_RSIZE);
-            if (b->start == NULL) {
+            b->آغاز = ngx_resolver_alloc(r, NGX_RESOLVER_TCP_RSIZE);
+            اگر (b->آغاز == تہی) {
                 ngx_resolver_free(r, b);
-                return NGX_ERROR;
+                واپس NGX_ERROR;
             }
 
-            b->end = b->start + NGX_RESOLVER_TCP_RSIZE;
+            b->انتہا = b->آغاز + NGX_RESOLVER_TCP_RSIZE;
 
             rec->read_buf = b;
         }
 
-        b->pos = b->start;
-        b->last = b->start;
+        b->pos = b->آغاز;
+        b->آخری = b->آغاز;
 
         b = rec->write_buf;
 
-        if (b == NULL) {
-            b = ngx_resolver_calloc(r, sizeof(ngx_buf_t));
-            if (b == NULL) {
-                return NGX_ERROR;
+        اگر (b == تہی) {
+            b = ngx_resolver_calloc(r, حجم(ngx_buf_t));
+            اگر (b == تہی) {
+                واپس NGX_ERROR;
             }
 
-            b->start = ngx_resolver_alloc(r, NGX_RESOLVER_TCP_WSIZE);
-            if (b->start == NULL) {
+            b->آغاز = ngx_resolver_alloc(r, NGX_RESOLVER_TCP_WSIZE);
+            اگر (b->آغاز == تہی) {
                 ngx_resolver_free(r, b);
-                return NGX_ERROR;
+                واپس NGX_ERROR;
             }
 
-            b->end = b->start + NGX_RESOLVER_TCP_WSIZE;
+            b->انتہا = b->آغاز + NGX_RESOLVER_TCP_WSIZE;
 
             rec->write_buf = b;
         }
 
-        b->pos = b->start;
-        b->last = b->start;
+        b->pos = b->آغاز;
+        b->آخری = b->آغاز;
 
         rc = ngx_tcp_connect(rec);
-        if (rc == NGX_ERROR) {
-            return NGX_ERROR;
+        اگر (rc == NGX_ERROR) {
+            واپس NGX_ERROR;
         }
 
-        rec->tcp->data = rec;
-        rec->tcp->write->handler = ngx_resolver_tcp_write;
-        rec->tcp->write->cancelable = 1;
-        rec->tcp->read->handler = ngx_resolver_tcp_read;
-        rec->tcp->read->resolver = 1;
+        rec->tcp->ڈیٹا = rec;
+        rec->tcp->اكتب->handler = ngx_resolver_tcp_write;
+        rec->tcp->اكتب->cancelable = 1;
+        rec->tcp->اقرأ->handler = ngx_resolver_tcp_read;
+        rec->tcp->اقرأ->resolver = 1;
 
-        ngx_add_timer(rec->tcp->write, (ngx_msec_t) (r->tcp_timeout * 1000));
+        ngx_جوڑو_timer(rec->tcp->اكتب, (ngx_msec_t) (r->tcp_timeout * 1000));
     }
 
     b = rec->write_buf;
 
-    if (b->end - b->last <  2 + qlen) {
-        ngx_log_error(NGX_LOG_CRIT, &rec->log, 0, "buffer overflow");
-        return NGX_ERROR;
+    اگر (b->انتہا - b->آخری <  2 + qlen) {
+        ngx_log_error(NGX_LOG_CRIT, &rec->لوگارتھم, 0, "buffer overflow");
+        واپس NGX_ERROR;
     }
 
-    *b->last++ = (u_char) (qlen >> 8);
-    *b->last++ = (u_char) qlen;
-    b->last = ngx_cpymem(b->last, query, qlen);
+    *b->آخری++ = (u_char) (qlen >> 8);
+    *b->آخری++ = (u_char) qlen;
+    b->آخری = ngx_cpymem(b->آخری, query, qlen);
 
-    if (rc == NGX_OK) {
-        ngx_resolver_tcp_write(rec->tcp->write);
+    اگر (rc == NGX_OK) {
+        ngx_resolver_tcp_write(rec->tcp->اكتب);
     }
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
-static void
+ساکن خالی
 ngx_resolver_resend_handler(ngx_event_t *ev)
 {
-    time_t           timer, atimer, stimer, ntimer;
-#if (NGX_HAVE_INET6)
-    time_t           a6timer;
-#endif
+    وقت_t           timer, atimer, stimer, ntimer;
+#اگر (NGX_HAVE_INET6)
+    وقت_t           a6timer;
+#اگر_ختم
     ngx_resolver_t  *r;
 
-    r = ev->data;
+    r = ev->ڈیٹا;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->log, 0,
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                    "resolver resend handler");
 
     /* lock name mutex */
 
-    ntimer = ngx_resolver_resend(r, &r->name_rbtree, &r->name_resend_queue);
+    ntimer = ngx_resolver_resend(r, &r->name_rbtree, &r->name_resend_قطار);
 
-    stimer = ngx_resolver_resend(r, &r->srv_rbtree, &r->srv_resend_queue);
+    stimer = ngx_resolver_resend(r, &r->srv_rbtree, &r->srv_resend_قطار);
 
     /* unlock name mutex */
 
     /* lock addr mutex */
 
-    atimer = ngx_resolver_resend(r, &r->addr_rbtree, &r->addr_resend_queue);
+    atimer = ngx_resolver_resend(r, &r->addr_rbtree, &r->addr_resend_قطار);
 
     /* unlock addr mutex */
 
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
 
     /* lock addr6 mutex */
 
-    a6timer = ngx_resolver_resend(r, &r->addr6_rbtree, &r->addr6_resend_queue);
+    a6timer = ngx_resolver_resend(r, &r->addr6_rbtree, &r->addr6_resend_قطار);
 
     /* unlock addr6 mutex */
 
-#endif
+#اگر_ختم
 
     timer = ntimer;
 
-    if (timer == 0) {
+    اگر (timer == 0) {
         timer = atimer;
 
-    } else if (atimer) {
+    } ورنہ اگر (atimer) {
         timer = ngx_min(timer, atimer);
     }
 
-    if (timer == 0) {
+    اگر (timer == 0) {
         timer = stimer;
 
-    } else if (stimer) {
+    } ورنہ اگر (stimer) {
         timer = ngx_min(timer, stimer);
     }
 
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
 
-    if (timer == 0) {
+    اگر (timer == 0) {
         timer = a6timer;
 
-    } else if (a6timer) {
+    } ورنہ اگر (a6timer) {
         timer = ngx_min(timer, a6timer);
     }
 
-#endif
+#اگر_ختم
 
-    if (timer) {
-        ngx_add_timer(r->event, (ngx_msec_t) (timer * 1000));
+    اگر (timer) {
+        ngx_جوڑو_timer(r->event, (ngx_msec_t) (timer * 1000));
     }
 }
 
 
-static time_t
-ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *tree, ngx_queue_t *queue)
+ساکن وقت_t
+ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *درخت, ngx_قطار_t *قطار)
 {
-    time_t                now;
-    ngx_queue_t          *q;
-    ngx_resolver_node_t  *rn;
+    وقت_t                now;
+    ngx_قطار_t          *q;
+    ngx_resolver_گرہ_t  *rn;
 
-    now = ngx_time();
+    now = ngx_وقت();
 
-    for ( ;; ) {
-        if (ngx_queue_empty(queue)) {
-            return 0;
+    برائے ( ;; ) {
+        اگر (ngx_قطار_خالی_خانے(قطار)) {
+            واپس 0;
         }
 
-        q = ngx_queue_last(queue);
+        q = ngx_قطار_آخری(قطار);
 
-        rn = ngx_queue_data(q, ngx_resolver_node_t, queue);
+        rn = ngx_قطار_ڈیٹا(q, ngx_resolver_گرہ_t, قطار);
 
-        if (now < rn->expire) {
-            return rn->expire - now;
+        اگر (now < rn->expire) {
+            واپس rn->expire - now;
         }
 
-        ngx_log_debug3(NGX_LOG_DEBUG_CORE, r->log, 0,
+        ngx_log_debug3(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                        "resolver resend \"%*s\" %p",
-                       (size_t) rn->nlen, rn->name, rn->waiting);
+                       (سائز_t) rn->nlen, rn->name, rn->انتظار);
 
-        ngx_queue_remove(q);
+        ngx_قطار_remove(q);
 
-        if (rn->waiting) {
+        اگر (rn->انتظار) {
 
-            if (++rn->last_connection == r->connections.nelts) {
-                rn->last_connection = 0;
+            اگر (++rn->آخری_connection == r->connections.nelts) {
+                rn->آخری_connection = 0;
             }
 
-            (void) ngx_resolver_send_query(r, rn);
+            (خالی) ngx_resolver_send_query(r, rn);
 
             rn->expire = now + r->resend_timeout;
 
-            ngx_queue_insert_head(queue, q);
+            ngx_قطار_داخل_کرو_سر(قطار, q);
 
-            continue;
+            جاری;
         }
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(درخت, &rn->گرہ);
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_گرہ(r, rn);
     }
 }
 
 
-static ngx_uint_t
-ngx_resolver_resend_empty(ngx_resolver_t *r)
+ساکن ngx_uint_t
+ngx_resolver_resend_خالی_خانے(ngx_resolver_t *r)
 {
-    return ngx_queue_empty(&r->name_resend_queue)
-           && ngx_queue_empty(&r->srv_resend_queue)
-#if (NGX_HAVE_INET6)
-           && ngx_queue_empty(&r->addr6_resend_queue)
-#endif
-           && ngx_queue_empty(&r->addr_resend_queue);
+    واپس ngx_قطار_خالی_خانے(&r->name_resend_قطار)
+           && ngx_قطار_خالی_خانے(&r->srv_resend_قطار)
+#اگر (NGX_HAVE_INET6)
+           && ngx_قطار_خالی_خانے(&r->addr6_resend_قطار)
+#اگر_ختم
+           && ngx_قطار_خالی_خانے(&r->addr_resend_قطار);
 }
 
 
-static void
+ساکن خالی
 ngx_resolver_udp_read(ngx_event_t *rev)
 {
     ssize_t                     n;
     ngx_connection_t           *c;
     ngx_resolver_connection_t  *rec;
-    u_char                      buf[NGX_RESOLVER_UDP_SIZE];
+    u_char                      buf[NGX_RESOLVER_UDP_سائز];
 
-    c = rev->data;
-    rec = c->data;
+    c = rev->ڈیٹا;
+    rec = c->ڈیٹا;
 
-    do {
-        n = ngx_udp_recv(c, buf, NGX_RESOLVER_UDP_SIZE);
+    کرو {
+        n = ngx_udp_recv(c, buf, NGX_RESOLVER_UDP_سائز);
 
-        if (n == NGX_AGAIN) {
-            break;
+        اگر (n == NGX_AGAIN) {
+            توڑو;
         }
 
-        if (n == NGX_ERROR) {
-            goto failed;
+        اگر (n == NGX_ERROR) {
+            جاؤ failed;
         }
 
         ngx_resolver_process_response(rec->resolver, buf, n, 0);
 
-    } while (rev->ready);
+    } جب (rev->ready);
 
-    if (ngx_handle_read_event(rev, 0) != NGX_OK) {
-        goto failed;
+    اگر (ngx_handle_read_event(rev, 0) != NGX_OK) {
+        جاؤ failed;
     }
 
-    return;
+    واپس;
 
 failed:
 
     ngx_close_connection(rec->udp);
-    rec->udp = NULL;
+    rec->udp = تہی;
 }
 
 
-static void
+ساکن خالی
 ngx_resolver_tcp_write(ngx_event_t *wev)
 {
-    off_t                       sent;
+    off_t                       بھیجا;
     ssize_t                     n;
     ngx_buf_t                  *b;
     ngx_resolver_t             *r;
     ngx_connection_t           *c;
     ngx_resolver_connection_t  *rec;
 
-    c = wev->data;
-    rec = c->data;
+    c = wev->ڈیٹا;
+    rec = c->ڈیٹا;
     b = rec->write_buf;
     r = rec->resolver;
 
-    if (wev->timedout) {
-        goto failed;
+    اگر (wev->timedout) {
+        جاؤ failed;
     }
 
-    sent = c->sent;
+    بھیجا = c->بھیجا;
 
-    while (wev->ready && b->pos < b->last) {
-        n = ngx_send(c, b->pos, b->last - b->pos);
+    جب (wev->ready && b->pos < b->آخری) {
+        n = ngx_send(c, b->pos, b->آخری - b->pos);
 
-        if (n == NGX_AGAIN) {
-            break;
+        اگر (n == NGX_AGAIN) {
+            توڑو;
         }
 
-        if (n == NGX_ERROR) {
-            goto failed;
+        اگر (n == NGX_ERROR) {
+            جاؤ failed;
         }
 
         b->pos += n;
     }
 
-    if (b->pos != b->start) {
-        b->last = ngx_movemem(b->start, b->pos, b->last - b->pos);
-        b->pos = b->start;
+    اگر (b->pos != b->آغاز) {
+        b->آخری = ngx_movemem(b->آغاز, b->pos, b->آخری - b->pos);
+        b->pos = b->آغاز;
     }
 
-    if (c->sent != sent) {
-        ngx_add_timer(wev, (ngx_msec_t) (r->tcp_timeout * 1000));
+    اگر (c->بھیجا != بھیجا) {
+        ngx_جوڑو_timer(wev, (ngx_msec_t) (r->tcp_timeout * 1000));
     }
 
-    if (ngx_handle_write_event(wev, 0) != NGX_OK) {
-        goto failed;
+    اگر (ngx_handle_write_event(wev, 0) != NGX_OK) {
+        جاؤ failed;
     }
 
-    return;
+    واپس;
 
 failed:
 
     ngx_close_connection(c);
-    rec->tcp = NULL;
+    rec->tcp = تہی;
 }
 
 
-static void
+ساکن خالی
 ngx_resolver_tcp_read(ngx_event_t *rev)
 {
     u_char                     *p;
-    size_t                      size;
+    سائز_t                      سائز;
     ssize_t                     n;
     u_short                     qlen;
     ngx_buf_t                  *b;
@@ -1683,37 +1683,37 @@ ngx_resolver_tcp_read(ngx_event_t *rev)
     ngx_connection_t           *c;
     ngx_resolver_connection_t  *rec;
 
-    c = rev->data;
-    rec = c->data;
+    c = rev->ڈیٹا;
+    rec = c->ڈیٹا;
     b = rec->read_buf;
     r = rec->resolver;
 
-    while (rev->ready) {
-        n = ngx_recv(c, b->last, b->end - b->last);
+    جب (rev->ready) {
+        n = ngx_recv(c, b->آخری, b->انتہا - b->آخری);
 
-        if (n == NGX_AGAIN) {
-            break;
+        اگر (n == NGX_AGAIN) {
+            توڑو;
         }
 
-        if (n == NGX_ERROR || n == 0) {
-            goto failed;
+        اگر (n == NGX_ERROR || n == 0) {
+            جاؤ failed;
         }
 
-        b->last += n;
+        b->آخری += n;
 
-        for ( ;; ) {
+        برائے ( ;; ) {
             p = b->pos;
-            size = b->last - p;
+            سائز = b->آخری - p;
 
-            if (size < 2) {
-                break;
+            اگر (سائز < 2) {
+                توڑو;
             }
 
             qlen = (u_short) *p++ << 8;
             qlen += *p++;
 
-            if (size < (size_t) (2 + qlen)) {
-                break;
+            اگر (سائز < (سائز_t) (2 + qlen)) {
+                توڑو;
             }
 
             ngx_resolver_process_response(r, p, qlen, 1);
@@ -1721,42 +1721,42 @@ ngx_resolver_tcp_read(ngx_event_t *rev)
             b->pos += 2 + qlen;
         }
 
-        if (b->pos != b->start) {
-            b->last = ngx_movemem(b->start, b->pos, b->last - b->pos);
-            b->pos = b->start;
+        اگر (b->pos != b->آغاز) {
+            b->آخری = ngx_movemem(b->آغاز, b->pos, b->آخری - b->pos);
+            b->pos = b->آغاز;
         }
     }
 
-    if (ngx_handle_read_event(rev, 0) != NGX_OK) {
-        goto failed;
+    اگر (ngx_handle_read_event(rev, 0) != NGX_OK) {
+        جاؤ failed;
     }
 
-    return;
+    واپس;
 
 failed:
 
     ngx_close_connection(c);
-    rec->tcp = NULL;
+    rec->tcp = تہی;
 }
 
 
-static void
-ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf, size_t n,
+ساکن خالی
+ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf, سائز_t n,
     ngx_uint_t tcp)
 {
-    char                 *err;
-    ngx_uint_t            i, times, ident, qident, flags, code, nqs, nan, trunc,
+    حرف                 *err;
+    ngx_uint_t            i, times, ident, qident, flags, رمز, nqs, nan, trunc,
                           qtype, qclass;
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
     ngx_uint_t            qident6;
-#endif
-    ngx_queue_t          *q;
+#اگر_ختم
+    ngx_قطار_t          *q;
     ngx_resolver_qs_t    *qs;
     ngx_resolver_hdr_t   *response;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_گرہ_t  *rn;
 
-    if (n < sizeof(ngx_resolver_hdr_t)) {
-        goto short_response;
+    اگر (n < حجم(ngx_resolver_hdr_t)) {
+        جاؤ short_response;
     }
 
     response = (ngx_resolver_hdr_t *) buf;
@@ -1767,92 +1767,92 @@ ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf, size_t n,
     nan = (response->nan_hi << 8) + response->nan_lo;
     trunc = flags & 0x0200;
 
-    ngx_log_debug6(NGX_LOG_DEBUG_CORE, r->log, 0,
+    ngx_log_debug6(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                    "resolver DNS response %ui fl:%04Xi %ui/%ui/%ud/%ud",
                    ident, flags, nqs, nan,
                    (response->nns_hi << 8) + response->nns_lo,
                    (response->nar_hi << 8) + response->nar_lo);
 
     /* response to a standard query */
-    if ((flags & 0xf870) != 0x8000 || (trunc && tcp)) {
-        ngx_log_error(r->log_level, r->log, 0,
+    اگر ((flags & 0xf870) != 0x8000 || (trunc && tcp)) {
+        ngx_log_error(r->log_level, r->لوگارتھم, 0,
                       "invalid %s DNS response %ui fl:%04Xi",
                       tcp ? "TCP" : "UDP", ident, flags);
-        return;
+        واپس;
     }
 
-    code = flags & 0xf;
+    رمز = flags & 0xf;
 
-    if (code == NGX_RESOLVE_FORMERR) {
+    اگر (رمز == NGX_RESOLVE_FORMERR) {
 
         times = 0;
 
-        for (q = ngx_queue_head(&r->name_resend_queue);
-             q != ngx_queue_sentinel(&r->name_resend_queue) && times++ < 100;
-             q = ngx_queue_next(q))
+        برائے (q = ngx_قطار_سر(&r->name_resend_قطار);
+             q != ngx_قطار_sentinel(&r->name_resend_قطار) && times++ < 100;
+             q = ngx_قطار_اگلا(q))
         {
-            rn = ngx_queue_data(q, ngx_resolver_node_t, queue);
+            rn = ngx_قطار_ڈیٹا(q, ngx_resolver_گرہ_t, قطار);
 
-            if (rn->query) {
+            اگر (rn->query) {
                 qident = (rn->query[0] << 8) + rn->query[1];
 
-                if (qident == ident) {
-                    goto dns_error_name;
+                اگر (qident == ident) {
+                    جاؤ dns_error_name;
                 }
             }
 
-#if (NGX_HAVE_INET6)
-            if (rn->query6) {
+#اگر (NGX_HAVE_INET6)
+            اگر (rn->query6) {
                 qident6 = (rn->query6[0] << 8) + rn->query6[1];
 
-                if (qident6 == ident) {
-                    goto dns_error_name;
+                اگر (qident6 == ident) {
+                    جاؤ dns_error_name;
                 }
             }
-#endif
+#اگر_ختم
         }
 
-        goto dns_error;
+        جاؤ dns_error;
     }
 
-    if (code > NGX_RESOLVE_REFUSED) {
-        goto dns_error;
+    اگر (رمز > NGX_RESOLVE_REFUSED) {
+        جاؤ dns_error;
     }
 
-    if (nqs != 1) {
+    اگر (nqs != 1) {
         err = "invalid number of questions in DNS response";
-        goto done;
+        جاؤ مکمل;
     }
 
-    i = sizeof(ngx_resolver_hdr_t);
+    i = حجم(ngx_resolver_hdr_t);
 
-    while (i < (ngx_uint_t) n) {
+    جب (i < (ngx_uint_t) n) {
 
-        if (buf[i] & 0xc0) {
+        اگر (buf[i] & 0xc0) {
             err = "unexpected compression pointer in DNS response";
-            goto done;
+            جاؤ مکمل;
         }
 
-        if (buf[i] == '\0') {
-            goto found;
+        اگر (buf[i] == '\0') {
+            جاؤ ملا;
         }
 
         i += 1 + buf[i];
     }
 
-    goto short_response;
+    جاؤ short_response;
 
-found:
+ملا:
 
-    if (i++ == sizeof(ngx_resolver_hdr_t)) {
+    اگر (i++ == حجم(ngx_resolver_hdr_t)) {
         err = "zero-length domain name in DNS response";
-        goto done;
+        جاؤ مکمل;
     }
 
-    if (i + sizeof(ngx_resolver_qs_t) + nan * (2 + sizeof(ngx_resolver_an_t))
+    اگر (i + حجم(ngx_resolver_qs_t) + nan * (2 + حجم(ngx_resolver_an_t))
         > (ngx_uint_t) n)
     {
-        goto short_response;
+        جاؤ short_response;
     }
 
     qs = (ngx_resolver_qs_t *) &buf[i];
@@ -1860,333 +1860,333 @@ found:
     qtype = (qs->type_hi << 8) + qs->type_lo;
     qclass = (qs->class_hi << 8) + qs->class_lo;
 
-    ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->log, 0,
+    ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                    "resolver DNS response qt:%ui cl:%ui", qtype, qclass);
 
-    if (qclass != 1) {
-        ngx_log_error(r->log_level, r->log, 0,
+    اگر (qclass != 1) {
+        ngx_log_error(r->log_level, r->لوگارتھم, 0,
                       "unknown query class %ui in DNS response", qclass);
-        return;
+        واپس;
     }
 
-    switch (qtype) {
+    انتخاب (qtype) {
 
-    case NGX_RESOLVE_A:
-#if (NGX_HAVE_INET6)
-    case NGX_RESOLVE_AAAA:
-#endif
+    حالت NGX_RESOLVE_A:
+#اگر (NGX_HAVE_INET6)
+    حالت NGX_RESOLVE_AAAA:
+#اگر_ختم
 
-        ngx_resolver_process_a(r, buf, n, ident, code, qtype, nan, trunc,
-                               i + sizeof(ngx_resolver_qs_t));
+        ngx_resolver_process_a(r, buf, n, ident, رمز, qtype, nan, trunc,
+                               i + حجم(ngx_resolver_qs_t));
 
-        break;
+        توڑو;
 
-    case NGX_RESOLVE_SRV:
+    حالت NGX_RESOLVE_SRV:
 
-        ngx_resolver_process_srv(r, buf, n, ident, code, nan, trunc,
-                                 i + sizeof(ngx_resolver_qs_t));
+        ngx_resolver_process_srv(r, buf, n, ident, رمز, nan, trunc,
+                                 i + حجم(ngx_resolver_qs_t));
 
-        break;
+        توڑو;
 
-    case NGX_RESOLVE_PTR:
+    حالت NGX_RESOLVE_PTR:
 
-        ngx_resolver_process_ptr(r, buf, n, ident, code, nan);
+        ngx_resolver_process_ptr(r, buf, n, ident, رمز, nan);
 
-        break;
+        توڑو;
 
-    default:
-        ngx_log_error(r->log_level, r->log, 0,
+    طےشدہ:
+        ngx_log_error(r->log_level, r->لوگارتھم, 0,
                       "unknown query type %ui in DNS response", qtype);
-        return;
+        واپس;
     }
 
-    return;
+    واپس;
 
 short_response:
 
     err = "short DNS response";
 
-done:
+مکمل:
 
-    ngx_log_error(r->log_level, r->log, 0, err);
+    ngx_log_error(r->log_level, r->لوگارتھم, 0, err);
 
-    return;
+    واپس;
 
 dns_error_name:
 
-    ngx_log_error(r->log_level, r->log, 0,
+    ngx_log_error(r->log_level, r->لوگارتھم, 0,
                   "DNS error (%ui: %s), query id:%ui, name:\"%*s\"",
-                  code, ngx_resolver_strerror(code), ident,
-                  (size_t) rn->nlen, rn->name);
-    return;
+                  رمز, ngx_resolver_strerror(رمز), ident,
+                  (سائز_t) rn->nlen, rn->name);
+    واپس;
 
 dns_error:
 
-    ngx_log_error(r->log_level, r->log, 0,
+    ngx_log_error(r->log_level, r->لوگارتھم, 0,
                   "DNS error (%ui: %s), query id:%ui",
-                  code, ngx_resolver_strerror(code), ident);
-    return;
+                  رمز, ngx_resolver_strerror(رمز), ident);
+    واپس;
 }
 
 
-static void
-ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
-    ngx_uint_t ident, ngx_uint_t code, ngx_uint_t qtype,
+ساکن خالی
+ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, سائز_t n,
+    ngx_uint_t ident, ngx_uint_t رمز, ngx_uint_t qtype,
     ngx_uint_t nan, ngx_uint_t trunc, ngx_uint_t ans)
 {
-    char                       *err;
+    حرف                       *err;
     u_char                     *cname;
-    size_t                      len;
+    سائز_t                      len;
     int32_t                     ttl;
     uint32_t                    hash;
-    in_addr_t                  *addr;
+    اندر_addr_t                  *addr;
     ngx_str_t                   name;
-    ngx_uint_t                  type, class, qident, naddrs, a, i, j, start;
-#if (NGX_HAVE_INET6)
-    struct in6_addr            *addr6;
-#endif
+    ngx_uint_t                  type, class, qident, naddrs, a, i, j, آغاز;
+#اگر (NGX_HAVE_INET6)
+    ساخت in6_addr            *addr6;
+#اگر_ختم
     ngx_resolver_an_t          *an;
-    ngx_resolver_ctx_t         *ctx, *next;
-    ngx_resolver_node_t        *rn;
+    ngx_resolver_ctx_t         *ctx, *اگلا;
+    ngx_resolver_گرہ_t        *rn;
     ngx_resolver_addr_t        *addrs;
     ngx_resolver_connection_t  *rec;
 
-    if (ngx_resolver_copy(r, &name, buf,
-                          buf + sizeof(ngx_resolver_hdr_t), buf + n)
+    اگر (ngx_resolver_copy(r, &name, buf,
+                          buf + حجم(ngx_resolver_hdr_t), buf + n)
         != NGX_OK)
     {
-        return;
+        واپس;
     }
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0, "resolver qs:%V", &name);
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0, "resolver qs:%V", &name);
 
-    hash = ngx_crc32_short(name.data, name.len);
+    hash = ngx_چکری_جانچ_32_short(name.ڈیٹا, name.len);
 
     /* lock name mutex */
 
     rn = ngx_resolver_lookup_name(r, &name, hash);
 
-    if (rn == NULL) {
-        ngx_log_error(r->log_level, r->log, 0,
+    اگر (rn == تہی) {
+        ngx_log_error(r->log_level, r->لوگارتھم, 0,
                       "unexpected DNS response for %V", &name);
-        ngx_resolver_free(r, name.data);
-        goto failed;
+        ngx_resolver_free(r, name.ڈیٹا);
+        جاؤ failed;
     }
 
-    switch (qtype) {
+    انتخاب (qtype) {
 
-#if (NGX_HAVE_INET6)
-    case NGX_RESOLVE_AAAA:
+#اگر (NGX_HAVE_INET6)
+    حالت NGX_RESOLVE_AAAA:
 
-        if (rn->query6 == NULL || rn->naddrs6 != (u_short) -1) {
-            ngx_log_error(r->log_level, r->log, 0,
+        اگر (rn->query6 == تہی || rn->naddrs6 != (u_short) -1) {
+            ngx_log_error(r->log_level, r->لوگارتھم, 0,
                           "unexpected DNS response for %V", &name);
-            ngx_resolver_free(r, name.data);
-            goto failed;
+            ngx_resolver_free(r, name.ڈیٹا);
+            جاؤ failed;
         }
 
-        if (trunc && rn->tcp6) {
-            ngx_resolver_free(r, name.data);
-            goto failed;
+        اگر (trunc && rn->tcp6) {
+            ngx_resolver_free(r, name.ڈیٹا);
+            جاؤ failed;
         }
 
         qident = (rn->query6[0] << 8) + rn->query6[1];
 
-        break;
-#endif
+        توڑو;
+#اگر_ختم
 
-    default: /* NGX_RESOLVE_A */
+    طےشدہ: /* NGX_RESOLVE_A */
 
-        if (rn->query == NULL || rn->naddrs != (u_short) -1) {
-            ngx_log_error(r->log_level, r->log, 0,
+        اگر (rn->query == تہی || rn->naddrs != (u_short) -1) {
+            ngx_log_error(r->log_level, r->لوگارتھم, 0,
                           "unexpected DNS response for %V", &name);
-            ngx_resolver_free(r, name.data);
-            goto failed;
+            ngx_resolver_free(r, name.ڈیٹا);
+            جاؤ failed;
         }
 
-        if (trunc && rn->tcp) {
-            ngx_resolver_free(r, name.data);
-            goto failed;
+        اگر (trunc && rn->tcp) {
+            ngx_resolver_free(r, name.ڈیٹا);
+            جاؤ failed;
         }
 
         qident = (rn->query[0] << 8) + rn->query[1];
     }
 
-    if (ident != qident) {
-        ngx_log_error(r->log_level, r->log, 0,
+    اگر (ident != qident) {
+        ngx_log_error(r->log_level, r->لوگارتھم, 0,
                       "wrong ident %ui in DNS response for %V, expect %ui",
                       ident, &name, qident);
-        ngx_resolver_free(r, name.data);
-        goto failed;
+        ngx_resolver_free(r, name.ڈیٹا);
+        جاؤ failed;
     }
 
-    ngx_resolver_free(r, name.data);
+    ngx_resolver_free(r, name.ڈیٹا);
 
-    if (trunc) {
+    اگر (trunc) {
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
-        if (rn->waiting == NULL) {
-            ngx_rbtree_delete(&r->name_rbtree, &rn->node);
-            ngx_resolver_free_node(r, rn);
-            goto next;
+        اگر (rn->انتظار == تہی) {
+            ngx_rbtree_delete(&r->name_rbtree, &rn->گرہ);
+            ngx_resolver_free_گرہ(r, rn);
+            جاؤ اگلا;
         }
 
         rec = r->connections.elts;
-        rec = &rec[rn->last_connection];
+        rec = &rec[rn->آخری_connection];
 
-        switch (qtype) {
+        انتخاب (qtype) {
 
-#if (NGX_HAVE_INET6)
-        case NGX_RESOLVE_AAAA:
+#اگر (NGX_HAVE_INET6)
+        حالت NGX_RESOLVE_AAAA:
 
             rn->tcp6 = 1;
 
-            (void) ngx_resolver_send_tcp_query(r, rec, rn->query6, rn->qlen);
+            (خالی) ngx_resolver_send_tcp_query(r, rec, rn->query6, rn->qlen);
 
-            break;
-#endif
+            توڑو;
+#اگر_ختم
 
-        default: /* NGX_RESOLVE_A */
+        طےشدہ: /* NGX_RESOLVE_A */
 
             rn->tcp = 1;
 
-            (void) ngx_resolver_send_tcp_query(r, rec, rn->query, rn->qlen);
+            (خالی) ngx_resolver_send_tcp_query(r, rec, rn->query, rn->qlen);
         }
 
-        rn->expire = ngx_time() + r->resend_timeout;
+        rn->expire = ngx_وقت() + r->resend_timeout;
 
-        ngx_queue_insert_head(&r->name_resend_queue, &rn->queue);
+        ngx_قطار_داخل_کرو_سر(&r->name_resend_قطار, &rn->قطار);
 
-        goto next;
+        جاؤ اگلا;
     }
 
-    if (code == 0 && rn->code) {
-        code = rn->code;
+    اگر (رمز == 0 && rn->رمز) {
+        رمز = rn->رمز;
     }
 
-    if (code == 0 && nan == 0) {
+    اگر (رمز == 0 && nan == 0) {
 
-#if (NGX_HAVE_INET6)
-        switch (qtype) {
+#اگر (NGX_HAVE_INET6)
+        انتخاب (qtype) {
 
-        case NGX_RESOLVE_AAAA:
+        حالت NGX_RESOLVE_AAAA:
 
             rn->naddrs6 = 0;
 
-            if (rn->naddrs == (u_short) -1) {
-                goto next;
+            اگر (rn->naddrs == (u_short) -1) {
+                جاؤ اگلا;
             }
 
-            if (rn->naddrs) {
-                goto export;
+            اگر (rn->naddrs) {
+                جاؤ export;
             }
 
-            break;
+            توڑو;
 
-        default: /* NGX_RESOLVE_A */
+        طےشدہ: /* NGX_RESOLVE_A */
 
             rn->naddrs = 0;
 
-            if (rn->naddrs6 == (u_short) -1) {
-                goto next;
+            اگر (rn->naddrs6 == (u_short) -1) {
+                جاؤ اگلا;
             }
 
-            if (rn->naddrs6) {
-                goto export;
+            اگر (rn->naddrs6) {
+                جاؤ export;
             }
         }
-#endif
+#اگر_ختم
 
-        code = NGX_RESOLVE_NXDOMAIN;
+        رمز = NGX_RESOLVE_NXDOMAIN;
     }
 
-    if (code) {
+    اگر (رمز) {
 
-#if (NGX_HAVE_INET6)
-        switch (qtype) {
+#اگر (NGX_HAVE_INET6)
+        انتخاب (qtype) {
 
-        case NGX_RESOLVE_AAAA:
+        حالت NGX_RESOLVE_AAAA:
 
             rn->naddrs6 = 0;
 
-            if (rn->naddrs == (u_short) -1) {
-                rn->code = (u_char) code;
-                goto next;
+            اگر (rn->naddrs == (u_short) -1) {
+                rn->رمز = (u_char) رمز;
+                جاؤ اگلا;
             }
 
-            break;
+            توڑو;
 
-        default: /* NGX_RESOLVE_A */
+        طےشدہ: /* NGX_RESOLVE_A */
 
             rn->naddrs = 0;
 
-            if (rn->naddrs6 == (u_short) -1) {
-                rn->code = (u_char) code;
-                goto next;
+            اگر (rn->naddrs6 == (u_short) -1) {
+                rn->رمز = (u_char) رمز;
+                جاؤ اگلا;
             }
         }
-#endif
+#اگر_ختم
 
-        next = rn->waiting;
-        rn->waiting = NULL;
+        اگلا = rn->انتظار;
+        rn->انتظار = تہی;
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
-        ngx_rbtree_delete(&r->name_rbtree, &rn->node);
+        ngx_rbtree_delete(&r->name_rbtree, &rn->گرہ);
 
         /* unlock name mutex */
 
-        while (next) {
-            ctx = next;
-            ctx->state = code;
-            ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
-            next = ctx->next;
+        جب (اگلا) {
+            ctx = اگلا;
+            ctx->state = رمز;
+            ctx->valid = ngx_وقت() + (r->valid ? r->valid : 10);
+            اگلا = ctx->اگلا;
 
             ctx->handler(ctx);
         }
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_گرہ(r, rn);
 
-        return;
+        واپس;
     }
 
     i = ans;
     naddrs = 0;
-    cname = NULL;
+    cname = تہی;
 
-    for (a = 0; a < nan; a++) {
+    برائے (a = 0; a < nan; a++) {
 
-        start = i;
+        آغاز = i;
 
-        while (i < n) {
+        جب (i < n) {
 
-            if (buf[i] & 0xc0) {
+            اگر (buf[i] & 0xc0) {
                 i += 2;
-                goto found;
+                جاؤ ملا;
             }
 
-            if (buf[i] == 0) {
+            اگر (buf[i] == 0) {
                 i++;
-                goto test_length;
+                جاؤ test_لمبائی;
             }
 
             i += 1 + buf[i];
         }
 
-        goto short_response;
+        جاؤ short_response;
 
-    test_length:
+    test_لمبائی:
 
-        if (i - start < 2) {
+        اگر (i - آغاز < 2) {
             err = "invalid name in DNS response";
-            goto invalid;
+            جاؤ invalid;
         }
 
-    found:
+    ملا:
 
-        if (i + sizeof(ngx_resolver_an_t) >= n) {
-            goto short_response;
+        اگر (i + حجم(ngx_resolver_an_t) >= n) {
+            جاؤ short_response;
         }
 
         an = (ngx_resolver_an_t *) &buf[i];
@@ -2197,151 +2197,151 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
         ttl = (an->ttl[0] << 24) + (an->ttl[1] << 16)
             + (an->ttl[2] << 8) + (an->ttl[3]);
 
-        if (class != 1) {
-            ngx_log_error(r->log_level, r->log, 0,
+        اگر (class != 1) {
+            ngx_log_error(r->log_level, r->لوگارتھم, 0,
                           "unexpected RR class %ui in DNS response", class);
-            goto failed;
+            جاؤ failed;
         }
 
-        if (ttl < 0) {
+        اگر (ttl < 0) {
             ttl = 0;
         }
 
         rn->ttl = ngx_min(rn->ttl, (uint32_t) ttl);
 
-        i += sizeof(ngx_resolver_an_t);
+        i += حجم(ngx_resolver_an_t);
 
-        switch (type) {
+        انتخاب (type) {
 
-        case NGX_RESOLVE_A:
+        حالت NGX_RESOLVE_A:
 
-            if (qtype != NGX_RESOLVE_A) {
+            اگر (qtype != NGX_RESOLVE_A) {
                 err = "unexpected A record in DNS response";
-                goto invalid;
+                جاؤ invalid;
             }
 
-            if (len != 4) {
+            اگر (len != 4) {
                 err = "invalid A record in DNS response";
-                goto invalid;
+                جاؤ invalid;
             }
 
-            if (i + 4 > n) {
-                goto short_response;
+            اگر (i + 4 > n) {
+                جاؤ short_response;
             }
 
             naddrs++;
 
-            break;
+            توڑو;
 
-#if (NGX_HAVE_INET6)
-        case NGX_RESOLVE_AAAA:
+#اگر (NGX_HAVE_INET6)
+        حالت NGX_RESOLVE_AAAA:
 
-            if (qtype != NGX_RESOLVE_AAAA) {
+            اگر (qtype != NGX_RESOLVE_AAAA) {
                 err = "unexpected AAAA record in DNS response";
-                goto invalid;
+                جاؤ invalid;
             }
 
-            if (len != 16) {
+            اگر (len != 16) {
                 err = "invalid AAAA record in DNS response";
-                goto invalid;
+                جاؤ invalid;
             }
 
-            if (i + 16 > n) {
-                goto short_response;
+            اگر (i + 16 > n) {
+                جاؤ short_response;
             }
 
             naddrs++;
 
-            break;
-#endif
+            توڑو;
+#اگر_ختم
 
-        case NGX_RESOLVE_CNAME:
+        حالت NGX_RESOLVE_CNAME:
 
             cname = &buf[i];
 
-            break;
+            توڑو;
 
-        case NGX_RESOLVE_DNAME:
+        حالت NGX_RESOLVE_DNAME:
 
-            break;
+            توڑو;
 
-        default:
+        طےشدہ:
 
-            ngx_log_error(r->log_level, r->log, 0,
+            ngx_log_error(r->log_level, r->لوگارتھم, 0,
                           "unexpected RR type %ui in DNS response", type);
         }
 
         i += len;
     }
 
-    ngx_log_debug3(NGX_LOG_DEBUG_CORE, r->log, 0,
+    ngx_log_debug3(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                    "resolver naddrs:%ui cname:%p ttl:%uD",
                    naddrs, cname, rn->ttl);
 
-    if (naddrs) {
+    اگر (naddrs) {
 
-        switch (qtype) {
+        انتخاب (qtype) {
 
-#if (NGX_HAVE_INET6)
-        case NGX_RESOLVE_AAAA:
+#اگر (NGX_HAVE_INET6)
+        حالت NGX_RESOLVE_AAAA:
 
-            if (naddrs == 1) {
+            اگر (naddrs == 1) {
                 addr6 = &rn->u6.addr6;
                 rn->naddrs6 = 1;
 
-            } else {
-                addr6 = ngx_resolver_alloc(r, naddrs * sizeof(struct in6_addr));
-                if (addr6 == NULL) {
-                    goto failed;
+            } ورنہ {
+                addr6 = ngx_resolver_alloc(r, naddrs * حجم(ساخت in6_addr));
+                اگر (addr6 == تہی) {
+                    جاؤ failed;
                 }
 
                 rn->u6.addrs6 = addr6;
                 rn->naddrs6 = (u_short) naddrs;
             }
 
-#if (NGX_SUPPRESS_WARN)
-            addr = NULL;
-#endif
+#اگر (NGX_SUPPRESS_WARN)
+            addr = تہی;
+#اگر_ختم
 
-            break;
-#endif
+            توڑو;
+#اگر_ختم
 
-        default: /* NGX_RESOLVE_A */
+        طےشدہ: /* NGX_RESOLVE_A */
 
-            if (naddrs == 1) {
+            اگر (naddrs == 1) {
                 addr = &rn->u.addr;
                 rn->naddrs = 1;
 
-            } else {
-                addr = ngx_resolver_alloc(r, naddrs * sizeof(in_addr_t));
-                if (addr == NULL) {
-                    goto failed;
+            } ورنہ {
+                addr = ngx_resolver_alloc(r, naddrs * حجم(اندر_addr_t));
+                اگر (addr == تہی) {
+                    جاؤ failed;
                 }
 
                 rn->u.addrs = addr;
                 rn->naddrs = (u_short) naddrs;
             }
 
-#if (NGX_HAVE_INET6 && NGX_SUPPRESS_WARN)
-            addr6 = NULL;
-#endif
+#اگر (NGX_HAVE_INET6 && NGX_SUPPRESS_WARN)
+            addr6 = تہی;
+#اگر_ختم
         }
 
         j = 0;
         i = ans;
 
-        for (a = 0; a < nan; a++) {
+        برائے (a = 0; a < nan; a++) {
 
-            for ( ;; ) {
+            برائے ( ;; ) {
 
-                if (buf[i] & 0xc0) {
+                اگر (buf[i] & 0xc0) {
                     i += 2;
-                    break;
+                    توڑو;
                 }
 
-                if (buf[i] == 0) {
+                اگر (buf[i] == 0) {
                     i++;
-                    break;
+                    توڑو;
                 }
 
                 i += 1 + buf[i];
@@ -2352,215 +2352,215 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
             type = (an->type_hi << 8) + an->type_lo;
             len = (an->len_hi << 8) + an->len_lo;
 
-            i += sizeof(ngx_resolver_an_t);
+            i += حجم(ngx_resolver_an_t);
 
-            if (type == NGX_RESOLVE_A) {
+            اگر (type == NGX_RESOLVE_A) {
 
                 addr[j] = htonl((buf[i] << 24) + (buf[i + 1] << 16)
                                 + (buf[i + 2] << 8) + (buf[i + 3]));
 
-                if (++j == naddrs) {
+                اگر (++j == naddrs) {
 
-#if (NGX_HAVE_INET6)
-                    if (rn->naddrs6 == (u_short) -1) {
-                        goto next;
+#اگر (NGX_HAVE_INET6)
+                    اگر (rn->naddrs6 == (u_short) -1) {
+                        جاؤ اگلا;
                     }
-#endif
+#اگر_ختم
 
-                    break;
+                    توڑو;
                 }
             }
 
-#if (NGX_HAVE_INET6)
-            else if (type == NGX_RESOLVE_AAAA) {
+#اگر (NGX_HAVE_INET6)
+            ورنہ اگر (type == NGX_RESOLVE_AAAA) {
 
                 ngx_memcpy(addr6[j].s6_addr, &buf[i], 16);
 
-                if (++j == naddrs) {
+                اگر (++j == naddrs) {
 
-                    if (rn->naddrs == (u_short) -1) {
-                        goto next;
+                    اگر (rn->naddrs == (u_short) -1) {
+                        جاؤ اگلا;
                     }
 
-                    break;
+                    توڑو;
                 }
             }
-#endif
+#اگر_ختم
 
             i += len;
         }
     }
 
-    switch (qtype) {
+    انتخاب (qtype) {
 
-#if (NGX_HAVE_INET6)
-    case NGX_RESOLVE_AAAA:
+#اگر (NGX_HAVE_INET6)
+    حالت NGX_RESOLVE_AAAA:
 
-        if (rn->naddrs6 == (u_short) -1) {
+        اگر (rn->naddrs6 == (u_short) -1) {
             rn->naddrs6 = 0;
         }
 
-        break;
-#endif
+        توڑو;
+#اگر_ختم
 
-    default: /* NGX_RESOLVE_A */
+    طےشدہ: /* NGX_RESOLVE_A */
 
-        if (rn->naddrs == (u_short) -1) {
+        اگر (rn->naddrs == (u_short) -1) {
             rn->naddrs = 0;
         }
     }
 
-    if (rn->naddrs != (u_short) -1
-#if (NGX_HAVE_INET6)
+    اگر (rn->naddrs != (u_short) -1
+#اگر (NGX_HAVE_INET6)
         && rn->naddrs6 != (u_short) -1
-#endif
+#اگر_ختم
         && rn->naddrs
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
            + rn->naddrs6
-#endif
+#اگر_ختم
            > 0)
     {
 
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
     export:
-#endif
+#اگر_ختم
 
         naddrs = rn->naddrs;
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
         naddrs += rn->naddrs6;
-#endif
+#اگر_ختم
 
-        if (naddrs == 1 && rn->naddrs == 1) {
-            addrs = NULL;
+        اگر (naddrs == 1 && rn->naddrs == 1) {
+            addrs = تہی;
 
-        } else {
+        } ورنہ {
             addrs = ngx_resolver_export(r, rn, 0);
-            if (addrs == NULL) {
-                goto failed;
+            اگر (addrs == تہی) {
+                جاؤ failed;
             }
         }
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
-        rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
-        rn->expire = ngx_time() + r->expire;
+        rn->valid = ngx_وقت() + (r->valid ? r->valid : (وقت_t) rn->ttl);
+        rn->expire = ngx_وقت() + r->expire;
 
-        ngx_queue_insert_head(&r->name_expire_queue, &rn->queue);
+        ngx_قطار_داخل_کرو_سر(&r->name_expire_قطار, &rn->قطار);
 
-        next = rn->waiting;
-        rn->waiting = NULL;
+        اگلا = rn->انتظار;
+        rn->انتظار = تہی;
 
         /* unlock name mutex */
 
-        while (next) {
-            ctx = next;
+        جب (اگلا) {
+            ctx = اگلا;
             ctx->state = NGX_OK;
             ctx->valid = rn->valid;
             ctx->naddrs = naddrs;
 
-            if (addrs == NULL) {
+            اگر (addrs == تہی) {
                 ctx->addrs = &ctx->addr;
-                ctx->addr.sockaddr = (struct sockaddr *) &ctx->sin;
-                ctx->addr.socklen = sizeof(struct sockaddr_in);
-                ngx_memzero(&ctx->sin, sizeof(struct sockaddr_in));
-                ctx->sin.sin_family = AF_INET;
-                ctx->sin.sin_addr.s_addr = rn->u.addr;
+                ctx->addr.sockaddr = (ساخت sockaddr *) &ctx->جیب;
+                ctx->addr.socklen = حجم(ساخت sockaddr_اندر);
+                ngx_memzero(&ctx->جیب, حجم(ساخت sockaddr_اندر));
+                ctx->جیب.sin_family = AF_INET;
+                ctx->جیب.sin_addr.s_addr = rn->u.addr;
 
-            } else {
+            } ورنہ {
                 ctx->addrs = addrs;
             }
 
-            next = ctx->next;
+            اگلا = ctx->اگلا;
 
             ctx->handler(ctx);
         }
 
-        if (addrs != NULL) {
+        اگر (addrs != تہی) {
             ngx_resolver_free(r, addrs->sockaddr);
             ngx_resolver_free(r, addrs);
         }
 
         ngx_resolver_free(r, rn->query);
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
-#endif
+        rn->query = تہی;
+#اگر (NGX_HAVE_INET6)
+        rn->query6 = تہی;
+#اگر_ختم
 
-        return;
+        واپس;
     }
 
-    if (cname) {
+    اگر (cname) {
 
         /* CNAME only */
 
-        if (rn->naddrs == (u_short) -1
-#if (NGX_HAVE_INET6)
+        اگر (rn->naddrs == (u_short) -1
+#اگر (NGX_HAVE_INET6)
             || rn->naddrs6 == (u_short) -1
-#endif
+#اگر_ختم
             )
         {
-            goto next;
+            جاؤ اگلا;
         }
 
-        if (ngx_resolver_copy(r, &name, buf, cname, buf + n) != NGX_OK) {
-            goto failed;
+        اگر (ngx_resolver_copy(r, &name, buf, cname, buf + n) != NGX_OK) {
+            جاؤ failed;
         }
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0,
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                        "resolver cname:\"%V\"", &name);
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
         rn->cnlen = (u_short) name.len;
-        rn->u.cname = name.data;
+        rn->u.cname = name.ڈیٹا;
 
-        rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
-        rn->expire = ngx_time() + r->expire;
+        rn->valid = ngx_وقت() + (r->valid ? r->valid : (وقت_t) rn->ttl);
+        rn->expire = ngx_وقت() + r->expire;
 
-        ngx_queue_insert_head(&r->name_expire_queue, &rn->queue);
+        ngx_قطار_داخل_کرو_سر(&r->name_expire_قطار, &rn->قطار);
 
         ngx_resolver_free(r, rn->query);
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
-#endif
+        rn->query = تہی;
+#اگر (NGX_HAVE_INET6)
+        rn->query6 = تہی;
+#اگر_ختم
 
-        ctx = rn->waiting;
-        rn->waiting = NULL;
+        ctx = rn->انتظار;
+        rn->انتظار = تہی;
 
-        if (ctx) {
+        اگر (ctx) {
 
-            if (ctx->recursion++ >= NGX_RESOLVER_MAX_RECURSION) {
+            اگر (ctx->recursion++ >= NGX_RESOLVER_MAX_RECURSION) {
 
                 /* unlock name mutex */
 
-                do {
+                کرو {
                     ctx->state = NGX_RESOLVE_NXDOMAIN;
-                    next = ctx->next;
+                    اگلا = ctx->اگلا;
 
                     ctx->handler(ctx);
 
-                    ctx = next;
-                } while (ctx);
+                    ctx = اگلا;
+                } جب (ctx);
 
-                return;
+                واپس;
             }
 
-            for (next = ctx; next; next = next->next) {
-                next->node = NULL;
+            برائے (اگلا = ctx; اگلا; اگلا = اگلا->اگلا) {
+                اگلا->گرہ = تہی;
             }
 
-            (void) ngx_resolve_name_locked(r, ctx, &name);
+            (خالی) ngx_resolve_name_locked(r, ctx, &name);
         }
 
         /* unlock name mutex */
 
-        return;
+        واپس;
     }
 
-    ngx_log_error(r->log_level, r->log, 0,
+    ngx_log_error(r->log_level, r->لوگارتھم, 0,
                   "no A or CNAME types in DNS response");
-    return;
+    واپس;
 
 short_response:
 
@@ -2570,165 +2570,165 @@ invalid:
 
     /* unlock name mutex */
 
-    ngx_log_error(r->log_level, r->log, 0, err);
+    ngx_log_error(r->log_level, r->لوگارتھم, 0, err);
 
-    return;
+    واپس;
 
 failed:
 
-next:
+اگلا:
 
     /* unlock name mutex */
 
-    return;
+    واپس;
 }
 
 
-static void
-ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
-    ngx_uint_t ident, ngx_uint_t code, ngx_uint_t nan,
+ساکن خالی
+ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, سائز_t n,
+    ngx_uint_t ident, ngx_uint_t رمز, ngx_uint_t nan,
     ngx_uint_t trunc, ngx_uint_t ans)
 {
-    char                       *err;
+    حرف                       *err;
     u_char                     *cname;
-    size_t                      len;
+    سائز_t                      len;
     int32_t                     ttl;
     uint32_t                    hash;
     ngx_str_t                   name;
-    ngx_uint_t                  type, qident, class, start, nsrvs, a, i, j;
+    ngx_uint_t                  type, qident, class, آغاز, nsrvs, a, i, j;
     ngx_resolver_an_t          *an;
-    ngx_resolver_ctx_t         *ctx, *next;
+    ngx_resolver_ctx_t         *ctx, *اگلا;
     ngx_resolver_srv_t         *srvs;
-    ngx_resolver_node_t        *rn;
+    ngx_resolver_گرہ_t        *rn;
     ngx_resolver_connection_t  *rec;
 
-    if (ngx_resolver_copy(r, &name, buf,
-                          buf + sizeof(ngx_resolver_hdr_t), buf + n)
+    اگر (ngx_resolver_copy(r, &name, buf,
+                          buf + حجم(ngx_resolver_hdr_t), buf + n)
         != NGX_OK)
     {
-        return;
+        واپس;
     }
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0, "resolver qs:%V", &name);
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0, "resolver qs:%V", &name);
 
-    hash = ngx_crc32_short(name.data, name.len);
+    hash = ngx_چکری_جانچ_32_short(name.ڈیٹا, name.len);
 
     rn = ngx_resolver_lookup_srv(r, &name, hash);
 
-    if (rn == NULL || rn->query == NULL) {
-        ngx_log_error(r->log_level, r->log, 0,
+    اگر (rn == تہی || rn->query == تہی) {
+        ngx_log_error(r->log_level, r->لوگارتھم, 0,
                       "unexpected DNS response for %V", &name);
-        ngx_resolver_free(r, name.data);
-        goto failed;
+        ngx_resolver_free(r, name.ڈیٹا);
+        جاؤ failed;
     }
 
-    if (trunc && rn->tcp) {
-        ngx_resolver_free(r, name.data);
-        goto failed;
+    اگر (trunc && rn->tcp) {
+        ngx_resolver_free(r, name.ڈیٹا);
+        جاؤ failed;
     }
 
     qident = (rn->query[0] << 8) + rn->query[1];
 
-    if (ident != qident) {
-        ngx_log_error(r->log_level, r->log, 0,
+    اگر (ident != qident) {
+        ngx_log_error(r->log_level, r->لوگارتھم, 0,
                       "wrong ident %ui in DNS response for %V, expect %ui",
                       ident, &name, qident);
-        ngx_resolver_free(r, name.data);
-        goto failed;
+        ngx_resolver_free(r, name.ڈیٹا);
+        جاؤ failed;
     }
 
-    ngx_resolver_free(r, name.data);
+    ngx_resolver_free(r, name.ڈیٹا);
 
-    if (trunc) {
+    اگر (trunc) {
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
-        if (rn->waiting == NULL) {
-            ngx_rbtree_delete(&r->srv_rbtree, &rn->node);
-            ngx_resolver_free_node(r, rn);
-            return;
+        اگر (rn->انتظار == تہی) {
+            ngx_rbtree_delete(&r->srv_rbtree, &rn->گرہ);
+            ngx_resolver_free_گرہ(r, rn);
+            واپس;
         }
 
         rec = r->connections.elts;
-        rec = &rec[rn->last_connection];
+        rec = &rec[rn->آخری_connection];
 
         rn->tcp = 1;
 
-        (void) ngx_resolver_send_tcp_query(r, rec, rn->query, rn->qlen);
+        (خالی) ngx_resolver_send_tcp_query(r, rec, rn->query, rn->qlen);
 
-        rn->expire = ngx_time() + r->resend_timeout;
+        rn->expire = ngx_وقت() + r->resend_timeout;
 
-        ngx_queue_insert_head(&r->srv_resend_queue, &rn->queue);
+        ngx_قطار_داخل_کرو_سر(&r->srv_resend_قطار, &rn->قطار);
 
-        return;
+        واپس;
     }
 
-    if (code == 0 && rn->code) {
-        code = rn->code;
+    اگر (رمز == 0 && rn->رمز) {
+        رمز = rn->رمز;
     }
 
-    if (code == 0 && nan == 0) {
-        code = NGX_RESOLVE_NXDOMAIN;
+    اگر (رمز == 0 && nan == 0) {
+        رمز = NGX_RESOLVE_NXDOMAIN;
     }
 
-    if (code) {
-        next = rn->waiting;
-        rn->waiting = NULL;
+    اگر (رمز) {
+        اگلا = rn->انتظار;
+        rn->انتظار = تہی;
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
-        ngx_rbtree_delete(&r->srv_rbtree, &rn->node);
+        ngx_rbtree_delete(&r->srv_rbtree, &rn->گرہ);
 
-        while (next) {
-            ctx = next;
-            ctx->state = code;
-            ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
-            next = ctx->next;
+        جب (اگلا) {
+            ctx = اگلا;
+            ctx->state = رمز;
+            ctx->valid = ngx_وقت() + (r->valid ? r->valid : 10);
+            اگلا = ctx->اگلا;
 
             ctx->handler(ctx);
         }
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_گرہ(r, rn);
 
-        return;
+        واپس;
     }
 
     i = ans;
     nsrvs = 0;
-    cname = NULL;
+    cname = تہی;
 
-    for (a = 0; a < nan; a++) {
+    برائے (a = 0; a < nan; a++) {
 
-        start = i;
+        آغاز = i;
 
-        while (i < n) {
+        جب (i < n) {
 
-            if (buf[i] & 0xc0) {
+            اگر (buf[i] & 0xc0) {
                 i += 2;
-                goto found;
+                جاؤ ملا;
             }
 
-            if (buf[i] == 0) {
+            اگر (buf[i] == 0) {
                 i++;
-                goto test_length;
+                جاؤ test_لمبائی;
             }
 
             i += 1 + buf[i];
         }
 
-        goto short_response;
+        جاؤ short_response;
 
-    test_length:
+    test_لمبائی:
 
-        if (i - start < 2) {
+        اگر (i - آغاز < 2) {
             err = "invalid name DNS response";
-            goto invalid;
+            جاؤ invalid;
         }
 
-    found:
+    ملا:
 
-        if (i + sizeof(ngx_resolver_an_t) >= n) {
-            goto short_response;
+        اگر (i + حجم(ngx_resolver_an_t) >= n) {
+            جاؤ short_response;
         }
 
         an = (ngx_resolver_an_t *) &buf[i];
@@ -2739,66 +2739,66 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
         ttl = (an->ttl[0] << 24) + (an->ttl[1] << 16)
             + (an->ttl[2] << 8) + (an->ttl[3]);
 
-        if (class != 1) {
-            ngx_log_error(r->log_level, r->log, 0,
+        اگر (class != 1) {
+            ngx_log_error(r->log_level, r->لوگارتھم, 0,
                           "unexpected RR class %ui in DNS response", class);
-            goto failed;
+            جاؤ failed;
         }
 
-        if (ttl < 0) {
+        اگر (ttl < 0) {
             ttl = 0;
         }
 
         rn->ttl = ngx_min(rn->ttl, (uint32_t) ttl);
 
-        i += sizeof(ngx_resolver_an_t);
+        i += حجم(ngx_resolver_an_t);
 
-        switch (type) {
+        انتخاب (type) {
 
-        case NGX_RESOLVE_SRV:
+        حالت NGX_RESOLVE_SRV:
 
-            if (i + 6 >= n) {
-                goto short_response;
+            اگر (i + 6 >= n) {
+                جاؤ short_response;
             }
 
-            if (ngx_resolver_copy(r, NULL, buf, &buf[i + 6], buf + n)
+            اگر (ngx_resolver_copy(r, تہی, buf, &buf[i + 6], buf + n)
                 != NGX_OK)
             {
-                goto failed;
+                جاؤ failed;
             }
 
             nsrvs++;
 
-            break;
+            توڑو;
 
-        case NGX_RESOLVE_CNAME:
+        حالت NGX_RESOLVE_CNAME:
 
             cname = &buf[i];
 
-            break;
+            توڑو;
 
-        case NGX_RESOLVE_DNAME:
+        حالت NGX_RESOLVE_DNAME:
 
-            break;
+            توڑو;
 
-        default:
+        طےشدہ:
 
-            ngx_log_error(r->log_level, r->log, 0,
+            ngx_log_error(r->log_level, r->لوگارتھم, 0,
                           "unexpected RR type %ui in DNS response", type);
         }
 
         i += len;
     }
 
-    ngx_log_debug3(NGX_LOG_DEBUG_CORE, r->log, 0,
+    ngx_log_debug3(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                    "resolver nsrvs:%ui cname:%p ttl:%uD",
                    nsrvs, cname, rn->ttl);
 
-    if (nsrvs) {
+    اگر (nsrvs) {
 
-        srvs = ngx_resolver_calloc(r, nsrvs * sizeof(ngx_resolver_srv_t));
-        if (srvs == NULL) {
-            goto failed;
+        srvs = ngx_resolver_calloc(r, nsrvs * حجم(ngx_resolver_srv_t));
+        اگر (srvs == تہی) {
+            جاؤ failed;
         }
 
         rn->u.srvs = srvs;
@@ -2807,18 +2807,18 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
         j = 0;
         i = ans;
 
-        for (a = 0; a < nan; a++) {
+        برائے (a = 0; a < nan; a++) {
 
-            for ( ;; ) {
+            برائے ( ;; ) {
 
-                if (buf[i] & 0xc0) {
+                اگر (buf[i] & 0xc0) {
                     i += 2;
-                    break;
+                    توڑو;
                 }
 
-                if (buf[i] == 0) {
+                اگر (buf[i] == 0) {
                     i++;
-                    break;
+                    توڑو;
                 }
 
                 i += 1 + buf[i];
@@ -2829,24 +2829,24 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
             type = (an->type_hi << 8) + an->type_lo;
             len = (an->len_hi << 8) + an->len_lo;
 
-            i += sizeof(ngx_resolver_an_t);
+            i += حجم(ngx_resolver_an_t);
 
-            if (type == NGX_RESOLVE_SRV) {
+            اگر (type == NGX_RESOLVE_SRV) {
 
-                srvs[j].priority = (buf[i] << 8) + buf[i + 1];
-                srvs[j].weight = (buf[i + 2] << 8) + buf[i + 3];
+                srvs[j].ترجیح = (buf[i] << 8) + buf[i + 1];
+                srvs[j].وزن = (buf[i + 2] << 8) + buf[i + 3];
 
-                if (srvs[j].weight == 0) {
-                    srvs[j].weight = 1;
+                اگر (srvs[j].وزن == 0) {
+                    srvs[j].وزن = 1;
                 }
 
-                srvs[j].port = (buf[i + 4] << 8) + buf[i + 5];
+                srvs[j].پورٹ = (buf[i + 4] << 8) + buf[i + 5];
 
-                if (ngx_resolver_copy(r, &srvs[j].name, buf, &buf[i + 6],
+                اگر (ngx_resolver_copy(r, &srvs[j].name, buf, &buf[i + 6],
                                       buf + n)
                     != NGX_OK)
                 {
-                    goto failed;
+                    جاؤ failed;
                 }
 
                 j++;
@@ -2855,97 +2855,97 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
             i += len;
         }
 
-        ngx_sort(srvs, nsrvs, sizeof(ngx_resolver_srv_t),
+        ngx_ترتیب_دو(srvs, nsrvs, حجم(ngx_resolver_srv_t),
                  ngx_resolver_cmp_srvs);
 
         ngx_resolver_free(r, rn->query);
-        rn->query = NULL;
+        rn->query = تہی;
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
-        rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
-        rn->expire = ngx_time() + r->expire;
+        rn->valid = ngx_وقت() + (r->valid ? r->valid : (وقت_t) rn->ttl);
+        rn->expire = ngx_وقت() + r->expire;
 
-        ngx_queue_insert_head(&r->srv_expire_queue, &rn->queue);
+        ngx_قطار_داخل_کرو_سر(&r->srv_expire_قطار, &rn->قطار);
 
-        next = rn->waiting;
-        rn->waiting = NULL;
+        اگلا = rn->انتظار;
+        rn->انتظار = تہی;
 
-        while (next) {
-            ctx = next;
-            next = ctx->next;
+        جب (اگلا) {
+            ctx = اگلا;
+            اگلا = ctx->اگلا;
 
-            ngx_resolver_resolve_srv_names(ctx, rn);
+            ngx_resolver_resolve_srv_نام(ctx, rn);
         }
 
-        return;
+        واپس;
     }
 
     rn->nsrvs = 0;
 
-    if (cname) {
+    اگر (cname) {
 
         /* CNAME only */
 
-        if (ngx_resolver_copy(r, &name, buf, cname, buf + n) != NGX_OK) {
-            goto failed;
+        اگر (ngx_resolver_copy(r, &name, buf, cname, buf + n) != NGX_OK) {
+            جاؤ failed;
         }
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0,
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                        "resolver cname:\"%V\"", &name);
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
         rn->cnlen = (u_short) name.len;
-        rn->u.cname = name.data;
+        rn->u.cname = name.ڈیٹا;
 
-        rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
-        rn->expire = ngx_time() + r->expire;
+        rn->valid = ngx_وقت() + (r->valid ? r->valid : (وقت_t) rn->ttl);
+        rn->expire = ngx_وقت() + r->expire;
 
-        ngx_queue_insert_head(&r->srv_expire_queue, &rn->queue);
+        ngx_قطار_داخل_کرو_سر(&r->srv_expire_قطار, &rn->قطار);
 
         ngx_resolver_free(r, rn->query);
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
-#endif
+        rn->query = تہی;
+#اگر (NGX_HAVE_INET6)
+        rn->query6 = تہی;
+#اگر_ختم
 
-        ctx = rn->waiting;
-        rn->waiting = NULL;
+        ctx = rn->انتظار;
+        rn->انتظار = تہی;
 
-        if (ctx) {
+        اگر (ctx) {
 
-            if (ctx->recursion++ >= NGX_RESOLVER_MAX_RECURSION) {
+            اگر (ctx->recursion++ >= NGX_RESOLVER_MAX_RECURSION) {
 
                 /* unlock name mutex */
 
-                do {
+                کرو {
                     ctx->state = NGX_RESOLVE_NXDOMAIN;
-                    next = ctx->next;
+                    اگلا = ctx->اگلا;
 
                     ctx->handler(ctx);
 
-                    ctx = next;
-                } while (ctx);
+                    ctx = اگلا;
+                } جب (ctx);
 
-                return;
+                واپس;
             }
 
-            for (next = ctx; next; next = next->next) {
-                next->node = NULL;
+            برائے (اگلا = ctx; اگلا; اگلا = اگلا->اگلا) {
+                اگلا->گرہ = تہی;
             }
 
-            (void) ngx_resolve_name_locked(r, ctx, &name);
+            (خالی) ngx_resolve_name_locked(r, ctx, &name);
         }
 
         /* unlock name mutex */
 
-        return;
+        واپس;
     }
 
-    ngx_log_error(r->log_level, r->log, 0, "no SRV type in DNS response");
+    ngx_log_error(r->log_level, r->لوگارتھم, 0, "no SRV type in DNS response");
 
-    return;
+    واپس;
 
 short_response:
 
@@ -2955,20 +2955,20 @@ invalid:
 
     /* unlock name mutex */
 
-    ngx_log_error(r->log_level, r->log, 0, err);
+    ngx_log_error(r->log_level, r->لوگارتھم, 0, err);
 
-    return;
+    واپس;
 
 failed:
 
     /* unlock name mutex */
 
-    return;
+    واپس;
 }
 
 
-static void
-ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx, ngx_resolver_node_t *rn)
+ساکن خالی
+ngx_resolver_resolve_srv_نام(ngx_resolver_ctx_t *ctx, ngx_resolver_گرہ_t *rn)
 {
     ngx_uint_t                i;
     ngx_resolver_t           *r;
@@ -2977,68 +2977,68 @@ ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx, ngx_resolver_node_t *rn)
 
     r = ctx->resolver;
 
-    ctx->node = NULL;
+    ctx->گرہ = تہی;
     ctx->state = NGX_OK;
     ctx->valid = rn->valid;
-    ctx->count = rn->nsrvs;
+    ctx->گنتی = rn->nsrvs;
 
-    srvs = ngx_resolver_calloc(r, rn->nsrvs * sizeof(ngx_resolver_srv_name_t));
-    if (srvs == NULL) {
-        goto failed;
+    srvs = ngx_resolver_calloc(r, rn->nsrvs * حجم(ngx_resolver_srv_name_t));
+    اگر (srvs == تہی) {
+        جاؤ failed;
     }
 
     ctx->srvs = srvs;
     ctx->nsrvs = rn->nsrvs;
 
-    if (ctx->event && ctx->event->timer_set) {
+    اگر (ctx->event && ctx->event->timer_سیٹ) {
         ngx_del_timer(ctx->event);
     }
 
-    for (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
-        srvs[i].name.data = ngx_resolver_alloc(r, rn->u.srvs[i].name.len);
-        if (srvs[i].name.data == NULL) {
-            goto failed;
+    برائے (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
+        srvs[i].name.ڈیٹا = ngx_resolver_alloc(r, rn->u.srvs[i].name.len);
+        اگر (srvs[i].name.ڈیٹا == تہی) {
+            جاؤ failed;
         }
 
         srvs[i].name.len = rn->u.srvs[i].name.len;
-        ngx_memcpy(srvs[i].name.data, rn->u.srvs[i].name.data,
+        ngx_memcpy(srvs[i].name.ڈیٹا, rn->u.srvs[i].name.ڈیٹا,
                    srvs[i].name.len);
 
-        cctx = ngx_resolve_start(r, NULL);
-        if (cctx == NULL) {
-            goto failed;
+        cctx = ngx_resolve_آغاز(r, تہی);
+        اگر (cctx == تہی) {
+            جاؤ failed;
         }
 
         cctx->name = srvs[i].name;
-        cctx->handler = ngx_resolver_srv_names_handler;
-        cctx->data = ctx;
+        cctx->handler = ngx_resolver_srv_نام_handler;
+        cctx->ڈیٹا = ctx;
         cctx->srvs = &srvs[i];
         cctx->timeout = ctx->timeout;
 
-        srvs[i].priority = rn->u.srvs[i].priority;
-        srvs[i].weight = rn->u.srvs[i].weight;
-        srvs[i].port = rn->u.srvs[i].port;
+        srvs[i].ترجیح = rn->u.srvs[i].ترجیح;
+        srvs[i].وزن = rn->u.srvs[i].وزن;
+        srvs[i].پورٹ = rn->u.srvs[i].پورٹ;
         srvs[i].ctx = cctx;
 
-        if (ngx_resolve_name(cctx) == NGX_ERROR) {
-            srvs[i].ctx = NULL;
-            goto failed;
+        اگر (ngx_resolve_name(cctx) == NGX_ERROR) {
+            srvs[i].ctx = تہی;
+            جاؤ failed;
         }
     }
 
-    return;
+    واپس;
 
 failed:
 
     ctx->state = NGX_ERROR;
-    ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
+    ctx->valid = ngx_وقت() + (r->valid ? r->valid : 10);
 
     ctx->handler(ctx);
 }
 
 
-static void
-ngx_resolver_srv_names_handler(ngx_resolver_ctx_t *cctx)
+ساکن خالی
+ngx_resolver_srv_نام_handler(ngx_resolver_ctx_t *cctx)
 {
     ngx_uint_t                i;
     ngx_addr_t               *addrs;
@@ -3048,252 +3048,252 @@ ngx_resolver_srv_names_handler(ngx_resolver_ctx_t *cctx)
     ngx_resolver_srv_name_t  *srv;
 
     r = cctx->resolver;
-    ctx = cctx->data;
+    ctx = cctx->ڈیٹا;
     srv = cctx->srvs;
 
-    ctx->count--;
+    ctx->گنتی--;
     ctx->async |= cctx->async;
 
-    srv->ctx = NULL;
+    srv->ctx = تہی;
     srv->state = cctx->state;
 
-    if (cctx->naddrs) {
+    اگر (cctx->naddrs) {
 
         ctx->valid = ngx_min(ctx->valid, cctx->valid);
 
-        addrs = ngx_resolver_calloc(r, cctx->naddrs * sizeof(ngx_addr_t));
-        if (addrs == NULL) {
+        addrs = ngx_resolver_calloc(r, cctx->naddrs * حجم(ngx_addr_t));
+        اگر (addrs == تہی) {
             srv->state = NGX_ERROR;
-            goto done;
+            جاؤ مکمل;
         }
 
-        sockaddr = ngx_resolver_alloc(r, cctx->naddrs * sizeof(ngx_sockaddr_t));
-        if (sockaddr == NULL) {
+        sockaddr = ngx_resolver_alloc(r, cctx->naddrs * حجم(ngx_sockaddr_t));
+        اگر (sockaddr == تہی) {
             ngx_resolver_free(r, addrs);
             srv->state = NGX_ERROR;
-            goto done;
+            جاؤ مکمل;
         }
 
-        for (i = 0; i < cctx->naddrs; i++) {
+        برائے (i = 0; i < cctx->naddrs; i++) {
             addrs[i].sockaddr = &sockaddr[i].sockaddr;
             addrs[i].socklen = cctx->addrs[i].socklen;
 
             ngx_memcpy(&sockaddr[i], cctx->addrs[i].sockaddr,
                        addrs[i].socklen);
 
-            ngx_inet_set_port(addrs[i].sockaddr, srv->port);
+            ngx_inet_سیٹ_پورٹ(addrs[i].sockaddr, srv->پورٹ);
         }
 
         srv->addrs = addrs;
         srv->naddrs = cctx->naddrs;
     }
 
-done:
+مکمل:
 
-    ngx_resolve_name_done(cctx);
+    ngx_resolve_name_مکمل(cctx);
 
-    if (ctx->count == 0) {
+    اگر (ctx->گنتی == 0) {
         ngx_resolver_report_srv(r, ctx);
     }
 }
 
 
-static void
-ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, size_t n,
-    ngx_uint_t ident, ngx_uint_t code, ngx_uint_t nan)
+ساکن خالی
+ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, سائز_t n,
+    ngx_uint_t ident, ngx_uint_t رمز, ngx_uint_t nan)
 {
-    char                 *err;
-    size_t                len;
-    in_addr_t             addr;
+    حرف                 *err;
+    سائز_t                len;
+    اندر_addr_t             addr;
     int32_t               ttl;
     ngx_int_t             octet;
     ngx_str_t             name;
-    ngx_uint_t            mask, type, class, qident, a, i, start;
-    ngx_queue_t          *expire_queue;
-    ngx_rbtree_t         *tree;
+    ngx_uint_t            نقاب, type, class, qident, a, i, آغاز;
+    ngx_قطار_t          *expire_قطار;
+    ngx_rbtree_t         *درخت;
     ngx_resolver_an_t    *an;
-    ngx_resolver_ctx_t   *ctx, *next;
-    ngx_resolver_node_t  *rn;
-#if (NGX_HAVE_INET6)
+    ngx_resolver_ctx_t   *ctx, *اگلا;
+    ngx_resolver_گرہ_t  *rn;
+#اگر (NGX_HAVE_INET6)
     uint32_t              hash;
     ngx_int_t             digit;
-    struct in6_addr       addr6;
-#endif
+    ساخت in6_addr       addr6;
+#اگر_ختم
 
-    if (ngx_resolver_copy(r, &name, buf,
-                          buf + sizeof(ngx_resolver_hdr_t), buf + n)
+    اگر (ngx_resolver_copy(r, &name, buf,
+                          buf + حجم(ngx_resolver_hdr_t), buf + n)
         != NGX_OK)
     {
-        return;
+        واپس;
     }
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0, "resolver qs:%V", &name);
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0, "resolver qs:%V", &name);
 
     /* AF_INET */
 
     addr = 0;
-    i = sizeof(ngx_resolver_hdr_t);
+    i = حجم(ngx_resolver_hdr_t);
 
-    for (mask = 0; mask < 32; mask += 8) {
+    برائے (نقاب = 0; نقاب < 32; نقاب += 8) {
         len = buf[i++];
 
         octet = ngx_atoi(&buf[i], len);
-        if (octet == NGX_ERROR || octet > 255) {
-            goto invalid_in_addr_arpa;
+        اگر (octet == NGX_ERROR || octet > 255) {
+            جاؤ invalid_اندر_addr_arpa;
         }
 
-        addr += octet << mask;
+        addr += octet << نقاب;
         i += len;
     }
 
-    if (ngx_strcasecmp(&buf[i], (u_char *) "\7in-addr\4arpa") == 0) {
-        i += sizeof("\7in-addr\4arpa");
+    اگر (ngx_strcasecmp(&buf[i], (u_char *) "\7in-addr\4arpa") == 0) {
+        i += حجم("\7in-addr\4arpa");
 
         /* lock addr mutex */
 
         rn = ngx_resolver_lookup_addr(r, addr);
 
-        tree = &r->addr_rbtree;
-        expire_queue = &r->addr_expire_queue;
+        درخت = &r->addr_rbtree;
+        expire_قطار = &r->addr_expire_قطار;
 
-        goto valid;
+        جاؤ valid;
     }
 
-invalid_in_addr_arpa:
+invalid_اندر_addr_arpa:
 
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
 
-    i = sizeof(ngx_resolver_hdr_t);
+    i = حجم(ngx_resolver_hdr_t);
 
-    for (octet = 15; octet >= 0; octet--) {
-        if (buf[i++] != '\1') {
-            goto invalid_ip6_arpa;
+    برائے (octet = 15; octet >= 0; octet--) {
+        اگر (buf[i++] != '\1') {
+            جاؤ invalid_ip6_arpa;
         }
 
         digit = ngx_hextoi(&buf[i++], 1);
-        if (digit == NGX_ERROR) {
-            goto invalid_ip6_arpa;
+        اگر (digit == NGX_ERROR) {
+            جاؤ invalid_ip6_arpa;
         }
 
         addr6.s6_addr[octet] = (u_char) digit;
 
-        if (buf[i++] != '\1') {
-            goto invalid_ip6_arpa;
+        اگر (buf[i++] != '\1') {
+            جاؤ invalid_ip6_arpa;
         }
 
         digit = ngx_hextoi(&buf[i++], 1);
-        if (digit == NGX_ERROR) {
-            goto invalid_ip6_arpa;
+        اگر (digit == NGX_ERROR) {
+            جاؤ invalid_ip6_arpa;
         }
 
         addr6.s6_addr[octet] += (u_char) (digit * 16);
     }
 
-    if (ngx_strcasecmp(&buf[i], (u_char *) "\3ip6\4arpa") == 0) {
-        i += sizeof("\3ip6\4arpa");
+    اگر (ngx_strcasecmp(&buf[i], (u_char *) "\3ip6\4arpa") == 0) {
+        i += حجم("\3ip6\4arpa");
 
         /* lock addr mutex */
 
-        hash = ngx_crc32_short(addr6.s6_addr, 16);
+        hash = ngx_چکری_جانچ_32_short(addr6.s6_addr, 16);
         rn = ngx_resolver_lookup_addr6(r, &addr6, hash);
 
-        tree = &r->addr6_rbtree;
-        expire_queue = &r->addr6_expire_queue;
+        درخت = &r->addr6_rbtree;
+        expire_قطار = &r->addr6_expire_قطار;
 
-        goto valid;
+        جاؤ valid;
     }
 
 invalid_ip6_arpa:
-#endif
+#اگر_ختم
 
-    ngx_log_error(r->log_level, r->log, 0,
+    ngx_log_error(r->log_level, r->لوگارتھم, 0,
                   "invalid in-addr.arpa or ip6.arpa name in DNS response");
-    ngx_resolver_free(r, name.data);
-    return;
+    ngx_resolver_free(r, name.ڈیٹا);
+    واپس;
 
 valid:
 
-    if (rn == NULL || rn->query == NULL) {
-        ngx_log_error(r->log_level, r->log, 0,
+    اگر (rn == تہی || rn->query == تہی) {
+        ngx_log_error(r->log_level, r->لوگارتھم, 0,
                       "unexpected DNS response for %V", &name);
-        ngx_resolver_free(r, name.data);
-        goto failed;
+        ngx_resolver_free(r, name.ڈیٹا);
+        جاؤ failed;
     }
 
     qident = (rn->query[0] << 8) + rn->query[1];
 
-    if (ident != qident) {
-        ngx_log_error(r->log_level, r->log, 0,
+    اگر (ident != qident) {
+        ngx_log_error(r->log_level, r->لوگارتھم, 0,
                       "wrong ident %ui in DNS response for %V, expect %ui",
                       ident, &name, qident);
-        ngx_resolver_free(r, name.data);
-        goto failed;
+        ngx_resolver_free(r, name.ڈیٹا);
+        جاؤ failed;
     }
 
-    ngx_resolver_free(r, name.data);
+    ngx_resolver_free(r, name.ڈیٹا);
 
-    if (code == 0 && nan == 0) {
-        code = NGX_RESOLVE_NXDOMAIN;
+    اگر (رمز == 0 && nan == 0) {
+        رمز = NGX_RESOLVE_NXDOMAIN;
     }
 
-    if (code) {
-        next = rn->waiting;
-        rn->waiting = NULL;
+    اگر (رمز) {
+        اگلا = rn->انتظار;
+        rn->انتظار = تہی;
 
-        ngx_queue_remove(&rn->queue);
+        ngx_قطار_remove(&rn->قطار);
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(درخت, &rn->گرہ);
 
         /* unlock addr mutex */
 
-        while (next) {
-            ctx = next;
-            ctx->state = code;
-            ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
-            next = ctx->next;
+        جب (اگلا) {
+            ctx = اگلا;
+            ctx->state = رمز;
+            ctx->valid = ngx_وقت() + (r->valid ? r->valid : 10);
+            اگلا = ctx->اگلا;
 
             ctx->handler(ctx);
         }
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_گرہ(r, rn);
 
-        return;
+        واپس;
     }
 
-    i += sizeof(ngx_resolver_qs_t);
+    i += حجم(ngx_resolver_qs_t);
 
-    for (a = 0; a < nan; a++) {
+    برائے (a = 0; a < nan; a++) {
 
-        start = i;
+        آغاز = i;
 
-        while (i < n) {
+        جب (i < n) {
 
-            if (buf[i] & 0xc0) {
+            اگر (buf[i] & 0xc0) {
                 i += 2;
-                goto found;
+                جاؤ ملا;
             }
 
-            if (buf[i] == 0) {
+            اگر (buf[i] == 0) {
                 i++;
-                goto test_length;
+                جاؤ test_لمبائی;
             }
 
             i += 1 + buf[i];
         }
 
-        goto short_response;
+        جاؤ short_response;
 
-    test_length:
+    test_لمبائی:
 
-        if (i - start < 2) {
+        اگر (i - آغاز < 2) {
             err = "invalid name in DNS response";
-            goto invalid;
+            جاؤ invalid;
         }
 
-    found:
+    ملا:
 
-        if (i + sizeof(ngx_resolver_an_t) >= n) {
-            goto short_response;
+        اگر (i + حجم(ngx_resolver_an_t) >= n) {
+            جاؤ short_response;
         }
 
         an = (ngx_resolver_an_t *) &buf[i];
@@ -3304,35 +3304,35 @@ valid:
         ttl = (an->ttl[0] << 24) + (an->ttl[1] << 16)
             + (an->ttl[2] << 8) + (an->ttl[3]);
 
-        if (class != 1) {
-            ngx_log_error(r->log_level, r->log, 0,
+        اگر (class != 1) {
+            ngx_log_error(r->log_level, r->لوگارتھم, 0,
                           "unexpected RR class %ui in DNS response", class);
-            goto failed;
+            جاؤ failed;
         }
 
-        if (ttl < 0) {
+        اگر (ttl < 0) {
             ttl = 0;
         }
 
-        ngx_log_debug3(NGX_LOG_DEBUG_CORE, r->log, 0,
+        ngx_log_debug3(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                       "resolver qt:%ui cl:%ui len:%uz",
                       type, class, len);
 
-        i += sizeof(ngx_resolver_an_t);
+        i += حجم(ngx_resolver_an_t);
 
-        switch (type) {
+        انتخاب (type) {
 
-        case NGX_RESOLVE_PTR:
+        حالت NGX_RESOLVE_PTR:
 
-            goto ptr;
+            جاؤ ptr;
 
-        case NGX_RESOLVE_CNAME:
+        حالت NGX_RESOLVE_CNAME:
 
-            break;
+            توڑو;
 
-        default:
+        طےشدہ:
 
-            ngx_log_error(r->log_level, r->log, 0,
+            ngx_log_error(r->log_level, r->لوگارتھم, 0,
                           "unexpected RR type %ui in DNS response", type);
         }
 
@@ -3341,59 +3341,59 @@ valid:
 
     /* unlock addr mutex */
 
-    ngx_log_error(r->log_level, r->log, 0,
+    ngx_log_error(r->log_level, r->لوگارتھم, 0,
                   "no PTR type in DNS response");
-    return;
+    واپس;
 
 ptr:
 
-    if (ngx_resolver_copy(r, &name, buf, buf + i, buf + n) != NGX_OK) {
-        goto failed;
+    اگر (ngx_resolver_copy(r, &name, buf, buf + i, buf + n) != NGX_OK) {
+        جاؤ failed;
     }
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0, "resolver an:%V", &name);
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0, "resolver an:%V", &name);
 
-    if (name.len != (size_t) rn->nlen
-        || ngx_strncmp(name.data, rn->name, name.len) != 0)
+    اگر (name.len != (سائز_t) rn->nlen
+        || ngx_strncmp(name.ڈیٹا, rn->name, name.len) != 0)
     {
-        if (rn->nlen) {
+        اگر (rn->nlen) {
             ngx_resolver_free(r, rn->name);
         }
 
         rn->nlen = (u_short) name.len;
-        rn->name = name.data;
+        rn->name = name.ڈیٹا;
 
-        name.data = ngx_resolver_dup(r, rn->name, name.len);
-        if (name.data == NULL) {
-            goto failed;
+        name.ڈیٹا = ngx_resolver_dup(r, rn->name, name.len);
+        اگر (name.ڈیٹا == تہی) {
+            جاؤ failed;
         }
     }
 
-    ngx_queue_remove(&rn->queue);
+    ngx_قطار_remove(&rn->قطار);
 
-    rn->valid = ngx_time() + (r->valid ? r->valid : ttl);
-    rn->expire = ngx_time() + r->expire;
+    rn->valid = ngx_وقت() + (r->valid ? r->valid : ttl);
+    rn->expire = ngx_وقت() + r->expire;
 
-    ngx_queue_insert_head(expire_queue, &rn->queue);
+    ngx_قطار_داخل_کرو_سر(expire_قطار, &rn->قطار);
 
-    next = rn->waiting;
-    rn->waiting = NULL;
+    اگلا = rn->انتظار;
+    rn->انتظار = تہی;
 
     /* unlock addr mutex */
 
-    while (next) {
-        ctx = next;
+    جب (اگلا) {
+        ctx = اگلا;
         ctx->state = NGX_OK;
         ctx->valid = rn->valid;
         ctx->name = name;
-        next = ctx->next;
+        اگلا = ctx->اگلا;
 
         ctx->handler(ctx);
     }
 
-    ngx_resolver_free(r, name.data);
+    ngx_resolver_free(r, name.ڈیٹا);
 
-    return;
+    واپس;
 
 short_response:
 
@@ -3403,301 +3403,301 @@ invalid:
 
     /* unlock addr mutex */
 
-    ngx_log_error(r->log_level, r->log, 0, err);
+    ngx_log_error(r->log_level, r->لوگارتھم, 0, err);
 
-    return;
+    واپس;
 
 failed:
 
     /* unlock addr mutex */
 
-    return;
+    واپس;
 }
 
 
-static ngx_resolver_node_t *
+ساکن ngx_resolver_گرہ_t *
 ngx_resolver_lookup_name(ngx_resolver_t *r, ngx_str_t *name, uint32_t hash)
 {
     ngx_int_t             rc;
-    ngx_rbtree_node_t    *node, *sentinel;
-    ngx_resolver_node_t  *rn;
+    ngx_rbtree_گرہ_t    *گرہ, *sentinel;
+    ngx_resolver_گرہ_t  *rn;
 
-    node = r->name_rbtree.root;
+    گرہ = r->name_rbtree.جڑ;
     sentinel = r->name_rbtree.sentinel;
 
-    while (node != sentinel) {
+    جب (گرہ != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
-            continue;
+        اگر (hash < گرہ->کلید) {
+            گرہ = گرہ->بایاں;
+            جاری;
         }
 
-        if (hash > node->key) {
-            node = node->right;
-            continue;
+        اگر (hash > گرہ->کلید) {
+            گرہ = گرہ->دایاں;
+            جاری;
         }
 
         /* hash == node->key */
 
-        rn = ngx_resolver_node(node);
+        rn = ngx_resolver_گرہ(گرہ);
 
-        rc = ngx_memn2cmp(name->data, rn->name, name->len, rn->nlen);
+        rc = ngx_memn2cmp(name->ڈیٹا, rn->name, name->len, rn->nlen);
 
-        if (rc == 0) {
-            return rn;
+        اگر (rc == 0) {
+            واپس rn;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        گرہ = (rc < 0) ? گرہ->بایاں : گرہ->دایاں;
     }
 
     /* not found */
 
-    return NULL;
+    واپس تہی;
 }
 
 
-static ngx_resolver_node_t *
+ساکن ngx_resolver_گرہ_t *
 ngx_resolver_lookup_srv(ngx_resolver_t *r, ngx_str_t *name, uint32_t hash)
 {
     ngx_int_t             rc;
-    ngx_rbtree_node_t    *node, *sentinel;
-    ngx_resolver_node_t  *rn;
+    ngx_rbtree_گرہ_t    *گرہ, *sentinel;
+    ngx_resolver_گرہ_t  *rn;
 
-    node = r->srv_rbtree.root;
+    گرہ = r->srv_rbtree.جڑ;
     sentinel = r->srv_rbtree.sentinel;
 
-    while (node != sentinel) {
+    جب (گرہ != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
-            continue;
+        اگر (hash < گرہ->کلید) {
+            گرہ = گرہ->بایاں;
+            جاری;
         }
 
-        if (hash > node->key) {
-            node = node->right;
-            continue;
+        اگر (hash > گرہ->کلید) {
+            گرہ = گرہ->دایاں;
+            جاری;
         }
 
         /* hash == node->key */
 
-        rn = ngx_resolver_node(node);
+        rn = ngx_resolver_گرہ(گرہ);
 
-        rc = ngx_memn2cmp(name->data, rn->name, name->len, rn->nlen);
+        rc = ngx_memn2cmp(name->ڈیٹا, rn->name, name->len, rn->nlen);
 
-        if (rc == 0) {
-            return rn;
+        اگر (rc == 0) {
+            واپس rn;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        گرہ = (rc < 0) ? گرہ->بایاں : گرہ->دایاں;
     }
 
     /* not found */
 
-    return NULL;
+    واپس تہی;
 }
 
 
-static ngx_resolver_node_t *
-ngx_resolver_lookup_addr(ngx_resolver_t *r, in_addr_t addr)
+ساکن ngx_resolver_گرہ_t *
+ngx_resolver_lookup_addr(ngx_resolver_t *r, اندر_addr_t addr)
 {
-    ngx_rbtree_node_t  *node, *sentinel;
+    ngx_rbtree_گرہ_t  *گرہ, *sentinel;
 
-    node = r->addr_rbtree.root;
+    گرہ = r->addr_rbtree.جڑ;
     sentinel = r->addr_rbtree.sentinel;
 
-    while (node != sentinel) {
+    جب (گرہ != sentinel) {
 
-        if (addr < node->key) {
-            node = node->left;
-            continue;
+        اگر (addr < گرہ->کلید) {
+            گرہ = گرہ->بایاں;
+            جاری;
         }
 
-        if (addr > node->key) {
-            node = node->right;
-            continue;
+        اگر (addr > گرہ->کلید) {
+            گرہ = گرہ->دایاں;
+            جاری;
         }
 
         /* addr == node->key */
 
-        return ngx_resolver_node(node);
+        واپس ngx_resolver_گرہ(گرہ);
     }
 
     /* not found */
 
-    return NULL;
+    واپس تہی;
 }
 
 
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
 
-static ngx_resolver_node_t *
-ngx_resolver_lookup_addr6(ngx_resolver_t *r, struct in6_addr *addr,
+ساکن ngx_resolver_گرہ_t *
+ngx_resolver_lookup_addr6(ngx_resolver_t *r, ساخت in6_addr *addr,
     uint32_t hash)
 {
     ngx_int_t             rc;
-    ngx_rbtree_node_t    *node, *sentinel;
-    ngx_resolver_node_t  *rn;
+    ngx_rbtree_گرہ_t    *گرہ, *sentinel;
+    ngx_resolver_گرہ_t  *rn;
 
-    node = r->addr6_rbtree.root;
+    گرہ = r->addr6_rbtree.جڑ;
     sentinel = r->addr6_rbtree.sentinel;
 
-    while (node != sentinel) {
+    جب (گرہ != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
-            continue;
+        اگر (hash < گرہ->کلید) {
+            گرہ = گرہ->بایاں;
+            جاری;
         }
 
-        if (hash > node->key) {
-            node = node->right;
-            continue;
+        اگر (hash > گرہ->کلید) {
+            گرہ = گرہ->دایاں;
+            جاری;
         }
 
         /* hash == node->key */
 
-        rn = ngx_resolver_node(node);
+        rn = ngx_resolver_گرہ(گرہ);
 
         rc = ngx_memcmp(addr, &rn->addr6, 16);
 
-        if (rc == 0) {
-            return rn;
+        اگر (rc == 0) {
+            واپس rn;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        گرہ = (rc < 0) ? گرہ->بایاں : گرہ->دایاں;
     }
 
     /* not found */
 
-    return NULL;
+    واپس تہی;
 }
 
-#endif
+#اگر_ختم
 
 
-static void
-ngx_resolver_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ساکن خالی
+ngx_resolver_rbtree_داخل_کرو_قدر(ngx_rbtree_گرہ_t *عارضی,
+    ngx_rbtree_گرہ_t *گرہ, ngx_rbtree_گرہ_t *sentinel)
 {
-    ngx_rbtree_node_t    **p;
-    ngx_resolver_node_t   *rn, *rn_temp;
+    ngx_rbtree_گرہ_t    **p;
+    ngx_resolver_گرہ_t   *rn, *rn_عارضی;
 
-    for ( ;; ) {
+    برائے ( ;; ) {
 
-        if (node->key < temp->key) {
+        اگر (گرہ->کلید < عارضی->کلید) {
 
-            p = &temp->left;
+            p = &عارضی->بایاں;
 
-        } else if (node->key > temp->key) {
+        } ورنہ اگر (گرہ->کلید > عارضی->کلید) {
 
-            p = &temp->right;
+            p = &عارضی->دایاں;
 
-        } else { /* node->key == temp->key */
+        } ورنہ { /* node->key == temp->key */
 
-            rn = ngx_resolver_node(node);
-            rn_temp = ngx_resolver_node(temp);
+            rn = ngx_resolver_گرہ(گرہ);
+            rn_عارضی = ngx_resolver_گرہ(عارضی);
 
-            p = (ngx_memn2cmp(rn->name, rn_temp->name, rn->nlen, rn_temp->nlen)
-                 < 0) ? &temp->left : &temp->right;
+            p = (ngx_memn2cmp(rn->name, rn_عارضی->name, rn->nlen, rn_عارضی->nlen)
+                 < 0) ? &عارضی->بایاں : &عارضی->دایاں;
         }
 
-        if (*p == sentinel) {
-            break;
+        اگر (*p == sentinel) {
+            توڑو;
         }
 
-        temp = *p;
+        عارضی = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = گرہ;
+    گرہ->والد = عارضی;
+    گرہ->بایاں = sentinel;
+    گرہ->دایاں = sentinel;
+    ngx_rbt_red(گرہ);
 }
 
 
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
 
-static void
-ngx_resolver_rbtree_insert_addr6_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ساکن خالی
+ngx_resolver_rbtree_داخل_کرو_addr6_قدر(ngx_rbtree_گرہ_t *عارضی,
+    ngx_rbtree_گرہ_t *گرہ, ngx_rbtree_گرہ_t *sentinel)
 {
-    ngx_rbtree_node_t    **p;
-    ngx_resolver_node_t   *rn, *rn_temp;
+    ngx_rbtree_گرہ_t    **p;
+    ngx_resolver_گرہ_t   *rn, *rn_عارضی;
 
-    for ( ;; ) {
+    برائے ( ;; ) {
 
-        if (node->key < temp->key) {
+        اگر (گرہ->کلید < عارضی->کلید) {
 
-            p = &temp->left;
+            p = &عارضی->بایاں;
 
-        } else if (node->key > temp->key) {
+        } ورنہ اگر (گرہ->کلید > عارضی->کلید) {
 
-            p = &temp->right;
+            p = &عارضی->دایاں;
 
-        } else { /* node->key == temp->key */
+        } ورنہ { /* node->key == temp->key */
 
-            rn = ngx_resolver_node(node);
-            rn_temp = ngx_resolver_node(temp);
+            rn = ngx_resolver_گرہ(گرہ);
+            rn_عارضی = ngx_resolver_گرہ(عارضی);
 
-            p = (ngx_memcmp(&rn->addr6, &rn_temp->addr6, 16)
-                 < 0) ? &temp->left : &temp->right;
+            p = (ngx_memcmp(&rn->addr6, &rn_عارضی->addr6, 16)
+                 < 0) ? &عارضی->بایاں : &عارضی->دایاں;
         }
 
-        if (*p == sentinel) {
-            break;
+        اگر (*p == sentinel) {
+            توڑو;
         }
 
-        temp = *p;
+        عارضی = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = گرہ;
+    گرہ->والد = عارضی;
+    گرہ->بایاں = sentinel;
+    گرہ->دایاں = sentinel;
+    ngx_rbt_red(گرہ);
 }
 
-#endif
+#اگر_ختم
 
 
-static ngx_int_t
-ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+ساکن ngx_int_t
+ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_گرہ_t *rn,
     ngx_str_t *name)
 {
     u_char              *p, *s;
-    size_t               len, nlen;
+    سائز_t               len, nlen;
     ngx_uint_t           ident;
     ngx_resolver_qs_t   *qs;
     ngx_resolver_hdr_t  *query;
 
     nlen = name->len ? (1 + name->len + 1) : 1;
 
-    len = sizeof(ngx_resolver_hdr_t) + nlen + sizeof(ngx_resolver_qs_t);
+    len = حجم(ngx_resolver_hdr_t) + nlen + حجم(ngx_resolver_qs_t);
 
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
     p = ngx_resolver_alloc(r, len * (r->ipv4 + r->ipv6));
-#else
+#ورنہ
     p = ngx_resolver_alloc(r, len);
-#endif
-    if (p == NULL) {
-        return NGX_ERROR;
+#اگر_ختم
+    اگر (p == تہی) {
+        واپس NGX_ERROR;
     }
 
     rn->qlen = (u_short) len;
     rn->query = p;
 
-#if (NGX_HAVE_INET6)
-    if (r->ipv6) {
+#اگر (NGX_HAVE_INET6)
+    اگر (r->ipv6) {
         rn->query6 = r->ipv4 ? (p + len) : p;
     }
-#endif
+#اگر_ختم
 
     query = (ngx_resolver_hdr_t *) p;
 
-    if (r->ipv4) {
+    اگر (r->ipv4) {
         ident = ngx_random();
 
-        ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->log, 0,
+        ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                        "resolve: \"%V\" A %i", name, ident & 0xffff);
 
         query->ident_hi = (u_char) ((ident >> 8) & 0xff);
@@ -3713,7 +3713,7 @@ ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
     query->nns_hi = 0; query->nns_lo = 0;
     query->nar_hi = 0; query->nar_lo = 0;
 
-    p += sizeof(ngx_resolver_hdr_t) + nlen;
+    p += حجم(ngx_resolver_hdr_t) + nlen;
 
     qs = (ngx_resolver_qs_t *) p;
 
@@ -3729,18 +3729,18 @@ ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
     p--;
     *p-- = '\0';
 
-    if (name->len == 0)  {
-        return NGX_DECLINED;
+    اگر (name->len == 0)  {
+        واپس NGX_DECLINED;
     }
 
-    for (s = name->data + name->len - 1; s >= name->data; s--) {
-        if (*s != '.') {
+    برائے (s = name->ڈیٹا + name->len - 1; s >= name->ڈیٹا; s--) {
+        اگر (*s != '.') {
             *p = *s;
             len++;
 
-        } else {
-            if (len == 0 || len > 255) {
-                return NGX_DECLINED;
+        } ورنہ {
+            اگر (len == 0 || len > 255) {
+                واپس NGX_DECLINED;
             }
 
             *p = (u_char) len;
@@ -3750,20 +3750,20 @@ ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
         p--;
     }
 
-    if (len == 0 || len > 255) {
-        return NGX_DECLINED;
+    اگر (len == 0 || len > 255) {
+        واپس NGX_DECLINED;
     }
 
     *p = (u_char) len;
 
-#if (NGX_HAVE_INET6)
-    if (!r->ipv6) {
-        return NGX_OK;
+#اگر (NGX_HAVE_INET6)
+    اگر (!r->ipv6) {
+        واپس NGX_OK;
     }
 
     p = rn->query6;
 
-    if (r->ipv4) {
+    اگر (r->ipv4) {
         ngx_memcpy(p, rn->query, rn->qlen);
     }
 
@@ -3771,40 +3771,40 @@ ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
 
     ident = ngx_random();
 
-    ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->log, 0,
+    ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                    "resolve: \"%V\" AAAA %i", name, ident & 0xffff);
 
     query->ident_hi = (u_char) ((ident >> 8) & 0xff);
     query->ident_lo = (u_char) (ident & 0xff);
 
-    p += sizeof(ngx_resolver_hdr_t) + nlen;
+    p += حجم(ngx_resolver_hdr_t) + nlen;
 
     qs = (ngx_resolver_qs_t *) p;
 
     qs->type_lo = NGX_RESOLVE_AAAA;
-#endif
+#اگر_ختم
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
-static ngx_int_t
-ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+ساکن ngx_int_t
+ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_گرہ_t *rn,
     ngx_str_t *name)
 {
     u_char              *p, *s;
-    size_t               len, nlen;
+    سائز_t               len, nlen;
     ngx_uint_t           ident;
     ngx_resolver_qs_t   *qs;
     ngx_resolver_hdr_t  *query;
 
     nlen = name->len ? (1 + name->len + 1) : 1;
 
-    len = sizeof(ngx_resolver_hdr_t) + nlen + sizeof(ngx_resolver_qs_t);
+    len = حجم(ngx_resolver_hdr_t) + nlen + حجم(ngx_resolver_qs_t);
 
     p = ngx_resolver_alloc(r, len);
-    if (p == NULL) {
-        return NGX_ERROR;
+    اگر (p == تہی) {
+        واپس NGX_ERROR;
     }
 
     rn->qlen = (u_short) len;
@@ -3814,7 +3814,7 @@ ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
 
     ident = ngx_random();
 
-    ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->log, 0,
+    ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->لوگارتھم, 0,
                    "resolve: \"%V\" SRV %i", name, ident & 0xffff);
 
     query->ident_hi = (u_char) ((ident >> 8) & 0xff);
@@ -3829,7 +3829,7 @@ ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
     query->nns_hi = 0; query->nns_lo = 0;
     query->nar_hi = 0; query->nar_lo = 0;
 
-    p += sizeof(ngx_resolver_hdr_t) + nlen;
+    p += حجم(ngx_resolver_hdr_t) + nlen;
 
     qs = (ngx_resolver_qs_t *) p;
 
@@ -3845,18 +3845,18 @@ ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
     p--;
     *p-- = '\0';
 
-    if (name->len == 0)  {
-        return NGX_DECLINED;
+    اگر (name->len == 0)  {
+        واپس NGX_DECLINED;
     }
 
-    for (s = name->data + name->len - 1; s >= name->data; s--) {
-        if (*s != '.') {
+    برائے (s = name->ڈیٹا + name->len - 1; s >= name->ڈیٹا; s--) {
+        اگر (*s != '.') {
             *p = *s;
             len++;
 
-        } else {
-            if (len == 0 || len > 255) {
-                return NGX_DECLINED;
+        } ورنہ {
+            اگر (len == 0 || len > 255) {
+                واپس NGX_DECLINED;
             }
 
             *p = (u_char) len;
@@ -3866,51 +3866,51 @@ ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
         p--;
     }
 
-    if (len == 0 || len > 255) {
-        return NGX_DECLINED;
+    اگر (len == 0 || len > 255) {
+        واپس NGX_DECLINED;
     }
 
     *p = (u_char) len;
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
-static ngx_int_t
-ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+ساکن ngx_int_t
+ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_گرہ_t *rn,
     ngx_resolver_addr_t *addr)
 {
     u_char               *p, *d;
-    size_t                len;
-    in_addr_t             inaddr;
+    سائز_t                len;
+    اندر_addr_t             inaddr;
     ngx_int_t             n;
     ngx_uint_t            ident;
     ngx_resolver_hdr_t   *query;
-    struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
-    struct sockaddr_in6  *sin6;
-#endif
+    ساخت sockaddr_اندر   *جیب;
+#اگر (NGX_HAVE_INET6)
+    ساخت sockaddr_in6  *sin6;
+#اگر_ختم
 
-    switch (addr->sockaddr->sa_family) {
+    انتخاب (addr->sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        len = sizeof(ngx_resolver_hdr_t)
-              + 64 + sizeof(".ip6.arpa.") - 1
-              + sizeof(ngx_resolver_qs_t);
+#اگر (NGX_HAVE_INET6)
+    حالت AF_INET6:
+        len = حجم(ngx_resolver_hdr_t)
+              + 64 + حجم(".ip6.arpa.") - 1
+              + حجم(ngx_resolver_qs_t);
 
-        break;
-#endif
+        توڑو;
+#اگر_ختم
 
-    default: /* AF_INET */
-        len = sizeof(ngx_resolver_hdr_t)
-              + sizeof(".255.255.255.255.in-addr.arpa.") - 1
-              + sizeof(ngx_resolver_qs_t);
+    طےشدہ: /* AF_INET */
+        len = حجم(ngx_resolver_hdr_t)
+              + حجم(".255.255.255.255.in-addr.arpa.") - 1
+              + حجم(ngx_resolver_qs_t);
     }
 
     p = ngx_resolver_alloc(r, len);
-    if (p == NULL) {
-        return NGX_ERROR;
+    اگر (p == تہی) {
+        واپس NGX_ERROR;
     }
 
     rn->query = p;
@@ -3930,15 +3930,15 @@ ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
     query->nns_hi = 0; query->nns_lo = 0;
     query->nar_hi = 0; query->nar_lo = 0;
 
-    p += sizeof(ngx_resolver_hdr_t);
+    p += حجم(ngx_resolver_hdr_t);
 
-    switch (addr->sockaddr->sa_family) {
+    انتخاب (addr->sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        sin6 = (struct sockaddr_in6 *) addr->sockaddr;
+#اگر (NGX_HAVE_INET6)
+    حالت AF_INET6:
+        sin6 = (ساخت sockaddr_in6 *) addr->sockaddr;
 
-        for (n = 15; n >= 0; n--) {
+        برائے (n = 15; n >= 0; n--) {
             p = ngx_sprintf(p, "\1%xd\1%xd",
                             sin6->sin6_addr.s6_addr[n] & 0xf,
                             (sin6->sin6_addr.s6_addr[n] >> 4) & 0xf);
@@ -3946,15 +3946,15 @@ ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
 
         p = ngx_cpymem(p, "\3ip6\4arpa\0", 10);
 
-        break;
-#endif
+        توڑو;
+#اگر_ختم
 
-    default: /* AF_INET */
+    طےشدہ: /* AF_INET */
 
-        sin = (struct sockaddr_in *) addr->sockaddr;
-        inaddr = ntohl(sin->sin_addr.s_addr);
+        جیب = (ساخت sockaddr_اندر *) addr->sockaddr;
+        inaddr = ntohl(جیب->sin_addr.s_addr);
 
-        for (n = 0; n < 32; n += 8) {
+        برائے (n = 0; n < 32; n += 8) {
             d = ngx_sprintf(&p[1], "%ud", (inaddr >> n) & 0xff);
             *p = (u_char) (d - &p[1]);
             p = d;
@@ -3968,17 +3968,17 @@ ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
 
     rn->qlen = (u_short) (p - rn->query);
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
-static ngx_int_t
+ساکن ngx_int_t
 ngx_resolver_copy(ngx_resolver_t *r, ngx_str_t *name, u_char *buf, u_char *src,
-    u_char *last)
+    u_char *آخری)
 {
-    char        *err;
+    حرف        *err;
     u_char      *p, *dst;
-    size_t       len;
+    سائز_t       len;
     ngx_uint_t   i, n;
 
     p = src;
@@ -3989,35 +3989,35 @@ ngx_resolver_copy(ngx_resolver_t *r, ngx_str_t *name, u_char *buf, u_char *src,
      * 128 pointers should be enough to store 255-byte name
      */
 
-    for (i = 0; i < 128; i++) {
+    برائے (i = 0; i < 128; i++) {
         n = *p++;
 
-        if (n == 0) {
-            goto done;
+        اگر (n == 0) {
+            جاؤ مکمل;
         }
 
-        if (n & 0xc0) {
-            if ((n & 0xc0) != 0xc0) {
+        اگر (n & 0xc0) {
+            اگر ((n & 0xc0) != 0xc0) {
                 err = "invalid label type in DNS response";
-                goto invalid;
+                جاؤ invalid;
             }
 
-            if (p >= last) {
+            اگر (p >= آخری) {
                 err = "name is out of DNS response";
-                goto invalid;
+                جاؤ invalid;
             }
 
             n = ((n & 0x3f) << 8) + *p;
             p = &buf[n];
 
-        } else {
+        } ورنہ {
             len += 1 + n;
             p = &p[n];
         }
 
-        if (p >= last) {
+        اگر (p >= آخری) {
             err = "name is out of DNS response";
-            goto invalid;
+            جاؤ invalid;
         }
     }
 
@@ -4025,41 +4025,41 @@ ngx_resolver_copy(ngx_resolver_t *r, ngx_str_t *name, u_char *buf, u_char *src,
 
 invalid:
 
-    ngx_log_error(r->log_level, r->log, 0, err);
+    ngx_log_error(r->log_level, r->لوگارتھم, 0, err);
 
-    return NGX_ERROR;
+    واپس NGX_ERROR;
 
-done:
+مکمل:
 
-    if (name == NULL) {
-        return NGX_OK;
+    اگر (name == تہی) {
+        واپس NGX_OK;
     }
 
-    if (len == 0) {
+    اگر (len == 0) {
         ngx_str_null(name);
-        return NGX_OK;
+        واپس NGX_OK;
     }
 
     dst = ngx_resolver_alloc(r, len);
-    if (dst == NULL) {
-        return NGX_ERROR;
+    اگر (dst == تہی) {
+        واپس NGX_ERROR;
     }
 
-    name->data = dst;
+    name->ڈیٹا = dst;
 
-    for ( ;; ) {
+    برائے ( ;; ) {
         n = *src++;
 
-        if (n == 0) {
-            name->len = dst - name->data - 1;
-            return NGX_OK;
+        اگر (n == 0) {
+            name->len = dst - name->ڈیٹا - 1;
+            واپس NGX_OK;
         }
 
-        if (n & 0xc0) {
+        اگر (n & 0xc0) {
             n = ((n & 0x3f) << 8) + *src;
             src = &buf[n];
 
-        } else {
+        } ورنہ {
             ngx_strlow(dst, src, n);
             dst += n;
             src += n;
@@ -4069,36 +4069,36 @@ done:
 }
 
 
-static ngx_int_t
-ngx_resolver_set_timeout(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx)
+ساکن ngx_int_t
+ngx_resolver_سیٹ_timeout(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx)
 {
-    if (ctx->event || ctx->timeout == 0) {
-        return NGX_OK;
+    اگر (ctx->event || ctx->timeout == 0) {
+        واپس NGX_OK;
     }
 
-    ctx->event = ngx_resolver_calloc(r, sizeof(ngx_event_t));
-    if (ctx->event == NULL) {
-        return NGX_ERROR;
+    ctx->event = ngx_resolver_calloc(r, حجم(ngx_event_t));
+    اگر (ctx->event == تہی) {
+        واپس NGX_ERROR;
     }
 
     ctx->event->handler = ngx_resolver_timeout_handler;
-    ctx->event->data = ctx;
-    ctx->event->log = r->log;
+    ctx->event->ڈیٹا = ctx;
+    ctx->event->لوگارتھم = r->لوگارتھم;
     ctx->event->cancelable = ctx->cancelable;
     ctx->ident = -1;
 
-    ngx_add_timer(ctx->event, ctx->timeout);
+    ngx_جوڑو_timer(ctx->event, ctx->timeout);
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
-static void
+ساکن خالی
 ngx_resolver_timeout_handler(ngx_event_t *ev)
 {
     ngx_resolver_ctx_t  *ctx;
 
-    ctx = ev->data;
+    ctx = ev->ڈیٹا;
 
     ctx->state = NGX_RESOLVE_TIMEDOUT;
 
@@ -4106,39 +4106,39 @@ ngx_resolver_timeout_handler(ngx_event_t *ev)
 }
 
 
-static void
-ngx_resolver_free_node(ngx_resolver_t *r, ngx_resolver_node_t *rn)
+ساکن خالی
+ngx_resolver_free_گرہ(ngx_resolver_t *r, ngx_resolver_گرہ_t *rn)
 {
     ngx_uint_t  i;
 
     /* lock alloc mutex */
 
-    if (rn->query) {
+    اگر (rn->query) {
         ngx_resolver_free_locked(r, rn->query);
     }
 
-    if (rn->name) {
+    اگر (rn->name) {
         ngx_resolver_free_locked(r, rn->name);
     }
 
-    if (rn->cnlen) {
+    اگر (rn->cnlen) {
         ngx_resolver_free_locked(r, rn->u.cname);
     }
 
-    if (rn->naddrs > 1 && rn->naddrs != (u_short) -1) {
+    اگر (rn->naddrs > 1 && rn->naddrs != (u_short) -1) {
         ngx_resolver_free_locked(r, rn->u.addrs);
     }
 
-#if (NGX_HAVE_INET6)
-    if (rn->naddrs6 > 1 && rn->naddrs6 != (u_short) -1) {
+#اگر (NGX_HAVE_INET6)
+    اگر (rn->naddrs6 > 1 && rn->naddrs6 != (u_short) -1) {
         ngx_resolver_free_locked(r, rn->u6.addrs6);
     }
-#endif
+#اگر_ختم
 
-    if (rn->nsrvs) {
-        for (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
-            if (rn->u.srvs[i].name.data) {
-                ngx_resolver_free_locked(r, rn->u.srvs[i].name.data);
+    اگر (rn->nsrvs) {
+        برائے (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
+            اگر (rn->u.srvs[i].name.ڈیٹا) {
+                ngx_resolver_free_locked(r, rn->u.srvs[i].name.ڈیٹا);
             }
         }
 
@@ -4151,38 +4151,38 @@ ngx_resolver_free_node(ngx_resolver_t *r, ngx_resolver_node_t *rn)
 }
 
 
-static void *
-ngx_resolver_alloc(ngx_resolver_t *r, size_t size)
+ساکن خالی *
+ngx_resolver_alloc(ngx_resolver_t *r, سائز_t سائز)
 {
     u_char  *p;
 
     /* lock alloc mutex */
 
-    p = ngx_alloc(size, r->log);
+    p = ngx_alloc(سائز, r->لوگارتھم);
 
     /* unlock alloc mutex */
 
-    return p;
+    واپس p;
 }
 
 
-static void *
-ngx_resolver_calloc(ngx_resolver_t *r, size_t size)
+ساکن خالی *
+ngx_resolver_calloc(ngx_resolver_t *r, سائز_t سائز)
 {
     u_char  *p;
 
-    p = ngx_resolver_alloc(r, size);
+    p = ngx_resolver_alloc(r, سائز);
 
-    if (p) {
-        ngx_memzero(p, size);
+    اگر (p) {
+        ngx_memzero(p, سائز);
     }
 
-    return p;
+    واپس p;
 }
 
 
-static void
-ngx_resolver_free(ngx_resolver_t *r, void *p)
+ساکن خالی
+ngx_resolver_free(ngx_resolver_t *r, خالی *p)
 {
     /* lock alloc mutex */
 
@@ -4192,114 +4192,114 @@ ngx_resolver_free(ngx_resolver_t *r, void *p)
 }
 
 
-static void
-ngx_resolver_free_locked(ngx_resolver_t *r, void *p)
+ساکن خالی
+ngx_resolver_free_locked(ngx_resolver_t *r, خالی *p)
 {
     ngx_free(p);
 }
 
 
-static void *
-ngx_resolver_dup(ngx_resolver_t *r, void *src, size_t size)
+ساکن خالی *
+ngx_resolver_dup(ngx_resolver_t *r, خالی *src, سائز_t سائز)
 {
-    void  *dst;
+    خالی  *dst;
 
-    dst = ngx_resolver_alloc(r, size);
+    dst = ngx_resolver_alloc(r, سائز);
 
-    if (dst == NULL) {
-        return dst;
+    اگر (dst == تہی) {
+        واپس dst;
     }
 
-    ngx_memcpy(dst, src, size);
+    ngx_memcpy(dst, src, سائز);
 
-    return dst;
+    واپس dst;
 }
 
 
-static ngx_resolver_addr_t *
-ngx_resolver_export(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+ساکن ngx_resolver_addr_t *
+ngx_resolver_export(ngx_resolver_t *r, ngx_resolver_گرہ_t *rn,
     ngx_uint_t rotate)
 {
     ngx_uint_t            d, i, j, n;
-    in_addr_t            *addr;
+    اندر_addr_t            *addr;
     ngx_sockaddr_t       *sockaddr;
-    struct sockaddr_in   *sin;
+    ساخت sockaddr_اندر   *جیب;
     ngx_resolver_addr_t  *dst;
-#if (NGX_HAVE_INET6)
-    struct in6_addr      *addr6;
-    struct sockaddr_in6  *sin6;
-#endif
+#اگر (NGX_HAVE_INET6)
+    ساخت in6_addr      *addr6;
+    ساخت sockaddr_in6  *sin6;
+#اگر_ختم
 
     n = rn->naddrs;
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
     n += rn->naddrs6;
-#endif
+#اگر_ختم
 
-    dst = ngx_resolver_calloc(r, n * sizeof(ngx_resolver_addr_t));
-    if (dst == NULL) {
-        return NULL;
+    dst = ngx_resolver_calloc(r, n * حجم(ngx_resolver_addr_t));
+    اگر (dst == تہی) {
+        واپس تہی;
     }
 
-    sockaddr = ngx_resolver_calloc(r, n * sizeof(ngx_sockaddr_t));
-    if (sockaddr == NULL) {
+    sockaddr = ngx_resolver_calloc(r, n * حجم(ngx_sockaddr_t));
+    اگر (sockaddr == تہی) {
         ngx_resolver_free(r, dst);
-        return NULL;
+        واپس تہی;
     }
 
     i = 0;
     d = rotate ? ngx_random() % n : 0;
 
-    if (rn->naddrs) {
+    اگر (rn->naddrs) {
         j = rotate ? ngx_random() % rn->naddrs : 0;
 
         addr = (rn->naddrs == 1) ? &rn->u.addr : rn->u.addrs;
 
-        do {
-            sin = &sockaddr[d].sockaddr_in;
-            sin->sin_family = AF_INET;
-            sin->sin_addr.s_addr = addr[j++];
-            dst[d].sockaddr = (struct sockaddr *) sin;
-            dst[d++].socklen = sizeof(struct sockaddr_in);
+        کرو {
+            جیب = &sockaddr[d].sockaddr_اندر;
+            جیب->sin_family = AF_INET;
+            جیب->sin_addr.s_addr = addr[j++];
+            dst[d].sockaddr = (ساخت sockaddr *) جیب;
+            dst[d++].socklen = حجم(ساخت sockaddr_اندر);
 
-            if (d == n) {
+            اگر (d == n) {
                 d = 0;
             }
 
-            if (j == (ngx_uint_t) rn->naddrs) {
+            اگر (j == (ngx_uint_t) rn->naddrs) {
                 j = 0;
             }
-        } while (++i < (ngx_uint_t) rn->naddrs);
+        } جب (++i < (ngx_uint_t) rn->naddrs);
     }
 
-#if (NGX_HAVE_INET6)
-    if (rn->naddrs6) {
+#اگر (NGX_HAVE_INET6)
+    اگر (rn->naddrs6) {
         j = rotate ? ngx_random() % rn->naddrs6 : 0;
 
         addr6 = (rn->naddrs6 == 1) ? &rn->u6.addr6 : rn->u6.addrs6;
 
-        do {
+        کرو {
             sin6 = &sockaddr[d].sockaddr_in6;
             sin6->sin6_family = AF_INET6;
             ngx_memcpy(sin6->sin6_addr.s6_addr, addr6[j++].s6_addr, 16);
-            dst[d].sockaddr = (struct sockaddr *) sin6;
-            dst[d++].socklen = sizeof(struct sockaddr_in6);
+            dst[d].sockaddr = (ساخت sockaddr *) sin6;
+            dst[d++].socklen = حجم(ساخت sockaddr_in6);
 
-            if (d == n) {
+            اگر (d == n) {
                 d = 0;
             }
 
-            if (j == rn->naddrs6) {
+            اگر (j == rn->naddrs6) {
                 j = 0;
             }
-        } while (++i < n);
+        } جب (++i < n);
     }
-#endif
+#اگر_ختم
 
-    return dst;
+    واپس dst;
 }
 
 
-static void
+ساکن خالی
 ngx_resolver_report_srv(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx)
 {
     ngx_uint_t                naddrs, nsrvs, nw, i, j, k, l, m, n, w;
@@ -4311,92 +4311,92 @@ ngx_resolver_report_srv(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx)
 
     naddrs = 0;
 
-    for (i = 0; i < nsrvs; i++) {
-        if (srvs[i].state == NGX_ERROR) {
+    برائے (i = 0; i < nsrvs; i++) {
+        اگر (srvs[i].state == NGX_ERROR) {
             ctx->state = NGX_ERROR;
-            ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
+            ctx->valid = ngx_وقت() + (r->valid ? r->valid : 10);
 
             ctx->handler(ctx);
-            return;
+            واپس;
         }
 
         naddrs += srvs[i].naddrs;
     }
 
-    if (naddrs == 0) {
+    اگر (naddrs == 0) {
         ctx->state = srvs[0].state;
 
-        for (i = 0; i < nsrvs; i++) {
-            if (srvs[i].state == NGX_RESOLVE_NXDOMAIN) {
+        برائے (i = 0; i < nsrvs; i++) {
+            اگر (srvs[i].state == NGX_RESOLVE_NXDOMAIN) {
                 ctx->state = NGX_RESOLVE_NXDOMAIN;
-                break;
+                توڑو;
             }
         }
 
-        ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
+        ctx->valid = ngx_وقت() + (r->valid ? r->valid : 10);
 
         ctx->handler(ctx);
-        return;
+        واپس;
     }
 
-    addrs = ngx_resolver_calloc(r, naddrs * sizeof(ngx_resolver_addr_t));
-    if (addrs == NULL) {
+    addrs = ngx_resolver_calloc(r, naddrs * حجم(ngx_resolver_addr_t));
+    اگر (addrs == تہی) {
         ctx->state = NGX_ERROR;
-        ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
+        ctx->valid = ngx_وقت() + (r->valid ? r->valid : 10);
 
         ctx->handler(ctx);
-        return;
+        واپس;
     }
 
     i = 0;
     n = 0;
 
-    do {
+    کرو {
         nw = 0;
 
-        for (j = i; j < nsrvs; j++) {
-            if (srvs[j].priority != srvs[i].priority) {
-                break;
+        برائے (j = i; j < nsrvs; j++) {
+            اگر (srvs[j].ترجیح != srvs[i].ترجیح) {
+                توڑو;
             }
 
-            nw += srvs[j].naddrs * srvs[j].weight;
+            nw += srvs[j].naddrs * srvs[j].وزن;
         }
 
-        if (nw == 0) {
-            goto next_srv;
+        اگر (nw == 0) {
+            جاؤ اگلا_srv;
         }
 
         w = ngx_random() % nw;
 
-        for (k = i; k < j; k++) {
-            if (w < srvs[k].naddrs * srvs[k].weight) {
-                break;
+        برائے (k = i; k < j; k++) {
+            اگر (w < srvs[k].naddrs * srvs[k].وزن) {
+                توڑو;
             }
 
-            w -= srvs[k].naddrs * srvs[k].weight;
+            w -= srvs[k].naddrs * srvs[k].وزن;
         }
 
-        for (l = i; l < j; l++) {
+        برائے (l = i; l < j; l++) {
 
-            for (m = 0; m < srvs[k].naddrs; m++) {
+            برائے (m = 0; m < srvs[k].naddrs; m++) {
                 addrs[n].socklen = srvs[k].addrs[m].socklen;
                 addrs[n].sockaddr = srvs[k].addrs[m].sockaddr;
                 addrs[n].name = srvs[k].name;
-                addrs[n].priority = srvs[k].priority;
-                addrs[n].weight = srvs[k].weight;
+                addrs[n].ترجیح = srvs[k].ترجیح;
+                addrs[n].وزن = srvs[k].وزن;
                 n++;
             }
 
-            if (++k == j) {
+            اگر (++k == j) {
                 k = i;
             }
         }
 
-next_srv:
+اگلا_srv:
 
         i = j;
 
-    } while (i < ctx->nsrvs);
+    } جب (i < ctx->nsrvs);
 
     ctx->state = NGX_OK;
     ctx->addrs = addrs;
@@ -4408,10 +4408,10 @@ next_srv:
 }
 
 
-char *
+حرف *
 ngx_resolver_strerror(ngx_int_t err)
 {
-    static char *errors[] = {
+    ساکن حرف *errors[] = {
         "Format error",     /* FORMERR */
         "Server failure",   /* SERVFAIL */
         "Host not found",   /* NXDOMAIN */
@@ -4419,45 +4419,45 @@ ngx_resolver_strerror(ngx_int_t err)
         "Operation refused" /* REFUSED */
     };
 
-    if (err > 0 && err < 6) {
-        return errors[err - 1];
+    اگر (err > 0 && err < 6) {
+        واپس errors[err - 1];
     }
 
-    if (err == NGX_RESOLVE_TIMEDOUT) {
-        return "Operation timed out";
+    اگر (err == NGX_RESOLVE_TIMEDOUT) {
+        واپس "Operation timed out";
     }
 
-    return "Unknown error";
+    واپس "Unknown error";
 }
 
 
-static u_char *
-ngx_resolver_log_error(ngx_log_t *log, u_char *buf, size_t len)
+ساکن u_char *
+ngx_resolver_log_error(ngx_log_t *لوگارتھم, u_char *buf, سائز_t len)
 {
     u_char                     *p;
     ngx_resolver_connection_t  *rec;
 
     p = buf;
 
-    if (log->action) {
-        p = ngx_snprintf(buf, len, " while %s", log->action);
+    اگر (لوگارتھم->action) {
+        p = ngx_snprintf(buf, len, " while %s", لوگارتھم->action);
         len -= p - buf;
     }
 
-    rec = log->data;
+    rec = لوگارتھم->ڈیٹا;
 
-    if (rec) {
+    اگر (rec) {
         p = ngx_snprintf(p, len, ", resolver: %V", &rec->server);
     }
 
-    return p;
+    واپس p;
 }
 
 
-static ngx_int_t
+ساکن ngx_int_t
 ngx_udp_connect(ngx_resolver_connection_t *rec)
 {
-    int                rc;
+    صحیح                rc;
     ngx_int_t          event;
     ngx_event_t       *rev, *wev;
     ngx_socket_t       s;
@@ -4465,54 +4465,54 @@ ngx_udp_connect(ngx_resolver_connection_t *rec)
 
     s = ngx_socket(rec->sockaddr->sa_family, SOCK_DGRAM, 0);
 
-    ngx_log_debug1(NGX_LOG_DEBUG_EVENT, &rec->log, 0, "UDP socket %d", s);
+    ngx_log_debug1(NGX_LOG_DEBUG_EVENT, &rec->لوگارتھم, 0, "UDP socket %d", s);
 
-    if (s == (ngx_socket_t) -1) {
-        ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
+    اگر (s == (ngx_socket_t) -1) {
+        ngx_log_error(NGX_LOG_ALERT, &rec->لوگارتھم, ngx_socket_errno,
                       ngx_socket_n " failed");
-        return NGX_ERROR;
+        واپس NGX_ERROR;
     }
 
-    c = ngx_get_connection(s, &rec->log);
+    c = ngx_get_connection(s, &rec->لوگارتھم);
 
-    if (c == NULL) {
-        if (ngx_close_socket(s) == -1) {
-            ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
+    اگر (c == تہی) {
+        اگر (ngx_close_socket(s) == -1) {
+            ngx_log_error(NGX_LOG_ALERT, &rec->لوگارتھم, ngx_socket_errno,
                           ngx_close_socket_n " failed");
         }
 
-        return NGX_ERROR;
+        واپس NGX_ERROR;
     }
 
-    if (ngx_nonblocking(s) == -1) {
-        ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
+    اگر (ngx_nonblocking(s) == -1) {
+        ngx_log_error(NGX_LOG_ALERT, &rec->لوگارتھم, ngx_socket_errno,
                       ngx_nonblocking_n " failed");
 
-        goto failed;
+        جاؤ failed;
     }
 
-    rev = c->read;
-    wev = c->write;
+    rev = c->اقرأ;
+    wev = c->اكتب;
 
-    rev->log = &rec->log;
-    wev->log = &rec->log;
+    rev->لوگارتھم = &rec->لوگارتھم;
+    wev->لوگارتھم = &rec->لوگارتھم;
 
     rec->udp = c;
 
-    c->number = ngx_atomic_fetch_add(ngx_connection_counter, 1);
+    c->نمبر = ngx_atomic_fetch_جوڑو(ngx_connection_شمار, 1);
 
-    c->start_time = ngx_current_msec;
+    c->آغاز_وقت = ngx_current_msec;
 
-    ngx_log_debug3(NGX_LOG_DEBUG_EVENT, &rec->log, 0,
-                   "connect to %V, fd:%d #%uA", &rec->server, s, c->number);
+    ngx_log_debug3(NGX_LOG_DEBUG_EVENT, &rec->لوگارتھم, 0,
+                   "connect to %V, fd:%d #%uA", &rec->server, s, c->نمبر);
 
     rc = connect(s, rec->sockaddr, rec->socklen);
 
-    if (rc == -1) {
-        ngx_log_error(NGX_LOG_CRIT, &rec->log, ngx_socket_errno,
+    اگر (rc == -1) {
+        ngx_log_error(NGX_LOG_CRIT, &rec->لوگارتھم, ngx_socket_errno,
                       "connect() failed");
 
-        goto failed;
+        جاؤ failed;
     }
 
     /* UDP sockets are always ready to write */
@@ -4523,25 +4523,25 @@ ngx_udp_connect(ngx_resolver_connection_t *rec)
                 /* select, poll, /dev/poll */       NGX_LEVEL_EVENT;
                 /* eventport event type has no meaning: oneshot only */
 
-    if (ngx_add_event(rev, NGX_READ_EVENT, event) != NGX_OK) {
-        goto failed;
+    اگر (ngx_جوڑو_event(rev, NGX_READ_EVENT, event) != NGX_OK) {
+        جاؤ failed;
     }
 
-    return NGX_OK;
+    واپس NGX_OK;
 
 failed:
 
     ngx_close_connection(c);
-    rec->udp = NULL;
+    rec->udp = تہی;
 
-    return NGX_ERROR;
+    واپس NGX_ERROR;
 }
 
 
-static ngx_int_t
+ساکن ngx_int_t
 ngx_tcp_connect(ngx_resolver_connection_t *rec)
 {
-    int                rc;
+    صحیح                rc;
     ngx_int_t          event;
     ngx_err_t          err;
     ngx_uint_t         level;
@@ -4549,76 +4549,76 @@ ngx_tcp_connect(ngx_resolver_connection_t *rec)
     ngx_event_t       *rev, *wev;
     ngx_connection_t  *c;
 
-    s = ngx_socket(rec->sockaddr->sa_family, SOCK_STREAM, 0);
+    s = ngx_socket(rec->sockaddr->sa_family, SOCK_دھارا, 0);
 
-    ngx_log_debug1(NGX_LOG_DEBUG_EVENT, &rec->log, 0, "TCP socket %d", s);
+    ngx_log_debug1(NGX_LOG_DEBUG_EVENT, &rec->لوگارتھم, 0, "TCP socket %d", s);
 
-    if (s == (ngx_socket_t) -1) {
-        ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
+    اگر (s == (ngx_socket_t) -1) {
+        ngx_log_error(NGX_LOG_ALERT, &rec->لوگارتھم, ngx_socket_errno,
                       ngx_socket_n " failed");
-        return NGX_ERROR;
+        واپس NGX_ERROR;
     }
 
-    c = ngx_get_connection(s, &rec->log);
+    c = ngx_get_connection(s, &rec->لوگارتھم);
 
-    if (c == NULL) {
-        if (ngx_close_socket(s) == -1) {
-            ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
+    اگر (c == تہی) {
+        اگر (ngx_close_socket(s) == -1) {
+            ngx_log_error(NGX_LOG_ALERT, &rec->لوگارتھم, ngx_socket_errno,
                           ngx_close_socket_n " failed");
         }
 
-        return NGX_ERROR;
+        واپس NGX_ERROR;
     }
 
-    if (ngx_nonblocking(s) == -1) {
-        ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
+    اگر (ngx_nonblocking(s) == -1) {
+        ngx_log_error(NGX_LOG_ALERT, &rec->لوگارتھم, ngx_socket_errno,
                       ngx_nonblocking_n " failed");
 
-        goto failed;
+        جاؤ failed;
     }
 
-    rev = c->read;
-    wev = c->write;
+    rev = c->اقرأ;
+    wev = c->اكتب;
 
-    rev->log = &rec->log;
-    wev->log = &rec->log;
+    rev->لوگارتھم = &rec->لوگارتھم;
+    wev->لوگارتھم = &rec->لوگارتھم;
 
     rec->tcp = c;
 
-    c->number = ngx_atomic_fetch_add(ngx_connection_counter, 1);
+    c->نمبر = ngx_atomic_fetch_جوڑو(ngx_connection_شمار, 1);
 
-    c->start_time = ngx_current_msec;
+    c->آغاز_وقت = ngx_current_msec;
 
-    if (ngx_add_conn) {
-        if (ngx_add_conn(c) == NGX_ERROR) {
-            goto failed;
+    اگر (ngx_جوڑو_conn) {
+        اگر (ngx_جوڑو_conn(c) == NGX_ERROR) {
+            جاؤ failed;
         }
     }
 
-    ngx_log_debug3(NGX_LOG_DEBUG_EVENT, &rec->log, 0,
-                   "connect to %V, fd:%d #%uA", &rec->server, s, c->number);
+    ngx_log_debug3(NGX_LOG_DEBUG_EVENT, &rec->لوگارتھم, 0,
+                   "connect to %V, fd:%d #%uA", &rec->server, s, c->نمبر);
 
     rc = connect(s, rec->sockaddr, rec->socklen);
 
-    if (rc == -1) {
+    اگر (rc == -1) {
         err = ngx_socket_errno;
 
 
-        if (err != NGX_EINPROGRESS
-#if (NGX_WIN32)
+        اگر (err != NGX_EINPROGRESS
+#اگر (NGX_WIN32)
             /* Winsock returns WSAEWOULDBLOCK (NGX_EAGAIN) */
             && err != NGX_EAGAIN
-#endif
+#اگر_ختم
             )
         {
-            if (err == NGX_ECONNREFUSED
-#if (NGX_LINUX)
+            اگر (err == NGX_ECONNREFUSED
+#اگر (NGX_LINUX)
                 /*
                  * Linux returns EAGAIN instead of ECONNREFUSED
                  * for unix sockets if listen queue is full
                  */
                 || err == NGX_EAGAIN
-#endif
+#اگر_ختم
                 || err == NGX_ECONNRESET
                 || err == NGX_ENETDOWN
                 || err == NGX_ENETUNREACH
@@ -4627,89 +4627,89 @@ ngx_tcp_connect(ngx_resolver_connection_t *rec)
             {
                 level = NGX_LOG_ERR;
 
-            } else {
+            } ورنہ {
                 level = NGX_LOG_CRIT;
             }
 
-            ngx_log_error(level, &rec->log, err, "connect() to %V failed",
+            ngx_log_error(level, &rec->لوگارتھم, err, "connect() to %V failed",
                           &rec->server);
 
             ngx_close_connection(c);
-            rec->tcp = NULL;
+            rec->tcp = تہی;
 
-            return NGX_ERROR;
+            واپس NGX_ERROR;
         }
     }
 
-    if (ngx_add_conn) {
-        if (rc == -1) {
+    اگر (ngx_جوڑو_conn) {
+        اگر (rc == -1) {
 
             /* NGX_EINPROGRESS */
 
-            return NGX_AGAIN;
+            واپس NGX_AGAIN;
         }
 
-        ngx_log_debug0(NGX_LOG_DEBUG_EVENT, &rec->log, 0, "connected");
+        ngx_log_debug0(NGX_LOG_DEBUG_EVENT, &rec->لوگارتھم, 0, "connected");
 
         wev->ready = 1;
 
-        return NGX_OK;
+        واپس NGX_OK;
     }
 
-    if (ngx_event_flags & NGX_USE_CLEAR_EVENT) {
+    اگر (ngx_event_flags & NGX_USE_CLEAR_EVENT) {
 
         /* kqueue */
 
         event = NGX_CLEAR_EVENT;
 
-    } else {
+    } ورنہ {
 
         /* select, poll, /dev/poll */
 
         event = NGX_LEVEL_EVENT;
     }
 
-    if (ngx_add_event(rev, NGX_READ_EVENT, event) != NGX_OK) {
-        goto failed;
+    اگر (ngx_جوڑو_event(rev, NGX_READ_EVENT, event) != NGX_OK) {
+        جاؤ failed;
     }
 
-    if (rc == -1) {
+    اگر (rc == -1) {
 
         /* NGX_EINPROGRESS */
 
-        if (ngx_add_event(wev, NGX_WRITE_EVENT, event) != NGX_OK) {
-            goto failed;
+        اگر (ngx_جوڑو_event(wev, NGX_WRITE_EVENT, event) != NGX_OK) {
+            جاؤ failed;
         }
 
-        return NGX_AGAIN;
+        واپس NGX_AGAIN;
     }
 
-    ngx_log_debug0(NGX_LOG_DEBUG_EVENT, &rec->log, 0, "connected");
+    ngx_log_debug0(NGX_LOG_DEBUG_EVENT, &rec->لوگارتھم, 0, "connected");
 
     wev->ready = 1;
 
-    return NGX_OK;
+    واپس NGX_OK;
 
 failed:
 
     ngx_close_connection(c);
-    rec->tcp = NULL;
+    rec->tcp = تہی;
 
-    return NGX_ERROR;
+    واپس NGX_ERROR;
 }
 
 
-static ngx_int_t
-ngx_resolver_cmp_srvs(const void *one, const void *two)
+ساکن ngx_int_t
+ngx_resolver_cmp_srvs(ثابت خالی *one, ثابت خالی *two)
 {
     ngx_int_t            p1, p2;
-    ngx_resolver_srv_t  *first, *second;
+    ngx_resolver_srv_t  *پہلا, *دوسرا;
 
-    first = (ngx_resolver_srv_t *) one;
-    second = (ngx_resolver_srv_t *) two;
+    پہلا = (ngx_resolver_srv_t *) one;
+    دوسرا = (ngx_resolver_srv_t *) two;
 
-    p1 = first->priority;
-    p2 = second->priority;
+    p1 = پہلا->ترجیح;
+    p2 = دوسرا->ترجیح;
 
-    return p1 - p2;
+    واپس p1 - p2;
 }

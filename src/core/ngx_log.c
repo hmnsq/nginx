@@ -5,49 +5,49 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-static char *ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log);
-static void ngx_log_insert(ngx_log_t *log, ngx_log_t *new_log);
+ساکن حرف *ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, خالی *conf);
+ساکن حرف *ngx_log_سیٹ_سطحیں(ngx_conf_t *cf, ngx_log_t *لوگارتھم);
+ساکن خالی ngx_log_داخل_کرو(ngx_log_t *لوگارتھم, ngx_log_t *new_log);
 
 
-#if (NGX_DEBUG)
+#اگر (NGX_DEBUG)
 
-static void ngx_log_memory_writer(ngx_log_t *log, ngx_uint_t level,
-    u_char *buf, size_t len);
-static void ngx_log_memory_cleanup(void *data);
+ساکن خالی ngx_log_حافظہ_writer(ngx_log_t *لوگارتھم, ngx_uint_t level,
+    u_char *buf, سائز_t len);
+ساکن خالی ngx_log_حافظہ_cleanup(خالی *ڈیٹا);
 
 
-typedef struct {
-    u_char        *start;
-    u_char        *end;
+قسمتعریف ساخت {
+    u_char        *آغاز;
+    u_char        *انتہا;
     u_char        *pos;
     ngx_atomic_t   written;
-} ngx_log_memory_buf_t;
+} ngx_log_حافظہ_buf_t;
 
-#endif
+#اگر_ختم
 
 
-static ngx_command_t  ngx_errlog_commands[] = {
+ساکن ngx_command_t  ngx_errlog_commands[] = {
 
     { ngx_string("error_log"),
-      NGX_MAIN_CONF|NGX_CONF_1MORE,
+      NGX_MAIN_CONF|NGX_CONF_1_مزید,
       ngx_error_log,
       0,
       0,
-      NULL },
+      تہی },
 
       ngx_null_command
 };
 
 
-static ngx_core_module_t  ngx_errlog_module_ctx = {
+ساکن ngx_core_module_t  ngx_errlog_module_ctx = {
     ngx_string("errlog"),
-    NULL,
-    NULL
+    تہی,
+    تہی
 };
 
 
@@ -56,23 +56,23 @@ ngx_module_t  ngx_errlog_module = {
     &ngx_errlog_module_ctx,                /* module context */
     ngx_errlog_commands,                   /* module directives */
     NGX_CORE_MODULE,                       /* module type */
-    NULL,                                  /* init master */
-    NULL,                                  /* init module */
-    NULL,                                  /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
-    NULL,                                  /* exit process */
-    NULL,                                  /* exit master */
+    تہی,                                  /* init master */
+    تہی,                                  /* init module */
+    تہی,                                  /* init process */
+    تہی,                                  /* init thread */
+    تہی,                                  /* exit thread */
+    تہی,                                  /* exit process */
+    تہی,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
-static ngx_log_t        ngx_log;
-static ngx_open_file_t  ngx_log_file;
+ساکن ngx_log_t        ngx_log;
+ساکن ngx_open_file_t  ngx_log_file;
 ngx_uint_t              ngx_use_stderr = 1;
 
 
-static ngx_str_t err_levels[] = {
+ساکن ngx_str_t err_سطحیں[] = {
     ngx_null_string,
     ngx_string("emerg"),
     ngx_string("alert"),
@@ -84,92 +84,92 @@ static ngx_str_t err_levels[] = {
     ngx_string("debug")
 };
 
-static const char *debug_levels[] = {
+ساکن ثابت حرف *debug_سطحیں[] = {
     "debug_core", "debug_alloc", "debug_mutex", "debug_event",
     "debug_http", "debug_mail", "debug_stream"
 };
 
 
-#if (NGX_HAVE_VARIADIC_MACROS)
+#اگر (NGX_HAVE_VARIADIC_MACROS)
 
-void
-ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, ...)
+خالی
+ngx_log_error_core(ngx_uint_t level, ngx_log_t *لوگارتھم, ngx_err_t err,
+    ثابت حرف *fmt, ...)
 
-#else
+#ورنہ
 
-void
-ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, va_list args)
+خالی
+ngx_log_error_core(ngx_uint_t level, ngx_log_t *لوگارتھم, ngx_err_t err,
+    ثابت حرف *fmt, va_list دلائل)
 
-#endif
+#اگر_ختم
 {
-#if (NGX_HAVE_VARIADIC_MACROS)
-    va_list      args;
-#endif
-    u_char      *p, *last, *msg;
+#اگر (NGX_HAVE_VARIADIC_MACROS)
+    va_list      دلائل;
+#اگر_ختم
+    u_char      *p, *آخری, *پیغام;
     ssize_t      n;
     ngx_uint_t   wrote_stderr, debug_connection;
     u_char       errstr[NGX_MAX_ERROR_STR];
 
-    last = errstr + NGX_MAX_ERROR_STR;
+    آخری = errstr + NGX_MAX_ERROR_STR;
 
-    p = ngx_cpymem(errstr, ngx_cached_err_log_time.data,
-                   ngx_cached_err_log_time.len);
+    p = ngx_cpymem(errstr, ngx_cached_err_log_وقت.ڈیٹا,
+                   ngx_cached_err_log_وقت.len);
 
-    p = ngx_slprintf(p, last, " [%V] ", &err_levels[level]);
+    p = ngx_slprintf(p, آخری, " [%V] ", &err_سطحیں[level]);
 
     /* pid#tid */
-    p = ngx_slprintf(p, last, "%P#" NGX_TID_T_FMT ": ",
+    p = ngx_slprintf(p, آخری, "%P#" NGX_TID_T_FMT ": ",
                     ngx_log_pid, ngx_log_tid);
 
-    if (log->connection) {
-        p = ngx_slprintf(p, last, "*%uA ", log->connection);
+    اگر (لوگارتھم->connection) {
+        p = ngx_slprintf(p, آخری, "*%uA ", لوگارتھم->connection);
     }
 
-    msg = p;
+    پیغام = p;
 
-#if (NGX_HAVE_VARIADIC_MACROS)
+#اگر (NGX_HAVE_VARIADIC_MACROS)
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(p, last, fmt, args);
-    va_end(args);
+    va_آغاز(دلائل, fmt);
+    p = ngx_vslprintf(p, آخری, fmt, دلائل);
+    va_انتہا(دلائل);
 
-#else
+#ورنہ
 
-    p = ngx_vslprintf(p, last, fmt, args);
+    p = ngx_vslprintf(p, آخری, fmt, دلائل);
 
-#endif
+#اگر_ختم
 
-    if (err) {
-        p = ngx_log_errno(p, last, err);
+    اگر (err) {
+        p = ngx_log_errno(p, آخری, err);
     }
 
-    if (level != NGX_LOG_DEBUG && log->handler) {
-        p = log->handler(log, p, last - p);
+    اگر (level != NGX_LOG_DEBUG && لوگارتھم->handler) {
+        p = لوگارتھم->handler(لوگارتھم, p, آخری - p);
     }
 
-    if (p > last - NGX_LINEFEED_SIZE) {
-        p = last - NGX_LINEFEED_SIZE;
+    اگر (p > آخری - NGX_LINEFEED_سائز) {
+        p = آخری - NGX_LINEFEED_سائز;
     }
 
     ngx_linefeed(p);
 
     wrote_stderr = 0;
-    debug_connection = (log->log_level & NGX_LOG_DEBUG_CONNECTION) != 0;
+    debug_connection = (لوگارتھم->log_level & NGX_LOG_DEBUG_CONNECTION) != 0;
 
-    while (log) {
+    جب (لوگارتھم) {
 
-        if (log->log_level < level && !debug_connection) {
-            break;
+        اگر (لوگارتھم->log_level < level && !debug_connection) {
+            توڑو;
         }
 
-        if (log->writer) {
-            log->writer(log, level, errstr, p - errstr);
-            goto next;
+        اگر (لوگارتھم->writer) {
+            لوگارتھم->writer(لوگارتھم, level, errstr, p - errstr);
+            جاؤ اگلا;
         }
 
-        if (ngx_time() == log->disk_full_time) {
+        اگر (ngx_وقت() == لوگارتھم->disk_بھرا_وقت) {
 
             /*
              * on FreeBSD writing to a full filesystem with enabled softupdates
@@ -177,193 +177,193 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
              * filesystem, so we skip writing to a log for one second
              */
 
-            goto next;
+            جاؤ اگلا;
         }
 
-        n = ngx_write_fd(log->file->fd, errstr, p - errstr);
+        n = ngx_write_fd(لوگارتھم->file->fd, errstr, p - errstr);
 
-        if (n == -1 && ngx_errno == NGX_ENOSPC) {
-            log->disk_full_time = ngx_time();
+        اگر (n == -1 && ngx_errno == NGX_ENOSPC) {
+            لوگارتھم->disk_بھرا_وقت = ngx_وقت();
         }
 
-        if (log->file->fd == ngx_stderr) {
+        اگر (لوگارتھم->file->fd == ngx_stderr) {
             wrote_stderr = 1;
         }
 
-    next:
+    اگلا:
 
-        log = log->next;
+        لوگارتھم = لوگارتھم->اگلا;
     }
 
-    if (!ngx_use_stderr
+    اگر (!ngx_use_stderr
         || level > NGX_LOG_WARN
         || wrote_stderr)
     {
-        return;
+        واپس;
     }
 
-    msg -= (7 + err_levels[level].len + 3);
+    پیغام -= (7 + err_سطحیں[level].len + 3);
 
-    (void) ngx_sprintf(msg, "nginx: [%V] ", &err_levels[level]);
+    (خالی) ngx_sprintf(پیغام, "nginx: [%V] ", &err_سطحیں[level]);
 
-    (void) ngx_write_console(ngx_stderr, msg, p - msg);
+    (خالی) ngx_write_console(ngx_stderr, پیغام, p - پیغام);
 }
 
 
-#if !(NGX_HAVE_VARIADIC_MACROS)
+#اگر !(NGX_HAVE_VARIADIC_MACROS)
 
-void ngx_cdecl
-ngx_log_error(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, ...)
+خالی ngx_cdecl
+ngx_log_error(ngx_uint_t level, ngx_log_t *لوگارتھم, ngx_err_t err,
+    ثابت حرف *fmt, ...)
 {
-    va_list  args;
+    va_list  دلائل;
 
-    if (log->log_level >= level) {
-        va_start(args, fmt);
-        ngx_log_error_core(level, log, err, fmt, args);
-        va_end(args);
+    اگر (لوگارتھم->log_level >= level) {
+        va_آغاز(دلائل, fmt);
+        ngx_log_error_core(level, لوگارتھم, err, fmt, دلائل);
+        va_انتہا(دلائل);
     }
 }
 
 
-void ngx_cdecl
-ngx_log_debug_core(ngx_log_t *log, ngx_err_t err, const char *fmt, ...)
+خالی ngx_cdecl
+ngx_log_debug_core(ngx_log_t *لوگارتھم, ngx_err_t err, ثابت حرف *fmt, ...)
 {
-    va_list  args;
+    va_list  دلائل;
 
-    va_start(args, fmt);
-    ngx_log_error_core(NGX_LOG_DEBUG, log, err, fmt, args);
-    va_end(args);
+    va_آغاز(دلائل, fmt);
+    ngx_log_error_core(NGX_LOG_DEBUG, لوگارتھم, err, fmt, دلائل);
+    va_انتہا(دلائل);
 }
 
-#endif
+#اگر_ختم
 
 
-void ngx_cdecl
-ngx_log_abort(ngx_err_t err, const char *fmt, ...)
+خالی ngx_cdecl
+ngx_log_abort(ngx_err_t err, ثابت حرف *fmt, ...)
 {
     u_char   *p;
-    va_list   args;
+    va_list   دلائل;
     u_char    errstr[NGX_MAX_CONF_ERRSTR];
 
-    va_start(args, fmt);
-    p = ngx_vsnprintf(errstr, sizeof(errstr) - 1, fmt, args);
-    va_end(args);
+    va_آغاز(دلائل, fmt);
+    p = ngx_vsnprintf(errstr, حجم(errstr) - 1, fmt, دلائل);
+    va_انتہا(دلائل);
 
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, err,
+    ngx_log_error(NGX_LOG_ALERT, ngx_چکر->لوگارتھم, err,
                   "%*s", p - errstr, errstr);
 }
 
 
-void ngx_cdecl
-ngx_log_stderr(ngx_err_t err, const char *fmt, ...)
+خالی ngx_cdecl
+ngx_log_stderr(ngx_err_t err, ثابت حرف *fmt, ...)
 {
-    u_char   *p, *last;
-    va_list   args;
+    u_char   *p, *آخری;
+    va_list   دلائل;
     u_char    errstr[NGX_MAX_ERROR_STR];
 
-    last = errstr + NGX_MAX_ERROR_STR;
+    آخری = errstr + NGX_MAX_ERROR_STR;
 
     p = ngx_cpymem(errstr, "nginx: ", 7);
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(p, last, fmt, args);
-    va_end(args);
+    va_آغاز(دلائل, fmt);
+    p = ngx_vslprintf(p, آخری, fmt, دلائل);
+    va_انتہا(دلائل);
 
-    if (err) {
-        p = ngx_log_errno(p, last, err);
+    اگر (err) {
+        p = ngx_log_errno(p, آخری, err);
     }
 
-    if (p > last - NGX_LINEFEED_SIZE) {
-        p = last - NGX_LINEFEED_SIZE;
+    اگر (p > آخری - NGX_LINEFEED_سائز) {
+        p = آخری - NGX_LINEFEED_سائز;
     }
 
     ngx_linefeed(p);
 
-    (void) ngx_write_console(ngx_stderr, errstr, p - errstr);
+    (خالی) ngx_write_console(ngx_stderr, errstr, p - errstr);
 }
 
 
 u_char *
-ngx_log_errno(u_char *buf, u_char *last, ngx_err_t err)
+ngx_log_errno(u_char *buf, u_char *آخری, ngx_err_t err)
 {
-    if (buf > last - 50) {
+    اگر (buf > آخری - 50) {
 
         /* leave a space for an error code */
 
-        buf = last - 50;
+        buf = آخری - 50;
         *buf++ = '.';
         *buf++ = '.';
         *buf++ = '.';
     }
 
-#if (NGX_WIN32)
-    buf = ngx_slprintf(buf, last, ((unsigned) err < 0x80000000)
+#اگر (NGX_WIN32)
+    buf = ngx_slprintf(buf, آخری, ((غیرعلامتی) err < 0x80000000)
                                        ? " (%d: " : " (%Xd: ", err);
-#else
-    buf = ngx_slprintf(buf, last, " (%d: ", err);
-#endif
+#ورنہ
+    buf = ngx_slprintf(buf, آخری, " (%d: ", err);
+#اگر_ختم
 
-    buf = ngx_strerror(err, buf, last - buf);
+    buf = ngx_strerror(err, buf, آخری - buf);
 
-    if (buf < last) {
+    اگر (buf < آخری) {
         *buf++ = ')';
     }
 
-    return buf;
+    واپس buf;
 }
 
 
 ngx_log_t *
-ngx_log_init(u_char *prefix, u_char *error_log)
+ngx_log_init(u_char *سابقہ, u_char *error_log)
 {
     u_char  *p, *name;
-    size_t   nlen, plen;
+    سائز_t   nlen, plen;
 
     ngx_log.file = &ngx_log_file;
     ngx_log.log_level = NGX_LOG_NOTICE;
 
-    if (error_log == NULL) {
-        error_log = (u_char *) NGX_ERROR_LOG_PATH;
+    اگر (error_log == تہی) {
+        error_log = (u_char *) NGX_ERROR_LOG_راستہ;
     }
 
     name = error_log;
     nlen = ngx_strlen(name);
 
-    if (nlen == 0) {
+    اگر (nlen == 0) {
         ngx_log_file.fd = ngx_stderr;
-        return &ngx_log;
+        واپس &ngx_log;
     }
 
-    p = NULL;
+    p = تہی;
 
-#if (NGX_WIN32)
-    if (name[1] != ':') {
-#else
-    if (name[0] != '/') {
-#endif
+#اگر (NGX_WIN32)
+    اگر (name[1] != ':') {
+#ورنہ
+    اگر (name[0] != '/') {
+#اگر_ختم
 
-        if (prefix) {
-            plen = ngx_strlen(prefix);
+        اگر (سابقہ) {
+            plen = ngx_strlen(سابقہ);
 
-        } else {
-#ifdef NGX_PREFIX
-            prefix = (u_char *) NGX_PREFIX;
-            plen = ngx_strlen(prefix);
-#else
+        } ورنہ {
+#اگر_تعریف_شدہ NGX_سابقہ
+            سابقہ = (u_char *) NGX_سابقہ;
+            plen = ngx_strlen(سابقہ);
+#ورنہ
             plen = 0;
-#endif
+#اگر_ختم
         }
 
-        if (plen) {
-            name = malloc(plen + nlen + 2);
-            if (name == NULL) {
-                return NULL;
+        اگر (plen) {
+            name = حافظہ_دو(plen + nlen + 2);
+            اگر (name == تہی) {
+                واپس تہی;
             }
 
-            p = ngx_cpymem(name, prefix, plen);
+            p = ngx_cpymem(name, سابقہ, plen);
 
-            if (!ngx_path_separator(*(p - 1))) {
+            اگر (!ngx_راستہ_separator(*(p - 1))) {
                 *p++ = '/';
             }
 
@@ -377,376 +377,376 @@ ngx_log_init(u_char *prefix, u_char *error_log)
                                     NGX_FILE_CREATE_OR_OPEN,
                                     NGX_FILE_DEFAULT_ACCESS);
 
-    if (ngx_log_file.fd == NGX_INVALID_FILE) {
+    اگر (ngx_log_file.fd == NGX_INVALID_FILE) {
         ngx_log_stderr(ngx_errno,
                        "[alert] could not open error log file: "
                        ngx_open_file_n " \"%s\" failed", name);
-#if (NGX_WIN32)
+#اگر (NGX_WIN32)
         ngx_event_log(ngx_errno,
                        "could not open error log file: "
                        ngx_open_file_n " \"%s\" failed", name);
-#endif
+#اگر_ختم
 
         ngx_log_file.fd = ngx_stderr;
     }
 
-    if (p) {
+    اگر (p) {
         ngx_free(p);
     }
 
-    return &ngx_log;
+    واپس &ngx_log;
 }
 
 
 ngx_int_t
-ngx_log_open_default(ngx_cycle_t *cycle)
+ngx_log_open_default(ngx_چکر_t *چکر)
 {
-    ngx_log_t  *log;
+    ngx_log_t  *لوگارتھم;
 
-    if (ngx_log_get_file_log(&cycle->new_log) != NULL) {
-        return NGX_OK;
+    اگر (ngx_log_get_file_log(&چکر->new_log) != تہی) {
+        واپس NGX_OK;
     }
 
-    if (cycle->new_log.log_level != 0) {
+    اگر (چکر->new_log.log_level != 0) {
         /* there are some error logs, but no files */
 
-        log = ngx_pcalloc(cycle->pool, sizeof(ngx_log_t));
-        if (log == NULL) {
-            return NGX_ERROR;
+        لوگارتھم = ngx_pcalloc(چکر->pool, حجم(ngx_log_t));
+        اگر (لوگارتھم == تہی) {
+            واپس NGX_ERROR;
         }
 
-    } else {
+    } ورنہ {
         /* no error logs at all */
-        log = &cycle->new_log;
+        لوگارتھم = &چکر->new_log;
     }
 
-    log->log_level = NGX_LOG_ERR;
+    لوگارتھم->log_level = NGX_LOG_ERR;
 
-    log->file = ngx_conf_open_file(cycle, &cycle->error_log);
-    if (log->file == NULL) {
-        return NGX_ERROR;
+    لوگارتھم->file = ngx_conf_open_file(چکر, &چکر->error_log);
+    اگر (لوگارتھم->file == تہی) {
+        واپس NGX_ERROR;
     }
 
-    if (log != &cycle->new_log) {
-        ngx_log_insert(&cycle->new_log, log);
+    اگر (لوگارتھم != &چکر->new_log) {
+        ngx_log_داخل_کرو(&چکر->new_log, لوگارتھم);
     }
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
 ngx_int_t
-ngx_log_redirect_stderr(ngx_cycle_t *cycle)
+ngx_log_redirect_stderr(ngx_چکر_t *چکر)
 {
     ngx_fd_t  fd;
 
-    if (cycle->log_use_stderr) {
-        return NGX_OK;
+    اگر (چکر->log_use_stderr) {
+        واپس NGX_OK;
     }
 
     /* file log always exists when we are called */
-    fd = ngx_log_get_file_log(cycle->log)->file->fd;
+    fd = ngx_log_get_file_log(چکر->لوگارتھم)->file->fd;
 
-    if (fd != ngx_stderr) {
-        if (ngx_set_stderr(fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
-                          ngx_set_stderr_n " failed");
+    اگر (fd != ngx_stderr) {
+        اگر (ngx_سیٹ_stderr(fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_errno,
+                          ngx_سیٹ_stderr_n " failed");
 
-            return NGX_ERROR;
+            واپس NGX_ERROR;
         }
     }
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
 ngx_log_t *
-ngx_log_get_file_log(ngx_log_t *head)
+ngx_log_get_file_log(ngx_log_t *سر)
 {
-    ngx_log_t  *log;
+    ngx_log_t  *لوگارتھم;
 
-    for (log = head; log; log = log->next) {
-        if (log->file != NULL) {
-            return log;
+    برائے (لوگارتھم = سر; لوگارتھم; لوگارتھم = لوگارتھم->اگلا) {
+        اگر (لوگارتھم->file != تہی) {
+            واپس لوگارتھم;
         }
     }
 
-    return NULL;
+    واپس تہی;
 }
 
 
-static char *
-ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log)
+ساکن حرف *
+ngx_log_سیٹ_سطحیں(ngx_conf_t *cf, ngx_log_t *لوگارتھم)
 {
-    ngx_uint_t   i, n, d, found;
-    ngx_str_t   *value;
+    ngx_uint_t   i, n, d, ملا;
+    ngx_str_t   *قدر;
 
-    if (cf->args->nelts == 2) {
-        log->log_level = NGX_LOG_ERR;
-        return NGX_CONF_OK;
+    اگر (cf->دلائل->nelts == 2) {
+        لوگارتھم->log_level = NGX_LOG_ERR;
+        واپس NGX_CONF_OK;
     }
 
-    value = cf->args->elts;
+    قدر = cf->دلائل->elts;
 
-    for (i = 2; i < cf->args->nelts; i++) {
-        found = 0;
+    برائے (i = 2; i < cf->دلائل->nelts; i++) {
+        ملا = 0;
 
-        for (n = 1; n <= NGX_LOG_DEBUG; n++) {
-            if (ngx_strcmp(value[i].data, err_levels[n].data) == 0) {
+        برائے (n = 1; n <= NGX_LOG_DEBUG; n++) {
+            اگر (ngx_strcmp(قدر[i].ڈیٹا, err_سطحیں[n].ڈیٹا) == 0) {
 
-                if (log->log_level != 0) {
+                اگر (لوگارتھم->log_level != 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "duplicate log level \"%V\"",
-                                       &value[i]);
-                    return NGX_CONF_ERROR;
+                                       &قدر[i]);
+                    واپس NGX_CONF_ERROR;
                 }
 
-                log->log_level = n;
-                found = 1;
-                break;
+                لوگارتھم->log_level = n;
+                ملا = 1;
+                توڑو;
             }
         }
 
-        for (n = 0, d = NGX_LOG_DEBUG_FIRST; d <= NGX_LOG_DEBUG_LAST; d <<= 1) {
-            if (ngx_strcmp(value[i].data, debug_levels[n++]) == 0) {
-                if (log->log_level & ~NGX_LOG_DEBUG_ALL) {
+        برائے (n = 0, d = NGX_LOG_DEBUG_پہلا; d <= NGX_LOG_DEBUG_آخری; d <<= 1) {
+            اگر (ngx_strcmp(قدر[i].ڈیٹا, debug_سطحیں[n++]) == 0) {
+                اگر (لوگارتھم->log_level & ~NGX_LOG_DEBUG_ALL) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "invalid log level \"%V\"",
-                                       &value[i]);
-                    return NGX_CONF_ERROR;
+                                       &قدر[i]);
+                    واپس NGX_CONF_ERROR;
                 }
 
-                log->log_level |= d;
-                found = 1;
-                break;
+                لوگارتھم->log_level |= d;
+                ملا = 1;
+                توڑو;
             }
         }
 
 
-        if (!found) {
+        اگر (!ملا) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                               "invalid log level \"%V\"", &value[i]);
-            return NGX_CONF_ERROR;
+                               "invalid log level \"%V\"", &قدر[i]);
+            واپس NGX_CONF_ERROR;
         }
     }
 
-    if (log->log_level == NGX_LOG_DEBUG) {
-        log->log_level = NGX_LOG_DEBUG_ALL;
+    اگر (لوگارتھم->log_level == NGX_LOG_DEBUG) {
+        لوگارتھم->log_level = NGX_LOG_DEBUG_ALL;
     }
 
-    return NGX_CONF_OK;
+    واپس NGX_CONF_OK;
 }
 
 
-static char *
-ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ساکن حرف *
+ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, خالی *conf)
 {
     ngx_log_t  *dummy;
 
-    dummy = &cf->cycle->new_log;
+    dummy = &cf->چکر->new_log;
 
-    return ngx_log_set_log(cf, &dummy);
+    واپس ngx_log_سیٹ_log(cf, &dummy);
 }
 
 
-char *
-ngx_log_set_log(ngx_conf_t *cf, ngx_log_t **head)
+حرف *
+ngx_log_سیٹ_log(ngx_conf_t *cf, ngx_log_t **سر)
 {
     ngx_log_t          *new_log;
-    ngx_str_t          *value, name;
+    ngx_str_t          *قدر, name;
     ngx_syslog_peer_t  *peer;
 
-    if (*head != NULL && (*head)->log_level == 0) {
-        new_log = *head;
+    اگر (*سر != تہی && (*سر)->log_level == 0) {
+        new_log = *سر;
 
-    } else {
+    } ورنہ {
 
-        new_log = ngx_pcalloc(cf->pool, sizeof(ngx_log_t));
-        if (new_log == NULL) {
-            return NGX_CONF_ERROR;
+        new_log = ngx_pcalloc(cf->pool, حجم(ngx_log_t));
+        اگر (new_log == تہی) {
+            واپس NGX_CONF_ERROR;
         }
 
-        if (*head == NULL) {
-            *head = new_log;
+        اگر (*سر == تہی) {
+            *سر = new_log;
         }
     }
 
-    value = cf->args->elts;
+    قدر = cf->دلائل->elts;
 
-    if (ngx_strcmp(value[1].data, "stderr") == 0) {
+    اگر (ngx_strcmp(قدر[1].ڈیٹا, "stderr") == 0) {
         ngx_str_null(&name);
-        cf->cycle->log_use_stderr = 1;
+        cf->چکر->log_use_stderr = 1;
 
-        new_log->file = ngx_conf_open_file(cf->cycle, &name);
-        if (new_log->file == NULL) {
-            return NGX_CONF_ERROR;
+        new_log->file = ngx_conf_open_file(cf->چکر, &name);
+        اگر (new_log->file == تہی) {
+            واپس NGX_CONF_ERROR;
         }
 
-    } else if (ngx_strncmp(value[1].data, "memory:", 7) == 0) {
+    } ورنہ اگر (ngx_strncmp(قدر[1].ڈیٹا, "memory:", 7) == 0) {
 
-#if (NGX_DEBUG)
-        size_t                 size, needed;
+#اگر (NGX_DEBUG)
+        سائز_t                 سائز, needed;
         ngx_pool_cleanup_t    *cln;
-        ngx_log_memory_buf_t  *buf;
+        ngx_log_حافظہ_buf_t  *buf;
 
-        value[1].len -= 7;
-        value[1].data += 7;
+        قدر[1].len -= 7;
+        قدر[1].ڈیٹا += 7;
 
-        needed = sizeof("MEMLOG  :" NGX_LINEFEED)
+        needed = حجم("MEMLOG  :" NGX_LINEFEED)
                  + cf->conf_file->file.name.len
-                 + NGX_SIZE_T_LEN
+                 + NGX_سائز_T_LEN
                  + NGX_INT_T_LEN
                  + NGX_MAX_ERROR_STR;
 
-        size = ngx_parse_size(&value[1]);
+        سائز = ngx_parse_سائز(&قدر[1]);
 
-        if (size == (size_t) NGX_ERROR || size < needed) {
+        اگر (سائز == (سائز_t) NGX_ERROR || سائز < needed) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                               "invalid buffer size \"%V\"", &value[1]);
-            return NGX_CONF_ERROR;
+                               "invalid buffer size \"%V\"", &قدر[1]);
+            واپس NGX_CONF_ERROR;
         }
 
-        buf = ngx_pcalloc(cf->pool, sizeof(ngx_log_memory_buf_t));
-        if (buf == NULL) {
-            return NGX_CONF_ERROR;
+        buf = ngx_pcalloc(cf->pool, حجم(ngx_log_حافظہ_buf_t));
+        اگر (buf == تہی) {
+            واپس NGX_CONF_ERROR;
         }
 
-        buf->start = ngx_pnalloc(cf->pool, size);
-        if (buf->start == NULL) {
-            return NGX_CONF_ERROR;
+        buf->آغاز = ngx_pnalloc(cf->pool, سائز);
+        اگر (buf->آغاز == تہی) {
+            واپس NGX_CONF_ERROR;
         }
 
-        buf->end = buf->start + size;
+        buf->انتہا = buf->آغاز + سائز;
 
-        buf->pos = ngx_slprintf(buf->start, buf->end, "MEMLOG %uz %V:%ui%N",
-                                size, &cf->conf_file->file.name,
-                                cf->conf_file->line);
+        buf->pos = ngx_slprintf(buf->آغاز, buf->انتہا, "MEMLOG %uz %V:%ui%N",
+                                سائز, &cf->conf_file->file.name,
+                                cf->conf_file->سطر);
 
-        ngx_memset(buf->pos, ' ', buf->end - buf->pos);
+        ngx_memset(buf->pos, ' ', buf->انتہا - buf->pos);
 
-        cln = ngx_pool_cleanup_add(cf->pool, 0);
-        if (cln == NULL) {
-            return NGX_CONF_ERROR;
+        cln = ngx_pool_cleanup_جوڑو(cf->pool, 0);
+        اگر (cln == تہی) {
+            واپس NGX_CONF_ERROR;
         }
 
-        cln->data = new_log;
-        cln->handler = ngx_log_memory_cleanup;
+        cln->ڈیٹا = new_log;
+        cln->handler = ngx_log_حافظہ_cleanup;
 
-        new_log->writer = ngx_log_memory_writer;
+        new_log->writer = ngx_log_حافظہ_writer;
         new_log->wdata = buf;
 
-#else
+#ورنہ
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "nginx was built without debug support");
-        return NGX_CONF_ERROR;
-#endif
+        واپس NGX_CONF_ERROR;
+#اگر_ختم
 
-    } else if (ngx_strncmp(value[1].data, "syslog:", 7) == 0) {
-        peer = ngx_pcalloc(cf->pool, sizeof(ngx_syslog_peer_t));
-        if (peer == NULL) {
-            return NGX_CONF_ERROR;
+    } ورنہ اگر (ngx_strncmp(قدر[1].ڈیٹا, "syslog:", 7) == 0) {
+        peer = ngx_pcalloc(cf->pool, حجم(ngx_syslog_peer_t));
+        اگر (peer == تہی) {
+            واپس NGX_CONF_ERROR;
         }
 
-        if (ngx_syslog_process_conf(cf, peer) != NGX_CONF_OK) {
-            return NGX_CONF_ERROR;
+        اگر (ngx_syslog_process_conf(cf, peer) != NGX_CONF_OK) {
+            واپس NGX_CONF_ERROR;
         }
 
         new_log->writer = ngx_syslog_writer;
         new_log->wdata = peer;
 
-    } else {
-        new_log->file = ngx_conf_open_file(cf->cycle, &value[1]);
-        if (new_log->file == NULL) {
-            return NGX_CONF_ERROR;
+    } ورنہ {
+        new_log->file = ngx_conf_open_file(cf->چکر, &قدر[1]);
+        اگر (new_log->file == تہی) {
+            واپس NGX_CONF_ERROR;
         }
     }
 
-    if (ngx_log_set_levels(cf, new_log) != NGX_CONF_OK) {
-        return NGX_CONF_ERROR;
+    اگر (ngx_log_سیٹ_سطحیں(cf, new_log) != NGX_CONF_OK) {
+        واپس NGX_CONF_ERROR;
     }
 
-    if (*head != new_log) {
-        ngx_log_insert(*head, new_log);
+    اگر (*سر != new_log) {
+        ngx_log_داخل_کرو(*سر, new_log);
     }
 
-    return NGX_CONF_OK;
+    واپس NGX_CONF_OK;
 }
 
 
-static void
-ngx_log_insert(ngx_log_t *log, ngx_log_t *new_log)
+ساکن خالی
+ngx_log_داخل_کرو(ngx_log_t *لوگارتھم, ngx_log_t *new_log)
 {
     ngx_log_t  tmp;
 
-    if (new_log->log_level > log->log_level) {
+    اگر (new_log->log_level > لوگارتھم->log_level) {
 
         /*
          * list head address is permanent, insert new log after
          * head and swap its contents with head
          */
 
-        tmp = *log;
-        *log = *new_log;
+        tmp = *لوگارتھم;
+        *لوگارتھم = *new_log;
         *new_log = tmp;
 
-        log->next = new_log;
-        return;
+        لوگارتھم->اگلا = new_log;
+        واپس;
     }
 
-    while (log->next) {
-        if (new_log->log_level > log->next->log_level) {
-            new_log->next = log->next;
-            log->next = new_log;
-            return;
+    جب (لوگارتھم->اگلا) {
+        اگر (new_log->log_level > لوگارتھم->اگلا->log_level) {
+            new_log->اگلا = لوگارتھم->اگلا;
+            لوگارتھم->اگلا = new_log;
+            واپس;
         }
 
-        log = log->next;
+        لوگارتھم = لوگارتھم->اگلا;
     }
 
-    log->next = new_log;
+    لوگارتھم->اگلا = new_log;
 }
 
 
-#if (NGX_DEBUG)
+#اگر (NGX_DEBUG)
 
-static void
-ngx_log_memory_writer(ngx_log_t *log, ngx_uint_t level, u_char *buf,
-    size_t len)
+ساکن خالی
+ngx_log_حافظہ_writer(ngx_log_t *لوگارتھم, ngx_uint_t level, u_char *buf,
+    سائز_t len)
 {
     u_char                *p;
-    size_t                 avail, written;
-    ngx_log_memory_buf_t  *mem;
+    سائز_t                 avail, written;
+    ngx_log_حافظہ_buf_t  *mem;
 
-    mem = log->wdata;
+    mem = لوگارتھم->wdata;
 
-    if (mem == NULL) {
-        return;
+    اگر (mem == تہی) {
+        واپس;
     }
 
-    written = ngx_atomic_fetch_add(&mem->written, len);
+    written = ngx_atomic_fetch_جوڑو(&mem->written, len);
 
-    p = mem->pos + written % (mem->end - mem->pos);
+    p = mem->pos + written % (mem->انتہا - mem->pos);
 
-    avail = mem->end - p;
+    avail = mem->انتہا - p;
 
-    if (avail >= len) {
+    اگر (avail >= len) {
         ngx_memcpy(p, buf, len);
 
-    } else {
+    } ورنہ {
         ngx_memcpy(p, buf, avail);
         ngx_memcpy(mem->pos, buf + avail, len - avail);
     }
 }
 
 
-static void
-ngx_log_memory_cleanup(void *data)
+ساکن خالی
+ngx_log_حافظہ_cleanup(خالی *ڈیٹا)
 {
-    ngx_log_t *log = data;
+    ngx_log_t *لوگارتھم = ڈیٹا;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, log, 0, "destroy memory log buffer");
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, لوگارتھم, 0, "destroy memory log buffer");
 
-    log->wdata = NULL;
+    لوگارتھم->wdata = تہی;
 }
 
-#endif
+#اگر_ختم

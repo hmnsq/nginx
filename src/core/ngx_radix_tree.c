@@ -5,41 +5,41 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-static ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
+ساکن ngx_radix_گرہ_t *ngx_radix_alloc(ngx_radix_درخت_t *درخت);
 
 
-ngx_radix_tree_t *
-ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
+ngx_radix_درخت_t *
+ngx_radix_درخت_create(ngx_pool_t *pool, ngx_int_t preallocate)
 {
-    uint32_t           key, mask, inc;
-    ngx_radix_tree_t  *tree;
+    uint32_t           کلید, نقاب, inc;
+    ngx_radix_درخت_t  *درخت;
 
-    tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
-        return NULL;
+    درخت = ngx_palloc(pool, حجم(ngx_radix_درخت_t));
+    اگر (درخت == تہی) {
+        واپس تہی;
     }
 
-    tree->pool = pool;
-    tree->free = NULL;
-    tree->start = NULL;
-    tree->size = 0;
+    درخت->pool = pool;
+    درخت->آزاد = تہی;
+    درخت->آغاز = تہی;
+    درخت->سائز = 0;
 
-    tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
-        return NULL;
+    درخت->جڑ = ngx_radix_alloc(درخت);
+    اگر (درخت->جڑ == تہی) {
+        واپس تہی;
     }
 
-    tree->root->right = NULL;
-    tree->root->left = NULL;
-    tree->root->parent = NULL;
-    tree->root->value = NGX_RADIX_NO_VALUE;
+    درخت->جڑ->دایاں = تہی;
+    درخت->جڑ->بایاں = تہی;
+    درخت->جڑ->والد = تہی;
+    درخت->جڑ->قدر = NGX_RADIX_NO_قدر;
 
-    if (preallocate == 0) {
-        return tree;
+    اگر (preallocate == 0) {
+        واپس درخت;
     }
 
     /*
@@ -59,430 +59,430 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      *     8 bits on sparc64 in 32-bit mode (8K pages)
      */
 
-    if (preallocate == -1) {
-        switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
+    اگر (preallocate == -1) {
+        انتخاب (ngx_pagesize / حجم(ngx_radix_گرہ_t)) {
 
         /* amd64 */
-        case 128:
+        حالت 128:
             preallocate = 6;
-            break;
+            توڑو;
 
         /* i386, sparc64 */
-        case 256:
+        حالت 256:
             preallocate = 7;
-            break;
+            توڑو;
 
         /* sparc64 in 32-bit mode */
-        default:
+        طےشدہ:
             preallocate = 8;
         }
     }
 
-    mask = 0;
+    نقاب = 0;
     inc = 0x80000000;
 
-    while (preallocate--) {
+    جب (preallocate--) {
 
-        key = 0;
-        mask >>= 1;
-        mask |= 0x80000000;
+        کلید = 0;
+        نقاب >>= 1;
+        نقاب |= 0x80000000;
 
-        do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+        کرو {
+            اگر (ngx_radix32tree_داخل_کرو(درخت, کلید, نقاب, NGX_RADIX_NO_قدر)
                 != NGX_OK)
             {
-                return NULL;
+                واپس تہی;
             }
 
-            key += inc;
+            کلید += inc;
 
-        } while (key);
+        } جب (کلید);
 
         inc >>= 1;
     }
 
-    return tree;
+    واپس درخت;
 }
 
 
 ngx_int_t
-ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
-    uintptr_t value)
+ngx_radix32tree_داخل_کرو(ngx_radix_درخت_t *درخت, uint32_t کلید, uint32_t نقاب,
+    uintptr_t قدر)
 {
-    uint32_t           bit;
-    ngx_radix_node_t  *node, *next;
+    uint32_t           ثنائی_ہندسہ;
+    ngx_radix_گرہ_t  *گرہ, *اگلا;
 
-    bit = 0x80000000;
+    ثنائی_ہندسہ = 0x80000000;
 
-    node = tree->root;
-    next = tree->root;
+    گرہ = درخت->جڑ;
+    اگلا = درخت->جڑ;
 
-    while (bit & mask) {
-        if (key & bit) {
-            next = node->right;
+    جب (ثنائی_ہندسہ & نقاب) {
+        اگر (کلید & ثنائی_ہندسہ) {
+            اگلا = گرہ->دایاں;
 
-        } else {
-            next = node->left;
+        } ورنہ {
+            اگلا = گرہ->بایاں;
         }
 
-        if (next == NULL) {
-            break;
+        اگر (اگلا == تہی) {
+            توڑو;
         }
 
-        bit >>= 1;
-        node = next;
+        ثنائی_ہندسہ >>= 1;
+        گرہ = اگلا;
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    اگر (اگلا) {
+        اگر (گرہ->قدر != NGX_RADIX_NO_قدر) {
+            واپس NGX_BUSY;
         }
 
-        node->value = value;
-        return NGX_OK;
+        گرہ->قدر = قدر;
+        واپس NGX_OK;
     }
 
-    while (bit & mask) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+    جب (ثنائی_ہندسہ & نقاب) {
+        اگلا = ngx_radix_alloc(درخت);
+        اگر (اگلا == تہی) {
+            واپس NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
+        اگلا->دایاں = تہی;
+        اگلا->بایاں = تہی;
+        اگلا->والد = گرہ;
+        اگلا->قدر = NGX_RADIX_NO_قدر;
 
-        if (key & bit) {
-            node->right = next;
+        اگر (کلید & ثنائی_ہندسہ) {
+            گرہ->دایاں = اگلا;
 
-        } else {
-            node->left = next;
+        } ورنہ {
+            گرہ->بایاں = اگلا;
         }
 
-        bit >>= 1;
-        node = next;
+        ثنائی_ہندسہ >>= 1;
+        گرہ = اگلا;
     }
 
-    node->value = value;
+    گرہ->قدر = قدر;
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
+ngx_radix32tree_delete(ngx_radix_درخت_t *درخت, uint32_t کلید, uint32_t نقاب)
 {
-    uint32_t           bit;
-    ngx_radix_node_t  *node;
+    uint32_t           ثنائی_ہندسہ;
+    ngx_radix_گرہ_t  *گرہ;
 
-    bit = 0x80000000;
-    node = tree->root;
+    ثنائی_ہندسہ = 0x80000000;
+    گرہ = درخت->جڑ;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
-            node = node->right;
+    جب (گرہ && (ثنائی_ہندسہ & نقاب)) {
+        اگر (کلید & ثنائی_ہندسہ) {
+            گرہ = گرہ->دایاں;
 
-        } else {
-            node = node->left;
+        } ورنہ {
+            گرہ = گرہ->بایاں;
         }
 
-        bit >>= 1;
+        ثنائی_ہندسہ >>= 1;
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    اگر (گرہ == تہی) {
+        واپس NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    اگر (گرہ->دایاں || گرہ->بایاں) {
+        اگر (گرہ->قدر != NGX_RADIX_NO_قدر) {
+            گرہ->قدر = NGX_RADIX_NO_قدر;
+            واپس NGX_OK;
         }
 
-        return NGX_ERROR;
+        واپس NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    برائے ( ;; ) {
+        اگر (گرہ->والد->دایاں == گرہ) {
+            گرہ->والد->دایاں = تہی;
 
-        } else {
-            node->parent->left = NULL;
+        } ورنہ {
+            گرہ->والد->بایاں = تہی;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        گرہ->دایاں = درخت->آزاد;
+        درخت->آزاد = گرہ;
 
-        node = node->parent;
+        گرہ = گرہ->والد;
 
-        if (node->right || node->left) {
-            break;
+        اگر (گرہ->دایاں || گرہ->بایاں) {
+            توڑو;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        اگر (گرہ->قدر != NGX_RADIX_NO_قدر) {
+            توڑو;
         }
 
-        if (node->parent == NULL) {
-            break;
+        اگر (گرہ->والد == تہی) {
+            توڑو;
         }
     }
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
+ngx_radix32tree_ڈھونڈو(ngx_radix_درخت_t *درخت, uint32_t کلید)
 {
-    uint32_t           bit;
-    uintptr_t          value;
-    ngx_radix_node_t  *node;
+    uint32_t           ثنائی_ہندسہ;
+    uintptr_t          قدر;
+    ngx_radix_گرہ_t  *گرہ;
 
-    bit = 0x80000000;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    ثنائی_ہندسہ = 0x80000000;
+    قدر = NGX_RADIX_NO_قدر;
+    گرہ = درخت->جڑ;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    جب (گرہ) {
+        اگر (گرہ->قدر != NGX_RADIX_NO_قدر) {
+            قدر = گرہ->قدر;
         }
 
-        if (key & bit) {
-            node = node->right;
+        اگر (کلید & ثنائی_ہندسہ) {
+            گرہ = گرہ->دایاں;
 
-        } else {
-            node = node->left;
+        } ورنہ {
+            گرہ = گرہ->بایاں;
         }
 
-        bit >>= 1;
+        ثنائی_ہندسہ >>= 1;
     }
 
-    return value;
+    واپس قدر;
 }
 
 
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
 
 ngx_int_t
-ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
-    uintptr_t value)
+ngx_radix128tree_داخل_کرو(ngx_radix_درخت_t *درخت, u_char *کلید, u_char *نقاب,
+    uintptr_t قدر)
 {
-    u_char             bit;
+    u_char             ثنائی_ہندسہ;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_گرہ_t  *گرہ, *اگلا;
 
     i = 0;
-    bit = 0x80;
+    ثنائی_ہندسہ = 0x80;
 
-    node = tree->root;
-    next = tree->root;
+    گرہ = درخت->جڑ;
+    اگلا = درخت->جڑ;
 
-    while (bit & mask[i]) {
-        if (key[i] & bit) {
-            next = node->right;
+    جب (ثنائی_ہندسہ & نقاب[i]) {
+        اگر (کلید[i] & ثنائی_ہندسہ) {
+            اگلا = گرہ->دایاں;
 
-        } else {
-            next = node->left;
+        } ورنہ {
+            اگلا = گرہ->بایاں;
         }
 
-        if (next == NULL) {
-            break;
+        اگر (اگلا == تہی) {
+            توڑو;
         }
 
-        bit >>= 1;
-        node = next;
+        ثنائی_ہندسہ >>= 1;
+        گرہ = اگلا;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        اگر (ثنائی_ہندسہ == 0) {
+            اگر (++i == 16) {
+                توڑو;
             }
 
-            bit = 0x80;
+            ثنائی_ہندسہ = 0x80;
         }
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    اگر (اگلا) {
+        اگر (گرہ->قدر != NGX_RADIX_NO_قدر) {
+            واپس NGX_BUSY;
         }
 
-        node->value = value;
-        return NGX_OK;
+        گرہ->قدر = قدر;
+        واپس NGX_OK;
     }
 
-    while (bit & mask[i]) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+    جب (ثنائی_ہندسہ & نقاب[i]) {
+        اگلا = ngx_radix_alloc(درخت);
+        اگر (اگلا == تہی) {
+            واپس NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
+        اگلا->دایاں = تہی;
+        اگلا->بایاں = تہی;
+        اگلا->والد = گرہ;
+        اگلا->قدر = NGX_RADIX_NO_قدر;
 
-        if (key[i] & bit) {
-            node->right = next;
+        اگر (کلید[i] & ثنائی_ہندسہ) {
+            گرہ->دایاں = اگلا;
 
-        } else {
-            node->left = next;
+        } ورنہ {
+            گرہ->بایاں = اگلا;
         }
 
-        bit >>= 1;
-        node = next;
+        ثنائی_ہندسہ >>= 1;
+        گرہ = اگلا;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        اگر (ثنائی_ہندسہ == 0) {
+            اگر (++i == 16) {
+                توڑو;
             }
 
-            bit = 0x80;
+            ثنائی_ہندسہ = 0x80;
         }
     }
 
-    node->value = value;
+    گرہ->قدر = قدر;
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
+ngx_radix128tree_delete(ngx_radix_درخت_t *درخت, u_char *کلید, u_char *نقاب)
 {
-    u_char             bit;
+    u_char             ثنائی_ہندسہ;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_گرہ_t  *گرہ;
 
     i = 0;
-    bit = 0x80;
-    node = tree->root;
+    ثنائی_ہندسہ = 0x80;
+    گرہ = درخت->جڑ;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
-            node = node->right;
+    جب (گرہ && (ثنائی_ہندسہ & نقاب[i])) {
+        اگر (کلید[i] & ثنائی_ہندسہ) {
+            گرہ = گرہ->دایاں;
 
-        } else {
-            node = node->left;
+        } ورنہ {
+            گرہ = گرہ->بایاں;
         }
 
-        bit >>= 1;
+        ثنائی_ہندسہ >>= 1;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        اگر (ثنائی_ہندسہ == 0) {
+            اگر (++i == 16) {
+                توڑو;
             }
 
-            bit = 0x80;
+            ثنائی_ہندسہ = 0x80;
         }
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    اگر (گرہ == تہی) {
+        واپس NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    اگر (گرہ->دایاں || گرہ->بایاں) {
+        اگر (گرہ->قدر != NGX_RADIX_NO_قدر) {
+            گرہ->قدر = NGX_RADIX_NO_قدر;
+            واپس NGX_OK;
         }
 
-        return NGX_ERROR;
+        واپس NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    برائے ( ;; ) {
+        اگر (گرہ->والد->دایاں == گرہ) {
+            گرہ->والد->دایاں = تہی;
 
-        } else {
-            node->parent->left = NULL;
+        } ورنہ {
+            گرہ->والد->بایاں = تہی;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        گرہ->دایاں = درخت->آزاد;
+        درخت->آزاد = گرہ;
 
-        node = node->parent;
+        گرہ = گرہ->والد;
 
-        if (node->right || node->left) {
-            break;
+        اگر (گرہ->دایاں || گرہ->بایاں) {
+            توڑو;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        اگر (گرہ->قدر != NGX_RADIX_NO_قدر) {
+            توڑو;
         }
 
-        if (node->parent == NULL) {
-            break;
+        اگر (گرہ->والد == تہی) {
+            توڑو;
         }
     }
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
+ngx_radix128tree_ڈھونڈو(ngx_radix_درخت_t *درخت, u_char *کلید)
 {
-    u_char             bit;
-    uintptr_t          value;
+    u_char             ثنائی_ہندسہ;
+    uintptr_t          قدر;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_گرہ_t  *گرہ;
 
     i = 0;
-    bit = 0x80;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    ثنائی_ہندسہ = 0x80;
+    قدر = NGX_RADIX_NO_قدر;
+    گرہ = درخت->جڑ;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    جب (گرہ) {
+        اگر (گرہ->قدر != NGX_RADIX_NO_قدر) {
+            قدر = گرہ->قدر;
         }
 
-        if (key[i] & bit) {
-            node = node->right;
+        اگر (کلید[i] & ثنائی_ہندسہ) {
+            گرہ = گرہ->دایاں;
 
-        } else {
-            node = node->left;
+        } ورنہ {
+            گرہ = گرہ->بایاں;
         }
 
-        bit >>= 1;
+        ثنائی_ہندسہ >>= 1;
 
-        if (bit == 0) {
+        اگر (ثنائی_ہندسہ == 0) {
             i++;
-            bit = 0x80;
+            ثنائی_ہندسہ = 0x80;
         }
     }
 
-    return value;
+    واپس قدر;
 }
 
-#endif
+#اگر_ختم
 
 
-static ngx_radix_node_t *
-ngx_radix_alloc(ngx_radix_tree_t *tree)
+ساکن ngx_radix_گرہ_t *
+ngx_radix_alloc(ngx_radix_درخت_t *درخت)
 {
-    ngx_radix_node_t  *p;
+    ngx_radix_گرہ_t  *p;
 
-    if (tree->free) {
-        p = tree->free;
-        tree->free = tree->free->right;
-        return p;
+    اگر (درخت->آزاد) {
+        p = درخت->آزاد;
+        درخت->آزاد = درخت->آزاد->دایاں;
+        واپس p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
-        tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
-            return NULL;
+    اگر (درخت->سائز < حجم(ngx_radix_گرہ_t)) {
+        درخت->آغاز = ngx_pmemalign(درخت->pool, ngx_pagesize, ngx_pagesize);
+        اگر (درخت->آغاز == تہی) {
+            واپس تہی;
         }
 
-        tree->size = ngx_pagesize;
+        درخت->سائز = ngx_pagesize;
     }
 
-    p = (ngx_radix_node_t *) tree->start;
-    tree->start += sizeof(ngx_radix_node_t);
-    tree->size -= sizeof(ngx_radix_node_t);
+    p = (ngx_radix_گرہ_t *) درخت->آغاز;
+    درخت->آغاز += حجم(ngx_radix_گرہ_t);
+    درخت->سائز -= حجم(ngx_radix_گرہ_t);
 
-    return p;
+    واپس p;
 }

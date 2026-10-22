@@ -5,36 +5,36 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
+#شامل <ngx_event.h>
 
 
 ngx_os_io_t  ngx_io;
 
 
-static void ngx_drain_connections(ngx_cycle_t *cycle);
+ساکن خالی ngx_drain_connections(ngx_چکر_t *چکر);
 
 
 ngx_listening_t *
-ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
+ngx_create_listening(ngx_conf_t *cf, ساخت sockaddr *sockaddr,
     socklen_t socklen)
 {
-    size_t            len;
+    سائز_t            len;
     ngx_listening_t  *ls;
-    struct sockaddr  *sa;
-    u_char            text[NGX_SOCKADDR_STRLEN];
+    ساخت sockaddr  *sa;
+    u_char            متن[NGX_SOCKADDR_STRLEN];
 
-    ls = ngx_array_push(&cf->cycle->listening);
-    if (ls == NULL) {
-        return NULL;
+    ls = ngx_array_ڈالو(&cf->چکر->listening);
+    اگر (ls == تہی) {
+        واپس تہی;
     }
 
-    ngx_memzero(ls, sizeof(ngx_listening_t));
+    ngx_memzero(ls, حجم(ngx_listening_t));
 
     sa = ngx_palloc(cf->pool, socklen);
-    if (sa == NULL) {
-        return NULL;
+    اگر (sa == تہی) {
+        واپس تہی;
     }
 
     ngx_memcpy(sa, sockaddr, socklen);
@@ -42,420 +42,420 @@ ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
     ls->sockaddr = sa;
     ls->socklen = socklen;
 
-    len = ngx_sock_ntop(sa, socklen, text, NGX_SOCKADDR_STRLEN, 1);
-    ls->addr_text.len = len;
+    len = ngx_sock_ntop(sa, socklen, متن, NGX_SOCKADDR_STRLEN, 1);
+    ls->addr_متن.len = len;
 
-    switch (ls->sockaddr->sa_family) {
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        ls->addr_text_max_len = NGX_INET6_ADDRSTRLEN;
-        break;
-#endif
-#if (NGX_HAVE_UNIX_DOMAIN)
-    case AF_UNIX:
-        ls->addr_text_max_len = NGX_UNIX_ADDRSTRLEN;
+    انتخاب (ls->sockaddr->sa_family) {
+#اگر (NGX_HAVE_INET6)
+    حالت AF_INET6:
+        ls->addr_متن_max_len = NGX_INET6_ADDRSTRLEN;
+        توڑو;
+#اگر_ختم
+#اگر (NGX_HAVE_UNIX_DOMAIN)
+    حالت AF_UNIX:
+        ls->addr_متن_max_len = NGX_UNIX_ADDRSTRLEN;
         len++;
-        break;
-#endif
-    case AF_INET:
-        ls->addr_text_max_len = NGX_INET_ADDRSTRLEN;
-        break;
-    default:
-        ls->addr_text_max_len = NGX_SOCKADDR_STRLEN;
-        break;
+        توڑو;
+#اگر_ختم
+    حالت AF_INET:
+        ls->addr_متن_max_len = NGX_INET_ADDRSTRLEN;
+        توڑو;
+    طےشدہ:
+        ls->addr_متن_max_len = NGX_SOCKADDR_STRLEN;
+        توڑو;
     }
 
-    ls->addr_text.data = ngx_pnalloc(cf->pool, len);
-    if (ls->addr_text.data == NULL) {
-        return NULL;
+    ls->addr_متن.ڈیٹا = ngx_pnalloc(cf->pool, len);
+    اگر (ls->addr_متن.ڈیٹا == تہی) {
+        واپس تہی;
     }
 
-    ngx_memcpy(ls->addr_text.data, text, len);
+    ngx_memcpy(ls->addr_متن.ڈیٹا, متن, len);
 
-#if !(NGX_WIN32)
-    ngx_rbtree_init(&ls->rbtree, &ls->sentinel, ngx_udp_rbtree_insert_value);
-#endif
+#اگر !(NGX_WIN32)
+    ngx_rbtree_init(&ls->rbtree, &ls->sentinel, ngx_udp_rbtree_داخل_کرو_قدر);
+#اگر_ختم
 
     ls->fd = (ngx_socket_t) -1;
-    ls->type = SOCK_STREAM;
+    ls->type = SOCK_دھارا;
 
     ls->backlog = NGX_LISTEN_BACKLOG;
     ls->rcvbuf = -1;
     ls->sndbuf = -1;
 
-#if (NGX_HAVE_SETFIB)
+#اگر (NGX_HAVE_SETFIB)
     ls->setfib = -1;
-#endif
+#اگر_ختم
 
-#if (NGX_HAVE_TCP_FASTOPEN)
+#اگر (NGX_HAVE_TCP_FASTOPEN)
     ls->fastopen = -1;
-#endif
+#اگر_ختم
 
-    return ls;
+    واپس ls;
 }
 
 
 ngx_int_t
-ngx_clone_listening(ngx_cycle_t *cycle, ngx_listening_t *ls)
+ngx_clone_listening(ngx_چکر_t *چکر, ngx_listening_t *ls)
 {
-#if (NGX_HAVE_REUSEPORT)
+#اگر (NGX_HAVE_REUSEPORT)
 
     ngx_int_t         n;
     ngx_core_conf_t  *ccf;
     ngx_listening_t   ols;
 
-    if (!ls->reuseport || ls->worker != 0) {
-        return NGX_OK;
+    اگر (!ls->reuseport || ls->کارکن != 0) {
+        واپس NGX_OK;
     }
 
     ols = *ls;
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(چکر->conf_ctx, ngx_core_module);
 
-    for (n = 1; n < ccf->worker_processes; n++) {
+    برائے (n = 1; n < ccf->کارکن_processes; n++) {
 
         /* create a socket for each worker process */
 
-        ls = ngx_array_push(&cycle->listening);
-        if (ls == NULL) {
-            return NGX_ERROR;
+        ls = ngx_array_ڈالو(&چکر->listening);
+        اگر (ls == تہی) {
+            واپس NGX_ERROR;
         }
 
         *ls = ols;
-        ls->worker = n;
+        ls->کارکن = n;
     }
 
-#endif
+#اگر_ختم
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
 ngx_int_t
-ngx_set_inherited_sockets(ngx_cycle_t *cycle)
+ngx_سیٹ_inherited_sockets(ngx_چکر_t *چکر)
 {
-    size_t                     len;
+    سائز_t                     len;
     ngx_uint_t                 i;
     ngx_listening_t           *ls;
     socklen_t                  olen;
-#if (NGX_HAVE_DEFERRED_ACCEPT || NGX_HAVE_TCP_FASTOPEN)
+#اگر (NGX_HAVE_DEFERRED_ACCEPT || NGX_HAVE_TCP_FASTOPEN)
     ngx_err_t                  err;
-#endif
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
-    struct accept_filter_arg   af;
-#endif
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
-    int                        timeout;
-#endif
-#if (NGX_HAVE_REUSEPORT)
-    int                        reuseport;
-#endif
+#اگر_ختم
+#اگر (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+    ساخت accept_filter_arg   af;
+#اگر_ختم
+#اگر (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
+    صحیح                        timeout;
+#اگر_ختم
+#اگر (NGX_HAVE_REUSEPORT)
+    صحیح                        reuseport;
+#اگر_ختم
 
-    ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
+    ls = چکر->listening.elts;
+    برائے (i = 0; i < چکر->listening.nelts; i++) {
 
-        ls[i].sockaddr = ngx_palloc(cycle->pool, sizeof(ngx_sockaddr_t));
-        if (ls[i].sockaddr == NULL) {
-            return NGX_ERROR;
+        ls[i].sockaddr = ngx_palloc(چکر->pool, حجم(ngx_sockaddr_t));
+        اگر (ls[i].sockaddr == تہی) {
+            واپس NGX_ERROR;
         }
 
-        ls[i].socklen = sizeof(ngx_sockaddr_t);
-        if (getsockname(ls[i].fd, ls[i].sockaddr, &ls[i].socklen) == -1) {
-            ngx_log_error(NGX_LOG_CRIT, cycle->log, ngx_socket_errno,
+        ls[i].socklen = حجم(ngx_sockaddr_t);
+        اگر (getsockname(ls[i].fd, ls[i].sockaddr, &ls[i].socklen) == -1) {
+            ngx_log_error(NGX_LOG_CRIT, چکر->لوگارتھم, ngx_socket_errno,
                           "getsockname() of the inherited "
                           "socket #%d failed", ls[i].fd);
             ls[i].ignore = 1;
-            continue;
+            جاری;
         }
 
-        if (ls[i].socklen > (socklen_t) sizeof(ngx_sockaddr_t)) {
-            ls[i].socklen = sizeof(ngx_sockaddr_t);
+        اگر (ls[i].socklen > (socklen_t) حجم(ngx_sockaddr_t)) {
+            ls[i].socklen = حجم(ngx_sockaddr_t);
         }
 
-        switch (ls[i].sockaddr->sa_family) {
+        انتخاب (ls[i].sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-        case AF_INET6:
-            ls[i].addr_text_max_len = NGX_INET6_ADDRSTRLEN;
-            len = NGX_INET6_ADDRSTRLEN + sizeof("[]:65535") - 1;
-            break;
-#endif
+#اگر (NGX_HAVE_INET6)
+        حالت AF_INET6:
+            ls[i].addr_متن_max_len = NGX_INET6_ADDRSTRLEN;
+            len = NGX_INET6_ADDRSTRLEN + حجم("[]:65535") - 1;
+            توڑو;
+#اگر_ختم
 
-#if (NGX_HAVE_UNIX_DOMAIN)
-        case AF_UNIX:
-            ls[i].addr_text_max_len = NGX_UNIX_ADDRSTRLEN;
+#اگر (NGX_HAVE_UNIX_DOMAIN)
+        حالت AF_UNIX:
+            ls[i].addr_متن_max_len = NGX_UNIX_ADDRSTRLEN;
             len = NGX_UNIX_ADDRSTRLEN;
-            break;
-#endif
+            توڑو;
+#اگر_ختم
 
-        case AF_INET:
-            ls[i].addr_text_max_len = NGX_INET_ADDRSTRLEN;
-            len = NGX_INET_ADDRSTRLEN + sizeof(":65535") - 1;
-            break;
+        حالت AF_INET:
+            ls[i].addr_متن_max_len = NGX_INET_ADDRSTRLEN;
+            len = NGX_INET_ADDRSTRLEN + حجم(":65535") - 1;
+            توڑو;
 
-        default:
-            ngx_log_error(NGX_LOG_CRIT, cycle->log, ngx_socket_errno,
+        طےشدہ:
+            ngx_log_error(NGX_LOG_CRIT, چکر->لوگارتھم, ngx_socket_errno,
                           "the inherited socket #%d has "
                           "an unsupported protocol family", ls[i].fd);
             ls[i].ignore = 1;
-            continue;
+            جاری;
         }
 
-        ls[i].addr_text.data = ngx_pnalloc(cycle->pool, len);
-        if (ls[i].addr_text.data == NULL) {
-            return NGX_ERROR;
+        ls[i].addr_متن.ڈیٹا = ngx_pnalloc(چکر->pool, len);
+        اگر (ls[i].addr_متن.ڈیٹا == تہی) {
+            واپس NGX_ERROR;
         }
 
         len = ngx_sock_ntop(ls[i].sockaddr, ls[i].socklen,
-                            ls[i].addr_text.data, len, 1);
-        if (len == 0) {
-            return NGX_ERROR;
+                            ls[i].addr_متن.ڈیٹا, len, 1);
+        اگر (len == 0) {
+            واپس NGX_ERROR;
         }
 
-        ls[i].addr_text.len = len;
+        ls[i].addr_متن.len = len;
 
         ls[i].backlog = NGX_LISTEN_BACKLOG;
 
-        olen = sizeof(int);
+        olen = حجم(صحیح);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_TYPE, (void *) &ls[i].type,
+        اگر (getsockopt(ls[i].fd, SOL_SOCKET, SO_TYPE, (خالی *) &ls[i].type,
                        &olen)
             == -1)
         {
-            ngx_log_error(NGX_LOG_CRIT, cycle->log, ngx_socket_errno,
-                          "getsockopt(SO_TYPE) %V failed", &ls[i].addr_text);
+            ngx_log_error(NGX_LOG_CRIT, چکر->لوگارتھم, ngx_socket_errno,
+                          "getsockopt(SO_TYPE) %V failed", &ls[i].addr_متن);
             ls[i].ignore = 1;
-            continue;
+            جاری;
         }
 
-        olen = sizeof(int);
+        olen = حجم(صحیح);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF, (void *) &ls[i].rcvbuf,
+        اگر (getsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF, (خالی *) &ls[i].rcvbuf,
                        &olen)
             == -1)
         {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+            ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                           "getsockopt(SO_RCVBUF) %V failed, ignored",
-                          &ls[i].addr_text);
+                          &ls[i].addr_متن);
 
             ls[i].rcvbuf = -1;
         }
 
-        olen = sizeof(int);
+        olen = حجم(صحیح);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF, (void *) &ls[i].sndbuf,
+        اگر (getsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF, (خالی *) &ls[i].sndbuf,
                        &olen)
             == -1)
         {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+            ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                           "getsockopt(SO_SNDBUF) %V failed, ignored",
-                          &ls[i].addr_text);
+                          &ls[i].addr_متن);
 
             ls[i].sndbuf = -1;
         }
 
-#if 0
+#اگر 0
         /* SO_SETFIB is currently a set only option */
 
-#if (NGX_HAVE_SETFIB)
+#اگر (NGX_HAVE_SETFIB)
 
-        olen = sizeof(int);
+        olen = حجم(صحیح);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
-                       (void *) &ls[i].setfib, &olen)
+        اگر (getsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
+                       (خالی *) &ls[i].setfib, &olen)
             == -1)
         {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+            ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                           "getsockopt(SO_SETFIB) %V failed, ignored",
-                          &ls[i].addr_text);
+                          &ls[i].addr_متن);
 
             ls[i].setfib = -1;
         }
 
-#endif
-#endif
+#اگر_ختم
+#اگر_ختم
 
-#if (NGX_HAVE_REUSEPORT)
+#اگر (NGX_HAVE_REUSEPORT)
 
         reuseport = 0;
-        olen = sizeof(int);
+        olen = حجم(صحیح);
 
-#ifdef SO_REUSEPORT_LB
+#اگر_تعریف_شدہ SO_REUSEPORT_LB
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
-                       (void *) &reuseport, &olen)
+        اگر (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
+                       (خالی *) &reuseport, &olen)
             == -1)
         {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+            ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                           "getsockopt(SO_REUSEPORT_LB) %V failed, ignored",
-                          &ls[i].addr_text);
+                          &ls[i].addr_متن);
 
-        } else {
+        } ورنہ {
             ls[i].reuseport = reuseport ? 1 : 0;
         }
 
-#else
+#ورنہ
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
-                       (void *) &reuseport, &olen)
+        اگر (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
+                       (خالی *) &reuseport, &olen)
             == -1)
         {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+            ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                           "getsockopt(SO_REUSEPORT) %V failed, ignored",
-                          &ls[i].addr_text);
+                          &ls[i].addr_متن);
 
-        } else {
+        } ورنہ {
             ls[i].reuseport = reuseport ? 1 : 0;
         }
-#endif
+#اگر_ختم
 
-#endif
+#اگر_ختم
 
-        if (ls[i].type != SOCK_STREAM) {
-            continue;
+        اگر (ls[i].type != SOCK_دھارا) {
+            جاری;
         }
 
-#ifdef SO_PROTOCOL
+#اگر_تعریف_شدہ SO_PROTOCOL
 
-        olen = sizeof(int);
+        olen = حجم(صحیح);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_PROTOCOL,
-                       (void *) &ls[i].protocol, &olen)
+        اگر (getsockopt(ls[i].fd, SOL_SOCKET, SO_PROTOCOL,
+                       (خالی *) &ls[i].protocol, &olen)
             == -1)
         {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+            ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                           "getsockopt(SO_PROTOCOL) %V failed, ignored",
-                          &ls[i].addr_text);
+                          &ls[i].addr_متن);
             ls[i].protocol = 0;
 
-        } else if (ls[i].protocol == IPPROTO_TCP) {
+        } ورنہ اگر (ls[i].protocol == IPPROTO_TCP) {
             ls[i].protocol = 0;
         }
 
-#endif
+#اگر_ختم
 
-#if (NGX_HAVE_TCP_FASTOPEN)
+#اگر (NGX_HAVE_TCP_FASTOPEN)
 
-        olen = sizeof(int);
+        olen = حجم(صحیح);
 
-        if (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
-                       (void *) &ls[i].fastopen, &olen)
+        اگر (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
+                       (خالی *) &ls[i].fastopen, &olen)
             == -1)
         {
             err = ngx_socket_errno;
 
-            if (err != NGX_EOPNOTSUPP && err != NGX_ENOPROTOOPT
+            اگر (err != NGX_EOPNOTSUPP && err != NGX_ENOPROTOOPT
                 && err != NGX_EINVAL)
             {
-                ngx_log_error(NGX_LOG_NOTICE, cycle->log, err,
+                ngx_log_error(NGX_LOG_NOTICE, چکر->لوگارتھم, err,
                               "getsockopt(TCP_FASTOPEN) %V failed, ignored",
-                              &ls[i].addr_text);
+                              &ls[i].addr_متن);
             }
 
             ls[i].fastopen = -1;
         }
 
-#endif
+#اگر_ختم
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+#اگر (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
 
-        ngx_memzero(&af, sizeof(struct accept_filter_arg));
-        olen = sizeof(struct accept_filter_arg);
+        ngx_memzero(&af, حجم(ساخت accept_filter_arg));
+        olen = حجم(ساخت accept_filter_arg);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, &af, &olen)
+        اگر (getsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, &af, &olen)
             == -1)
         {
             err = ngx_socket_errno;
 
-            if (err == NGX_EINVAL) {
-                continue;
+            اگر (err == NGX_EINVAL) {
+                جاری;
             }
 
-            ngx_log_error(NGX_LOG_NOTICE, cycle->log, err,
+            ngx_log_error(NGX_LOG_NOTICE, چکر->لوگارتھم, err,
                           "getsockopt(SO_ACCEPTFILTER) for %V failed, ignored",
-                          &ls[i].addr_text);
-            continue;
+                          &ls[i].addr_متن);
+            جاری;
         }
 
-        if (olen < sizeof(struct accept_filter_arg) || af.af_name[0] == '\0') {
-            continue;
+        اگر (olen < حجم(ساخت accept_filter_arg) || af.af_name[0] == '\0') {
+            جاری;
         }
 
-        ls[i].accept_filter = ngx_palloc(cycle->pool, 16);
-        if (ls[i].accept_filter == NULL) {
-            return NGX_ERROR;
+        ls[i].accept_filter = ngx_palloc(چکر->pool, 16);
+        اگر (ls[i].accept_filter == تہی) {
+            واپس NGX_ERROR;
         }
 
-        (void) ngx_cpystrn((u_char *) ls[i].accept_filter,
+        (خالی) ngx_cpystrn((u_char *) ls[i].accept_filter,
                            (u_char *) af.af_name, 16);
-#endif
+#اگر_ختم
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
+#اگر (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
 
         timeout = 0;
-        olen = sizeof(int);
+        olen = حجم(صحیح);
 
-        if (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT, &timeout, &olen)
+        اگر (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT, &timeout, &olen)
             == -1)
         {
             err = ngx_socket_errno;
 
-            if (err == NGX_EOPNOTSUPP) {
-                continue;
+            اگر (err == NGX_EOPNOTSUPP) {
+                جاری;
             }
 
-            ngx_log_error(NGX_LOG_NOTICE, cycle->log, err,
+            ngx_log_error(NGX_LOG_NOTICE, چکر->لوگارتھم, err,
                           "getsockopt(TCP_DEFER_ACCEPT) for %V failed, ignored",
-                          &ls[i].addr_text);
-            continue;
+                          &ls[i].addr_متن);
+            جاری;
         }
 
-        if (olen < sizeof(int) || timeout == 0) {
-            continue;
+        اگر (olen < حجم(صحیح) || timeout == 0) {
+            جاری;
         }
 
         ls[i].deferred_accept = 1;
-#endif
+#اگر_ختم
     }
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
 ngx_int_t
-ngx_open_listening_sockets(ngx_cycle_t *cycle)
+ngx_open_listening_sockets(ngx_چکر_t *چکر)
 {
-    int               reuseaddr;
+    صحیح               reuseaddr;
     ngx_uint_t        i, tries, failed;
     ngx_err_t         err;
-    ngx_log_t        *log;
+    ngx_log_t        *لوگارتھم;
     ngx_socket_t      s;
     ngx_listening_t  *ls;
 
     reuseaddr = 1;
-#if (NGX_SUPPRESS_WARN)
+#اگر (NGX_SUPPRESS_WARN)
     failed = 0;
-#endif
+#اگر_ختم
 
-    log = cycle->log;
+    لوگارتھم = چکر->لوگارتھم;
 
     /* TODO: configurable try number */
 
-    for (tries = 5; tries; tries--) {
+    برائے (tries = 5; tries; tries--) {
         failed = 0;
 
         /* for each listening socket */
 
-        ls = cycle->listening.elts;
-        for (i = 0; i < cycle->listening.nelts; i++) {
+        ls = چکر->listening.elts;
+        برائے (i = 0; i < چکر->listening.nelts; i++) {
 
-            if (ls[i].ignore) {
-                continue;
+            اگر (ls[i].ignore) {
+                جاری;
             }
 
-#if (NGX_HAVE_REUSEPORT)
+#اگر (NGX_HAVE_REUSEPORT)
 
-            if (ls[i].add_reuseport || ls[i].change_protocol) {
+            اگر (ls[i].جوڑو_reuseport || ls[i].change_protocol) {
 
                 /*
                  * to allow transition from a socket without SO_REUSEPORT
@@ -467,219 +467,219 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
                  * and new sockets
                  */
 
-                int  reuseport = 1;
+                صحیح  reuseport = 1;
 
-#ifdef SO_REUSEPORT_LB
+#اگر_تعریف_شدہ SO_REUSEPORT_LB
 
-                if (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
-                               (const void *) &reuseport, sizeof(int))
+                اگر (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
+                               (ثابت خالی *) &reuseport, حجم(صحیح))
                     == -1)
                 {
-                    ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                    ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                                   "setsockopt(SO_REUSEPORT_LB) %V failed, "
                                   "ignored",
-                                  &ls[i].addr_text);
+                                  &ls[i].addr_متن);
                 }
 
-#else
+#ورنہ
 
-                if (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
-                               (const void *) &reuseport, sizeof(int))
+                اگر (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
+                               (ثابت خالی *) &reuseport, حجم(صحیح))
                     == -1)
                 {
-                    ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                    ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                                   "setsockopt(SO_REUSEPORT) %V failed, ignored",
-                                  &ls[i].addr_text);
+                                  &ls[i].addr_متن);
                 }
-#endif
+#اگر_ختم
 
-                ls[i].add_reuseport = 0;
+                ls[i].جوڑو_reuseport = 0;
             }
-#endif
+#اگر_ختم
 
-            if (ls[i].fd != (ngx_socket_t) -1 && !ls[i].change_protocol) {
-                continue;
+            اگر (ls[i].fd != (ngx_socket_t) -1 && !ls[i].change_protocol) {
+                جاری;
             }
 
-            if (ls[i].inherited) {
+            اگر (ls[i].inherited) {
 
                 /* TODO: close on exit */
                 /* TODO: nonblocking */
                 /* TODO: deferred accept */
 
-                continue;
+                جاری;
             }
 
             s = ngx_socket(ls[i].sockaddr->sa_family, ls[i].type,
                            ls[i].protocol);
 
-            if (s == (ngx_socket_t) -1) {
-                ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
-                              ngx_socket_n " %V failed", &ls[i].addr_text);
-                return NGX_ERROR;
+            اگر (s == (ngx_socket_t) -1) {
+                ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
+                              ngx_socket_n " %V failed", &ls[i].addr_متن);
+                واپس NGX_ERROR;
             }
 
-            if (ls[i].type != SOCK_DGRAM || !ngx_test_config) {
+            اگر (ls[i].type != SOCK_DGRAM || !ngx_test_config) {
 
-                if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
-                               (const void *) &reuseaddr, sizeof(int))
+                اگر (setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
+                               (ثابت خالی *) &reuseaddr, حجم(صحیح))
                     == -1)
                 {
-                    ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+                    ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                                   "setsockopt(SO_REUSEADDR) %V failed",
-                                  &ls[i].addr_text);
+                                  &ls[i].addr_متن);
 
-                    if (ngx_close_socket(s) == -1) {
-                        ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+                    اگر (ngx_close_socket(s) == -1) {
+                        ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                                       ngx_close_socket_n " %V failed",
-                                      &ls[i].addr_text);
+                                      &ls[i].addr_متن);
                     }
 
-                    return NGX_ERROR;
+                    واپس NGX_ERROR;
                 }
             }
 
-#if (NGX_HAVE_REUSEPORT)
+#اگر (NGX_HAVE_REUSEPORT)
 
-            if ((ls[i].reuseport || ls[i].change_protocol)
+            اگر ((ls[i].reuseport || ls[i].change_protocol)
                 && !ngx_test_config)
             {
-                int  reuseport;
+                صحیح  reuseport;
 
                 reuseport = 1;
 
-#ifdef SO_REUSEPORT_LB
+#اگر_تعریف_شدہ SO_REUSEPORT_LB
 
-                if (setsockopt(s, SOL_SOCKET, SO_REUSEPORT_LB,
-                               (const void *) &reuseport, sizeof(int))
+                اگر (setsockopt(s, SOL_SOCKET, SO_REUSEPORT_LB,
+                               (ثابت خالی *) &reuseport, حجم(صحیح))
                     == -1)
                 {
-                    ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+                    ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                                   "setsockopt(SO_REUSEPORT_LB) %V failed",
-                                  &ls[i].addr_text);
+                                  &ls[i].addr_متن);
 
-                    if (ngx_close_socket(s) == -1) {
-                        ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+                    اگر (ngx_close_socket(s) == -1) {
+                        ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                                       ngx_close_socket_n " %V failed",
-                                      &ls[i].addr_text);
+                                      &ls[i].addr_متن);
                     }
 
-                    return NGX_ERROR;
+                    واپس NGX_ERROR;
                 }
 
-#else
+#ورنہ
 
-                if (setsockopt(s, SOL_SOCKET, SO_REUSEPORT,
-                               (const void *) &reuseport, sizeof(int))
+                اگر (setsockopt(s, SOL_SOCKET, SO_REUSEPORT,
+                               (ثابت خالی *) &reuseport, حجم(صحیح))
                     == -1)
                 {
-                    ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+                    ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                                   "setsockopt(SO_REUSEPORT) %V failed",
-                                  &ls[i].addr_text);
+                                  &ls[i].addr_متن);
 
-                    if (ngx_close_socket(s) == -1) {
-                        ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+                    اگر (ngx_close_socket(s) == -1) {
+                        ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                                       ngx_close_socket_n " %V failed",
-                                      &ls[i].addr_text);
+                                      &ls[i].addr_متن);
                     }
 
-                    return NGX_ERROR;
+                    واپس NGX_ERROR;
                 }
-#endif
+#اگر_ختم
             }
-#endif
+#اگر_ختم
 
-#if (NGX_HAVE_INET6 && defined IPV6_V6ONLY)
+#اگر (NGX_HAVE_INET6 && defined IPV6_V6ONLY)
 
-            if (ls[i].sockaddr->sa_family == AF_INET6) {
-                int  ipv6only;
+            اگر (ls[i].sockaddr->sa_family == AF_INET6) {
+                صحیح  ipv6only;
 
                 ipv6only = ls[i].ipv6only;
 
-                if (setsockopt(s, IPPROTO_IPV6, IPV6_V6ONLY,
-                               (const void *) &ipv6only, sizeof(int))
+                اگر (setsockopt(s, IPPROTO_IPV6, IPV6_V6ONLY,
+                               (ثابت خالی *) &ipv6only, حجم(صحیح))
                     == -1)
                 {
-                    ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+                    ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                                   "setsockopt(IPV6_V6ONLY) %V failed, ignored",
-                                  &ls[i].addr_text);
+                                  &ls[i].addr_متن);
                 }
             }
-#endif
+#اگر_ختم
             /* TODO: close on exit */
 
-            if (ngx_nonblocking(s) == -1) {
-                ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+            اگر (ngx_nonblocking(s) == -1) {
+                ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                               ngx_nonblocking_n " %V failed",
-                              &ls[i].addr_text);
+                              &ls[i].addr_متن);
 
-                if (ngx_close_socket(s) == -1) {
-                    ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+                اگر (ngx_close_socket(s) == -1) {
+                    ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                                   ngx_close_socket_n " %V failed",
-                                  &ls[i].addr_text);
+                                  &ls[i].addr_متن);
                 }
 
-                return NGX_ERROR;
+                واپس NGX_ERROR;
             }
 
-            ngx_log_debug2(NGX_LOG_DEBUG_CORE, log, 0,
-                           "bind() %V #%d ", &ls[i].addr_text, s);
+            ngx_log_debug2(NGX_LOG_DEBUG_CORE, لوگارتھم, 0,
+                           "bind() %V #%d ", &ls[i].addr_متن, s);
 
-            if (bind(s, ls[i].sockaddr, ls[i].socklen) == -1) {
+            اگر (bind(s, ls[i].sockaddr, ls[i].socklen) == -1) {
                 err = ngx_socket_errno;
 
-                if (err != NGX_EADDRINUSE || !ngx_test_config) {
-                    ngx_log_error(NGX_LOG_EMERG, log, err,
-                                  "bind() to %V failed", &ls[i].addr_text);
+                اگر (err != NGX_EADDRINUSE || !ngx_test_config) {
+                    ngx_log_error(NGX_LOG_EMERG, لوگارتھم, err,
+                                  "bind() to %V failed", &ls[i].addr_متن);
                 }
 
-                if (ngx_close_socket(s) == -1) {
-                    ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+                اگر (ngx_close_socket(s) == -1) {
+                    ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                                   ngx_close_socket_n " %V failed",
-                                  &ls[i].addr_text);
+                                  &ls[i].addr_متن);
                 }
 
-                if (err != NGX_EADDRINUSE) {
-                    return NGX_ERROR;
+                اگر (err != NGX_EADDRINUSE) {
+                    واپس NGX_ERROR;
                 }
 
-                if (!ngx_test_config) {
+                اگر (!ngx_test_config) {
                     failed = 1;
                 }
 
-                continue;
+                جاری;
             }
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#اگر (NGX_HAVE_UNIX_DOMAIN)
 
-            if (ls[i].sockaddr->sa_family == AF_UNIX) {
-                mode_t   mode;
+            اگر (ls[i].sockaddr->sa_family == AF_UNIX) {
+                منوال_t   منوال;
                 u_char  *name;
 
-                name = ls[i].addr_text.data + sizeof("unix:") - 1;
-                mode = (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
+                name = ls[i].addr_متن.ڈیٹا + حجم("unix:") - 1;
+                منوال = (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
 
-                if (chmod((char *) name, mode) == -1) {
-                    ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+                اگر (chmod((حرف *) name, منوال) == -1) {
+                    ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
                                   "chmod() \"%s\" failed", name);
                 }
 
-                if (ngx_test_config) {
-                    if (ngx_delete_file(name) == NGX_FILE_ERROR) {
-                        ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+                اگر (ngx_test_config) {
+                    اگر (ngx_delete_file(name) == NGX_FILE_ERROR) {
+                        ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_errno,
                                       ngx_delete_file_n " %s failed", name);
                     }
                 }
             }
-#endif
+#اگر_ختم
 
-            if (ls[i].type != SOCK_STREAM) {
+            اگر (ls[i].type != SOCK_دھارا) {
                 ls[i].fd = s;
                 ls[i].open = 1;
-                continue;
+                جاری;
             }
 
-            if (listen(s, ls[i].backlog) == -1) {
+            اگر (listen(s, ls[i].backlog) == -1) {
                 err = ngx_socket_errno;
 
                 /*
@@ -688,27 +688,27 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
                  * https://bugs.openvz.org/browse/OVZ-5587
                  */
 
-                if (err != NGX_EADDRINUSE || !ngx_test_config) {
-                    ngx_log_error(NGX_LOG_EMERG, log, err,
+                اگر (err != NGX_EADDRINUSE || !ngx_test_config) {
+                    ngx_log_error(NGX_LOG_EMERG, لوگارتھم, err,
                                   "listen() to %V, backlog %d failed",
-                                  &ls[i].addr_text, ls[i].backlog);
+                                  &ls[i].addr_متن, ls[i].backlog);
                 }
 
-                if (ngx_close_socket(s) == -1) {
-                    ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+                اگر (ngx_close_socket(s) == -1) {
+                    ngx_log_error(NGX_LOG_EMERG, لوگارتھم, ngx_socket_errno,
                                   ngx_close_socket_n " %V failed",
-                                  &ls[i].addr_text);
+                                  &ls[i].addr_متن);
                 }
 
-                if (err != NGX_EADDRINUSE) {
-                    return NGX_ERROR;
+                اگر (err != NGX_EADDRINUSE) {
+                    واپس NGX_ERROR;
                 }
 
-                if (!ngx_test_config) {
+                اگر (!ngx_test_config) {
                     failed = 1;
                 }
 
-                continue;
+                جاری;
             }
 
             ls[i].listen = 1;
@@ -717,180 +717,180 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
             ls[i].open = 1;
         }
 
-        if (!failed) {
-            break;
+        اگر (!failed) {
+            توڑو;
         }
 
         /* TODO: delay configurable */
 
-        ngx_log_error(NGX_LOG_NOTICE, log, 0,
+        ngx_log_error(NGX_LOG_NOTICE, لوگارتھم, 0,
                       "try again to bind() after 500ms");
 
         ngx_msleep(500);
     }
 
-    if (failed) {
-        ngx_log_error(NGX_LOG_EMERG, log, 0, "still could not bind()");
-        return NGX_ERROR;
+    اگر (failed) {
+        ngx_log_error(NGX_LOG_EMERG, لوگارتھم, 0, "still could not bind()");
+        واپس NGX_ERROR;
     }
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
-void
-ngx_configure_listening_sockets(ngx_cycle_t *cycle)
+خالی
+ngx_configure_listening_sockets(ngx_چکر_t *چکر)
 {
-    int                        value;
+    صحیح                        قدر;
     ngx_uint_t                 i;
     ngx_listening_t           *ls;
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
-    struct accept_filter_arg   af;
-#endif
+#اگر (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+    ساخت accept_filter_arg   af;
+#اگر_ختم
 
-    ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
+    ls = چکر->listening.elts;
+    برائے (i = 0; i < چکر->listening.nelts; i++) {
 
-        ls[i].log = *ls[i].logp;
+        ls[i].لوگارتھم = *ls[i].logp;
 
-        if (ls[i].rcvbuf != -1) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF,
-                           (const void *) &ls[i].rcvbuf, sizeof(int))
+        اگر (ls[i].rcvbuf != -1) {
+            اگر (setsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF,
+                           (ثابت خالی *) &ls[i].rcvbuf, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(SO_RCVBUF, %d) %V failed, ignored",
-                              ls[i].rcvbuf, &ls[i].addr_text);
+                              ls[i].rcvbuf, &ls[i].addr_متن);
             }
         }
 
-        if (ls[i].sndbuf != -1) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF,
-                           (const void *) &ls[i].sndbuf, sizeof(int))
+        اگر (ls[i].sndbuf != -1) {
+            اگر (setsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF,
+                           (ثابت خالی *) &ls[i].sndbuf, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(SO_SNDBUF, %d) %V failed, ignored",
-                              ls[i].sndbuf, &ls[i].addr_text);
+                              ls[i].sndbuf, &ls[i].addr_متن);
             }
         }
 
-        if (ls[i].keepalive) {
-            value = (ls[i].keepalive == 1) ? 1 : 0;
+        اگر (ls[i].keepalive) {
+            قدر = (ls[i].keepalive == 1) ? 1 : 0;
 
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_KEEPALIVE,
-                           (const void *) &value, sizeof(int))
+            اگر (setsockopt(ls[i].fd, SOL_SOCKET, SO_KEEPALIVE,
+                           (ثابت خالی *) &قدر, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(SO_KEEPALIVE, %d) %V failed, ignored",
-                              value, &ls[i].addr_text);
+                              قدر, &ls[i].addr_متن);
             }
         }
 
-#if (NGX_HAVE_KEEPALIVE_TUNABLE)
+#اگر (NGX_HAVE_KEEPALIVE_TUNABLE)
 
-#if !(NGX_DARWIN)
+#اگر !(NGX_DARWIN)
 
-        if (ls[i].keepidle) {
-            value = ls[i].keepidle;
+        اگر (ls[i].keepidle) {
+            قدر = ls[i].keepidle;
 
-#if (NGX_KEEPALIVE_FACTOR)
-            value *= NGX_KEEPALIVE_FACTOR;
-#endif
+#اگر (NGX_KEEPALIVE_ضربی_عدد)
+            قدر *= NGX_KEEPALIVE_ضربی_عدد;
+#اگر_ختم
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPIDLE,
-                           (const void *) &value, sizeof(int))
+            اگر (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPIDLE,
+                           (ثابت خالی *) &قدر, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(TCP_KEEPIDLE, %d) %V failed, ignored",
-                              value, &ls[i].addr_text);
+                              قدر, &ls[i].addr_متن);
             }
         }
 
-#endif
+#اگر_ختم
 
-        if (ls[i].keepintvl) {
-            value = ls[i].keepintvl;
+        اگر (ls[i].keepintvl) {
+            قدر = ls[i].keepintvl;
 
-#if (NGX_KEEPALIVE_FACTOR)
-            value *= NGX_KEEPALIVE_FACTOR;
-#endif
+#اگر (NGX_KEEPALIVE_ضربی_عدد)
+            قدر *= NGX_KEEPALIVE_ضربی_عدد;
+#اگر_ختم
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPINTVL,
-                           (const void *) &value, sizeof(int))
+            اگر (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPINTVL,
+                           (ثابت خالی *) &قدر, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                              "setsockopt(TCP_KEEPINTVL, %d) %V failed, ignored",
-                             value, &ls[i].addr_text);
+                             قدر, &ls[i].addr_متن);
             }
         }
 
-        if (ls[i].keepcnt) {
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPCNT,
-                           (const void *) &ls[i].keepcnt, sizeof(int))
+        اگر (ls[i].keepcnt) {
+            اگر (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPCNT,
+                           (ثابت خالی *) &ls[i].keepcnt, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(TCP_KEEPCNT, %d) %V failed, ignored",
-                              ls[i].keepcnt, &ls[i].addr_text);
+                              ls[i].keepcnt, &ls[i].addr_متن);
             }
         }
 
-#endif
+#اگر_ختم
 
-#if (NGX_HAVE_SETFIB)
-        if (ls[i].setfib != -1) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
-                           (const void *) &ls[i].setfib, sizeof(int))
+#اگر (NGX_HAVE_SETFIB)
+        اگر (ls[i].setfib != -1) {
+            اگر (setsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
+                           (ثابت خالی *) &ls[i].setfib, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(SO_SETFIB, %d) %V failed, ignored",
-                              ls[i].setfib, &ls[i].addr_text);
+                              ls[i].setfib, &ls[i].addr_متن);
             }
         }
-#endif
+#اگر_ختم
 
-#if (NGX_HAVE_TCP_FASTOPEN)
-        if (ls[i].fastopen != -1) {
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
-                           (const void *) &ls[i].fastopen, sizeof(int))
+#اگر (NGX_HAVE_TCP_FASTOPEN)
+        اگر (ls[i].fastopen != -1) {
+            اگر (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
+                           (ثابت خالی *) &ls[i].fastopen, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(TCP_FASTOPEN, %d) %V failed, ignored",
-                              ls[i].fastopen, &ls[i].addr_text);
+                              ls[i].fastopen, &ls[i].addr_متن);
             }
         }
-#endif
+#اگر_ختم
 
-#if 0
-        if (1) {
-            int tcp_nodelay = 1;
+#اگر 0
+        اگر (1) {
+            صحیح tcp_nodelay = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_NODELAY,
-                       (const void *) &tcp_nodelay, sizeof(int))
+            اگر (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_NODELAY,
+                       (ثابت خالی *) &tcp_nodelay, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(TCP_NODELAY) %V failed, ignored",
-                              &ls[i].addr_text);
+                              &ls[i].addr_متن);
             }
         }
-#endif
+#اگر_ختم
 
-        if (ls[i].listen) {
+        اگر (ls[i].listen) {
 
             /* change backlog via listen() */
 
-            if (listen(ls[i].fd, ls[i].backlog) == -1) {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+            اگر (listen(ls[i].fd, ls[i].backlog) == -1) {
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "listen() to %V, backlog %d failed, ignored",
-                              &ls[i].addr_text, ls[i].backlog);
+                              &ls[i].addr_متن, ls[i].backlog);
             }
         }
 
@@ -899,231 +899,231 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
          * because code may prematurely continue cycle on failure
          */
 
-#if (NGX_HAVE_DEFERRED_ACCEPT)
+#اگر (NGX_HAVE_DEFERRED_ACCEPT)
 
-#ifdef SO_ACCEPTFILTER
+#اگر_تعریف_شدہ SO_ACCEPTFILTER
 
-        if (ls[i].delete_deferred) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, NULL, 0)
+        اگر (ls[i].delete_deferred) {
+            اگر (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, تہی, 0)
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(SO_ACCEPTFILTER, NULL) "
                               "for %V failed, ignored",
-                              &ls[i].addr_text);
+                              &ls[i].addr_متن);
 
-                if (ls[i].accept_filter) {
-                    ngx_log_error(NGX_LOG_ALERT, cycle->log, 0,
+                اگر (ls[i].accept_filter) {
+                    ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, 0,
                                   "could not change the accept filter "
                                   "to \"%s\" for %V, ignored",
-                                  ls[i].accept_filter, &ls[i].addr_text);
+                                  ls[i].accept_filter, &ls[i].addr_متن);
                 }
 
-                continue;
+                جاری;
             }
 
             ls[i].deferred_accept = 0;
         }
 
-        if (ls[i].add_deferred) {
-            ngx_memzero(&af, sizeof(struct accept_filter_arg));
-            (void) ngx_cpystrn((u_char *) af.af_name,
+        اگر (ls[i].جوڑو_deferred) {
+            ngx_memzero(&af, حجم(ساخت accept_filter_arg));
+            (خالی) ngx_cpystrn((u_char *) af.af_name,
                                (u_char *) ls[i].accept_filter, 16);
 
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER,
-                           &af, sizeof(struct accept_filter_arg))
+            اگر (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER,
+                           &af, حجم(ساخت accept_filter_arg))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(SO_ACCEPTFILTER, \"%s\") "
                               "for %V failed, ignored",
-                              ls[i].accept_filter, &ls[i].addr_text);
-                continue;
+                              ls[i].accept_filter, &ls[i].addr_متن);
+                جاری;
             }
 
             ls[i].deferred_accept = 1;
         }
 
-#endif
+#اگر_ختم
 
-#ifdef TCP_DEFER_ACCEPT
+#اگر_تعریف_شدہ TCP_DEFER_ACCEPT
 
-        if (ls[i].add_deferred || ls[i].delete_deferred) {
+        اگر (ls[i].جوڑو_deferred || ls[i].delete_deferred) {
 
-            if (ls[i].add_deferred) {
+            اگر (ls[i].جوڑو_deferred) {
                 /*
                  * There is no way to find out how long a connection was
                  * in queue (and a connection may bypass deferred queue at all
                  * if syncookies were used), hence we use 1 second timeout
                  * here.
                  */
-                value = 1;
+                قدر = 1;
 
-            } else {
-                value = 0;
+            } ورنہ {
+                قدر = 0;
             }
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT,
-                           &value, sizeof(int))
+            اگر (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT,
+                           &قدر, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(TCP_DEFER_ACCEPT, %d) for %V failed, "
                               "ignored",
-                              value, &ls[i].addr_text);
+                              قدر, &ls[i].addr_متن);
 
-                continue;
+                جاری;
             }
         }
 
-        if (ls[i].add_deferred) {
+        اگر (ls[i].جوڑو_deferred) {
             ls[i].deferred_accept = 1;
         }
 
-#endif
+#اگر_ختم
 
-#endif /* NGX_HAVE_DEFERRED_ACCEPT */
+#اگر_ختم /* NGX_HAVE_DEFERRED_ACCEPT */
 
-#if (NGX_HAVE_IP_RECVDSTADDR)
+#اگر (NGX_HAVE_IP_RECVDSTADDR)
 
-        if (ls[i].wildcard
+        اگر (ls[i].wildcard
             && ls[i].type == SOCK_DGRAM
             && ls[i].sockaddr->sa_family == AF_INET)
         {
-            value = 1;
+            قدر = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_RECVDSTADDR,
-                           (const void *) &value, sizeof(int))
+            اگر (setsockopt(ls[i].fd, IPPROTO_IP, IP_RECVDSTADDR,
+                           (ثابت خالی *) &قدر, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(IP_RECVDSTADDR) "
                               "for %V failed, ignored",
-                              &ls[i].addr_text);
+                              &ls[i].addr_متن);
             }
         }
 
-#elif (NGX_HAVE_IP_PKTINFO)
+#وگرنہ_اگر (NGX_HAVE_IP_PKTINFO)
 
-        if (ls[i].wildcard
+        اگر (ls[i].wildcard
             && ls[i].type == SOCK_DGRAM
             && ls[i].sockaddr->sa_family == AF_INET)
         {
-            value = 1;
+            قدر = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_PKTINFO,
-                           (const void *) &value, sizeof(int))
+            اگر (setsockopt(ls[i].fd, IPPROTO_IP, IP_PKTINFO,
+                           (ثابت خالی *) &قدر, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(IP_PKTINFO) "
                               "for %V failed, ignored",
-                              &ls[i].addr_text);
+                              &ls[i].addr_متن);
             }
         }
 
-#endif
+#اگر_ختم
 
-#if (NGX_HAVE_INET6 && NGX_HAVE_IPV6_RECVPKTINFO)
+#اگر (NGX_HAVE_INET6 && NGX_HAVE_IPV6_RECVPKTINFO)
 
-        if (ls[i].wildcard
+        اگر (ls[i].wildcard
             && ls[i].type == SOCK_DGRAM
             && ls[i].sockaddr->sa_family == AF_INET6)
         {
-            value = 1;
+            قدر = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_RECVPKTINFO,
-                           (const void *) &value, sizeof(int))
+            اگر (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_RECVPKTINFO,
+                           (ثابت خالی *) &قدر, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(IPV6_RECVPKTINFO) "
                               "for %V failed, ignored",
-                              &ls[i].addr_text);
+                              &ls[i].addr_متن);
             }
         }
 
-#endif
+#اگر_ختم
 
-#if (NGX_HAVE_IP_MTU_DISCOVER)
+#اگر (NGX_HAVE_IP_MTU_DISCOVER)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
-            value = IP_PMTUDISC_DO;
+        اگر (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
+            قدر = IP_PMTUDISC_DO;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_MTU_DISCOVER,
-                           (const void *) &value, sizeof(int))
+            اگر (setsockopt(ls[i].fd, IPPROTO_IP, IP_MTU_DISCOVER,
+                           (ثابت خالی *) &قدر, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(IP_MTU_DISCOVER) "
                               "for %V failed, ignored",
-                              &ls[i].addr_text);
+                              &ls[i].addr_متن);
             }
         }
 
-#elif (NGX_HAVE_IP_DONTFRAG)
+#وگرنہ_اگر (NGX_HAVE_IP_DONTFRAG)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
-            value = 1;
+        اگر (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
+            قدر = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_DONTFRAG,
-                           (const void *) &value, sizeof(int))
+            اگر (setsockopt(ls[i].fd, IPPROTO_IP, IP_DONTFRAG,
+                           (ثابت خالی *) &قدر, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(IP_DONTFRAG) "
                               "for %V failed, ignored",
-                              &ls[i].addr_text);
+                              &ls[i].addr_متن);
             }
         }
 
-#endif
+#اگر_ختم
 
-#if (NGX_HAVE_INET6)
+#اگر (NGX_HAVE_INET6)
 
-#if (NGX_HAVE_IPV6_MTU_DISCOVER)
+#اگر (NGX_HAVE_IPV6_MTU_DISCOVER)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
-            value = IPV6_PMTUDISC_DO;
+        اگر (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
+            قدر = IPV6_PMTUDISC_DO;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_MTU_DISCOVER,
-                           (const void *) &value, sizeof(int))
+            اگر (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_MTU_DISCOVER,
+                           (ثابت خالی *) &قدر, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(IPV6_MTU_DISCOVER) "
                               "for %V failed, ignored",
-                              &ls[i].addr_text);
+                              &ls[i].addr_متن);
             }
         }
 
-#elif (NGX_HAVE_IPV6_DONTFRAG)
+#وگرنہ_اگر (NGX_HAVE_IPV6_DONTFRAG)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
-            value = 1;
+        اگر (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
+            قدر = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_DONTFRAG,
-                           (const void *) &value, sizeof(int))
+            اگر (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_DONTFRAG,
+                           (ثابت خالی *) &قدر, حجم(صحیح))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
+                ngx_log_error(NGX_LOG_ALERT, چکر->لوگارتھم, ngx_socket_errno,
                               "setsockopt(IPV6_DONTFRAG) "
                               "for %V failed, ignored",
-                              &ls[i].addr_text);
+                              &ls[i].addr_متن);
             }
         }
 
-#endif
+#اگر_ختم
 
-#endif
+#اگر_ختم
     }
 
-    return;
+    واپس;
 }
 
 
-void
-ngx_close_listening_sockets(ngx_cycle_t *cycle)
+خالی
+ngx_close_listening_sockets(ngx_چکر_t *چکر)
 {
     ngx_uint_t         i;
     ngx_listening_t   *ls;
@@ -1132,22 +1132,22 @@ ngx_close_listening_sockets(ngx_cycle_t *cycle)
     ngx_accept_mutex_held = 0;
     ngx_use_accept_mutex = 0;
 
-    ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
+    ls = چکر->listening.elts;
+    برائے (i = 0; i < چکر->listening.nelts; i++) {
 
-#if (NGX_QUIC)
-        if (ls[i].quic
-            && (!ls[i].reuseport || !ngx_quic_bpf_enabled(cycle)))
+#اگر (NGX_QUIC)
+        اگر (ls[i].quic
+            && (!ls[i].reuseport || !ngx_quic_bpf_enabled(چکر)))
         {
-            continue;
+            جاری;
         }
-#endif
+#اگر_ختم
 
         c = ls[i].connection;
 
-        if (c) {
-            if (c->read->active) {
-                if (ngx_event_flags & NGX_USE_EPOLL_EVENT) {
+        اگر (c) {
+            اگر (c->اقرأ->فعال) {
+                اگر (ngx_event_flags & NGX_USE_EPOLL_EVENT) {
 
                     /*
                      * it seems that Linux-2.6.x OpenVZ sends events
@@ -1155,15 +1155,15 @@ ngx_close_listening_sockets(ngx_cycle_t *cycle)
                      * the events was explicitly deleted
                      */
 
-                    ngx_del_event(c->read, NGX_READ_EVENT, 0);
+                    ngx_del_event(c->اقرأ, NGX_READ_EVENT, 0);
 
-                } else {
-                    ngx_del_event(c->read, NGX_READ_EVENT, NGX_CLOSE_EVENT);
+                } ورنہ {
+                    ngx_del_event(c->اقرأ, NGX_READ_EVENT, NGX_CLOSE_EVENT);
                 }
             }
 
-            if (c->read->timer_set) {
-                ngx_del_timer(c->read);
+            اگر (c->اقرأ->timer_سیٹ) {
+                ngx_del_timer(c->اقرأ);
             }
 
             ngx_free_connection(c);
@@ -1171,40 +1171,40 @@ ngx_close_listening_sockets(ngx_cycle_t *cycle)
             c->fd = (ngx_socket_t) -1;
         }
 
-        ngx_log_debug2(NGX_LOG_DEBUG_CORE, cycle->log, 0,
-                       "close listening %V #%d ", &ls[i].addr_text, ls[i].fd);
+        ngx_log_debug2(NGX_LOG_DEBUG_CORE, چکر->لوگارتھم, 0,
+                       "close listening %V #%d ", &ls[i].addr_متن, ls[i].fd);
 
-        if (ngx_close_socket(ls[i].fd) == -1) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_socket_errno,
-                          ngx_close_socket_n " %V failed", &ls[i].addr_text);
+        اگر (ngx_close_socket(ls[i].fd) == -1) {
+            ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_socket_errno,
+                          ngx_close_socket_n " %V failed", &ls[i].addr_متن);
         }
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#اگر (NGX_HAVE_UNIX_DOMAIN)
 
-        if (ls[i].sockaddr->sa_family == AF_UNIX
+        اگر (ls[i].sockaddr->sa_family == AF_UNIX
             && ngx_process <= NGX_PROCESS_MASTER
-            && ngx_new_binary == 0
-            && (!ls[i].inherited || ngx_getppid() != ngx_parent))
+            && ngx_new_ثنائی == 0
+            && (!ls[i].inherited || ngx_getppid() != ngx_والد))
         {
-            u_char *name = ls[i].addr_text.data + sizeof("unix:") - 1;
+            u_char *name = ls[i].addr_متن.ڈیٹا + حجم("unix:") - 1;
 
-            if (ngx_delete_file(name) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_socket_errno,
+            اگر (ngx_delete_file(name) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_EMERG, چکر->لوگارتھم, ngx_socket_errno,
                               ngx_delete_file_n " %s failed", name);
             }
         }
 
-#endif
+#اگر_ختم
 
         ls[i].fd = (ngx_socket_t) -1;
     }
 
-    cycle->listening.nelts = 0;
+    چکر->listening.nelts = 0;
 }
 
 
 ngx_connection_t *
-ngx_get_connection(ngx_socket_t s, ngx_log_t *log)
+ngx_get_connection(ngx_socket_t s, ngx_log_t *لوگارتھم)
 {
     ngx_uint_t         instance;
     ngx_event_t       *rev, *wev;
@@ -1212,121 +1212,121 @@ ngx_get_connection(ngx_socket_t s, ngx_log_t *log)
 
     /* disable warning: Win32 SOCKET is u_int while UNIX socket is int */
 
-    if (ngx_cycle->files && (ngx_uint_t) s >= ngx_cycle->files_n) {
-        ngx_log_error(NGX_LOG_ALERT, log, 0,
+    اگر (ngx_چکر->files && (ngx_uint_t) s >= ngx_چکر->files_n) {
+        ngx_log_error(NGX_LOG_ALERT, لوگارتھم, 0,
                       "the new socket has number %d, "
                       "but only %ui files are available",
-                      s, ngx_cycle->files_n);
-        return NULL;
+                      s, ngx_چکر->files_n);
+        واپس تہی;
     }
 
-    ngx_drain_connections((ngx_cycle_t *) ngx_cycle);
+    ngx_drain_connections((ngx_چکر_t *) ngx_چکر);
 
-    c = ngx_cycle->free_connections;
+    c = ngx_چکر->free_connections;
 
-    if (c == NULL) {
-        ngx_log_error(NGX_LOG_ALERT, log, 0,
+    اگر (c == تہی) {
+        ngx_log_error(NGX_LOG_ALERT, لوگارتھم, 0,
                       "%ui worker_connections are not enough",
-                      ngx_cycle->connection_n);
+                      ngx_چکر->connection_n);
 
-        return NULL;
+        واپس تہی;
     }
 
-    ngx_cycle->free_connections = c->data;
-    ngx_cycle->free_connection_n--;
+    ngx_چکر->free_connections = c->ڈیٹا;
+    ngx_چکر->free_connection_n--;
 
-    if (ngx_cycle->files && ngx_cycle->files[s] == NULL) {
-        ngx_cycle->files[s] = c;
+    اگر (ngx_چکر->files && ngx_چکر->files[s] == تہی) {
+        ngx_چکر->files[s] = c;
     }
 
-    rev = c->read;
-    wev = c->write;
+    rev = c->اقرأ;
+    wev = c->اكتب;
 
-    ngx_memzero(c, sizeof(ngx_connection_t));
+    ngx_memzero(c, حجم(ngx_connection_t));
 
-    c->read = rev;
-    c->write = wev;
+    c->اقرأ = rev;
+    c->اكتب = wev;
     c->fd = s;
-    c->log = log;
+    c->لوگارتھم = لوگارتھم;
 
     instance = rev->instance;
 
-    ngx_memzero(rev, sizeof(ngx_event_t));
-    ngx_memzero(wev, sizeof(ngx_event_t));
+    ngx_memzero(rev, حجم(ngx_event_t));
+    ngx_memzero(wev, حجم(ngx_event_t));
 
     rev->instance = !instance;
     wev->instance = !instance;
 
-    rev->index = NGX_INVALID_INDEX;
-    wev->index = NGX_INVALID_INDEX;
+    rev->اشاریہ = NGX_INVALID_اشاریہ;
+    wev->اشاریہ = NGX_INVALID_اشاریہ;
 
-    rev->data = c;
-    wev->data = c;
+    rev->ڈیٹا = c;
+    wev->ڈیٹا = c;
 
-    wev->write = 1;
+    wev->اكتب = 1;
 
-    return c;
+    واپس c;
 }
 
 
-void
+خالی
 ngx_free_connection(ngx_connection_t *c)
 {
-    c->data = ngx_cycle->free_connections;
-    ngx_cycle->free_connections = c;
-    ngx_cycle->free_connection_n++;
+    c->ڈیٹا = ngx_چکر->free_connections;
+    ngx_چکر->free_connections = c;
+    ngx_چکر->free_connection_n++;
 
-    if (ngx_cycle->files && ngx_cycle->files[c->fd] == c) {
-        ngx_cycle->files[c->fd] = NULL;
+    اگر (ngx_چکر->files && ngx_چکر->files[c->fd] == c) {
+        ngx_چکر->files[c->fd] = تہی;
     }
 }
 
 
-void
+خالی
 ngx_close_connection(ngx_connection_t *c)
 {
     ngx_err_t     err;
     ngx_uint_t    log_error, level;
     ngx_socket_t  fd;
 
-    if (c->fd == (ngx_socket_t) -1) {
-        ngx_log_error(NGX_LOG_ALERT, c->log, 0, "connection already closed");
-        return;
+    اگر (c->fd == (ngx_socket_t) -1) {
+        ngx_log_error(NGX_LOG_ALERT, c->لوگارتھم, 0, "connection already closed");
+        واپس;
     }
 
-    if (c->read->timer_set) {
-        ngx_del_timer(c->read);
+    اگر (c->اقرأ->timer_سیٹ) {
+        ngx_del_timer(c->اقرأ);
     }
 
-    if (c->write->timer_set) {
-        ngx_del_timer(c->write);
+    اگر (c->اكتب->timer_سیٹ) {
+        ngx_del_timer(c->اكتب);
     }
 
-    if (!c->shared) {
-        if (ngx_del_conn) {
+    اگر (!c->shared) {
+        اگر (ngx_del_conn) {
             ngx_del_conn(c, NGX_CLOSE_EVENT);
 
-        } else {
-            if (c->read->active || c->read->disabled) {
-                ngx_del_event(c->read, NGX_READ_EVENT, NGX_CLOSE_EVENT);
+        } ورنہ {
+            اگر (c->اقرأ->فعال || c->اقرأ->disabled) {
+                ngx_del_event(c->اقرأ, NGX_READ_EVENT, NGX_CLOSE_EVENT);
             }
 
-            if (c->write->active || c->write->disabled) {
-                ngx_del_event(c->write, NGX_WRITE_EVENT, NGX_CLOSE_EVENT);
+            اگر (c->اكتب->فعال || c->اكتب->disabled) {
+                ngx_del_event(c->اكتب, NGX_WRITE_EVENT, NGX_CLOSE_EVENT);
             }
         }
     }
 
-    if (c->read->posted) {
-        ngx_delete_posted_event(c->read);
+    اگر (c->اقرأ->posted) {
+        ngx_delete_posted_event(c->اقرأ);
     }
 
-    if (c->write->posted) {
-        ngx_delete_posted_event(c->write);
+    اگر (c->اكتب->posted) {
+        ngx_delete_posted_event(c->اكتب);
     }
 
-    c->read->closed = 1;
-    c->write->closed = 1;
+    c->اقرأ->closed = 1;
+    c->اكتب->closed = 1;
 
     ngx_reusable_connection(c, 0);
 
@@ -1337,111 +1337,111 @@ ngx_close_connection(ngx_connection_t *c)
     fd = c->fd;
     c->fd = (ngx_socket_t) -1;
 
-    if (c->shared) {
-        return;
+    اگر (c->shared) {
+        واپس;
     }
 
-    if (ngx_close_socket(fd) == -1) {
+    اگر (ngx_close_socket(fd) == -1) {
 
         err = ngx_socket_errno;
 
-        if (err == NGX_ECONNRESET || err == NGX_ENOTCONN) {
+        اگر (err == NGX_ECONNRESET || err == NGX_ENOTCONN) {
 
-            switch (log_error) {
+            انتخاب (log_error) {
 
-            case NGX_ERROR_INFO:
+            حالت NGX_ERROR_INFO:
                 level = NGX_LOG_INFO;
-                break;
+                توڑو;
 
-            case NGX_ERROR_ERR:
+            حالت NGX_ERROR_ERR:
                 level = NGX_LOG_ERR;
-                break;
+                توڑو;
 
-            default:
+            طےشدہ:
                 level = NGX_LOG_CRIT;
             }
 
-        } else {
+        } ورنہ {
             level = NGX_LOG_CRIT;
         }
 
-        ngx_log_error(level, c->log, err, ngx_close_socket_n " %d failed", fd);
+        ngx_log_error(level, c->لوگارتھم, err, ngx_close_socket_n " %d failed", fd);
     }
 }
 
 
-void
+خالی
 ngx_reusable_connection(ngx_connection_t *c, ngx_uint_t reusable)
 {
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->لوگارتھم, 0,
                    "reusable connection: %ui", reusable);
 
-    if (c->reusable) {
-        ngx_queue_remove(&c->queue);
-        ngx_cycle->reusable_connections_n--;
+    اگر (c->reusable) {
+        ngx_قطار_remove(&c->قطار);
+        ngx_چکر->reusable_connections_n--;
 
-#if (NGX_STAT_STUB)
-        (void) ngx_atomic_fetch_add(ngx_stat_waiting, -1);
-#endif
+#اگر (NGX_STAT_STUB)
+        (خالی) ngx_atomic_fetch_جوڑو(ngx_stat_انتظار, -1);
+#اگر_ختم
     }
 
     c->reusable = reusable;
 
-    if (reusable) {
+    اگر (reusable) {
         /* need cast as ngx_cycle is volatile */
 
-        ngx_queue_insert_head(
-            (ngx_queue_t *) &ngx_cycle->reusable_connections_queue, &c->queue);
-        ngx_cycle->reusable_connections_n++;
+        ngx_قطار_داخل_کرو_سر(
+            (ngx_قطار_t *) &ngx_چکر->reusable_connections_قطار, &c->قطار);
+        ngx_چکر->reusable_connections_n++;
 
-#if (NGX_STAT_STUB)
-        (void) ngx_atomic_fetch_add(ngx_stat_waiting, 1);
-#endif
+#اگر (NGX_STAT_STUB)
+        (خالی) ngx_atomic_fetch_جوڑو(ngx_stat_انتظار, 1);
+#اگر_ختم
     }
 }
 
 
-static void
-ngx_drain_connections(ngx_cycle_t *cycle)
+ساکن خالی
+ngx_drain_connections(ngx_چکر_t *چکر)
 {
     ngx_uint_t         i, n;
-    ngx_queue_t       *q;
+    ngx_قطار_t       *q;
     ngx_connection_t  *c;
 
-    if (cycle->free_connection_n > cycle->connection_n / 16
-        || cycle->reusable_connections_n == 0)
+    اگر (چکر->free_connection_n > چکر->connection_n / 16
+        || چکر->reusable_connections_n == 0)
     {
-        return;
+        واپس;
     }
 
-    if (cycle->connections_reuse_time != ngx_time()) {
-        cycle->connections_reuse_time = ngx_time();
+    اگر (چکر->connections_reuse_وقت != ngx_وقت()) {
+        چکر->connections_reuse_وقت = ngx_وقت();
 
-        ngx_log_error(NGX_LOG_WARN, cycle->log, 0,
+        ngx_log_error(NGX_LOG_WARN, چکر->لوگارتھم, 0,
                       "%ui worker_connections are not enough, "
                       "reusing connections",
-                      cycle->connection_n);
+                      چکر->connection_n);
     }
 
-    c = NULL;
-    n = ngx_max(ngx_min(32, cycle->reusable_connections_n / 8), 1);
+    c = تہی;
+    n = ngx_max(ngx_min(32, چکر->reusable_connections_n / 8), 1);
 
-    for (i = 0; i < n; i++) {
-        if (ngx_queue_empty(&cycle->reusable_connections_queue)) {
-            break;
+    برائے (i = 0; i < n; i++) {
+        اگر (ngx_قطار_خالی_خانے(&چکر->reusable_connections_قطار)) {
+            توڑو;
         }
 
-        q = ngx_queue_last(&cycle->reusable_connections_queue);
-        c = ngx_queue_data(q, ngx_connection_t, queue);
+        q = ngx_قطار_آخری(&چکر->reusable_connections_قطار);
+        c = ngx_قطار_ڈیٹا(q, ngx_connection_t, قطار);
 
-        ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->log, 0,
+        ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->لوگارتھم, 0,
                        "reusing connection");
 
         c->close = 1;
-        c->read->handler(c->read);
+        c->اقرأ->handler(c->اقرأ);
     }
 
-    if (cycle->free_connection_n == 0 && c && c->reusable) {
+    اگر (چکر->free_connection_n == 0 && c && c->reusable) {
 
         /*
          * if no connections were freed, try to reuse the last
@@ -1449,30 +1449,30 @@ ngx_drain_connections(ngx_cycle_t *cycle)
          * previous reuse moved it to lingering close
          */
 
-        ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->log, 0,
+        ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->لوگارتھم, 0,
                        "reusing connection again");
 
         c->close = 1;
-        c->read->handler(c->read);
+        c->اقرأ->handler(c->اقرأ);
     }
 }
 
 
-void
-ngx_close_idle_connections(ngx_cycle_t *cycle)
+خالی
+ngx_close_idle_connections(ngx_چکر_t *چکر)
 {
     ngx_uint_t         i;
     ngx_connection_t  *c;
 
-    c = cycle->connections;
+    c = چکر->connections;
 
-    for (i = 0; i < cycle->connection_n; i++) {
+    برائے (i = 0; i < چکر->connection_n; i++) {
 
         /* THREAD: lock */
 
-        if (c[i].fd != (ngx_socket_t) -1 && c[i].idle) {
+        اگر (c[i].fd != (ngx_socket_t) -1 && c[i].idle) {
             c[i].close = 1;
-            c[i].read->handler(c[i].read);
+            c[i].اقرأ->handler(c[i].اقرأ);
         }
     }
 }
@@ -1480,58 +1480,58 @@ ngx_close_idle_connections(ngx_cycle_t *cycle)
 
 ngx_int_t
 ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
-    ngx_uint_t port)
+    ngx_uint_t پورٹ)
 {
     socklen_t             len;
     ngx_uint_t            addr;
     ngx_sockaddr_t        sa;
-    struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
+    ساخت sockaddr_اندر   *جیب;
+#اگر (NGX_HAVE_INET6)
     ngx_uint_t            i;
-    struct sockaddr_in6  *sin6;
-#endif
+    ساخت sockaddr_in6  *sin6;
+#اگر_ختم
 
     addr = 0;
 
-    if (c->local_socklen) {
-        switch (c->local_sockaddr->sa_family) {
+    اگر (c->local_socklen) {
+        انتخاب (c->local_sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-        case AF_INET6:
-            sin6 = (struct sockaddr_in6 *) c->local_sockaddr;
+#اگر (NGX_HAVE_INET6)
+        حالت AF_INET6:
+            sin6 = (ساخت sockaddr_in6 *) c->local_sockaddr;
 
-            for (i = 0; addr == 0 && i < 16; i++) {
+            برائے (i = 0; addr == 0 && i < 16; i++) {
                 addr |= sin6->sin6_addr.s6_addr[i];
             }
 
-            break;
-#endif
+            توڑو;
+#اگر_ختم
 
-#if (NGX_HAVE_UNIX_DOMAIN)
-        case AF_UNIX:
+#اگر (NGX_HAVE_UNIX_DOMAIN)
+        حالت AF_UNIX:
             addr = 1;
-            break;
-#endif
+            توڑو;
+#اگر_ختم
 
-        default: /* AF_INET */
-            sin = (struct sockaddr_in *) c->local_sockaddr;
-            addr = sin->sin_addr.s_addr;
-            break;
+        طےشدہ: /* AF_INET */
+            جیب = (ساخت sockaddr_اندر *) c->local_sockaddr;
+            addr = جیب->sin_addr.s_addr;
+            توڑو;
         }
     }
 
-    if (addr == 0) {
+    اگر (addr == 0) {
 
-        len = sizeof(ngx_sockaddr_t);
+        len = حجم(ngx_sockaddr_t);
 
-        if (getsockname(c->fd, &sa.sockaddr, &len) == -1) {
+        اگر (getsockname(c->fd, &sa.sockaddr, &len) == -1) {
             ngx_connection_error(c, ngx_socket_errno, "getsockname() failed");
-            return NGX_ERROR;
+            واپس NGX_ERROR;
         }
 
         c->local_sockaddr = ngx_palloc(c->pool, len);
-        if (c->local_sockaddr == NULL) {
-            return NGX_ERROR;
+        اگر (c->local_sockaddr == تہی) {
+            واپس NGX_ERROR;
         }
 
         ngx_memcpy(c->local_sockaddr, &sa, len);
@@ -1539,36 +1539,36 @@ ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
         c->local_socklen = len;
     }
 
-    if (s == NULL) {
-        return NGX_OK;
+    اگر (s == تہی) {
+        واپس NGX_OK;
     }
 
     s->len = ngx_sock_ntop(c->local_sockaddr, c->local_socklen,
-                           s->data, s->len, port);
+                           s->ڈیٹا, s->len, پورٹ);
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
 ngx_int_t
 ngx_tcp_nodelay(ngx_connection_t *c)
 {
-    int  tcp_nodelay;
+    صحیح  tcp_nodelay;
 
-    if (c->tcp_nodelay != NGX_TCP_NODELAY_UNSET) {
-        return NGX_OK;
+    اگر (c->tcp_nodelay != NGX_TCP_NODELAY_UNSET) {
+        واپس NGX_OK;
     }
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->log, 0, "tcp_nodelay");
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->لوگارتھم, 0, "tcp_nodelay");
 
     tcp_nodelay = 1;
 
-    if (setsockopt(c->fd, IPPROTO_TCP, TCP_NODELAY,
-                   (const void *) &tcp_nodelay, sizeof(int))
+    اگر (setsockopt(c->fd, IPPROTO_TCP, TCP_NODELAY,
+                   (ثابت خالی *) &tcp_nodelay, حجم(صحیح))
         == -1)
     {
-#if (NGX_SOLARIS)
-        if (c->log_error == NGX_ERROR_INFO) {
+#اگر (NGX_SOLARIS)
+        اگر (c->log_error == NGX_ERROR_INFO) {
 
             /* Solaris returns EINVAL if a socket has been shut down */
             c->log_error = NGX_ERROR_IGNORE_EINVAL;
@@ -1578,60 +1578,60 @@ ngx_tcp_nodelay(ngx_connection_t *c)
 
             c->log_error = NGX_ERROR_INFO;
 
-            return NGX_ERROR;
+            واپس NGX_ERROR;
         }
-#endif
+#اگر_ختم
 
         ngx_connection_error(c, ngx_socket_errno,
                              "setsockopt(TCP_NODELAY) failed");
-        return NGX_ERROR;
+        واپس NGX_ERROR;
     }
 
-    c->tcp_nodelay = NGX_TCP_NODELAY_SET;
+    c->tcp_nodelay = NGX_TCP_NODELAY_سیٹ;
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
 ngx_int_t
-ngx_connection_error(ngx_connection_t *c, ngx_err_t err, char *text)
+ngx_connection_error(ngx_connection_t *c, ngx_err_t err, حرف *متن)
 {
     ngx_uint_t  level;
 
     /* Winsock may return NGX_ECONNABORTED instead of NGX_ECONNRESET */
 
-    if ((err == NGX_ECONNRESET
-#if (NGX_WIN32)
+    اگر ((err == NGX_ECONNRESET
+#اگر (NGX_WIN32)
          || err == NGX_ECONNABORTED
-#endif
+#اگر_ختم
         ) && c->log_error == NGX_ERROR_IGNORE_ECONNRESET)
     {
-        return 0;
+        واپس 0;
     }
 
-#if (NGX_SOLARIS)
-    if (err == NGX_EINVAL && c->log_error == NGX_ERROR_IGNORE_EINVAL) {
-        return 0;
+#اگر (NGX_SOLARIS)
+    اگر (err == NGX_EINVAL && c->log_error == NGX_ERROR_IGNORE_EINVAL) {
+        واپس 0;
     }
-#endif
+#اگر_ختم
 
-    if (err == NGX_EMSGSIZE && c->log_error == NGX_ERROR_IGNORE_EMSGSIZE) {
-        return 0;
+    اگر (err == NGX_EMSGSIZE && c->log_error == NGX_ERROR_IGNORE_EMSGSIZE) {
+        واپس 0;
     }
 
-#if (NGX_LINUX)
-    if (err == NGX_EIO && c->ktls_recv) {
-        return 0;
+#اگر (NGX_LINUX)
+    اگر (err == NGX_EIO && c->ktls_recv) {
+        واپس 0;
     }
-#endif
+#اگر_ختم
 
-    if (err == 0
+    اگر (err == 0
         || err == NGX_ECONNRESET
-#if (NGX_WIN32)
+#اگر (NGX_WIN32)
         || err == NGX_ECONNABORTED
-#else
+#ورنہ
         || err == NGX_EPIPE
-#endif
+#اگر_ختم
         || err == NGX_ENOTCONN
         || err == NGX_ETIMEDOUT
         || err == NGX_ECONNREFUSED
@@ -1640,24 +1640,24 @@ ngx_connection_error(ngx_connection_t *c, ngx_err_t err, char *text)
         || err == NGX_EHOSTDOWN
         || err == NGX_EHOSTUNREACH)
     {
-        switch (c->log_error) {
+        انتخاب (c->log_error) {
 
-        case NGX_ERROR_IGNORE_EMSGSIZE:
-        case NGX_ERROR_IGNORE_EINVAL:
-        case NGX_ERROR_IGNORE_ECONNRESET:
-        case NGX_ERROR_INFO:
+        حالت NGX_ERROR_IGNORE_EMSGSIZE:
+        حالت NGX_ERROR_IGNORE_EINVAL:
+        حالت NGX_ERROR_IGNORE_ECONNRESET:
+        حالت NGX_ERROR_INFO:
             level = NGX_LOG_INFO;
-            break;
+            توڑو;
 
-        default:
+        طےشدہ:
             level = NGX_LOG_ERR;
         }
 
-    } else {
+    } ورنہ {
         level = NGX_LOG_ALERT;
     }
 
-    ngx_log_error(level, c->log, err, text);
+    ngx_log_error(level, c->لوگارتھم, err, متن);
 
-    return NGX_ERROR;
+    واپس NGX_ERROR;
 }

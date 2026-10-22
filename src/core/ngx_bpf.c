@@ -4,140 +4,140 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
-#define NGX_BPF_LOGBUF_SIZE  (32 * 1024)
+#تعریف_کرو NGX_BPF_LOGBUF_سائز  (32 * 1024)
 
 
-static ngx_inline int
-ngx_bpf(enum bpf_cmd cmd, union bpf_attr *attr, unsigned int size)
+ساکن ngx_inline صحیح
+ngx_bpf(شمار bpf_cmd cmd, اتحاد bpf_attr *attr, غیرعلامتی صحیح سائز)
 {
-    return syscall(__NR_bpf, cmd, attr, size);
+    واپس syscall(__NR_bpf, cmd, attr, سائز);
 }
 
 
-void
-ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol, int fd)
+خالی
+ngx_bpf_پروگرام_link(ngx_bpf_پروگرام_t *پروگرام, ثابت حرف *علامت, صحیح fd)
 {
     ngx_uint_t        i;
     ngx_bpf_reloc_t  *rl;
 
-    rl = program->relocs;
+    rl = پروگرام->relocs;
 
-    for (i = 0; i < program->nrelocs; i++) {
-        if (ngx_strcmp(rl[i].name, symbol) == 0) {
-            program->ins[rl[i].offset].src_reg = 1;
-            program->ins[rl[i].offset].imm = fd;
+    برائے (i = 0; i < پروگرام->nrelocs; i++) {
+        اگر (ngx_strcmp(rl[i].name, علامت) == 0) {
+            پروگرام->ins[rl[i].انحراف].src_reg = 1;
+            پروگرام->ins[rl[i].انحراف].imm = fd;
         }
     }
 }
 
 
-int
-ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program)
+صحیح
+ngx_bpf_بھرو_پروگرام(ngx_log_t *لوگارتھم, ngx_bpf_پروگرام_t *پروگرام)
 {
-    int             fd;
-    union bpf_attr  attr;
-#if (NGX_DEBUG)
-    char            buf[NGX_BPF_LOGBUF_SIZE];
-#endif
+    صحیح             fd;
+    اتحاد bpf_attr  attr;
+#اگر (NGX_DEBUG)
+    حرف            buf[NGX_BPF_LOGBUF_سائز];
+#اگر_ختم
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, حجم(اتحاد bpf_attr));
 
-    attr.license = (uintptr_t) program->license;
-    attr.prog_type = program->type;
-    attr.insns = (uintptr_t) program->ins;
-    attr.insn_cnt = program->nins;
+    attr.license = (uintptr_t) پروگرام->license;
+    attr.prog_type = پروگرام->type;
+    attr.insns = (uintptr_t) پروگرام->ins;
+    attr.insn_cnt = پروگرام->nins;
 
-#if (NGX_DEBUG)
+#اگر (NGX_DEBUG)
     /* for verifier errors */
     attr.log_buf = (uintptr_t) buf;
-    attr.log_size = NGX_BPF_LOGBUF_SIZE;
+    attr.log_سائز = NGX_BPF_LOGBUF_سائز;
     attr.log_level = 1;
-#endif
+#اگر_ختم
 
-    fd = ngx_bpf(BPF_PROG_LOAD, &attr, sizeof(attr));
-    if (fd < 0) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    fd = ngx_bpf(BPF_PROG_بھرو, &attr, حجم(attr));
+    اگر (fd < 0) {
+        ngx_log_error(NGX_LOG_ALERT, لوگارتھم, ngx_errno,
                       "failed to load BPF program");
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0,
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, لوگارتھم, 0,
                        "bpf verifier: %s", buf);
 
-        return -1;
+        واپس -1;
     }
 
-    return fd;
+    واپس fd;
 }
 
 
-int
-ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags)
+صحیح
+ngx_bpf_map_create(ngx_log_t *لوگارتھم, شمار bpf_map_type type, صحیح کلید_سائز,
+    صحیح قدر_سائز, صحیح max_entries, uint32_t map_flags)
 {
-    int             fd;
-    union bpf_attr  attr;
+    صحیح             fd;
+    اتحاد bpf_attr  attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, حجم(اتحاد bpf_attr));
 
     attr.map_type = type;
-    attr.key_size = key_size;
-    attr.value_size = value_size;
+    attr.کلید_سائز = کلید_سائز;
+    attr.قدر_سائز = قدر_سائز;
     attr.max_entries = max_entries;
     attr.map_flags = map_flags;
 
-    fd = ngx_bpf(BPF_MAP_CREATE, &attr, sizeof(attr));
-    if (fd < 0) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    fd = ngx_bpf(BPF_MAP_CREATE, &attr, حجم(attr));
+    اگر (fd < 0) {
+        ngx_log_error(NGX_LOG_ALERT, لوگارتھم, ngx_errno,
                       "failed to create BPF map");
-        return NGX_ERROR;
+        واپس NGX_ERROR;
     }
 
-    return fd;
+    واپس fd;
 }
 
 
-int
-ngx_bpf_map_update(int fd, const void *key, const void *value, uint64_t flags)
+صحیح
+ngx_bpf_map_update(صحیح fd, ثابت خالی *کلید, ثابت خالی *قدر, uint64_t flags)
 {
-    union bpf_attr attr;
+    اتحاد bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, حجم(اتحاد bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.کلید = (uintptr_t) کلید;
+    attr.قدر = (uintptr_t) قدر;
     attr.flags = flags;
 
-    return ngx_bpf(BPF_MAP_UPDATE_ELEM, &attr, sizeof(attr));
+    واپس ngx_bpf(BPF_MAP_UPDATE_ELEM, &attr, حجم(attr));
 }
 
 
-int
-ngx_bpf_map_delete(int fd, const void *key)
+صحیح
+ngx_bpf_map_delete(صحیح fd, ثابت خالی *کلید)
 {
-    union bpf_attr attr;
+    اتحاد bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, حجم(اتحاد bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
+    attr.کلید = (uintptr_t) کلید;
 
-    return ngx_bpf(BPF_MAP_DELETE_ELEM, &attr, sizeof(attr));
+    واپس ngx_bpf(BPF_MAP_DELETE_ELEM, &attr, حجم(attr));
 }
 
 
-int
-ngx_bpf_map_lookup(int fd, const void *key, void *value)
+صحیح
+ngx_bpf_map_lookup(صحیح fd, ثابت خالی *کلید, خالی *قدر)
 {
-    union bpf_attr attr;
+    اتحاد bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, حجم(اتحاد bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.کلید = (uintptr_t) کلید;
+    attr.قدر = (uintptr_t) قدر;
 
-    return ngx_bpf(BPF_MAP_LOOKUP_ELEM, &attr, sizeof(attr));
+    واپس ngx_bpf(BPF_MAP_LOOKUP_ELEM, &attr, حجم(attr));
 }

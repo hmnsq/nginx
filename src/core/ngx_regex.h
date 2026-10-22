@@ -5,74 +5,74 @@
  */
 
 
-#ifndef _NGX_REGEX_H_INCLUDED_
-#define _NGX_REGEX_H_INCLUDED_
+#اگر_غیر_تعریف_شدہ _NGX_REGEX_H_INCLUDED_
+#تعریف_کرو _NGX_REGEX_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-#if (NGX_PCRE2)
+#اگر (NGX_PCRE2)
 
-#define PCRE2_CODE_UNIT_WIDTH  8
-#include <pcre2.h>
+#تعریف_کرو PCRE2_رمز_UNIT_چوڑائی  8
+#شامل <pcre2.h>
 
-#define NGX_REGEX_NO_MATCHED   PCRE2_ERROR_NOMATCH   /* -1 */
+#تعریف_کرو NGX_REGEX_NO_MATCHED   PCRE2_ERROR_NOMATCH   /* -1 */
 
-typedef pcre2_code  ngx_regex_t;
+قسمتعریف pcre2_رمز  ngx_regex_t;
 
-#else
+#ورنہ
 
-#include <pcre.h>
+#شامل <pcre.h>
 
-#define NGX_REGEX_NO_MATCHED   PCRE_ERROR_NOMATCH    /* -1 */
+#تعریف_کرو NGX_REGEX_NO_MATCHED   PCRE_ERROR_NOMATCH    /* -1 */
 
-typedef struct {
-    pcre        *code;
+قسمتعریف ساخت {
+    pcre        *رمز;
     pcre_extra  *extra;
 } ngx_regex_t;
 
-#endif
+#اگر_ختم
 
 
-#define NGX_REGEX_CASELESS     0x00000001
-#define NGX_REGEX_MULTILINE    0x00000002
+#تعریف_کرو NGX_REGEX_CASELESS     0x00000001
+#تعریف_کرو NGX_REGEX_MULTILINE    0x00000002
 
 
-typedef struct {
-    ngx_str_t     pattern;
+قسمتعریف ساخت {
+    ngx_str_t     نمونہ;
     ngx_pool_t   *pool;
     ngx_uint_t    options;
 
     ngx_regex_t  *regex;
-    int           captures;
-    int           named_captures;
-    int           name_size;
-    u_char       *names;
+    صحیح           captures;
+    صحیح           named_captures;
+    صحیح           name_سائز;
+    u_char       *نام;
     ngx_str_t     err;
 } ngx_regex_compile_t;
 
 
-typedef struct {
+قسمتعریف ساخت {
     ngx_regex_t  *regex;
     u_char       *name;
 } ngx_regex_elt_t;
 
 
-void ngx_regex_init(void);
+خالی ngx_regex_init(خالی);
 ngx_int_t ngx_regex_compile(ngx_regex_compile_t *rc);
 
-ngx_int_t ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures,
-    ngx_uint_t size);
+ngx_int_t ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, صحیح *captures,
+    ngx_uint_t سائز);
 
-#if (NGX_PCRE2)
-#define ngx_regex_exec_n       "pcre2_match()"
-#else
-#define ngx_regex_exec_n       "pcre_exec()"
-#endif
+#اگر (NGX_PCRE2)
+#تعریف_کرو ngx_regex_exec_n       "pcre2_match()"
+#ورنہ
+#تعریف_کرو ngx_regex_exec_n       "pcre_exec()"
+#اگر_ختم
 
-ngx_int_t ngx_regex_exec_array(ngx_array_t *a, ngx_str_t *s, ngx_log_t *log);
+ngx_int_t ngx_regex_exec_array(ngx_array_t *a, ngx_str_t *s, ngx_log_t *لوگارتھم);
 
 
-#endif /* _NGX_REGEX_H_INCLUDED_ */
+#اگر_ختم /* _NGX_REGEX_H_INCLUDED_ */

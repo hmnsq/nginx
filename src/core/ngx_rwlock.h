@@ -5,18 +5,18 @@
  */
 
 
-#ifndef _NGX_RWLOCK_H_INCLUDED_
-#define _NGX_RWLOCK_H_INCLUDED_
+#اگر_غیر_تعریف_شدہ _NGX_RWLOCK_H_INCLUDED_
+#تعریف_کرو _NGX_RWLOCK_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-void ngx_rwlock_wlock(ngx_atomic_t *lock);
-void ngx_rwlock_rlock(ngx_atomic_t *lock);
-void ngx_rwlock_unlock(ngx_atomic_t *lock);
-void ngx_rwlock_downgrade(ngx_atomic_t *lock);
+خالی ngx_rwlock_wlock(ngx_atomic_t *تالا);
+خالی ngx_rwlock_rlock(ngx_atomic_t *تالا);
+خالی ngx_rwlock_unlock(ngx_atomic_t *تالا);
+خالی ngx_rwlock_downgrade(ngx_atomic_t *تالا);
 
 
-#endif /* _NGX_RWLOCK_H_INCLUDED_ */
+#اگر_ختم /* _NGX_RWLOCK_H_INCLUDED_ */

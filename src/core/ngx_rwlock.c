@@ -5,40 +5,40 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#اگر (NGX_HAVE_ATOMIC_OPS)
 
 
-#define NGX_RWLOCK_SPIN   2048
-#define NGX_RWLOCK_WLOCK  ((ngx_atomic_uint_t) -1)
+#تعریف_کرو NGX_RWLOCK_SPIN   2048
+#تعریف_کرو NGX_RWLOCK_WLOCK  ((ngx_atomic_uint_t) -1)
 
 
-void
-ngx_rwlock_wlock(ngx_atomic_t *lock)
+خالی
+ngx_rwlock_wlock(ngx_atomic_t *تالا)
 {
     ngx_uint_t  i, n;
 
-    for ( ;; ) {
+    برائے ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK)) {
-            return;
+        اگر (*تالا == 0 && ngx_atomic_cmp_سیٹ(تالا, 0, NGX_RWLOCK_WLOCK)) {
+            واپس;
         }
 
-        if (ngx_ncpu > 1) {
+        اگر (ngx_ncpu > 1) {
 
-            for (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
+            برائے (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                برائے (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0
-                    && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK))
+                اگر (*تالا == 0
+                    && ngx_atomic_cmp_سیٹ(تالا, 0, NGX_RWLOCK_WLOCK))
                 {
-                    return;
+                    واپس;
                 }
             }
         }
@@ -48,35 +48,35 @@ ngx_rwlock_wlock(ngx_atomic_t *lock)
 }
 
 
-void
-ngx_rwlock_rlock(ngx_atomic_t *lock)
+خالی
+ngx_rwlock_rlock(ngx_atomic_t *تالا)
 {
     ngx_uint_t         i, n;
     ngx_atomic_uint_t  readers;
 
-    for ( ;; ) {
-        readers = *lock;
+    برائے ( ;; ) {
+        readers = *تالا;
 
-        if (readers != NGX_RWLOCK_WLOCK
-            && ngx_atomic_cmp_set(lock, readers, readers + 1))
+        اگر (readers != NGX_RWLOCK_WLOCK
+            && ngx_atomic_cmp_سیٹ(تالا, readers, readers + 1))
         {
-            return;
+            واپس;
         }
 
-        if (ngx_ncpu > 1) {
+        اگر (ngx_ncpu > 1) {
 
-            for (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
+            برائے (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                برائے (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                readers = *lock;
+                readers = *تالا;
 
-                if (readers != NGX_RWLOCK_WLOCK
-                    && ngx_atomic_cmp_set(lock, readers, readers + 1))
+                اگر (readers != NGX_RWLOCK_WLOCK
+                    && ngx_atomic_cmp_سیٹ(تالا, readers, readers + 1))
                 {
-                    return;
+                    واپس;
                 }
             }
         }
@@ -86,32 +86,32 @@ ngx_rwlock_rlock(ngx_atomic_t *lock)
 }
 
 
-void
-ngx_rwlock_unlock(ngx_atomic_t *lock)
+خالی
+ngx_rwlock_unlock(ngx_atomic_t *تالا)
 {
-    if (*lock == NGX_RWLOCK_WLOCK) {
-        (void) ngx_atomic_cmp_set(lock, NGX_RWLOCK_WLOCK, 0);
-    } else {
-        (void) ngx_atomic_fetch_add(lock, -1);
+    اگر (*تالا == NGX_RWLOCK_WLOCK) {
+        (خالی) ngx_atomic_cmp_سیٹ(تالا, NGX_RWLOCK_WLOCK, 0);
+    } ورنہ {
+        (خالی) ngx_atomic_fetch_جوڑو(تالا, -1);
     }
 }
 
 
-void
-ngx_rwlock_downgrade(ngx_atomic_t *lock)
+خالی
+ngx_rwlock_downgrade(ngx_atomic_t *تالا)
 {
-    if (*lock == NGX_RWLOCK_WLOCK) {
-        *lock = 1;
+    اگر (*تالا == NGX_RWLOCK_WLOCK) {
+        *تالا = 1;
     }
 }
 
 
-#else
+#ورنہ
 
-#if (NGX_HTTP_UPSTREAM_ZONE || NGX_STREAM_UPSTREAM_ZONE)
+#اگر (NGX_HTTP_UPSTREAM_ZONE || NGX_دھارا_UPSTREAM_ZONE)
 
-#error ngx_atomic_cmp_set() is not defined!
+#غلطی ngx_atomic_cmp_سیٹ() is not defined!
 
-#endif
+#اگر_ختم
 
-#endif
+#اگر_ختم

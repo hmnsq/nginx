@@ -5,48 +5,48 @@
  */
 
 
-#ifndef _NGX_TIMES_H_INCLUDED_
-#define _NGX_TIMES_H_INCLUDED_
+#اگر_غیر_تعریف_شدہ _NGX_TIMES_H_INCLUDED_
+#تعریف_کرو _NGX_TIMES_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-typedef struct {
-    time_t      sec;
+قسمتعریف ساخت {
+    وقت_t      sec;
     ngx_uint_t  msec;
     ngx_int_t   gmtoff;
-} ngx_time_t;
+} ngx_وقت_t;
 
 
-void ngx_time_init(void);
-void ngx_time_update(void);
-void ngx_time_sigsafe_update(void);
-u_char *ngx_http_time(u_char *buf, time_t t);
-u_char *ngx_http_cookie_time(u_char *buf, time_t t);
-void ngx_gmtime(time_t t, ngx_tm_t *tp);
+خالی ngx_وقت_init(خالی);
+خالی ngx_وقت_update(خالی);
+خالی ngx_وقت_sigsafe_update(خالی);
+u_char *ngx_http_وقت(u_char *buf, وقت_t t);
+u_char *ngx_http_cookie_وقت(u_char *buf, وقت_t t);
+خالی ngx_gmtime(وقت_t t, ngx_tm_t *tp);
 
-time_t ngx_next_time(time_t when);
-#define ngx_next_time_n      "mktime()"
+وقت_t ngx_اگلا_وقت(وقت_t when);
+#تعریف_کرو ngx_اگلا_وقت_n      "mktime()"
 
 
-extern volatile ngx_time_t  *ngx_cached_time;
+خارجی متلون ngx_وقت_t  *ngx_cached_وقت;
 
-#define ngx_time()           ngx_cached_time->sec
-#define ngx_timeofday()      (ngx_time_t *) ngx_cached_time
+#تعریف_کرو ngx_وقت()           ngx_cached_وقت->sec
+#تعریف_کرو ngx_timeofday()      (ngx_وقت_t *) ngx_cached_وقت
 
-extern volatile ngx_str_t    ngx_cached_err_log_time;
-extern volatile ngx_str_t    ngx_cached_http_time;
-extern volatile ngx_str_t    ngx_cached_http_log_time;
-extern volatile ngx_str_t    ngx_cached_http_log_iso8601;
-extern volatile ngx_str_t    ngx_cached_syslog_time;
+خارجی متلون ngx_str_t    ngx_cached_err_log_وقت;
+خارجی متلون ngx_str_t    ngx_cached_http_وقت;
+خارجی متلون ngx_str_t    ngx_cached_http_log_وقت;
+خارجی متلون ngx_str_t    ngx_cached_http_log_iso8601;
+خارجی متلون ngx_str_t    ngx_cached_syslog_وقت;
 
 /*
  * milliseconds elapsed since some unspecified point in the past
  * and truncated to ngx_msec_t, used in event timers
  */
-extern volatile ngx_msec_t  ngx_current_msec;
+خارجی متلون ngx_msec_t  ngx_current_msec;
 
 
-#endif /* _NGX_TIMES_H_INCLUDED_ */
+#اگر_ختم /* _NGX_TIMES_H_INCLUDED_ */

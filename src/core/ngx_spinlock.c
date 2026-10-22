@@ -5,34 +5,34 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-void
-ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
+خالی
+ngx_spinlock(ngx_atomic_t *تالا, ngx_atomic_int_t قدر, ngx_uint_t spin)
 {
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#اگر (NGX_HAVE_ATOMIC_OPS)
 
     ngx_uint_t  i, n;
 
-    for ( ;; ) {
+    برائے ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-            return;
+        اگر (*تالا == 0 && ngx_atomic_cmp_سیٹ(تالا, 0, قدر)) {
+            واپس;
         }
 
-        if (ngx_ncpu > 1) {
+        اگر (ngx_ncpu > 1) {
 
-            for (n = 1; n < spin; n <<= 1) {
+            برائے (n = 1; n < spin; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                برائے (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-                    return;
+                اگر (*تالا == 0 && ngx_atomic_cmp_سیٹ(تالا, 0, قدر)) {
+                    واپس;
                 }
             }
         }
@@ -40,14 +40,14 @@ ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
         ngx_sched_yield();
     }
 
-#else
+#ورنہ
 
-#if (NGX_THREADS)
+#اگر (NGX_دھاگے)
 
-#error ngx_spinlock() or ngx_atomic_cmp_set() are not defined !
+#غلطی ngx_spinlock() or ngx_atomic_cmp_سیٹ() are not defined !
 
-#endif
+#اگر_ختم
 
-#endif
+#اگر_ختم
 
 }

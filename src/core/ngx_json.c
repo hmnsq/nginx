@@ -4,173 +4,173 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-typedef ssize_t   (*ngx_json_length_pt)(ngx_data_item_t *item);
-typedef u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_data_item_t *item);
+قسمتعریف ssize_t   (*ngx_json_لمبائی_pt)(ngx_ڈیٹا_شے_t *شے);
+قسمتعریف u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_ڈیٹا_شے_t *شے);
 
 
-typedef struct {
-    ngx_json_length_pt        length;
+قسمتعریف ساخت {
+    ngx_json_لمبائی_pt        لمبائی;
     ngx_json_encode_pt        encode;
 } ngx_json_encode_t;
 
 
-static ssize_t ngx_json_obj_length(ngx_data_item_t *item);
-static ssize_t ngx_json_list_length(ngx_data_item_t *item);
-static ssize_t ngx_json_string_length(ngx_data_item_t *item);
-static ssize_t ngx_json_integer_length(ngx_data_item_t *item);
-static ssize_t ngx_json_boolean_length(ngx_data_item_t *item);
-static ssize_t ngx_json_null_length(ngx_data_item_t *item);
+ساکن ssize_t ngx_json_obj_لمبائی(ngx_ڈیٹا_شے_t *شے);
+ساکن ssize_t ngx_json_list_لمبائی(ngx_ڈیٹا_شے_t *شے);
+ساکن ssize_t ngx_json_string_لمبائی(ngx_ڈیٹا_شے_t *شے);
+ساکن ssize_t ngx_json_integer_لمبائی(ngx_ڈیٹا_شے_t *شے);
+ساکن ssize_t ngx_json_boolean_لمبائی(ngx_ڈیٹا_شے_t *شے);
+ساکن ssize_t ngx_json_null_لمبائی(ngx_ڈیٹا_شے_t *شے);
 
-static u_char *ngx_json_obj_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_list_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_string_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_integer_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_null_encode(u_char *p, ngx_data_item_t *item);
+ساکن u_char *ngx_json_obj_encode(u_char *p, ngx_ڈیٹا_شے_t *شے);
+ساکن u_char *ngx_json_list_encode(u_char *p, ngx_ڈیٹا_شے_t *شے);
+ساکن u_char *ngx_json_string_encode(u_char *p, ngx_ڈیٹا_شے_t *شے);
+ساکن u_char *ngx_json_integer_encode(u_char *p, ngx_ڈیٹا_شے_t *شے);
+ساکن u_char *ngx_json_boolean_encode(u_char *p, ngx_ڈیٹا_شے_t *شے);
+ساکن u_char *ngx_json_null_encode(u_char *p, ngx_ڈیٹا_شے_t *شے);
 
 
-static ngx_json_encode_t  ngx_json_encode[] = {
+ساکن ngx_json_encode_t  ngx_json_encode[] = {
 
     /* NGX_DATA_OBJECT_TYPE */
-    { ngx_json_obj_length,
+    { ngx_json_obj_لمبائی,
       ngx_json_obj_encode },
 
     /* NGX_DATA_LIST_TYPE */
-    { ngx_json_list_length,
+    { ngx_json_list_لمبائی,
       ngx_json_list_encode },
 
     /* NGX_DATA_STRING_TYPE */
-    { ngx_json_string_length,
+    { ngx_json_string_لمبائی,
       ngx_json_string_encode },
 
     /* NGX_DATA_INTEGER_TYPE */
-    { ngx_json_integer_length,
+    { ngx_json_integer_لمبائی,
       ngx_json_integer_encode },
 
     /* NGX_DATA_BOOLEAN_TYPE */
-    { ngx_json_boolean_length,
+    { ngx_json_boolean_لمبائی,
       ngx_json_boolean_encode },
 
     /* NGX_DATA_NULL_TYPE */
-    { ngx_json_null_length,
+    { ngx_json_null_لمبائی,
       ngx_json_null_encode },
 };
 
 
 ngx_buf_t *
-ngx_json_render(ngx_pool_t *pool, ngx_data_item_t *item)
+ngx_json_render(ngx_pool_t *pool, ngx_ڈیٹا_شے_t *شے)
 {
-    size_t      length;
+    سائز_t      لمبائی;
     ngx_buf_t  *buf;
 
-    length = ngx_json_encode[item->type].length(item);
-    if (length == (size_t) NGX_ERROR) {
-        return NULL;
+    لمبائی = ngx_json_encode[شے->type].لمبائی(شے);
+    اگر (لمبائی == (سائز_t) NGX_ERROR) {
+        واپس تہی;
     }
 
-    buf = ngx_create_temp_buf(pool, length);
-    if (buf == NULL) {
-        return NULL;
+    buf = ngx_create_عارضی_buf(pool, لمبائی);
+    اگر (buf == تہی) {
+        واپس تہی;
     }
 
-    buf->last = ngx_json_encode[item->type].encode(buf->last, item);
+    buf->آخری = ngx_json_encode[شے->type].encode(buf->آخری, شے);
 
-    return buf;
+    واپس buf;
 }
 
 
-static ssize_t
-ngx_json_obj_length(ngx_data_item_t *item)
+ساکن ssize_t
+ngx_json_obj_لمبائی(ngx_ڈیٹا_شے_t *شے)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    سائز_t            len, کل;
+    ngx_ڈیٹا_obj_t   *obj;
+    ngx_ڈیٹا_شے_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("{}") - 1;
-    i = obj->item;
+    obj = &شے->ڈیٹا.object;
+    کل = حجم("{}") - 1;
+    i = obj->شے;
 
-    if (i) {
-        for ( ;; ) {
-            if (i->name.len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\":") - 1)) {
-                return NGX_ERROR;
+    اگر (i) {
+        برائے ( ;; ) {
+            اگر (i->name.len > NGX_MAX_سائز_T_قدر - (حجم("\"\":") - 1)) {
+                واپس NGX_ERROR;
             }
 
-            len = sizeof("\"\":") - 1 + i->name.len;
+            len = حجم("\"\":") - 1 + i->name.len;
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            اگر (len > NGX_MAX_سائز_T_قدر - کل) {
+                واپس NGX_ERROR;
             }
 
-            total += len;
+            کل += len;
 
-            len = ngx_escape_json(NULL, i->name.data, i->name.len);
+            len = ngx_escape_json(تہی, i->name.ڈیٹا, i->name.len);
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            اگر (len > NGX_MAX_سائز_T_قدر - کل) {
+                واپس NGX_ERROR;
             }
 
-            total += len;
+            کل += len;
 
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+            len = ngx_json_encode[i->type].لمبائی(i);
+            اگر (len == (سائز_t) NGX_ERROR) {
+                واپس NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            اگر (len > NGX_MAX_سائز_T_قدر - کل) {
+                واپس NGX_ERROR;
             }
 
-            total += len;
+            کل += len;
 
-            i = i->next;
+            i = i->اگلا;
 
-            if (i == NULL) {
-                break;
+            اگر (i == تہی) {
+                توڑو;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            اگر (کل > NGX_MAX_سائز_T_قدر - (حجم(",") - 1)) {
+                واپس NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            کل += حجم(",") - 1;
         }
     }
 
-    return total;
+    واپس کل;
 }
 
 
-static u_char *
-ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
+ساکن u_char *
+ngx_json_obj_encode(u_char *p, ngx_ڈیٹا_شے_t *شے)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_ڈیٹا_obj_t   *obj;
+    ngx_ڈیٹا_شے_t  *i;
 
-    obj = &item->data.object;
-    i = obj->item;
+    obj = &شے->ڈیٹا.object;
+    i = obj->شے;
 
     *p++ = '{';
 
-    if (i) {
-        for ( ;; ) {
+    اگر (i) {
+        برائے ( ;; ) {
             *p++ = '"';
 
-            p = (u_char *) ngx_escape_json(p, i->name.data, i->name.len);
+            p = (u_char *) ngx_escape_json(p, i->name.ڈیٹا, i->name.len);
 
             *p++ = '"';
             *p++ = ':';
 
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->اگلا;
 
-            if (i == NULL) {
-                break;
+            اگر (i == تہی) {
+                توڑو;
             }
 
             *p++ = ',';
@@ -179,71 +179,71 @@ ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = '}';
 
-    return p;
+    واپس p;
 }
 
 
-static ssize_t
-ngx_json_list_length(ngx_data_item_t *item)
+ساکن ssize_t
+ngx_json_list_لمبائی(ngx_ڈیٹا_شے_t *شے)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    سائز_t            len, کل;
+    ngx_ڈیٹا_obj_t   *obj;
+    ngx_ڈیٹا_شے_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("[]") - 1;
-    i = obj->item;
+    obj = &شے->ڈیٹا.object;
+    کل = حجم("[]") - 1;
+    i = obj->شے;
 
-    if (i) {
-        for ( ;; ) {
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+    اگر (i) {
+        برائے ( ;; ) {
+            len = ngx_json_encode[i->type].لمبائی(i);
+            اگر (len == (سائز_t) NGX_ERROR) {
+                واپس NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            اگر (len > NGX_MAX_سائز_T_قدر - کل) {
+                واپس NGX_ERROR;
             }
 
-            total += len;
+            کل += len;
 
-            i = i->next;
+            i = i->اگلا;
 
-            if (i == NULL) {
-                break;
+            اگر (i == تہی) {
+                توڑو;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            اگر (کل > NGX_MAX_سائز_T_قدر - (حجم(",") - 1)) {
+                واپس NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            کل += حجم(",") - 1;
         }
     }
 
-    return total;
+    واپس کل;
 }
 
 
-static u_char *
-ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
+ساکن u_char *
+ngx_json_list_encode(u_char *p, ngx_ڈیٹا_شے_t *شے)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_ڈیٹا_obj_t   *obj;
+    ngx_ڈیٹا_شے_t  *i;
 
-    obj = &item->data.object;
-    i = obj->item;
+    obj = &شے->ڈیٹا.object;
+    i = obj->شے;
 
     *p++ = '[';
 
-    if (i) {
-        for ( ;; ) {
+    اگر (i) {
+        برائے ( ;; ) {
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->اگلا;
 
-            if (i == NULL) {
-                break;
+            اگر (i == تہی) {
+                توڑو;
             }
 
             *p++ = ',';
@@ -252,89 +252,89 @@ ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = ']';
 
-    return p;
+    واپس p;
 }
 
 
-static ssize_t
-ngx_json_string_length(ngx_data_item_t *item)
+ساکن ssize_t
+ngx_json_string_لمبائی(ngx_ڈیٹا_شے_t *شے)
 {
-    size_t      len, total;
+    سائز_t      len, کل;
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &شے->ڈیٹا.string;
 
-    if (str->len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\"") - 1)) {
-        return NGX_ERROR;
+    اگر (str->len > NGX_MAX_سائز_T_قدر - (حجم("\"\"") - 1)) {
+        واپس NGX_ERROR;
     }
 
-    total = sizeof("\"\"") - 1 + str->len;
+    کل = حجم("\"\"") - 1 + str->len;
 
-    len = ngx_escape_json(NULL, str->data, str->len);
+    len = ngx_escape_json(تہی, str->ڈیٹا, str->len);
 
-    if (len > NGX_MAX_SIZE_T_VALUE - total) {
-        return NGX_ERROR;
+    اگر (len > NGX_MAX_سائز_T_قدر - کل) {
+        واپس NGX_ERROR;
     }
 
-    return total + len;
+    واپس کل + len;
 }
 
 
-static u_char *
-ngx_json_string_encode(u_char *p, ngx_data_item_t *item)
+ساکن u_char *
+ngx_json_string_encode(u_char *p, ngx_ڈیٹا_شے_t *شے)
 {
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &شے->ڈیٹا.string;
 
     *p++ = '"';
 
-    p = (u_char *) ngx_escape_json(p, str->data, str->len);
+    p = (u_char *) ngx_escape_json(p, str->ڈیٹا, str->len);
 
     *p++ = '"';
 
-    return p;
+    واپس p;
 }
 
 
-static ssize_t
-ngx_json_integer_length(ngx_data_item_t *item)
+ساکن ssize_t
+ngx_json_integer_لمبائی(ngx_ڈیٹا_شے_t *شے)
 {
-    return NGX_INT64_LEN;
+    واپس NGX_INT64_LEN;
 }
 
 
-static u_char *
-ngx_json_integer_encode(u_char *p, ngx_data_item_t *item)
+ساکن u_char *
+ngx_json_integer_encode(u_char *p, ngx_ڈیٹا_شے_t *شے)
 {
-    return ngx_sprintf(p, "%L", item->data.integer);
+    واپس ngx_sprintf(p, "%L", شے->ڈیٹا.integer);
 }
 
 
-static ssize_t
-ngx_json_boolean_length(ngx_data_item_t *item)
+ساکن ssize_t
+ngx_json_boolean_لمبائی(ngx_ڈیٹا_شے_t *شے)
 {
-    return sizeof("false") - 1;
+    واپس حجم("false") - 1;
 }
 
 
-static u_char *
-ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item)
+ساکن u_char *
+ngx_json_boolean_encode(u_char *p, ngx_ڈیٹا_شے_t *شے)
 {
-    return item->data.boolean ? ngx_cpymem(p, "true", 4)
+    واپس شے->ڈیٹا.boolean ? ngx_cpymem(p, "true", 4)
                               : ngx_cpymem(p, "false", 5);
 }
 
 
-static ssize_t
-ngx_json_null_length(ngx_data_item_t *item)
+ساکن ssize_t
+ngx_json_null_لمبائی(ngx_ڈیٹا_شے_t *شے)
 {
-    return sizeof("null") - 1;
+    واپس حجم("null") - 1;
 }
 
 
-static u_char *
-ngx_json_null_encode(u_char *p, ngx_data_item_t *item)
+ساکن u_char *
+ngx_json_null_encode(u_char *p, ngx_ڈیٹا_شے_t *شے)
 {
-    return ngx_cpymem(p, "null", 4);
+    واپس ngx_cpymem(p, "null", 4);
 }

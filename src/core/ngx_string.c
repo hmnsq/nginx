@@ -5,24 +5,24 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-static u_char *ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64,
-    u_char zero, ngx_uint_t hexadecimal, ngx_uint_t width);
-static u_char *ngx_sprintf_str(u_char *buf, u_char *last, u_char *src,
-    size_t len, ngx_uint_t hexadecimal);
-static void ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src,
-    const u_char *basis, ngx_uint_t padding);
-static ngx_int_t ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src,
-    const u_char *basis);
+ساکن u_char *ngx_sprintf_عدد(u_char *buf, u_char *آخری, uint64_t ui64,
+    u_char zero, ngx_uint_t hexadecimal, ngx_uint_t چوڑائی);
+ساکن u_char *ngx_sprintf_str(u_char *buf, u_char *آخری, u_char *src,
+    سائز_t len, ngx_uint_t hexadecimal);
+ساکن خالی ngx_encode_base64_اندرونی(ngx_str_t *dst, ngx_str_t *src,
+    ثابت u_char *basis, ngx_uint_t padding);
+ساکن ngx_int_t ngx_decode_base64_اندرونی(ngx_str_t *dst, ngx_str_t *src,
+    ثابت u_char *basis);
 
 
-void
-ngx_strlow(u_char *dst, u_char *src, size_t n)
+خالی
+ngx_strlow(u_char *dst, u_char *src, سائز_t n)
 {
-    while (n) {
+    جب (n) {
         *dst = ngx_tolower(*src);
         dst++;
         src++;
@@ -31,34 +31,34 @@ ngx_strlow(u_char *dst, u_char *src, size_t n)
 }
 
 
-size_t
-ngx_strnlen(u_char *p, size_t n)
+سائز_t
+ngx_strnlen(u_char *p, سائز_t n)
 {
-    size_t  i;
+    سائز_t  i;
 
-    for (i = 0; i < n; i++) {
+    برائے (i = 0; i < n; i++) {
 
-        if (p[i] == '\0') {
-            return i;
+        اگر (p[i] == '\0') {
+            واپس i;
         }
     }
 
-    return n;
+    واپس n;
 }
 
 
 u_char *
-ngx_cpystrn(u_char *dst, u_char *src, size_t n)
+ngx_cpystrn(u_char *dst, u_char *src, سائز_t n)
 {
-    if (n == 0) {
-        return dst;
+    اگر (n == 0) {
+        واپس dst;
     }
 
-    while (--n) {
+    جب (--n) {
         *dst = *src;
 
-        if (*dst == '\0') {
-            return dst;
+        اگر (*dst == '\0') {
+            واپس dst;
         }
 
         dst++;
@@ -67,7 +67,7 @@ ngx_cpystrn(u_char *dst, u_char *src, size_t n)
 
     *dst = '\0';
 
-    return dst;
+    واپس dst;
 }
 
 
@@ -77,13 +77,13 @@ ngx_pstrdup(ngx_pool_t *pool, ngx_str_t *src)
     u_char  *dst;
 
     dst = ngx_pnalloc(pool, src->len);
-    if (dst == NULL) {
-        return NULL;
+    اگر (dst == تہی) {
+        واپس تہی;
     }
 
-    ngx_memcpy(dst, src->data, src->len);
+    ngx_memcpy(dst, src->ڈیٹا, src->len);
 
-    return dst;
+    واپس dst;
 }
 
 
@@ -120,255 +120,255 @@ ngx_pstrdup(ngx_pool_t *pool, ngx_str_t *src)
 
 
 u_char * ngx_cdecl
-ngx_sprintf(u_char *buf, const char *fmt, ...)
+ngx_sprintf(u_char *buf, ثابت حرف *fmt, ...)
 {
     u_char   *p;
-    va_list   args;
+    va_list   دلائل;
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(buf, (void *) -1, fmt, args);
-    va_end(args);
+    va_آغاز(دلائل, fmt);
+    p = ngx_vslprintf(buf, (خالی *) -1, fmt, دلائل);
+    va_انتہا(دلائل);
 
-    return p;
+    واپس p;
 }
 
 
 u_char * ngx_cdecl
-ngx_snprintf(u_char *buf, size_t max, const char *fmt, ...)
+ngx_snprintf(u_char *buf, سائز_t max, ثابت حرف *fmt, ...)
 {
     u_char   *p;
-    va_list   args;
+    va_list   دلائل;
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(buf, buf + max, fmt, args);
-    va_end(args);
+    va_آغاز(دلائل, fmt);
+    p = ngx_vslprintf(buf, buf + max, fmt, دلائل);
+    va_انتہا(دلائل);
 
-    return p;
+    واپس p;
 }
 
 
 u_char * ngx_cdecl
-ngx_slprintf(u_char *buf, u_char *last, const char *fmt, ...)
+ngx_slprintf(u_char *buf, u_char *آخری, ثابت حرف *fmt, ...)
 {
     u_char   *p;
-    va_list   args;
+    va_list   دلائل;
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(buf, last, fmt, args);
-    va_end(args);
+    va_آغاز(دلائل, fmt);
+    p = ngx_vslprintf(buf, آخری, fmt, دلائل);
+    va_انتہا(دلائل);
 
-    return p;
+    واپس p;
 }
 
 
 u_char *
-ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
+ngx_vslprintf(u_char *buf, u_char *آخری, ثابت حرف *fmt, va_list دلائل)
 {
     u_char                *p, zero;
-    int                    d;
-    double                 f;
-    size_t                 slen;
+    صحیح                    d;
+    دوہرا                 f;
+    سائز_t                 slen;
     int64_t                i64;
     uint64_t               ui64, frac;
     ngx_msec_t             ms;
-    ngx_uint_t             width, sign, hex, max_width, frac_width, scale, n;
+    ngx_uint_t             چوڑائی, sign, hex, max_چوڑائی, frac_چوڑائی, scale, n;
     ngx_str_t             *v;
-    ngx_variable_value_t  *vv;
+    ngx_variable_قدر_t  *vv;
 
-    while (*fmt && buf < last) {
+    جب (*fmt && buf < آخری) {
 
         /*
          * "buf < last" means that we could copy at least one character:
          * the plain character, "%%", "%c", and minus without the checking
          */
 
-        if (*fmt == '%') {
+        اگر (*fmt == '%') {
 
             i64 = 0;
             ui64 = 0;
 
             zero = (u_char) ((*++fmt == '0') ? '0' : ' ');
-            width = 0;
+            چوڑائی = 0;
             sign = 1;
             hex = 0;
-            max_width = 0;
-            frac_width = 0;
-            slen = (size_t) -1;
+            max_چوڑائی = 0;
+            frac_چوڑائی = 0;
+            slen = (سائز_t) -1;
 
-            while (*fmt >= '0' && *fmt <= '9') {
-                width = width * 10 + (*fmt++ - '0');
+            جب (*fmt >= '0' && *fmt <= '9') {
+                چوڑائی = چوڑائی * 10 + (*fmt++ - '0');
             }
 
 
-            for ( ;; ) {
-                switch (*fmt) {
+            برائے ( ;; ) {
+                انتخاب (*fmt) {
 
-                case 'u':
+                حالت 'u':
                     sign = 0;
                     fmt++;
-                    continue;
+                    جاری;
 
-                case 'm':
-                    max_width = 1;
+                حالت 'm':
+                    max_چوڑائی = 1;
                     fmt++;
-                    continue;
+                    جاری;
 
-                case 'X':
+                حالت 'X':
                     hex = 2;
                     sign = 0;
                     fmt++;
-                    continue;
+                    جاری;
 
-                case 'x':
+                حالت 'x':
                     hex = 1;
                     sign = 0;
                     fmt++;
-                    continue;
+                    جاری;
 
-                case '.':
+                حالت '.':
                     fmt++;
 
-                    while (*fmt >= '0' && *fmt <= '9') {
-                        frac_width = frac_width * 10 + (*fmt++ - '0');
+                    جب (*fmt >= '0' && *fmt <= '9') {
+                        frac_چوڑائی = frac_چوڑائی * 10 + (*fmt++ - '0');
                     }
 
-                    break;
+                    توڑو;
 
-                case '*':
-                    slen = va_arg(args, size_t);
+                حالت '*':
+                    slen = va_arg(دلائل, سائز_t);
                     fmt++;
-                    continue;
+                    جاری;
 
-                default:
-                    break;
+                طےشدہ:
+                    توڑو;
                 }
 
-                break;
+                توڑو;
             }
 
 
-            switch (*fmt) {
+            انتخاب (*fmt) {
 
-            case 'V':
-                v = va_arg(args, ngx_str_t *);
+            حالت 'V':
+                v = va_arg(دلائل, ngx_str_t *);
 
-                buf = ngx_sprintf_str(buf, last, v->data, v->len, hex);
+                buf = ngx_sprintf_str(buf, آخری, v->ڈیٹا, v->len, hex);
                 fmt++;
 
-                continue;
+                جاری;
 
-            case 'v':
-                vv = va_arg(args, ngx_variable_value_t *);
+            حالت 'v':
+                vv = va_arg(دلائل, ngx_variable_قدر_t *);
 
-                buf = ngx_sprintf_str(buf, last, vv->data, vv->len, hex);
+                buf = ngx_sprintf_str(buf, آخری, vv->ڈیٹا, vv->len, hex);
                 fmt++;
 
-                continue;
+                جاری;
 
-            case 's':
-                p = va_arg(args, u_char *);
+            حالت 's':
+                p = va_arg(دلائل, u_char *);
 
-                buf = ngx_sprintf_str(buf, last, p, slen, hex);
+                buf = ngx_sprintf_str(buf, آخری, p, slen, hex);
                 fmt++;
 
-                continue;
+                جاری;
 
-            case 'O':
-                i64 = (int64_t) va_arg(args, off_t);
+            حالت 'O':
+                i64 = (int64_t) va_arg(دلائل, off_t);
                 sign = 1;
-                break;
+                توڑو;
 
-            case 'P':
-                i64 = (int64_t) va_arg(args, ngx_pid_t);
+            حالت 'P':
+                i64 = (int64_t) va_arg(دلائل, ngx_pid_t);
                 sign = 1;
-                break;
+                توڑو;
 
-            case 'T':
-                i64 = (int64_t) va_arg(args, time_t);
+            حالت 'T':
+                i64 = (int64_t) va_arg(دلائل, وقت_t);
                 sign = 1;
-                break;
+                توڑو;
 
-            case 'M':
-                ms = (ngx_msec_t) va_arg(args, ngx_msec_t);
-                if ((ngx_msec_int_t) ms == -1) {
+            حالت 'M':
+                ms = (ngx_msec_t) va_arg(دلائل, ngx_msec_t);
+                اگر ((ngx_msec_int_t) ms == -1) {
                     sign = 1;
                     i64 = -1;
-                } else {
+                } ورنہ {
                     sign = 0;
                     ui64 = (uint64_t) ms;
                 }
-                break;
+                توڑو;
 
-            case 'z':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, ssize_t);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, size_t);
+            حالت 'z':
+                اگر (sign) {
+                    i64 = (int64_t) va_arg(دلائل, ssize_t);
+                } ورنہ {
+                    ui64 = (uint64_t) va_arg(دلائل, سائز_t);
                 }
-                break;
+                توڑو;
 
-            case 'i':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, ngx_int_t);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, ngx_uint_t);
-                }
-
-                if (max_width) {
-                    width = NGX_INT_T_LEN;
+            حالت 'i':
+                اگر (sign) {
+                    i64 = (int64_t) va_arg(دلائل, ngx_int_t);
+                } ورنہ {
+                    ui64 = (uint64_t) va_arg(دلائل, ngx_uint_t);
                 }
 
-                break;
-
-            case 'd':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, int);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, u_int);
-                }
-                break;
-
-            case 'l':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, long);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, u_long);
-                }
-                break;
-
-            case 'D':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, int32_t);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, uint32_t);
-                }
-                break;
-
-            case 'L':
-                if (sign) {
-                    i64 = va_arg(args, int64_t);
-                } else {
-                    ui64 = va_arg(args, uint64_t);
-                }
-                break;
-
-            case 'A':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, ngx_atomic_int_t);
-                } else {
-                    ui64 = (uint64_t) va_arg(args, ngx_atomic_uint_t);
+                اگر (max_چوڑائی) {
+                    چوڑائی = NGX_INT_T_LEN;
                 }
 
-                if (max_width) {
-                    width = NGX_ATOMIC_T_LEN;
+                توڑو;
+
+            حالت 'd':
+                اگر (sign) {
+                    i64 = (int64_t) va_arg(دلائل, صحیح);
+                } ورنہ {
+                    ui64 = (uint64_t) va_arg(دلائل, u_int);
+                }
+                توڑو;
+
+            حالت 'l':
+                اگر (sign) {
+                    i64 = (int64_t) va_arg(دلائل, طویل);
+                } ورنہ {
+                    ui64 = (uint64_t) va_arg(دلائل, u_long);
+                }
+                توڑو;
+
+            حالت 'D':
+                اگر (sign) {
+                    i64 = (int64_t) va_arg(دلائل, int32_t);
+                } ورنہ {
+                    ui64 = (uint64_t) va_arg(دلائل, uint32_t);
+                }
+                توڑو;
+
+            حالت 'L':
+                اگر (sign) {
+                    i64 = va_arg(دلائل, int64_t);
+                } ورنہ {
+                    ui64 = va_arg(دلائل, uint64_t);
+                }
+                توڑو;
+
+            حالت 'A':
+                اگر (sign) {
+                    i64 = (int64_t) va_arg(دلائل, ngx_atomic_int_t);
+                } ورنہ {
+                    ui64 = (uint64_t) va_arg(دلائل, ngx_atomic_uint_t);
                 }
 
-                break;
+                اگر (max_چوڑائی) {
+                    چوڑائی = NGX_ATOMIC_T_LEN;
+                }
 
-            case 'f':
-                f = va_arg(args, double);
+                توڑو;
 
-                if (f < 0) {
+            حالت 'f':
+                f = va_arg(دلائل, دوہرا);
+
+                اگر (f < 0) {
                     *buf++ = '-';
                     f = -f;
                 }
@@ -376,130 +376,130 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
                 ui64 = (int64_t) f;
                 frac = 0;
 
-                if (frac_width) {
+                اگر (frac_چوڑائی) {
 
                     scale = 1;
-                    for (n = frac_width; n; n--) {
+                    برائے (n = frac_چوڑائی; n; n--) {
                         scale *= 10;
                     }
 
-                    frac = (uint64_t) ((f - (double) ui64) * scale + 0.5);
+                    frac = (uint64_t) ((f - (دوہرا) ui64) * scale + 0.5);
 
-                    if (frac == scale) {
+                    اگر (frac == scale) {
                         ui64++;
                         frac = 0;
                     }
                 }
 
-                buf = ngx_sprintf_num(buf, last, ui64, zero, 0, width);
+                buf = ngx_sprintf_عدد(buf, آخری, ui64, zero, 0, چوڑائی);
 
-                if (frac_width) {
-                    if (buf < last) {
+                اگر (frac_چوڑائی) {
+                    اگر (buf < آخری) {
                         *buf++ = '.';
                     }
 
-                    buf = ngx_sprintf_num(buf, last, frac, '0', 0, frac_width);
+                    buf = ngx_sprintf_عدد(buf, آخری, frac, '0', 0, frac_چوڑائی);
                 }
 
                 fmt++;
 
-                continue;
+                جاری;
 
-#if !(NGX_WIN32)
-            case 'r':
-                i64 = (int64_t) va_arg(args, rlim_t);
+#اگر !(NGX_WIN32)
+            حالت 'r':
+                i64 = (int64_t) va_arg(دلائل, rlim_t);
                 sign = 1;
-                break;
-#endif
+                توڑو;
+#اگر_ختم
 
-            case 'p':
-                ui64 = (uintptr_t) va_arg(args, void *);
+            حالت 'p':
+                ui64 = (uintptr_t) va_arg(دلائل, خالی *);
                 hex = 2;
                 sign = 0;
                 zero = '0';
-                width = 2 * sizeof(void *);
-                break;
+                چوڑائی = 2 * حجم(خالی *);
+                توڑو;
 
-            case 'c':
-                d = va_arg(args, int);
+            حالت 'c':
+                d = va_arg(دلائل, صحیح);
                 *buf++ = (u_char) (d & 0xff);
                 fmt++;
 
-                continue;
+                جاری;
 
-            case 'Z':
+            حالت 'Z':
                 *buf++ = '\0';
                 fmt++;
 
-                continue;
+                جاری;
 
-            case 'N':
-#if (NGX_WIN32)
+            حالت 'N':
+#اگر (NGX_WIN32)
                 *buf++ = CR;
-                if (buf < last) {
+                اگر (buf < آخری) {
                     *buf++ = LF;
                 }
-#else
+#ورنہ
                 *buf++ = LF;
-#endif
+#اگر_ختم
                 fmt++;
 
-                continue;
+                جاری;
 
-            case '%':
+            حالت '%':
                 *buf++ = '%';
                 fmt++;
 
-                continue;
+                جاری;
 
-            default:
+            طےشدہ:
                 *buf++ = *fmt++;
 
-                continue;
+                جاری;
             }
 
-            if (sign) {
-                if (i64 < 0) {
+            اگر (sign) {
+                اگر (i64 < 0) {
                     *buf++ = '-';
                     ui64 = (uint64_t) -i64;
 
-                } else {
+                } ورنہ {
                     ui64 = (uint64_t) i64;
                 }
             }
 
-            buf = ngx_sprintf_num(buf, last, ui64, zero, hex, width);
+            buf = ngx_sprintf_عدد(buf, آخری, ui64, zero, hex, چوڑائی);
 
             fmt++;
 
-        } else {
+        } ورنہ {
             *buf++ = *fmt++;
         }
     }
 
-    return buf;
+    واپس buf;
 }
 
 
-static u_char *
-ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
-    ngx_uint_t hexadecimal, ngx_uint_t width)
+ساکن u_char *
+ngx_sprintf_عدد(u_char *buf, u_char *آخری, uint64_t ui64, u_char zero,
+    ngx_uint_t hexadecimal, ngx_uint_t چوڑائی)
 {
-    u_char         *p, temp[NGX_INT64_LEN + 1];
+    u_char         *p, عارضی[NGX_INT64_LEN + 1];
                        /*
                         * we need temp[NGX_INT64_LEN] only,
                         * but icc issues the warning
                         */
-    size_t          len;
+    سائز_t          len;
     uint32_t        ui32;
-    static u_char   hex[] = "0123456789abcdef";
-    static u_char   HEX[] = "0123456789ABCDEF";
+    ساکن u_char   hex[] = "0123456789abcdef";
+    ساکن u_char   HEX[] = "0123456789ABCDEF";
 
-    p = temp + NGX_INT64_LEN;
+    p = عارضی + NGX_INT64_LEN;
 
-    if (hexadecimal == 0) {
+    اگر (hexadecimal == 0) {
 
-        if (ui64 <= (uint64_t) NGX_MAX_UINT32_VALUE) {
+        اگر (ui64 <= (uint64_t) NGX_MAX_UINT32_قدر) {
 
             /*
              * To divide 64-bit numbers and to find remainders
@@ -518,110 +518,110 @@ ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
 
             ui32 = (uint32_t) ui64;
 
-            do {
+            کرو {
                 *--p = (u_char) (ui32 % 10 + '0');
-            } while (ui32 /= 10);
+            } جب (ui32 /= 10);
 
-        } else {
-            do {
+        } ورنہ {
+            کرو {
                 *--p = (u_char) (ui64 % 10 + '0');
-            } while (ui64 /= 10);
+            } جب (ui64 /= 10);
         }
 
-    } else if (hexadecimal == 1) {
+    } ورنہ اگر (hexadecimal == 1) {
 
-        do {
+        کرو {
 
             /* the "(uint32_t)" cast disables the BCC's warning */
             *--p = hex[(uint32_t) (ui64 & 0xf)];
 
-        } while (ui64 >>= 4);
+        } جب (ui64 >>= 4);
 
-    } else { /* hexadecimal == 2 */
+    } ورنہ { /* hexadecimal == 2 */
 
-        do {
+        کرو {
 
             /* the "(uint32_t)" cast disables the BCC's warning */
             *--p = HEX[(uint32_t) (ui64 & 0xf)];
 
-        } while (ui64 >>= 4);
+        } جب (ui64 >>= 4);
     }
 
     /* zero or space padding */
 
-    len = (temp + NGX_INT64_LEN) - p;
+    len = (عارضی + NGX_INT64_LEN) - p;
 
-    while (len++ < width && buf < last) {
+    جب (len++ < چوڑائی && buf < آخری) {
         *buf++ = zero;
     }
 
     /* number safe copy */
 
-    len = (temp + NGX_INT64_LEN) - p;
+    len = (عارضی + NGX_INT64_LEN) - p;
 
-    if (buf + len > last) {
-        len = last - buf;
+    اگر (buf + len > آخری) {
+        len = آخری - buf;
     }
 
-    return ngx_cpymem(buf, p, len);
+    واپس ngx_cpymem(buf, p, len);
 }
 
 
-static u_char *
-ngx_sprintf_str(u_char *buf, u_char *last, u_char *src, size_t len,
+ساکن u_char *
+ngx_sprintf_str(u_char *buf, u_char *آخری, u_char *src, سائز_t len,
     ngx_uint_t hexadecimal)
 {
-    static u_char   hex[] = "0123456789abcdef";
-    static u_char   HEX[] = "0123456789ABCDEF";
+    ساکن u_char   hex[] = "0123456789abcdef";
+    ساکن u_char   HEX[] = "0123456789ABCDEF";
 
-    if (hexadecimal == 0) {
+    اگر (hexadecimal == 0) {
 
-        if (len == (size_t) -1) {
-            while (*src && buf < last) {
+        اگر (len == (سائز_t) -1) {
+            جب (*src && buf < آخری) {
                 *buf++ = *src++;
             }
 
-        } else {
-            len = ngx_min((size_t) (last - buf), len);
+        } ورنہ {
+            len = ngx_min((سائز_t) (آخری - buf), len);
             buf = ngx_cpymem(buf, src, len);
         }
 
-    } else if (hexadecimal == 1) {
+    } ورنہ اگر (hexadecimal == 1) {
 
-        if (len == (size_t) -1) {
+        اگر (len == (سائز_t) -1) {
 
-            while (*src && buf < last - 1) {
+            جب (*src && buf < آخری - 1) {
                 *buf++ = hex[*src >> 4];
                 *buf++ = hex[*src++ & 0xf];
             }
 
-        } else {
+        } ورنہ {
 
-            while (len-- && buf < last - 1) {
+            جب (len-- && buf < آخری - 1) {
                 *buf++ = hex[*src >> 4];
                 *buf++ = hex[*src++ & 0xf];
             }
         }
 
-    } else { /* hexadecimal == 2 */
+    } ورنہ { /* hexadecimal == 2 */
 
-        if (len == (size_t) -1) {
+        اگر (len == (سائز_t) -1) {
 
-            while (*src && buf < last - 1) {
+            جب (*src && buf < آخری - 1) {
                 *buf++ = HEX[*src >> 4];
                 *buf++ = HEX[*src++ & 0xf];
             }
 
-        } else {
+        } ورنہ {
 
-            while (len-- && buf < last - 1) {
+            جب (len-- && buf < آخری - 1) {
                 *buf++ = HEX[*src >> 4];
                 *buf++ = HEX[*src++ & 0xf];
             }
         }
     }
 
-    return buf;
+    واپس buf;
 }
 
 
@@ -637,87 +637,87 @@ ngx_strcasecmp(u_char *s1, u_char *s2)
 {
     ngx_uint_t  c1, c2;
 
-    for ( ;; ) {
+    برائے ( ;; ) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        اگر (c1 == c2) {
 
-            if (c1) {
-                continue;
+            اگر (c1) {
+                جاری;
             }
 
-            return 0;
+            واپس 0;
         }
 
-        return c1 - c2;
+        واپس c1 - c2;
     }
 }
 
 
 ngx_int_t
-ngx_strncasecmp(u_char *s1, u_char *s2, size_t n)
+ngx_strncasecmp(u_char *s1, u_char *s2, سائز_t n)
 {
     ngx_uint_t  c1, c2;
 
-    while (n) {
+    جب (n) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        اگر (c1 == c2) {
 
-            if (c1) {
+            اگر (c1) {
                 n--;
-                continue;
+                جاری;
             }
 
-            return 0;
+            واپس 0;
         }
 
-        return c1 - c2;
+        واپس c1 - c2;
     }
 
-    return 0;
+    واپس 0;
 }
 
 
 u_char *
-ngx_strnstr(u_char *s1, char *s2, size_t len)
+ngx_strnstr(u_char *s1, حرف *s2, سائز_t len)
 {
     u_char  c1, c2;
-    size_t  n;
+    سائز_t  n;
 
     c2 = *(u_char *) s2++;
 
     n = ngx_strlen(s2);
 
-    do {
-        do {
-            if (len-- == 0) {
-                return NULL;
+    کرو {
+        کرو {
+            اگر (len-- == 0) {
+                واپس تہی;
             }
 
             c1 = *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            اگر (c1 == 0) {
+                واپس تہی;
             }
 
-        } while (c1 != c2);
+        } جب (c1 != c2);
 
-        if (n > len) {
-            return NULL;
+        اگر (n > len) {
+            واپس تہی;
         }
 
-    } while (ngx_strncmp(s1, (u_char *) s2, n) != 0);
+    } جب (ngx_strncmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    واپس --s1;
 }
 
 
@@ -728,51 +728,51 @@ ngx_strnstr(u_char *s1, char *s2, size_t len)
  */
 
 u_char *
-ngx_strstrn(u_char *s1, char *s2, size_t n)
+ngx_strstrn(u_char *s1, حرف *s2, سائز_t n)
 {
     u_char  c1, c2;
 
     c2 = *(u_char *) s2++;
 
-    do {
-        do {
+    کرو {
+        کرو {
             c1 = *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            اگر (c1 == 0) {
+                واپس تہی;
             }
 
-        } while (c1 != c2);
+        } جب (c1 != c2);
 
-    } while (ngx_strncmp(s1, (u_char *) s2, n) != 0);
+    } جب (ngx_strncmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    واپس --s1;
 }
 
 
 u_char *
-ngx_strcasestrn(u_char *s1, char *s2, size_t n)
+ngx_strcasestrn(u_char *s1, حرف *s2, سائز_t n)
 {
     ngx_uint_t  c1, c2;
 
     c2 = (ngx_uint_t) *s2++;
     c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-    do {
-        do {
+    کرو {
+        کرو {
             c1 = (ngx_uint_t) *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            اگر (c1 == 0) {
+                واپس تہی;
             }
 
             c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
 
-        } while (c1 != c2);
+        } جب (c1 != c2);
 
-    } while (ngx_strncasecmp(s1, (u_char *) s2, n) != 0);
+    } جب (ngx_strncasecmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    واپس --s1;
 }
 
 
@@ -783,48 +783,48 @@ ngx_strcasestrn(u_char *s1, char *s2, size_t n)
  */
 
 u_char *
-ngx_strlcasestrn(u_char *s1, u_char *last, u_char *s2, size_t n)
+ngx_strlcasestrn(u_char *s1, u_char *آخری, u_char *s2, سائز_t n)
 {
     ngx_uint_t  c1, c2;
 
     c2 = (ngx_uint_t) *s2++;
     c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
-    last -= n;
+    آخری -= n;
 
-    do {
-        do {
-            if (s1 >= last) {
-                return NULL;
+    کرو {
+        کرو {
+            اگر (s1 >= آخری) {
+                واپس تہی;
             }
 
             c1 = (ngx_uint_t) *s1++;
 
             c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
 
-        } while (c1 != c2);
+        } جب (c1 != c2);
 
-    } while (ngx_strncasecmp(s1, s2, n) != 0);
+    } جب (ngx_strncasecmp(s1, s2, n) != 0);
 
-    return --s1;
+    واپس --s1;
 }
 
 
 ngx_int_t
-ngx_rstrncmp(u_char *s1, u_char *s2, size_t n)
+ngx_rstrncmp(u_char *s1, u_char *s2, سائز_t n)
 {
-    if (n == 0) {
-        return 0;
+    اگر (n == 0) {
+        واپس 0;
     }
 
     n--;
 
-    for ( ;; ) {
-        if (s1[n] != s2[n]) {
-            return s1[n] - s2[n];
+    برائے ( ;; ) {
+        اگر (s1[n] != s2[n]) {
+            واپس s1[n] - s2[n];
         }
 
-        if (n == 0) {
-            return 0;
+        اگر (n == 0) {
+            واپس 0;
         }
 
         n--;
@@ -833,33 +833,33 @@ ngx_rstrncmp(u_char *s1, u_char *s2, size_t n)
 
 
 ngx_int_t
-ngx_rstrncasecmp(u_char *s1, u_char *s2, size_t n)
+ngx_rstrncasecmp(u_char *s1, u_char *s2, سائز_t n)
 {
     u_char  c1, c2;
 
-    if (n == 0) {
-        return 0;
+    اگر (n == 0) {
+        واپس 0;
     }
 
     n--;
 
-    for ( ;; ) {
+    برائے ( ;; ) {
         c1 = s1[n];
-        if (c1 >= 'a' && c1 <= 'z') {
+        اگر (c1 >= 'a' && c1 <= 'z') {
             c1 -= 'a' - 'A';
         }
 
         c2 = s2[n];
-        if (c2 >= 'a' && c2 <= 'z') {
+        اگر (c2 >= 'a' && c2 <= 'z') {
             c2 -= 'a' - 'A';
         }
 
-        if (c1 != c2) {
-            return c1 - c2;
+        اگر (c1 != c2) {
+            واپس c1 - c2;
         }
 
-        if (n == 0) {
-            return 0;
+        اگر (n == 0) {
+            واپس 0;
         }
 
         n--;
@@ -868,27 +868,27 @@ ngx_rstrncasecmp(u_char *s1, u_char *s2, size_t n)
 
 
 ngx_int_t
-ngx_memn2cmp(u_char *s1, u_char *s2, size_t n1, size_t n2)
+ngx_memn2cmp(u_char *s1, u_char *s2, سائز_t n1, سائز_t n2)
 {
-    size_t     n;
+    سائز_t     n;
     ngx_int_t  m, z;
 
-    if (n1 <= n2) {
+    اگر (n1 <= n2) {
         n = n1;
         z = -1;
 
-    } else {
+    } ورنہ {
         n = n2;
         z = 1;
     }
 
     m = ngx_memcmp(s1, s2, n);
 
-    if (m || n1 == n2) {
-        return m;
+    اگر (m || n1 == n2) {
+        واپس m;
     }
 
-    return z;
+    واپس z;
 }
 
 
@@ -897,20 +897,20 @@ ngx_dns_strcmp(u_char *s1, u_char *s2)
 {
     ngx_uint_t  c1, c2;
 
-    for ( ;; ) {
+    برائے ( ;; ) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        اگر (c1 == c2) {
 
-            if (c1) {
-                continue;
+            اگر (c1) {
+                جاری;
             }
 
-            return 0;
+            واپس 0;
         }
 
         /* in ASCII '.' > '-', but we need '.' to be the lowest character */
@@ -918,303 +918,303 @@ ngx_dns_strcmp(u_char *s1, u_char *s2)
         c1 = (c1 == '.') ? ' ' : c1;
         c2 = (c2 == '.') ? ' ' : c2;
 
-        return c1 - c2;
+        واپس c1 - c2;
     }
 }
 
 
 ngx_int_t
-ngx_filename_cmp(u_char *s1, u_char *s2, size_t n)
+ngx_filename_cmp(u_char *s1, u_char *s2, سائز_t n)
 {
     ngx_uint_t  c1, c2;
 
-    while (n) {
+    جب (n) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
-#if (NGX_HAVE_CASELESS_FILESYSTEM)
+#اگر (NGX_HAVE_CASELESS_FILESYSTEM)
         c1 = tolower(c1);
         c2 = tolower(c2);
-#endif
+#اگر_ختم
 
-        if (c1 == c2) {
+        اگر (c1 == c2) {
 
-            if (c1) {
+            اگر (c1) {
                 n--;
-                continue;
+                جاری;
             }
 
-            return 0;
+            واپس 0;
         }
 
         /* we need '/' to be the lowest character */
 
-        if (c1 == 0 || c2 == 0) {
-            return c1 - c2;
+        اگر (c1 == 0 || c2 == 0) {
+            واپس c1 - c2;
         }
 
         c1 = (c1 == '/') ? 0 : c1;
         c2 = (c2 == '/') ? 0 : c2;
 
-        return c1 - c2;
+        واپس c1 - c2;
     }
 
-    return 0;
+    واپس 0;
 }
 
 
 ngx_int_t
-ngx_atoi(u_char *line, size_t n)
+ngx_atoi(u_char *سطر, سائز_t n)
 {
-    ngx_int_t  value, cutoff, cutlim;
+    ngx_int_t  قدر, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    اگر (n == 0) {
+        واپس NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_INT_T_VALUE / 10;
-    cutlim = NGX_MAX_INT_T_VALUE % 10;
+    cutoff = NGX_MAX_INT_T_قدر / 10;
+    cutlim = NGX_MAX_INT_T_قدر % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    برائے (قدر = 0; n--; سطر++) {
+        اگر (*سطر < '0' || *سطر > '9') {
+            واپس NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        اگر (قدر >= cutoff && (قدر > cutoff || *سطر - '0' > cutlim)) {
+            واپس NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        قدر = قدر * 10 + (*سطر - '0');
     }
 
-    return value;
+    واپس قدر;
 }
 
 
 /* parse a fixed point number, e.g., ngx_atofp("10.5", 4, 2) returns 1050 */
 
 ngx_int_t
-ngx_atofp(u_char *line, size_t n, size_t point)
+ngx_atofp(u_char *سطر, سائز_t n, سائز_t نقطہ)
 {
-    ngx_int_t   value, cutoff, cutlim;
+    ngx_int_t   قدر, cutoff, cutlim;
     ngx_uint_t  dot;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    اگر (n == 0) {
+        واپس NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_INT_T_VALUE / 10;
-    cutlim = NGX_MAX_INT_T_VALUE % 10;
+    cutoff = NGX_MAX_INT_T_قدر / 10;
+    cutlim = NGX_MAX_INT_T_قدر % 10;
 
     dot = 0;
 
-    for (value = 0; n--; line++) {
+    برائے (قدر = 0; n--; سطر++) {
 
-        if (point == 0) {
-            return NGX_ERROR;
+        اگر (نقطہ == 0) {
+            واپس NGX_ERROR;
         }
 
-        if (*line == '.') {
-            if (dot) {
-                return NGX_ERROR;
+        اگر (*سطر == '.') {
+            اگر (dot) {
+                واپس NGX_ERROR;
             }
 
             dot = 1;
-            continue;
+            جاری;
         }
 
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+        اگر (*سطر < '0' || *سطر > '9') {
+            واپس NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        اگر (قدر >= cutoff && (قدر > cutoff || *سطر - '0' > cutlim)) {
+            واپس NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
-        point -= dot;
+        قدر = قدر * 10 + (*سطر - '0');
+        نقطہ -= dot;
     }
 
-    while (point--) {
-        if (value > cutoff) {
-            return NGX_ERROR;
+    جب (نقطہ--) {
+        اگر (قدر > cutoff) {
+            واپس NGX_ERROR;
         }
 
-        value = value * 10;
+        قدر = قدر * 10;
     }
 
-    return value;
+    واپس قدر;
 }
 
 
 ssize_t
-ngx_atosz(u_char *line, size_t n)
+ngx_atosz(u_char *سطر, سائز_t n)
 {
-    ssize_t  value, cutoff, cutlim;
+    ssize_t  قدر, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    اگر (n == 0) {
+        واپس NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_SIZE_T_VALUE / 10;
-    cutlim = NGX_MAX_SIZE_T_VALUE % 10;
+    cutoff = NGX_MAX_سائز_T_قدر / 10;
+    cutlim = NGX_MAX_سائز_T_قدر % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    برائے (قدر = 0; n--; سطر++) {
+        اگر (*سطر < '0' || *سطر > '9') {
+            واپس NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        اگر (قدر >= cutoff && (قدر > cutoff || *سطر - '0' > cutlim)) {
+            واپس NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        قدر = قدر * 10 + (*سطر - '0');
     }
 
-    return value;
+    واپس قدر;
 }
 
 
 off_t
-ngx_atoof(u_char *line, size_t n)
+ngx_atoof(u_char *سطر, سائز_t n)
 {
-    off_t  value, cutoff, cutlim;
+    off_t  قدر, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    اگر (n == 0) {
+        واپس NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_OFF_T_VALUE / 10;
-    cutlim = NGX_MAX_OFF_T_VALUE % 10;
+    cutoff = NGX_MAX_OFF_T_قدر / 10;
+    cutlim = NGX_MAX_OFF_T_قدر % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    برائے (قدر = 0; n--; سطر++) {
+        اگر (*سطر < '0' || *سطر > '9') {
+            واپس NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        اگر (قدر >= cutoff && (قدر > cutoff || *سطر - '0' > cutlim)) {
+            واپس NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        قدر = قدر * 10 + (*سطر - '0');
     }
 
-    return value;
+    واپس قدر;
 }
 
 
-time_t
-ngx_atotm(u_char *line, size_t n)
+وقت_t
+ngx_atotm(u_char *سطر, سائز_t n)
 {
-    time_t  value, cutoff, cutlim;
+    وقت_t  قدر, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    اگر (n == 0) {
+        واپس NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_TIME_T_VALUE / 10;
-    cutlim = NGX_MAX_TIME_T_VALUE % 10;
+    cutoff = NGX_MAX_وقت_T_قدر / 10;
+    cutlim = NGX_MAX_وقت_T_قدر % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    برائے (قدر = 0; n--; سطر++) {
+        اگر (*سطر < '0' || *سطر > '9') {
+            واپس NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        اگر (قدر >= cutoff && (قدر > cutoff || *سطر - '0' > cutlim)) {
+            واپس NGX_ERROR;
         }
 
-        value = value * 10 + (*line - '0');
+        قدر = قدر * 10 + (*سطر - '0');
     }
 
-    return value;
+    واپس قدر;
 }
 
 
 ngx_int_t
-ngx_hextoi(u_char *line, size_t n)
+ngx_hextoi(u_char *سطر, سائز_t n)
 {
     u_char     c, ch;
-    ngx_int_t  value, cutoff;
+    ngx_int_t  قدر, cutoff;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    اگر (n == 0) {
+        واپس NGX_ERROR;
     }
 
-    cutoff = NGX_MAX_INT_T_VALUE / 16;
+    cutoff = NGX_MAX_INT_T_قدر / 16;
 
-    for (value = 0; n--; line++) {
-        if (value > cutoff) {
-            return NGX_ERROR;
+    برائے (قدر = 0; n--; سطر++) {
+        اگر (قدر > cutoff) {
+            واپس NGX_ERROR;
         }
 
-        ch = *line;
+        ch = *سطر;
 
-        if (ch >= '0' && ch <= '9') {
-            value = value * 16 + (ch - '0');
-            continue;
+        اگر (ch >= '0' && ch <= '9') {
+            قدر = قدر * 16 + (ch - '0');
+            جاری;
         }
 
         c = (u_char) (ch | 0x20);
 
-        if (c >= 'a' && c <= 'f') {
-            value = value * 16 + (c - 'a' + 10);
-            continue;
+        اگر (c >= 'a' && c <= 'f') {
+            قدر = قدر * 16 + (c - 'a' + 10);
+            جاری;
         }
 
-        return NGX_ERROR;
+        واپس NGX_ERROR;
     }
 
-    return value;
+    واپس قدر;
 }
 
 
 u_char *
-ngx_hex_dump(u_char *dst, u_char *src, size_t len)
+ngx_hex_dump(u_char *dst, u_char *src, سائز_t len)
 {
-    static u_char  hex[] = "0123456789abcdef";
+    ساکن u_char  hex[] = "0123456789abcdef";
 
-    while (len--) {
+    جب (len--) {
         *dst++ = hex[*src >> 4];
         *dst++ = hex[*src++ & 0xf];
     }
 
-    return dst;
+    واپس dst;
 }
 
 
-void
+خالی
 ngx_encode_base64(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] =
+    ساکن u_char   basis64[] =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    ngx_encode_base64_internal(dst, src, basis64, 1);
+    ngx_encode_base64_اندرونی(dst, src, basis64, 1);
 }
 
 
-void
+خالی
 ngx_encode_base64url(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] =
+    ساکن u_char   basis64[] =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
-    ngx_encode_base64_internal(dst, src, basis64, 0);
+    ngx_encode_base64_اندرونی(dst, src, basis64, 0);
 }
 
 
-static void
-ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis,
+ساکن خالی
+ngx_encode_base64_اندرونی(ngx_str_t *dst, ngx_str_t *src, ثابت u_char *basis,
     ngx_uint_t padding)
 {
     u_char         *d, *s;
-    size_t          len;
+    سائز_t          len;
 
     len = src->len;
-    s = src->data;
-    d = dst->data;
+    s = src->ڈیٹا;
+    d = dst->ڈیٹا;
 
-    while (len > 2) {
+    جب (len > 2) {
         *d++ = basis[(s[0] >> 2) & 0x3f];
         *d++ = basis[((s[0] & 3) << 4) | (s[1] >> 4)];
         *d++ = basis[((s[1] & 0x0f) << 2) | (s[2] >> 6)];
@@ -1224,33 +1224,33 @@ ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis,
         len -= 3;
     }
 
-    if (len) {
+    اگر (len) {
         *d++ = basis[(s[0] >> 2) & 0x3f];
 
-        if (len == 1) {
+        اگر (len == 1) {
             *d++ = basis[(s[0] & 3) << 4];
-            if (padding) {
+            اگر (padding) {
                 *d++ = '=';
             }
 
-        } else {
+        } ورنہ {
             *d++ = basis[((s[0] & 3) << 4) | (s[1] >> 4)];
             *d++ = basis[(s[1] & 0x0f) << 2];
         }
 
-        if (padding) {
+        اگر (padding) {
             *d++ = '=';
         }
     }
 
-    dst->len = d - dst->data;
+    dst->len = d - dst->ڈیٹا;
 }
 
 
 ngx_int_t
 ngx_decode_base64(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] = {
+    ساکن u_char   basis64[] = {
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 62, 77, 77, 77, 63,
@@ -1270,14 +1270,14 @@ ngx_decode_base64(ngx_str_t *dst, ngx_str_t *src)
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
     };
 
-    return ngx_decode_base64_internal(dst, src, basis64);
+    واپس ngx_decode_base64_اندرونی(dst, src, basis64);
 }
 
 
 ngx_int_t
 ngx_decode_base64url(ngx_str_t *dst, ngx_str_t *src)
 {
-    static u_char   basis64[] = {
+    ساکن u_char   basis64[] = {
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 62, 77, 77,
@@ -1297,34 +1297,34 @@ ngx_decode_base64url(ngx_str_t *dst, ngx_str_t *src)
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
     };
 
-    return ngx_decode_base64_internal(dst, src, basis64);
+    واپس ngx_decode_base64_اندرونی(dst, src, basis64);
 }
 
 
-static ngx_int_t
-ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
+ساکن ngx_int_t
+ngx_decode_base64_اندرونی(ngx_str_t *dst, ngx_str_t *src, ثابت u_char *basis)
 {
-    size_t          len;
+    سائز_t          len;
     u_char         *d, *s;
 
-    for (len = 0; len < src->len; len++) {
-        if (src->data[len] == '=') {
-            break;
+    برائے (len = 0; len < src->len; len++) {
+        اگر (src->ڈیٹا[len] == '=') {
+            توڑو;
         }
 
-        if (basis[src->data[len]] == 77) {
-            return NGX_ERROR;
+        اگر (basis[src->ڈیٹا[len]] == 77) {
+            واپس NGX_ERROR;
         }
     }
 
-    if (len % 4 == 1) {
-        return NGX_ERROR;
+    اگر (len % 4 == 1) {
+        واپس NGX_ERROR;
     }
 
-    s = src->data;
-    d = dst->data;
+    s = src->ڈیٹا;
+    d = dst->ڈیٹا;
 
-    while (len > 3) {
+    جب (len > 3) {
         *d++ = (u_char) (basis[s[0]] << 2 | basis[s[1]] >> 4);
         *d++ = (u_char) (basis[s[1]] << 4 | basis[s[2]] >> 2);
         *d++ = (u_char) (basis[s[2]] << 6 | basis[s[3]]);
@@ -1333,17 +1333,17 @@ ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
         len -= 4;
     }
 
-    if (len > 1) {
+    اگر (len > 1) {
         *d++ = (u_char) (basis[s[0]] << 2 | basis[s[1]] >> 4);
     }
 
-    if (len > 2) {
+    اگر (len > 2) {
         *d++ = (u_char) (basis[s[1]] << 4 | basis[s[2]] >> 2);
     }
 
-    dst->len = d - dst->data;
+    dst->len = d - dst->ڈیٹا;
 
-    return NGX_OK;
+    واپس NGX_OK;
 }
 
 
@@ -1357,52 +1357,52 @@ ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
  */
 
 uint32_t
-ngx_utf8_decode(u_char **p, size_t n)
+ngx_utf8_decode(u_char **p, سائز_t n)
 {
-    size_t    len;
+    سائز_t    len;
     uint32_t  u, i, valid;
 
     u = **p;
 
-    if (u >= 0xf8) {
+    اگر (u >= 0xf8) {
 
         (*p)++;
-        return 0xffffffff;
+        واپس 0xffffffff;
 
-    } else if (u >= 0xf0) {
+    } ورنہ اگر (u >= 0xf0) {
 
         u &= 0x07;
         valid = 0xffff;
         len = 3;
 
-    } else if (u >= 0xe0) {
+    } ورنہ اگر (u >= 0xe0) {
 
         u &= 0x0f;
         valid = 0x7ff;
         len = 2;
 
-    } else if (u >= 0xc2) {
+    } ورنہ اگر (u >= 0xc2) {
 
         u &= 0x1f;
         valid = 0x7f;
         len = 1;
 
-    } else {
+    } ورنہ {
         (*p)++;
-        return 0xffffffff;
+        واپس 0xffffffff;
     }
 
-    if (n - 1 < len) {
-        return 0xfffffffe;
+    اگر (n - 1 < len) {
+        واپس 0xfffffffe;
     }
 
     (*p)++;
 
-    while (len) {
+    جب (len) {
         i = *(*p)++;
 
-        if (i < 0x80) {
-            return 0xffffffff;
+        اگر (i < 0x80) {
+            واپس 0xffffffff;
         }
 
         u = (u << 6) | (i & 0x3f);
@@ -1410,76 +1410,76 @@ ngx_utf8_decode(u_char **p, size_t n)
         len--;
     }
 
-    if (u > valid) {
-        return u;
+    اگر (u > valid) {
+        واپس u;
     }
 
-    return 0xffffffff;
+    واپس 0xffffffff;
 }
 
 
-size_t
-ngx_utf8_length(u_char *p, size_t n)
+سائز_t
+ngx_utf8_لمبائی(u_char *p, سائز_t n)
 {
-    u_char  c, *last;
-    size_t  len;
+    u_char  c, *آخری;
+    سائز_t  len;
 
-    last = p + n;
+    آخری = p + n;
 
-    for (len = 0; p < last; len++) {
+    برائے (len = 0; p < آخری; len++) {
 
         c = *p;
 
-        if (c < 0x80) {
+        اگر (c < 0x80) {
             p++;
-            continue;
+            جاری;
         }
 
-        if (ngx_utf8_decode(&p, last - p) > 0x10ffff) {
+        اگر (ngx_utf8_decode(&p, آخری - p) > 0x10ffff) {
             /* invalid UTF-8 */
-            return n;
+            واپس n;
         }
     }
 
-    return len;
+    واپس len;
 }
 
 
 u_char *
-ngx_utf8_cpystrn(u_char *dst, u_char *src, size_t n, size_t len)
+ngx_utf8_cpystrn(u_char *dst, u_char *src, سائز_t n, سائز_t len)
 {
-    u_char  c, *next;
+    u_char  c, *اگلا;
 
-    if (n == 0) {
-        return dst;
+    اگر (n == 0) {
+        واپس dst;
     }
 
-    while (--n) {
+    جب (--n) {
 
         c = *src;
         *dst = c;
 
-        if (c < 0x80) {
+        اگر (c < 0x80) {
 
-            if (c != '\0') {
+            اگر (c != '\0') {
                 dst++;
                 src++;
                 len--;
 
-                continue;
+                جاری;
             }
 
-            return dst;
+            واپس dst;
         }
 
-        next = src;
+        اگلا = src;
 
-        if (ngx_utf8_decode(&next, len) > 0x10ffff) {
+        اگر (ngx_utf8_decode(&اگلا, len) > 0x10ffff) {
             /* invalid UTF-8 */
-            break;
+            توڑو;
         }
 
-        while (src < next) {
+        جب (src < اگلا) {
             *dst++ = *src++;
             len--;
         }
@@ -1487,17 +1487,17 @@ ngx_utf8_cpystrn(u_char *dst, u_char *src, size_t n, size_t len)
 
     *dst = '\0';
 
-    return dst;
+    واپس dst;
 }
 
 
 uintptr_t
-ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
+ngx_escape_uri(u_char *dst, u_char *src, سائز_t سائز, ngx_uint_t type)
 {
-    u_char          prefix;
+    u_char          سابقہ;
     uint32_t       *escape;
     ngx_uint_t      n;
-    static u_char   hex[] = "0123456789ABCDEF";
+    ساکن u_char   hex[] = "0123456789ABCDEF";
 
     /*
      * Per RFC 3986 only the following chars are allowed in URIs unescaped:
@@ -1514,7 +1514,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "#", "%", "?", not allowed */
 
-    static uint32_t   uri[] = {
+    ساکن uint32_t   uri[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1534,7 +1534,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "#", "%", "&", "+", ";", "?", not allowed */
 
-    static uint32_t   args[] = {
+    ساکن uint32_t   دلائل[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1554,7 +1554,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* not ALPHA, DIGIT, "-", ".", "_", "~" */
 
-    static uint32_t   uri_component[] = {
+    ساکن uint32_t   uri_component[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1574,7 +1574,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "#", """, "%", "'", not allowed */
 
-    static uint32_t   html[] = {
+    ساکن uint32_t   html[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1594,7 +1594,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", """, "'", not allowed */
 
-    static uint32_t   refresh[] = {
+    ساکن uint32_t   refresh[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1614,7 +1614,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "%", %00-%1F */
 
-    static uint32_t   memcached[] = {
+    ساکن uint32_t   memcached[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1636,7 +1636,7 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
 
                     /* " ", "+", "=", not allowed */
 
-    static uint32_t   mail_xtext[] = {
+    ساکن uint32_t   mail_xtext[] = {
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
 
                     /* ?>=< ;:98 7654 3210  /.-, +*)( '&%$ #"!  */
@@ -1654,59 +1654,59 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
         0xffffffff, /* 1111 1111 1111 1111  1111 1111 1111 1111 */
     };
 
-    static uint32_t  *map[] =
-        { uri, args, uri_component, html, refresh, memcached, memcached,
+    ساکن uint32_t  *map[] =
+        { uri, دلائل, uri_component, html, refresh, memcached, memcached,
           mail_xtext };
 
-    static u_char  map_char[] =
+    ساکن u_char  map_char[] =
         { '%', '%', '%', '%', '%', '%', '%', '+' };
 
 
     escape = map[type];
-    prefix = map_char[type];
+    سابقہ = map_char[type];
 
-    if (dst == NULL) {
+    اگر (dst == تہی) {
 
         /* find the number of the characters to be escaped */
 
         n = 0;
 
-        while (size) {
-            if (escape[*src >> 5] & (1U << (*src & 0x1f))) {
+        جب (سائز) {
+            اگر (escape[*src >> 5] & (1U << (*src & 0x1f))) {
                 n++;
             }
             src++;
-            size--;
+            سائز--;
         }
 
-        return (uintptr_t) n;
+        واپس (uintptr_t) n;
     }
 
-    while (size) {
-        if (escape[*src >> 5] & (1U << (*src & 0x1f))) {
-            *dst++ = prefix;
+    جب (سائز) {
+        اگر (escape[*src >> 5] & (1U << (*src & 0x1f))) {
+            *dst++ = سابقہ;
             *dst++ = hex[*src >> 4];
             *dst++ = hex[*src & 0xf];
             src++;
 
-        } else {
+        } ورنہ {
             *dst++ = *src++;
         }
-        size--;
+        سائز--;
     }
 
-    return (uintptr_t) dst;
+    واپس (uintptr_t) dst;
 }
 
 
-void
-ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
+خالی
+ngx_unescape_uri(u_char **dst, u_char **src, سائز_t سائز, ngx_uint_t type)
 {
     u_char  *d, *s, ch, c, decoded;
-    enum {
+    شمار {
         sw_usual = 0,
         sw_quoted,
-        sw_quoted_second
+        sw_quoted_دوسرا
     } state;
 
     d = *dst;
@@ -1715,40 +1715,40 @@ ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
     state = 0;
     decoded = 0;
 
-    while (size--) {
+    جب (سائز--) {
 
         ch = *s++;
 
-        switch (state) {
-        case sw_usual:
-            if (ch == '?'
+        انتخاب (state) {
+        حالت sw_usual:
+            اگر (ch == '?'
                 && (type & (NGX_UNESCAPE_URI|NGX_UNESCAPE_REDIRECT)))
             {
                 *d++ = ch;
-                goto done;
+                جاؤ مکمل;
             }
 
-            if (ch == '%') {
+            اگر (ch == '%') {
                 state = sw_quoted;
-                break;
+                توڑو;
             }
 
             *d++ = ch;
-            break;
+            توڑو;
 
-        case sw_quoted:
+        حالت sw_quoted:
 
-            if (ch >= '0' && ch <= '9') {
+            اگر (ch >= '0' && ch <= '9') {
                 decoded = (u_char) (ch - '0');
-                state = sw_quoted_second;
-                break;
+                state = sw_quoted_دوسرا;
+                توڑو;
             }
 
             c = (u_char) (ch | 0x20);
-            if (c >= 'a' && c <= 'f') {
+            اگر (c >= 'a' && c <= 'f') {
                 decoded = (u_char) (c - 'a' + 10);
-                state = sw_quoted_second;
-                break;
+                state = sw_quoted_دوسرا;
+                توڑو;
             }
 
             /* the invalid quoted character */
@@ -1757,72 +1757,72 @@ ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
 
             *d++ = ch;
 
-            break;
+            توڑو;
 
-        case sw_quoted_second:
+        حالت sw_quoted_دوسرا:
 
             state = sw_usual;
 
-            if (ch >= '0' && ch <= '9') {
+            اگر (ch >= '0' && ch <= '9') {
                 ch = (u_char) ((decoded << 4) + (ch - '0'));
 
-                if (type & NGX_UNESCAPE_REDIRECT) {
-                    if (ch > '%' && ch < 0x7f) {
+                اگر (type & NGX_UNESCAPE_REDIRECT) {
+                    اگر (ch > '%' && ch < 0x7f) {
                         *d++ = ch;
-                        break;
+                        توڑو;
                     }
 
                     *d++ = '%'; *d++ = *(s - 2); *d++ = *(s - 1);
 
-                    break;
+                    توڑو;
                 }
 
                 *d++ = ch;
 
-                break;
+                توڑو;
             }
 
             c = (u_char) (ch | 0x20);
-            if (c >= 'a' && c <= 'f') {
+            اگر (c >= 'a' && c <= 'f') {
                 ch = (u_char) ((decoded << 4) + (c - 'a') + 10);
 
-                if (type & NGX_UNESCAPE_URI) {
-                    if (ch == '?') {
+                اگر (type & NGX_UNESCAPE_URI) {
+                    اگر (ch == '?') {
                         *d++ = ch;
-                        goto done;
+                        جاؤ مکمل;
                     }
 
                     *d++ = ch;
-                    break;
+                    توڑو;
                 }
 
-                if (type & NGX_UNESCAPE_REDIRECT) {
-                    if (ch == '?') {
+                اگر (type & NGX_UNESCAPE_REDIRECT) {
+                    اگر (ch == '?') {
                         *d++ = ch;
-                        goto done;
+                        جاؤ مکمل;
                     }
 
-                    if (ch > '%' && ch < 0x7f) {
+                    اگر (ch > '%' && ch < 0x7f) {
                         *d++ = ch;
-                        break;
+                        توڑو;
                     }
 
                     *d++ = '%'; *d++ = *(s - 2); *d++ = *(s - 1);
-                    break;
+                    توڑو;
                 }
 
                 *d++ = ch;
 
-                break;
+                توڑو;
             }
 
             /* the invalid quoted character */
 
-            break;
+            توڑو;
         }
     }
 
-done:
+مکمل:
 
     *dst = d;
     *src = s;
@@ -1830,150 +1830,150 @@ done:
 
 
 uintptr_t
-ngx_escape_html(u_char *dst, u_char *src, size_t size)
+ngx_escape_html(u_char *dst, u_char *src, سائز_t سائز)
 {
     u_char      ch;
     ngx_uint_t  len;
 
-    if (dst == NULL) {
+    اگر (dst == تہی) {
 
         len = 0;
 
-        while (size) {
-            switch (*src++) {
+        جب (سائز) {
+            انتخاب (*src++) {
 
-            case '<':
-                len += sizeof("&lt;") - 2;
-                break;
+            حالت '<':
+                len += حجم("&lt;") - 2;
+                توڑو;
 
-            case '>':
-                len += sizeof("&gt;") - 2;
-                break;
+            حالت '>':
+                len += حجم("&gt;") - 2;
+                توڑو;
 
-            case '&':
-                len += sizeof("&amp;") - 2;
-                break;
+            حالت '&':
+                len += حجم("&amp;") - 2;
+                توڑو;
 
-            case '"':
-                len += sizeof("&quot;") - 2;
-                break;
+            حالت '"':
+                len += حجم("&quot;") - 2;
+                توڑو;
 
-            default:
-                break;
+            طےشدہ:
+                توڑو;
             }
-            size--;
+            سائز--;
         }
 
-        return (uintptr_t) len;
+        واپس (uintptr_t) len;
     }
 
-    while (size) {
+    جب (سائز) {
         ch = *src++;
 
-        switch (ch) {
+        انتخاب (ch) {
 
-        case '<':
+        حالت '<':
             *dst++ = '&'; *dst++ = 'l'; *dst++ = 't'; *dst++ = ';';
-            break;
+            توڑو;
 
-        case '>':
+        حالت '>':
             *dst++ = '&'; *dst++ = 'g'; *dst++ = 't'; *dst++ = ';';
-            break;
+            توڑو;
 
-        case '&':
+        حالت '&':
             *dst++ = '&'; *dst++ = 'a'; *dst++ = 'm'; *dst++ = 'p';
             *dst++ = ';';
-            break;
+            توڑو;
 
-        case '"':
+        حالت '"':
             *dst++ = '&'; *dst++ = 'q'; *dst++ = 'u'; *dst++ = 'o';
             *dst++ = 't'; *dst++ = ';';
-            break;
+            توڑو;
 
-        default:
+        طےشدہ:
             *dst++ = ch;
-            break;
+            توڑو;
         }
-        size--;
+        سائز--;
     }
 
-    return (uintptr_t) dst;
+    واپس (uintptr_t) dst;
 }
 
 
 uintptr_t
-ngx_escape_json(u_char *dst, u_char *src, size_t size)
+ngx_escape_json(u_char *dst, u_char *src, سائز_t سائز)
 {
     u_char      ch;
     ngx_uint_t  len;
 
-    if (dst == NULL) {
+    اگر (dst == تہی) {
         len = 0;
 
-        while (size) {
+        جب (سائز) {
             ch = *src++;
 
-            if (ch == '\\' || ch == '"') {
+            اگر (ch == '\\' || ch == '"') {
                 len++;
 
-            } else if (ch <= 0x1f) {
+            } ورنہ اگر (ch <= 0x1f) {
 
-                switch (ch) {
-                case '\n':
-                case '\r':
-                case '\t':
-                case '\b':
-                case '\f':
+                انتخاب (ch) {
+                حالت '\n':
+                حالت '\r':
+                حالت '\t':
+                حالت '\b':
+                حالت '\f':
                     len++;
-                    break;
+                    توڑو;
 
-                default:
-                    len += sizeof("\\u001F") - 2;
+                طےشدہ:
+                    len += حجم("\\u001F") - 2;
                 }
             }
 
-            size--;
+            سائز--;
         }
 
-        return (uintptr_t) len;
+        واپس (uintptr_t) len;
     }
 
-    while (size) {
+    جب (سائز) {
         ch = *src++;
 
-        if (ch > 0x1f) {
+        اگر (ch > 0x1f) {
 
-            if (ch == '\\' || ch == '"') {
+            اگر (ch == '\\' || ch == '"') {
                 *dst++ = '\\';
             }
 
             *dst++ = ch;
 
-        } else {
+        } ورنہ {
             *dst++ = '\\';
 
-            switch (ch) {
-            case '\n':
+            انتخاب (ch) {
+            حالت '\n':
                 *dst++ = 'n';
-                break;
+                توڑو;
 
-            case '\r':
+            حالت '\r':
                 *dst++ = 'r';
-                break;
+                توڑو;
 
-            case '\t':
+            حالت '\t':
                 *dst++ = 't';
-                break;
+                توڑو;
 
-            case '\b':
+            حالت '\b':
                 *dst++ = 'b';
-                break;
+                توڑو;
 
-            case '\f':
+            حالت '\f':
                 *dst++ = 'f';
-                break;
+                توڑو;
 
-            default:
+            طےشدہ:
                 *dst++ = 'u'; *dst++ = '0'; *dst++ = '0';
                 *dst++ = '0' + (ch >> 4);
 
@@ -1983,148 +1983,148 @@ ngx_escape_json(u_char *dst, u_char *src, size_t size)
             }
         }
 
-        size--;
+        سائز--;
     }
 
-    return (uintptr_t) dst;
+    واپس (uintptr_t) dst;
 }
 
 
-void
-ngx_str_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+خالی
+ngx_str_rbtree_داخل_کرو_قدر(ngx_rbtree_گرہ_t *عارضی,
+    ngx_rbtree_گرہ_t *گرہ, ngx_rbtree_گرہ_t *sentinel)
 {
-    ngx_str_node_t      *n, *t;
-    ngx_rbtree_node_t  **p;
+    ngx_str_گرہ_t      *n, *t;
+    ngx_rbtree_گرہ_t  **p;
 
-    for ( ;; ) {
+    برائے ( ;; ) {
 
-        n = (ngx_str_node_t *) node;
-        t = (ngx_str_node_t *) temp;
+        n = (ngx_str_گرہ_t *) گرہ;
+        t = (ngx_str_گرہ_t *) عارضی;
 
-        if (node->key != temp->key) {
+        اگر (گرہ->کلید != عارضی->کلید) {
 
-            p = (node->key < temp->key) ? &temp->left : &temp->right;
+            p = (گرہ->کلید < عارضی->کلید) ? &عارضی->بایاں : &عارضی->دایاں;
 
-        } else if (n->str.len != t->str.len) {
+        } ورنہ اگر (n->str.len != t->str.len) {
 
-            p = (n->str.len < t->str.len) ? &temp->left : &temp->right;
+            p = (n->str.len < t->str.len) ? &عارضی->بایاں : &عارضی->دایاں;
 
-        } else {
-            p = (ngx_memcmp(n->str.data, t->str.data, n->str.len) < 0)
-                 ? &temp->left : &temp->right;
+        } ورنہ {
+            p = (ngx_memcmp(n->str.ڈیٹا, t->str.ڈیٹا, n->str.len) < 0)
+                 ? &عارضی->بایاں : &عارضی->دایاں;
         }
 
-        if (*p == sentinel) {
-            break;
+        اگر (*p == sentinel) {
+            توڑو;
         }
 
-        temp = *p;
+        عارضی = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = گرہ;
+    گرہ->والد = عارضی;
+    گرہ->بایاں = sentinel;
+    گرہ->دایاں = sentinel;
+    ngx_rbt_red(گرہ);
 }
 
 
-ngx_str_node_t *
+ngx_str_گرہ_t *
 ngx_str_rbtree_lookup(ngx_rbtree_t *rbtree, ngx_str_t *val, uint32_t hash)
 {
     ngx_int_t           rc;
-    ngx_str_node_t     *n;
-    ngx_rbtree_node_t  *node, *sentinel;
+    ngx_str_گرہ_t     *n;
+    ngx_rbtree_گرہ_t  *گرہ, *sentinel;
 
-    node = rbtree->root;
+    گرہ = rbtree->جڑ;
     sentinel = rbtree->sentinel;
 
-    while (node != sentinel) {
+    جب (گرہ != sentinel) {
 
-        n = (ngx_str_node_t *) node;
+        n = (ngx_str_گرہ_t *) گرہ;
 
-        if (hash != node->key) {
-            node = (hash < node->key) ? node->left : node->right;
-            continue;
+        اگر (hash != گرہ->کلید) {
+            گرہ = (hash < گرہ->کلید) ? گرہ->بایاں : گرہ->دایاں;
+            جاری;
         }
 
-        if (val->len != n->str.len) {
-            node = (val->len < n->str.len) ? node->left : node->right;
-            continue;
+        اگر (val->len != n->str.len) {
+            گرہ = (val->len < n->str.len) ? گرہ->بایاں : گرہ->دایاں;
+            جاری;
         }
 
-        rc = ngx_memcmp(val->data, n->str.data, val->len);
+        rc = ngx_memcmp(val->ڈیٹا, n->str.ڈیٹا, val->len);
 
-        if (rc < 0) {
-            node = node->left;
-            continue;
+        اگر (rc < 0) {
+            گرہ = گرہ->بایاں;
+            جاری;
         }
 
-        if (rc > 0) {
-            node = node->right;
-            continue;
+        اگر (rc > 0) {
+            گرہ = گرہ->دایاں;
+            جاری;
         }
 
-        return n;
+        واپس n;
     }
 
-    return NULL;
+    واپس تہی;
 }
 
 
 /* ngx_sort() is implemented as insertion sort because we need stable sort */
 
-void
-ngx_sort(void *base, size_t n, size_t size,
-    ngx_int_t (*cmp)(const void *, const void *))
+خالی
+ngx_ترتیب_دو(خالی *بنیاد, سائز_t n, سائز_t سائز,
+    ngx_int_t (*cmp)(ثابت خالی *, ثابت خالی *))
 {
     u_char  *p1, *p2, *p;
 
-    p = ngx_alloc(size, ngx_cycle->log);
-    if (p == NULL) {
-        return;
+    p = ngx_alloc(سائز, ngx_چکر->لوگارتھم);
+    اگر (p == تہی) {
+        واپس;
     }
 
-    for (p1 = (u_char *) base + size;
-         p1 < (u_char *) base + n * size;
-         p1 += size)
+    برائے (p1 = (u_char *) بنیاد + سائز;
+         p1 < (u_char *) بنیاد + n * سائز;
+         p1 += سائز)
     {
-        ngx_memcpy(p, p1, size);
+        ngx_memcpy(p, p1, سائز);
 
-        for (p2 = p1;
-             p2 > (u_char *) base && cmp(p2 - size, p) > 0;
-             p2 -= size)
+        برائے (p2 = p1;
+             p2 > (u_char *) بنیاد && cmp(p2 - سائز, p) > 0;
+             p2 -= سائز)
         {
-            ngx_memcpy(p2, p2 - size, size);
+            ngx_memcpy(p2, p2 - سائز, سائز);
         }
 
-        ngx_memcpy(p2, p, size);
+        ngx_memcpy(p2, p, سائز);
     }
 
     ngx_free(p);
 }
 
 
-void
-ngx_explicit_memzero(void *buf, size_t n)
+خالی
+ngx_explicit_memzero(خالی *buf, سائز_t n)
 {
     ngx_memzero(buf, n);
-    ngx_memory_barrier();
+    ngx_حافظہ_barrier();
 }
 
 
-#if (NGX_MEMCPY_LIMIT)
+#اگر (NGX_MEMCPY_حد_بندی)
 
-void *
-ngx_memcpy(void *dst, const void *src, size_t n)
+خالی *
+ngx_memcpy(خالی *dst, ثابت خالی *src, سائز_t n)
 {
-    if (n > NGX_MEMCPY_LIMIT) {
-        ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "memcpy %uz bytes", n);
-        ngx_debug_point();
+    اگر (n > NGX_MEMCPY_حد_بندی) {
+        ngx_log_error(NGX_LOG_ALERT, ngx_چکر->لوگارتھم, 0, "memcpy %uz bytes", n);
+        ngx_debug_نقطہ();
     }
 
-    return memcpy(dst, src, n);
+    واپس حافظہ_نقل(dst, src, n);
 }
 
-#endif
+#اگر_ختم

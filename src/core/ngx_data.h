@@ -4,98 +4,98 @@
  */
 
 
-#ifndef _NGX_DATA_H_INCLUDED_
-#define _NGX_DATA_H_INCLUDED_
+#اگر_غیر_تعریف_شدہ NGX_ڈیٹا_H_INCLUDED
+#تعریف_کرو NGX_ڈیٹا_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-typedef struct ngx_data_item_s ngx_data_item_t;
+قسمتعریف ساخت ngx_ڈیٹا_شے_s ngx_ڈیٹا_شے_t;
 
 
-typedef struct {
-    ngx_data_item_t          *item;
-    ngx_data_item_t         **next;
-} ngx_data_obj_t;
+قسمتعریف ساخت {
+    ngx_ڈیٹا_شے_t          *شے;
+    ngx_ڈیٹا_شے_t         **اگلا;
+} ngx_ڈیٹا_obj_t;
 
 
-struct ngx_data_item_s {
-    ngx_data_item_t          *next;
+ساخت ngx_ڈیٹا_شے_s {
+    ngx_ڈیٹا_شے_t          *اگلا;
     ngx_str_t                 name;
     ngx_uint_t                type;
 
-    union {
-        ngx_data_obj_t        object;
+    اتحاد {
+        ngx_ڈیٹا_obj_t        object;
         ngx_str_t             string;
         int64_t               integer;
         ngx_uint_t            boolean;
-    } data;
+    } ڈیٹا;
 };
 
 
-ngx_data_item_t *ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_new_شے(ngx_pool_t *pool, ngx_uint_t type);
 
-void ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name,
-    ngx_data_item_t *item);
+خالی ngx_ڈیٹا_جوڑو_شے(ngx_ڈیٹا_شے_t *obj, ngx_str_t *name,
+    ngx_ڈیٹا_شے_t *شے);
 
-#define NGX_DATA_OBJECT_TYPE  0
-#define NGX_DATA_LIST_TYPE    1
-#define NGX_DATA_STRING_TYPE  2
-#define NGX_DATA_INTEGER_TYPE 3
-#define NGX_DATA_BOOLEAN_TYPE 4
-#define NGX_DATA_NULL_TYPE    5
-
-
-#define ngx_data_new_object(pool)                                             \
-    ngx_data_new_item(pool, NGX_DATA_OBJECT_TYPE)
-#define ngx_data_new_list(pool)                                               \
-    ngx_data_new_item(pool, NGX_DATA_LIST_TYPE)
-#define ngx_data_new_string(pool)                                             \
-    ngx_data_new_item(pool, NGX_DATA_STRING_TYPE)
-#define ngx_data_new_integer(pool)                                            \
-    ngx_data_new_item(pool, NGX_DATA_INTEGER_TYPE)
-#define ngx_data_new_boolean(pool)                                            \
-    ngx_data_new_item(pool, NGX_DATA_BOOLEAN_TYPE)
-#define ngx_data_new_null(pool)                                               \
-    ngx_data_new_item(pool, NGX_DATA_NULL_TYPE)
+#تعریف_کرو NGX_ڈیٹا_OBJECT_TYPE  0
+#تعریف_کرو NGX_ڈیٹا_LIST_TYPE    1
+#تعریف_کرو NGX_ڈیٹا_STRING_TYPE  2
+#تعریف_کرو NGX_ڈیٹا_INTEGER_TYPE 3
+#تعریف_کرو NGX_ڈیٹا_BOOLEAN_TYPE 4
+#تعریف_کرو NGX_ڈیٹا_NULL_TYPE    5
 
 
-typedef struct {
+#تعریف_کرو ngx_ڈیٹا_new_object(pool)                                             \
+    ngx_ڈیٹا_new_شے(pool, NGX_ڈیٹا_OBJECT_TYPE)
+#تعریف_کرو ngx_ڈیٹا_new_list(pool)                                               \
+    ngx_ڈیٹا_new_شے(pool, NGX_ڈیٹا_LIST_TYPE)
+#تعریف_کرو ngx_ڈیٹا_new_string(pool)                                             \
+    ngx_ڈیٹا_new_شے(pool, NGX_ڈیٹا_STRING_TYPE)
+#تعریف_کرو ngx_ڈیٹا_new_integer(pool)                                            \
+    ngx_ڈیٹا_new_شے(pool, NGX_ڈیٹا_INTEGER_TYPE)
+#تعریف_کرو ngx_ڈیٹا_new_boolean(pool)                                            \
+    ngx_ڈیٹا_new_شے(pool, NGX_ڈیٹا_BOOLEAN_TYPE)
+#تعریف_کرو ngx_ڈیٹا_new_null(pool)                                               \
+    ngx_ڈیٹا_new_شے(pool, NGX_ڈیٹا_NULL_TYPE)
+
+
+قسمتعریف ساخت {
     ngx_str_t            name;
-    ngx_data_item_t   *(*handler)(uintptr_t data, ngx_pool_t *pool, void *ctx);
-    uintptr_t            data;
-} ngx_data_decl_t;
+    ngx_ڈیٹا_شے_t   *(*handler)(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx);
+    uintptr_t            ڈیٹا;
+} ngx_ڈیٹا_decl_t;
 
-#define ngx_data_null_decl  { ngx_null_string, NULL, 0 }
+#تعریف_کرو ngx_ڈیٹا_null_decl  { ngx_null_string, تہی, 0 }
 
-#define NGX_DATA_DECLINE  (ngx_data_item_t *) -1
+#تعریف_کرو NGX_ڈیٹا_DECLINE  (ngx_ڈیٹا_شے_t *) -1
 
 
-ngx_data_item_t *ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx, ngx_array_t *fields);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_obj_handler(uintptr_t ڈیٹا, ngx_pool_t *pool,
+    خالی *ctx);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_obj_fields_handler(uintptr_t ڈیٹا, ngx_pool_t *pool,
+    خالی *ctx, ngx_array_t *fields);
 
-ngx_data_item_t *ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_نمبر_handler(uintptr_t ڈیٹا, ngx_pool_t *pool,
+    خالی *ctx);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_string_handler(uintptr_t ڈیٹا, ngx_pool_t *pool,
+    خالی *ctx);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_boolean_handler(uintptr_t ڈیٹا, ngx_pool_t *pool,
+    خالی *ctx);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_وقت_handler(uintptr_t ڈیٹا, ngx_pool_t *pool,
+    خالی *ctx);
 
-ngx_data_item_t *ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_struct_atomic_handler(uintptr_t data,
-    ngx_pool_t *pool, void *ctx);
-ngx_data_item_t *ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_struct_boolean_handler(uintptr_t data,
-    ngx_pool_t *pool, void *ctx);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_struct_int64_handler(uintptr_t ڈیٹا, ngx_pool_t *pool,
+    خالی *ctx);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_struct_int_handler(uintptr_t ڈیٹا, ngx_pool_t *pool,
+    خالی *ctx);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_struct_atomic_handler(uintptr_t ڈیٹا,
+    ngx_pool_t *pool, خالی *ctx);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_struct_str_handler(uintptr_t ڈیٹا, ngx_pool_t *pool,
+    خالی *ctx);
+ngx_ڈیٹا_شے_t *ngx_ڈیٹا_struct_boolean_handler(uintptr_t ڈیٹا,
+    ngx_pool_t *pool, خالی *ctx);
 
-#endif /* _NGX_DATA_H_INCLUDED_ */
+#اگر_ختم /* _NGX_DATA_H_INCLUDED_ */

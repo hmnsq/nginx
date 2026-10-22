@@ -4,214 +4,214 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
-static size_t  ngx_data_sizes[] = {
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_OBJECT_TYPE */
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_LIST_TYPE */
-    sizeof(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
-    sizeof(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
-    sizeof(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
+ساکن سائز_t  ngx_ڈیٹا_sizes[] = {
+    حجم(ngx_ڈیٹا_obj_t),            /* NGX_DATA_OBJECT_TYPE */
+    حجم(ngx_ڈیٹا_obj_t),            /* NGX_DATA_LIST_TYPE */
+    حجم(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
+    حجم(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
+    حجم(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
     0,                                 /* NGX_DATA_NULL_TYPE */
 };
 
 
-ngx_data_item_t *
-ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type)
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_new_شے(ngx_pool_t *pool, ngx_uint_t type)
 {
-    ngx_data_item_t  *item;
+    ngx_ڈیٹا_شے_t  *شے;
 
-    item = ngx_pcalloc(pool, offsetof(ngx_data_item_t, data)
-                             + ngx_data_sizes[type]);
-    if (item == NULL) {
-        return NULL;
+    شے = ngx_pcalloc(pool, offsetof(ngx_ڈیٹا_شے_t, ڈیٹا)
+                             + ngx_ڈیٹا_sizes[type]);
+    اگر (شے == تہی) {
+        واپس تہی;
     }
 
-    item->type = type;
+    شے->type = type;
 
-    return item;
+    واپس شے;
 }
 
 
-void
-ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name, ngx_data_item_t *item)
+خالی
+ngx_ڈیٹا_جوڑو_شے(ngx_ڈیٹا_شے_t *obj, ngx_str_t *name, ngx_ڈیٹا_شے_t *شے)
 {
-    ngx_data_obj_t  *object;
+    ngx_ڈیٹا_obj_t  *object;
 
-    if (obj->type != NGX_DATA_OBJECT_TYPE && obj->type != NGX_DATA_LIST_TYPE) {
-        return;
+    اگر (obj->type != NGX_ڈیٹا_OBJECT_TYPE && obj->type != NGX_ڈیٹا_LIST_TYPE) {
+        واپس;
     }
 
-    object = &obj->data.object;
+    object = &obj->ڈیٹا.object;
 
-    if (name) {
-        item->name = *name;
+    اگر (name) {
+        شے->name = *name;
     }
 
-    if (object->next == NULL) {
-        object->next = &object->item;
+    اگر (object->اگلا == تہی) {
+        object->اگلا = &object->شے;
     }
 
-    *object->next = item;
-    object->next = &item->next;
+    *object->اگلا = شے;
+    object->اگلا = &شے->اگلا;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_obj_handler(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx)
 {
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_ڈیٹا_شے_t  *obj, *شے;
+    ngx_ڈیٹا_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_ڈیٹا_new_object(pool);
+    اگر (obj == تہی) {
+        واپس تہی;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_ڈیٹا_decl_t *) ڈیٹا;
 
-    while (decl->name.len) {
+    جب (decl->name.len) {
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        شے = decl->handler(decl->ڈیٹا, pool, ctx);
+        اگر (شے == تہی) {
+            واپس تہی;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        اگر (شے != NGX_ڈیٹا_DECLINE) {
+            ngx_ڈیٹا_جوڑو_شے(obj, &decl->name, شے);
         }
 
         decl++;
     }
 
-    return obj;
+    واپس obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_obj_fields_handler(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx,
     ngx_array_t *fields)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *قدر;
     ngx_uint_t        i;
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_ڈیٹا_شے_t  *obj, *شے;
+    ngx_ڈیٹا_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_ڈیٹا_new_object(pool);
+    اگر (obj == تہی) {
+        واپس تہی;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_ڈیٹا_decl_t *) ڈیٹا;
 
-    while (decl->name.len) {
+    جب (decl->name.len) {
 
-        if (fields) {
-            value = fields->elts;
+        اگر (fields) {
+            قدر = fields->elts;
 
-            for (i = 0; i < fields->nelts; i++) {
+            برائے (i = 0; i < fields->nelts; i++) {
 
-                if (decl->name.len == value[i].len
-                    && ngx_strncmp(decl->name.data, value[i].data,
-                                   value[i].len)
+                اگر (decl->name.len == قدر[i].len
+                    && ngx_strncmp(decl->name.ڈیٹا, قدر[i].ڈیٹا,
+                                   قدر[i].len)
                     == 0)
                 {
-                    goto found;
+                    جاؤ ملا;
                 }
             }
 
             decl++;
-            continue;
+            جاری;
         }
 
-found:
+ملا:
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        شے = decl->handler(decl->ڈیٹا, pool, ctx);
+        اگر (شے == تہی) {
+            واپس تہی;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        اگر (شے != NGX_ڈیٹا_DECLINE) {
+            ngx_ڈیٹا_جوڑو_شے(obj, &decl->name, شے);
         }
 
         decl++;
     }
 
-    return obj;
+    واپس obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_نمبر_handler(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ڈیٹا_شے_t  *شے;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    شے = ngx_ڈیٹا_new_integer(pool);
+    اگر (شے == تہی) {
+        واپس تہی;
     }
 
-    item->data.integer = data;
+    شے->ڈیٹا.integer = ڈیٹا;
 
-    return item;
+    واپس شے;
 }
 
 
-ngx_data_item_t *
-ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_string_handler(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *قدر, *src;
+    ngx_ڈیٹا_شے_t  *شے;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    شے = ngx_ڈیٹا_new_string(pool);
+    اگر (شے == تہی) {
+        واپس تہی;
     }
 
-    value = &item->data.string;
+    قدر = &شے->ڈیٹا.string;
 
-    src = (ngx_str_t *) data;
+    src = (ngx_str_t *) ڈیٹا;
 
-    value->len = src->len;
+    قدر->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    قدر->ڈیٹا = ngx_pstrdup(pool, src);
+    اگر (قدر->ڈیٹا == تہی) {
+        واپس تہی;
     }
 
-    return item;
+    واپس شے;
 }
 
 
-ngx_data_item_t *
-ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_boolean_handler(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ڈیٹا_شے_t  *شے;
 
-    item = ngx_data_new_boolean(pool);
-    if (item == NULL) {
-        return NULL;
+    شے = ngx_ڈیٹا_new_boolean(pool);
+    اگر (شے == تہی) {
+        واپس تہی;
     }
 
-    item->data.boolean = data;
+    شے->ڈیٹا.boolean = ڈیٹا;
 
-    return item;
+    واپس شے;
 }
 
 
-ngx_data_item_t *
-ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_وقت_handler(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx)
 {
     u_char      *p;
     ngx_tm_t     tm;
     ngx_str_t    src;
-    ngx_time_t  *tp;
-    u_char       iso8601[sizeof("1974-01-19T13:00:00.000Z") - 1];
+    ngx_وقت_t  *tp;
+    u_char       iso8601[حجم("1974-01-19T13:00:00.000Z") - 1];
 
-    tp = (ngx_time_t *) data;
+    tp = (ngx_وقت_t *) ڈیٹا;
 
     ngx_gmtime(tp->sec, &tm);
 
@@ -219,94 +219,94 @@ ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
                     tm.ngx_tm_year, tm.ngx_tm_mon, tm.ngx_tm_mday,
                     tm.ngx_tm_hour, tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    if (tp->msec) {
+    اگر (tp->msec) {
         p = ngx_sprintf(p, ".%03ui", tp->msec);
     }
 
     *p++ = 'Z';
 
-    src.data = iso8601;
+    src.ڈیٹا = iso8601;
     src.len = p - iso8601;
 
-    return ngx_data_string_handler((uintptr_t) &src, pool, NULL);
+    واپس ngx_ڈیٹا_string_handler((uintptr_t) &src, pool, تہی);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_struct_int64_handler(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ڈیٹا_شے_t  *شے;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    شے = ngx_ڈیٹا_new_integer(pool);
+    اگر (شے == تہی) {
+        واپس تہی;
     }
 
-    item->data.integer = *(int64_t *) ((u_char *) ctx + data);
+    شے->ڈیٹا.integer = *(int64_t *) ((u_char *) ctx + ڈیٹا);
 
-    return item;
+    واپس شے;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_struct_int_handler(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx)
 {
-    ngx_int_t  value;
+    ngx_int_t  قدر;
 
-    value = *(ngx_int_t *) ((u_char *) ctx + data);
+    قدر = *(ngx_int_t *) ((u_char *) ctx + ڈیٹا);
 
-    return ngx_data_number_handler(value, pool, NULL);
+    واپس ngx_ڈیٹا_نمبر_handler(قدر, pool, تہی);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_atomic_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_struct_atomic_handler(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_ڈیٹا_شے_t  *شے;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    شے = ngx_ڈیٹا_new_integer(pool);
+    اگر (شے == تہی) {
+        واپس تہی;
     }
 
-    item->data.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + data);
+    شے->ڈیٹا.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + ڈیٹا);
 
-    return item;
+    واپس شے;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_struct_str_handler(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *قدر, *src;
+    ngx_ڈیٹا_شے_t  *شے;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    شے = ngx_ڈیٹا_new_string(pool);
+    اگر (شے == تہی) {
+        واپس تہی;
     }
 
-    value = &item->data.string;
+    قدر = &شے->ڈیٹا.string;
 
-    src = (ngx_str_t *) ((u_char *) ctx + data);
+    src = (ngx_str_t *) ((u_char *) ctx + ڈیٹا);
 
-    value->len = src->len;
+    قدر->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    قدر->ڈیٹا = ngx_pstrdup(pool, src);
+    اگر (قدر->ڈیٹا == تہی) {
+        واپس تہی;
     }
 
-    return item;
+    واپس شے;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_ڈیٹا_شے_t *
+ngx_ڈیٹا_struct_boolean_handler(uintptr_t ڈیٹا, ngx_pool_t *pool, خالی *ctx)
 {
-    ngx_uint_t  value;
+    ngx_uint_t  قدر;
 
-    value = *(ngx_uint_t *) ((u_char *) ctx + data);
+    قدر = *(ngx_uint_t *) ((u_char *) ctx + ڈیٹا);
 
-    return ngx_data_boolean_handler(value, pool, NULL);
+    واپس ngx_ڈیٹا_boolean_handler(قدر, pool, تہی);
 }

@@ -5,137 +5,137 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#شامل <ngx_config.h>
+#شامل <ngx_core.h>
 
 
 ngx_array_t *
-ngx_array_create(ngx_pool_t *p, ngx_uint_t n, size_t size)
+ngx_array_create(ngx_pool_t *p, ngx_uint_t n, سائز_t سائز)
 {
     ngx_array_t *a;
 
-    a = ngx_palloc(p, sizeof(ngx_array_t));
-    if (a == NULL) {
-        return NULL;
+    a = ngx_palloc(p, حجم(ngx_array_t));
+    اگر (a == تہی) {
+        واپس تہی;
     }
 
-    if (ngx_array_init(a, p, n, size) != NGX_OK) {
-        return NULL;
+    اگر (ngx_array_init(a, p, n, سائز) != NGX_OK) {
+        واپس تہی;
     }
 
-    return a;
+    واپس a;
 }
 
 
-void
+خالی
 ngx_array_destroy(ngx_array_t *a)
 {
     ngx_pool_t  *p;
 
     p = a->pool;
 
-    if ((u_char *) a->elts + a->size * a->nalloc == p->d.last) {
-        p->d.last -= a->size * a->nalloc;
+    اگر ((u_char *) a->elts + a->سائز * a->nalloc == p->d.آخری) {
+        p->d.آخری -= a->سائز * a->nalloc;
     }
 
-    if ((u_char *) a + sizeof(ngx_array_t) == p->d.last) {
-        p->d.last = (u_char *) a;
+    اگر ((u_char *) a + حجم(ngx_array_t) == p->d.آخری) {
+        p->d.آخری = (u_char *) a;
     }
 }
 
 
-void *
-ngx_array_push(ngx_array_t *a)
+خالی *
+ngx_array_ڈالو(ngx_array_t *a)
 {
-    void        *elt, *new;
-    size_t       size;
+    خالی        *elt, *new;
+    سائز_t       سائز;
     ngx_pool_t  *p;
 
-    if (a->nelts == a->nalloc) {
+    اگر (a->nelts == a->nalloc) {
 
         /* the array is full */
 
-        size = a->size * a->nalloc;
+        سائز = a->سائز * a->nalloc;
 
         p = a->pool;
 
-        if ((u_char *) a->elts + size == p->d.last
-            && p->d.last + a->size <= p->d.end)
+        اگر ((u_char *) a->elts + سائز == p->d.آخری
+            && p->d.آخری + a->سائز <= p->d.انتہا)
         {
             /*
              * the array allocation is the last in the pool
              * and there is space for new allocation
              */
 
-            p->d.last += a->size;
+            p->d.آخری += a->سائز;
             a->nalloc++;
 
-        } else {
+        } ورنہ {
             /* allocate a new array */
 
-            new = ngx_palloc(p, 2 * size);
-            if (new == NULL) {
-                return NULL;
+            new = ngx_palloc(p, 2 * سائز);
+            اگر (new == تہی) {
+                واپس تہی;
             }
 
-            ngx_memcpy(new, a->elts, size);
+            ngx_memcpy(new, a->elts, سائز);
             a->elts = new;
             a->nalloc *= 2;
         }
     }
 
-    elt = (u_char *) a->elts + a->size * a->nelts;
+    elt = (u_char *) a->elts + a->سائز * a->nelts;
     a->nelts++;
 
-    return elt;
+    واپس elt;
 }
 
 
-void *
-ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
+خالی *
+ngx_array_ڈالو_n(ngx_array_t *a, ngx_uint_t n)
 {
-    void        *elt, *new;
-    size_t       size;
+    خالی        *elt, *new;
+    سائز_t       سائز;
     ngx_uint_t   nalloc;
     ngx_pool_t  *p;
 
-    size = n * a->size;
+    سائز = n * a->سائز;
 
-    if (a->nelts + n > a->nalloc) {
+    اگر (a->nelts + n > a->nalloc) {
 
         /* the array is full */
 
         p = a->pool;
 
-        if ((u_char *) a->elts + a->size * a->nalloc == p->d.last
-            && p->d.last + size <= p->d.end)
+        اگر ((u_char *) a->elts + a->سائز * a->nalloc == p->d.آخری
+            && p->d.آخری + سائز <= p->d.انتہا)
         {
             /*
              * the array allocation is the last in the pool
              * and there is space for new allocation
              */
 
-            p->d.last += size;
+            p->d.آخری += سائز;
             a->nalloc += n;
 
-        } else {
+        } ورنہ {
             /* allocate a new array */
 
             nalloc = 2 * ((n >= a->nalloc) ? n : a->nalloc);
 
-            new = ngx_palloc(p, nalloc * a->size);
-            if (new == NULL) {
-                return NULL;
+            new = ngx_palloc(p, nalloc * a->سائز);
+            اگر (new == تہی) {
+                واپس تہی;
             }
 
-            ngx_memcpy(new, a->elts, a->nelts * a->size);
+            ngx_memcpy(new, a->elts, a->nelts * a->سائز);
             a->elts = new;
             a->nalloc = nalloc;
         }
     }
 
-    elt = (u_char *) a->elts + a->size * a->nelts;
+    elt = (u_char *) a->elts + a->سائز * a->nelts;
     a->nelts += n;
 
-    return elt;
+    واپس elt;
 }
