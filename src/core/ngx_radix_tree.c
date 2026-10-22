@@ -5,41 +5,41 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-static ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
+स्थिर ngx_radix_गाँठो_t *ngx_radix_alloc(ngx_radix_रूख_t *रूख);
 
 
-ngx_radix_tree_t *
-ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
+ngx_radix_रूख_t *
+ngx_radix_रूख_create(ngx_pool_t *pool, ngx_int_t preallocate)
 {
-    uint32_t           key, mask, inc;
-    ngx_radix_tree_t  *tree;
+    uint32_t           साँचो, mask, inc;
+    ngx_radix_रूख_t  *रूख;
 
-    tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
-        return NULL;
+    रूख = ngx_palloc(pool, परिमाण(ngx_radix_रूख_t));
+    यदि (रूख == रिक्त) {
+        फर्काऊ रिक्त;
     }
 
-    tree->pool = pool;
-    tree->free = NULL;
-    tree->start = NULL;
-    tree->size = 0;
+    रूख->pool = pool;
+    रूख->मुक्त = रिक्त;
+    रूख->start = रिक्त;
+    रूख->size = 0;
 
-    tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
-        return NULL;
+    रूख->जरा = ngx_radix_alloc(रूख);
+    यदि (रूख->जरा == रिक्त) {
+        फर्काऊ रिक्त;
     }
 
-    tree->root->right = NULL;
-    tree->root->left = NULL;
-    tree->root->parent = NULL;
-    tree->root->value = NGX_RADIX_NO_VALUE;
+    रूख->जरा->दायाँ = रिक्त;
+    रूख->जरा->बायाँ = रिक्त;
+    रूख->जरा->parent = रिक्त;
+    रूख->जरा->मान = NGX_RADIX_NO_मान;
 
-    if (preallocate == 0) {
-        return tree;
+    यदि (preallocate == 0) {
+        फर्काऊ रूख;
     }
 
     /*
@@ -59,21 +59,21 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      *     8 bits on sparc64 in 32-bit mode (8K pages)
      */
 
-    if (preallocate == -1) {
-        switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
+    यदि (preallocate == -1) {
+        विकल्प (ngx_pagesize / परिमाण(ngx_radix_गाँठो_t)) {
 
         /* amd64 */
-        case 128:
+        पक्ष 128:
             preallocate = 6;
-            break;
+            रोक;
 
         /* i386, sparc64 */
-        case 256:
+        पक्ष 256:
             preallocate = 7;
-            break;
+            रोक;
 
         /* sparc64 in 32-bit mode */
-        default:
+        स्वभाव:
             preallocate = 8;
         }
     }
@@ -81,408 +81,408 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     mask = 0;
     inc = 0x80000000;
 
-    while (preallocate--) {
+    जबसम्म (preallocate--) {
 
-        key = 0;
+        साँचो = 0;
         mask >>= 1;
         mask |= 0x80000000;
 
-        do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+        गर {
+            यदि (ngx_radix32tree_घुसाउ(रूख, साँचो, mask, NGX_RADIX_NO_मान)
                 != NGX_OK)
             {
-                return NULL;
+                फर्काऊ रिक्त;
             }
 
-            key += inc;
+            साँचो += inc;
 
-        } while (key);
+        } जबसम्म (साँचो);
 
         inc >>= 1;
     }
 
-    return tree;
+    फर्काऊ रूख;
 }
 
 
 ngx_int_t
-ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
-    uintptr_t value)
+ngx_radix32tree_घुसाउ(ngx_radix_रूख_t *रूख, uint32_t साँचो, uint32_t mask,
+    uintptr_t मान)
 {
     uint32_t           bit;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_गाँठो_t  *गाँठो, *next;
 
     bit = 0x80000000;
 
-    node = tree->root;
-    next = tree->root;
+    गाँठो = रूख->जरा;
+    next = रूख->जरा;
 
-    while (bit & mask) {
-        if (key & bit) {
-            next = node->right;
+    जबसम्म (bit & mask) {
+        यदि (साँचो & bit) {
+            next = गाँठो->दायाँ;
 
-        } else {
-            next = node->left;
+        } अन्यथा {
+            next = गाँठो->बायाँ;
         }
 
-        if (next == NULL) {
-            break;
-        }
-
-        bit >>= 1;
-        node = next;
-    }
-
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
-        }
-
-        node->value = value;
-        return NGX_OK;
-    }
-
-    while (bit & mask) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
-        }
-
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
-
-        if (key & bit) {
-            node->right = next;
-
-        } else {
-            node->left = next;
+        यदि (next == रिक्त) {
+            रोक;
         }
 
         bit >>= 1;
-        node = next;
+        गाँठो = next;
     }
 
-    node->value = value;
+    यदि (next) {
+        यदि (गाँठो->मान != NGX_RADIX_NO_मान) {
+            फर्काऊ NGX_BUSY;
+        }
 
-    return NGX_OK;
+        गाँठो->मान = मान;
+        फर्काऊ NGX_OK;
+    }
+
+    जबसम्म (bit & mask) {
+        next = ngx_radix_alloc(रूख);
+        यदि (next == रिक्त) {
+            फर्काऊ NGX_ERROR;
+        }
+
+        next->दायाँ = रिक्त;
+        next->बायाँ = रिक्त;
+        next->parent = गाँठो;
+        next->मान = NGX_RADIX_NO_मान;
+
+        यदि (साँचो & bit) {
+            गाँठो->दायाँ = next;
+
+        } अन्यथा {
+            गाँठो->बायाँ = next;
+        }
+
+        bit >>= 1;
+        गाँठो = next;
+    }
+
+    गाँठो->मान = मान;
+
+    फर्काऊ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
+ngx_radix32tree_delete(ngx_radix_रूख_t *रूख, uint32_t साँचो, uint32_t mask)
 {
     uint32_t           bit;
-    ngx_radix_node_t  *node;
+    ngx_radix_गाँठो_t  *गाँठो;
 
     bit = 0x80000000;
-    node = tree->root;
+    गाँठो = रूख->जरा;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
-            node = node->right;
+    जबसम्म (गाँठो && (bit & mask)) {
+        यदि (साँचो & bit) {
+            गाँठो = गाँठो->दायाँ;
 
-        } else {
-            node = node->left;
+        } अन्यथा {
+            गाँठो = गाँठो->बायाँ;
         }
 
         bit >>= 1;
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    यदि (गाँठो == रिक्त) {
+        फर्काऊ NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    यदि (गाँठो->दायाँ || गाँठो->बायाँ) {
+        यदि (गाँठो->मान != NGX_RADIX_NO_मान) {
+            गाँठो->मान = NGX_RADIX_NO_मान;
+            फर्काऊ NGX_OK;
         }
 
-        return NGX_ERROR;
+        फर्काऊ NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    लागि ( ;; ) {
+        यदि (गाँठो->parent->दायाँ == गाँठो) {
+            गाँठो->parent->दायाँ = रिक्त;
 
-        } else {
-            node->parent->left = NULL;
+        } अन्यथा {
+            गाँठो->parent->बायाँ = रिक्त;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        गाँठो->दायाँ = रूख->मुक्त;
+        रूख->मुक्त = गाँठो;
 
-        node = node->parent;
+        गाँठो = गाँठो->parent;
 
-        if (node->right || node->left) {
-            break;
+        यदि (गाँठो->दायाँ || गाँठो->बायाँ) {
+            रोक;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        यदि (गाँठो->मान != NGX_RADIX_NO_मान) {
+            रोक;
         }
 
-        if (node->parent == NULL) {
-            break;
+        यदि (गाँठो->parent == रिक्त) {
+            रोक;
         }
     }
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
+ngx_radix32tree_find(ngx_radix_रूख_t *रूख, uint32_t साँचो)
 {
     uint32_t           bit;
-    uintptr_t          value;
-    ngx_radix_node_t  *node;
+    uintptr_t          मान;
+    ngx_radix_गाँठो_t  *गाँठो;
 
     bit = 0x80000000;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    मान = NGX_RADIX_NO_मान;
+    गाँठो = रूख->जरा;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    जबसम्म (गाँठो) {
+        यदि (गाँठो->मान != NGX_RADIX_NO_मान) {
+            मान = गाँठो->मान;
         }
 
-        if (key & bit) {
-            node = node->right;
+        यदि (साँचो & bit) {
+            गाँठो = गाँठो->दायाँ;
 
-        } else {
-            node = node->left;
+        } अन्यथा {
+            गाँठो = गाँठो->बायाँ;
         }
 
         bit >>= 1;
     }
 
-    return value;
+    फर्काऊ मान;
 }
 
 
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
 
 ngx_int_t
-ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
-    uintptr_t value)
+ngx_radix128tree_घुसाउ(ngx_radix_रूख_t *रूख, u_char *साँचो, u_char *mask,
+    uintptr_t मान)
 {
     u_char             bit;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_गाँठो_t  *गाँठो, *next;
 
     i = 0;
     bit = 0x80;
 
-    node = tree->root;
-    next = tree->root;
+    गाँठो = रूख->जरा;
+    next = रूख->जरा;
 
-    while (bit & mask[i]) {
-        if (key[i] & bit) {
-            next = node->right;
+    जबसम्म (bit & mask[i]) {
+        यदि (साँचो[i] & bit) {
+            next = गाँठो->दायाँ;
 
-        } else {
-            next = node->left;
+        } अन्यथा {
+            next = गाँठो->बायाँ;
         }
 
-        if (next == NULL) {
-            break;
+        यदि (next == रिक्त) {
+            रोक;
         }
 
         bit >>= 1;
-        node = next;
+        गाँठो = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        यदि (bit == 0) {
+            यदि (++i == 16) {
+                रोक;
             }
 
             bit = 0x80;
         }
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    यदि (next) {
+        यदि (गाँठो->मान != NGX_RADIX_NO_मान) {
+            फर्काऊ NGX_BUSY;
         }
 
-        node->value = value;
-        return NGX_OK;
+        गाँठो->मान = मान;
+        फर्काऊ NGX_OK;
     }
 
-    while (bit & mask[i]) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+    जबसम्म (bit & mask[i]) {
+        next = ngx_radix_alloc(रूख);
+        यदि (next == रिक्त) {
+            फर्काऊ NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
+        next->दायाँ = रिक्त;
+        next->बायाँ = रिक्त;
+        next->parent = गाँठो;
+        next->मान = NGX_RADIX_NO_मान;
 
-        if (key[i] & bit) {
-            node->right = next;
+        यदि (साँचो[i] & bit) {
+            गाँठो->दायाँ = next;
 
-        } else {
-            node->left = next;
+        } अन्यथा {
+            गाँठो->बायाँ = next;
         }
 
         bit >>= 1;
-        node = next;
+        गाँठो = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        यदि (bit == 0) {
+            यदि (++i == 16) {
+                रोक;
             }
 
             bit = 0x80;
         }
     }
 
-    node->value = value;
+    गाँठो->मान = मान;
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
+ngx_radix128tree_delete(ngx_radix_रूख_t *रूख, u_char *साँचो, u_char *mask)
 {
     u_char             bit;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_गाँठो_t  *गाँठो;
 
     i = 0;
     bit = 0x80;
-    node = tree->root;
+    गाँठो = रूख->जरा;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
-            node = node->right;
+    जबसम्म (गाँठो && (bit & mask[i])) {
+        यदि (साँचो[i] & bit) {
+            गाँठो = गाँठो->दायाँ;
 
-        } else {
-            node = node->left;
+        } अन्यथा {
+            गाँठो = गाँठो->बायाँ;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        यदि (bit == 0) {
+            यदि (++i == 16) {
+                रोक;
             }
 
             bit = 0x80;
         }
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    यदि (गाँठो == रिक्त) {
+        फर्काऊ NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    यदि (गाँठो->दायाँ || गाँठो->बायाँ) {
+        यदि (गाँठो->मान != NGX_RADIX_NO_मान) {
+            गाँठो->मान = NGX_RADIX_NO_मान;
+            फर्काऊ NGX_OK;
         }
 
-        return NGX_ERROR;
+        फर्काऊ NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    लागि ( ;; ) {
+        यदि (गाँठो->parent->दायाँ == गाँठो) {
+            गाँठो->parent->दायाँ = रिक्त;
 
-        } else {
-            node->parent->left = NULL;
+        } अन्यथा {
+            गाँठो->parent->बायाँ = रिक्त;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        गाँठो->दायाँ = रूख->मुक्त;
+        रूख->मुक्त = गाँठो;
 
-        node = node->parent;
+        गाँठो = गाँठो->parent;
 
-        if (node->right || node->left) {
-            break;
+        यदि (गाँठो->दायाँ || गाँठो->बायाँ) {
+            रोक;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        यदि (गाँठो->मान != NGX_RADIX_NO_मान) {
+            रोक;
         }
 
-        if (node->parent == NULL) {
-            break;
+        यदि (गाँठो->parent == रिक्त) {
+            रोक;
         }
     }
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
+ngx_radix128tree_find(ngx_radix_रूख_t *रूख, u_char *साँचो)
 {
     u_char             bit;
-    uintptr_t          value;
+    uintptr_t          मान;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_गाँठो_t  *गाँठो;
 
     i = 0;
     bit = 0x80;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    मान = NGX_RADIX_NO_मान;
+    गाँठो = रूख->जरा;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    जबसम्म (गाँठो) {
+        यदि (गाँठो->मान != NGX_RADIX_NO_मान) {
+            मान = गाँठो->मान;
         }
 
-        if (key[i] & bit) {
-            node = node->right;
+        यदि (साँचो[i] & bit) {
+            गाँठो = गाँठो->दायाँ;
 
-        } else {
-            node = node->left;
+        } अन्यथा {
+            गाँठो = गाँठो->बायाँ;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
+        यदि (bit == 0) {
             i++;
             bit = 0x80;
         }
     }
 
-    return value;
+    फर्काऊ मान;
 }
 
 #endif
 
 
-static ngx_radix_node_t *
-ngx_radix_alloc(ngx_radix_tree_t *tree)
+स्थिर ngx_radix_गाँठो_t *
+ngx_radix_alloc(ngx_radix_रूख_t *रूख)
 {
-    ngx_radix_node_t  *p;
+    ngx_radix_गाँठो_t  *p;
 
-    if (tree->free) {
-        p = tree->free;
-        tree->free = tree->free->right;
-        return p;
+    यदि (रूख->मुक्त) {
+        p = रूख->मुक्त;
+        रूख->मुक्त = रूख->मुक्त->दायाँ;
+        फर्काऊ p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
-        tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
-            return NULL;
+    यदि (रूख->size < परिमाण(ngx_radix_गाँठो_t)) {
+        रूख->start = ngx_pmemalign(रूख->pool, ngx_pagesize, ngx_pagesize);
+        यदि (रूख->start == रिक्त) {
+            फर्काऊ रिक्त;
         }
 
-        tree->size = ngx_pagesize;
+        रूख->size = ngx_pagesize;
     }
 
-    p = (ngx_radix_node_t *) tree->start;
-    tree->start += sizeof(ngx_radix_node_t);
-    tree->size -= sizeof(ngx_radix_node_t);
+    p = (ngx_radix_गाँठो_t *) रूख->start;
+    रूख->start += परिमाण(ngx_radix_गाँठो_t);
+    रूख->size -= परिमाण(ngx_radix_गाँठो_t);
 
-    return p;
+    फर्काऊ p;
 }

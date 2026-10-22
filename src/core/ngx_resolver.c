@@ -5,9 +5,9 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
+#अन्तर्भाव <ngx_event.h>
 
 
 #define NGX_RESOLVER_UDP_SIZE   4096
@@ -16,7 +16,7 @@
 #define NGX_RESOLVER_TCP_WSIZE  8192
 
 
-typedef struct {
+प्रकारनिर्देश संरचना {
     u_char  ident_hi;
     u_char  ident_lo;
     u_char  flags_hi;
@@ -32,7 +32,7 @@ typedef struct {
 } ngx_resolver_hdr_t;
 
 
-typedef struct {
+प्रकारनिर्देश संरचना {
     u_char  type_hi;
     u_char  type_lo;
     u_char  class_hi;
@@ -40,7 +40,7 @@ typedef struct {
 } ngx_resolver_qs_t;
 
 
-typedef struct {
+प्रकारनिर्देश संरचना {
     u_char  type_hi;
     u_char  type_lo;
     u_char  class_hi;
@@ -51,81 +51,81 @@ typedef struct {
 } ngx_resolver_an_t;
 
 
-#define ngx_resolver_node(n)  ngx_rbtree_data(n, ngx_resolver_node_t, node)
+#define ngx_resolver_गाँठो(n)  ngx_rbtree_data(n, ngx_resolver_गाँठो_t, गाँठो)
 
 
-static ngx_int_t ngx_udp_connect(ngx_resolver_connection_t *rec);
-static ngx_int_t ngx_tcp_connect(ngx_resolver_connection_t *rec);
+स्थिर ngx_int_t ngx_udp_connect(ngx_resolver_connection_t *rec);
+स्थिर ngx_int_t ngx_tcp_connect(ngx_resolver_connection_t *rec);
 
 
-static void ngx_resolver_cleanup(void *data);
-static void ngx_resolver_cleanup_tree(ngx_resolver_t *r, ngx_rbtree_t *tree);
-static ngx_int_t ngx_resolve_name_locked(ngx_resolver_t *r,
+स्थिर शून्य ngx_resolver_cleanup(शून्य *data);
+स्थिर शून्य ngx_resolver_cleanup_रूख(ngx_resolver_t *r, ngx_rbtree_t *रूख);
+स्थिर ngx_int_t ngx_resolve_name_locked(ngx_resolver_t *r,
     ngx_resolver_ctx_t *ctx, ngx_str_t *name);
-static void ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *tree,
+स्थिर शून्य ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *रूख,
     ngx_queue_t *queue);
-static ngx_int_t ngx_resolver_send_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn);
-static ngx_int_t ngx_resolver_send_udp_query(ngx_resolver_t *r,
+स्थिर ngx_int_t ngx_resolver_send_query(ngx_resolver_t *r,
+    ngx_resolver_गाँठो_t *rn);
+स्थिर ngx_int_t ngx_resolver_send_udp_query(ngx_resolver_t *r,
     ngx_resolver_connection_t *rec, u_char *query, u_short qlen);
-static ngx_int_t ngx_resolver_send_tcp_query(ngx_resolver_t *r,
+स्थिर ngx_int_t ngx_resolver_send_tcp_query(ngx_resolver_t *r,
     ngx_resolver_connection_t *rec, u_char *query, u_short qlen);
-static ngx_int_t ngx_resolver_create_name_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_str_t *name);
-static ngx_int_t ngx_resolver_create_srv_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_str_t *name);
-static ngx_int_t ngx_resolver_create_addr_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_resolver_addr_t *addr);
-static void ngx_resolver_resend_handler(ngx_event_t *ev);
-static time_t ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *tree,
+स्थिर ngx_int_t ngx_resolver_create_name_query(ngx_resolver_t *r,
+    ngx_resolver_गाँठो_t *rn, ngx_str_t *name);
+स्थिर ngx_int_t ngx_resolver_create_srv_query(ngx_resolver_t *r,
+    ngx_resolver_गाँठो_t *rn, ngx_str_t *name);
+स्थिर ngx_int_t ngx_resolver_create_addr_query(ngx_resolver_t *r,
+    ngx_resolver_गाँठो_t *rn, ngx_resolver_addr_t *addr);
+स्थिर शून्य ngx_resolver_resend_handler(ngx_event_t *ev);
+स्थिर समय_प्रकार ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *रूख,
     ngx_queue_t *queue);
-static ngx_uint_t ngx_resolver_resend_empty(ngx_resolver_t *r);
-static void ngx_resolver_udp_read(ngx_event_t *rev);
-static void ngx_resolver_tcp_write(ngx_event_t *wev);
-static void ngx_resolver_tcp_read(ngx_event_t *rev);
-static void ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf,
-    size_t n, ngx_uint_t tcp);
-static void ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
+स्थिर ngx_uint_t ngx_resolver_resend_empty(ngx_resolver_t *r);
+स्थिर शून्य ngx_resolver_udp_read(ngx_event_t *rev);
+स्थिर शून्य ngx_resolver_tcp_write(ngx_event_t *wev);
+स्थिर शून्य ngx_resolver_tcp_read(ngx_event_t *rev);
+स्थिर शून्य ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf,
+    माप_प्रकार n, ngx_uint_t tcp);
+स्थिर शून्य ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, माप_प्रकार n,
     ngx_uint_t ident, ngx_uint_t code, ngx_uint_t qtype,
     ngx_uint_t nan, ngx_uint_t trunc, ngx_uint_t ans);
-static void ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
+स्थिर शून्य ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, माप_प्रकार n,
     ngx_uint_t ident, ngx_uint_t code, ngx_uint_t nan,
     ngx_uint_t trunc, ngx_uint_t ans);
-static void ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, size_t n,
+स्थिर शून्य ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, माप_प्रकार n,
     ngx_uint_t ident, ngx_uint_t code, ngx_uint_t nan);
-static ngx_resolver_node_t *ngx_resolver_lookup_name(ngx_resolver_t *r,
+स्थिर ngx_resolver_गाँठो_t *ngx_resolver_lookup_name(ngx_resolver_t *r,
     ngx_str_t *name, uint32_t hash);
-static ngx_resolver_node_t *ngx_resolver_lookup_srv(ngx_resolver_t *r,
+स्थिर ngx_resolver_गाँठो_t *ngx_resolver_lookup_srv(ngx_resolver_t *r,
     ngx_str_t *name, uint32_t hash);
-static ngx_resolver_node_t *ngx_resolver_lookup_addr(ngx_resolver_t *r,
+स्थिर ngx_resolver_गाँठो_t *ngx_resolver_lookup_addr(ngx_resolver_t *r,
     in_addr_t addr);
-static void ngx_resolver_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-static ngx_int_t ngx_resolver_copy(ngx_resolver_t *r, ngx_str_t *name,
+स्थिर शून्य ngx_resolver_rbtree_घुसाउ_मान(ngx_rbtree_गाँठो_t *temp,
+    ngx_rbtree_गाँठो_t *गाँठो, ngx_rbtree_गाँठो_t *sentinel);
+स्थिर ngx_int_t ngx_resolver_copy(ngx_resolver_t *r, ngx_str_t *name,
     u_char *buf, u_char *src, u_char *last);
-static ngx_int_t ngx_resolver_set_timeout(ngx_resolver_t *r,
+स्थिर ngx_int_t ngx_resolver_set_timeout(ngx_resolver_t *r,
     ngx_resolver_ctx_t *ctx);
-static void ngx_resolver_timeout_handler(ngx_event_t *ev);
-static void ngx_resolver_free_node(ngx_resolver_t *r, ngx_resolver_node_t *rn);
-static void *ngx_resolver_alloc(ngx_resolver_t *r, size_t size);
-static void *ngx_resolver_calloc(ngx_resolver_t *r, size_t size);
-static void ngx_resolver_free(ngx_resolver_t *r, void *p);
-static void ngx_resolver_free_locked(ngx_resolver_t *r, void *p);
-static void *ngx_resolver_dup(ngx_resolver_t *r, void *src, size_t size);
-static ngx_resolver_addr_t *ngx_resolver_export(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_uint_t rotate);
-static void ngx_resolver_report_srv(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx);
-static u_char *ngx_resolver_log_error(ngx_log_t *log, u_char *buf, size_t len);
-static void ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx,
-    ngx_resolver_node_t *rn);
-static void ngx_resolver_srv_names_handler(ngx_resolver_ctx_t *ctx);
-static ngx_int_t ngx_resolver_cmp_srvs(const void *one, const void *two);
+स्थिर शून्य ngx_resolver_timeout_handler(ngx_event_t *ev);
+स्थिर शून्य ngx_resolver_free_गाँठो(ngx_resolver_t *r, ngx_resolver_गाँठो_t *rn);
+स्थिर शून्य *ngx_resolver_alloc(ngx_resolver_t *r, माप_प्रकार size);
+स्थिर शून्य *ngx_resolver_calloc(ngx_resolver_t *r, माप_प्रकार size);
+स्थिर शून्य ngx_resolver_free(ngx_resolver_t *r, शून्य *p);
+स्थिर शून्य ngx_resolver_free_locked(ngx_resolver_t *r, शून्य *p);
+स्थिर शून्य *ngx_resolver_dup(ngx_resolver_t *r, शून्य *src, माप_प्रकार size);
+स्थिर ngx_resolver_addr_t *ngx_resolver_export(ngx_resolver_t *r,
+    ngx_resolver_गाँठो_t *rn, ngx_uint_t rotate);
+स्थिर शून्य ngx_resolver_report_srv(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx);
+स्थिर u_char *ngx_resolver_log_error(ngx_log_t *log, u_char *buf, माप_प्रकार len);
+स्थिर शून्य ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx,
+    ngx_resolver_गाँठो_t *rn);
+स्थिर शून्य ngx_resolver_srv_names_handler(ngx_resolver_ctx_t *ctx);
+स्थिर ngx_int_t ngx_resolver_cmp_srvs(अचर शून्य *one, अचर शून्य *two);
 
-#if (NGX_HAVE_INET6)
-static void ngx_resolver_rbtree_insert_addr6_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-static ngx_resolver_node_t *ngx_resolver_lookup_addr6(ngx_resolver_t *r,
-    struct in6_addr *addr, uint32_t hash);
+#यदि (NGX_HAVE_INET6)
+स्थिर शून्य ngx_resolver_rbtree_घुसाउ_addr6_मान(ngx_rbtree_गाँठो_t *temp,
+    ngx_rbtree_गाँठो_t *गाँठो, ngx_rbtree_गाँठो_t *sentinel);
+स्थिर ngx_resolver_गाँठो_t *ngx_resolver_lookup_addr6(ngx_resolver_t *r,
+    संरचना in6_addr *addr, uint32_t hash);
 #endif
 
 
@@ -139,19 +139,19 @@ ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
     ngx_pool_cleanup_t         *cln;
     ngx_resolver_connection_t  *rec;
 
-    r = ngx_pcalloc(cf->pool, sizeof(ngx_resolver_t));
-    if (r == NULL) {
-        return NULL;
+    r = ngx_pcalloc(cf->pool, परिमाण(ngx_resolver_t));
+    यदि (r == रिक्त) {
+        फर्काऊ रिक्त;
     }
 
-    r->event = ngx_pcalloc(cf->pool, sizeof(ngx_event_t));
-    if (r->event == NULL) {
-        return NULL;
+    r->event = ngx_pcalloc(cf->pool, परिमाण(ngx_event_t));
+    यदि (r->event == रिक्त) {
+        फर्काऊ रिक्त;
     }
 
     cln = ngx_pool_cleanup_add(cf->pool, 0);
-    if (cln == NULL) {
-        return NULL;
+    यदि (cln == रिक्त) {
+        फर्काऊ रिक्त;
     }
 
     cln->handler = ngx_resolver_cleanup;
@@ -160,13 +160,13 @@ ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
     r->ipv4 = 1;
 
     ngx_rbtree_init(&r->name_rbtree, &r->name_sentinel,
-                    ngx_resolver_rbtree_insert_value);
+                    ngx_resolver_rbtree_घुसाउ_मान);
 
     ngx_rbtree_init(&r->srv_rbtree, &r->srv_sentinel,
-                    ngx_resolver_rbtree_insert_value);
+                    ngx_resolver_rbtree_घुसाउ_मान);
 
     ngx_rbtree_init(&r->addr_rbtree, &r->addr_sentinel,
-                    ngx_rbtree_insert_value);
+                    ngx_rbtree_घुसाउ_मान);
 
     ngx_queue_init(&r->name_resend_queue);
     ngx_queue_init(&r->srv_resend_queue);
@@ -176,11 +176,11 @@ ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
     ngx_queue_init(&r->srv_expire_queue);
     ngx_queue_init(&r->addr_expire_queue);
 
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
     r->ipv6 = 1;
 
     ngx_rbtree_init(&r->addr6_rbtree, &r->addr6_sentinel,
-                    ngx_resolver_rbtree_insert_addr6_value);
+                    ngx_resolver_rbtree_घुसाउ_addr6_मान);
 
     ngx_queue_init(&r->addr6_resend_queue);
 
@@ -201,90 +201,90 @@ ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
     r->log = &cf->cycle->new_log;
     r->log_level = NGX_LOG_ERR;
 
-    if (n) {
-        if (ngx_array_init(&r->connections, cf->pool, n,
-                           sizeof(ngx_resolver_connection_t))
+    यदि (n) {
+        यदि (ngx_array_init(&r->connections, cf->pool, n,
+                           परिमाण(ngx_resolver_connection_t))
             != NGX_OK)
         {
-            return NULL;
+            फर्काऊ रिक्त;
         }
     }
 
-    for (i = 0; i < n; i++) {
-        if (ngx_strncmp(names[i].data, "valid=", 6) == 0) {
+    लागि (i = 0; i < n; i++) {
+        यदि (ngx_strncmp(names[i].data, "valid=", 6) == 0) {
             s.len = names[i].len - 6;
             s.data = names[i].data + 6;
 
             r->valid = ngx_parse_time(&s, 1);
 
-            if (r->valid == (time_t) NGX_ERROR) {
+            यदि (r->valid == (समय_प्रकार) NGX_ERROR) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "invalid parameter: %V", &names[i]);
-                return NULL;
+                फर्काऊ रिक्त;
             }
 
-            continue;
+            जारी;
         }
 
-#if (NGX_HAVE_INET6)
-        if (ngx_strncmp(names[i].data, "ipv4=", 5) == 0) {
+#यदि (NGX_HAVE_INET6)
+        यदि (ngx_strncmp(names[i].data, "ipv4=", 5) == 0) {
 
-            if (ngx_strcmp(&names[i].data[5], "on") == 0) {
+            यदि (ngx_strcmp(&names[i].data[5], "on") == 0) {
                 r->ipv4 = 1;
 
-            } else if (ngx_strcmp(&names[i].data[5], "off") == 0) {
+            } अन्यथा यदि (ngx_strcmp(&names[i].data[5], "off") == 0) {
                 r->ipv4 = 0;
 
-            } else {
+            } अन्यथा {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "invalid parameter: %V", &names[i]);
-                return NULL;
+                फर्काऊ रिक्त;
             }
 
-            continue;
+            जारी;
         }
 
-        if (ngx_strncmp(names[i].data, "ipv6=", 5) == 0) {
+        यदि (ngx_strncmp(names[i].data, "ipv6=", 5) == 0) {
 
-            if (ngx_strcmp(&names[i].data[5], "on") == 0) {
+            यदि (ngx_strcmp(&names[i].data[5], "on") == 0) {
                 r->ipv6 = 1;
 
-            } else if (ngx_strcmp(&names[i].data[5], "off") == 0) {
+            } अन्यथा यदि (ngx_strcmp(&names[i].data[5], "off") == 0) {
                 r->ipv6 = 0;
 
-            } else {
+            } अन्यथा {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "invalid parameter: %V", &names[i]);
-                return NULL;
+                फर्काऊ रिक्त;
             }
 
-            continue;
+            जारी;
         }
 #endif
 
-        ngx_memzero(&u, sizeof(ngx_url_t));
+        ngx_memzero(&u, परिमाण(ngx_url_t));
 
         u.url = names[i];
         u.default_port = 53;
 
-        if (ngx_parse_url(cf->pool, &u) != NGX_OK) {
-            if (u.err) {
+        यदि (ngx_parse_url(cf->pool, &u) != NGX_OK) {
+            यदि (u.err) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "%s in resolver \"%V\"",
                                    u.err, &u.url);
             }
 
-            return NULL;
+            फर्काऊ रिक्त;
         }
 
-        rec = ngx_array_push_n(&r->connections, u.naddrs);
-        if (rec == NULL) {
-            return NULL;
+        rec = ngx_array_थप_n(&r->connections, u.naddrs);
+        यदि (rec == रिक्त) {
+            फर्काऊ रिक्त;
         }
 
-        ngx_memzero(rec, u.naddrs * sizeof(ngx_resolver_connection_t));
+        ngx_memzero(rec, u.naddrs * परिमाण(ngx_resolver_connection_t));
 
-        for (j = 0; j < u.naddrs; j++) {
+        लागि (j = 0; j < u.naddrs; j++) {
             rec[j].sockaddr = u.addrs[j].sockaddr;
             rec[j].socklen = u.addrs[j].socklen;
             rec[j].server = u.addrs[j].name;
@@ -292,25 +292,25 @@ ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
         }
     }
 
-#if (NGX_HAVE_INET6)
-    if (r->ipv4 + r->ipv6 == 0) {
+#यदि (NGX_HAVE_INET6)
+    यदि (r->ipv4 + r->ipv6 == 0) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "\"ipv4\" and \"ipv6\" cannot both be \"off\"");
-        return NULL;
+        फर्काऊ रिक्त;
     }
 #endif
 
-    if (n && r->connections.nelts == 0) {
+    यदि (n && r->connections.nelts == 0) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "no name servers defined");
-        return NULL;
+        फर्काऊ रिक्त;
     }
 
-    return r;
+    फर्काऊ r;
 }
 
 
-static void
-ngx_resolver_cleanup(void *data)
+स्थिर शून्य
+ngx_resolver_cleanup(शून्य *data)
 {
     ngx_resolver_t  *r = data;
 
@@ -319,37 +319,37 @@ ngx_resolver_cleanup(void *data)
 
     ngx_log_debug0(NGX_LOG_DEBUG_CORE, ngx_cycle->log, 0, "cleanup resolver");
 
-    ngx_resolver_cleanup_tree(r, &r->name_rbtree);
+    ngx_resolver_cleanup_रूख(r, &r->name_rbtree);
 
-    ngx_resolver_cleanup_tree(r, &r->srv_rbtree);
+    ngx_resolver_cleanup_रूख(r, &r->srv_rbtree);
 
-    ngx_resolver_cleanup_tree(r, &r->addr_rbtree);
+    ngx_resolver_cleanup_रूख(r, &r->addr_rbtree);
 
-#if (NGX_HAVE_INET6)
-    ngx_resolver_cleanup_tree(r, &r->addr6_rbtree);
+#यदि (NGX_HAVE_INET6)
+    ngx_resolver_cleanup_रूख(r, &r->addr6_rbtree);
 #endif
 
-    if (r->event->timer_set) {
+    यदि (r->event->timer_set) {
         ngx_del_timer(r->event);
     }
 
     rec = r->connections.elts;
 
-    for (i = 0; i < r->connections.nelts; i++) {
-        if (rec[i].udp) {
+    लागि (i = 0; i < r->connections.nelts; i++) {
+        यदि (rec[i].udp) {
             ngx_close_connection(rec[i].udp);
         }
 
-        if (rec[i].tcp) {
+        यदि (rec[i].tcp) {
             ngx_close_connection(rec[i].tcp);
         }
 
-        if (rec[i].read_buf) {
+        यदि (rec[i].read_buf) {
             ngx_resolver_free(r, rec[i].read_buf->start);
             ngx_resolver_free(r, rec[i].read_buf);
         }
 
-        if (rec[i].write_buf) {
+        यदि (rec[i].write_buf) {
             ngx_resolver_free(r, rec[i].write_buf->start);
             ngx_resolver_free(r, rec[i].write_buf);
         }
@@ -357,23 +357,23 @@ ngx_resolver_cleanup(void *data)
 }
 
 
-static void
-ngx_resolver_cleanup_tree(ngx_resolver_t *r, ngx_rbtree_t *tree)
+स्थिर शून्य
+ngx_resolver_cleanup_रूख(ngx_resolver_t *r, ngx_rbtree_t *रूख)
 {
     ngx_resolver_ctx_t   *ctx, *next;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_गाँठो_t  *rn;
 
-    while (tree->root != tree->sentinel) {
+    जबसम्म (रूख->जरा != रूख->sentinel) {
 
-        rn = ngx_resolver_node(ngx_rbtree_min(tree->root, tree->sentinel));
+        rn = ngx_resolver_गाँठो(ngx_rbtree_min(रूख->जरा, रूख->sentinel));
 
         ngx_queue_remove(&rn->queue);
 
-        for (ctx = rn->waiting; ctx; ctx = next) {
+        लागि (ctx = rn->waiting; ctx; ctx = next) {
             next = ctx->next;
 
-            if (ctx->event) {
-                if (ctx->event->timer_set) {
+            यदि (ctx->event) {
+                यदि (ctx->event->timer_set) {
                     ngx_del_timer(ctx->event);
                 }
 
@@ -383,9 +383,9 @@ ngx_resolver_cleanup_tree(ngx_resolver_t *r, ngx_rbtree_t *tree)
             ngx_resolver_free(r, ctx);
         }
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(रूख, &rn->गाँठो);
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_गाँठो(r, rn);
     }
 }
 
@@ -396,82 +396,82 @@ ngx_resolve_start(ngx_resolver_t *r, ngx_resolver_ctx_t *temp)
     in_addr_t            addr;
     ngx_resolver_ctx_t  *ctx;
 
-    if (temp) {
+    यदि (temp) {
         addr = ngx_inet_addr(temp->name.data, temp->name.len);
 
-        if (addr != INADDR_NONE) {
+        यदि (addr != INADDR_NONE) {
             temp->resolver = r;
             temp->state = NGX_OK;
             temp->naddrs = 1;
             temp->addrs = &temp->addr;
-            temp->addr.sockaddr = (struct sockaddr *) &temp->sin;
-            temp->addr.socklen = sizeof(struct sockaddr_in);
-            ngx_memzero(&temp->sin, sizeof(struct sockaddr_in));
+            temp->addr.sockaddr = (संरचना sockaddr *) &temp->sin;
+            temp->addr.socklen = परिमाण(संरचना sockaddr_in);
+            ngx_memzero(&temp->sin, परिमाण(संरचना sockaddr_in));
             temp->sin.sin_family = AF_INET;
             temp->sin.sin_addr.s_addr = addr;
             temp->quick = 1;
 
-            return temp;
+            फर्काऊ temp;
         }
     }
 
-    if (r->connections.nelts == 0) {
-        return NGX_NO_RESOLVER;
+    यदि (r->connections.nelts == 0) {
+        फर्काऊ NGX_NO_RESOLVER;
     }
 
-    ctx = ngx_resolver_calloc(r, sizeof(ngx_resolver_ctx_t));
+    ctx = ngx_resolver_calloc(r, परिमाण(ngx_resolver_ctx_t));
 
-    if (ctx) {
+    यदि (ctx) {
         ctx->resolver = r;
     }
 
-    return ctx;
+    फर्काऊ ctx;
 }
 
 
 ngx_int_t
 ngx_resolve_name(ngx_resolver_ctx_t *ctx)
 {
-    size_t           slen;
+    माप_प्रकार           slen;
     ngx_int_t        rc;
     ngx_str_t        name;
     ngx_resolver_t  *r;
 
     r = ctx->resolver;
 
-    if (ctx->name.len > 0 && ctx->name.data[ctx->name.len - 1] == '.') {
+    यदि (ctx->name.len > 0 && ctx->name.data[ctx->name.len - 1] == '.') {
         ctx->name.len--;
     }
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0,
                    "resolve: \"%V\"", &ctx->name);
 
-    if (ctx->quick) {
+    यदि (ctx->quick) {
         ctx->handler(ctx);
-        return NGX_OK;
+        फर्काऊ NGX_OK;
     }
 
-    if (ctx->service.len) {
+    यदि (ctx->service.len) {
         slen = ctx->service.len;
 
-        if (ngx_strlchr(ctx->service.data,
+        यदि (ngx_strlchr(ctx->service.data,
                         ctx->service.data + ctx->service.len, '.')
-            == NULL)
+            == रिक्त)
         {
-            slen += sizeof("_._tcp") - 1;
+            slen += परिमाण("_._tcp") - 1;
         }
 
         name.len = slen + 1 + ctx->name.len;
 
         name.data = ngx_resolver_alloc(r, name.len);
-        if (name.data == NULL) {
-            goto failed;
+        यदि (name.data == रिक्त) {
+            गच्छ failed;
         }
 
-        if (slen == ctx->service.len) {
+        यदि (slen == ctx->service.len) {
             ngx_sprintf(name.data, "%V.%V", &ctx->service, &ctx->name);
 
-        } else {
+        } अन्यथा {
             ngx_sprintf(name.data, "_%V._tcp.%V", &ctx->service, &ctx->name);
         }
 
@@ -481,25 +481,25 @@ ngx_resolve_name(ngx_resolver_ctx_t *ctx)
 
         ngx_resolver_free(r, name.data);
 
-    } else {
+    } अन्यथा {
         /* lock name mutex */
 
         rc = ngx_resolve_name_locked(r, ctx, &ctx->name);
     }
 
-    if (rc == NGX_OK) {
-        return NGX_OK;
+    यदि (rc == NGX_OK) {
+        फर्काऊ NGX_OK;
     }
 
     /* unlock name mutex */
 
-    if (rc == NGX_AGAIN) {
-        return NGX_OK;
+    यदि (rc == NGX_AGAIN) {
+        फर्काऊ NGX_OK;
     }
 
     /* NGX_ERROR */
 
-    if (ctx->event) {
+    यदि (ctx->event) {
         ngx_resolver_free(r, ctx->event);
     }
 
@@ -507,40 +507,40 @@ failed:
 
     ngx_resolver_free(r, ctx);
 
-    return NGX_ERROR;
+    फर्काऊ NGX_ERROR;
 }
 
 
-void
+शून्य
 ngx_resolve_name_done(ngx_resolver_ctx_t *ctx)
 {
     ngx_uint_t            i;
     ngx_resolver_t       *r;
     ngx_resolver_ctx_t   *w, **p;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_गाँठो_t  *rn;
 
     r = ctx->resolver;
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0,
                    "resolve name done: %i", ctx->state);
 
-    if (ctx->quick) {
-        return;
+    यदि (ctx->quick) {
+        फर्काऊ;
     }
 
-    if (ctx->event && ctx->event->timer_set) {
+    यदि (ctx->event && ctx->event->timer_set) {
         ngx_del_timer(ctx->event);
     }
 
     /* lock name mutex */
 
-    if (ctx->nsrvs) {
-        for (i = 0; i < ctx->nsrvs; i++) {
-            if (ctx->srvs[i].ctx) {
+    यदि (ctx->nsrvs) {
+        लागि (i = 0; i < ctx->nsrvs; i++) {
+            यदि (ctx->srvs[i].ctx) {
                 ngx_resolve_name_done(ctx->srvs[i].ctx);
             }
 
-            if (ctx->srvs[i].addrs) {
+            यदि (ctx->srvs[i].addrs) {
                 ngx_resolver_free(r, ctx->srvs[i].addrs->sockaddr);
                 ngx_resolver_free(r, ctx->srvs[i].addrs);
             }
@@ -551,19 +551,19 @@ ngx_resolve_name_done(ngx_resolver_ctx_t *ctx)
         ngx_resolver_free(r, ctx->srvs);
     }
 
-    if (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
+    यदि (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
 
-        rn = ctx->node;
+        rn = ctx->गाँठो;
 
-        if (rn) {
+        यदि (rn) {
             p = &rn->waiting;
             w = rn->waiting;
 
-            while (w) {
-                if (w == ctx) {
+            जबसम्म (w) {
+                यदि (w == ctx) {
                     *p = w->next;
 
-                    goto done;
+                    गच्छ done;
                 }
 
                 p = &w->next;
@@ -577,10 +577,10 @@ ngx_resolve_name_done(ngx_resolver_ctx_t *ctx)
 
 done:
 
-    if (ctx->service.len) {
+    यदि (ctx->service.len) {
         ngx_resolver_expire(r, &r->srv_rbtree, &r->srv_expire_queue);
 
-    } else {
+    } अन्यथा {
         ngx_resolver_expire(r, &r->name_rbtree, &r->name_expire_queue);
     }
 
@@ -588,7 +588,7 @@ done:
 
     /* lock alloc mutex */
 
-    if (ctx->event) {
+    यदि (ctx->event) {
         ngx_resolver_free_locked(r, ctx->event);
     }
 
@@ -596,13 +596,13 @@ done:
 
     /* unlock alloc mutex */
 
-    if (r->event->timer_set && ngx_resolver_resend_empty(r)) {
+    यदि (r->event->timer_set && ngx_resolver_resend_empty(r)) {
         ngx_del_timer(r->event);
     }
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
     ngx_str_t *name)
 {
@@ -611,36 +611,36 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
     ngx_str_t             cname;
     ngx_uint_t            i, naddrs;
     ngx_queue_t          *resend_queue, *expire_queue;
-    ngx_rbtree_t         *tree;
+    ngx_rbtree_t         *रूख;
     ngx_resolver_ctx_t   *next, *last;
     ngx_resolver_addr_t  *addrs;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_गाँठो_t  *rn;
 
     ngx_strlow(name->data, name->data, name->len);
 
     hash = ngx_crc32_short(name->data, name->len);
 
-    if (ctx->service.len) {
+    यदि (ctx->service.len) {
         rn = ngx_resolver_lookup_srv(r, name, hash);
 
-        tree = &r->srv_rbtree;
+        रूख = &r->srv_rbtree;
         resend_queue = &r->srv_resend_queue;
         expire_queue = &r->srv_expire_queue;
 
-    } else {
+    } अन्यथा {
         rn = ngx_resolver_lookup_name(r, name, hash);
 
-        tree = &r->name_rbtree;
+        रूख = &r->name_rbtree;
         resend_queue = &r->name_resend_queue;
         expire_queue = &r->name_expire_queue;
     }
 
-    if (rn) {
+    यदि (rn) {
 
         /* ctx can be a list after NGX_RESOLVE_CNAME */
-        for (last = ctx; last->next; last = last->next);
+        लागि (last = ctx; last->next; last = last->next);
 
-        if (rn->valid >= ngx_time()) {
+        यदि (rn->valid >= ngx_time()) {
 
             ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->log, 0, "resolve cached");
 
@@ -648,44 +648,44 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
 
             rn->expire = ngx_time() + r->expire;
 
-            ngx_queue_insert_head(expire_queue, &rn->queue);
+            ngx_queue_घुसाउ_head(expire_queue, &rn->queue);
 
             naddrs = (rn->naddrs == (u_short) -1) ? 0 : rn->naddrs;
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
             naddrs += (rn->naddrs6 == (u_short) -1) ? 0 : rn->naddrs6;
 #endif
 
-            if (naddrs) {
+            यदि (naddrs) {
 
-                if (naddrs == 1 && rn->naddrs == 1) {
-                    addrs = NULL;
+                यदि (naddrs == 1 && rn->naddrs == 1) {
+                    addrs = रिक्त;
 
-                } else {
+                } अन्यथा {
                     addrs = ngx_resolver_export(r, rn, 1);
-                    if (addrs == NULL) {
-                        return NGX_ERROR;
+                    यदि (addrs == रिक्त) {
+                        फर्काऊ NGX_ERROR;
                     }
                 }
 
                 last->next = rn->waiting;
-                rn->waiting = NULL;
+                rn->waiting = रिक्त;
 
                 /* unlock name mutex */
 
-                do {
+                गर {
                     ctx->state = NGX_OK;
                     ctx->valid = rn->valid;
                     ctx->naddrs = naddrs;
 
-                    if (addrs == NULL) {
+                    यदि (addrs == रिक्त) {
                         ctx->addrs = &ctx->addr;
-                        ctx->addr.sockaddr = (struct sockaddr *) &ctx->sin;
-                        ctx->addr.socklen = sizeof(struct sockaddr_in);
-                        ngx_memzero(&ctx->sin, sizeof(struct sockaddr_in));
+                        ctx->addr.sockaddr = (संरचना sockaddr *) &ctx->sin;
+                        ctx->addr.socklen = परिमाण(संरचना sockaddr_in);
+                        ngx_memzero(&ctx->sin, परिमाण(संरचना sockaddr_in));
                         ctx->sin.sin_family = AF_INET;
                         ctx->sin.sin_addr.s_addr = rn->u.addr;
 
-                    } else {
+                    } अन्यथा {
                         ctx->addrs = addrs;
                     }
 
@@ -694,49 +694,49 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
                     ctx->handler(ctx);
 
                     ctx = next;
-                } while (ctx);
+                } जबसम्म (ctx);
 
-                if (addrs != NULL) {
+                यदि (addrs != रिक्त) {
                     ngx_resolver_free(r, addrs->sockaddr);
                     ngx_resolver_free(r, addrs);
                 }
 
-                return NGX_OK;
+                फर्काऊ NGX_OK;
             }
 
-            if (rn->nsrvs) {
+            यदि (rn->nsrvs) {
                 last->next = rn->waiting;
-                rn->waiting = NULL;
+                rn->waiting = रिक्त;
 
                 /* unlock name mutex */
 
-                do {
+                गर {
                     next = ctx->next;
 
                     ngx_resolver_resolve_srv_names(ctx, rn);
 
                     ctx = next;
-                } while (ctx);
+                } जबसम्म (ctx);
 
-                return NGX_OK;
+                फर्काऊ NGX_OK;
             }
 
             /* NGX_RESOLVE_CNAME */
 
-            if (ctx->recursion++ < NGX_RESOLVER_MAX_RECURSION) {
+            यदि (ctx->recursion++ < NGX_RESOLVER_MAX_RECURSION) {
 
                 cname.len = rn->cnlen;
                 cname.data = rn->u.cname;
 
-                return ngx_resolve_name_locked(r, ctx, &cname);
+                फर्काऊ ngx_resolve_name_locked(r, ctx, &cname);
             }
 
             last->next = rn->waiting;
-            rn->waiting = NULL;
+            rn->waiting = रिक्त;
 
             /* unlock name mutex */
 
-            do {
+            गर {
                 ctx->state = NGX_RESOLVE_NXDOMAIN;
                 ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
                 next = ctx->next;
@@ -744,14 +744,14 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
                 ctx->handler(ctx);
 
                 ctx = next;
-            } while (ctx);
+            } जबसम्म (ctx);
 
-            return NGX_OK;
+            फर्काऊ NGX_OK;
         }
 
-        if (rn->waiting) {
-            if (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
-                return NGX_ERROR;
+        यदि (rn->waiting) {
+            यदि (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
+                फर्काऊ NGX_ERROR;
             }
 
             last->next = rn->waiting;
@@ -759,43 +759,43 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
             ctx->state = NGX_AGAIN;
             ctx->async = 1;
 
-            do {
-                ctx->node = rn;
+            गर {
+                ctx->गाँठो = rn;
                 ctx = ctx->next;
-            } while (ctx);
+            } जबसम्म (ctx);
 
-            return NGX_AGAIN;
+            फर्काऊ NGX_AGAIN;
         }
 
         ngx_queue_remove(&rn->queue);
 
         /* lock alloc mutex */
 
-        if (rn->query) {
+        यदि (rn->query) {
             ngx_resolver_free_locked(r, rn->query);
-            rn->query = NULL;
-#if (NGX_HAVE_INET6)
-            rn->query6 = NULL;
+            rn->query = रिक्त;
+#यदि (NGX_HAVE_INET6)
+            rn->query6 = रिक्त;
 #endif
         }
 
-        if (rn->cnlen) {
+        यदि (rn->cnlen) {
             ngx_resolver_free_locked(r, rn->u.cname);
         }
 
-        if (rn->naddrs > 1 && rn->naddrs != (u_short) -1) {
+        यदि (rn->naddrs > 1 && rn->naddrs != (u_short) -1) {
             ngx_resolver_free_locked(r, rn->u.addrs);
         }
 
-#if (NGX_HAVE_INET6)
-        if (rn->naddrs6 > 1 && rn->naddrs6 != (u_short) -1) {
+#यदि (NGX_HAVE_INET6)
+        यदि (rn->naddrs6 > 1 && rn->naddrs6 != (u_short) -1) {
             ngx_resolver_free_locked(r, rn->u6.addrs6);
         }
 #endif
 
-        if (rn->nsrvs) {
-            for (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
-                if (rn->u.srvs[i].name.data) {
+        यदि (rn->nsrvs) {
+            लागि (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
+                यदि (rn->u.srvs[i].name.data) {
                     ngx_resolver_free_locked(r, rn->u.srvs[i].name.data);
                 }
             }
@@ -805,117 +805,117 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
 
         /* unlock alloc mutex */
 
-    } else {
+    } अन्यथा {
 
-        rn = ngx_resolver_alloc(r, sizeof(ngx_resolver_node_t));
-        if (rn == NULL) {
-            return NGX_ERROR;
+        rn = ngx_resolver_alloc(r, परिमाण(ngx_resolver_गाँठो_t));
+        यदि (rn == रिक्त) {
+            फर्काऊ NGX_ERROR;
         }
 
         rn->name = ngx_resolver_dup(r, name->data, name->len);
-        if (rn->name == NULL) {
+        यदि (rn->name == रिक्त) {
             ngx_resolver_free(r, rn);
-            return NGX_ERROR;
+            फर्काऊ NGX_ERROR;
         }
 
-        rn->node.key = hash;
+        rn->गाँठो.साँचो = hash;
         rn->nlen = (u_short) name->len;
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
+        rn->query = रिक्त;
+#यदि (NGX_HAVE_INET6)
+        rn->query6 = रिक्त;
 #endif
 
-        ngx_rbtree_insert(tree, &rn->node);
+        ngx_rbtree_घुसाउ(रूख, &rn->गाँठो);
     }
 
-    if (ctx->service.len) {
+    यदि (ctx->service.len) {
         rc = ngx_resolver_create_srv_query(r, rn, name);
 
-    } else {
+    } अन्यथा {
         rc = ngx_resolver_create_name_query(r, rn, name);
     }
 
-    if (rc == NGX_ERROR) {
-        goto failed;
+    यदि (rc == NGX_ERROR) {
+        गच्छ failed;
     }
 
-    if (rc == NGX_DECLINED) {
-        ngx_rbtree_delete(tree, &rn->node);
+    यदि (rc == NGX_DECLINED) {
+        ngx_rbtree_delete(रूख, &rn->गाँठो);
 
         ngx_resolver_free(r, rn->query);
         ngx_resolver_free(r, rn->name);
         ngx_resolver_free(r, rn);
 
-        do {
+        गर {
             ctx->state = NGX_RESOLVE_NXDOMAIN;
             next = ctx->next;
 
             ctx->handler(ctx);
 
             ctx = next;
-        } while (ctx);
+        } जबसम्म (ctx);
 
-        return NGX_OK;
+        फर्काऊ NGX_OK;
     }
 
     rn->last_connection = r->last_connection++;
-    if (r->last_connection == r->connections.nelts) {
+    यदि (r->last_connection == r->connections.nelts) {
         r->last_connection = 0;
     }
 
     rn->naddrs = r->ipv4 ? (u_short) -1 : 0;
     rn->tcp = 0;
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
     rn->naddrs6 = r->ipv6 ? (u_short) -1 : 0;
     rn->tcp6 = 0;
 #endif
     rn->nsrvs = 0;
 
-    if (ngx_resolver_send_query(r, rn) != NGX_OK) {
+    यदि (ngx_resolver_send_query(r, rn) != NGX_OK) {
 
         /* immediately retry once on failure */
 
         rn->last_connection++;
-        if (rn->last_connection == r->connections.nelts) {
+        यदि (rn->last_connection == r->connections.nelts) {
             rn->last_connection = 0;
         }
 
-        (void) ngx_resolver_send_query(r, rn);
+        (शून्य) ngx_resolver_send_query(r, rn);
     }
 
-    if (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
-        goto failed;
+    यदि (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
+        गच्छ failed;
     }
 
-    if (ngx_resolver_resend_empty(r)) {
+    यदि (ngx_resolver_resend_empty(r)) {
         ngx_add_timer(r->event, (ngx_msec_t) (r->resend_timeout * 1000));
     }
 
     rn->expire = ngx_time() + r->resend_timeout;
 
-    ngx_queue_insert_head(resend_queue, &rn->queue);
+    ngx_queue_घुसाउ_head(resend_queue, &rn->queue);
 
     rn->code = 0;
     rn->cnlen = 0;
     rn->valid = 0;
-    rn->ttl = NGX_MAX_UINT32_VALUE;
+    rn->ttl = NGX_MAX_UINT32_मान;
     rn->waiting = ctx;
 
     ctx->state = NGX_AGAIN;
     ctx->async = 1;
 
-    do {
-        ctx->node = rn;
+    गर {
+        ctx->गाँठो = rn;
         ctx = ctx->next;
-    } while (ctx);
+    } जबसम्म (ctx);
 
-    return NGX_AGAIN;
+    फर्काऊ NGX_AGAIN;
 
 failed:
 
-    ngx_rbtree_delete(tree, &rn->node);
+    ngx_rbtree_delete(रूख, &rn->गाँठो);
 
-    if (rn->query) {
+    यदि (rn->query) {
         ngx_resolver_free(r, rn->query);
     }
 
@@ -923,7 +923,7 @@ failed:
 
     ngx_resolver_free(r, rn);
 
-    return NGX_ERROR;
+    फर्काऊ NGX_ERROR;
 }
 
 
@@ -933,59 +933,59 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
     u_char               *name;
     in_addr_t             addr;
     ngx_queue_t          *resend_queue, *expire_queue;
-    ngx_rbtree_t         *tree;
+    ngx_rbtree_t         *रूख;
     ngx_resolver_t       *r;
-    struct sockaddr_in   *sin;
-    ngx_resolver_node_t  *rn;
-#if (NGX_HAVE_INET6)
+    संरचना sockaddr_in   *sin;
+    ngx_resolver_गाँठो_t  *rn;
+#यदि (NGX_HAVE_INET6)
     uint32_t              hash;
-    struct sockaddr_in6  *sin6;
+    संरचना sockaddr_in6  *sin6;
 #endif
 
-#if (NGX_SUPPRESS_WARN)
+#यदि (NGX_SUPPRESS_WARN)
     addr = 0;
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
     hash = 0;
-    sin6 = NULL;
+    sin6 = रिक्त;
 #endif
 #endif
 
     r = ctx->resolver;
 
-    switch (ctx->addr.sockaddr->sa_family) {
+    विकल्प (ctx->addr.sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        sin6 = (struct sockaddr_in6 *) ctx->addr.sockaddr;
+#यदि (NGX_HAVE_INET6)
+    पक्ष AF_INET6:
+        sin6 = (संरचना sockaddr_in6 *) ctx->addr.sockaddr;
         hash = ngx_crc32_short(sin6->sin6_addr.s6_addr, 16);
 
         /* lock addr mutex */
 
         rn = ngx_resolver_lookup_addr6(r, &sin6->sin6_addr, hash);
 
-        tree = &r->addr6_rbtree;
+        रूख = &r->addr6_rbtree;
         resend_queue = &r->addr6_resend_queue;
         expire_queue = &r->addr6_expire_queue;
 
-        break;
+        रोक;
 #endif
 
-    default: /* AF_INET */
-        sin = (struct sockaddr_in *) ctx->addr.sockaddr;
+    स्वभाव: /* AF_INET */
+        sin = (संरचना sockaddr_in *) ctx->addr.sockaddr;
         addr = ntohl(sin->sin_addr.s_addr);
 
         /* lock addr mutex */
 
         rn = ngx_resolver_lookup_addr(r, addr);
 
-        tree = &r->addr_rbtree;
+        रूख = &r->addr_rbtree;
         resend_queue = &r->addr_resend_queue;
         expire_queue = &r->addr_expire_queue;
     }
 
-    if (rn) {
+    यदि (rn) {
 
-        if (rn->valid >= ngx_time()) {
+        यदि (rn->valid >= ngx_time()) {
 
             ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->log, 0, "resolve cached");
 
@@ -993,12 +993,12 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
 
             rn->expire = ngx_time() + r->expire;
 
-            ngx_queue_insert_head(expire_queue, &rn->queue);
+            ngx_queue_घुसाउ_head(expire_queue, &rn->queue);
 
             name = ngx_resolver_dup(r, rn->name, rn->nlen);
-            if (name == NULL) {
+            यदि (name == रिक्त) {
                 ngx_resolver_free(r, ctx);
-                return NGX_ERROR;
+                फर्काऊ NGX_ERROR;
             }
 
             ctx->name.len = rn->nlen;
@@ -1013,123 +1013,123 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
 
             ngx_resolver_free(r, name);
 
-            return NGX_OK;
+            फर्काऊ NGX_OK;
         }
 
-        if (rn->waiting) {
-            if (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
-                return NGX_ERROR;
+        यदि (rn->waiting) {
+            यदि (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
+                फर्काऊ NGX_ERROR;
             }
 
             ctx->next = rn->waiting;
             rn->waiting = ctx;
             ctx->state = NGX_AGAIN;
             ctx->async = 1;
-            ctx->node = rn;
+            ctx->गाँठो = rn;
 
             /* unlock addr mutex */
 
-            return NGX_OK;
+            फर्काऊ NGX_OK;
         }
 
         ngx_queue_remove(&rn->queue);
 
         ngx_resolver_free(r, rn->query);
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
+        rn->query = रिक्त;
+#यदि (NGX_HAVE_INET6)
+        rn->query6 = रिक्त;
 #endif
 
-    } else {
-        rn = ngx_resolver_alloc(r, sizeof(ngx_resolver_node_t));
-        if (rn == NULL) {
-            goto failed;
+    } अन्यथा {
+        rn = ngx_resolver_alloc(r, परिमाण(ngx_resolver_गाँठो_t));
+        यदि (rn == रिक्त) {
+            गच्छ failed;
         }
 
-        switch (ctx->addr.sockaddr->sa_family) {
+        विकल्प (ctx->addr.sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-        case AF_INET6:
+#यदि (NGX_HAVE_INET6)
+        पक्ष AF_INET6:
             rn->addr6 = sin6->sin6_addr;
-            rn->node.key = hash;
-            break;
+            rn->गाँठो.साँचो = hash;
+            रोक;
 #endif
 
-        default: /* AF_INET */
-            rn->node.key = addr;
+        स्वभाव: /* AF_INET */
+            rn->गाँठो.साँचो = addr;
         }
 
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
+        rn->query = रिक्त;
+#यदि (NGX_HAVE_INET6)
+        rn->query6 = रिक्त;
 #endif
 
-        ngx_rbtree_insert(tree, &rn->node);
+        ngx_rbtree_घुसाउ(रूख, &rn->गाँठो);
     }
 
-    if (ngx_resolver_create_addr_query(r, rn, &ctx->addr) != NGX_OK) {
-        goto failed;
+    यदि (ngx_resolver_create_addr_query(r, rn, &ctx->addr) != NGX_OK) {
+        गच्छ failed;
     }
 
     rn->last_connection = r->last_connection++;
-    if (r->last_connection == r->connections.nelts) {
+    यदि (r->last_connection == r->connections.nelts) {
         r->last_connection = 0;
     }
 
     rn->naddrs = (u_short) -1;
     rn->tcp = 0;
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
     rn->naddrs6 = (u_short) -1;
     rn->tcp6 = 0;
 #endif
     rn->nsrvs = 0;
 
-    if (ngx_resolver_send_query(r, rn) != NGX_OK) {
+    यदि (ngx_resolver_send_query(r, rn) != NGX_OK) {
 
         /* immediately retry once on failure */
 
         rn->last_connection++;
-        if (rn->last_connection == r->connections.nelts) {
+        यदि (rn->last_connection == r->connections.nelts) {
             rn->last_connection = 0;
         }
 
-        (void) ngx_resolver_send_query(r, rn);
+        (शून्य) ngx_resolver_send_query(r, rn);
     }
 
-    if (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
-        goto failed;
+    यदि (ngx_resolver_set_timeout(r, ctx) != NGX_OK) {
+        गच्छ failed;
     }
 
-    if (ngx_resolver_resend_empty(r)) {
+    यदि (ngx_resolver_resend_empty(r)) {
         ngx_add_timer(r->event, (ngx_msec_t) (r->resend_timeout * 1000));
     }
 
     rn->expire = ngx_time() + r->resend_timeout;
 
-    ngx_queue_insert_head(resend_queue, &rn->queue);
+    ngx_queue_घुसाउ_head(resend_queue, &rn->queue);
 
     rn->code = 0;
     rn->cnlen = 0;
-    rn->name = NULL;
+    rn->name = रिक्त;
     rn->nlen = 0;
     rn->valid = 0;
-    rn->ttl = NGX_MAX_UINT32_VALUE;
+    rn->ttl = NGX_MAX_UINT32_मान;
     rn->waiting = ctx;
 
     /* unlock addr mutex */
 
     ctx->state = NGX_AGAIN;
     ctx->async = 1;
-    ctx->node = rn;
+    ctx->गाँठो = rn;
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 
 failed:
 
-    if (rn) {
-        ngx_rbtree_delete(tree, &rn->node);
+    यदि (rn) {
+        ngx_rbtree_delete(रूख, &rn->गाँठो);
 
-        if (rn->query) {
+        यदि (rn->query) {
             ngx_resolver_free(r, rn->query);
         }
 
@@ -1138,63 +1138,63 @@ failed:
 
     /* unlock addr mutex */
 
-    if (ctx->event) {
+    यदि (ctx->event) {
         ngx_resolver_free(r, ctx->event);
     }
 
     ngx_resolver_free(r, ctx);
 
-    return NGX_ERROR;
+    फर्काऊ NGX_ERROR;
 }
 
 
-void
+शून्य
 ngx_resolve_addr_done(ngx_resolver_ctx_t *ctx)
 {
     ngx_queue_t          *expire_queue;
-    ngx_rbtree_t         *tree;
+    ngx_rbtree_t         *रूख;
     ngx_resolver_t       *r;
     ngx_resolver_ctx_t   *w, **p;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_गाँठो_t  *rn;
 
     r = ctx->resolver;
 
-    switch (ctx->addr.sockaddr->sa_family) {
+    विकल्प (ctx->addr.sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        tree = &r->addr6_rbtree;
+#यदि (NGX_HAVE_INET6)
+    पक्ष AF_INET6:
+        रूख = &r->addr6_rbtree;
         expire_queue = &r->addr6_expire_queue;
-        break;
+        रोक;
 #endif
 
-    default: /* AF_INET */
-        tree = &r->addr_rbtree;
+    स्वभाव: /* AF_INET */
+        रूख = &r->addr_rbtree;
         expire_queue = &r->addr_expire_queue;
     }
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0,
                    "resolve addr done: %i", ctx->state);
 
-    if (ctx->event && ctx->event->timer_set) {
+    यदि (ctx->event && ctx->event->timer_set) {
         ngx_del_timer(ctx->event);
     }
 
     /* lock addr mutex */
 
-    if (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
+    यदि (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
 
-        rn = ctx->node;
+        rn = ctx->गाँठो;
 
-        if (rn) {
+        यदि (rn) {
             p = &rn->waiting;
             w = rn->waiting;
 
-            while (w) {
-                if (w == ctx) {
+            जबसम्म (w) {
+                यदि (w == ctx) {
                     *p = w->next;
 
-                    goto done;
+                    गच्छ done;
                 }
 
                 p = &w->next;
@@ -1217,13 +1217,13 @@ ngx_resolve_addr_done(ngx_resolver_ctx_t *ctx)
 
 done:
 
-    ngx_resolver_expire(r, tree, expire_queue);
+    ngx_resolver_expire(r, रूख, expire_queue);
 
     /* unlock addr mutex */
 
     /* lock alloc mutex */
 
-    if (ctx->event) {
+    यदि (ctx->event) {
         ngx_resolver_free_locked(r, ctx->event);
     }
 
@@ -1231,51 +1231,51 @@ done:
 
     /* unlock alloc mutex */
 
-    if (r->event->timer_set && ngx_resolver_resend_empty(r)) {
+    यदि (r->event->timer_set && ngx_resolver_resend_empty(r)) {
         ngx_del_timer(r->event);
     }
 }
 
 
-static void
-ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *tree, ngx_queue_t *queue)
+स्थिर शून्य
+ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *रूख, ngx_queue_t *queue)
 {
-    time_t                now;
+    समय_प्रकार                now;
     ngx_uint_t            i;
     ngx_queue_t          *q;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_गाँठो_t  *rn;
 
     ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->log, 0, "resolver expire");
 
     now = ngx_time();
 
-    for (i = 0; i < 2; i++) {
-        if (ngx_queue_empty(queue)) {
-            return;
+    लागि (i = 0; i < 2; i++) {
+        यदि (ngx_queue_empty(queue)) {
+            फर्काऊ;
         }
 
         q = ngx_queue_last(queue);
 
-        rn = ngx_queue_data(q, ngx_resolver_node_t, queue);
+        rn = ngx_queue_data(q, ngx_resolver_गाँठो_t, queue);
 
-        if (now <= rn->expire) {
-            return;
+        यदि (now <= rn->expire) {
+            फर्काऊ;
         }
 
         ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->log, 0,
-                       "resolver expire \"%*s\"", (size_t) rn->nlen, rn->name);
+                       "resolver expire \"%*s\"", (माप_प्रकार) rn->nlen, rn->name);
 
         ngx_queue_remove(q);
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(रूख, &rn->गाँठो);
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_गाँठो(r, rn);
     }
 }
 
 
-static ngx_int_t
-ngx_resolver_send_query(ngx_resolver_t *r, ngx_resolver_node_t *rn)
+स्थिर ngx_int_t
+ngx_resolver_send_query(ngx_resolver_t *r, ngx_resolver_गाँठो_t *rn)
 {
     ngx_int_t                   rc;
     ngx_resolver_connection_t  *rec;
@@ -1283,79 +1283,79 @@ ngx_resolver_send_query(ngx_resolver_t *r, ngx_resolver_node_t *rn)
     rec = r->connections.elts;
     rec = &rec[rn->last_connection];
 
-    if (rec->log.handler == NULL) {
+    यदि (rec->log.handler == रिक्त) {
         rec->log = *r->log;
         rec->log.handler = ngx_resolver_log_error;
         rec->log.data = rec;
         rec->log.action = "resolving";
     }
 
-    if (rn->query && rn->naddrs == (u_short) -1) {
+    यदि (rn->query && rn->naddrs == (u_short) -1) {
         rc = rn->tcp ? ngx_resolver_send_tcp_query(r, rec, rn->query, rn->qlen)
                      : ngx_resolver_send_udp_query(r, rec, rn->query, rn->qlen);
 
-        if (rc != NGX_OK) {
-            return rc;
+        यदि (rc != NGX_OK) {
+            फर्काऊ rc;
         }
     }
 
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
 
-    if (rn->query6 && rn->naddrs6 == (u_short) -1) {
+    यदि (rn->query6 && rn->naddrs6 == (u_short) -1) {
         rc = rn->tcp6
                     ? ngx_resolver_send_tcp_query(r, rec, rn->query6, rn->qlen)
                     : ngx_resolver_send_udp_query(r, rec, rn->query6, rn->qlen);
 
-        if (rc != NGX_OK) {
-            return rc;
+        यदि (rc != NGX_OK) {
+            फर्काऊ rc;
         }
     }
 
 #endif
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_resolver_send_udp_query(ngx_resolver_t *r, ngx_resolver_connection_t  *rec,
     u_char *query, u_short qlen)
 {
     ssize_t  n;
 
-    if (rec->udp == NULL) {
-        if (ngx_udp_connect(rec) != NGX_OK) {
-            return NGX_ERROR;
+    यदि (rec->udp == रिक्त) {
+        यदि (ngx_udp_connect(rec) != NGX_OK) {
+            फर्काऊ NGX_ERROR;
         }
 
         rec->udp->data = rec;
-        rec->udp->read->handler = ngx_resolver_udp_read;
-        rec->udp->read->resolver = 1;
+        rec->udp->पठ->handler = ngx_resolver_udp_read;
+        rec->udp->पठ->resolver = 1;
     }
 
     n = ngx_send(rec->udp, query, qlen);
 
-    if (n == NGX_ERROR) {
-        goto failed;
+    यदि (n == NGX_ERROR) {
+        गच्छ failed;
     }
 
-    if ((size_t) n != (size_t) qlen) {
+    यदि ((माप_प्रकार) n != (माप_प्रकार) qlen) {
         ngx_log_error(NGX_LOG_CRIT, &rec->log, 0, "send() incomplete");
-        goto failed;
+        गच्छ failed;
     }
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 
 failed:
 
     ngx_close_connection(rec->udp);
-    rec->udp = NULL;
+    rec->udp = रिक्त;
 
-    return NGX_ERROR;
+    फर्काऊ NGX_ERROR;
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_resolver_send_tcp_query(ngx_resolver_t *r, ngx_resolver_connection_t *rec,
     u_char *query, u_short qlen)
 {
@@ -1364,19 +1364,19 @@ ngx_resolver_send_tcp_query(ngx_resolver_t *r, ngx_resolver_connection_t *rec,
 
     rc = NGX_OK;
 
-    if (rec->tcp == NULL) {
+    यदि (rec->tcp == रिक्त) {
         b = rec->read_buf;
 
-        if (b == NULL) {
-            b = ngx_resolver_calloc(r, sizeof(ngx_buf_t));
-            if (b == NULL) {
-                return NGX_ERROR;
+        यदि (b == रिक्त) {
+            b = ngx_resolver_calloc(r, परिमाण(ngx_buf_t));
+            यदि (b == रिक्त) {
+                फर्काऊ NGX_ERROR;
             }
 
             b->start = ngx_resolver_alloc(r, NGX_RESOLVER_TCP_RSIZE);
-            if (b->start == NULL) {
+            यदि (b->start == रिक्त) {
                 ngx_resolver_free(r, b);
-                return NGX_ERROR;
+                फर्काऊ NGX_ERROR;
             }
 
             b->end = b->start + NGX_RESOLVER_TCP_RSIZE;
@@ -1389,16 +1389,16 @@ ngx_resolver_send_tcp_query(ngx_resolver_t *r, ngx_resolver_connection_t *rec,
 
         b = rec->write_buf;
 
-        if (b == NULL) {
-            b = ngx_resolver_calloc(r, sizeof(ngx_buf_t));
-            if (b == NULL) {
-                return NGX_ERROR;
+        यदि (b == रिक्त) {
+            b = ngx_resolver_calloc(r, परिमाण(ngx_buf_t));
+            यदि (b == रिक्त) {
+                फर्काऊ NGX_ERROR;
             }
 
             b->start = ngx_resolver_alloc(r, NGX_RESOLVER_TCP_WSIZE);
-            if (b->start == NULL) {
+            यदि (b->start == रिक्त) {
                 ngx_resolver_free(r, b);
-                return NGX_ERROR;
+                फर्काऊ NGX_ERROR;
             }
 
             b->end = b->start + NGX_RESOLVER_TCP_WSIZE;
@@ -1410,44 +1410,44 @@ ngx_resolver_send_tcp_query(ngx_resolver_t *r, ngx_resolver_connection_t *rec,
         b->last = b->start;
 
         rc = ngx_tcp_connect(rec);
-        if (rc == NGX_ERROR) {
-            return NGX_ERROR;
+        यदि (rc == NGX_ERROR) {
+            फर्काऊ NGX_ERROR;
         }
 
         rec->tcp->data = rec;
-        rec->tcp->write->handler = ngx_resolver_tcp_write;
-        rec->tcp->write->cancelable = 1;
-        rec->tcp->read->handler = ngx_resolver_tcp_read;
-        rec->tcp->read->resolver = 1;
+        rec->tcp->लिख->handler = ngx_resolver_tcp_write;
+        rec->tcp->लिख->cancelable = 1;
+        rec->tcp->पठ->handler = ngx_resolver_tcp_read;
+        rec->tcp->पठ->resolver = 1;
 
-        ngx_add_timer(rec->tcp->write, (ngx_msec_t) (r->tcp_timeout * 1000));
+        ngx_add_timer(rec->tcp->लिख, (ngx_msec_t) (r->tcp_timeout * 1000));
     }
 
     b = rec->write_buf;
 
-    if (b->end - b->last <  2 + qlen) {
+    यदि (b->end - b->last <  2 + qlen) {
         ngx_log_error(NGX_LOG_CRIT, &rec->log, 0, "buffer overflow");
-        return NGX_ERROR;
+        फर्काऊ NGX_ERROR;
     }
 
     *b->last++ = (u_char) (qlen >> 8);
     *b->last++ = (u_char) qlen;
     b->last = ngx_cpymem(b->last, query, qlen);
 
-    if (rc == NGX_OK) {
-        ngx_resolver_tcp_write(rec->tcp->write);
+    यदि (rc == NGX_OK) {
+        ngx_resolver_tcp_write(rec->tcp->लिख);
     }
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 }
 
 
-static void
+स्थिर शून्य
 ngx_resolver_resend_handler(ngx_event_t *ev)
 {
-    time_t           timer, atimer, stimer, ntimer;
-#if (NGX_HAVE_INET6)
-    time_t           a6timer;
+    समय_प्रकार           timer, atimer, stimer, ntimer;
+#यदि (NGX_HAVE_INET6)
+    समय_प्रकार           a6timer;
 #endif
     ngx_resolver_t  *r;
 
@@ -1470,7 +1470,7 @@ ngx_resolver_resend_handler(ngx_event_t *ev)
 
     /* unlock addr mutex */
 
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
 
     /* lock addr6 mutex */
 
@@ -1482,100 +1482,100 @@ ngx_resolver_resend_handler(ngx_event_t *ev)
 
     timer = ntimer;
 
-    if (timer == 0) {
+    यदि (timer == 0) {
         timer = atimer;
 
-    } else if (atimer) {
+    } अन्यथा यदि (atimer) {
         timer = ngx_min(timer, atimer);
     }
 
-    if (timer == 0) {
+    यदि (timer == 0) {
         timer = stimer;
 
-    } else if (stimer) {
+    } अन्यथा यदि (stimer) {
         timer = ngx_min(timer, stimer);
     }
 
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
 
-    if (timer == 0) {
+    यदि (timer == 0) {
         timer = a6timer;
 
-    } else if (a6timer) {
+    } अन्यथा यदि (a6timer) {
         timer = ngx_min(timer, a6timer);
     }
 
 #endif
 
-    if (timer) {
+    यदि (timer) {
         ngx_add_timer(r->event, (ngx_msec_t) (timer * 1000));
     }
 }
 
 
-static time_t
-ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *tree, ngx_queue_t *queue)
+स्थिर समय_प्रकार
+ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *रूख, ngx_queue_t *queue)
 {
-    time_t                now;
+    समय_प्रकार                now;
     ngx_queue_t          *q;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_गाँठो_t  *rn;
 
     now = ngx_time();
 
-    for ( ;; ) {
-        if (ngx_queue_empty(queue)) {
-            return 0;
+    लागि ( ;; ) {
+        यदि (ngx_queue_empty(queue)) {
+            फर्काऊ 0;
         }
 
         q = ngx_queue_last(queue);
 
-        rn = ngx_queue_data(q, ngx_resolver_node_t, queue);
+        rn = ngx_queue_data(q, ngx_resolver_गाँठो_t, queue);
 
-        if (now < rn->expire) {
-            return rn->expire - now;
+        यदि (now < rn->expire) {
+            फर्काऊ rn->expire - now;
         }
 
         ngx_log_debug3(NGX_LOG_DEBUG_CORE, r->log, 0,
                        "resolver resend \"%*s\" %p",
-                       (size_t) rn->nlen, rn->name, rn->waiting);
+                       (माप_प्रकार) rn->nlen, rn->name, rn->waiting);
 
         ngx_queue_remove(q);
 
-        if (rn->waiting) {
+        यदि (rn->waiting) {
 
-            if (++rn->last_connection == r->connections.nelts) {
+            यदि (++rn->last_connection == r->connections.nelts) {
                 rn->last_connection = 0;
             }
 
-            (void) ngx_resolver_send_query(r, rn);
+            (शून्य) ngx_resolver_send_query(r, rn);
 
             rn->expire = now + r->resend_timeout;
 
-            ngx_queue_insert_head(queue, q);
+            ngx_queue_घुसाउ_head(queue, q);
 
-            continue;
+            जारी;
         }
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(रूख, &rn->गाँठो);
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_गाँठो(r, rn);
     }
 }
 
 
-static ngx_uint_t
+स्थिर ngx_uint_t
 ngx_resolver_resend_empty(ngx_resolver_t *r)
 {
-    return ngx_queue_empty(&r->name_resend_queue)
+    फर्काऊ ngx_queue_empty(&r->name_resend_queue)
            && ngx_queue_empty(&r->srv_resend_queue)
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
            && ngx_queue_empty(&r->addr6_resend_queue)
 #endif
            && ngx_queue_empty(&r->addr_resend_queue);
 }
 
 
-static void
+स्थिर शून्य
 ngx_resolver_udp_read(ngx_event_t *rev)
 {
     ssize_t                     n;
@@ -1586,35 +1586,35 @@ ngx_resolver_udp_read(ngx_event_t *rev)
     c = rev->data;
     rec = c->data;
 
-    do {
+    गर {
         n = ngx_udp_recv(c, buf, NGX_RESOLVER_UDP_SIZE);
 
-        if (n == NGX_AGAIN) {
-            break;
+        यदि (n == NGX_AGAIN) {
+            रोक;
         }
 
-        if (n == NGX_ERROR) {
-            goto failed;
+        यदि (n == NGX_ERROR) {
+            गच्छ failed;
         }
 
         ngx_resolver_process_response(rec->resolver, buf, n, 0);
 
-    } while (rev->ready);
+    } जबसम्म (rev->ready);
 
-    if (ngx_handle_read_event(rev, 0) != NGX_OK) {
-        goto failed;
+    यदि (ngx_handle_read_event(rev, 0) != NGX_OK) {
+        गच्छ failed;
     }
 
-    return;
+    फर्काऊ;
 
 failed:
 
     ngx_close_connection(rec->udp);
-    rec->udp = NULL;
+    rec->udp = रिक्त;
 }
 
 
-static void
+स्थिर शून्य
 ngx_resolver_tcp_write(ngx_event_t *wev)
 {
     off_t                       sent;
@@ -1629,53 +1629,53 @@ ngx_resolver_tcp_write(ngx_event_t *wev)
     b = rec->write_buf;
     r = rec->resolver;
 
-    if (wev->timedout) {
-        goto failed;
+    यदि (wev->timedout) {
+        गच्छ failed;
     }
 
     sent = c->sent;
 
-    while (wev->ready && b->pos < b->last) {
+    जबसम्म (wev->ready && b->pos < b->last) {
         n = ngx_send(c, b->pos, b->last - b->pos);
 
-        if (n == NGX_AGAIN) {
-            break;
+        यदि (n == NGX_AGAIN) {
+            रोक;
         }
 
-        if (n == NGX_ERROR) {
-            goto failed;
+        यदि (n == NGX_ERROR) {
+            गच्छ failed;
         }
 
         b->pos += n;
     }
 
-    if (b->pos != b->start) {
+    यदि (b->pos != b->start) {
         b->last = ngx_movemem(b->start, b->pos, b->last - b->pos);
         b->pos = b->start;
     }
 
-    if (c->sent != sent) {
+    यदि (c->sent != sent) {
         ngx_add_timer(wev, (ngx_msec_t) (r->tcp_timeout * 1000));
     }
 
-    if (ngx_handle_write_event(wev, 0) != NGX_OK) {
-        goto failed;
+    यदि (ngx_handle_write_event(wev, 0) != NGX_OK) {
+        गच्छ failed;
     }
 
-    return;
+    फर्काऊ;
 
 failed:
 
     ngx_close_connection(c);
-    rec->tcp = NULL;
+    rec->tcp = रिक्त;
 }
 
 
-static void
+स्थिर शून्य
 ngx_resolver_tcp_read(ngx_event_t *rev)
 {
     u_char                     *p;
-    size_t                      size;
+    माप_प्रकार                      size;
     ssize_t                     n;
     u_short                     qlen;
     ngx_buf_t                  *b;
@@ -1688,32 +1688,32 @@ ngx_resolver_tcp_read(ngx_event_t *rev)
     b = rec->read_buf;
     r = rec->resolver;
 
-    while (rev->ready) {
+    जबसम्म (rev->ready) {
         n = ngx_recv(c, b->last, b->end - b->last);
 
-        if (n == NGX_AGAIN) {
-            break;
+        यदि (n == NGX_AGAIN) {
+            रोक;
         }
 
-        if (n == NGX_ERROR || n == 0) {
-            goto failed;
+        यदि (n == NGX_ERROR || n == 0) {
+            गच्छ failed;
         }
 
         b->last += n;
 
-        for ( ;; ) {
+        लागि ( ;; ) {
             p = b->pos;
             size = b->last - p;
 
-            if (size < 2) {
-                break;
+            यदि (size < 2) {
+                रोक;
             }
 
             qlen = (u_short) *p++ << 8;
             qlen += *p++;
 
-            if (size < (size_t) (2 + qlen)) {
-                break;
+            यदि (size < (माप_प्रकार) (2 + qlen)) {
+                रोक;
             }
 
             ngx_resolver_process_response(r, p, qlen, 1);
@@ -1721,42 +1721,42 @@ ngx_resolver_tcp_read(ngx_event_t *rev)
             b->pos += 2 + qlen;
         }
 
-        if (b->pos != b->start) {
+        यदि (b->pos != b->start) {
             b->last = ngx_movemem(b->start, b->pos, b->last - b->pos);
             b->pos = b->start;
         }
     }
 
-    if (ngx_handle_read_event(rev, 0) != NGX_OK) {
-        goto failed;
+    यदि (ngx_handle_read_event(rev, 0) != NGX_OK) {
+        गच्छ failed;
     }
 
-    return;
+    फर्काऊ;
 
 failed:
 
     ngx_close_connection(c);
-    rec->tcp = NULL;
+    rec->tcp = रिक्त;
 }
 
 
-static void
-ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf, size_t n,
+स्थिर शून्य
+ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf, माप_प्रकार n,
     ngx_uint_t tcp)
 {
-    char                 *err;
-    ngx_uint_t            i, times, ident, qident, flags, code, nqs, nan, trunc,
+    वर्ण                 *err;
+    ngx_uint_t            i, बार, ident, qident, flags, code, nqs, nan, trunc,
                           qtype, qclass;
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
     ngx_uint_t            qident6;
 #endif
     ngx_queue_t          *q;
     ngx_resolver_qs_t    *qs;
     ngx_resolver_hdr_t   *response;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_गाँठो_t  *rn;
 
-    if (n < sizeof(ngx_resolver_hdr_t)) {
-        goto short_response;
+    यदि (n < परिमाण(ngx_resolver_hdr_t)) {
+        गच्छ short_response;
     }
 
     response = (ngx_resolver_hdr_t *) buf;
@@ -1774,85 +1774,85 @@ ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf, size_t n,
                    (response->nar_hi << 8) + response->nar_lo);
 
     /* response to a standard query */
-    if ((flags & 0xf870) != 0x8000 || (trunc && tcp)) {
+    यदि ((flags & 0xf870) != 0x8000 || (trunc && tcp)) {
         ngx_log_error(r->log_level, r->log, 0,
                       "invalid %s DNS response %ui fl:%04Xi",
                       tcp ? "TCP" : "UDP", ident, flags);
-        return;
+        फर्काऊ;
     }
 
     code = flags & 0xf;
 
-    if (code == NGX_RESOLVE_FORMERR) {
+    यदि (code == NGX_RESOLVE_FORMERR) {
 
-        times = 0;
+        बार = 0;
 
-        for (q = ngx_queue_head(&r->name_resend_queue);
-             q != ngx_queue_sentinel(&r->name_resend_queue) && times++ < 100;
+        लागि (q = ngx_queue_head(&r->name_resend_queue);
+             q != ngx_queue_sentinel(&r->name_resend_queue) && बार++ < 100;
              q = ngx_queue_next(q))
         {
-            rn = ngx_queue_data(q, ngx_resolver_node_t, queue);
+            rn = ngx_queue_data(q, ngx_resolver_गाँठो_t, queue);
 
-            if (rn->query) {
+            यदि (rn->query) {
                 qident = (rn->query[0] << 8) + rn->query[1];
 
-                if (qident == ident) {
-                    goto dns_error_name;
+                यदि (qident == ident) {
+                    गच्छ dns_error_name;
                 }
             }
 
-#if (NGX_HAVE_INET6)
-            if (rn->query6) {
+#यदि (NGX_HAVE_INET6)
+            यदि (rn->query6) {
                 qident6 = (rn->query6[0] << 8) + rn->query6[1];
 
-                if (qident6 == ident) {
-                    goto dns_error_name;
+                यदि (qident6 == ident) {
+                    गच्छ dns_error_name;
                 }
             }
 #endif
         }
 
-        goto dns_error;
+        गच्छ dns_error;
     }
 
-    if (code > NGX_RESOLVE_REFUSED) {
-        goto dns_error;
+    यदि (code > NGX_RESOLVE_REFUSED) {
+        गच्छ dns_error;
     }
 
-    if (nqs != 1) {
+    यदि (nqs != 1) {
         err = "invalid number of questions in DNS response";
-        goto done;
+        गच्छ done;
     }
 
-    i = sizeof(ngx_resolver_hdr_t);
+    i = परिमाण(ngx_resolver_hdr_t);
 
-    while (i < (ngx_uint_t) n) {
+    जबसम्म (i < (ngx_uint_t) n) {
 
-        if (buf[i] & 0xc0) {
+        यदि (buf[i] & 0xc0) {
             err = "unexpected compression pointer in DNS response";
-            goto done;
+            गच्छ done;
         }
 
-        if (buf[i] == '\0') {
-            goto found;
+        यदि (buf[i] == '\0') {
+            गच्छ found;
         }
 
         i += 1 + buf[i];
     }
 
-    goto short_response;
+    गच्छ short_response;
 
 found:
 
-    if (i++ == sizeof(ngx_resolver_hdr_t)) {
+    यदि (i++ == परिमाण(ngx_resolver_hdr_t)) {
         err = "zero-length domain name in DNS response";
-        goto done;
+        गच्छ done;
     }
 
-    if (i + sizeof(ngx_resolver_qs_t) + nan * (2 + sizeof(ngx_resolver_an_t))
+    यदि (i + परिमाण(ngx_resolver_qs_t) + nan * (2 + परिमाण(ngx_resolver_an_t))
         > (ngx_uint_t) n)
     {
-        goto short_response;
+        गच्छ short_response;
     }
 
     qs = (ngx_resolver_qs_t *) &buf[i];
@@ -1863,44 +1863,44 @@ found:
     ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->log, 0,
                    "resolver DNS response qt:%ui cl:%ui", qtype, qclass);
 
-    if (qclass != 1) {
+    यदि (qclass != 1) {
         ngx_log_error(r->log_level, r->log, 0,
                       "unknown query class %ui in DNS response", qclass);
-        return;
+        फर्काऊ;
     }
 
-    switch (qtype) {
+    विकल्प (qtype) {
 
-    case NGX_RESOLVE_A:
-#if (NGX_HAVE_INET6)
-    case NGX_RESOLVE_AAAA:
+    पक्ष NGX_RESOLVE_A:
+#यदि (NGX_HAVE_INET6)
+    पक्ष NGX_RESOLVE_AAAA:
 #endif
 
         ngx_resolver_process_a(r, buf, n, ident, code, qtype, nan, trunc,
-                               i + sizeof(ngx_resolver_qs_t));
+                               i + परिमाण(ngx_resolver_qs_t));
 
-        break;
+        रोक;
 
-    case NGX_RESOLVE_SRV:
+    पक्ष NGX_RESOLVE_SRV:
 
         ngx_resolver_process_srv(r, buf, n, ident, code, nan, trunc,
-                                 i + sizeof(ngx_resolver_qs_t));
+                                 i + परिमाण(ngx_resolver_qs_t));
 
-        break;
+        रोक;
 
-    case NGX_RESOLVE_PTR:
+    पक्ष NGX_RESOLVE_PTR:
 
         ngx_resolver_process_ptr(r, buf, n, ident, code, nan);
 
-        break;
+        रोक;
 
-    default:
+    स्वभाव:
         ngx_log_error(r->log_level, r->log, 0,
                       "unknown query type %ui in DNS response", qtype);
-        return;
+        फर्काऊ;
     }
 
-    return;
+    फर्काऊ;
 
 short_response:
 
@@ -1910,52 +1910,52 @@ done:
 
     ngx_log_error(r->log_level, r->log, 0, err);
 
-    return;
+    फर्काऊ;
 
 dns_error_name:
 
     ngx_log_error(r->log_level, r->log, 0,
                   "DNS error (%ui: %s), query id:%ui, name:\"%*s\"",
                   code, ngx_resolver_strerror(code), ident,
-                  (size_t) rn->nlen, rn->name);
-    return;
+                  (माप_प्रकार) rn->nlen, rn->name);
+    फर्काऊ;
 
 dns_error:
 
     ngx_log_error(r->log_level, r->log, 0,
                   "DNS error (%ui: %s), query id:%ui",
                   code, ngx_resolver_strerror(code), ident);
-    return;
+    फर्काऊ;
 }
 
 
-static void
-ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
+स्थिर शून्य
+ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, माप_प्रकार n,
     ngx_uint_t ident, ngx_uint_t code, ngx_uint_t qtype,
     ngx_uint_t nan, ngx_uint_t trunc, ngx_uint_t ans)
 {
-    char                       *err;
+    वर्ण                       *err;
     u_char                     *cname;
-    size_t                      len;
+    माप_प्रकार                      len;
     int32_t                     ttl;
     uint32_t                    hash;
     in_addr_t                  *addr;
     ngx_str_t                   name;
     ngx_uint_t                  type, class, qident, naddrs, a, i, j, start;
-#if (NGX_HAVE_INET6)
-    struct in6_addr            *addr6;
+#यदि (NGX_HAVE_INET6)
+    संरचना in6_addr            *addr6;
 #endif
     ngx_resolver_an_t          *an;
     ngx_resolver_ctx_t         *ctx, *next;
-    ngx_resolver_node_t        *rn;
+    ngx_resolver_गाँठो_t        *rn;
     ngx_resolver_addr_t        *addrs;
     ngx_resolver_connection_t  *rec;
 
-    if (ngx_resolver_copy(r, &name, buf,
-                          buf + sizeof(ngx_resolver_hdr_t), buf + n)
+    यदि (ngx_resolver_copy(r, &name, buf,
+                          buf + परिमाण(ngx_resolver_hdr_t), buf + n)
         != NGX_OK)
     {
-        return;
+        फर्काऊ;
     }
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0, "resolver qs:%V", &name);
@@ -1966,134 +1966,134 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
 
     rn = ngx_resolver_lookup_name(r, &name, hash);
 
-    if (rn == NULL) {
+    यदि (rn == रिक्त) {
         ngx_log_error(r->log_level, r->log, 0,
                       "unexpected DNS response for %V", &name);
         ngx_resolver_free(r, name.data);
-        goto failed;
+        गच्छ failed;
     }
 
-    switch (qtype) {
+    विकल्प (qtype) {
 
-#if (NGX_HAVE_INET6)
-    case NGX_RESOLVE_AAAA:
+#यदि (NGX_HAVE_INET6)
+    पक्ष NGX_RESOLVE_AAAA:
 
-        if (rn->query6 == NULL || rn->naddrs6 != (u_short) -1) {
+        यदि (rn->query6 == रिक्त || rn->naddrs6 != (u_short) -1) {
             ngx_log_error(r->log_level, r->log, 0,
                           "unexpected DNS response for %V", &name);
             ngx_resolver_free(r, name.data);
-            goto failed;
+            गच्छ failed;
         }
 
-        if (trunc && rn->tcp6) {
+        यदि (trunc && rn->tcp6) {
             ngx_resolver_free(r, name.data);
-            goto failed;
+            गच्छ failed;
         }
 
         qident = (rn->query6[0] << 8) + rn->query6[1];
 
-        break;
+        रोक;
 #endif
 
-    default: /* NGX_RESOLVE_A */
+    स्वभाव: /* NGX_RESOLVE_A */
 
-        if (rn->query == NULL || rn->naddrs != (u_short) -1) {
+        यदि (rn->query == रिक्त || rn->naddrs != (u_short) -1) {
             ngx_log_error(r->log_level, r->log, 0,
                           "unexpected DNS response for %V", &name);
             ngx_resolver_free(r, name.data);
-            goto failed;
+            गच्छ failed;
         }
 
-        if (trunc && rn->tcp) {
+        यदि (trunc && rn->tcp) {
             ngx_resolver_free(r, name.data);
-            goto failed;
+            गच्छ failed;
         }
 
         qident = (rn->query[0] << 8) + rn->query[1];
     }
 
-    if (ident != qident) {
+    यदि (ident != qident) {
         ngx_log_error(r->log_level, r->log, 0,
                       "wrong ident %ui in DNS response for %V, expect %ui",
                       ident, &name, qident);
         ngx_resolver_free(r, name.data);
-        goto failed;
+        गच्छ failed;
     }
 
     ngx_resolver_free(r, name.data);
 
-    if (trunc) {
+    यदि (trunc) {
 
         ngx_queue_remove(&rn->queue);
 
-        if (rn->waiting == NULL) {
-            ngx_rbtree_delete(&r->name_rbtree, &rn->node);
-            ngx_resolver_free_node(r, rn);
-            goto next;
+        यदि (rn->waiting == रिक्त) {
+            ngx_rbtree_delete(&r->name_rbtree, &rn->गाँठो);
+            ngx_resolver_free_गाँठो(r, rn);
+            गच्छ next;
         }
 
         rec = r->connections.elts;
         rec = &rec[rn->last_connection];
 
-        switch (qtype) {
+        विकल्प (qtype) {
 
-#if (NGX_HAVE_INET6)
-        case NGX_RESOLVE_AAAA:
+#यदि (NGX_HAVE_INET6)
+        पक्ष NGX_RESOLVE_AAAA:
 
             rn->tcp6 = 1;
 
-            (void) ngx_resolver_send_tcp_query(r, rec, rn->query6, rn->qlen);
+            (शून्य) ngx_resolver_send_tcp_query(r, rec, rn->query6, rn->qlen);
 
-            break;
+            रोक;
 #endif
 
-        default: /* NGX_RESOLVE_A */
+        स्वभाव: /* NGX_RESOLVE_A */
 
             rn->tcp = 1;
 
-            (void) ngx_resolver_send_tcp_query(r, rec, rn->query, rn->qlen);
+            (शून्य) ngx_resolver_send_tcp_query(r, rec, rn->query, rn->qlen);
         }
 
         rn->expire = ngx_time() + r->resend_timeout;
 
-        ngx_queue_insert_head(&r->name_resend_queue, &rn->queue);
+        ngx_queue_घुसाउ_head(&r->name_resend_queue, &rn->queue);
 
-        goto next;
+        गच्छ next;
     }
 
-    if (code == 0 && rn->code) {
+    यदि (code == 0 && rn->code) {
         code = rn->code;
     }
 
-    if (code == 0 && nan == 0) {
+    यदि (code == 0 && nan == 0) {
 
-#if (NGX_HAVE_INET6)
-        switch (qtype) {
+#यदि (NGX_HAVE_INET6)
+        विकल्प (qtype) {
 
-        case NGX_RESOLVE_AAAA:
+        पक्ष NGX_RESOLVE_AAAA:
 
             rn->naddrs6 = 0;
 
-            if (rn->naddrs == (u_short) -1) {
-                goto next;
+            यदि (rn->naddrs == (u_short) -1) {
+                गच्छ next;
             }
 
-            if (rn->naddrs) {
-                goto export;
+            यदि (rn->naddrs) {
+                गच्छ export;
             }
 
-            break;
+            रोक;
 
-        default: /* NGX_RESOLVE_A */
+        स्वभाव: /* NGX_RESOLVE_A */
 
             rn->naddrs = 0;
 
-            if (rn->naddrs6 == (u_short) -1) {
-                goto next;
+            यदि (rn->naddrs6 == (u_short) -1) {
+                गच्छ next;
             }
 
-            if (rn->naddrs6) {
-                goto export;
+            यदि (rn->naddrs6) {
+                गच्छ export;
             }
         }
 #endif
@@ -2101,43 +2101,43 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
         code = NGX_RESOLVE_NXDOMAIN;
     }
 
-    if (code) {
+    यदि (code) {
 
-#if (NGX_HAVE_INET6)
-        switch (qtype) {
+#यदि (NGX_HAVE_INET6)
+        विकल्प (qtype) {
 
-        case NGX_RESOLVE_AAAA:
+        पक्ष NGX_RESOLVE_AAAA:
 
             rn->naddrs6 = 0;
 
-            if (rn->naddrs == (u_short) -1) {
+            यदि (rn->naddrs == (u_short) -1) {
                 rn->code = (u_char) code;
-                goto next;
+                गच्छ next;
             }
 
-            break;
+            रोक;
 
-        default: /* NGX_RESOLVE_A */
+        स्वभाव: /* NGX_RESOLVE_A */
 
             rn->naddrs = 0;
 
-            if (rn->naddrs6 == (u_short) -1) {
+            यदि (rn->naddrs6 == (u_short) -1) {
                 rn->code = (u_char) code;
-                goto next;
+                गच्छ next;
             }
         }
 #endif
 
         next = rn->waiting;
-        rn->waiting = NULL;
+        rn->waiting = रिक्त;
 
         ngx_queue_remove(&rn->queue);
 
-        ngx_rbtree_delete(&r->name_rbtree, &rn->node);
+        ngx_rbtree_delete(&r->name_rbtree, &rn->गाँठो);
 
         /* unlock name mutex */
 
-        while (next) {
+        जबसम्म (next) {
             ctx = next;
             ctx->state = code;
             ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
@@ -2146,47 +2146,47 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
             ctx->handler(ctx);
         }
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_गाँठो(r, rn);
 
-        return;
+        फर्काऊ;
     }
 
     i = ans;
     naddrs = 0;
-    cname = NULL;
+    cname = रिक्त;
 
-    for (a = 0; a < nan; a++) {
+    लागि (a = 0; a < nan; a++) {
 
         start = i;
 
-        while (i < n) {
+        जबसम्म (i < n) {
 
-            if (buf[i] & 0xc0) {
+            यदि (buf[i] & 0xc0) {
                 i += 2;
-                goto found;
+                गच्छ found;
             }
 
-            if (buf[i] == 0) {
+            यदि (buf[i] == 0) {
                 i++;
-                goto test_length;
+                गच्छ test_length;
             }
 
             i += 1 + buf[i];
         }
 
-        goto short_response;
+        गच्छ short_response;
 
     test_length:
 
-        if (i - start < 2) {
+        यदि (i - start < 2) {
             err = "invalid name in DNS response";
-            goto invalid;
+            गच्छ invalid;
         }
 
     found:
 
-        if (i + sizeof(ngx_resolver_an_t) >= n) {
-            goto short_response;
+        यदि (i + परिमाण(ngx_resolver_an_t) >= n) {
+            गच्छ short_response;
         }
 
         an = (ngx_resolver_an_t *) &buf[i];
@@ -2197,75 +2197,75 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
         ttl = (an->ttl[0] << 24) + (an->ttl[1] << 16)
             + (an->ttl[2] << 8) + (an->ttl[3]);
 
-        if (class != 1) {
+        यदि (class != 1) {
             ngx_log_error(r->log_level, r->log, 0,
                           "unexpected RR class %ui in DNS response", class);
-            goto failed;
+            गच्छ failed;
         }
 
-        if (ttl < 0) {
+        यदि (ttl < 0) {
             ttl = 0;
         }
 
         rn->ttl = ngx_min(rn->ttl, (uint32_t) ttl);
 
-        i += sizeof(ngx_resolver_an_t);
+        i += परिमाण(ngx_resolver_an_t);
 
-        switch (type) {
+        विकल्प (type) {
 
-        case NGX_RESOLVE_A:
+        पक्ष NGX_RESOLVE_A:
 
-            if (qtype != NGX_RESOLVE_A) {
+            यदि (qtype != NGX_RESOLVE_A) {
                 err = "unexpected A record in DNS response";
-                goto invalid;
+                गच्छ invalid;
             }
 
-            if (len != 4) {
+            यदि (len != 4) {
                 err = "invalid A record in DNS response";
-                goto invalid;
+                गच्छ invalid;
             }
 
-            if (i + 4 > n) {
-                goto short_response;
+            यदि (i + 4 > n) {
+                गच्छ short_response;
             }
 
             naddrs++;
 
-            break;
+            रोक;
 
-#if (NGX_HAVE_INET6)
-        case NGX_RESOLVE_AAAA:
+#यदि (NGX_HAVE_INET6)
+        पक्ष NGX_RESOLVE_AAAA:
 
-            if (qtype != NGX_RESOLVE_AAAA) {
+            यदि (qtype != NGX_RESOLVE_AAAA) {
                 err = "unexpected AAAA record in DNS response";
-                goto invalid;
+                गच्छ invalid;
             }
 
-            if (len != 16) {
+            यदि (len != 16) {
                 err = "invalid AAAA record in DNS response";
-                goto invalid;
+                गच्छ invalid;
             }
 
-            if (i + 16 > n) {
-                goto short_response;
+            यदि (i + 16 > n) {
+                गच्छ short_response;
             }
 
             naddrs++;
 
-            break;
+            रोक;
 #endif
 
-        case NGX_RESOLVE_CNAME:
+        पक्ष NGX_RESOLVE_CNAME:
 
             cname = &buf[i];
 
-            break;
+            रोक;
 
-        case NGX_RESOLVE_DNAME:
+        पक्ष NGX_RESOLVE_DNAME:
 
-            break;
+            रोक;
 
-        default:
+        स्वभाव:
 
             ngx_log_error(r->log_level, r->log, 0,
                           "unexpected RR type %ui in DNS response", type);
@@ -2278,70 +2278,70 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
                    "resolver naddrs:%ui cname:%p ttl:%uD",
                    naddrs, cname, rn->ttl);
 
-    if (naddrs) {
+    यदि (naddrs) {
 
-        switch (qtype) {
+        विकल्प (qtype) {
 
-#if (NGX_HAVE_INET6)
-        case NGX_RESOLVE_AAAA:
+#यदि (NGX_HAVE_INET6)
+        पक्ष NGX_RESOLVE_AAAA:
 
-            if (naddrs == 1) {
+            यदि (naddrs == 1) {
                 addr6 = &rn->u6.addr6;
                 rn->naddrs6 = 1;
 
-            } else {
-                addr6 = ngx_resolver_alloc(r, naddrs * sizeof(struct in6_addr));
-                if (addr6 == NULL) {
-                    goto failed;
+            } अन्यथा {
+                addr6 = ngx_resolver_alloc(r, naddrs * परिमाण(संरचना in6_addr));
+                यदि (addr6 == रिक्त) {
+                    गच्छ failed;
                 }
 
                 rn->u6.addrs6 = addr6;
                 rn->naddrs6 = (u_short) naddrs;
             }
 
-#if (NGX_SUPPRESS_WARN)
-            addr = NULL;
+#यदि (NGX_SUPPRESS_WARN)
+            addr = रिक्त;
 #endif
 
-            break;
+            रोक;
 #endif
 
-        default: /* NGX_RESOLVE_A */
+        स्वभाव: /* NGX_RESOLVE_A */
 
-            if (naddrs == 1) {
+            यदि (naddrs == 1) {
                 addr = &rn->u.addr;
                 rn->naddrs = 1;
 
-            } else {
-                addr = ngx_resolver_alloc(r, naddrs * sizeof(in_addr_t));
-                if (addr == NULL) {
-                    goto failed;
+            } अन्यथा {
+                addr = ngx_resolver_alloc(r, naddrs * परिमाण(in_addr_t));
+                यदि (addr == रिक्त) {
+                    गच्छ failed;
                 }
 
                 rn->u.addrs = addr;
                 rn->naddrs = (u_short) naddrs;
             }
 
-#if (NGX_HAVE_INET6 && NGX_SUPPRESS_WARN)
-            addr6 = NULL;
+#यदि (NGX_HAVE_INET6 && NGX_SUPPRESS_WARN)
+            addr6 = रिक्त;
 #endif
         }
 
         j = 0;
         i = ans;
 
-        for (a = 0; a < nan; a++) {
+        लागि (a = 0; a < nan; a++) {
 
-            for ( ;; ) {
+            लागि ( ;; ) {
 
-                if (buf[i] & 0xc0) {
+                यदि (buf[i] & 0xc0) {
                     i += 2;
-                    break;
+                    रोक;
                 }
 
-                if (buf[i] == 0) {
+                यदि (buf[i] == 0) {
                     i++;
-                    break;
+                    रोक;
                 }
 
                 i += 1 + buf[i];
@@ -2352,37 +2352,37 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
             type = (an->type_hi << 8) + an->type_lo;
             len = (an->len_hi << 8) + an->len_lo;
 
-            i += sizeof(ngx_resolver_an_t);
+            i += परिमाण(ngx_resolver_an_t);
 
-            if (type == NGX_RESOLVE_A) {
+            यदि (type == NGX_RESOLVE_A) {
 
                 addr[j] = htonl((buf[i] << 24) + (buf[i + 1] << 16)
                                 + (buf[i + 2] << 8) + (buf[i + 3]));
 
-                if (++j == naddrs) {
+                यदि (++j == naddrs) {
 
-#if (NGX_HAVE_INET6)
-                    if (rn->naddrs6 == (u_short) -1) {
-                        goto next;
+#यदि (NGX_HAVE_INET6)
+                    यदि (rn->naddrs6 == (u_short) -1) {
+                        गच्छ next;
                     }
 #endif
 
-                    break;
+                    रोक;
                 }
             }
 
-#if (NGX_HAVE_INET6)
-            else if (type == NGX_RESOLVE_AAAA) {
+#यदि (NGX_HAVE_INET6)
+            अन्यथा यदि (type == NGX_RESOLVE_AAAA) {
 
                 ngx_memcpy(addr6[j].s6_addr, &buf[i], 16);
 
-                if (++j == naddrs) {
+                यदि (++j == naddrs) {
 
-                    if (rn->naddrs == (u_short) -1) {
-                        goto next;
+                    यदि (rn->naddrs == (u_short) -1) {
+                        गच्छ next;
                     }
 
-                    break;
+                    रोक;
                 }
             }
 #endif
@@ -2391,82 +2391,82 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
         }
     }
 
-    switch (qtype) {
+    विकल्प (qtype) {
 
-#if (NGX_HAVE_INET6)
-    case NGX_RESOLVE_AAAA:
+#यदि (NGX_HAVE_INET6)
+    पक्ष NGX_RESOLVE_AAAA:
 
-        if (rn->naddrs6 == (u_short) -1) {
+        यदि (rn->naddrs6 == (u_short) -1) {
             rn->naddrs6 = 0;
         }
 
-        break;
+        रोक;
 #endif
 
-    default: /* NGX_RESOLVE_A */
+    स्वभाव: /* NGX_RESOLVE_A */
 
-        if (rn->naddrs == (u_short) -1) {
+        यदि (rn->naddrs == (u_short) -1) {
             rn->naddrs = 0;
         }
     }
 
-    if (rn->naddrs != (u_short) -1
-#if (NGX_HAVE_INET6)
+    यदि (rn->naddrs != (u_short) -1
+#यदि (NGX_HAVE_INET6)
         && rn->naddrs6 != (u_short) -1
 #endif
         && rn->naddrs
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
            + rn->naddrs6
 #endif
            > 0)
     {
 
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
     export:
 #endif
 
         naddrs = rn->naddrs;
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
         naddrs += rn->naddrs6;
 #endif
 
-        if (naddrs == 1 && rn->naddrs == 1) {
-            addrs = NULL;
+        यदि (naddrs == 1 && rn->naddrs == 1) {
+            addrs = रिक्त;
 
-        } else {
+        } अन्यथा {
             addrs = ngx_resolver_export(r, rn, 0);
-            if (addrs == NULL) {
-                goto failed;
+            यदि (addrs == रिक्त) {
+                गच्छ failed;
             }
         }
 
         ngx_queue_remove(&rn->queue);
 
-        rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
+        rn->valid = ngx_time() + (r->valid ? r->valid : (समय_प्रकार) rn->ttl);
         rn->expire = ngx_time() + r->expire;
 
-        ngx_queue_insert_head(&r->name_expire_queue, &rn->queue);
+        ngx_queue_घुसाउ_head(&r->name_expire_queue, &rn->queue);
 
         next = rn->waiting;
-        rn->waiting = NULL;
+        rn->waiting = रिक्त;
 
         /* unlock name mutex */
 
-        while (next) {
+        जबसम्म (next) {
             ctx = next;
             ctx->state = NGX_OK;
             ctx->valid = rn->valid;
             ctx->naddrs = naddrs;
 
-            if (addrs == NULL) {
+            यदि (addrs == रिक्त) {
                 ctx->addrs = &ctx->addr;
-                ctx->addr.sockaddr = (struct sockaddr *) &ctx->sin;
-                ctx->addr.socklen = sizeof(struct sockaddr_in);
-                ngx_memzero(&ctx->sin, sizeof(struct sockaddr_in));
+                ctx->addr.sockaddr = (संरचना sockaddr *) &ctx->sin;
+                ctx->addr.socklen = परिमाण(संरचना sockaddr_in);
+                ngx_memzero(&ctx->sin, परिमाण(संरचना sockaddr_in));
                 ctx->sin.sin_family = AF_INET;
                 ctx->sin.sin_addr.s_addr = rn->u.addr;
 
-            } else {
+            } अन्यथा {
                 ctx->addrs = addrs;
             }
 
@@ -2475,35 +2475,35 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
             ctx->handler(ctx);
         }
 
-        if (addrs != NULL) {
+        यदि (addrs != रिक्त) {
             ngx_resolver_free(r, addrs->sockaddr);
             ngx_resolver_free(r, addrs);
         }
 
         ngx_resolver_free(r, rn->query);
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
+        rn->query = रिक्त;
+#यदि (NGX_HAVE_INET6)
+        rn->query6 = रिक्त;
 #endif
 
-        return;
+        फर्काऊ;
     }
 
-    if (cname) {
+    यदि (cname) {
 
         /* CNAME only */
 
-        if (rn->naddrs == (u_short) -1
-#if (NGX_HAVE_INET6)
+        यदि (rn->naddrs == (u_short) -1
+#यदि (NGX_HAVE_INET6)
             || rn->naddrs6 == (u_short) -1
 #endif
             )
         {
-            goto next;
+            गच्छ next;
         }
 
-        if (ngx_resolver_copy(r, &name, buf, cname, buf + n) != NGX_OK) {
-            goto failed;
+        यदि (ngx_resolver_copy(r, &name, buf, cname, buf + n) != NGX_OK) {
+            गच्छ failed;
         }
 
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0,
@@ -2514,53 +2514,53 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
         rn->cnlen = (u_short) name.len;
         rn->u.cname = name.data;
 
-        rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
+        rn->valid = ngx_time() + (r->valid ? r->valid : (समय_प्रकार) rn->ttl);
         rn->expire = ngx_time() + r->expire;
 
-        ngx_queue_insert_head(&r->name_expire_queue, &rn->queue);
+        ngx_queue_घुसाउ_head(&r->name_expire_queue, &rn->queue);
 
         ngx_resolver_free(r, rn->query);
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
+        rn->query = रिक्त;
+#यदि (NGX_HAVE_INET6)
+        rn->query6 = रिक्त;
 #endif
 
         ctx = rn->waiting;
-        rn->waiting = NULL;
+        rn->waiting = रिक्त;
 
-        if (ctx) {
+        यदि (ctx) {
 
-            if (ctx->recursion++ >= NGX_RESOLVER_MAX_RECURSION) {
+            यदि (ctx->recursion++ >= NGX_RESOLVER_MAX_RECURSION) {
 
                 /* unlock name mutex */
 
-                do {
+                गर {
                     ctx->state = NGX_RESOLVE_NXDOMAIN;
                     next = ctx->next;
 
                     ctx->handler(ctx);
 
                     ctx = next;
-                } while (ctx);
+                } जबसम्म (ctx);
 
-                return;
+                फर्काऊ;
             }
 
-            for (next = ctx; next; next = next->next) {
-                next->node = NULL;
+            लागि (next = ctx; next; next = next->next) {
+                next->गाँठो = रिक्त;
             }
 
-            (void) ngx_resolve_name_locked(r, ctx, &name);
+            (शून्य) ngx_resolve_name_locked(r, ctx, &name);
         }
 
         /* unlock name mutex */
 
-        return;
+        फर्काऊ;
     }
 
     ngx_log_error(r->log_level, r->log, 0,
                   "no A or CNAME types in DNS response");
-    return;
+    फर्काऊ;
 
 short_response:
 
@@ -2572,7 +2572,7 @@ invalid:
 
     ngx_log_error(r->log_level, r->log, 0, err);
 
-    return;
+    फर्काऊ;
 
 failed:
 
@@ -2580,18 +2580,18 @@ next:
 
     /* unlock name mutex */
 
-    return;
+    फर्काऊ;
 }
 
 
-static void
-ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
+स्थिर शून्य
+ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, माप_प्रकार n,
     ngx_uint_t ident, ngx_uint_t code, ngx_uint_t nan,
     ngx_uint_t trunc, ngx_uint_t ans)
 {
-    char                       *err;
+    वर्ण                       *err;
     u_char                     *cname;
-    size_t                      len;
+    माप_प्रकार                      len;
     int32_t                     ttl;
     uint32_t                    hash;
     ngx_str_t                   name;
@@ -2599,14 +2599,14 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
     ngx_resolver_an_t          *an;
     ngx_resolver_ctx_t         *ctx, *next;
     ngx_resolver_srv_t         *srvs;
-    ngx_resolver_node_t        *rn;
+    ngx_resolver_गाँठो_t        *rn;
     ngx_resolver_connection_t  *rec;
 
-    if (ngx_resolver_copy(r, &name, buf,
-                          buf + sizeof(ngx_resolver_hdr_t), buf + n)
+    यदि (ngx_resolver_copy(r, &name, buf,
+                          buf + परिमाण(ngx_resolver_hdr_t), buf + n)
         != NGX_OK)
     {
-        return;
+        फर्काऊ;
     }
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0, "resolver qs:%V", &name);
@@ -2615,38 +2615,38 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
 
     rn = ngx_resolver_lookup_srv(r, &name, hash);
 
-    if (rn == NULL || rn->query == NULL) {
+    यदि (rn == रिक्त || rn->query == रिक्त) {
         ngx_log_error(r->log_level, r->log, 0,
                       "unexpected DNS response for %V", &name);
         ngx_resolver_free(r, name.data);
-        goto failed;
+        गच्छ failed;
     }
 
-    if (trunc && rn->tcp) {
+    यदि (trunc && rn->tcp) {
         ngx_resolver_free(r, name.data);
-        goto failed;
+        गच्छ failed;
     }
 
     qident = (rn->query[0] << 8) + rn->query[1];
 
-    if (ident != qident) {
+    यदि (ident != qident) {
         ngx_log_error(r->log_level, r->log, 0,
                       "wrong ident %ui in DNS response for %V, expect %ui",
                       ident, &name, qident);
         ngx_resolver_free(r, name.data);
-        goto failed;
+        गच्छ failed;
     }
 
     ngx_resolver_free(r, name.data);
 
-    if (trunc) {
+    यदि (trunc) {
 
         ngx_queue_remove(&rn->queue);
 
-        if (rn->waiting == NULL) {
-            ngx_rbtree_delete(&r->srv_rbtree, &rn->node);
-            ngx_resolver_free_node(r, rn);
-            return;
+        यदि (rn->waiting == रिक्त) {
+            ngx_rbtree_delete(&r->srv_rbtree, &rn->गाँठो);
+            ngx_resolver_free_गाँठो(r, rn);
+            फर्काऊ;
         }
 
         rec = r->connections.elts;
@@ -2654,32 +2654,32 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
 
         rn->tcp = 1;
 
-        (void) ngx_resolver_send_tcp_query(r, rec, rn->query, rn->qlen);
+        (शून्य) ngx_resolver_send_tcp_query(r, rec, rn->query, rn->qlen);
 
         rn->expire = ngx_time() + r->resend_timeout;
 
-        ngx_queue_insert_head(&r->srv_resend_queue, &rn->queue);
+        ngx_queue_घुसाउ_head(&r->srv_resend_queue, &rn->queue);
 
-        return;
+        फर्काऊ;
     }
 
-    if (code == 0 && rn->code) {
+    यदि (code == 0 && rn->code) {
         code = rn->code;
     }
 
-    if (code == 0 && nan == 0) {
+    यदि (code == 0 && nan == 0) {
         code = NGX_RESOLVE_NXDOMAIN;
     }
 
-    if (code) {
+    यदि (code) {
         next = rn->waiting;
-        rn->waiting = NULL;
+        rn->waiting = रिक्त;
 
         ngx_queue_remove(&rn->queue);
 
-        ngx_rbtree_delete(&r->srv_rbtree, &rn->node);
+        ngx_rbtree_delete(&r->srv_rbtree, &rn->गाँठो);
 
-        while (next) {
+        जबसम्म (next) {
             ctx = next;
             ctx->state = code;
             ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
@@ -2688,47 +2688,47 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
             ctx->handler(ctx);
         }
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_गाँठो(r, rn);
 
-        return;
+        फर्काऊ;
     }
 
     i = ans;
     nsrvs = 0;
-    cname = NULL;
+    cname = रिक्त;
 
-    for (a = 0; a < nan; a++) {
+    लागि (a = 0; a < nan; a++) {
 
         start = i;
 
-        while (i < n) {
+        जबसम्म (i < n) {
 
-            if (buf[i] & 0xc0) {
+            यदि (buf[i] & 0xc0) {
                 i += 2;
-                goto found;
+                गच्छ found;
             }
 
-            if (buf[i] == 0) {
+            यदि (buf[i] == 0) {
                 i++;
-                goto test_length;
+                गच्छ test_length;
             }
 
             i += 1 + buf[i];
         }
 
-        goto short_response;
+        गच्छ short_response;
 
     test_length:
 
-        if (i - start < 2) {
+        यदि (i - start < 2) {
             err = "invalid name DNS response";
-            goto invalid;
+            गच्छ invalid;
         }
 
     found:
 
-        if (i + sizeof(ngx_resolver_an_t) >= n) {
-            goto short_response;
+        यदि (i + परिमाण(ngx_resolver_an_t) >= n) {
+            गच्छ short_response;
         }
 
         an = (ngx_resolver_an_t *) &buf[i];
@@ -2739,49 +2739,49 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
         ttl = (an->ttl[0] << 24) + (an->ttl[1] << 16)
             + (an->ttl[2] << 8) + (an->ttl[3]);
 
-        if (class != 1) {
+        यदि (class != 1) {
             ngx_log_error(r->log_level, r->log, 0,
                           "unexpected RR class %ui in DNS response", class);
-            goto failed;
+            गच्छ failed;
         }
 
-        if (ttl < 0) {
+        यदि (ttl < 0) {
             ttl = 0;
         }
 
         rn->ttl = ngx_min(rn->ttl, (uint32_t) ttl);
 
-        i += sizeof(ngx_resolver_an_t);
+        i += परिमाण(ngx_resolver_an_t);
 
-        switch (type) {
+        विकल्प (type) {
 
-        case NGX_RESOLVE_SRV:
+        पक्ष NGX_RESOLVE_SRV:
 
-            if (i + 6 >= n) {
-                goto short_response;
+            यदि (i + 6 >= n) {
+                गच्छ short_response;
             }
 
-            if (ngx_resolver_copy(r, NULL, buf, &buf[i + 6], buf + n)
+            यदि (ngx_resolver_copy(r, रिक्त, buf, &buf[i + 6], buf + n)
                 != NGX_OK)
             {
-                goto failed;
+                गच्छ failed;
             }
 
             nsrvs++;
 
-            break;
+            रोक;
 
-        case NGX_RESOLVE_CNAME:
+        पक्ष NGX_RESOLVE_CNAME:
 
             cname = &buf[i];
 
-            break;
+            रोक;
 
-        case NGX_RESOLVE_DNAME:
+        पक्ष NGX_RESOLVE_DNAME:
 
-            break;
+            रोक;
 
-        default:
+        स्वभाव:
 
             ngx_log_error(r->log_level, r->log, 0,
                           "unexpected RR type %ui in DNS response", type);
@@ -2794,11 +2794,11 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
                    "resolver nsrvs:%ui cname:%p ttl:%uD",
                    nsrvs, cname, rn->ttl);
 
-    if (nsrvs) {
+    यदि (nsrvs) {
 
-        srvs = ngx_resolver_calloc(r, nsrvs * sizeof(ngx_resolver_srv_t));
-        if (srvs == NULL) {
-            goto failed;
+        srvs = ngx_resolver_calloc(r, nsrvs * परिमाण(ngx_resolver_srv_t));
+        यदि (srvs == रिक्त) {
+            गच्छ failed;
         }
 
         rn->u.srvs = srvs;
@@ -2807,18 +2807,18 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
         j = 0;
         i = ans;
 
-        for (a = 0; a < nan; a++) {
+        लागि (a = 0; a < nan; a++) {
 
-            for ( ;; ) {
+            लागि ( ;; ) {
 
-                if (buf[i] & 0xc0) {
+                यदि (buf[i] & 0xc0) {
                     i += 2;
-                    break;
+                    रोक;
                 }
 
-                if (buf[i] == 0) {
+                यदि (buf[i] == 0) {
                     i++;
-                    break;
+                    रोक;
                 }
 
                 i += 1 + buf[i];
@@ -2829,24 +2829,24 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
             type = (an->type_hi << 8) + an->type_lo;
             len = (an->len_hi << 8) + an->len_lo;
 
-            i += sizeof(ngx_resolver_an_t);
+            i += परिमाण(ngx_resolver_an_t);
 
-            if (type == NGX_RESOLVE_SRV) {
+            यदि (type == NGX_RESOLVE_SRV) {
 
                 srvs[j].priority = (buf[i] << 8) + buf[i + 1];
                 srvs[j].weight = (buf[i + 2] << 8) + buf[i + 3];
 
-                if (srvs[j].weight == 0) {
+                यदि (srvs[j].weight == 0) {
                     srvs[j].weight = 1;
                 }
 
                 srvs[j].port = (buf[i + 4] << 8) + buf[i + 5];
 
-                if (ngx_resolver_copy(r, &srvs[j].name, buf, &buf[i + 6],
+                यदि (ngx_resolver_copy(r, &srvs[j].name, buf, &buf[i + 6],
                                       buf + n)
                     != NGX_OK)
                 {
-                    goto failed;
+                    गच्छ failed;
                 }
 
                 j++;
@@ -2855,40 +2855,40 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
             i += len;
         }
 
-        ngx_sort(srvs, nsrvs, sizeof(ngx_resolver_srv_t),
+        ngx_sort(srvs, nsrvs, परिमाण(ngx_resolver_srv_t),
                  ngx_resolver_cmp_srvs);
 
         ngx_resolver_free(r, rn->query);
-        rn->query = NULL;
+        rn->query = रिक्त;
 
         ngx_queue_remove(&rn->queue);
 
-        rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
+        rn->valid = ngx_time() + (r->valid ? r->valid : (समय_प्रकार) rn->ttl);
         rn->expire = ngx_time() + r->expire;
 
-        ngx_queue_insert_head(&r->srv_expire_queue, &rn->queue);
+        ngx_queue_घुसाउ_head(&r->srv_expire_queue, &rn->queue);
 
         next = rn->waiting;
-        rn->waiting = NULL;
+        rn->waiting = रिक्त;
 
-        while (next) {
+        जबसम्म (next) {
             ctx = next;
             next = ctx->next;
 
             ngx_resolver_resolve_srv_names(ctx, rn);
         }
 
-        return;
+        फर्काऊ;
     }
 
     rn->nsrvs = 0;
 
-    if (cname) {
+    यदि (cname) {
 
         /* CNAME only */
 
-        if (ngx_resolver_copy(r, &name, buf, cname, buf + n) != NGX_OK) {
-            goto failed;
+        यदि (ngx_resolver_copy(r, &name, buf, cname, buf + n) != NGX_OK) {
+            गच्छ failed;
         }
 
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0,
@@ -2899,53 +2899,53 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
         rn->cnlen = (u_short) name.len;
         rn->u.cname = name.data;
 
-        rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
+        rn->valid = ngx_time() + (r->valid ? r->valid : (समय_प्रकार) rn->ttl);
         rn->expire = ngx_time() + r->expire;
 
-        ngx_queue_insert_head(&r->srv_expire_queue, &rn->queue);
+        ngx_queue_घुसाउ_head(&r->srv_expire_queue, &rn->queue);
 
         ngx_resolver_free(r, rn->query);
-        rn->query = NULL;
-#if (NGX_HAVE_INET6)
-        rn->query6 = NULL;
+        rn->query = रिक्त;
+#यदि (NGX_HAVE_INET6)
+        rn->query6 = रिक्त;
 #endif
 
         ctx = rn->waiting;
-        rn->waiting = NULL;
+        rn->waiting = रिक्त;
 
-        if (ctx) {
+        यदि (ctx) {
 
-            if (ctx->recursion++ >= NGX_RESOLVER_MAX_RECURSION) {
+            यदि (ctx->recursion++ >= NGX_RESOLVER_MAX_RECURSION) {
 
                 /* unlock name mutex */
 
-                do {
+                गर {
                     ctx->state = NGX_RESOLVE_NXDOMAIN;
                     next = ctx->next;
 
                     ctx->handler(ctx);
 
                     ctx = next;
-                } while (ctx);
+                } जबसम्म (ctx);
 
-                return;
+                फर्काऊ;
             }
 
-            for (next = ctx; next; next = next->next) {
-                next->node = NULL;
+            लागि (next = ctx; next; next = next->next) {
+                next->गाँठो = रिक्त;
             }
 
-            (void) ngx_resolve_name_locked(r, ctx, &name);
+            (शून्य) ngx_resolve_name_locked(r, ctx, &name);
         }
 
         /* unlock name mutex */
 
-        return;
+        फर्काऊ;
     }
 
     ngx_log_error(r->log_level, r->log, 0, "no SRV type in DNS response");
 
-    return;
+    फर्काऊ;
 
 short_response:
 
@@ -2957,18 +2957,18 @@ invalid:
 
     ngx_log_error(r->log_level, r->log, 0, err);
 
-    return;
+    फर्काऊ;
 
 failed:
 
     /* unlock name mutex */
 
-    return;
+    फर्काऊ;
 }
 
 
-static void
-ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx, ngx_resolver_node_t *rn)
+स्थिर शून्य
+ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx, ngx_resolver_गाँठो_t *rn)
 {
     ngx_uint_t                i;
     ngx_resolver_t           *r;
@@ -2977,36 +2977,36 @@ ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx, ngx_resolver_node_t *rn)
 
     r = ctx->resolver;
 
-    ctx->node = NULL;
+    ctx->गाँठो = रिक्त;
     ctx->state = NGX_OK;
     ctx->valid = rn->valid;
-    ctx->count = rn->nsrvs;
+    ctx->गन्ती = rn->nsrvs;
 
-    srvs = ngx_resolver_calloc(r, rn->nsrvs * sizeof(ngx_resolver_srv_name_t));
-    if (srvs == NULL) {
-        goto failed;
+    srvs = ngx_resolver_calloc(r, rn->nsrvs * परिमाण(ngx_resolver_srv_name_t));
+    यदि (srvs == रिक्त) {
+        गच्छ failed;
     }
 
     ctx->srvs = srvs;
     ctx->nsrvs = rn->nsrvs;
 
-    if (ctx->event && ctx->event->timer_set) {
+    यदि (ctx->event && ctx->event->timer_set) {
         ngx_del_timer(ctx->event);
     }
 
-    for (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
+    लागि (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
         srvs[i].name.data = ngx_resolver_alloc(r, rn->u.srvs[i].name.len);
-        if (srvs[i].name.data == NULL) {
-            goto failed;
+        यदि (srvs[i].name.data == रिक्त) {
+            गच्छ failed;
         }
 
         srvs[i].name.len = rn->u.srvs[i].name.len;
         ngx_memcpy(srvs[i].name.data, rn->u.srvs[i].name.data,
                    srvs[i].name.len);
 
-        cctx = ngx_resolve_start(r, NULL);
-        if (cctx == NULL) {
-            goto failed;
+        cctx = ngx_resolve_start(r, रिक्त);
+        यदि (cctx == रिक्त) {
+            गच्छ failed;
         }
 
         cctx->name = srvs[i].name;
@@ -3020,13 +3020,13 @@ ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx, ngx_resolver_node_t *rn)
         srvs[i].port = rn->u.srvs[i].port;
         srvs[i].ctx = cctx;
 
-        if (ngx_resolve_name(cctx) == NGX_ERROR) {
-            srvs[i].ctx = NULL;
-            goto failed;
+        यदि (ngx_resolve_name(cctx) == NGX_ERROR) {
+            srvs[i].ctx = रिक्त;
+            गच्छ failed;
         }
     }
 
-    return;
+    फर्काऊ;
 
 failed:
 
@@ -3037,7 +3037,7 @@ failed:
 }
 
 
-static void
+स्थिर शून्य
 ngx_resolver_srv_names_handler(ngx_resolver_ctx_t *cctx)
 {
     ngx_uint_t                i;
@@ -3051,30 +3051,30 @@ ngx_resolver_srv_names_handler(ngx_resolver_ctx_t *cctx)
     ctx = cctx->data;
     srv = cctx->srvs;
 
-    ctx->count--;
+    ctx->गन्ती--;
     ctx->async |= cctx->async;
 
-    srv->ctx = NULL;
+    srv->ctx = रिक्त;
     srv->state = cctx->state;
 
-    if (cctx->naddrs) {
+    यदि (cctx->naddrs) {
 
         ctx->valid = ngx_min(ctx->valid, cctx->valid);
 
-        addrs = ngx_resolver_calloc(r, cctx->naddrs * sizeof(ngx_addr_t));
-        if (addrs == NULL) {
+        addrs = ngx_resolver_calloc(r, cctx->naddrs * परिमाण(ngx_addr_t));
+        यदि (addrs == रिक्त) {
             srv->state = NGX_ERROR;
-            goto done;
+            गच्छ done;
         }
 
-        sockaddr = ngx_resolver_alloc(r, cctx->naddrs * sizeof(ngx_sockaddr_t));
-        if (sockaddr == NULL) {
+        sockaddr = ngx_resolver_alloc(r, cctx->naddrs * परिमाण(ngx_sockaddr_t));
+        यदि (sockaddr == रिक्त) {
             ngx_resolver_free(r, addrs);
             srv->state = NGX_ERROR;
-            goto done;
+            गच्छ done;
         }
 
-        for (i = 0; i < cctx->naddrs; i++) {
+        लागि (i = 0; i < cctx->naddrs; i++) {
             addrs[i].sockaddr = &sockaddr[i].sockaddr;
             addrs[i].socklen = cctx->addrs[i].socklen;
 
@@ -3092,39 +3092,39 @@ done:
 
     ngx_resolve_name_done(cctx);
 
-    if (ctx->count == 0) {
+    यदि (ctx->गन्ती == 0) {
         ngx_resolver_report_srv(r, ctx);
     }
 }
 
 
-static void
-ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, size_t n,
+स्थिर शून्य
+ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, माप_प्रकार n,
     ngx_uint_t ident, ngx_uint_t code, ngx_uint_t nan)
 {
-    char                 *err;
-    size_t                len;
+    वर्ण                 *err;
+    माप_प्रकार                len;
     in_addr_t             addr;
     int32_t               ttl;
     ngx_int_t             octet;
     ngx_str_t             name;
     ngx_uint_t            mask, type, class, qident, a, i, start;
     ngx_queue_t          *expire_queue;
-    ngx_rbtree_t         *tree;
+    ngx_rbtree_t         *रूख;
     ngx_resolver_an_t    *an;
     ngx_resolver_ctx_t   *ctx, *next;
-    ngx_resolver_node_t  *rn;
-#if (NGX_HAVE_INET6)
+    ngx_resolver_गाँठो_t  *rn;
+#यदि (NGX_HAVE_INET6)
     uint32_t              hash;
     ngx_int_t             digit;
-    struct in6_addr       addr6;
+    संरचना in6_addr       addr6;
 #endif
 
-    if (ngx_resolver_copy(r, &name, buf,
-                          buf + sizeof(ngx_resolver_hdr_t), buf + n)
+    यदि (ngx_resolver_copy(r, &name, buf,
+                          buf + परिमाण(ngx_resolver_hdr_t), buf + n)
         != NGX_OK)
     {
-        return;
+        फर्काऊ;
     }
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0, "resolver qs:%V", &name);
@@ -3132,75 +3132,75 @@ ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, size_t n,
     /* AF_INET */
 
     addr = 0;
-    i = sizeof(ngx_resolver_hdr_t);
+    i = परिमाण(ngx_resolver_hdr_t);
 
-    for (mask = 0; mask < 32; mask += 8) {
+    लागि (mask = 0; mask < 32; mask += 8) {
         len = buf[i++];
 
         octet = ngx_atoi(&buf[i], len);
-        if (octet == NGX_ERROR || octet > 255) {
-            goto invalid_in_addr_arpa;
+        यदि (octet == NGX_ERROR || octet > 255) {
+            गच्छ invalid_in_addr_arpa;
         }
 
         addr += octet << mask;
         i += len;
     }
 
-    if (ngx_strcasecmp(&buf[i], (u_char *) "\7in-addr\4arpa") == 0) {
-        i += sizeof("\7in-addr\4arpa");
+    यदि (ngx_strcasecmp(&buf[i], (u_char *) "\7in-addr\4arpa") == 0) {
+        i += परिमाण("\7in-addr\4arpa");
 
         /* lock addr mutex */
 
         rn = ngx_resolver_lookup_addr(r, addr);
 
-        tree = &r->addr_rbtree;
+        रूख = &r->addr_rbtree;
         expire_queue = &r->addr_expire_queue;
 
-        goto valid;
+        गच्छ valid;
     }
 
 invalid_in_addr_arpa:
 
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
 
-    i = sizeof(ngx_resolver_hdr_t);
+    i = परिमाण(ngx_resolver_hdr_t);
 
-    for (octet = 15; octet >= 0; octet--) {
-        if (buf[i++] != '\1') {
-            goto invalid_ip6_arpa;
+    लागि (octet = 15; octet >= 0; octet--) {
+        यदि (buf[i++] != '\1') {
+            गच्छ invalid_ip6_arpa;
         }
 
         digit = ngx_hextoi(&buf[i++], 1);
-        if (digit == NGX_ERROR) {
-            goto invalid_ip6_arpa;
+        यदि (digit == NGX_ERROR) {
+            गच्छ invalid_ip6_arpa;
         }
 
         addr6.s6_addr[octet] = (u_char) digit;
 
-        if (buf[i++] != '\1') {
-            goto invalid_ip6_arpa;
+        यदि (buf[i++] != '\1') {
+            गच्छ invalid_ip6_arpa;
         }
 
         digit = ngx_hextoi(&buf[i++], 1);
-        if (digit == NGX_ERROR) {
-            goto invalid_ip6_arpa;
+        यदि (digit == NGX_ERROR) {
+            गच्छ invalid_ip6_arpa;
         }
 
         addr6.s6_addr[octet] += (u_char) (digit * 16);
     }
 
-    if (ngx_strcasecmp(&buf[i], (u_char *) "\3ip6\4arpa") == 0) {
-        i += sizeof("\3ip6\4arpa");
+    यदि (ngx_strcasecmp(&buf[i], (u_char *) "\3ip6\4arpa") == 0) {
+        i += परिमाण("\3ip6\4arpa");
 
         /* lock addr mutex */
 
         hash = ngx_crc32_short(addr6.s6_addr, 16);
         rn = ngx_resolver_lookup_addr6(r, &addr6, hash);
 
-        tree = &r->addr6_rbtree;
+        रूख = &r->addr6_rbtree;
         expire_queue = &r->addr6_expire_queue;
 
-        goto valid;
+        गच्छ valid;
     }
 
 invalid_ip6_arpa:
@@ -3209,44 +3209,44 @@ invalid_ip6_arpa:
     ngx_log_error(r->log_level, r->log, 0,
                   "invalid in-addr.arpa or ip6.arpa name in DNS response");
     ngx_resolver_free(r, name.data);
-    return;
+    फर्काऊ;
 
 valid:
 
-    if (rn == NULL || rn->query == NULL) {
+    यदि (rn == रिक्त || rn->query == रिक्त) {
         ngx_log_error(r->log_level, r->log, 0,
                       "unexpected DNS response for %V", &name);
         ngx_resolver_free(r, name.data);
-        goto failed;
+        गच्छ failed;
     }
 
     qident = (rn->query[0] << 8) + rn->query[1];
 
-    if (ident != qident) {
+    यदि (ident != qident) {
         ngx_log_error(r->log_level, r->log, 0,
                       "wrong ident %ui in DNS response for %V, expect %ui",
                       ident, &name, qident);
         ngx_resolver_free(r, name.data);
-        goto failed;
+        गच्छ failed;
     }
 
     ngx_resolver_free(r, name.data);
 
-    if (code == 0 && nan == 0) {
+    यदि (code == 0 && nan == 0) {
         code = NGX_RESOLVE_NXDOMAIN;
     }
 
-    if (code) {
+    यदि (code) {
         next = rn->waiting;
-        rn->waiting = NULL;
+        rn->waiting = रिक्त;
 
         ngx_queue_remove(&rn->queue);
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(रूख, &rn->गाँठो);
 
         /* unlock addr mutex */
 
-        while (next) {
+        जबसम्म (next) {
             ctx = next;
             ctx->state = code;
             ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
@@ -3255,45 +3255,45 @@ valid:
             ctx->handler(ctx);
         }
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_गाँठो(r, rn);
 
-        return;
+        फर्काऊ;
     }
 
-    i += sizeof(ngx_resolver_qs_t);
+    i += परिमाण(ngx_resolver_qs_t);
 
-    for (a = 0; a < nan; a++) {
+    लागि (a = 0; a < nan; a++) {
 
         start = i;
 
-        while (i < n) {
+        जबसम्म (i < n) {
 
-            if (buf[i] & 0xc0) {
+            यदि (buf[i] & 0xc0) {
                 i += 2;
-                goto found;
+                गच्छ found;
             }
 
-            if (buf[i] == 0) {
+            यदि (buf[i] == 0) {
                 i++;
-                goto test_length;
+                गच्छ test_length;
             }
 
             i += 1 + buf[i];
         }
 
-        goto short_response;
+        गच्छ short_response;
 
     test_length:
 
-        if (i - start < 2) {
+        यदि (i - start < 2) {
             err = "invalid name in DNS response";
-            goto invalid;
+            गच्छ invalid;
         }
 
     found:
 
-        if (i + sizeof(ngx_resolver_an_t) >= n) {
-            goto short_response;
+        यदि (i + परिमाण(ngx_resolver_an_t) >= n) {
+            गच्छ short_response;
         }
 
         an = (ngx_resolver_an_t *) &buf[i];
@@ -3304,13 +3304,13 @@ valid:
         ttl = (an->ttl[0] << 24) + (an->ttl[1] << 16)
             + (an->ttl[2] << 8) + (an->ttl[3]);
 
-        if (class != 1) {
+        यदि (class != 1) {
             ngx_log_error(r->log_level, r->log, 0,
                           "unexpected RR class %ui in DNS response", class);
-            goto failed;
+            गच्छ failed;
         }
 
-        if (ttl < 0) {
+        यदि (ttl < 0) {
             ttl = 0;
         }
 
@@ -3318,19 +3318,19 @@ valid:
                       "resolver qt:%ui cl:%ui len:%uz",
                       type, class, len);
 
-        i += sizeof(ngx_resolver_an_t);
+        i += परिमाण(ngx_resolver_an_t);
 
-        switch (type) {
+        विकल्प (type) {
 
-        case NGX_RESOLVE_PTR:
+        पक्ष NGX_RESOLVE_PTR:
 
-            goto ptr;
+            गच्छ ptr;
 
-        case NGX_RESOLVE_CNAME:
+        पक्ष NGX_RESOLVE_CNAME:
 
-            break;
+            रोक;
 
-        default:
+        स्वभाव:
 
             ngx_log_error(r->log_level, r->log, 0,
                           "unexpected RR type %ui in DNS response", type);
@@ -3343,20 +3343,20 @@ valid:
 
     ngx_log_error(r->log_level, r->log, 0,
                   "no PTR type in DNS response");
-    return;
+    फर्काऊ;
 
 ptr:
 
-    if (ngx_resolver_copy(r, &name, buf, buf + i, buf + n) != NGX_OK) {
-        goto failed;
+    यदि (ngx_resolver_copy(r, &name, buf, buf + i, buf + n) != NGX_OK) {
+        गच्छ failed;
     }
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, r->log, 0, "resolver an:%V", &name);
 
-    if (name.len != (size_t) rn->nlen
+    यदि (name.len != (माप_प्रकार) rn->nlen
         || ngx_strncmp(name.data, rn->name, name.len) != 0)
     {
-        if (rn->nlen) {
+        यदि (rn->nlen) {
             ngx_resolver_free(r, rn->name);
         }
 
@@ -3364,8 +3364,8 @@ ptr:
         rn->name = name.data;
 
         name.data = ngx_resolver_dup(r, rn->name, name.len);
-        if (name.data == NULL) {
-            goto failed;
+        यदि (name.data == रिक्त) {
+            गच्छ failed;
         }
     }
 
@@ -3374,14 +3374,14 @@ ptr:
     rn->valid = ngx_time() + (r->valid ? r->valid : ttl);
     rn->expire = ngx_time() + r->expire;
 
-    ngx_queue_insert_head(expire_queue, &rn->queue);
+    ngx_queue_घुसाउ_head(expire_queue, &rn->queue);
 
     next = rn->waiting;
-    rn->waiting = NULL;
+    rn->waiting = रिक्त;
 
     /* unlock addr mutex */
 
-    while (next) {
+    जबसम्म (next) {
         ctx = next;
         ctx->state = NGX_OK;
         ctx->valid = rn->valid;
@@ -3393,7 +3393,7 @@ ptr:
 
     ngx_resolver_free(r, name.data);
 
-    return;
+    फर्काऊ;
 
 short_response:
 
@@ -3405,296 +3405,296 @@ invalid:
 
     ngx_log_error(r->log_level, r->log, 0, err);
 
-    return;
+    फर्काऊ;
 
 failed:
 
     /* unlock addr mutex */
 
-    return;
+    फर्काऊ;
 }
 
 
-static ngx_resolver_node_t *
+स्थिर ngx_resolver_गाँठो_t *
 ngx_resolver_lookup_name(ngx_resolver_t *r, ngx_str_t *name, uint32_t hash)
 {
     ngx_int_t             rc;
-    ngx_rbtree_node_t    *node, *sentinel;
-    ngx_resolver_node_t  *rn;
+    ngx_rbtree_गाँठो_t    *गाँठो, *sentinel;
+    ngx_resolver_गाँठो_t  *rn;
 
-    node = r->name_rbtree.root;
+    गाँठो = r->name_rbtree.जरा;
     sentinel = r->name_rbtree.sentinel;
 
-    while (node != sentinel) {
+    जबसम्म (गाँठो != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
-            continue;
+        यदि (hash < गाँठो->साँचो) {
+            गाँठो = गाँठो->बायाँ;
+            जारी;
         }
 
-        if (hash > node->key) {
-            node = node->right;
-            continue;
+        यदि (hash > गाँठो->साँचो) {
+            गाँठो = गाँठो->दायाँ;
+            जारी;
         }
 
         /* hash == node->key */
 
-        rn = ngx_resolver_node(node);
+        rn = ngx_resolver_गाँठो(गाँठो);
 
         rc = ngx_memn2cmp(name->data, rn->name, name->len, rn->nlen);
 
-        if (rc == 0) {
-            return rn;
+        यदि (rc == 0) {
+            फर्काऊ rn;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        गाँठो = (rc < 0) ? गाँठो->बायाँ : गाँठो->दायाँ;
     }
 
     /* not found */
 
-    return NULL;
+    फर्काऊ रिक्त;
 }
 
 
-static ngx_resolver_node_t *
+स्थिर ngx_resolver_गाँठो_t *
 ngx_resolver_lookup_srv(ngx_resolver_t *r, ngx_str_t *name, uint32_t hash)
 {
     ngx_int_t             rc;
-    ngx_rbtree_node_t    *node, *sentinel;
-    ngx_resolver_node_t  *rn;
+    ngx_rbtree_गाँठो_t    *गाँठो, *sentinel;
+    ngx_resolver_गाँठो_t  *rn;
 
-    node = r->srv_rbtree.root;
+    गाँठो = r->srv_rbtree.जरा;
     sentinel = r->srv_rbtree.sentinel;
 
-    while (node != sentinel) {
+    जबसम्म (गाँठो != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
-            continue;
+        यदि (hash < गाँठो->साँचो) {
+            गाँठो = गाँठो->बायाँ;
+            जारी;
         }
 
-        if (hash > node->key) {
-            node = node->right;
-            continue;
+        यदि (hash > गाँठो->साँचो) {
+            गाँठो = गाँठो->दायाँ;
+            जारी;
         }
 
         /* hash == node->key */
 
-        rn = ngx_resolver_node(node);
+        rn = ngx_resolver_गाँठो(गाँठो);
 
         rc = ngx_memn2cmp(name->data, rn->name, name->len, rn->nlen);
 
-        if (rc == 0) {
-            return rn;
+        यदि (rc == 0) {
+            फर्काऊ rn;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        गाँठो = (rc < 0) ? गाँठो->बायाँ : गाँठो->दायाँ;
     }
 
     /* not found */
 
-    return NULL;
+    फर्काऊ रिक्त;
 }
 
 
-static ngx_resolver_node_t *
+स्थिर ngx_resolver_गाँठो_t *
 ngx_resolver_lookup_addr(ngx_resolver_t *r, in_addr_t addr)
 {
-    ngx_rbtree_node_t  *node, *sentinel;
+    ngx_rbtree_गाँठो_t  *गाँठो, *sentinel;
 
-    node = r->addr_rbtree.root;
+    गाँठो = r->addr_rbtree.जरा;
     sentinel = r->addr_rbtree.sentinel;
 
-    while (node != sentinel) {
+    जबसम्म (गाँठो != sentinel) {
 
-        if (addr < node->key) {
-            node = node->left;
-            continue;
+        यदि (addr < गाँठो->साँचो) {
+            गाँठो = गाँठो->बायाँ;
+            जारी;
         }
 
-        if (addr > node->key) {
-            node = node->right;
-            continue;
+        यदि (addr > गाँठो->साँचो) {
+            गाँठो = गाँठो->दायाँ;
+            जारी;
         }
 
         /* addr == node->key */
 
-        return ngx_resolver_node(node);
+        फर्काऊ ngx_resolver_गाँठो(गाँठो);
     }
 
     /* not found */
 
-    return NULL;
+    फर्काऊ रिक्त;
 }
 
 
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
 
-static ngx_resolver_node_t *
-ngx_resolver_lookup_addr6(ngx_resolver_t *r, struct in6_addr *addr,
+स्थिर ngx_resolver_गाँठो_t *
+ngx_resolver_lookup_addr6(ngx_resolver_t *r, संरचना in6_addr *addr,
     uint32_t hash)
 {
     ngx_int_t             rc;
-    ngx_rbtree_node_t    *node, *sentinel;
-    ngx_resolver_node_t  *rn;
+    ngx_rbtree_गाँठो_t    *गाँठो, *sentinel;
+    ngx_resolver_गाँठो_t  *rn;
 
-    node = r->addr6_rbtree.root;
+    गाँठो = r->addr6_rbtree.जरा;
     sentinel = r->addr6_rbtree.sentinel;
 
-    while (node != sentinel) {
+    जबसम्म (गाँठो != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
-            continue;
+        यदि (hash < गाँठो->साँचो) {
+            गाँठो = गाँठो->बायाँ;
+            जारी;
         }
 
-        if (hash > node->key) {
-            node = node->right;
-            continue;
+        यदि (hash > गाँठो->साँचो) {
+            गाँठो = गाँठो->दायाँ;
+            जारी;
         }
 
         /* hash == node->key */
 
-        rn = ngx_resolver_node(node);
+        rn = ngx_resolver_गाँठो(गाँठो);
 
         rc = ngx_memcmp(addr, &rn->addr6, 16);
 
-        if (rc == 0) {
-            return rn;
+        यदि (rc == 0) {
+            फर्काऊ rn;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        गाँठो = (rc < 0) ? गाँठो->बायाँ : गाँठो->दायाँ;
     }
 
     /* not found */
 
-    return NULL;
+    फर्काऊ रिक्त;
 }
 
 #endif
 
 
-static void
-ngx_resolver_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+स्थिर शून्य
+ngx_resolver_rbtree_घुसाउ_मान(ngx_rbtree_गाँठो_t *temp,
+    ngx_rbtree_गाँठो_t *गाँठो, ngx_rbtree_गाँठो_t *sentinel)
 {
-    ngx_rbtree_node_t    **p;
-    ngx_resolver_node_t   *rn, *rn_temp;
+    ngx_rbtree_गाँठो_t    **p;
+    ngx_resolver_गाँठो_t   *rn, *rn_temp;
 
-    for ( ;; ) {
+    लागि ( ;; ) {
 
-        if (node->key < temp->key) {
+        यदि (गाँठो->साँचो < temp->साँचो) {
 
-            p = &temp->left;
+            p = &temp->बायाँ;
 
-        } else if (node->key > temp->key) {
+        } अन्यथा यदि (गाँठो->साँचो > temp->साँचो) {
 
-            p = &temp->right;
+            p = &temp->दायाँ;
 
-        } else { /* node->key == temp->key */
+        } अन्यथा { /* node->key == temp->key */
 
-            rn = ngx_resolver_node(node);
-            rn_temp = ngx_resolver_node(temp);
+            rn = ngx_resolver_गाँठो(गाँठो);
+            rn_temp = ngx_resolver_गाँठो(temp);
 
             p = (ngx_memn2cmp(rn->name, rn_temp->name, rn->nlen, rn_temp->nlen)
-                 < 0) ? &temp->left : &temp->right;
+                 < 0) ? &temp->बायाँ : &temp->दायाँ;
         }
 
-        if (*p == sentinel) {
-            break;
+        यदि (*p == sentinel) {
+            रोक;
         }
 
         temp = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = गाँठो;
+    गाँठो->parent = temp;
+    गाँठो->बायाँ = sentinel;
+    गाँठो->दायाँ = sentinel;
+    ngx_rbt_red(गाँठो);
 }
 
 
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
 
-static void
-ngx_resolver_rbtree_insert_addr6_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+स्थिर शून्य
+ngx_resolver_rbtree_घुसाउ_addr6_मान(ngx_rbtree_गाँठो_t *temp,
+    ngx_rbtree_गाँठो_t *गाँठो, ngx_rbtree_गाँठो_t *sentinel)
 {
-    ngx_rbtree_node_t    **p;
-    ngx_resolver_node_t   *rn, *rn_temp;
+    ngx_rbtree_गाँठो_t    **p;
+    ngx_resolver_गाँठो_t   *rn, *rn_temp;
 
-    for ( ;; ) {
+    लागि ( ;; ) {
 
-        if (node->key < temp->key) {
+        यदि (गाँठो->साँचो < temp->साँचो) {
 
-            p = &temp->left;
+            p = &temp->बायाँ;
 
-        } else if (node->key > temp->key) {
+        } अन्यथा यदि (गाँठो->साँचो > temp->साँचो) {
 
-            p = &temp->right;
+            p = &temp->दायाँ;
 
-        } else { /* node->key == temp->key */
+        } अन्यथा { /* node->key == temp->key */
 
-            rn = ngx_resolver_node(node);
-            rn_temp = ngx_resolver_node(temp);
+            rn = ngx_resolver_गाँठो(गाँठो);
+            rn_temp = ngx_resolver_गाँठो(temp);
 
             p = (ngx_memcmp(&rn->addr6, &rn_temp->addr6, 16)
-                 < 0) ? &temp->left : &temp->right;
+                 < 0) ? &temp->बायाँ : &temp->दायाँ;
         }
 
-        if (*p == sentinel) {
-            break;
+        यदि (*p == sentinel) {
+            रोक;
         }
 
         temp = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = गाँठो;
+    गाँठो->parent = temp;
+    गाँठो->बायाँ = sentinel;
+    गाँठो->दायाँ = sentinel;
+    ngx_rbt_red(गाँठो);
 }
 
 #endif
 
 
-static ngx_int_t
-ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+स्थिर ngx_int_t
+ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_गाँठो_t *rn,
     ngx_str_t *name)
 {
     u_char              *p, *s;
-    size_t               len, nlen;
+    माप_प्रकार               len, nlen;
     ngx_uint_t           ident;
     ngx_resolver_qs_t   *qs;
     ngx_resolver_hdr_t  *query;
 
     nlen = name->len ? (1 + name->len + 1) : 1;
 
-    len = sizeof(ngx_resolver_hdr_t) + nlen + sizeof(ngx_resolver_qs_t);
+    len = परिमाण(ngx_resolver_hdr_t) + nlen + परिमाण(ngx_resolver_qs_t);
 
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
     p = ngx_resolver_alloc(r, len * (r->ipv4 + r->ipv6));
-#else
+#अन्यथा
     p = ngx_resolver_alloc(r, len);
 #endif
-    if (p == NULL) {
-        return NGX_ERROR;
+    यदि (p == रिक्त) {
+        फर्काऊ NGX_ERROR;
     }
 
     rn->qlen = (u_short) len;
     rn->query = p;
 
-#if (NGX_HAVE_INET6)
-    if (r->ipv6) {
+#यदि (NGX_HAVE_INET6)
+    यदि (r->ipv6) {
         rn->query6 = r->ipv4 ? (p + len) : p;
     }
 #endif
 
     query = (ngx_resolver_hdr_t *) p;
 
-    if (r->ipv4) {
+    यदि (r->ipv4) {
         ident = ngx_random();
 
         ngx_log_debug2(NGX_LOG_DEBUG_CORE, r->log, 0,
@@ -3713,7 +3713,7 @@ ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
     query->nns_hi = 0; query->nns_lo = 0;
     query->nar_hi = 0; query->nar_lo = 0;
 
-    p += sizeof(ngx_resolver_hdr_t) + nlen;
+    p += परिमाण(ngx_resolver_hdr_t) + nlen;
 
     qs = (ngx_resolver_qs_t *) p;
 
@@ -3729,18 +3729,18 @@ ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
     p--;
     *p-- = '\0';
 
-    if (name->len == 0)  {
-        return NGX_DECLINED;
+    यदि (name->len == 0)  {
+        फर्काऊ NGX_DECLINED;
     }
 
-    for (s = name->data + name->len - 1; s >= name->data; s--) {
-        if (*s != '.') {
+    लागि (s = name->data + name->len - 1; s >= name->data; s--) {
+        यदि (*s != '.') {
             *p = *s;
             len++;
 
-        } else {
-            if (len == 0 || len > 255) {
-                return NGX_DECLINED;
+        } अन्यथा {
+            यदि (len == 0 || len > 255) {
+                फर्काऊ NGX_DECLINED;
             }
 
             *p = (u_char) len;
@@ -3750,20 +3750,20 @@ ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
         p--;
     }
 
-    if (len == 0 || len > 255) {
-        return NGX_DECLINED;
+    यदि (len == 0 || len > 255) {
+        फर्काऊ NGX_DECLINED;
     }
 
     *p = (u_char) len;
 
-#if (NGX_HAVE_INET6)
-    if (!r->ipv6) {
-        return NGX_OK;
+#यदि (NGX_HAVE_INET6)
+    यदि (!r->ipv6) {
+        फर्काऊ NGX_OK;
     }
 
     p = rn->query6;
 
-    if (r->ipv4) {
+    यदि (r->ipv4) {
         ngx_memcpy(p, rn->query, rn->qlen);
     }
 
@@ -3777,34 +3777,34 @@ ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
     query->ident_hi = (u_char) ((ident >> 8) & 0xff);
     query->ident_lo = (u_char) (ident & 0xff);
 
-    p += sizeof(ngx_resolver_hdr_t) + nlen;
+    p += परिमाण(ngx_resolver_hdr_t) + nlen;
 
     qs = (ngx_resolver_qs_t *) p;
 
     qs->type_lo = NGX_RESOLVE_AAAA;
 #endif
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 }
 
 
-static ngx_int_t
-ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+स्थिर ngx_int_t
+ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_गाँठो_t *rn,
     ngx_str_t *name)
 {
     u_char              *p, *s;
-    size_t               len, nlen;
+    माप_प्रकार               len, nlen;
     ngx_uint_t           ident;
     ngx_resolver_qs_t   *qs;
     ngx_resolver_hdr_t  *query;
 
     nlen = name->len ? (1 + name->len + 1) : 1;
 
-    len = sizeof(ngx_resolver_hdr_t) + nlen + sizeof(ngx_resolver_qs_t);
+    len = परिमाण(ngx_resolver_hdr_t) + nlen + परिमाण(ngx_resolver_qs_t);
 
     p = ngx_resolver_alloc(r, len);
-    if (p == NULL) {
-        return NGX_ERROR;
+    यदि (p == रिक्त) {
+        फर्काऊ NGX_ERROR;
     }
 
     rn->qlen = (u_short) len;
@@ -3829,7 +3829,7 @@ ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
     query->nns_hi = 0; query->nns_lo = 0;
     query->nar_hi = 0; query->nar_lo = 0;
 
-    p += sizeof(ngx_resolver_hdr_t) + nlen;
+    p += परिमाण(ngx_resolver_hdr_t) + nlen;
 
     qs = (ngx_resolver_qs_t *) p;
 
@@ -3845,18 +3845,18 @@ ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
     p--;
     *p-- = '\0';
 
-    if (name->len == 0)  {
-        return NGX_DECLINED;
+    यदि (name->len == 0)  {
+        फर्काऊ NGX_DECLINED;
     }
 
-    for (s = name->data + name->len - 1; s >= name->data; s--) {
-        if (*s != '.') {
+    लागि (s = name->data + name->len - 1; s >= name->data; s--) {
+        यदि (*s != '.') {
             *p = *s;
             len++;
 
-        } else {
-            if (len == 0 || len > 255) {
-                return NGX_DECLINED;
+        } अन्यथा {
+            यदि (len == 0 || len > 255) {
+                फर्काऊ NGX_DECLINED;
             }
 
             *p = (u_char) len;
@@ -3866,51 +3866,51 @@ ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
         p--;
     }
 
-    if (len == 0 || len > 255) {
-        return NGX_DECLINED;
+    यदि (len == 0 || len > 255) {
+        फर्काऊ NGX_DECLINED;
     }
 
     *p = (u_char) len;
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 }
 
 
-static ngx_int_t
-ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+स्थिर ngx_int_t
+ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_गाँठो_t *rn,
     ngx_resolver_addr_t *addr)
 {
     u_char               *p, *d;
-    size_t                len;
+    माप_प्रकार                len;
     in_addr_t             inaddr;
     ngx_int_t             n;
     ngx_uint_t            ident;
     ngx_resolver_hdr_t   *query;
-    struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
-    struct sockaddr_in6  *sin6;
+    संरचना sockaddr_in   *sin;
+#यदि (NGX_HAVE_INET6)
+    संरचना sockaddr_in6  *sin6;
 #endif
 
-    switch (addr->sockaddr->sa_family) {
+    विकल्प (addr->sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        len = sizeof(ngx_resolver_hdr_t)
-              + 64 + sizeof(".ip6.arpa.") - 1
-              + sizeof(ngx_resolver_qs_t);
+#यदि (NGX_HAVE_INET6)
+    पक्ष AF_INET6:
+        len = परिमाण(ngx_resolver_hdr_t)
+              + 64 + परिमाण(".ip6.arpa.") - 1
+              + परिमाण(ngx_resolver_qs_t);
 
-        break;
+        रोक;
 #endif
 
-    default: /* AF_INET */
-        len = sizeof(ngx_resolver_hdr_t)
-              + sizeof(".255.255.255.255.in-addr.arpa.") - 1
-              + sizeof(ngx_resolver_qs_t);
+    स्वभाव: /* AF_INET */
+        len = परिमाण(ngx_resolver_hdr_t)
+              + परिमाण(".255.255.255.255.in-addr.arpa.") - 1
+              + परिमाण(ngx_resolver_qs_t);
     }
 
     p = ngx_resolver_alloc(r, len);
-    if (p == NULL) {
-        return NGX_ERROR;
+    यदि (p == रिक्त) {
+        फर्काऊ NGX_ERROR;
     }
 
     rn->query = p;
@@ -3930,15 +3930,15 @@ ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
     query->nns_hi = 0; query->nns_lo = 0;
     query->nar_hi = 0; query->nar_lo = 0;
 
-    p += sizeof(ngx_resolver_hdr_t);
+    p += परिमाण(ngx_resolver_hdr_t);
 
-    switch (addr->sockaddr->sa_family) {
+    विकल्प (addr->sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        sin6 = (struct sockaddr_in6 *) addr->sockaddr;
+#यदि (NGX_HAVE_INET6)
+    पक्ष AF_INET6:
+        sin6 = (संरचना sockaddr_in6 *) addr->sockaddr;
 
-        for (n = 15; n >= 0; n--) {
+        लागि (n = 15; n >= 0; n--) {
             p = ngx_sprintf(p, "\1%xd\1%xd",
                             sin6->sin6_addr.s6_addr[n] & 0xf,
                             (sin6->sin6_addr.s6_addr[n] >> 4) & 0xf);
@@ -3946,15 +3946,15 @@ ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
 
         p = ngx_cpymem(p, "\3ip6\4arpa\0", 10);
 
-        break;
+        रोक;
 #endif
 
-    default: /* AF_INET */
+    स्वभाव: /* AF_INET */
 
-        sin = (struct sockaddr_in *) addr->sockaddr;
+        sin = (संरचना sockaddr_in *) addr->sockaddr;
         inaddr = ntohl(sin->sin_addr.s_addr);
 
-        for (n = 0; n < 32; n += 8) {
+        लागि (n = 0; n < 32; n += 8) {
             d = ngx_sprintf(&p[1], "%ud", (inaddr >> n) & 0xff);
             *p = (u_char) (d - &p[1]);
             p = d;
@@ -3968,17 +3968,17 @@ ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
 
     rn->qlen = (u_short) (p - rn->query);
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_resolver_copy(ngx_resolver_t *r, ngx_str_t *name, u_char *buf, u_char *src,
     u_char *last)
 {
-    char        *err;
+    वर्ण        *err;
     u_char      *p, *dst;
-    size_t       len;
+    माप_प्रकार       len;
     ngx_uint_t   i, n;
 
     p = src;
@@ -3989,35 +3989,35 @@ ngx_resolver_copy(ngx_resolver_t *r, ngx_str_t *name, u_char *buf, u_char *src,
      * 128 pointers should be enough to store 255-byte name
      */
 
-    for (i = 0; i < 128; i++) {
+    लागि (i = 0; i < 128; i++) {
         n = *p++;
 
-        if (n == 0) {
-            goto done;
+        यदि (n == 0) {
+            गच्छ done;
         }
 
-        if (n & 0xc0) {
-            if ((n & 0xc0) != 0xc0) {
+        यदि (n & 0xc0) {
+            यदि ((n & 0xc0) != 0xc0) {
                 err = "invalid label type in DNS response";
-                goto invalid;
+                गच्छ invalid;
             }
 
-            if (p >= last) {
+            यदि (p >= last) {
                 err = "name is out of DNS response";
-                goto invalid;
+                गच्छ invalid;
             }
 
             n = ((n & 0x3f) << 8) + *p;
             p = &buf[n];
 
-        } else {
+        } अन्यथा {
             len += 1 + n;
             p = &p[n];
         }
 
-        if (p >= last) {
+        यदि (p >= last) {
             err = "name is out of DNS response";
-            goto invalid;
+            गच्छ invalid;
         }
     }
 
@@ -4027,39 +4027,39 @@ invalid:
 
     ngx_log_error(r->log_level, r->log, 0, err);
 
-    return NGX_ERROR;
+    फर्काऊ NGX_ERROR;
 
 done:
 
-    if (name == NULL) {
-        return NGX_OK;
+    यदि (name == रिक्त) {
+        फर्काऊ NGX_OK;
     }
 
-    if (len == 0) {
+    यदि (len == 0) {
         ngx_str_null(name);
-        return NGX_OK;
+        फर्काऊ NGX_OK;
     }
 
     dst = ngx_resolver_alloc(r, len);
-    if (dst == NULL) {
-        return NGX_ERROR;
+    यदि (dst == रिक्त) {
+        फर्काऊ NGX_ERROR;
     }
 
     name->data = dst;
 
-    for ( ;; ) {
+    लागि ( ;; ) {
         n = *src++;
 
-        if (n == 0) {
+        यदि (n == 0) {
             name->len = dst - name->data - 1;
-            return NGX_OK;
+            फर्काऊ NGX_OK;
         }
 
-        if (n & 0xc0) {
+        यदि (n & 0xc0) {
             n = ((n & 0x3f) << 8) + *src;
             src = &buf[n];
 
-        } else {
+        } अन्यथा {
             ngx_strlow(dst, src, n);
             dst += n;
             src += n;
@@ -4069,16 +4069,16 @@ done:
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_resolver_set_timeout(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx)
 {
-    if (ctx->event || ctx->timeout == 0) {
-        return NGX_OK;
+    यदि (ctx->event || ctx->timeout == 0) {
+        फर्काऊ NGX_OK;
     }
 
-    ctx->event = ngx_resolver_calloc(r, sizeof(ngx_event_t));
-    if (ctx->event == NULL) {
-        return NGX_ERROR;
+    ctx->event = ngx_resolver_calloc(r, परिमाण(ngx_event_t));
+    यदि (ctx->event == रिक्त) {
+        फर्काऊ NGX_ERROR;
     }
 
     ctx->event->handler = ngx_resolver_timeout_handler;
@@ -4089,11 +4089,11 @@ ngx_resolver_set_timeout(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx)
 
     ngx_add_timer(ctx->event, ctx->timeout);
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 }
 
 
-static void
+स्थिर शून्य
 ngx_resolver_timeout_handler(ngx_event_t *ev)
 {
     ngx_resolver_ctx_t  *ctx;
@@ -4106,38 +4106,38 @@ ngx_resolver_timeout_handler(ngx_event_t *ev)
 }
 
 
-static void
-ngx_resolver_free_node(ngx_resolver_t *r, ngx_resolver_node_t *rn)
+स्थिर शून्य
+ngx_resolver_free_गाँठो(ngx_resolver_t *r, ngx_resolver_गाँठो_t *rn)
 {
     ngx_uint_t  i;
 
     /* lock alloc mutex */
 
-    if (rn->query) {
+    यदि (rn->query) {
         ngx_resolver_free_locked(r, rn->query);
     }
 
-    if (rn->name) {
+    यदि (rn->name) {
         ngx_resolver_free_locked(r, rn->name);
     }
 
-    if (rn->cnlen) {
+    यदि (rn->cnlen) {
         ngx_resolver_free_locked(r, rn->u.cname);
     }
 
-    if (rn->naddrs > 1 && rn->naddrs != (u_short) -1) {
+    यदि (rn->naddrs > 1 && rn->naddrs != (u_short) -1) {
         ngx_resolver_free_locked(r, rn->u.addrs);
     }
 
-#if (NGX_HAVE_INET6)
-    if (rn->naddrs6 > 1 && rn->naddrs6 != (u_short) -1) {
+#यदि (NGX_HAVE_INET6)
+    यदि (rn->naddrs6 > 1 && rn->naddrs6 != (u_short) -1) {
         ngx_resolver_free_locked(r, rn->u6.addrs6);
     }
 #endif
 
-    if (rn->nsrvs) {
-        for (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
-            if (rn->u.srvs[i].name.data) {
+    यदि (rn->nsrvs) {
+        लागि (i = 0; i < (ngx_uint_t) rn->nsrvs; i++) {
+            यदि (rn->u.srvs[i].name.data) {
                 ngx_resolver_free_locked(r, rn->u.srvs[i].name.data);
             }
         }
@@ -4151,8 +4151,8 @@ ngx_resolver_free_node(ngx_resolver_t *r, ngx_resolver_node_t *rn)
 }
 
 
-static void *
-ngx_resolver_alloc(ngx_resolver_t *r, size_t size)
+स्थिर शून्य *
+ngx_resolver_alloc(ngx_resolver_t *r, माप_प्रकार size)
 {
     u_char  *p;
 
@@ -4162,27 +4162,27 @@ ngx_resolver_alloc(ngx_resolver_t *r, size_t size)
 
     /* unlock alloc mutex */
 
-    return p;
+    फर्काऊ p;
 }
 
 
-static void *
-ngx_resolver_calloc(ngx_resolver_t *r, size_t size)
+स्थिर शून्य *
+ngx_resolver_calloc(ngx_resolver_t *r, माप_प्रकार size)
 {
     u_char  *p;
 
     p = ngx_resolver_alloc(r, size);
 
-    if (p) {
+    यदि (p) {
         ngx_memzero(p, size);
     }
 
-    return p;
+    फर्काऊ p;
 }
 
 
-static void
-ngx_resolver_free(ngx_resolver_t *r, void *p)
+स्थिर शून्य
+ngx_resolver_free(ngx_resolver_t *r, शून्य *p)
 {
     /* lock alloc mutex */
 
@@ -4192,114 +4192,114 @@ ngx_resolver_free(ngx_resolver_t *r, void *p)
 }
 
 
-static void
-ngx_resolver_free_locked(ngx_resolver_t *r, void *p)
+स्थिर शून्य
+ngx_resolver_free_locked(ngx_resolver_t *r, शून्य *p)
 {
     ngx_free(p);
 }
 
 
-static void *
-ngx_resolver_dup(ngx_resolver_t *r, void *src, size_t size)
+स्थिर शून्य *
+ngx_resolver_dup(ngx_resolver_t *r, शून्य *src, माप_प्रकार size)
 {
-    void  *dst;
+    शून्य  *dst;
 
     dst = ngx_resolver_alloc(r, size);
 
-    if (dst == NULL) {
-        return dst;
+    यदि (dst == रिक्त) {
+        फर्काऊ dst;
     }
 
     ngx_memcpy(dst, src, size);
 
-    return dst;
+    फर्काऊ dst;
 }
 
 
-static ngx_resolver_addr_t *
-ngx_resolver_export(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+स्थिर ngx_resolver_addr_t *
+ngx_resolver_export(ngx_resolver_t *r, ngx_resolver_गाँठो_t *rn,
     ngx_uint_t rotate)
 {
     ngx_uint_t            d, i, j, n;
     in_addr_t            *addr;
     ngx_sockaddr_t       *sockaddr;
-    struct sockaddr_in   *sin;
+    संरचना sockaddr_in   *sin;
     ngx_resolver_addr_t  *dst;
-#if (NGX_HAVE_INET6)
-    struct in6_addr      *addr6;
-    struct sockaddr_in6  *sin6;
+#यदि (NGX_HAVE_INET6)
+    संरचना in6_addr      *addr6;
+    संरचना sockaddr_in6  *sin6;
 #endif
 
     n = rn->naddrs;
-#if (NGX_HAVE_INET6)
+#यदि (NGX_HAVE_INET6)
     n += rn->naddrs6;
 #endif
 
-    dst = ngx_resolver_calloc(r, n * sizeof(ngx_resolver_addr_t));
-    if (dst == NULL) {
-        return NULL;
+    dst = ngx_resolver_calloc(r, n * परिमाण(ngx_resolver_addr_t));
+    यदि (dst == रिक्त) {
+        फर्काऊ रिक्त;
     }
 
-    sockaddr = ngx_resolver_calloc(r, n * sizeof(ngx_sockaddr_t));
-    if (sockaddr == NULL) {
+    sockaddr = ngx_resolver_calloc(r, n * परिमाण(ngx_sockaddr_t));
+    यदि (sockaddr == रिक्त) {
         ngx_resolver_free(r, dst);
-        return NULL;
+        फर्काऊ रिक्त;
     }
 
     i = 0;
     d = rotate ? ngx_random() % n : 0;
 
-    if (rn->naddrs) {
+    यदि (rn->naddrs) {
         j = rotate ? ngx_random() % rn->naddrs : 0;
 
         addr = (rn->naddrs == 1) ? &rn->u.addr : rn->u.addrs;
 
-        do {
+        गर {
             sin = &sockaddr[d].sockaddr_in;
             sin->sin_family = AF_INET;
             sin->sin_addr.s_addr = addr[j++];
-            dst[d].sockaddr = (struct sockaddr *) sin;
-            dst[d++].socklen = sizeof(struct sockaddr_in);
+            dst[d].sockaddr = (संरचना sockaddr *) sin;
+            dst[d++].socklen = परिमाण(संरचना sockaddr_in);
 
-            if (d == n) {
+            यदि (d == n) {
                 d = 0;
             }
 
-            if (j == (ngx_uint_t) rn->naddrs) {
+            यदि (j == (ngx_uint_t) rn->naddrs) {
                 j = 0;
             }
-        } while (++i < (ngx_uint_t) rn->naddrs);
+        } जबसम्म (++i < (ngx_uint_t) rn->naddrs);
     }
 
-#if (NGX_HAVE_INET6)
-    if (rn->naddrs6) {
+#यदि (NGX_HAVE_INET6)
+    यदि (rn->naddrs6) {
         j = rotate ? ngx_random() % rn->naddrs6 : 0;
 
         addr6 = (rn->naddrs6 == 1) ? &rn->u6.addr6 : rn->u6.addrs6;
 
-        do {
+        गर {
             sin6 = &sockaddr[d].sockaddr_in6;
             sin6->sin6_family = AF_INET6;
             ngx_memcpy(sin6->sin6_addr.s6_addr, addr6[j++].s6_addr, 16);
-            dst[d].sockaddr = (struct sockaddr *) sin6;
-            dst[d++].socklen = sizeof(struct sockaddr_in6);
+            dst[d].sockaddr = (संरचना sockaddr *) sin6;
+            dst[d++].socklen = परिमाण(संरचना sockaddr_in6);
 
-            if (d == n) {
+            यदि (d == n) {
                 d = 0;
             }
 
-            if (j == rn->naddrs6) {
+            यदि (j == rn->naddrs6) {
                 j = 0;
             }
-        } while (++i < n);
+        } जबसम्म (++i < n);
     }
 #endif
 
-    return dst;
+    फर्काऊ dst;
 }
 
 
-static void
+स्थिर शून्य
 ngx_resolver_report_srv(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx)
 {
     ngx_uint_t                naddrs, nsrvs, nw, i, j, k, l, m, n, w;
@@ -4311,74 +4311,74 @@ ngx_resolver_report_srv(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx)
 
     naddrs = 0;
 
-    for (i = 0; i < nsrvs; i++) {
-        if (srvs[i].state == NGX_ERROR) {
+    लागि (i = 0; i < nsrvs; i++) {
+        यदि (srvs[i].state == NGX_ERROR) {
             ctx->state = NGX_ERROR;
             ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
 
             ctx->handler(ctx);
-            return;
+            फर्काऊ;
         }
 
         naddrs += srvs[i].naddrs;
     }
 
-    if (naddrs == 0) {
+    यदि (naddrs == 0) {
         ctx->state = srvs[0].state;
 
-        for (i = 0; i < nsrvs; i++) {
-            if (srvs[i].state == NGX_RESOLVE_NXDOMAIN) {
+        लागि (i = 0; i < nsrvs; i++) {
+            यदि (srvs[i].state == NGX_RESOLVE_NXDOMAIN) {
                 ctx->state = NGX_RESOLVE_NXDOMAIN;
-                break;
+                रोक;
             }
         }
 
         ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
 
         ctx->handler(ctx);
-        return;
+        फर्काऊ;
     }
 
-    addrs = ngx_resolver_calloc(r, naddrs * sizeof(ngx_resolver_addr_t));
-    if (addrs == NULL) {
+    addrs = ngx_resolver_calloc(r, naddrs * परिमाण(ngx_resolver_addr_t));
+    यदि (addrs == रिक्त) {
         ctx->state = NGX_ERROR;
         ctx->valid = ngx_time() + (r->valid ? r->valid : 10);
 
         ctx->handler(ctx);
-        return;
+        फर्काऊ;
     }
 
     i = 0;
     n = 0;
 
-    do {
+    गर {
         nw = 0;
 
-        for (j = i; j < nsrvs; j++) {
-            if (srvs[j].priority != srvs[i].priority) {
-                break;
+        लागि (j = i; j < nsrvs; j++) {
+            यदि (srvs[j].priority != srvs[i].priority) {
+                रोक;
             }
 
             nw += srvs[j].naddrs * srvs[j].weight;
         }
 
-        if (nw == 0) {
-            goto next_srv;
+        यदि (nw == 0) {
+            गच्छ next_srv;
         }
 
         w = ngx_random() % nw;
 
-        for (k = i; k < j; k++) {
-            if (w < srvs[k].naddrs * srvs[k].weight) {
-                break;
+        लागि (k = i; k < j; k++) {
+            यदि (w < srvs[k].naddrs * srvs[k].weight) {
+                रोक;
             }
 
             w -= srvs[k].naddrs * srvs[k].weight;
         }
 
-        for (l = i; l < j; l++) {
+        लागि (l = i; l < j; l++) {
 
-            for (m = 0; m < srvs[k].naddrs; m++) {
+            लागि (m = 0; m < srvs[k].naddrs; m++) {
                 addrs[n].socklen = srvs[k].addrs[m].socklen;
                 addrs[n].sockaddr = srvs[k].addrs[m].sockaddr;
                 addrs[n].name = srvs[k].name;
@@ -4387,7 +4387,7 @@ ngx_resolver_report_srv(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx)
                 n++;
             }
 
-            if (++k == j) {
+            यदि (++k == j) {
                 k = i;
             }
         }
@@ -4396,7 +4396,7 @@ next_srv:
 
         i = j;
 
-    } while (i < ctx->nsrvs);
+    } जबसम्म (i < ctx->nsrvs);
 
     ctx->state = NGX_OK;
     ctx->addrs = addrs;
@@ -4408,10 +4408,10 @@ next_srv:
 }
 
 
-char *
+वर्ण *
 ngx_resolver_strerror(ngx_int_t err)
 {
-    static char *errors[] = {
+    स्थिर वर्ण *errors[] = {
         "Format error",     /* FORMERR */
         "Server failure",   /* SERVFAIL */
         "Host not found",   /* NXDOMAIN */
@@ -4419,45 +4419,45 @@ ngx_resolver_strerror(ngx_int_t err)
         "Operation refused" /* REFUSED */
     };
 
-    if (err > 0 && err < 6) {
-        return errors[err - 1];
+    यदि (err > 0 && err < 6) {
+        फर्काऊ errors[err - 1];
     }
 
-    if (err == NGX_RESOLVE_TIMEDOUT) {
-        return "Operation timed out";
+    यदि (err == NGX_RESOLVE_TIMEDOUT) {
+        फर्काऊ "Operation timed out";
     }
 
-    return "Unknown error";
+    फर्काऊ "Unknown error";
 }
 
 
-static u_char *
-ngx_resolver_log_error(ngx_log_t *log, u_char *buf, size_t len)
+स्थिर u_char *
+ngx_resolver_log_error(ngx_log_t *log, u_char *buf, माप_प्रकार len)
 {
     u_char                     *p;
     ngx_resolver_connection_t  *rec;
 
     p = buf;
 
-    if (log->action) {
+    यदि (log->action) {
         p = ngx_snprintf(buf, len, " while %s", log->action);
         len -= p - buf;
     }
 
     rec = log->data;
 
-    if (rec) {
+    यदि (rec) {
         p = ngx_snprintf(p, len, ", resolver: %V", &rec->server);
     }
 
-    return p;
+    फर्काऊ p;
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_udp_connect(ngx_resolver_connection_t *rec)
 {
-    int                rc;
+    पूर्णाङ्क                rc;
     ngx_int_t          event;
     ngx_event_t       *rev, *wev;
     ngx_socket_t       s;
@@ -4467,52 +4467,52 @@ ngx_udp_connect(ngx_resolver_connection_t *rec)
 
     ngx_log_debug1(NGX_LOG_DEBUG_EVENT, &rec->log, 0, "UDP socket %d", s);
 
-    if (s == (ngx_socket_t) -1) {
+    यदि (s == (ngx_socket_t) -1) {
         ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
                       ngx_socket_n " failed");
-        return NGX_ERROR;
+        फर्काऊ NGX_ERROR;
     }
 
     c = ngx_get_connection(s, &rec->log);
 
-    if (c == NULL) {
-        if (ngx_close_socket(s) == -1) {
+    यदि (c == रिक्त) {
+        यदि (ngx_close_socket(s) == -1) {
             ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
                           ngx_close_socket_n " failed");
         }
 
-        return NGX_ERROR;
+        फर्काऊ NGX_ERROR;
     }
 
-    if (ngx_nonblocking(s) == -1) {
+    यदि (ngx_nonblocking(s) == -1) {
         ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
                       ngx_nonblocking_n " failed");
 
-        goto failed;
+        गच्छ failed;
     }
 
-    rev = c->read;
-    wev = c->write;
+    rev = c->पठ;
+    wev = c->लिख;
 
     rev->log = &rec->log;
     wev->log = &rec->log;
 
     rec->udp = c;
 
-    c->number = ngx_atomic_fetch_add(ngx_connection_counter, 1);
+    c->सङ्ख्या = ngx_atomic_fetch_add(ngx_connection_counter, 1);
 
     c->start_time = ngx_current_msec;
 
     ngx_log_debug3(NGX_LOG_DEBUG_EVENT, &rec->log, 0,
-                   "connect to %V, fd:%d #%uA", &rec->server, s, c->number);
+                   "connect to %V, fd:%d #%uA", &rec->server, s, c->सङ्ख्या);
 
     rc = connect(s, rec->sockaddr, rec->socklen);
 
-    if (rc == -1) {
+    यदि (rc == -1) {
         ngx_log_error(NGX_LOG_CRIT, &rec->log, ngx_socket_errno,
                       "connect() failed");
 
-        goto failed;
+        गच्छ failed;
     }
 
     /* UDP sockets are always ready to write */
@@ -4523,25 +4523,25 @@ ngx_udp_connect(ngx_resolver_connection_t *rec)
                 /* select, poll, /dev/poll */       NGX_LEVEL_EVENT;
                 /* eventport event type has no meaning: oneshot only */
 
-    if (ngx_add_event(rev, NGX_READ_EVENT, event) != NGX_OK) {
-        goto failed;
+    यदि (ngx_add_event(rev, NGX_READ_EVENT, event) != NGX_OK) {
+        गच्छ failed;
     }
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 
 failed:
 
     ngx_close_connection(c);
-    rec->udp = NULL;
+    rec->udp = रिक्त;
 
-    return NGX_ERROR;
+    फर्काऊ NGX_ERROR;
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_tcp_connect(ngx_resolver_connection_t *rec)
 {
-    int                rc;
+    पूर्णाङ्क                rc;
     ngx_int_t          event;
     ngx_err_t          err;
     ngx_uint_t         level;
@@ -4553,66 +4553,66 @@ ngx_tcp_connect(ngx_resolver_connection_t *rec)
 
     ngx_log_debug1(NGX_LOG_DEBUG_EVENT, &rec->log, 0, "TCP socket %d", s);
 
-    if (s == (ngx_socket_t) -1) {
+    यदि (s == (ngx_socket_t) -1) {
         ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
                       ngx_socket_n " failed");
-        return NGX_ERROR;
+        फर्काऊ NGX_ERROR;
     }
 
     c = ngx_get_connection(s, &rec->log);
 
-    if (c == NULL) {
-        if (ngx_close_socket(s) == -1) {
+    यदि (c == रिक्त) {
+        यदि (ngx_close_socket(s) == -1) {
             ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
                           ngx_close_socket_n " failed");
         }
 
-        return NGX_ERROR;
+        फर्काऊ NGX_ERROR;
     }
 
-    if (ngx_nonblocking(s) == -1) {
+    यदि (ngx_nonblocking(s) == -1) {
         ngx_log_error(NGX_LOG_ALERT, &rec->log, ngx_socket_errno,
                       ngx_nonblocking_n " failed");
 
-        goto failed;
+        गच्छ failed;
     }
 
-    rev = c->read;
-    wev = c->write;
+    rev = c->पठ;
+    wev = c->लिख;
 
     rev->log = &rec->log;
     wev->log = &rec->log;
 
     rec->tcp = c;
 
-    c->number = ngx_atomic_fetch_add(ngx_connection_counter, 1);
+    c->सङ्ख्या = ngx_atomic_fetch_add(ngx_connection_counter, 1);
 
     c->start_time = ngx_current_msec;
 
-    if (ngx_add_conn) {
-        if (ngx_add_conn(c) == NGX_ERROR) {
-            goto failed;
+    यदि (ngx_add_conn) {
+        यदि (ngx_add_conn(c) == NGX_ERROR) {
+            गच्छ failed;
         }
     }
 
     ngx_log_debug3(NGX_LOG_DEBUG_EVENT, &rec->log, 0,
-                   "connect to %V, fd:%d #%uA", &rec->server, s, c->number);
+                   "connect to %V, fd:%d #%uA", &rec->server, s, c->सङ्ख्या);
 
     rc = connect(s, rec->sockaddr, rec->socklen);
 
-    if (rc == -1) {
+    यदि (rc == -1) {
         err = ngx_socket_errno;
 
 
-        if (err != NGX_EINPROGRESS
-#if (NGX_WIN32)
+        यदि (err != NGX_EINPROGRESS
+#यदि (NGX_WIN32)
             /* Winsock returns WSAEWOULDBLOCK (NGX_EAGAIN) */
             && err != NGX_EAGAIN
 #endif
             )
         {
-            if (err == NGX_ECONNREFUSED
-#if (NGX_LINUX)
+            यदि (err == NGX_ECONNREFUSED
+#यदि (NGX_LINUX)
                 /*
                  * Linux returns EAGAIN instead of ECONNREFUSED
                  * for unix sockets if listen queue is full
@@ -4627,7 +4627,7 @@ ngx_tcp_connect(ngx_resolver_connection_t *rec)
             {
                 level = NGX_LOG_ERR;
 
-            } else {
+            } अन्यथा {
                 level = NGX_LOG_CRIT;
             }
 
@@ -4635,72 +4635,72 @@ ngx_tcp_connect(ngx_resolver_connection_t *rec)
                           &rec->server);
 
             ngx_close_connection(c);
-            rec->tcp = NULL;
+            rec->tcp = रिक्त;
 
-            return NGX_ERROR;
+            फर्काऊ NGX_ERROR;
         }
     }
 
-    if (ngx_add_conn) {
-        if (rc == -1) {
+    यदि (ngx_add_conn) {
+        यदि (rc == -1) {
 
             /* NGX_EINPROGRESS */
 
-            return NGX_AGAIN;
+            फर्काऊ NGX_AGAIN;
         }
 
         ngx_log_debug0(NGX_LOG_DEBUG_EVENT, &rec->log, 0, "connected");
 
         wev->ready = 1;
 
-        return NGX_OK;
+        फर्काऊ NGX_OK;
     }
 
-    if (ngx_event_flags & NGX_USE_CLEAR_EVENT) {
+    यदि (ngx_event_flags & NGX_USE_CLEAR_EVENT) {
 
         /* kqueue */
 
         event = NGX_CLEAR_EVENT;
 
-    } else {
+    } अन्यथा {
 
         /* select, poll, /dev/poll */
 
         event = NGX_LEVEL_EVENT;
     }
 
-    if (ngx_add_event(rev, NGX_READ_EVENT, event) != NGX_OK) {
-        goto failed;
+    यदि (ngx_add_event(rev, NGX_READ_EVENT, event) != NGX_OK) {
+        गच्छ failed;
     }
 
-    if (rc == -1) {
+    यदि (rc == -1) {
 
         /* NGX_EINPROGRESS */
 
-        if (ngx_add_event(wev, NGX_WRITE_EVENT, event) != NGX_OK) {
-            goto failed;
+        यदि (ngx_add_event(wev, NGX_WRITE_EVENT, event) != NGX_OK) {
+            गच्छ failed;
         }
 
-        return NGX_AGAIN;
+        फर्काऊ NGX_AGAIN;
     }
 
     ngx_log_debug0(NGX_LOG_DEBUG_EVENT, &rec->log, 0, "connected");
 
     wev->ready = 1;
 
-    return NGX_OK;
+    फर्काऊ NGX_OK;
 
 failed:
 
     ngx_close_connection(c);
-    rec->tcp = NULL;
+    rec->tcp = रिक्त;
 
-    return NGX_ERROR;
+    फर्काऊ NGX_ERROR;
 }
 
 
-static ngx_int_t
-ngx_resolver_cmp_srvs(const void *one, const void *two)
+स्थिर ngx_int_t
+ngx_resolver_cmp_srvs(अचर शून्य *one, अचर शून्य *two)
 {
     ngx_int_t            p1, p2;
     ngx_resolver_srv_t  *first, *second;
@@ -4711,5 +4711,5 @@ ngx_resolver_cmp_srvs(const void *one, const void *two)
     p1 = first->priority;
     p2 = second->priority;
 
-    return p1 - p2;
+    फर्काऊ p1 - p2;
 }
