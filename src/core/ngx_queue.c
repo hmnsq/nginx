@@ -5,12 +5,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+स्थिर शून्य ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
+    ngx_int_t (*cmp)(ध्रुव ngx_queue_t *, ध्रुव ngx_queue_t *));
 
 
 /*
@@ -19,31 +19,31 @@ static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
  */
 
 ngx_queue_t *
-ngx_queue_middle(ngx_queue_t *queue)
+ngx_queue_मध्यः(ngx_queue_t *queue)
 {
-    ngx_queue_t  *middle, *next;
+    ngx_queue_t  *मध्यः, *next;
 
-    middle = ngx_queue_head(queue);
+    मध्यः = ngx_queue_head(queue);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    सचे (मध्यः == ngx_queue_last(queue)) {
+        पटिनिवत्त मध्यः;
     }
 
     next = ngx_queue_head(queue);
 
-    for ( ;; ) {
-        middle = ngx_queue_next(middle);
+    अत्थाय ( ;; ) {
+        मध्यः = ngx_queue_next(मध्यः);
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        सचे (next == ngx_queue_last(queue)) {
+            पटिनिवत्त मध्यः;
         }
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        सचे (next == ngx_queue_last(queue)) {
+            पटिनिवत्त मध्यः;
         }
     }
 }
@@ -51,19 +51,19 @@ ngx_queue_middle(ngx_queue_t *queue)
 
 /* the stable merge sort */
 
-void
+शून्य
 ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+    ngx_int_t (*cmp)(ध्रुव ngx_queue_t *, ध्रुव ngx_queue_t *))
 {
     ngx_queue_t  *q, tail;
 
     q = ngx_queue_head(queue);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    सचे (q == ngx_queue_last(queue)) {
+        पटिनिवत्त;
     }
 
-    q = ngx_queue_middle(queue);
+    q = ngx_queue_मध्यः(queue);
 
     ngx_queue_split(queue, q, &tail);
 
@@ -74,32 +74,32 @@ ngx_queue_sort(ngx_queue_t *queue,
 }
 
 
-static void
+स्थिर शून्य
 ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+    ngx_int_t (*cmp)(ध्रुव ngx_queue_t *, ध्रुव ngx_queue_t *))
 {
     ngx_queue_t  *q1, *q2;
 
     q1 = ngx_queue_head(queue);
     q2 = ngx_queue_head(tail);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
+    अत्थाय ( ;; ) {
+        सचे (q1 == ngx_queue_sentinel(queue)) {
             ngx_queue_add(queue, tail);
-            break;
+            भङ्ग;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        सचे (q2 == ngx_queue_sentinel(tail)) {
+            भङ्ग;
         }
 
-        if (cmp(q1, q2) <= 0) {
+        सचे (cmp(q1, q2) <= 0) {
             q1 = ngx_queue_next(q1);
-            continue;
+            अनुवर्त;
         }
 
         ngx_queue_remove(q2);
-        ngx_queue_insert_before(q1, q2);
+        ngx_queue_निवेशय_before(q1, q2);
 
         q2 = ngx_queue_head(tail);
     }

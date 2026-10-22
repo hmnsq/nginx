@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
 #define NGX_PROXY_PROTOCOL_V2_MAX_HEADER    52
@@ -31,7 +31,7 @@
 #define NGX_PROXY_PROTOCOL_TLV_SSL_CN       0x22
 #define NGX_PROXY_PROTOCOL_TLV_SSL_CIPHER   0x23
 #define NGX_PROXY_PROTOCOL_TLV_SSL_SIG_ALG  0x24
-#define NGX_PROXY_PROTOCOL_TLV_SSL_KEY_ALG  0x25
+#define NGX_PROXY_PROTOCOL_TLV_SSL_कुञ्चिका_ALG  0x25
 #define NGX_PROXY_PROTOCOL_TLV_NETNS        0x30
 
 #define NGX_PROXY_PROTOCOL_V2_CLIENT_SSL          0x01
@@ -50,7 +50,7 @@
     + (           (p)[3]) )
 
 
-typedef struct {
+प्रकारनिर्देश संरचना {
     u_char                                  signature[12];
     u_char                                  version_command;
     u_char                                  family_transport;
@@ -58,7 +58,7 @@ typedef struct {
 } ngx_proxy_protocol_header_t;
 
 
-typedef struct {
+प्रकारनिर्देश संरचना {
     u_char                                  src_addr[4];
     u_char                                  dst_addr[4];
     u_char                                  src_port[2];
@@ -66,7 +66,7 @@ typedef struct {
 } ngx_proxy_protocol_inet_addrs_t;
 
 
-typedef struct {
+प्रकारनिर्देश संरचना {
     u_char                                  src_addr[16];
     u_char                                  dst_addr[16];
     u_char                                  src_port[2];
@@ -74,66 +74,66 @@ typedef struct {
 } ngx_proxy_protocol_inet6_addrs_t;
 
 
-typedef struct {
+प्रकारनिर्देश संरचना {
     u_char                                  type;
     u_char                                  len[2];
 } ngx_proxy_protocol_tlv_t;
 
 
-typedef struct {
+प्रकारनिर्देश संरचना {
     u_char                                  client;
     u_char                                  verify[4];
 } ngx_proxy_protocol_tlv_ssl_t;
 
 
-typedef struct {
+प्रकारनिर्देश संरचना {
     ngx_str_t                               name;
     ngx_uint_t                              type;
 } ngx_proxy_protocol_tlv_entry_t;
 
 
-typedef struct {
+प्रकारनिर्देश संरचना {
     ngx_uint_t                              type;
-    ngx_str_t                               value;
-} ngx_proxy_protocol_tlv_value_t;
+    ngx_str_t                               मानम्;
+} ngx_proxy_protocol_tlv_मानम्_t;
 
 
-static u_char *ngx_proxy_protocol_read_addr(ngx_connection_t *c, u_char *p,
+स्थिर u_char *ngx_proxy_protocol_read_addr(ngx_connection_t *c, u_char *p,
     u_char *last, ngx_str_t *addr);
-static u_char *ngx_proxy_protocol_read_port(u_char *p, u_char *last,
+स्थिर u_char *ngx_proxy_protocol_read_port(u_char *p, u_char *last,
     in_port_t *port, u_char sep);
-static u_char *ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf,
+स्थिर u_char *ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf,
     u_char *last);
-static ngx_int_t ngx_proxy_protocol_lookup_tlv(ngx_connection_t *c,
-    ngx_str_t *tlvs, ngx_uint_t type, ngx_str_t *value);
-#if (NGX_OPENSSL)
-static ngx_int_t ngx_proxy_protocol_v2_eval_ssl(ngx_connection_t *c,
+स्थिर ngx_int_t ngx_proxy_protocol_lookup_tlv(ngx_connection_t *c,
+    ngx_str_t *tlvs, ngx_uint_t type, ngx_str_t *मानम्);
+#सचे (NGX_OPENSSL)
+स्थिर ngx_int_t ngx_proxy_protocol_v2_eval_ssl(ngx_connection_t *c,
     ngx_array_t *tlvs, ngx_array_t *ssl_tlvs, ngx_uint_t *client,
     uint32_t *verify);
-static ngx_int_t ngx_proxy_protocol_v2_authority(ngx_connection_t *c,
+स्थिर ngx_int_t ngx_proxy_protocol_v2_authority(ngx_connection_t *c,
     ngx_str_t *out);
-static ngx_int_t ngx_proxy_protocol_v2_alpn(ngx_connection_t *c,
+स्थिर ngx_int_t ngx_proxy_protocol_v2_alpn(ngx_connection_t *c,
     ngx_str_t *out);
-static ngx_int_t ngx_proxy_protocol_v2_ssl_sub(ngx_connection_t *c,
+स्थिर ngx_int_t ngx_proxy_protocol_v2_ssl_sub(ngx_connection_t *c,
     ngx_uint_t type, ngx_str_t *out);
 #endif
-static u_char *ngx_proxy_protocol_v2_write_header(ngx_connection_t *c,
+स्थिर u_char *ngx_proxy_protocol_v2_write_header(ngx_connection_t *c,
     u_char *buf, u_char *last);
-static u_char ngx_proxy_protocol_v2_family(ngx_uint_t family);
-static void ngx_proxy_protocol_v2_write_ipv4(struct sockaddr *sa, u_char *addr,
+स्थिर u_char ngx_proxy_protocol_v2_family(ngx_uint_t family);
+स्थिर शून्य ngx_proxy_protocol_v2_write_ipv4(संरचना sockaddr *sa, u_char *addr,
     u_char *port);
-static void ngx_proxy_protocol_v2_write_ipv6(struct sockaddr *sa, u_char *addr,
+स्थिर शून्य ngx_proxy_protocol_v2_write_ipv6(संरचना sockaddr *sa, u_char *addr,
     u_char *port);
-static u_char *ngx_proxy_protocol_v2_write_tlv(ngx_connection_t *c, u_char *p,
-    u_char *last, ngx_uint_t type, ngx_str_t *value);
-static u_char *ngx_proxy_protocol_v2_write_ssl(ngx_connection_t *c, u_char *p,
+स्थिर u_char *ngx_proxy_protocol_v2_write_tlv(ngx_connection_t *c, u_char *p,
+    u_char *last, ngx_uint_t type, ngx_str_t *मानम्);
+स्थिर u_char *ngx_proxy_protocol_v2_write_ssl(ngx_connection_t *c, u_char *p,
     u_char *last, ngx_array_t *ssl_tlvs, ngx_uint_t client, uint32_t verify);
-static void ngx_proxy_protocol_v2_set_len(u_char *buf, u_char *p);
-static u_char *ngx_proxy_protocol_v2_write_crc32c(ngx_connection_t *c,
+स्थिर शून्य ngx_proxy_protocol_v2_set_len(u_char *buf, u_char *p);
+स्थिर u_char *ngx_proxy_protocol_v2_write_crc32c(ngx_connection_t *c,
     u_char *buf, u_char *p, u_char *last);
 
 
-static ngx_proxy_protocol_tlv_entry_t  ngx_proxy_protocol_tlv_entries[] = {
+स्थिर ngx_proxy_protocol_tlv_entry_t  ngx_proxy_protocol_tlv_entries[] = {
     { ngx_string("alpn"),       NGX_PROXY_PROTOCOL_TLV_ALPN },
     { ngx_string("authority"),  NGX_PROXY_PROTOCOL_TLV_AUTHORITY },
     { ngx_string("unique_id"),  NGX_PROXY_PROTOCOL_TLV_UNIQUE_ID },
@@ -143,17 +143,17 @@ static ngx_proxy_protocol_tlv_entry_t  ngx_proxy_protocol_tlv_entries[] = {
 };
 
 
-static ngx_proxy_protocol_tlv_entry_t  ngx_proxy_protocol_tlv_ssl_entries[] = {
+स्थिर ngx_proxy_protocol_tlv_entry_t  ngx_proxy_protocol_tlv_ssl_entries[] = {
     { ngx_string("version"),    NGX_PROXY_PROTOCOL_TLV_SSL_VERSION },
     { ngx_string("cn"),         NGX_PROXY_PROTOCOL_TLV_SSL_CN },
     { ngx_string("cipher"),     NGX_PROXY_PROTOCOL_TLV_SSL_CIPHER },
     { ngx_string("sig_alg"),    NGX_PROXY_PROTOCOL_TLV_SSL_SIG_ALG },
-    { ngx_string("key_alg"),    NGX_PROXY_PROTOCOL_TLV_SSL_KEY_ALG },
+    { ngx_string("key_alg"),    NGX_PROXY_PROTOCOL_TLV_SSL_कुञ्चिका_ALG },
     { ngx_null_string,          0x00 }
 };
 
 
-static const u_char  ngx_proxy_protocol_signature[] = "\r\n\r\n\0\r\nQUIT\n";
+स्थिर ध्रुव u_char  ngx_proxy_protocol_signature[] = "\r\n\r\n\0\r\nQUIT\n";
 
 
 u_char *
@@ -166,67 +166,67 @@ ngx_proxy_protocol_read(ngx_connection_t *c, u_char *buf, u_char *last)
     p = buf;
     len = last - buf;
 
-    if (len >= sizeof(ngx_proxy_protocol_header_t)
+    सचे (len >= परिमाण(ngx_proxy_protocol_header_t)
         && ngx_memcmp(p, ngx_proxy_protocol_signature,
-                      sizeof(ngx_proxy_protocol_signature) - 1)
+                      परिमाण(ngx_proxy_protocol_signature) - 1)
            == 0)
     {
-        return ngx_proxy_protocol_v2_read(c, buf, last);
+        पटिनिवत्त ngx_proxy_protocol_v2_read(c, buf, last);
     }
 
-    if (len < 8 || ngx_strncmp(p, "PROXY ", 6) != 0) {
-        goto invalid;
+    सचे (len < 8 || ngx_strncmp(p, "PROXY ", 6) != 0) {
+        गच्छ invalid;
     }
 
     p += 6;
     len -= 6;
 
-    if (len >= 7 && ngx_strncmp(p, "UNKNOWN", 7) == 0) {
+    सचे (len >= 7 && ngx_strncmp(p, "UNKNOWN", 7) == 0) {
         ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->log, 0,
                        "PROXY protocol unknown protocol");
         p += 7;
-        goto skip;
+        गच्छ skip;
     }
 
-    if (len < 5 || ngx_strncmp(p, "TCP", 3) != 0
+    सचे (len < 5 || ngx_strncmp(p, "TCP", 3) != 0
         || (p[3] != '4' && p[3] != '6') || p[4] != ' ')
     {
-        goto invalid;
+        गच्छ invalid;
     }
 
     p += 5;
 
-    pp = ngx_pcalloc(c->pool, sizeof(ngx_proxy_protocol_t));
-    if (pp == NULL) {
-        return NULL;
+    pp = ngx_pcalloc(c->pool, परिमाण(ngx_proxy_protocol_t));
+    सचे (pp == रिक्त) {
+        पटिनिवत्त रिक्त;
     }
 
     p = ngx_proxy_protocol_read_addr(c, p, last, &pp->src_addr);
-    if (p == NULL) {
-        goto invalid;
+    सचे (p == रिक्त) {
+        गच्छ invalid;
     }
 
     p = ngx_proxy_protocol_read_addr(c, p, last, &pp->dst_addr);
-    if (p == NULL) {
-        goto invalid;
+    सचे (p == रिक्त) {
+        गच्छ invalid;
     }
 
     p = ngx_proxy_protocol_read_port(p, last, &pp->src_port, ' ');
-    if (p == NULL) {
-        goto invalid;
+    सचे (p == रिक्त) {
+        गच्छ invalid;
     }
 
     p = ngx_proxy_protocol_read_port(p, last, &pp->dst_port, CR);
-    if (p == NULL) {
-        goto invalid;
+    सचे (p == रिक्त) {
+        गच्छ invalid;
     }
 
-    if (p == last) {
-        goto invalid;
+    सचे (p == last) {
+        गच्छ invalid;
     }
 
-    if (*p++ != LF) {
-        goto invalid;
+    सचे (*p++ != LF) {
+        गच्छ invalid;
     }
 
     ngx_log_debug4(NGX_LOG_DEBUG_CORE, c->log, 0,
@@ -235,32 +235,32 @@ ngx_proxy_protocol_read(ngx_connection_t *c, u_char *buf, u_char *last)
 
     c->proxy_protocol = pp;
 
-    return p;
+    पटिनिवत्त p;
 
 skip:
 
-    for ( /* void */ ; p < last - 1; p++) {
-        if (p[0] == CR && p[1] == LF) {
-            return p + 2;
+    अत्थाय ( /* void */ ; p < last - 1; p++) {
+        सचे (p[0] == CR && p[1] == LF) {
+            पटिनिवत्त p + 2;
         }
     }
 
 invalid:
 
-    for (p = buf; p < last; p++) {
-        if (*p == CR || *p == LF) {
-            break;
+    अत्थाय (p = buf; p < last; p++) {
+        सचे (*p == CR || *p == LF) {
+            भङ्ग;
         }
     }
 
     ngx_log_error(NGX_LOG_ERR, c->log, 0,
                   "broken header: \"%*s\"", (size_t) (p - buf), buf);
 
-    return NULL;
+    पटिनिवत्त रिक्त;
 }
 
 
-static u_char *
+स्थिर u_char *
 ngx_proxy_protocol_read_addr(ngx_connection_t *c, u_char *p, u_char *last,
     ngx_str_t *addr)
 {
@@ -269,41 +269,41 @@ ngx_proxy_protocol_read_addr(ngx_connection_t *c, u_char *p, u_char *last,
 
     pos = p;
 
-    for ( ;; ) {
-        if (p == last) {
-            return NULL;
+    अत्थाय ( ;; ) {
+        सचे (p == last) {
+            पटिनिवत्त रिक्त;
         }
 
         ch = *p++;
 
-        if (ch == ' ') {
-            break;
+        सचे (ch == ' ') {
+            भङ्ग;
         }
 
-        if (ch != ':' && ch != '.'
+        सचे (ch != ':' && ch != '.'
             && (ch < 'a' || ch > 'f')
             && (ch < 'A' || ch > 'F')
             && (ch < '0' || ch > '9'))
         {
-            return NULL;
+            पटिनिवत्त रिक्त;
         }
     }
 
     len = p - pos - 1;
 
     addr->data = ngx_pnalloc(c->pool, len);
-    if (addr->data == NULL) {
-        return NULL;
+    सचे (addr->data == रिक्त) {
+        पटिनिवत्त रिक्त;
     }
 
     ngx_memcpy(addr->data, pos, len);
     addr->len = len;
 
-    return p;
+    पटिनिवत्त p;
 }
 
 
-static u_char *
+स्थिर u_char *
 ngx_proxy_protocol_read_port(u_char *p, u_char *last, in_port_t *port,
     u_char sep)
 {
@@ -313,26 +313,26 @@ ngx_proxy_protocol_read_port(u_char *p, u_char *last, in_port_t *port,
 
     pos = p;
 
-    for ( ;; ) {
-        if (p == last) {
-            return NULL;
+    अत्थाय ( ;; ) {
+        सचे (p == last) {
+            पटिनिवत्त रिक्त;
         }
 
-        if (*p++ == sep) {
-            break;
+        सचे (*p++ == sep) {
+            भङ्ग;
         }
     }
 
     len = p - pos - 1;
 
     n = ngx_atoi(pos, len);
-    if (n < 0 || n > 65535) {
-        return NULL;
+    सचे (n < 0 || n > 65535) {
+        पटिनिवत्त रिक्त;
     }
 
     *port = (in_port_t) n;
 
-    return p;
+    पटिनिवत्त p;
 }
 
 
@@ -341,31 +341,31 @@ ngx_proxy_protocol_write(ngx_connection_t *c, u_char *buf, u_char *last)
 {
     ngx_uint_t  port, lport;
 
-    if (last - buf < NGX_PROXY_PROTOCOL_V1_MAX_HEADER) {
+    सचे (last - buf < NGX_PROXY_PROTOCOL_V1_MAX_HEADER) {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0,
                       "too small buffer for PROXY protocol");
-        return NULL;
+        पटिनिवत्त रिक्त;
     }
 
-    if (ngx_connection_local_sockaddr(c, NULL, 0) != NGX_OK) {
-        return NULL;
+    सचे (ngx_connection_local_sockaddr(c, रिक्त, 0) != NGX_OK) {
+        पटिनिवत्त रिक्त;
     }
 
-    switch (c->sockaddr->sa_family) {
+    विकल्प (c->sockaddr->sa_family) {
 
-    case AF_INET:
-        buf = ngx_cpymem(buf, "PROXY TCP4 ", sizeof("PROXY TCP4 ") - 1);
-        break;
+    पक्ष AF_INET:
+        buf = ngx_cpymem(buf, "PROXY TCP4 ", परिमाण("PROXY TCP4 ") - 1);
+        भङ्ग;
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        buf = ngx_cpymem(buf, "PROXY TCP6 ", sizeof("PROXY TCP6 ") - 1);
-        break;
+#सचे (NGX_HAVE_INET6)
+    पक्ष AF_INET6:
+        buf = ngx_cpymem(buf, "PROXY TCP6 ", परिमाण("PROXY TCP6 ") - 1);
+        भङ्ग;
 #endif
 
-    default:
-        return ngx_cpymem(buf, "PROXY UNKNOWN" CRLF,
-                          sizeof("PROXY UNKNOWN" CRLF) - 1);
+    स्वभाव:
+        पटिनिवत्त ngx_cpymem(buf, "PROXY UNKNOWN" CRLF,
+                          परिमाण("PROXY UNKNOWN" CRLF) - 1);
     }
 
     buf += ngx_sock_ntop(c->sockaddr, c->socklen, buf, last - buf, 0);
@@ -378,11 +378,11 @@ ngx_proxy_protocol_write(ngx_connection_t *c, u_char *buf, u_char *last)
     port = ngx_inet_get_port(c->sockaddr);
     lport = ngx_inet_get_port(c->local_sockaddr);
 
-    return ngx_slprintf(buf, last, " %ui %ui" CRLF, port, lport);
+    पटिनिवत्त ngx_slprintf(buf, last, " %ui %ui" CRLF, port, lport);
 }
 
 
-static u_char *
+स्थिर u_char *
 ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
 {
     u_char                             *end;
@@ -393,27 +393,27 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
     ngx_proxy_protocol_t               *pp;
     ngx_proxy_protocol_header_t        *header;
     ngx_proxy_protocol_inet_addrs_t    *in;
-#if (NGX_HAVE_INET6)
+#सचे (NGX_HAVE_INET6)
     ngx_proxy_protocol_inet6_addrs_t   *in6;
 #endif
 
     header = (ngx_proxy_protocol_header_t *) buf;
 
-    buf += sizeof(ngx_proxy_protocol_header_t);
+    buf += परिमाण(ngx_proxy_protocol_header_t);
 
     version = header->version_command >> 4;
 
-    if (version != 2) {
+    सचे (version != 2) {
         ngx_log_error(NGX_LOG_ERR, c->log, 0,
                       "unknown PROXY protocol version: %ui", version);
-        return NULL;
+        पटिनिवत्त रिक्त;
     }
 
     len = ngx_proxy_protocol_parse_uint16(header->len);
 
-    if ((size_t) (last - buf) < len) {
+    सचे ((size_t) (last - buf) < len) {
         ngx_log_error(NGX_LOG_ERR, c->log, 0, "header is too large");
-        return NULL;
+        पटिनिवत्त रिक्त;
     }
 
     end = buf + len;
@@ -421,35 +421,35 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
     command = header->version_command & 0x0f;
 
     /* only PROXY is supported */
-    if (command != NGX_PROXY_PROTOCOL_CMD_PROXY) {
+    सचे (command != NGX_PROXY_PROTOCOL_CMD_PROXY) {
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
                        "PROXY protocol v2 unsupported command %ui", command);
-        return end;
+        पटिनिवत्त end;
     }
 
     transport = header->family_transport & 0x0f;
 
     /* only STREAM is supported */
-    if (transport != NGX_PROXY_PROTOCOL_TYPE_STREAM) {
+    सचे (transport != NGX_PROXY_PROTOCOL_TYPE_STREAM) {
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
                        "PROXY protocol v2 unsupported transport %ui",
                        transport);
-        return end;
+        पटिनिवत्त end;
     }
 
-    pp = ngx_pcalloc(c->pool, sizeof(ngx_proxy_protocol_t));
-    if (pp == NULL) {
-        return NULL;
+    pp = ngx_pcalloc(c->pool, परिमाण(ngx_proxy_protocol_t));
+    सचे (pp == रिक्त) {
+        पटिनिवत्त रिक्त;
     }
 
     family = header->family_transport >> 4;
 
-    switch (family) {
+    विकल्प (family) {
 
-    case NGX_PROXY_PROTOCOL_AF_INET:
+    पक्ष NGX_PROXY_PROTOCOL_AF_INET:
 
-        if ((size_t) (end - buf) < sizeof(ngx_proxy_protocol_inet_addrs_t)) {
-            return NULL;
+        सचे ((size_t) (end - buf) < परिमाण(ngx_proxy_protocol_inet_addrs_t)) {
+            पटिनिवत्त रिक्त;
         }
 
         in = (ngx_proxy_protocol_inet_addrs_t *) buf;
@@ -465,18 +465,18 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
         pp->src_port = ngx_proxy_protocol_parse_uint16(in->src_port);
         pp->dst_port = ngx_proxy_protocol_parse_uint16(in->dst_port);
 
-        socklen = sizeof(struct sockaddr_in);
+        socklen = परिमाण(संरचना sockaddr_in);
 
-        buf += sizeof(ngx_proxy_protocol_inet_addrs_t);
+        buf += परिमाण(ngx_proxy_protocol_inet_addrs_t);
 
-        break;
+        भङ्ग;
 
-#if (NGX_HAVE_INET6)
+#सचे (NGX_HAVE_INET6)
 
-    case NGX_PROXY_PROTOCOL_AF_INET6:
+    पक्ष NGX_PROXY_PROTOCOL_AF_INET6:
 
-        if ((size_t) (end - buf) < sizeof(ngx_proxy_protocol_inet6_addrs_t)) {
-            return NULL;
+        सचे ((size_t) (end - buf) < परिमाण(ngx_proxy_protocol_inet6_addrs_t)) {
+            पटिनिवत्त रिक्त;
         }
 
         in6 = (ngx_proxy_protocol_inet6_addrs_t *) buf;
@@ -492,32 +492,32 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
         pp->src_port = ngx_proxy_protocol_parse_uint16(in6->src_port);
         pp->dst_port = ngx_proxy_protocol_parse_uint16(in6->dst_port);
 
-        socklen = sizeof(struct sockaddr_in6);
+        socklen = परिमाण(संरचना sockaddr_in6);
 
-        buf += sizeof(ngx_proxy_protocol_inet6_addrs_t);
+        buf += परिमाण(ngx_proxy_protocol_inet6_addrs_t);
 
-        break;
+        भङ्ग;
 
 #endif
 
-    default:
+    स्वभाव:
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
                        "PROXY protocol v2 unsupported address family %ui",
                        family);
-        return end;
+        पटिनिवत्त end;
     }
 
     pp->src_addr.data = ngx_pnalloc(c->pool, NGX_SOCKADDR_STRLEN);
-    if (pp->src_addr.data == NULL) {
-        return NULL;
+    सचे (pp->src_addr.data == रिक्त) {
+        पटिनिवत्त रिक्त;
     }
 
     pp->src_addr.len = ngx_sock_ntop(&src_sockaddr.sockaddr, socklen,
                                      pp->src_addr.data, NGX_SOCKADDR_STRLEN, 0);
 
     pp->dst_addr.data = ngx_pnalloc(c->pool, NGX_SOCKADDR_STRLEN);
-    if (pp->dst_addr.data == NULL) {
-        return NULL;
+    सचे (pp->dst_addr.data == रिक्त) {
+        पटिनिवत्त रिक्त;
     }
 
     pp->dst_addr.len = ngx_sock_ntop(&dst_sockaddr.sockaddr, socklen,
@@ -527,10 +527,10 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
                    "PROXY protocol v2 src: %V %d, dst: %V %d",
                    &pp->src_addr, pp->src_port, &pp->dst_addr, pp->dst_port);
 
-    if (buf < end) {
+    सचे (buf < end) {
         pp->tlvs.data = ngx_pnalloc(c->pool, end - buf);
-        if (pp->tlvs.data == NULL) {
-            return NULL;
+        सचे (pp->tlvs.data == रिक्त) {
+            पटिनिवत्त रिक्त;
         }
 
         ngx_memcpy(pp->tlvs.data, buf, end - buf);
@@ -539,13 +539,13 @@ ngx_proxy_protocol_v2_read(ngx_connection_t *c, u_char *buf, u_char *last)
 
     c->proxy_protocol = pp;
 
-    return end;
+    पटिनिवत्त end;
 }
 
 
 ngx_int_t
 ngx_proxy_protocol_get_tlv(ngx_connection_t *c, ngx_str_t *name,
-    ngx_str_t *value)
+    ngx_str_t *मानम्)
 {
     u_char                          *p;
     size_t                           n;
@@ -555,8 +555,8 @@ ngx_proxy_protocol_get_tlv(ngx_connection_t *c, ngx_str_t *name,
     ngx_proxy_protocol_tlv_ssl_t    *tlv_ssl;
     ngx_proxy_protocol_tlv_entry_t  *te;
 
-    if (c->proxy_protocol == NULL) {
-        return NGX_DECLINED;
+    सचे (c->proxy_protocol == रिक्त) {
+        पटिनिवत्त NGX_DECLINED;
     }
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
@@ -568,71 +568,71 @@ ngx_proxy_protocol_get_tlv(ngx_connection_t *c, ngx_str_t *name,
     p = name->data;
     n = name->len;
 
-    if (n >= 4 && p[0] == 's' && p[1] == 's' && p[2] == 'l' && p[3] == '_') {
+    सचे (n >= 4 && p[0] == 's' && p[1] == 's' && p[2] == 'l' && p[3] == '_') {
 
         rc = ngx_proxy_protocol_lookup_tlv(c, tlvs,
                                            NGX_PROXY_PROTOCOL_TLV_SSL, &ssl);
-        if (rc != NGX_OK) {
-            return rc;
+        सचे (rc != NGX_OK) {
+            पटिनिवत्त rc;
         }
 
-        if (ssl.len < sizeof(ngx_proxy_protocol_tlv_ssl_t)) {
-            return NGX_ERROR;
+        सचे (ssl.len < परिमाण(ngx_proxy_protocol_tlv_ssl_t)) {
+            पटिनिवत्त NGX_ERROR;
         }
 
         p += 4;
         n -= 4;
 
-        if (n == 6 && ngx_strncmp(p, "verify", 6) == 0) {
+        सचे (n == 6 && ngx_strncmp(p, "verify", 6) == 0) {
 
             tlv_ssl = (ngx_proxy_protocol_tlv_ssl_t *) ssl.data;
             verify = ngx_proxy_protocol_parse_uint32(tlv_ssl->verify);
 
-            value->data = ngx_pnalloc(c->pool, NGX_INT32_LEN);
-            if (value->data == NULL) {
-                return NGX_ERROR;
+            मानम्->data = ngx_pnalloc(c->pool, NGX_INT32_LEN);
+            सचे (मानम्->data == रिक्त) {
+                पटिनिवत्त NGX_ERROR;
             }
 
-            value->len = ngx_sprintf(value->data, "%uD", verify)
-                         - value->data;
-            return NGX_OK;
+            मानम्->len = ngx_sprintf(मानम्->data, "%uD", verify)
+                         - मानम्->data;
+            पटिनिवत्त NGX_OK;
         }
 
-        ssl.data += sizeof(ngx_proxy_protocol_tlv_ssl_t);
-        ssl.len -= sizeof(ngx_proxy_protocol_tlv_ssl_t);
+        ssl.data += परिमाण(ngx_proxy_protocol_tlv_ssl_t);
+        ssl.len -= परिमाण(ngx_proxy_protocol_tlv_ssl_t);
 
         te = ngx_proxy_protocol_tlv_ssl_entries;
         tlvs = &ssl;
     }
 
-    if (n >= 2 && p[0] == '0' && p[1] == 'x') {
+    सचे (n >= 2 && p[0] == '0' && p[1] == 'x') {
 
         type = ngx_hextoi(p + 2, n - 2);
-        if (type == NGX_ERROR) {
+        सचे (type == NGX_ERROR) {
             ngx_log_error(NGX_LOG_ERR, c->log, 0,
                           "invalid PROXY protocol TLV \"%V\"", name);
-            return NGX_ERROR;
+            पटिनिवत्त NGX_ERROR;
         }
 
-        return ngx_proxy_protocol_lookup_tlv(c, tlvs, type, value);
+        पटिनिवत्त ngx_proxy_protocol_lookup_tlv(c, tlvs, type, मानम्);
     }
 
-    for ( /* void */ ; te->type; te++) {
-        if (te->name.len == n && ngx_strncmp(te->name.data, p, n) == 0) {
-            return ngx_proxy_protocol_lookup_tlv(c, tlvs, te->type, value);
+    अत्थाय ( /* void */ ; te->type; te++) {
+        सचे (te->name.len == n && ngx_strncmp(te->name.data, p, n) == 0) {
+            पटिनिवत्त ngx_proxy_protocol_lookup_tlv(c, tlvs, te->type, मानम्);
         }
     }
 
     ngx_log_error(NGX_LOG_ERR, c->log, 0,
                   "unknown PROXY protocol TLV \"%V\"", name);
 
-    return NGX_DECLINED;
+    पटिनिवत्त NGX_DECLINED;
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_proxy_protocol_lookup_tlv(ngx_connection_t *c, ngx_str_t *tlvs,
-    ngx_uint_t type, ngx_str_t *value)
+    ngx_uint_t type, ngx_str_t *मानम्)
 {
     u_char                    *p;
     size_t                     n, len;
@@ -644,34 +644,34 @@ ngx_proxy_protocol_lookup_tlv(ngx_connection_t *c, ngx_str_t *tlvs,
     p = tlvs->data;
     n = tlvs->len;
 
-    while (n) {
-        if (n < sizeof(ngx_proxy_protocol_tlv_t)) {
+    याव (n) {
+        सचे (n < परिमाण(ngx_proxy_protocol_tlv_t)) {
             ngx_log_error(NGX_LOG_ERR, c->log, 0, "broken PROXY protocol TLV");
-            return NGX_ERROR;
+            पटिनिवत्त NGX_ERROR;
         }
 
         tlv = (ngx_proxy_protocol_tlv_t *) p;
         len = ngx_proxy_protocol_parse_uint16(tlv->len);
 
-        p += sizeof(ngx_proxy_protocol_tlv_t);
-        n -= sizeof(ngx_proxy_protocol_tlv_t);
+        p += परिमाण(ngx_proxy_protocol_tlv_t);
+        n -= परिमाण(ngx_proxy_protocol_tlv_t);
 
-        if (n < len) {
+        सचे (n < len) {
             ngx_log_error(NGX_LOG_ERR, c->log, 0, "broken PROXY protocol TLV");
-            return NGX_ERROR;
+            पटिनिवत्त NGX_ERROR;
         }
 
-        if (tlv->type == type) {
-            value->data = p;
-            value->len = len;
-            return NGX_OK;
+        सचे (tlv->type == type) {
+            मानम्->data = p;
+            मानम्->len = len;
+            पटिनिवत्त NGX_OK;
         }
 
         p += len;
         n -= len;
     }
 
-    return NGX_DECLINED;
+    पटिनिवत्त NGX_DECLINED;
 }
 
 
@@ -683,126 +683,126 @@ ngx_proxy_protocol_v2_write(ngx_connection_t *c, u_char *buf, u_char *last,
     uint32_t                         verify;
     ngx_uint_t                       i, client;
     ngx_array_t                      base_tlvs, ssl_tlvs;
-    ngx_proxy_protocol_tlv_value_t  *tlv;
+    ngx_proxy_protocol_tlv_मानम्_t  *tlv;
 
     client = 0;
     verify = 0;
 
-    ngx_memzero(&base_tlvs, sizeof(ngx_array_t));
-    ngx_memzero(&ssl_tlvs, sizeof(ngx_array_t));
+    ngx_memzero(&base_tlvs, परिमाण(ngx_array_t));
+    ngx_memzero(&ssl_tlvs, परिमाण(ngx_array_t));
 
-#if (NGX_OPENSSL)
+#सचे (NGX_OPENSSL)
 
-    if (c->ssl != NULL) {
-        if (ngx_array_init(&base_tlvs, c->pool, 2,
-                           sizeof(ngx_proxy_protocol_tlv_value_t))
+    सचे (c->ssl != रिक्त) {
+        सचे (ngx_array_init(&base_tlvs, c->pool, 2,
+                           परिमाण(ngx_proxy_protocol_tlv_मानम्_t))
             != NGX_OK)
         {
-            return NULL;
+            पटिनिवत्त रिक्त;
         }
 
-        if (ngx_array_init(&ssl_tlvs, c->pool, 5,
-                           sizeof(ngx_proxy_protocol_tlv_value_t))
+        सचे (ngx_array_init(&ssl_tlvs, c->pool, 5,
+                           परिमाण(ngx_proxy_protocol_tlv_मानम्_t))
             != NGX_OK)
         {
-            return NULL;
+            पटिनिवत्त रिक्त;
         }
 
-        if (ngx_proxy_protocol_v2_eval_ssl(c, &base_tlvs, &ssl_tlvs, &client,
+        सचे (ngx_proxy_protocol_v2_eval_ssl(c, &base_tlvs, &ssl_tlvs, &client,
                                            &verify)
             != NGX_OK)
         {
-            return NULL;
+            पटिनिवत्त रिक्त;
         }
     }
 
 #endif
 
     p = ngx_proxy_protocol_v2_write_header(c, buf, last);
-    if (p == NULL) {
-        return NULL;
+    सचे (p == रिक्त) {
+        पटिनिवत्त रिक्त;
     }
 
     tlv = base_tlvs.elts;
 
-    for (i = 0; i < base_tlvs.nelts; i++) {
+    अत्थाय (i = 0; i < base_tlvs.nelts; i++) {
         p = ngx_proxy_protocol_v2_write_tlv(c, p, last, tlv[i].type,
-                                           &tlv[i].value);
-        if (p == NULL) {
-            return NULL;
+                                           &tlv[i].मानम्);
+        सचे (p == रिक्त) {
+            पटिनिवत्त रिक्त;
         }
     }
 
-    if (client) {
+    सचे (client) {
         p = ngx_proxy_protocol_v2_write_ssl(c, p, last, &ssl_tlvs, client,
                                             verify);
-        if (p == NULL) {
-            return NULL;
+        सचे (p == रिक्त) {
+            पटिनिवत्त रिक्त;
         }
     }
 
     ngx_proxy_protocol_v2_set_len(buf,
-                                  p + sizeof(ngx_proxy_protocol_tlv_t) + 4);
+                                  p + परिमाण(ngx_proxy_protocol_tlv_t) + 4);
 
-    return ngx_proxy_protocol_v2_write_crc32c(c, buf, p, last);
+    पटिनिवत्त ngx_proxy_protocol_v2_write_crc32c(c, buf, p, last);
 }
 
 
-#if (NGX_OPENSSL)
+#सचे (NGX_OPENSSL)
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_proxy_protocol_v2_eval_ssl(ngx_connection_t *c, ngx_array_t *tlvs,
     ngx_array_t *ssl_tlvs, ngx_uint_t *client, uint32_t *verify)
 {
     X509                            *cert;
     long                             n;
     ngx_int_t                        rc;
-    ngx_str_t                        value;
+    ngx_str_t                        मानम्;
     ngx_uint_t                       type;
-    const char                      *s;
-    ngx_proxy_protocol_tlv_value_t  *tlv;
+    ध्रुव वर्ण                      *s;
+    ngx_proxy_protocol_tlv_मानम्_t  *tlv;
 
-    if (ngx_proxy_protocol_v2_authority(c, &value) == NGX_OK) {
-        tlv = ngx_array_push(tlvs);
-        if (tlv == NULL) {
-            return NGX_ERROR;
+    सचे (ngx_proxy_protocol_v2_authority(c, &मानम्) == NGX_OK) {
+        tlv = ngx_array_प्रक्षिप(tlvs);
+        सचे (tlv == रिक्त) {
+            पटिनिवत्त NGX_ERROR;
         }
 
         tlv->type = NGX_PROXY_PROTOCOL_TLV_AUTHORITY;
-        tlv->value = value;
+        tlv->मानम् = मानम्;
     }
 
-    if (ngx_proxy_protocol_v2_alpn(c, &value) == NGX_OK) {
-        tlv = ngx_array_push(tlvs);
-        if (tlv == NULL) {
-            return NGX_ERROR;
+    सचे (ngx_proxy_protocol_v2_alpn(c, &मानम्) == NGX_OK) {
+        tlv = ngx_array_प्रक्षिप(tlvs);
+        सचे (tlv == रिक्त) {
+            पटिनिवत्त NGX_ERROR;
         }
 
         tlv->type = NGX_PROXY_PROTOCOL_TLV_ALPN;
-        tlv->value = value;
+        tlv->मानम् = मानम्;
     }
 
-    for (type = NGX_PROXY_PROTOCOL_TLV_SSL_VERSION;
-         type <= NGX_PROXY_PROTOCOL_TLV_SSL_KEY_ALG;
+    अत्थाय (type = NGX_PROXY_PROTOCOL_TLV_SSL_VERSION;
+         type <= NGX_PROXY_PROTOCOL_TLV_SSL_कुञ्चिका_ALG;
          type++)
     {
-        rc = ngx_proxy_protocol_v2_ssl_sub(c, type, &value);
+        rc = ngx_proxy_protocol_v2_ssl_sub(c, type, &मानम्);
 
-        if (rc == NGX_ERROR) {
-            return NGX_ERROR;
+        सचे (rc == NGX_ERROR) {
+            पटिनिवत्त NGX_ERROR;
         }
 
-        if (rc != NGX_OK) {
-            continue;
+        सचे (rc != NGX_OK) {
+            अनुवर्त;
         }
 
-        tlv = ngx_array_push(ssl_tlvs);
-        if (tlv == NULL) {
-            return NGX_ERROR;
+        tlv = ngx_array_प्रक्षिप(ssl_tlvs);
+        सचे (tlv == रिक्त) {
+            पटिनिवत्त NGX_ERROR;
         }
 
         tlv->type = type;
-        tlv->value = value;
+        tlv->मानम् = मानम्;
     }
 
     *client = NGX_PROXY_PROTOCOL_V2_CLIENT_SSL;
@@ -810,20 +810,20 @@ ngx_proxy_protocol_v2_eval_ssl(ngx_connection_t *c, ngx_array_t *tlvs,
 
     cert = SSL_get_peer_certificate(c->ssl->connection);
 
-    if (cert != NULL) {
+    सचे (cert != रिक्त) {
         X509_free(cert);
 
         *client |= NGX_PROXY_PROTOCOL_V2_CLIENT_CERT_SESS;
 
-        if (!SSL_session_reused(c->ssl->connection)) {
+        सचे (!SSL_session_reused(c->ssl->connection)) {
             *client |= NGX_PROXY_PROTOCOL_V2_CLIENT_CERT_CONN;
         }
 
         n = SSL_get_verify_result(c->ssl->connection);
 
-        if (n == X509_V_OK) {
+        सचे (n == X509_V_OK) {
 
-            if (ngx_ssl_ocsp_get_status(c, &s) != NGX_OK) {
+            सचे (ngx_ssl_ocsp_get_status(c, &s) != NGX_OK) {
                 n = X509_V_ERR_CERT_REVOKED;
             }
         }
@@ -831,168 +831,168 @@ ngx_proxy_protocol_v2_eval_ssl(ngx_connection_t *c, ngx_array_t *tlvs,
         *verify = (uint32_t) n;
     }
 
-    return NGX_OK;
+    पटिनिवत्त NGX_OK;
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_proxy_protocol_v2_authority(ngx_connection_t *c, ngx_str_t *out)
 {
 #ifdef SSL_CTRL_SET_TLSEXT_HOSTNAME
 
-    const char  *sni;
+    ध्रुव वर्ण  *sni;
 
     sni = SSL_get_servername(c->ssl->connection, TLSEXT_NAMETYPE_host_name);
-    if (sni == NULL) {
-        return NGX_DECLINED;
+    सचे (sni == रिक्त) {
+        पटिनिवत्त NGX_DECLINED;
     }
 
     out->data = (u_char *) sni;
     out->len = ngx_strlen(sni);
-    return NGX_OK;
+    पटिनिवत्त NGX_OK;
 
-#else
-    return NGX_DECLINED;
+#अञ्ञथा
+    पटिनिवत्त NGX_DECLINED;
 #endif
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_proxy_protocol_v2_alpn(ngx_connection_t *c, ngx_str_t *out)
 {
 #ifdef TLSEXT_TYPE_application_layer_protocol_negotiation
 
-    unsigned int          alpnlen;
-    const unsigned char  *alpn;
+    unsigned पूर्णाङ्क          alpnlen;
+    ध्रुव unsigned वर्ण  *alpn;
 
     SSL_get0_alpn_selected(c->ssl->connection, &alpn, &alpnlen);
-    if (alpn == NULL || alpnlen == 0) {
-        return NGX_DECLINED;
+    सचे (alpn == रिक्त || alpnlen == 0) {
+        पटिनिवत्त NGX_DECLINED;
     }
 
     out->data = (u_char *) alpn;
     out->len = alpnlen;
-    return NGX_OK;
+    पटिनिवत्त NGX_OK;
 
-#else
-    return NGX_DECLINED;
+#अञ्ञथा
+    पटिनिवत्त NGX_DECLINED;
 #endif
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_proxy_protocol_v2_ssl_sub(ngx_connection_t *c, ngx_uint_t type,
     ngx_str_t *out)
 {
-    int               i, len;
+    पूर्णाङ्क               i, len;
     X509             *cert;
     u_char           *alg, *s;
     EVP_PKEY         *pkey;
-#if (OPENSSL_VERSION_NUMBER >= 0x40000000L)
-    const
+#सचे (OPENSSL_VERSION_सङ्ख्या >= 0x40000000L)
+    ध्रुव
 #endif
     X509_NAME        *subject;
-#if (OPENSSL_VERSION_NUMBER >= 0x40000000L)
-    const
+#सचे (OPENSSL_VERSION_सङ्ख्या >= 0x40000000L)
+    ध्रुव
 #endif
     X509_NAME_ENTRY  *entry;
 
-    switch (type) {
+    विकल्प (type) {
 
-    case NGX_PROXY_PROTOCOL_TLV_SSL_VERSION:
+    पक्ष NGX_PROXY_PROTOCOL_TLV_SSL_VERSION:
         out->data = (u_char *) SSL_get_version(c->ssl->connection);
         out->len = ngx_strlen(out->data);
-        return NGX_OK;
+        पटिनिवत्त NGX_OK;
 
-    case NGX_PROXY_PROTOCOL_TLV_SSL_CIPHER:
+    पक्ष NGX_PROXY_PROTOCOL_TLV_SSL_CIPHER:
         out->data = (u_char *) SSL_get_cipher_name(c->ssl->connection);
         out->len = ngx_strlen(out->data);
-        return NGX_OK;
+        पटिनिवत्त NGX_OK;
 
-    case NGX_PROXY_PROTOCOL_TLV_SSL_CN:
+    पक्ष NGX_PROXY_PROTOCOL_TLV_SSL_CN:
         cert = SSL_get_peer_certificate(c->ssl->connection);
-        if (cert == NULL) {
-            return NGX_DECLINED;
+        सचे (cert == रिक्त) {
+            पटिनिवत्त NGX_DECLINED;
         }
 
         subject = X509_get_subject_name(cert);
-        if (subject == NULL) {
+        सचे (subject == रिक्त) {
             X509_free(cert);
-            return NGX_ERROR;
+            पटिनिवत्त NGX_ERROR;
         }
 
         i = X509_NAME_get_index_by_NID(subject, NID_commonName, -1);
-        if (i < 0) {
+        सचे (i < 0) {
             X509_free(cert);
-            return NGX_DECLINED;
+            पटिनिवत्त NGX_DECLINED;
         }
 
         entry = X509_NAME_get_entry(subject, i);
 
         len = ASN1_STRING_to_UTF8(&s, X509_NAME_ENTRY_get_data(entry));
-        if (len < 0) {
+        सचे (len < 0) {
             ngx_ssl_error(NGX_LOG_ALERT, c->log, 0,
                           "ASN1_STRING_to_UTF8() failed");
             X509_free(cert);
-            return NGX_ERROR;
+            पटिनिवत्त NGX_ERROR;
         }
 
         out->len = len;
         out->data = ngx_pnalloc(c->pool, len);
-        if (out->data == NULL) {
+        सचे (out->data == रिक्त) {
             OPENSSL_free(s);
             X509_free(cert);
-            return NGX_ERROR;
+            पटिनिवत्त NGX_ERROR;
         }
 
         ngx_memcpy(out->data, s, len);
 
         OPENSSL_free(s);
         X509_free(cert);
-        return NGX_OK;
+        पटिनिवत्त NGX_OK;
 
-    case NGX_PROXY_PROTOCOL_TLV_SSL_SIG_ALG:
+    पक्ष NGX_PROXY_PROTOCOL_TLV_SSL_SIG_ALG:
         cert = SSL_get_certificate(c->ssl->connection);
 
         out->data = (u_char *) OBJ_nid2sn(X509_get_signature_nid(cert));
         out->len = ngx_strlen(out->data);
-        return NGX_OK;
+        पटिनिवत्त NGX_OK;
 
-    case NGX_PROXY_PROTOCOL_TLV_SSL_KEY_ALG:
+    पक्ष NGX_PROXY_PROTOCOL_TLV_SSL_कुञ्चिका_ALG:
         cert = SSL_get_certificate(c->ssl->connection);
 
         pkey = X509_get_pubkey(cert);
-        if (pkey == NULL) {
-            return NGX_ERROR;
+        सचे (pkey == रिक्त) {
+            पटिनिवत्त NGX_ERROR;
         }
 
-        switch (EVP_PKEY_base_id(pkey)) {
+        विकल्प (EVP_PKEY_base_id(pkey)) {
 
-        case EVP_PKEY_RSA:
+        पक्ष EVP_PKEY_RSA:
 #ifdef EVP_PKEY_RSA_PSS
-        case EVP_PKEY_RSA_PSS:
+        पक्ष EVP_PKEY_RSA_PSS:
 #endif
             alg = (u_char *) "RSA";
-            break;
+            भङ्ग;
 
-        case EVP_PKEY_EC:
+        पक्ष EVP_PKEY_EC:
             alg = (u_char *) "EC";
-            break;
+            भङ्ग;
 
-        case EVP_PKEY_DSA:
+        पक्ष EVP_PKEY_DSA:
             alg = (u_char *) "DSA";
-            break;
+            भङ्ग;
 
-        default:
+        स्वभाव:
             EVP_PKEY_free(pkey);
-            return NGX_DECLINED;
+            पटिनिवत्त NGX_DECLINED;
         }
 
-        out->len = sizeof("RSA16384") - 1;
+        out->len = परिमाण("RSA16384") - 1;
         out->data = ngx_pnalloc(c->pool, out->len);
-        if (out->data == NULL) {
+        सचे (out->data == रिक्त) {
             EVP_PKEY_free(pkey);
-            return NGX_ERROR;
+            पटिनिवत्त NGX_ERROR;
         }
 
         out->len = ngx_snprintf(out->data, out->len, "%s%d",
@@ -1001,16 +1001,16 @@ ngx_proxy_protocol_v2_ssl_sub(ngx_connection_t *c, ngx_uint_t type,
 
         EVP_PKEY_free(pkey);
 
-        return NGX_OK;
+        पटिनिवत्त NGX_OK;
     }
 
-    return NGX_DECLINED;
+    पटिनिवत्त NGX_DECLINED;
 }
 
 #endif
 
 
-static u_char *
+स्थिर u_char *
 ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
     u_char *last)
 {
@@ -1019,20 +1019,20 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
     ngx_uint_t                         src_fam, dst_fam;
     ngx_proxy_protocol_header_t       *header;
     ngx_proxy_protocol_inet_addrs_t   *in;
-#if (NGX_HAVE_INET6)
+#सचे (NGX_HAVE_INET6)
     ngx_uint_t                         port, lport;
-    struct in6_addr                   *src6, *dst6;
+    संरचना in6_addr                   *src6, *dst6;
     ngx_proxy_protocol_inet6_addrs_t  *in6;
 #endif
 
-    if (last - buf < NGX_PROXY_PROTOCOL_V2_MAX_HEADER) {
+    सचे (last - buf < NGX_PROXY_PROTOCOL_V2_MAX_HEADER) {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0,
                       "too small buffer for PROXY protocol v2");
-        return NULL;
+        पटिनिवत्त रिक्त;
     }
 
-    if (ngx_connection_local_sockaddr(c, NULL, 0) != NGX_OK) {
-        return NULL;
+    सचे (ngx_connection_local_sockaddr(c, रिक्त, 0) != NGX_OK) {
+        पटिनिवत्त रिक्त;
     }
 
     /* the length field is set by the caller once all TLVs are written */
@@ -1040,9 +1040,9 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
     header = (ngx_proxy_protocol_header_t *) buf;
 
     ngx_memcpy(header->signature, ngx_proxy_protocol_signature,
-               sizeof(ngx_proxy_protocol_signature) - 1);
+               परिमाण(ngx_proxy_protocol_signature) - 1);
 
-    p = buf + sizeof(ngx_proxy_protocol_header_t);
+    p = buf + परिमाण(ngx_proxy_protocol_header_t);
 
     src_fam = c->sockaddr->sa_family;
     dst_fam = c->local_sockaddr->sa_family;
@@ -1052,36 +1052,36 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
 
     /* promote to the highest address family present on either side */
 
-    if (src_af == NGX_PROXY_PROTOCOL_AF_UNSPEC
+    सचे (src_af == NGX_PROXY_PROTOCOL_AF_UNSPEC
         || dst_af == NGX_PROXY_PROTOCOL_AF_UNSPEC)
     {
         command = NGX_PROXY_PROTOCOL_CMD_LOCAL;
         family = NGX_PROXY_PROTOCOL_AF_UNSPEC;
         transport = NGX_PROXY_PROTOCOL_TYPE_UNSPEC;
 
-    } else {
+    } अञ्ञथा {
         command = NGX_PROXY_PROTOCOL_CMD_PROXY;
         family = ngx_max(src_af, dst_af);
 
-        switch (c->type) {
-        case SOCK_STREAM:
+        विकल्प (c->type) {
+        पक्ष SOCK_STREAM:
             transport = NGX_PROXY_PROTOCOL_TYPE_STREAM;
-            break;
-        case SOCK_DGRAM:
+            भङ्ग;
+        पक्ष SOCK_DGRAM:
             transport = NGX_PROXY_PROTOCOL_TYPE_DGRAM;
-            break;
-        default:
+            भङ्ग;
+        स्वभाव:
             transport = NGX_PROXY_PROTOCOL_TYPE_UNSPEC;
-            break;
+            भङ्ग;
         }
     }
 
     header->version_command = 0x20 | command;
     header->family_transport = (family << 4) | transport;
 
-    switch (family) {
+    विकल्प (family) {
 
-    case NGX_PROXY_PROTOCOL_AF_INET:
+    पक्ष NGX_PROXY_PROTOCOL_AF_INET:
 
         in = (ngx_proxy_protocol_inet_addrs_t *) p;
 
@@ -1090,19 +1090,19 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
         ngx_proxy_protocol_v2_write_ipv4(c->local_sockaddr,
                                          in->dst_addr, in->dst_port);
 
-        p += sizeof(ngx_proxy_protocol_inet_addrs_t);
+        p += परिमाण(ngx_proxy_protocol_inet_addrs_t);
 
-        break;
+        भङ्ग;
 
-#if (NGX_HAVE_INET6)
+#सचे (NGX_HAVE_INET6)
 
-    case NGX_PROXY_PROTOCOL_AF_INET6:
+    पक्ष NGX_PROXY_PROTOCOL_AF_INET6:
 
-        if (src_fam == AF_INET6 && dst_fam == AF_INET6) {
-            src6 = &((struct sockaddr_in6 *) c->sockaddr)->sin6_addr;
-            dst6 = &((struct sockaddr_in6 *) c->local_sockaddr)->sin6_addr;
+        सचे (src_fam == AF_INET6 && dst_fam == AF_INET6) {
+            src6 = &((संरचना sockaddr_in6 *) c->sockaddr)->sin6_addr;
+            dst6 = &((संरचना sockaddr_in6 *) c->local_sockaddr)->sin6_addr;
 
-            if (IN6_IS_ADDR_V4MAPPED(src6) && IN6_IS_ADDR_V4MAPPED(dst6)) {
+            सचे (IN6_IS_ADDR_V4MAPPED(src6) && IN6_IS_ADDR_V4MAPPED(dst6)) {
 
                 /* both v4-mapped: demote to AF_INET */
 
@@ -1122,8 +1122,8 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
                 in->dst_port[0] = (u_char) (lport >> 8);
                 in->dst_port[1] = (u_char)  lport;
 
-                p += sizeof(ngx_proxy_protocol_inet_addrs_t);
-                break;
+                p += परिमाण(ngx_proxy_protocol_inet_addrs_t);
+                भङ्ग;
             }
         }
 
@@ -1134,75 +1134,75 @@ ngx_proxy_protocol_v2_write_header(ngx_connection_t *c, u_char *buf,
         ngx_proxy_protocol_v2_write_ipv6(c->local_sockaddr,
                                          in6->dst_addr, in6->dst_port);
 
-        p += sizeof(ngx_proxy_protocol_inet6_addrs_t);
+        p += परिमाण(ngx_proxy_protocol_inet6_addrs_t);
 
-        break;
+        भङ्ग;
 
 #endif
 
-    default:  /* NGX_PROXY_PROTOCOL_AF_UNSPEC */
-        break;
+    स्वभाव:  /* NGX_PROXY_PROTOCOL_AF_UNSPEC */
+        भङ्ग;
     }
 
-    return p;
+    पटिनिवत्त p;
 }
 
 
-static u_char
+स्थिर u_char
 ngx_proxy_protocol_v2_family(ngx_uint_t family)
 {
-    switch (family) {
+    विकल्प (family) {
 
-    case AF_INET:
-        return NGX_PROXY_PROTOCOL_AF_INET;
+    पक्ष AF_INET:
+        पटिनिवत्त NGX_PROXY_PROTOCOL_AF_INET;
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        return NGX_PROXY_PROTOCOL_AF_INET6;
+#सचे (NGX_HAVE_INET6)
+    पक्ष AF_INET6:
+        पटिनिवत्त NGX_PROXY_PROTOCOL_AF_INET6;
 #endif
 
-    default:
-        return NGX_PROXY_PROTOCOL_AF_UNSPEC;
+    स्वभाव:
+        पटिनिवत्त NGX_PROXY_PROTOCOL_AF_UNSPEC;
     }
 }
 
 
-static void
-ngx_proxy_protocol_v2_write_ipv4(struct sockaddr *sa, u_char *addr,
+स्थिर शून्य
+ngx_proxy_protocol_v2_write_ipv4(संरचना sockaddr *sa, u_char *addr,
     u_char *port)
 {
-    struct sockaddr_in  *sin;
+    संरचना sockaddr_in  *sin;
 
-    sin = (struct sockaddr_in *) sa;
+    sin = (संरचना sockaddr_in *) sa;
     ngx_memcpy(addr, &sin->sin_addr, 4);
     ngx_memcpy(port, &sin->sin_port, 2);
 }
 
 
-#if (NGX_HAVE_INET6)
+#सचे (NGX_HAVE_INET6)
 
-static void
-ngx_proxy_protocol_v2_write_ipv6(struct sockaddr *sa, u_char *addr,
+स्थिर शून्य
+ngx_proxy_protocol_v2_write_ipv6(संरचना sockaddr *sa, u_char *addr,
     u_char *port)
 {
-    struct sockaddr_in   *sin;
-    struct sockaddr_in6  *sin6;
+    संरचना sockaddr_in   *sin;
+    संरचना sockaddr_in6  *sin6;
 
     /* IPv4-mapped prefix: 80 zero bits + 16 one bits */
-    static const u_char  mapped[]   = { 0x00, 0x00, 0x00, 0x00,
+    स्थिर ध्रुव u_char  mapped[]   = { 0x00, 0x00, 0x00, 0x00,
                                         0x00, 0x00, 0x00, 0x00,
                                         0x00, 0x00, 0xff, 0xff };
 
-    if (sa->sa_family == AF_INET6) {
-        sin6 = (struct sockaddr_in6 *) sa;
+    सचे (sa->sa_family == AF_INET6) {
+        sin6 = (संरचना sockaddr_in6 *) sa;
         ngx_memcpy(addr, &sin6->sin6_addr, 16);
         ngx_memcpy(port, &sin6->sin6_port, 2);
 
-    } else {
+    } अञ्ञथा {
         /* promote AF_INET to ::ffff:a.b.c.d */
-        sin = (struct sockaddr_in *) sa;
-        ngx_memcpy(addr, mapped, sizeof(mapped));
-        ngx_memcpy(addr + sizeof(mapped), &sin->sin_addr, 4);
+        sin = (संरचना sockaddr_in *) sa;
+        ngx_memcpy(addr, mapped, परिमाण(mapped));
+        ngx_memcpy(addr + परिमाण(mapped), &sin->sin_addr, 4);
         ngx_memcpy(port, &sin->sin_port, 2);
     }
 }
@@ -1210,30 +1210,30 @@ ngx_proxy_protocol_v2_write_ipv6(struct sockaddr *sa, u_char *addr,
 #endif
 
 
-static u_char *
+स्थिर u_char *
 ngx_proxy_protocol_v2_write_tlv(ngx_connection_t *c, u_char *p, u_char *last,
-    ngx_uint_t type, ngx_str_t *value)
+    ngx_uint_t type, ngx_str_t *मानम्)
 {
     ngx_proxy_protocol_tlv_t  *tlv;
 
-    if ((size_t) (last - p) < sizeof(ngx_proxy_protocol_tlv_t) + value->len) {
+    सचे ((size_t) (last - p) < परिमाण(ngx_proxy_protocol_tlv_t) + मानम्->len) {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0,
                       "too small buffer for PROXY protocol v2 TLV");
-        return NULL;
+        पटिनिवत्त रिक्त;
     }
 
     tlv = (ngx_proxy_protocol_tlv_t *) p;
     tlv->type = (u_char) type;
-    tlv->len[0] = (u_char) (value->len >> 8);
-    tlv->len[1] = (u_char)  value->len;
+    tlv->len[0] = (u_char) (मानम्->len >> 8);
+    tlv->len[1] = (u_char)  मानम्->len;
 
-    p += sizeof(ngx_proxy_protocol_tlv_t);
+    p += परिमाण(ngx_proxy_protocol_tlv_t);
 
-    return ngx_cpymem(p, value->data, value->len);
+    पटिनिवत्त ngx_cpymem(p, मानम्->data, मानम्->len);
 }
 
 
-static u_char *
+स्थिर u_char *
 ngx_proxy_protocol_v2_write_ssl(ngx_connection_t *c, u_char *p, u_char *last,
     ngx_array_t *ssl_tlvs, ngx_uint_t client, uint32_t verify)
 {
@@ -1242,18 +1242,18 @@ ngx_proxy_protocol_v2_write_ssl(ngx_connection_t *c, u_char *p, u_char *last,
     ngx_uint_t                       i;
     ngx_proxy_protocol_tlv_t        *tlv;
     ngx_proxy_protocol_tlv_ssl_t    *tlv_ssl;
-    ngx_proxy_protocol_tlv_value_t  *sub;
+    ngx_proxy_protocol_tlv_मानम्_t  *sub;
 
-    if ((size_t) (last - p) < sizeof(ngx_proxy_protocol_tlv_t)
-                              + sizeof(ngx_proxy_protocol_tlv_ssl_t))
+    सचे ((size_t) (last - p) < परिमाण(ngx_proxy_protocol_tlv_t)
+                              + परिमाण(ngx_proxy_protocol_tlv_ssl_t))
     {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0,
                       "too small buffer for PROXY protocol v2 SSL TLV");
-        return NULL;
+        पटिनिवत्त रिक्त;
     }
 
     start = p;
-    p += sizeof(ngx_proxy_protocol_tlv_t);
+    p += परिमाण(ngx_proxy_protocol_tlv_t);
 
     tlv_ssl = (ngx_proxy_protocol_tlv_ssl_t *) p;
     tlv_ssl->client = (u_char) client;
@@ -1262,36 +1262,36 @@ ngx_proxy_protocol_v2_write_ssl(ngx_connection_t *c, u_char *p, u_char *last,
     tlv_ssl->verify[2] = (u_char) (verify >> 8);
     tlv_ssl->verify[3] = (u_char)  verify;
 
-    p += sizeof(ngx_proxy_protocol_tlv_ssl_t);
+    p += परिमाण(ngx_proxy_protocol_tlv_ssl_t);
 
     sub = ssl_tlvs->elts;
 
-    for (i = 0; i < ssl_tlvs->nelts; i++) {
+    अत्थाय (i = 0; i < ssl_tlvs->nelts; i++) {
         p = ngx_proxy_protocol_v2_write_tlv(c, p, last, sub[i].type,
-                                            &sub[i].value);
-        if (p == NULL) {
-            return NULL;
+                                            &sub[i].मानम्);
+        सचे (p == रिक्त) {
+            पटिनिवत्त रिक्त;
         }
     }
 
-    len = (uint16_t) (p - start - sizeof(ngx_proxy_protocol_tlv_t));
+    len = (uint16_t) (p - start - परिमाण(ngx_proxy_protocol_tlv_t));
 
     tlv = (ngx_proxy_protocol_tlv_t *) start;
     tlv->type = NGX_PROXY_PROTOCOL_TLV_SSL;
     tlv->len[0] = (u_char) (len >> 8);
     tlv->len[1] = (u_char)  len;
 
-    return p;
+    पटिनिवत्त p;
 }
 
 
-static void
+स्थिर शून्य
 ngx_proxy_protocol_v2_set_len(u_char *buf, u_char *p)
 {
     uint16_t                      len;
     ngx_proxy_protocol_header_t  *header;
 
-    len = (uint16_t) (p - buf - sizeof(ngx_proxy_protocol_header_t));
+    len = (uint16_t) (p - buf - परिमाण(ngx_proxy_protocol_header_t));
 
     header = (ngx_proxy_protocol_header_t *) buf;
     header->len[0] = (u_char) (len >> 8);
@@ -1299,18 +1299,18 @@ ngx_proxy_protocol_v2_set_len(u_char *buf, u_char *p)
 }
 
 
-static u_char *
+स्थिर u_char *
 ngx_proxy_protocol_v2_write_crc32c(ngx_connection_t *c, u_char *buf,
     u_char *p, u_char *last)
 {
-    u_char                    *value;
+    u_char                    *मानम्;
     uint32_t                   crc;
     ngx_proxy_protocol_tlv_t  *tlv;
 
-    if ((size_t) (last - p) < sizeof(ngx_proxy_protocol_tlv_t) + 4) {
+    सचे ((size_t) (last - p) < परिमाण(ngx_proxy_protocol_tlv_t) + 4) {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0,
                       "too small buffer for PROXY protocol v2 CRC32c TLV");
-        return NULL;
+        पटिनिवत्त रिक्त;
     }
 
     /* append the CRC32c TLV with a zeroed value field */
@@ -1320,20 +1320,20 @@ ngx_proxy_protocol_v2_write_crc32c(ngx_connection_t *c, u_char *buf,
     tlv->len[0] = 0;
     tlv->len[1] = 4;
 
-    value = p + sizeof(ngx_proxy_protocol_tlv_t);
+    मानम् = p + परिमाण(ngx_proxy_protocol_tlv_t);
 
-    ngx_memzero(value, 4);
+    ngx_memzero(मानम्, 4);
 
-    p = value + 4;
+    p = मानम् + 4;
 
     /* the checksum covers the entire header with the zeroed value */
 
     crc = ngx_crc32c_long(buf, p - buf);
 
-    value[0] = (u_char) (crc >> 24);
-    value[1] = (u_char) (crc >> 16);
-    value[2] = (u_char) (crc >> 8);
-    value[3] = (u_char) crc;
+    मानम्[0] = (u_char) (crc >> 24);
+    मानम्[1] = (u_char) (crc >> 16);
+    मानम्[2] = (u_char) (crc >> 8);
+    मानम्[3] = (u_char) crc;
 
-    return p;
+    पटिनिवत्त p;
 }

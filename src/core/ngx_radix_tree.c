@@ -5,41 +5,41 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-static ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
+स्थिर ngx_radix_ग्रन्थिः_t *ngx_radix_alloc(ngx_radix_वृक्षः_t *वृक्षः);
 
 
-ngx_radix_tree_t *
-ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
+ngx_radix_वृक्षः_t *
+ngx_radix_वृक्षः_create(ngx_pool_t *pool, ngx_int_t preallocate)
 {
-    uint32_t           key, mask, inc;
-    ngx_radix_tree_t  *tree;
+    uint32_t           कुञ्चिका, mask, inc;
+    ngx_radix_वृक्षः_t  *वृक्षः;
 
-    tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
-        return NULL;
+    वृक्षः = ngx_palloc(pool, परिमाण(ngx_radix_वृक्षः_t));
+    सचे (वृक्षः == रिक्त) {
+        पटिनिवत्त रिक्त;
     }
 
-    tree->pool = pool;
-    tree->free = NULL;
-    tree->start = NULL;
-    tree->size = 0;
+    वृक्षः->pool = pool;
+    वृक्षः->मुक्त = रिक्त;
+    वृक्षः->start = रिक्त;
+    वृक्षः->size = 0;
 
-    tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
-        return NULL;
+    वृक्षः->मूलम् = ngx_radix_alloc(वृक्षः);
+    सचे (वृक्षः->मूलम् == रिक्त) {
+        पटिनिवत्त रिक्त;
     }
 
-    tree->root->right = NULL;
-    tree->root->left = NULL;
-    tree->root->parent = NULL;
-    tree->root->value = NGX_RADIX_NO_VALUE;
+    वृक्षः->मूलम्->दक्षिणः = रिक्त;
+    वृक्षः->मूलम्->वामः = रिक्त;
+    वृक्षः->मूलम्->parent = रिक्त;
+    वृक्षः->मूलम्->मानम् = NGX_RADIX_NO_मानम्;
 
-    if (preallocate == 0) {
-        return tree;
+    सचे (preallocate == 0) {
+        पटिनिवत्त वृक्षः;
     }
 
     /*
@@ -59,21 +59,21 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      *     8 bits on sparc64 in 32-bit mode (8K pages)
      */
 
-    if (preallocate == -1) {
-        switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
+    सचे (preallocate == -1) {
+        विकल्प (ngx_pagesize / परिमाण(ngx_radix_ग्रन्थिः_t)) {
 
         /* amd64 */
-        case 128:
+        पक्ष 128:
             preallocate = 6;
-            break;
+            भङ्ग;
 
         /* i386, sparc64 */
-        case 256:
+        पक्ष 256:
             preallocate = 7;
-            break;
+            भङ्ग;
 
         /* sparc64 in 32-bit mode */
-        default:
+        स्वभाव:
             preallocate = 8;
         }
     }
@@ -81,408 +81,408 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     mask = 0;
     inc = 0x80000000;
 
-    while (preallocate--) {
+    याव (preallocate--) {
 
-        key = 0;
+        कुञ्चिका = 0;
         mask >>= 1;
         mask |= 0x80000000;
 
-        do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+        करोहि {
+            सचे (ngx_radix32tree_निवेशय(वृक्षः, कुञ्चिका, mask, NGX_RADIX_NO_मानम्)
                 != NGX_OK)
             {
-                return NULL;
+                पटिनिवत्त रिक्त;
             }
 
-            key += inc;
+            कुञ्चिका += inc;
 
-        } while (key);
+        } याव (कुञ्चिका);
 
         inc >>= 1;
     }
 
-    return tree;
+    पटिनिवत्त वृक्षः;
 }
 
 
 ngx_int_t
-ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
-    uintptr_t value)
+ngx_radix32tree_निवेशय(ngx_radix_वृक्षः_t *वृक्षः, uint32_t कुञ्चिका, uint32_t mask,
+    uintptr_t मानम्)
 {
     uint32_t           bit;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_ग्रन्थिः_t  *ग्रन्थिः, *next;
 
     bit = 0x80000000;
 
-    node = tree->root;
-    next = tree->root;
+    ग्रन्थिः = वृक्षः->मूलम्;
+    next = वृक्षः->मूलम्;
 
-    while (bit & mask) {
-        if (key & bit) {
-            next = node->right;
+    याव (bit & mask) {
+        सचे (कुञ्चिका & bit) {
+            next = ग्रन्थिः->दक्षिणः;
 
-        } else {
-            next = node->left;
+        } अञ्ञथा {
+            next = ग्रन्थिः->वामः;
         }
 
-        if (next == NULL) {
-            break;
-        }
-
-        bit >>= 1;
-        node = next;
-    }
-
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
-        }
-
-        node->value = value;
-        return NGX_OK;
-    }
-
-    while (bit & mask) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
-        }
-
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
-
-        if (key & bit) {
-            node->right = next;
-
-        } else {
-            node->left = next;
+        सचे (next == रिक्त) {
+            भङ्ग;
         }
 
         bit >>= 1;
-        node = next;
+        ग्रन्थिः = next;
     }
 
-    node->value = value;
+    सचे (next) {
+        सचे (ग्रन्थिः->मानम् != NGX_RADIX_NO_मानम्) {
+            पटिनिवत्त NGX_BUSY;
+        }
 
-    return NGX_OK;
+        ग्रन्थिः->मानम् = मानम्;
+        पटिनिवत्त NGX_OK;
+    }
+
+    याव (bit & mask) {
+        next = ngx_radix_alloc(वृक्षः);
+        सचे (next == रिक्त) {
+            पटिनिवत्त NGX_ERROR;
+        }
+
+        next->दक्षिणः = रिक्त;
+        next->वामः = रिक्त;
+        next->parent = ग्रन्थिः;
+        next->मानम् = NGX_RADIX_NO_मानम्;
+
+        सचे (कुञ्चिका & bit) {
+            ग्रन्थिः->दक्षिणः = next;
+
+        } अञ्ञथा {
+            ग्रन्थिः->वामः = next;
+        }
+
+        bit >>= 1;
+        ग्रन्थिः = next;
+    }
+
+    ग्रन्थिः->मानम् = मानम्;
+
+    पटिनिवत्त NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
+ngx_radix32tree_delete(ngx_radix_वृक्षः_t *वृक्षः, uint32_t कुञ्चिका, uint32_t mask)
 {
     uint32_t           bit;
-    ngx_radix_node_t  *node;
+    ngx_radix_ग्रन्थिः_t  *ग्रन्थिः;
 
     bit = 0x80000000;
-    node = tree->root;
+    ग्रन्थिः = वृक्षः->मूलम्;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
-            node = node->right;
+    याव (ग्रन्थिः && (bit & mask)) {
+        सचे (कुञ्चिका & bit) {
+            ग्रन्थिः = ग्रन्थिः->दक्षिणः;
 
-        } else {
-            node = node->left;
+        } अञ्ञथा {
+            ग्रन्थिः = ग्रन्थिः->वामः;
         }
 
         bit >>= 1;
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    सचे (ग्रन्थिः == रिक्त) {
+        पटिनिवत्त NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    सचे (ग्रन्थिः->दक्षिणः || ग्रन्थिः->वामः) {
+        सचे (ग्रन्थिः->मानम् != NGX_RADIX_NO_मानम्) {
+            ग्रन्थिः->मानम् = NGX_RADIX_NO_मानम्;
+            पटिनिवत्त NGX_OK;
         }
 
-        return NGX_ERROR;
+        पटिनिवत्त NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    अत्थाय ( ;; ) {
+        सचे (ग्रन्थिः->parent->दक्षिणः == ग्रन्थिः) {
+            ग्रन्थिः->parent->दक्षिणः = रिक्त;
 
-        } else {
-            node->parent->left = NULL;
+        } अञ्ञथा {
+            ग्रन्थिः->parent->वामः = रिक्त;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        ग्रन्थिः->दक्षिणः = वृक्षः->मुक्त;
+        वृक्षः->मुक्त = ग्रन्थिः;
 
-        node = node->parent;
+        ग्रन्थिः = ग्रन्थिः->parent;
 
-        if (node->right || node->left) {
-            break;
+        सचे (ग्रन्थिः->दक्षिणः || ग्रन्थिः->वामः) {
+            भङ्ग;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        सचे (ग्रन्थिः->मानम् != NGX_RADIX_NO_मानम्) {
+            भङ्ग;
         }
 
-        if (node->parent == NULL) {
-            break;
+        सचे (ग्रन्थिः->parent == रिक्त) {
+            भङ्ग;
         }
     }
 
-    return NGX_OK;
+    पटिनिवत्त NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
+ngx_radix32tree_find(ngx_radix_वृक्षः_t *वृक्षः, uint32_t कुञ्चिका)
 {
     uint32_t           bit;
-    uintptr_t          value;
-    ngx_radix_node_t  *node;
+    uintptr_t          मानम्;
+    ngx_radix_ग्रन्थिः_t  *ग्रन्थिः;
 
     bit = 0x80000000;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    मानम् = NGX_RADIX_NO_मानम्;
+    ग्रन्थिः = वृक्षः->मूलम्;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    याव (ग्रन्थिः) {
+        सचे (ग्रन्थिः->मानम् != NGX_RADIX_NO_मानम्) {
+            मानम् = ग्रन्थिः->मानम्;
         }
 
-        if (key & bit) {
-            node = node->right;
+        सचे (कुञ्चिका & bit) {
+            ग्रन्थिः = ग्रन्थिः->दक्षिणः;
 
-        } else {
-            node = node->left;
+        } अञ्ञथा {
+            ग्रन्थिः = ग्रन्थिः->वामः;
         }
 
         bit >>= 1;
     }
 
-    return value;
+    पटिनिवत्त मानम्;
 }
 
 
-#if (NGX_HAVE_INET6)
+#सचे (NGX_HAVE_INET6)
 
 ngx_int_t
-ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
-    uintptr_t value)
+ngx_radix128tree_निवेशय(ngx_radix_वृक्षः_t *वृक्षः, u_char *कुञ्चिका, u_char *mask,
+    uintptr_t मानम्)
 {
     u_char             bit;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_ग्रन्थिः_t  *ग्रन्थिः, *next;
 
     i = 0;
     bit = 0x80;
 
-    node = tree->root;
-    next = tree->root;
+    ग्रन्थिः = वृक्षः->मूलम्;
+    next = वृक्षः->मूलम्;
 
-    while (bit & mask[i]) {
-        if (key[i] & bit) {
-            next = node->right;
+    याव (bit & mask[i]) {
+        सचे (कुञ्चिका[i] & bit) {
+            next = ग्रन्थिः->दक्षिणः;
 
-        } else {
-            next = node->left;
+        } अञ्ञथा {
+            next = ग्रन्थिः->वामः;
         }
 
-        if (next == NULL) {
-            break;
+        सचे (next == रिक्त) {
+            भङ्ग;
         }
 
         bit >>= 1;
-        node = next;
+        ग्रन्थिः = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        सचे (bit == 0) {
+            सचे (++i == 16) {
+                भङ्ग;
             }
 
             bit = 0x80;
         }
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    सचे (next) {
+        सचे (ग्रन्थिः->मानम् != NGX_RADIX_NO_मानम्) {
+            पटिनिवत्त NGX_BUSY;
         }
 
-        node->value = value;
-        return NGX_OK;
+        ग्रन्थिः->मानम् = मानम्;
+        पटिनिवत्त NGX_OK;
     }
 
-    while (bit & mask[i]) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+    याव (bit & mask[i]) {
+        next = ngx_radix_alloc(वृक्षः);
+        सचे (next == रिक्त) {
+            पटिनिवत्त NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
+        next->दक्षिणः = रिक्त;
+        next->वामः = रिक्त;
+        next->parent = ग्रन्थिः;
+        next->मानम् = NGX_RADIX_NO_मानम्;
 
-        if (key[i] & bit) {
-            node->right = next;
+        सचे (कुञ्चिका[i] & bit) {
+            ग्रन्थिः->दक्षिणः = next;
 
-        } else {
-            node->left = next;
+        } अञ्ञथा {
+            ग्रन्थिः->वामः = next;
         }
 
         bit >>= 1;
-        node = next;
+        ग्रन्थिः = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        सचे (bit == 0) {
+            सचे (++i == 16) {
+                भङ्ग;
             }
 
             bit = 0x80;
         }
     }
 
-    node->value = value;
+    ग्रन्थिः->मानम् = मानम्;
 
-    return NGX_OK;
+    पटिनिवत्त NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
+ngx_radix128tree_delete(ngx_radix_वृक्षः_t *वृक्षः, u_char *कुञ्चिका, u_char *mask)
 {
     u_char             bit;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_ग्रन्थिः_t  *ग्रन्थिः;
 
     i = 0;
     bit = 0x80;
-    node = tree->root;
+    ग्रन्थिः = वृक्षः->मूलम्;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
-            node = node->right;
+    याव (ग्रन्थिः && (bit & mask[i])) {
+        सचे (कुञ्चिका[i] & bit) {
+            ग्रन्थिः = ग्रन्थिः->दक्षिणः;
 
-        } else {
-            node = node->left;
+        } अञ्ञथा {
+            ग्रन्थिः = ग्रन्थिः->वामः;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        सचे (bit == 0) {
+            सचे (++i == 16) {
+                भङ्ग;
             }
 
             bit = 0x80;
         }
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    सचे (ग्रन्थिः == रिक्त) {
+        पटिनिवत्त NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    सचे (ग्रन्थिः->दक्षिणः || ग्रन्थिः->वामः) {
+        सचे (ग्रन्थिः->मानम् != NGX_RADIX_NO_मानम्) {
+            ग्रन्थिः->मानम् = NGX_RADIX_NO_मानम्;
+            पटिनिवत्त NGX_OK;
         }
 
-        return NGX_ERROR;
+        पटिनिवत्त NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    अत्थाय ( ;; ) {
+        सचे (ग्रन्थिः->parent->दक्षिणः == ग्रन्थिः) {
+            ग्रन्थिः->parent->दक्षिणः = रिक्त;
 
-        } else {
-            node->parent->left = NULL;
+        } अञ्ञथा {
+            ग्रन्थिः->parent->वामः = रिक्त;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        ग्रन्थिः->दक्षिणः = वृक्षः->मुक्त;
+        वृक्षः->मुक्त = ग्रन्थिः;
 
-        node = node->parent;
+        ग्रन्थिः = ग्रन्थिः->parent;
 
-        if (node->right || node->left) {
-            break;
+        सचे (ग्रन्थिः->दक्षिणः || ग्रन्थिः->वामः) {
+            भङ्ग;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        सचे (ग्रन्थिः->मानम् != NGX_RADIX_NO_मानम्) {
+            भङ्ग;
         }
 
-        if (node->parent == NULL) {
-            break;
+        सचे (ग्रन्थिः->parent == रिक्त) {
+            भङ्ग;
         }
     }
 
-    return NGX_OK;
+    पटिनिवत्त NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
+ngx_radix128tree_find(ngx_radix_वृक्षः_t *वृक्षः, u_char *कुञ्चिका)
 {
     u_char             bit;
-    uintptr_t          value;
+    uintptr_t          मानम्;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_ग्रन्थिः_t  *ग्रन्थिः;
 
     i = 0;
     bit = 0x80;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    मानम् = NGX_RADIX_NO_मानम्;
+    ग्रन्थिः = वृक्षः->मूलम्;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    याव (ग्रन्थिः) {
+        सचे (ग्रन्थिः->मानम् != NGX_RADIX_NO_मानम्) {
+            मानम् = ग्रन्थिः->मानम्;
         }
 
-        if (key[i] & bit) {
-            node = node->right;
+        सचे (कुञ्चिका[i] & bit) {
+            ग्रन्थिः = ग्रन्थिः->दक्षिणः;
 
-        } else {
-            node = node->left;
+        } अञ्ञथा {
+            ग्रन्थिः = ग्रन्थिः->वामः;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
+        सचे (bit == 0) {
             i++;
             bit = 0x80;
         }
     }
 
-    return value;
+    पटिनिवत्त मानम्;
 }
 
 #endif
 
 
-static ngx_radix_node_t *
-ngx_radix_alloc(ngx_radix_tree_t *tree)
+स्थिर ngx_radix_ग्रन्थिः_t *
+ngx_radix_alloc(ngx_radix_वृक्षः_t *वृक्षः)
 {
-    ngx_radix_node_t  *p;
+    ngx_radix_ग्रन्थिः_t  *p;
 
-    if (tree->free) {
-        p = tree->free;
-        tree->free = tree->free->right;
-        return p;
+    सचे (वृक्षः->मुक्त) {
+        p = वृक्षः->मुक्त;
+        वृक्षः->मुक्त = वृक्षः->मुक्त->दक्षिणः;
+        पटिनिवत्त p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
-        tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
-            return NULL;
+    सचे (वृक्षः->size < परिमाण(ngx_radix_ग्रन्थिः_t)) {
+        वृक्षः->start = ngx_pmemalign(वृक्षः->pool, ngx_pagesize, ngx_pagesize);
+        सचे (वृक्षः->start == रिक्त) {
+            पटिनिवत्त रिक्त;
         }
 
-        tree->size = ngx_pagesize;
+        वृक्षः->size = ngx_pagesize;
     }
 
-    p = (ngx_radix_node_t *) tree->start;
-    tree->start += sizeof(ngx_radix_node_t);
-    tree->size -= sizeof(ngx_radix_node_t);
+    p = (ngx_radix_ग्रन्थिः_t *) वृक्षः->start;
+    वृक्षः->start += परिमाण(ngx_radix_ग्रन्थिः_t);
+    वृक्षः->size -= परिमाण(ngx_radix_ग्रन्थिः_t);
 
-    return p;
+    पटिनिवत्त p;
 }
