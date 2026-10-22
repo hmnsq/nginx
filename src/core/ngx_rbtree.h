@@ -9,78 +9,78 @@
 #define _NGX_RBTREE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef ngx_uint_t  ngx_rbtree_key_t;
-typedef ngx_int_t   ngx_rbtree_key_int_t;
+تعريفنوع ngx_uint_t  ngx_rbtree_ئاچقۇچ_t;
+تعريفنوع ngx_int_t   ngx_rbtree_ئاچقۇچ_int_t;
 
 
-typedef struct ngx_rbtree_node_s  ngx_rbtree_node_t;
+تعريفنوع بنية ngx_rbtree_تۈگۈن_s  ngx_rbtree_تۈگۈن_t;
 
-struct ngx_rbtree_node_s {
-    ngx_rbtree_key_t       key;
-    ngx_rbtree_node_t     *left;
-    ngx_rbtree_node_t     *right;
-    ngx_rbtree_node_t     *parent;
+بنية ngx_rbtree_تۈگۈن_s {
+    ngx_rbtree_ئاچقۇچ_t       ئاچقۇچ;
+    ngx_rbtree_تۈگۈن_t     *سول;
+    ngx_rbtree_تۈگۈن_t     *ئوڭ;
+    ngx_rbtree_تۈگۈن_t     *parent;
     u_char                 color;
     u_char                 data;
 };
 
 
-typedef struct ngx_rbtree_s  ngx_rbtree_t;
+تعريفنوع بنية ngx_rbtree_s  ngx_rbtree_t;
 
-typedef void (*ngx_rbtree_insert_pt) (ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
+تعريفنوع فراغ (*ngx_rbtree_قىستۇرۇش_pt) (ngx_rbtree_تۈگۈن_t *يىلتىز,
+    ngx_rbtree_تۈگۈن_t *تۈگۈن, ngx_rbtree_تۈگۈن_t *sentinel);
 
-struct ngx_rbtree_s {
-    ngx_rbtree_node_t     *root;
-    ngx_rbtree_node_t     *sentinel;
-    ngx_rbtree_insert_pt   insert;
+بنية ngx_rbtree_s {
+    ngx_rbtree_تۈگۈن_t     *يىلتىز;
+    ngx_rbtree_تۈگۈن_t     *sentinel;
+    ngx_rbtree_قىستۇرۇش_pt   قىستۇرۇش;
 };
 
 
-#define ngx_rbtree_init(tree, s, i)                                           \
+#define ngx_rbtree_init(دەرەخ, s, i)                                           \
     ngx_rbtree_sentinel_init(s);                                              \
-    (tree)->root = s;                                                         \
-    (tree)->sentinel = s;                                                     \
-    (tree)->insert = i
+    (دەرەخ)->يىلتىز = s;                                                         \
+    (دەرەخ)->sentinel = s;                                                     \
+    (دەرەخ)->قىستۇرۇش = i
 
-#define ngx_rbtree_data(node, type, link)                                     \
-    (type *) ((u_char *) (node) - offsetof(type, link))
-
-
-void ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_insert_value(ngx_rbtree_node_t *root, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel);
-void ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-ngx_rbtree_node_t *ngx_rbtree_next(ngx_rbtree_t *tree,
-    ngx_rbtree_node_t *node);
+#define ngx_rbtree_data(تۈگۈن, type, link)                                     \
+    (type *) ((u_char *) (تۈگۈن) - offsetof(type, link))
 
 
-#define ngx_rbt_red(node)               ((node)->color = 1)
-#define ngx_rbt_black(node)             ((node)->color = 0)
-#define ngx_rbt_is_red(node)            ((node)->color)
-#define ngx_rbt_is_black(node)          (!ngx_rbt_is_red(node))
+فراغ ngx_rbtree_قىستۇرۇش(ngx_rbtree_t *دەرەخ, ngx_rbtree_تۈگۈن_t *تۈگۈن);
+فراغ ngx_rbtree_delete(ngx_rbtree_t *دەرەخ, ngx_rbtree_تۈگۈن_t *تۈگۈن);
+فراغ ngx_rbtree_قىستۇرۇش_قىممەت(ngx_rbtree_تۈگۈن_t *يىلتىز, ngx_rbtree_تۈگۈن_t *تۈگۈن,
+    ngx_rbtree_تۈگۈن_t *sentinel);
+فراغ ngx_rbtree_قىستۇرۇش_timer_قىممەت(ngx_rbtree_تۈگۈن_t *يىلتىز,
+    ngx_rbtree_تۈگۈن_t *تۈگۈن, ngx_rbtree_تۈگۈن_t *sentinel);
+ngx_rbtree_تۈگۈن_t *ngx_rbtree_next(ngx_rbtree_t *دەرەخ,
+    ngx_rbtree_تۈگۈن_t *تۈگۈن);
+
+
+#define ngx_rbt_red(تۈگۈن)               ((تۈگۈن)->color = 1)
+#define ngx_rbt_black(تۈگۈن)             ((تۈگۈن)->color = 0)
+#define ngx_rbt_is_red(تۈگۈن)            ((تۈگۈن)->color)
+#define ngx_rbt_is_black(تۈگۈن)          (!ngx_rbt_is_red(تۈگۈن))
 #define ngx_rbt_copy_color(n1, n2)      (n1->color = n2->color)
 
 
 /* a sentinel must be black */
 
-#define ngx_rbtree_sentinel_init(node)  ngx_rbt_black(node)
+#define ngx_rbtree_sentinel_init(تۈگۈن)  ngx_rbt_black(تۈگۈن)
 
 
-static ngx_inline ngx_rbtree_node_t *
-ngx_rbtree_min(ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ساكن ngx_inline ngx_rbtree_تۈگۈن_t *
+ngx_rbtree_min(ngx_rbtree_تۈگۈن_t *تۈگۈن, ngx_rbtree_تۈگۈن_t *sentinel)
 {
-    while (node->left != sentinel) {
-        node = node->left;
+    طالما (تۈگۈن->سول != sentinel) {
+        تۈگۈن = تۈگۈن->سول;
     }
 
-    return node;
+    أرجع تۈگۈن;
 }
 
 
