@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
 ngx_array_t *
@@ -14,44 +14,44 @@ ngx_array_create(ngx_pool_t *p, ngx_uint_t n, size_t size)
 {
     ngx_array_t *a;
 
-    a = ngx_palloc(p, sizeof(ngx_array_t));
-    if (a == NULL) {
-        return NULL;
+    a = ngx_palloc(p, পরিমাণ(ngx_array_t));
+    যদি (a == রিক্ত) {
+        প্রত্যাগম রিক্ত;
     }
 
-    if (ngx_array_init(a, p, n, size) != NGX_OK) {
-        return NULL;
+    যদি (ngx_array_init(a, p, n, size) != NGX_OK) {
+        প্রত্যাগম রিক্ত;
     }
 
-    return a;
+    প্রত্যাগম a;
 }
 
 
-void
+শূন্য
 ngx_array_destroy(ngx_array_t *a)
 {
     ngx_pool_t  *p;
 
     p = a->pool;
 
-    if ((u_char *) a->elts + a->size * a->nalloc == p->d.last) {
+    যদি ((u_char *) a->elts + a->size * a->nalloc == p->d.last) {
         p->d.last -= a->size * a->nalloc;
     }
 
-    if ((u_char *) a + sizeof(ngx_array_t) == p->d.last) {
+    যদি ((u_char *) a + পরিমাণ(ngx_array_t) == p->d.last) {
         p->d.last = (u_char *) a;
     }
 }
 
 
-void *
-ngx_array_push(ngx_array_t *a)
+শূন্য *
+ngx_array_ঠেলো(ngx_array_t *a)
 {
-    void        *elt, *new;
+    শূন্য        *elt, *new;
     size_t       size;
     ngx_pool_t  *p;
 
-    if (a->nelts == a->nalloc) {
+    যদি (a->nelts == a->nalloc) {
 
         /* the array is full */
 
@@ -59,7 +59,7 @@ ngx_array_push(ngx_array_t *a)
 
         p = a->pool;
 
-        if ((u_char *) a->elts + size == p->d.last
+        যদি ((u_char *) a->elts + size == p->d.last
             && p->d.last + a->size <= p->d.end)
         {
             /*
@@ -70,12 +70,12 @@ ngx_array_push(ngx_array_t *a)
             p->d.last += a->size;
             a->nalloc++;
 
-        } else {
+        } অন্যথা {
             /* allocate a new array */
 
             new = ngx_palloc(p, 2 * size);
-            if (new == NULL) {
-                return NULL;
+            যদি (new == রিক্ত) {
+                প্রত্যাগম রিক্ত;
             }
 
             ngx_memcpy(new, a->elts, size);
@@ -87,27 +87,27 @@ ngx_array_push(ngx_array_t *a)
     elt = (u_char *) a->elts + a->size * a->nelts;
     a->nelts++;
 
-    return elt;
+    প্রত্যাগম elt;
 }
 
 
-void *
-ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
+শূন্য *
+ngx_array_ঠেলো_n(ngx_array_t *a, ngx_uint_t n)
 {
-    void        *elt, *new;
+    শূন্য        *elt, *new;
     size_t       size;
     ngx_uint_t   nalloc;
     ngx_pool_t  *p;
 
     size = n * a->size;
 
-    if (a->nelts + n > a->nalloc) {
+    যদি (a->nelts + n > a->nalloc) {
 
         /* the array is full */
 
         p = a->pool;
 
-        if ((u_char *) a->elts + a->size * a->nalloc == p->d.last
+        যদি ((u_char *) a->elts + a->size * a->nalloc == p->d.last
             && p->d.last + size <= p->d.end)
         {
             /*
@@ -118,14 +118,14 @@ ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
             p->d.last += size;
             a->nalloc += n;
 
-        } else {
+        } অন্যথা {
             /* allocate a new array */
 
             nalloc = 2 * ((n >= a->nalloc) ? n : a->nalloc);
 
             new = ngx_palloc(p, nalloc * a->size);
-            if (new == NULL) {
-                return NULL;
+            যদি (new == রিক্ত) {
+                প্রত্যাগম রিক্ত;
             }
 
             ngx_memcpy(new, a->elts, a->nelts * a->size);
@@ -137,5 +137,5 @@ ngx_array_push_n(ngx_array_t *a, ngx_uint_t n)
     elt = (u_char *) a->elts + a->size * a->nelts;
     a->nelts += n;
 
-    return elt;
+    প্রত্যাগম elt;
 }

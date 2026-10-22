@@ -9,36 +9,36 @@
 #define _NGX_CONNECTION_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
-typedef struct ngx_listening_s  ngx_listening_t;
+প্রকারনির্দেশ সংরচনা ngx_listening_s  ngx_listening_t;
 
-struct ngx_listening_s {
+সংরচনা ngx_listening_s {
     ngx_socket_t        fd;
 
-    struct sockaddr    *sockaddr;
+    সংরচনা sockaddr    *sockaddr;
     socklen_t           socklen;    /* size of sockaddr */
     size_t              addr_text_max_len;
     ngx_str_t           addr_text;
 
-    int                 type;
-    int                 protocol;
+    পূর্ণাঙ্ক                 type;
+    পূর্ণাঙ্ক                 protocol;
 
-    int                 backlog;
-    int                 rcvbuf;
-    int                 sndbuf;
-#if (NGX_HAVE_KEEPALIVE_TUNABLE)
-    int                 keepidle;
-    int                 keepintvl;
-    int                 keepcnt;
+    পূর্ণাঙ্ক                 backlog;
+    পূর্ণাঙ্ক                 rcvbuf;
+    পূর্ণাঙ্ক                 sndbuf;
+#যদি (NGX_HAVE_KEEPALIVE_TUNABLE)
+    পূর্ণাঙ্ক                 keepidle;
+    পূর্ণাঙ্ক                 keepintvl;
+    পূর্ণাঙ্ক                 keepcnt;
 #endif
 
     /* handler of accepted connection */
     ngx_connection_handler_pt   handler;
 
-    void               *servers;  /* array of ngx_http_in_addr_t, for example */
+    শূন্য               *servers;  /* array of ngx_http_in_addr_t, for example */
 
     ngx_log_t           log;
     ngx_log_t          *logp;
@@ -49,7 +49,7 @@ struct ngx_listening_s {
     ngx_connection_t   *connection;
 
     ngx_rbtree_t        rbtree;
-    ngx_rbtree_node_t   sentinel;
+    ngx_rbtree_গ্রন্থি_t   sentinel;
 
     ngx_uint_t          worker;
 
@@ -66,7 +66,7 @@ struct ngx_listening_s {
     unsigned            addr_ntop:1;
     unsigned            wildcard:1;
 
-#if (NGX_HAVE_INET6)
+#যদি (NGX_HAVE_INET6)
     unsigned            ipv6only:1;
 #endif
     unsigned            reuseport:1;
@@ -79,21 +79,21 @@ struct ngx_listening_s {
     unsigned            deferred_accept:1;
     unsigned            delete_deferred:1;
     unsigned            add_deferred:1;
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
-    char               *accept_filter;
+#যদি (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+    বর্ণ               *accept_filter;
 #endif
-#if (NGX_HAVE_SETFIB)
-    int                 setfib;
+#যদি (NGX_HAVE_SETFIB)
+    পূর্ণাঙ্ক                 setfib;
 #endif
 
-#if (NGX_HAVE_TCP_FASTOPEN)
-    int                 fastopen;
+#যদি (NGX_HAVE_TCP_FASTOPEN)
+    পূর্ণাঙ্ক                 fastopen;
 #endif
 
 };
 
 
-typedef enum {
+প্রকারনির্দেশ গণনা {
     NGX_ERROR_ALERT = 0,
     NGX_ERROR_ERR,
     NGX_ERROR_INFO,
@@ -103,14 +103,14 @@ typedef enum {
 } ngx_connection_log_error_e;
 
 
-typedef enum {
+প্রকারনির্দেশ গণনা {
     NGX_TCP_NODELAY_UNSET = 0,
     NGX_TCP_NODELAY_SET,
     NGX_TCP_NODELAY_DISABLED
 } ngx_connection_tcp_nodelay_e;
 
 
-typedef enum {
+প্রকারনির্দেশ গণনা {
     NGX_TCP_NOPUSH_UNSET = 0,
     NGX_TCP_NOPUSH_SET,
     NGX_TCP_NOPUSH_DISABLED
@@ -122,10 +122,10 @@ typedef enum {
 #define NGX_HTTP_V2_BUFFERED   0x02
 
 
-struct ngx_connection_s {
-    void               *data;
-    ngx_event_t        *read;
-    ngx_event_t        *write;
+সংরচনা ngx_connection_s {
+    শূন্য               *data;
+    ngx_event_t        *পঠ;
+    ngx_event_t        *লিখ;
 
     ngx_socket_t        fd;
 
@@ -142,32 +142,32 @@ struct ngx_connection_s {
 
     ngx_pool_t         *pool;
 
-    int                 type;
+    পূর্ণাঙ্ক                 type;
 
-    struct sockaddr    *sockaddr;
+    সংরচনা sockaddr    *sockaddr;
     socklen_t           socklen;
     ngx_str_t           addr_text;
 
     ngx_proxy_protocol_t  *proxy_protocol;
 
-#if (NGX_QUIC || NGX_COMPAT)
+#যদি (NGX_QUIC || NGX_COMPAT)
     ngx_quic_stream_t     *quic;
 #endif
 
-#if (NGX_SSL || NGX_COMPAT)
+#যদি (NGX_SSL || NGX_COMPAT)
     ngx_ssl_connection_t  *ssl;
 #endif
 
     ngx_udp_connection_t  *udp;
 
-    struct sockaddr    *local_sockaddr;
+    সংরচনা sockaddr    *local_sockaddr;
     socklen_t           local_socklen;
 
     ngx_buf_t          *buffer;
 
     ngx_queue_t         queue;
 
-    ngx_atomic_uint_t   number;
+    ngx_atomic_uint_t   সংখ্যা;
 
     ngx_msec_t          start_time;
     ngx_uint_t          requests;
@@ -194,13 +194,13 @@ struct ngx_connection_s {
     unsigned            need_last_buf:1;
     unsigned            need_flush_buf:1;
 
-#if (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
-    unsigned            busy_count:2;
+#যদি (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
+    unsigned            busy_গুনতি:2;
 #endif
 
     unsigned            ktls_recv:1;
 
-#if (NGX_THREADS || NGX_COMPAT)
+#যদি (NGX_THREADS || NGX_COMPAT)
     ngx_thread_task_t  *sendfile_task;
 #endif
 };
@@ -212,28 +212,28 @@ struct ngx_connection_s {
     c->log->next = l->next;                                                  \
     c->log->writer = l->writer;                                              \
     c->log->wdata = l->wdata;                                                \
-    if (!(c->log->log_level & NGX_LOG_DEBUG_CONNECTION)) {                   \
+    যদি (!(c->log->log_level & NGX_LOG_DEBUG_CONNECTION)) {                   \
         c->log->log_level = l->log_level;                                    \
     }
 
 
-ngx_listening_t *ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
+ngx_listening_t *ngx_create_listening(ngx_conf_t *cf, সংরচনা sockaddr *sockaddr,
     socklen_t socklen);
 ngx_int_t ngx_clone_listening(ngx_cycle_t *cycle, ngx_listening_t *ls);
 ngx_int_t ngx_set_inherited_sockets(ngx_cycle_t *cycle);
 ngx_int_t ngx_open_listening_sockets(ngx_cycle_t *cycle);
-void ngx_configure_listening_sockets(ngx_cycle_t *cycle);
-void ngx_close_listening_sockets(ngx_cycle_t *cycle);
-void ngx_close_connection(ngx_connection_t *c);
-void ngx_close_idle_connections(ngx_cycle_t *cycle);
+শূন্য ngx_configure_listening_sockets(ngx_cycle_t *cycle);
+শূন্য ngx_close_listening_sockets(ngx_cycle_t *cycle);
+শূন্য ngx_close_connection(ngx_connection_t *c);
+শূন্য ngx_close_idle_connections(ngx_cycle_t *cycle);
 ngx_int_t ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
     ngx_uint_t port);
 ngx_int_t ngx_tcp_nodelay(ngx_connection_t *c);
-ngx_int_t ngx_connection_error(ngx_connection_t *c, ngx_err_t err, char *text);
+ngx_int_t ngx_connection_error(ngx_connection_t *c, ngx_err_t err, বর্ণ *text);
 
 ngx_connection_t *ngx_get_connection(ngx_socket_t s, ngx_log_t *log);
-void ngx_free_connection(ngx_connection_t *c);
+শূন্য ngx_free_connection(ngx_connection_t *c);
 
-void ngx_reusable_connection(ngx_connection_t *c, ngx_uint_t reusable);
+শূন্য ngx_reusable_connection(ngx_connection_t *c, ngx_uint_t reusable);
 
 #endif /* _NGX_CONNECTION_H_INCLUDED_ */

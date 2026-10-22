@@ -7,16 +7,16 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_sha1.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
+#অন্তর্ভাব <ngx_sha1.h>
 
 
-static const u_char *ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data,
+স্থির ধ্রুব u_char *ngx_sha1_body(ngx_sha1_t *ctx, ধ্রুব u_char *data,
     size_t size);
 
 
-void
+শূন্য
 ngx_sha1_init(ngx_sha1_t *ctx)
 {
     ctx->a = 0x67452301;
@@ -29,29 +29,29 @@ ngx_sha1_init(ngx_sha1_t *ctx)
 }
 
 
-void
-ngx_sha1_update(ngx_sha1_t *ctx, const void *data, size_t size)
+শূন্য
+ngx_sha1_update(ngx_sha1_t *ctx, ধ্রুব শূন্য *data, size_t size)
 {
-    size_t  used, free;
+    size_t  used, মুক্ত;
 
     used = (size_t) (ctx->bytes & 0x3f);
     ctx->bytes += size;
 
-    if (used) {
-        free = 64 - used;
+    যদি (used) {
+        মুক্ত = 64 - used;
 
-        if (size < free) {
+        যদি (size < মুক্ত) {
             ngx_memcpy(&ctx->buffer[used], data, size);
-            return;
+            প্রত্যাগম;
         }
 
-        ngx_memcpy(&ctx->buffer[used], data, free);
-        data = (u_char *) data + free;
-        size -= free;
-        (void) ngx_sha1_body(ctx, ctx->buffer, 64);
+        ngx_memcpy(&ctx->buffer[used], data, মুক্ত);
+        data = (u_char *) data + মুক্ত;
+        size -= মুক্ত;
+        (শূন্য) ngx_sha1_body(ctx, ctx->buffer, 64);
     }
 
-    if (size >= 64) {
+    যদি (size >= 64) {
         data = ngx_sha1_body(ctx, data, size & ~(size_t) 0x3f);
         size &= 0x3f;
     }
@@ -60,25 +60,25 @@ ngx_sha1_update(ngx_sha1_t *ctx, const void *data, size_t size)
 }
 
 
-void
+শূন্য
 ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
 {
-    size_t  used, free;
+    size_t  used, মুক্ত;
 
     used = (size_t) (ctx->bytes & 0x3f);
 
     ctx->buffer[used++] = 0x80;
 
-    free = 64 - used;
+    মুক্ত = 64 - used;
 
-    if (free < 8) {
-        ngx_memzero(&ctx->buffer[used], free);
-        (void) ngx_sha1_body(ctx, ctx->buffer, 64);
+    যদি (মুক্ত < 8) {
+        ngx_memzero(&ctx->buffer[used], মুক্ত);
+        (শূন্য) ngx_sha1_body(ctx, ctx->buffer, 64);
         used = 0;
-        free = 64;
+        মুক্ত = 64;
     }
 
-    ngx_memzero(&ctx->buffer[used], free - 8);
+    ngx_memzero(&ctx->buffer[used], মুক্ত - 8);
 
     ctx->bytes <<= 3;
     ctx->buffer[56] = (u_char) (ctx->bytes >> 56);
@@ -90,7 +90,7 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
     ctx->buffer[62] = (u_char) (ctx->bytes >> 8);
     ctx->buffer[63] = (u_char) ctx->bytes;
 
-    (void) ngx_sha1_body(ctx, ctx->buffer, 64);
+    (শূন্য) ngx_sha1_body(ctx, ctx->buffer, 64);
 
     result[0] = (u_char) (ctx->a >> 24);
     result[1] = (u_char) (ctx->a >> 16);
@@ -113,7 +113,7 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
     result[18] = (u_char) (ctx->e >> 8);
     result[19] = (u_char) ctx->e;
 
-    ngx_memzero(ctx, sizeof(*ctx));
+    ngx_memzero(ctx, পরিমাণ(*ctx));
 }
 
 
@@ -153,14 +153,14 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
  * the bit counters.  There are no alignment requirements.
  */
 
-static const u_char *
-ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
+স্থির ধ্রুব u_char *
+ngx_sha1_body(ngx_sha1_t *ctx, ধ্রুব u_char *data, size_t size)
 {
     uint32_t       a, b, c, d, e, temp;
     uint32_t       saved_a, saved_b, saved_c, saved_d, saved_e;
-    uint32_t       words[80];
+    uint32_t       শব্দগুলি[80];
     ngx_uint_t     i;
-    const u_char  *p;
+    ধ্রুব u_char  *p;
 
     p = data;
 
@@ -170,7 +170,7 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
     d = ctx->d;
     e = ctx->e;
 
-    do {
+    কুরু {
         saved_a = a;
         saved_b = b;
         saved_c = c;
@@ -179,100 +179,100 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
 
         /* Load data block into the words array */
 
-        for (i = 0; i < 16; i++) {
-            words[i] = GET(i);
+        প্রতি (i = 0; i < 16; i++) {
+            শব্দগুলি[i] = GET(i);
         }
 
-        for (i = 16; i < 80; i++) {
-            words[i] = ROTATE(1, words[i - 3] ^ words[i - 8] ^ words[i - 14]
-                                 ^ words[i - 16]);
+        প্রতি (i = 16; i < 80; i++) {
+            শব্দগুলি[i] = ROTATE(1, শব্দগুলি[i - 3] ^ শব্দগুলি[i - 8] ^ শব্দগুলি[i - 14]
+                                 ^ শব্দগুলি[i - 16]);
         }
 
         /* Transformations */
 
-        STEP(F1, a, b, c, d, e, words[0],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[1],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[2],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[3],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[4],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[5],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[6],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[7],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[8],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[9],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[10], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[11], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[12], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[13], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[14], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[15], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[16], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[17], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[18], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[19], 0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[0],  0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[1],  0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[2],  0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[3],  0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[4],  0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[5],  0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[6],  0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[7],  0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[8],  0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[9],  0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[10], 0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[11], 0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[12], 0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[13], 0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[14], 0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[15], 0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[16], 0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[17], 0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[18], 0x5a827999);
+        STEP(F1, a, b, c, d, e, শব্দগুলি[19], 0x5a827999);
 
-        STEP(F2, a, b, c, d, e, words[20], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[21], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[22], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[23], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[24], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[25], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[26], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[27], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[28], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[29], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[30], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[31], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[32], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[33], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[34], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[35], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[36], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[37], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[38], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[39], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[20], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[21], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[22], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[23], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[24], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[25], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[26], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[27], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[28], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[29], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[30], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[31], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[32], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[33], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[34], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[35], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[36], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[37], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[38], 0x6ed9eba1);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[39], 0x6ed9eba1);
 
-        STEP(F3, a, b, c, d, e, words[40], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[41], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[42], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[43], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[44], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[45], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[46], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[47], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[48], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[49], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[50], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[51], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[52], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[53], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[54], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[55], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[56], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[57], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[58], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[59], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[40], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[41], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[42], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[43], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[44], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[45], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[46], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[47], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[48], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[49], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[50], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[51], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[52], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[53], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[54], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[55], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[56], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[57], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[58], 0x8f1bbcdc);
+        STEP(F3, a, b, c, d, e, শব্দগুলি[59], 0x8f1bbcdc);
 
-        STEP(F2, a, b, c, d, e, words[60], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[61], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[62], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[63], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[64], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[65], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[66], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[67], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[68], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[69], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[70], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[71], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[72], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[73], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[74], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[75], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[76], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[77], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[78], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[79], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[60], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[61], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[62], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[63], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[64], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[65], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[66], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[67], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[68], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[69], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[70], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[71], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[72], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[73], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[74], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[75], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[76], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[77], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[78], 0xca62c1d6);
+        STEP(F2, a, b, c, d, e, শব্দগুলি[79], 0xca62c1d6);
 
         a += saved_a;
         b += saved_b;
@@ -282,7 +282,7 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
 
         p += 64;
 
-    } while (size -= 64);
+    } যাবত্ (size -= 64);
 
     ctx->a = a;
     ctx->b = b;
@@ -290,5 +290,5 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
     ctx->d = d;
     ctx->e = e;
 
-    return p;
+    প্রত্যাগম p;
 }

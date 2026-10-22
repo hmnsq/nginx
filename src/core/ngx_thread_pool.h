@@ -9,21 +9,21 @@
 #define _NGX_THREAD_POOL_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
+#অন্তর্ভাব <ngx_event.h>
 
 
-struct ngx_thread_task_s {
+সংরচনা ngx_thread_task_s {
     ngx_thread_task_t   *next;
     ngx_uint_t           id;
-    void                *ctx;
-    void               (*handler)(void *data, ngx_log_t *log);
+    শূন্য                *ctx;
+    শূন্য               (*handler)(শূন্য *data, ngx_log_t *log);
     ngx_event_t          event;
 };
 
 
-typedef struct ngx_thread_pool_s  ngx_thread_pool_t;
+প্রকারনির্দেশ সংরচনা ngx_thread_pool_s  ngx_thread_pool_t;
 
 
 ngx_thread_pool_t *ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name);
