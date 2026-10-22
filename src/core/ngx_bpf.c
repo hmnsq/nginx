@@ -4,29 +4,29 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
-#define NGX_BPF_LOGBUF_SIZE  (32 * 1024)
+#घोषणा NGX_BPF_LOGBUF_आकार  (32 * 1024)
 
 
-static ngx_inline int
-ngx_bpf(enum bpf_cmd cmd, union bpf_attr *attr, unsigned int size)
+अटल ngx_inline पूर्णांक
+ngx_bpf(क्रमागत bpf_cmd cmd, जोड़ bpf_attr *attr, अचिन्हित पूर्णांक आकार)
 {
-    return syscall(__NR_bpf, cmd, attr, size);
+    वापस syscall(__NR_bpf, cmd, attr, आकार);
 }
 
 
-void
-ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol, int fd)
+व्योम
+ngx_bpf_program_link(ngx_bpf_program_t *program, स्थिर अक्षर *प्रतीक, पूर्णांक fd)
 {
     ngx_uint_t        i;
     ngx_bpf_reloc_t  *rl;
 
     rl = program->relocs;
 
-    for (i = 0; i < program->nrelocs; i++) {
-        if (ngx_strcmp(rl[i].name, symbol) == 0) {
+    क्रम (i = 0; i < program->nrelocs; i++) {
+        अगर (ngx_strcmp(rl[i].name, प्रतीक) == 0) {
             program->ins[rl[i].offset].src_reg = 1;
             program->ins[rl[i].offset].imm = fd;
         }
@@ -34,110 +34,110 @@ ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol, int fd)
 }
 
 
-int
+पूर्णांक
 ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program)
 {
-    int             fd;
-    union bpf_attr  attr;
-#if (NGX_DEBUG)
-    char            buf[NGX_BPF_LOGBUF_SIZE];
-#endif
+    पूर्णांक             fd;
+    जोड़ bpf_attr  attr;
+#अगर (NGX_DEBUG)
+    अक्षर            buf[NGX_BPF_LOGBUF_आकार];
+#पूर्ण_अगर
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, माप(जोड़ bpf_attr));
 
     attr.license = (uintptr_t) program->license;
     attr.prog_type = program->type;
     attr.insns = (uintptr_t) program->ins;
     attr.insn_cnt = program->nins;
 
-#if (NGX_DEBUG)
+#अगर (NGX_DEBUG)
     /* for verifier errors */
     attr.log_buf = (uintptr_t) buf;
-    attr.log_size = NGX_BPF_LOGBUF_SIZE;
+    attr.log_आकार = NGX_BPF_LOGBUF_आकार;
     attr.log_level = 1;
-#endif
+#पूर्ण_अगर
 
-    fd = ngx_bpf(BPF_PROG_LOAD, &attr, sizeof(attr));
-    if (fd < 0) {
+    fd = ngx_bpf(BPF_PROG_LOAD, &attr, माप(attr));
+    अगर (fd < 0) {
         ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
                       "failed to load BPF program");
 
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0,
                        "bpf verifier: %s", buf);
 
-        return -1;
+        वापस -1;
     }
 
-    return fd;
+    वापस fd;
 }
 
 
-int
-ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags)
+पूर्णांक
+ngx_bpf_map_create(ngx_log_t *log, क्रमागत bpf_map_type type, पूर्णांक कुंजी_आकार,
+    पूर्णांक मूल्य_आकार, पूर्णांक max_entries, uint32_t map_flags)
 {
-    int             fd;
-    union bpf_attr  attr;
+    पूर्णांक             fd;
+    जोड़ bpf_attr  attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, माप(जोड़ bpf_attr));
 
     attr.map_type = type;
-    attr.key_size = key_size;
-    attr.value_size = value_size;
+    attr.कुंजी_आकार = कुंजी_आकार;
+    attr.मूल्य_आकार = मूल्य_आकार;
     attr.max_entries = max_entries;
     attr.map_flags = map_flags;
 
-    fd = ngx_bpf(BPF_MAP_CREATE, &attr, sizeof(attr));
-    if (fd < 0) {
+    fd = ngx_bpf(BPF_MAP_CREATE, &attr, माप(attr));
+    अगर (fd < 0) {
         ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
                       "failed to create BPF map");
-        return NGX_ERROR;
+        वापस NGX_ERROR;
     }
 
-    return fd;
+    वापस fd;
 }
 
 
-int
-ngx_bpf_map_update(int fd, const void *key, const void *value, uint64_t flags)
+पूर्णांक
+ngx_bpf_map_update(पूर्णांक fd, स्थिर व्योम *कुंजी, स्थिर व्योम *मूल्य, uint64_t flags)
 {
-    union bpf_attr attr;
+    जोड़ bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, माप(जोड़ bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.कुंजी = (uintptr_t) कुंजी;
+    attr.मूल्य = (uintptr_t) मूल्य;
     attr.flags = flags;
 
-    return ngx_bpf(BPF_MAP_UPDATE_ELEM, &attr, sizeof(attr));
+    वापस ngx_bpf(BPF_MAP_UPDATE_ELEM, &attr, माप(attr));
 }
 
 
-int
-ngx_bpf_map_delete(int fd, const void *key)
+पूर्णांक
+ngx_bpf_map_delete(पूर्णांक fd, स्थिर व्योम *कुंजी)
 {
-    union bpf_attr attr;
+    जोड़ bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, माप(जोड़ bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
+    attr.कुंजी = (uintptr_t) कुंजी;
 
-    return ngx_bpf(BPF_MAP_DELETE_ELEM, &attr, sizeof(attr));
+    वापस ngx_bpf(BPF_MAP_DELETE_ELEM, &attr, माप(attr));
 }
 
 
-int
-ngx_bpf_map_lookup(int fd, const void *key, void *value)
+पूर्णांक
+ngx_bpf_map_lookup(पूर्णांक fd, स्थिर व्योम *कुंजी, व्योम *मूल्य)
 {
-    union bpf_attr attr;
+    जोड़ bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, माप(जोड़ bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.कुंजी = (uintptr_t) कुंजी;
+    attr.मूल्य = (uintptr_t) मूल्य;
 
-    return ngx_bpf(BPF_MAP_LOOKUP_ELEM, &attr, sizeof(attr));
+    वापस ngx_bpf(BPF_MAP_LOOKUP_ELEM, &attr, माप(attr));
 }

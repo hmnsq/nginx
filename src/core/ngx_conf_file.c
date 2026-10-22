@@ -5,25 +5,25 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
-#define NGX_CONF_BUFFER  4096
+#घोषणा NGX_CONF_बफर  4096
 
-static ngx_int_t ngx_conf_add_dump(ngx_conf_t *cf, ngx_str_t *filename);
-static ngx_int_t ngx_conf_handler(ngx_conf_t *cf, ngx_int_t last);
-static ngx_int_t ngx_conf_read_token(ngx_conf_t *cf);
-static void ngx_conf_flush_files(ngx_cycle_t *cycle);
+अटल ngx_int_t ngx_conf_add_dump(ngx_conf_t *cf, ngx_str_t *filename);
+अटल ngx_int_t ngx_conf_handler(ngx_conf_t *cf, ngx_int_t last);
+अटल ngx_int_t ngx_conf_read_token(ngx_conf_t *cf);
+अटल व्योम ngx_conf_flush_files(ngx_cycle_t *cycle);
 
 
-static ngx_command_t  ngx_conf_commands[] = {
+अटल ngx_command_t  ngx_conf_commands[] = {
 
     { ngx_string("include"),
       NGX_ANY_CONF|NGX_CONF_TAKE1,
       ngx_conf_include,
       0,
       0,
-      NULL },
+      शून्य },
 
       ngx_null_command
 };
@@ -31,23 +31,23 @@ static ngx_command_t  ngx_conf_commands[] = {
 
 ngx_module_t  ngx_conf_module = {
     NGX_MODULE_V1,
-    NULL,                                  /* module context */
+    शून्य,                                  /* module context */
     ngx_conf_commands,                     /* module directives */
     NGX_CONF_MODULE,                       /* module type */
-    NULL,                                  /* init master */
-    NULL,                                  /* init module */
-    NULL,                                  /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
+    शून्य,                                  /* init master */
+    शून्य,                                  /* init module */
+    शून्य,                                  /* init process */
+    शून्य,                                  /* init thread */
+    शून्य,                                  /* exit thread */
     ngx_conf_flush_files,                  /* exit process */
-    NULL,                                  /* exit master */
+    शून्य,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
 /* The eight fixed arguments */
 
-static ngx_uint_t argument_number[] = {
+अटल ngx_uint_t argument_संख्या[] = {
     NGX_CONF_NOARGS,
     NGX_CONF_TAKE1,
     NGX_CONF_TAKE2,
@@ -59,193 +59,193 @@ static ngx_uint_t argument_number[] = {
 };
 
 
-ngx_conf_post_t  ngx_conf_size_nonzero_post = { ngx_conf_check_size_nonzero };
+ngx_conf_post_t  ngx_conf_आकार_nonzero_post = { ngx_conf_check_आकार_nonzero };
 
 
-char *
+अक्षर *
 ngx_conf_param(ngx_conf_t *cf)
 {
-    char             *rv;
+    अक्षर             *rv;
     ngx_str_t        *param;
     ngx_buf_t         b;
     ngx_conf_file_t   conf_file;
 
     param = &cf->cycle->conf_param;
 
-    if (param->len == 0) {
-        return NGX_CONF_OK;
+    अगर (param->len == 0) {
+        वापस NGX_CONF_OK;
     }
 
-    ngx_memzero(&conf_file, sizeof(ngx_conf_file_t));
+    ngx_memzero(&conf_file, माप(ngx_conf_file_t));
 
-    ngx_memzero(&b, sizeof(ngx_buf_t));
+    ngx_memzero(&b, माप(ngx_buf_t));
 
-    b.start = param->data;
-    b.pos = param->data;
-    b.last = param->data + param->len;
+    b.start = param->तथ्य;
+    b.pos = param->तथ्य;
+    b.last = param->तथ्य + param->len;
     b.end = b.last;
     b.temporary = 1;
 
     conf_file.file.fd = NGX_INVALID_FILE;
-    conf_file.file.name.data = NULL;
-    conf_file.line = 0;
+    conf_file.file.name.तथ्य = शून्य;
+    conf_file.पंक्ति = 0;
 
     cf->conf_file = &conf_file;
-    cf->conf_file->buffer = &b;
+    cf->conf_file->बफर = &b;
 
-    rv = ngx_conf_parse(cf, NULL);
+    rv = ngx_conf_parse(cf, शून्य);
 
-    cf->conf_file = NULL;
+    cf->conf_file = शून्य;
 
-    return rv;
+    वापस rv;
 }
 
 
-static ngx_int_t
+अटल ngx_int_t
 ngx_conf_add_dump(ngx_conf_t *cf, ngx_str_t *filename)
 {
-    off_t             size;
+    off_t             आकार;
     u_char           *p;
     uint32_t          hash;
     ngx_buf_t        *buf;
-    ngx_str_node_t   *sn;
+    ngx_str_गाँठ_t   *sn;
     ngx_conf_dump_t  *cd;
 
-    hash = ngx_crc32_long(filename->data, filename->len);
+    hash = ngx_crc32_long(filename->तथ्य, filename->len);
 
     sn = ngx_str_rbtree_lookup(&cf->cycle->config_dump_rbtree, filename, hash);
 
-    if (sn) {
-        cf->conf_file->dump = NULL;
-        return NGX_OK;
+    अगर (sn) {
+        cf->conf_file->dump = शून्य;
+        वापस NGX_OK;
     }
 
     p = ngx_pstrdup(cf->cycle->pool, filename);
-    if (p == NULL) {
-        return NGX_ERROR;
+    अगर (p == शून्य) {
+        वापस NGX_ERROR;
     }
 
-    cd = ngx_array_push(&cf->cycle->config_dump);
-    if (cd == NULL) {
-        return NGX_ERROR;
+    cd = ngx_array_धकेलो(&cf->cycle->config_dump);
+    अगर (cd == शून्य) {
+        वापस NGX_ERROR;
     }
 
-    size = ngx_file_size(&cf->conf_file->file.info);
+    आकार = ngx_file_आकार(&cf->conf_file->file.info);
 
-    buf = ngx_create_temp_buf(cf->cycle->pool, (size_t) size);
-    if (buf == NULL) {
-        return NGX_ERROR;
+    buf = ngx_create_अस्थायी_buf(cf->cycle->pool, (माप_प्रकार) आकार);
+    अगर (buf == शून्य) {
+        वापस NGX_ERROR;
     }
 
-    cd->name.data = p;
+    cd->name.तथ्य = p;
     cd->name.len = filename->len;
-    cd->buffer = buf;
+    cd->बफर = buf;
 
     cf->conf_file->dump = buf;
 
-    sn = ngx_palloc(cf->temp_pool, sizeof(ngx_str_node_t));
-    if (sn == NULL) {
-        return NGX_ERROR;
+    sn = ngx_palloc(cf->अस्थायी_pool, माप(ngx_str_गाँठ_t));
+    अगर (sn == शून्य) {
+        वापस NGX_ERROR;
     }
 
-    sn->node.key = hash;
+    sn->गाँठ.कुंजी = hash;
     sn->str = cd->name;
 
-    ngx_rbtree_insert(&cf->cycle->config_dump_rbtree, &sn->node);
+    ngx_rbtree_जोड़ो(&cf->cycle->config_dump_rbtree, &sn->गाँठ);
 
-    return NGX_OK;
+    वापस NGX_OK;
 }
 
 
-char *
+अक्षर *
 ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
 {
-    char             *rv;
+    अक्षर             *rv;
     ngx_fd_t          fd;
     ngx_int_t         rc;
     ngx_buf_t         buf;
-    ngx_conf_file_t  *prev, conf_file;
-    enum {
+    ngx_conf_file_t  *पूर्व, conf_file;
+    क्रमागत {
         parse_file = 0,
         parse_block,
         parse_param
     } type;
 
-#if (NGX_SUPPRESS_WARN)
+#अगर (NGX_SUPPRESS_WARN)
     fd = NGX_INVALID_FILE;
-    prev = NULL;
-#endif
+    पूर्व = शून्य;
+#पूर्ण_अगर
 
-    if (filename) {
+    अगर (filename) {
 
         /* open configuration file */
 
-        fd = ngx_open_file(filename->data, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0);
+        fd = ngx_open_file(filename->तथ्य, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0);
 
-        if (fd == NGX_INVALID_FILE) {
+        अगर (fd == NGX_INVALID_FILE) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
                                ngx_open_file_n " \"%s\" failed",
-                               filename->data);
-            return NGX_CONF_ERROR;
+                               filename->तथ्य);
+            वापस NGX_CONF_ERROR;
         }
 
-        prev = cf->conf_file;
+        पूर्व = cf->conf_file;
 
         cf->conf_file = &conf_file;
 
-        if (ngx_fd_info(fd, &cf->conf_file->file.info) == NGX_FILE_ERROR) {
+        अगर (ngx_fd_info(fd, &cf->conf_file->file.info) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_EMERG, cf->log, ngx_errno,
-                          ngx_fd_info_n " \"%s\" failed", filename->data);
+                          ngx_fd_info_n " \"%s\" failed", filename->तथ्य);
         }
 
-        cf->conf_file->buffer = &buf;
+        cf->conf_file->बफर = &buf;
 
-        buf.start = ngx_alloc(NGX_CONF_BUFFER, cf->log);
-        if (buf.start == NULL) {
-            goto failed;
+        buf.start = ngx_alloc(NGX_CONF_बफर, cf->log);
+        अगर (buf.start == शून्य) {
+            जाओ failed;
         }
 
         buf.pos = buf.start;
         buf.last = buf.start;
-        buf.end = buf.last + NGX_CONF_BUFFER;
+        buf.end = buf.last + NGX_CONF_बफर;
         buf.temporary = 1;
 
         cf->conf_file->file.fd = fd;
         cf->conf_file->file.name.len = filename->len;
-        cf->conf_file->file.name.data = filename->data;
+        cf->conf_file->file.name.तथ्य = filename->तथ्य;
         cf->conf_file->file.offset = 0;
         cf->conf_file->file.log = cf->log;
-        cf->conf_file->line = 1;
+        cf->conf_file->पंक्ति = 1;
 
         type = parse_file;
 
-        if (ngx_dump_config
-#if (NGX_CONTROL_API)
+        अगर (ngx_dump_config
+#अगर (NGX_CONTROL_API)
             || ngx_control_api_enabled
-#endif
-#if (NGX_DEBUG)
+#पूर्ण_अगर
+#अगर (NGX_DEBUG)
             || 1
-#endif
+#पूर्ण_अगर
            )
         {
-            if (ngx_conf_add_dump(cf, filename) != NGX_OK) {
-                goto failed;
+            अगर (ngx_conf_add_dump(cf, filename) != NGX_OK) {
+                जाओ failed;
             }
 
-        } else {
-            cf->conf_file->dump = NULL;
+        } अन्यथा {
+            cf->conf_file->dump = शून्य;
         }
 
-    } else if (cf->conf_file->file.fd != NGX_INVALID_FILE) {
+    } अन्यथा अगर (cf->conf_file->file.fd != NGX_INVALID_FILE) {
 
         type = parse_block;
 
-    } else {
+    } अन्यथा {
         type = parse_param;
     }
 
 
-    for ( ;; ) {
+    क्रम ( ;; ) {
         rc = ngx_conf_read_token(cf);
 
         /*
@@ -258,74 +258,74 @@ ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
          *    NGX_CONF_FILE_DONE    the configuration file is done
          */
 
-        if (rc == NGX_ERROR) {
-            goto done;
+        अगर (rc == NGX_ERROR) {
+            जाओ done;
         }
 
-        if (rc == NGX_CONF_BLOCK_DONE) {
+        अगर (rc == NGX_CONF_BLOCK_DONE) {
 
-            if (type != parse_block) {
+            अगर (type != parse_block) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "unexpected \"}\"");
-                goto failed;
+                जाओ failed;
             }
 
-            goto done;
+            जाओ done;
         }
 
-        if (rc == NGX_CONF_FILE_DONE) {
+        अगर (rc == NGX_CONF_FILE_DONE) {
 
-            if (type == parse_block) {
+            अगर (type == parse_block) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "unexpected end of file, expecting \"}\"");
-                goto failed;
+                जाओ failed;
             }
 
-            goto done;
+            जाओ done;
         }
 
-        if (rc == NGX_CONF_BLOCK_START) {
+        अगर (rc == NGX_CONF_BLOCK_START) {
 
-            if (type == parse_param) {
+            अगर (type == parse_param) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "block directives are not supported "
                                    "in -g option");
-                goto failed;
+                जाओ failed;
             }
         }
 
         /* rc == NGX_OK || rc == NGX_CONF_BLOCK_START */
 
-        if (cf->handler) {
+        अगर (cf->handler) {
 
             /*
              * the custom handler, i.e., that is used in the http's
              * "types { ... }" directive
              */
 
-            if (rc == NGX_CONF_BLOCK_START) {
+            अगर (rc == NGX_CONF_BLOCK_START) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "unexpected \"{\"");
-                goto failed;
+                जाओ failed;
             }
 
-            rv = (*cf->handler)(cf, NULL, cf->handler_conf);
-            if (rv == NGX_CONF_OK) {
-                continue;
+            rv = (*cf->handler)(cf, शून्य, cf->handler_conf);
+            अगर (rv == NGX_CONF_OK) {
+                जारी;
             }
 
-            if (rv == NGX_CONF_ERROR) {
-                goto failed;
+            अगर (rv == NGX_CONF_ERROR) {
+                जाओ failed;
             }
 
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "%s", rv);
 
-            goto failed;
+            जाओ failed;
         }
 
 
         rc = ngx_conf_handler(cf, rc);
 
-        if (rc == NGX_ERROR) {
-            goto failed;
+        अगर (rc == NGX_ERROR) {
+            जाओ failed;
         }
     }
 
@@ -335,34 +335,34 @@ failed:
 
 done:
 
-    if (filename) {
-        if (cf->conf_file->buffer->start) {
-            ngx_free(cf->conf_file->buffer->start);
+    अगर (filename) {
+        अगर (cf->conf_file->बफर->start) {
+            ngx_free(cf->conf_file->बफर->start);
         }
 
-        if (ngx_close_file(fd) == NGX_FILE_ERROR) {
+        अगर (ngx_close_file(fd) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
                           ngx_close_file_n " %s failed",
-                          filename->data);
+                          filename->तथ्य);
             rc = NGX_ERROR;
         }
 
-        cf->conf_file = prev;
+        cf->conf_file = पूर्व;
     }
 
-    if (rc == NGX_ERROR) {
-        return NGX_CONF_ERROR;
+    अगर (rc == NGX_ERROR) {
+        वापस NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-static ngx_int_t
+अटल ngx_int_t
 ngx_conf_handler(ngx_conf_t *cf, ngx_int_t last)
 {
-    char           *rv;
-    void           *conf, **confp;
+    अक्षर           *rv;
+    व्योम           *conf, **confp;
     ngx_uint_t      i, found;
     ngx_str_t      *name;
     ngx_command_t  *cmd;
@@ -371,149 +371,149 @@ ngx_conf_handler(ngx_conf_t *cf, ngx_int_t last)
 
     found = 0;
 
-    for (i = 0; cf->cycle->modules[i]; i++) {
+    क्रम (i = 0; cf->cycle->modules[i]; i++) {
 
         cmd = cf->cycle->modules[i]->commands;
-        if (cmd == NULL) {
-            continue;
+        अगर (cmd == शून्य) {
+            जारी;
         }
 
-        for ( /* void */ ; cmd->name.len; cmd++) {
+        क्रम ( /* void */ ; cmd->name.len; cmd++) {
 
-            if (name->len != cmd->name.len) {
-                continue;
+            अगर (name->len != cmd->name.len) {
+                जारी;
             }
 
-            if (ngx_strcmp(name->data, cmd->name.data) != 0) {
-                continue;
+            अगर (ngx_strcmp(name->तथ्य, cmd->name.तथ्य) != 0) {
+                जारी;
             }
 
             found = 1;
 
-            if (cf->cycle->modules[i]->type != NGX_CONF_MODULE
+            अगर (cf->cycle->modules[i]->type != NGX_CONF_MODULE
                 && cf->cycle->modules[i]->type != cf->module_type)
             {
-                continue;
+                जारी;
             }
 
             /* is the directive's location right ? */
 
-            if (!(cmd->type & cf->cmd_type)) {
-                continue;
+            अगर (!(cmd->type & cf->cmd_type)) {
+                जारी;
             }
 
-            if (!(cmd->type & NGX_CONF_BLOCK) && last != NGX_OK) {
+            अगर (!(cmd->type & NGX_CONF_BLOCK) && last != NGX_OK) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                   "directive \"%s\" is not terminated by \";\"",
-                                  name->data);
-                return NGX_ERROR;
+                                  name->तथ्य);
+                वापस NGX_ERROR;
             }
 
-            if ((cmd->type & NGX_CONF_BLOCK) && last != NGX_CONF_BLOCK_START) {
+            अगर ((cmd->type & NGX_CONF_BLOCK) && last != NGX_CONF_BLOCK_START) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "directive \"%s\" has no opening \"{\"",
-                                   name->data);
-                return NGX_ERROR;
+                                   name->तथ्य);
+                वापस NGX_ERROR;
             }
 
             /* is the directive's argument count right ? */
 
-            if (!(cmd->type & NGX_CONF_ANY)) {
+            अगर (!(cmd->type & NGX_CONF_ANY)) {
 
-                if (cmd->type & NGX_CONF_FLAG) {
+                अगर (cmd->type & NGX_CONF_FLAG) {
 
-                    if (cf->args->nelts != 2) {
-                        goto invalid;
+                    अगर (cf->args->nelts != 2) {
+                        जाओ invalid;
                     }
 
-                } else if (cmd->type & NGX_CONF_1MORE) {
+                } अन्यथा अगर (cmd->type & NGX_CONF_1MORE) {
 
-                    if (cf->args->nelts < 2) {
-                        goto invalid;
+                    अगर (cf->args->nelts < 2) {
+                        जाओ invalid;
                     }
 
-                } else if (cmd->type & NGX_CONF_2MORE) {
+                } अन्यथा अगर (cmd->type & NGX_CONF_2MORE) {
 
-                    if (cf->args->nelts < 3) {
-                        goto invalid;
+                    अगर (cf->args->nelts < 3) {
+                        जाओ invalid;
                     }
 
-                } else if (cf->args->nelts > NGX_CONF_MAX_ARGS) {
+                } अन्यथा अगर (cf->args->nelts > NGX_CONF_MAX_ARGS) {
 
-                    goto invalid;
+                    जाओ invalid;
 
-                } else if (!(cmd->type & argument_number[cf->args->nelts - 1]))
+                } अन्यथा अगर (!(cmd->type & argument_संख्या[cf->args->nelts - 1]))
                 {
-                    goto invalid;
+                    जाओ invalid;
                 }
             }
 
             /* set up the directive's configuration context */
 
-            conf = NULL;
+            conf = शून्य;
 
-            if (cmd->type & NGX_DIRECT_CONF) {
-                conf = ((void **) cf->ctx)[cf->cycle->modules[i]->index];
+            अगर (cmd->type & NGX_DIRECT_CONF) {
+                conf = ((व्योम **) cf->ctx)[cf->cycle->modules[i]->सूचकांक];
 
-            } else if (cmd->type & NGX_MAIN_CONF) {
-                conf = &(((void **) cf->ctx)[cf->cycle->modules[i]->index]);
+            } अन्यथा अगर (cmd->type & NGX_MAIN_CONF) {
+                conf = &(((व्योम **) cf->ctx)[cf->cycle->modules[i]->सूचकांक]);
 
-            } else if (cf->ctx) {
-                confp = *(void **) ((char *) cf->ctx + cmd->conf);
+            } अन्यथा अगर (cf->ctx) {
+                confp = *(व्योम **) ((अक्षर *) cf->ctx + cmd->conf);
 
-                if (confp) {
-                    conf = confp[cf->cycle->modules[i]->ctx_index];
+                अगर (confp) {
+                    conf = confp[cf->cycle->modules[i]->ctx_सूचकांक];
                 }
             }
 
             rv = cmd->set(cf, cmd, conf);
 
-            if (rv == NGX_CONF_OK) {
-                return NGX_OK;
+            अगर (rv == NGX_CONF_OK) {
+                वापस NGX_OK;
             }
 
-            if (rv == NGX_CONF_ERROR) {
-                return NGX_ERROR;
+            अगर (rv == NGX_CONF_ERROR) {
+                वापस NGX_ERROR;
             }
 
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                               "\"%s\" directive %s", name->data, rv);
+                               "\"%s\" directive %s", name->तथ्य, rv);
 
-            return NGX_ERROR;
+            वापस NGX_ERROR;
         }
     }
 
-    if (found) {
+    अगर (found) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                           "\"%s\" directive is not allowed here", name->data);
+                           "\"%s\" directive is not allowed here", name->तथ्य);
 
-        return NGX_ERROR;
+        वापस NGX_ERROR;
     }
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                       "unknown directive \"%s\"", name->data);
+                       "unknown directive \"%s\"", name->तथ्य);
 
-    return NGX_ERROR;
+    वापस NGX_ERROR;
 
 invalid:
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                        "invalid number of arguments in \"%s\" directive",
-                       name->data);
+                       name->तथ्य);
 
-    return NGX_ERROR;
+    वापस NGX_ERROR;
 }
 
 
-static ngx_int_t
+अटल ngx_int_t
 ngx_conf_read_token(ngx_conf_t *cf)
 {
     u_char      *start, ch, *src, *dst;
-    off_t        file_size;
-    size_t       len;
-    ssize_t      n, size;
+    off_t        file_आकार;
+    माप_प्रकार       len;
+    ssize_t      n, आकार;
     ngx_uint_t   found, need_space, last_space, sharp_comment, variable;
-    ngx_uint_t   quoted, s_quoted, d_quoted, start_line;
+    ngx_uint_t   quoted, s_quoted, d_quoted, start_पंक्ति;
     ngx_str_t   *word;
     ngx_buf_t   *b, *dump;
 
@@ -527,279 +527,279 @@ ngx_conf_read_token(ngx_conf_t *cf)
     d_quoted = 0;
 
     cf->args->nelts = 0;
-    b = cf->conf_file->buffer;
+    b = cf->conf_file->बफर;
     dump = cf->conf_file->dump;
     start = b->pos;
-    start_line = cf->conf_file->line;
+    start_पंक्ति = cf->conf_file->पंक्ति;
 
-    file_size = ngx_file_size(&cf->conf_file->file.info);
+    file_आकार = ngx_file_आकार(&cf->conf_file->file.info);
 
-    for ( ;; ) {
+    क्रम ( ;; ) {
 
-        if (b->pos >= b->last) {
+        अगर (b->pos >= b->last) {
 
-            if (cf->conf_file->file.offset >= file_size) {
+            अगर (cf->conf_file->file.offset >= file_आकार) {
 
-                if (cf->args->nelts > 0 || !last_space) {
+                अगर (cf->args->nelts > 0 || !last_space) {
 
-                    if (cf->conf_file->file.fd == NGX_INVALID_FILE) {
+                    अगर (cf->conf_file->file.fd == NGX_INVALID_FILE) {
                         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                            "unexpected end of parameter, "
                                            "expecting \";\"");
-                        return NGX_ERROR;
+                        वापस NGX_ERROR;
                     }
 
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "unexpected end of file, "
                                        "expecting \";\" or \"}\"");
-                    return NGX_ERROR;
+                    वापस NGX_ERROR;
                 }
 
-                return NGX_CONF_FILE_DONE;
+                वापस NGX_CONF_FILE_DONE;
             }
 
             len = b->pos - start;
 
-            if (len == NGX_CONF_BUFFER) {
-                cf->conf_file->line = start_line;
+            अगर (len == NGX_CONF_बफर) {
+                cf->conf_file->पंक्ति = start_पंक्ति;
 
-                if (d_quoted) {
+                अगर (d_quoted) {
                     ch = '"';
 
-                } else if (s_quoted) {
+                } अन्यथा अगर (s_quoted) {
                     ch = '\'';
 
-                } else {
+                } अन्यथा {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "too long parameter \"%*s...\" started",
-                                       (size_t) 10, start);
-                    return NGX_ERROR;
+                                       (माप_प्रकार) 10, start);
+                    वापस NGX_ERROR;
                 }
 
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "too long parameter, probably "
                                    "missing terminating \"%c\" character", ch);
-                return NGX_ERROR;
+                वापस NGX_ERROR;
             }
 
-            if (len) {
+            अगर (len) {
                 ngx_memmove(b->start, start, len);
             }
 
-            size = (ssize_t) (file_size - cf->conf_file->file.offset);
+            आकार = (ssize_t) (file_आकार - cf->conf_file->file.offset);
 
-            if (size > b->end - (b->start + len)) {
-                size = b->end - (b->start + len);
+            अगर (आकार > b->end - (b->start + len)) {
+                आकार = b->end - (b->start + len);
             }
 
-            n = ngx_read_file(&cf->conf_file->file, b->start + len, size,
+            n = ngx_read_file(&cf->conf_file->file, b->start + len, आकार,
                               cf->conf_file->file.offset);
 
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            अगर (n == NGX_ERROR) {
+                वापस NGX_ERROR;
             }
 
-            if (n != size) {
+            अगर (n != आकार) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    ngx_read_file_n " returned "
                                    "only %z bytes instead of %z",
-                                   n, size);
-                return NGX_ERROR;
+                                   n, आकार);
+                वापस NGX_ERROR;
             }
 
             b->pos = b->start + len;
             b->last = b->pos + n;
             start = b->start;
 
-            if (dump) {
-                dump->last = ngx_cpymem(dump->last, b->pos, size);
+            अगर (dump) {
+                dump->last = ngx_cpymem(dump->last, b->pos, आकार);
             }
         }
 
         ch = *b->pos++;
 
-        if (ch == LF) {
-            cf->conf_file->line++;
+        अगर (ch == LF) {
+            cf->conf_file->पंक्ति++;
 
-            if (sharp_comment) {
+            अगर (sharp_comment) {
                 sharp_comment = 0;
             }
         }
 
-        if (sharp_comment) {
-            continue;
+        अगर (sharp_comment) {
+            जारी;
         }
 
-        if (quoted) {
+        अगर (quoted) {
             quoted = 0;
-            continue;
+            जारी;
         }
 
-        if (need_space) {
-            if (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
+        अगर (need_space) {
+            अगर (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
                 last_space = 1;
                 need_space = 0;
-                continue;
+                जारी;
             }
 
-            if (ch == ';') {
-                return NGX_OK;
+            अगर (ch == ';') {
+                वापस NGX_OK;
             }
 
-            if (ch == '{') {
-                return NGX_CONF_BLOCK_START;
+            अगर (ch == '{') {
+                वापस NGX_CONF_BLOCK_START;
             }
 
-            if (ch == ')') {
+            अगर (ch == ')') {
                 last_space = 1;
                 need_space = 0;
 
-            } else {
+            } अन्यथा {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "unexpected \"%c\"", ch);
-                return NGX_ERROR;
+                वापस NGX_ERROR;
             }
         }
 
-        if (last_space) {
+        अगर (last_space) {
 
             start = b->pos - 1;
-            start_line = cf->conf_file->line;
+            start_पंक्ति = cf->conf_file->पंक्ति;
 
-            if (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
-                continue;
+            अगर (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
+                जारी;
             }
 
-            switch (ch) {
+            चयन (ch) {
 
-            case ';':
-            case '{':
-                if (cf->args->nelts == 0) {
+            हाल ';':
+            हाल '{':
+                अगर (cf->args->nelts == 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "unexpected \"%c\"", ch);
-                    return NGX_ERROR;
+                    वापस NGX_ERROR;
                 }
 
-                if (ch == '{') {
-                    return NGX_CONF_BLOCK_START;
+                अगर (ch == '{') {
+                    वापस NGX_CONF_BLOCK_START;
                 }
 
-                return NGX_OK;
+                वापस NGX_OK;
 
-            case '}':
-                if (cf->args->nelts != 0) {
+            हाल '}':
+                अगर (cf->args->nelts != 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "unexpected \"}\"");
-                    return NGX_ERROR;
+                    वापस NGX_ERROR;
                 }
 
-                return NGX_CONF_BLOCK_DONE;
+                वापस NGX_CONF_BLOCK_DONE;
 
-            case '#':
+            हाल '#':
                 sharp_comment = 1;
-                continue;
+                जारी;
 
-            case '\\':
+            हाल '\\':
                 quoted = 1;
                 last_space = 0;
-                continue;
+                जारी;
 
-            case '"':
+            हाल '"':
                 start++;
                 d_quoted = 1;
                 last_space = 0;
-                continue;
+                जारी;
 
-            case '\'':
+            हाल '\'':
                 start++;
                 s_quoted = 1;
                 last_space = 0;
-                continue;
+                जारी;
 
-            case '$':
+            हाल '$':
                 variable = 1;
                 last_space = 0;
-                continue;
+                जारी;
 
-            default:
+            शेष:
                 last_space = 0;
             }
 
-        } else {
-            if (ch == '{' && variable) {
-                continue;
+        } अन्यथा {
+            अगर (ch == '{' && variable) {
+                जारी;
             }
 
             variable = 0;
 
-            if (ch == '\\') {
+            अगर (ch == '\\') {
                 quoted = 1;
-                continue;
+                जारी;
             }
 
-            if (ch == '$') {
+            अगर (ch == '$') {
                 variable = 1;
-                continue;
+                जारी;
             }
 
-            if (d_quoted) {
-                if (ch == '"') {
+            अगर (d_quoted) {
+                अगर (ch == '"') {
                     d_quoted = 0;
                     need_space = 1;
                     found = 1;
                 }
 
-            } else if (s_quoted) {
-                if (ch == '\'') {
+            } अन्यथा अगर (s_quoted) {
+                अगर (ch == '\'') {
                     s_quoted = 0;
                     need_space = 1;
                     found = 1;
                 }
 
-            } else if (ch == ' ' || ch == '\t' || ch == CR || ch == LF
+            } अन्यथा अगर (ch == ' ' || ch == '\t' || ch == CR || ch == LF
                        || ch == ';' || ch == '{')
             {
                 last_space = 1;
                 found = 1;
             }
 
-            if (found) {
-                word = ngx_array_push(cf->args);
-                if (word == NULL) {
-                    return NGX_ERROR;
+            अगर (found) {
+                word = ngx_array_धकेलो(cf->args);
+                अगर (word == शून्य) {
+                    वापस NGX_ERROR;
                 }
 
-                word->data = ngx_pnalloc(cf->pool, b->pos - 1 - start + 1);
-                if (word->data == NULL) {
-                    return NGX_ERROR;
+                word->तथ्य = ngx_pnalloc(cf->pool, b->pos - 1 - start + 1);
+                अगर (word->तथ्य == शून्य) {
+                    वापस NGX_ERROR;
                 }
 
-                for (dst = word->data, src = start, len = 0;
+                क्रम (dst = word->तथ्य, src = start, len = 0;
                      src < b->pos - 1;
                      len++)
                 {
-                    if (*src == '\\') {
-                        switch (src[1]) {
-                        case '"':
-                        case '\'':
-                        case '\\':
+                    अगर (*src == '\\') {
+                        चयन (src[1]) {
+                        हाल '"':
+                        हाल '\'':
+                        हाल '\\':
                             src++;
-                            break;
+                            अवरोध;
 
-                        case 't':
+                        हाल 't':
                             *dst++ = '\t';
                             src += 2;
-                            continue;
+                            जारी;
 
-                        case 'r':
+                        हाल 'r':
                             *dst++ = '\r';
                             src += 2;
-                            continue;
+                            जारी;
 
-                        case 'n':
+                        हाल 'n':
                             *dst++ = '\n';
                             src += 2;
-                            continue;
+                            जारी;
                         }
 
                     }
@@ -808,12 +808,12 @@ ngx_conf_read_token(ngx_conf_t *cf)
                 *dst = '\0';
                 word->len = len;
 
-                if (ch == ';') {
-                    return NGX_OK;
+                अगर (ch == ';') {
+                    वापस NGX_OK;
                 }
 
-                if (ch == '{') {
-                    return NGX_CONF_BLOCK_START;
+                अगर (ch == '{') {
+                    वापस NGX_CONF_BLOCK_START;
                 }
 
                 found = 0;
@@ -823,69 +823,69 @@ ngx_conf_read_token(ngx_conf_t *cf)
 }
 
 
-char *
-ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char        *rv;
+    अक्षर        *rv;
     ngx_int_t    n;
-    ngx_str_t   *value, file, name;
+    ngx_str_t   *मूल्य, file, name;
     ngx_glob_t   gl;
 
-    value = cf->args->elts;
-    file = value[1];
+    मूल्य = cf->args->elts;
+    file = मूल्य[1];
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.data);
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.तथ्य);
 
-    if (ngx_conf_full_name(cf->cycle, &file, 1) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    अगर (ngx_conf_full_name(cf->cycle, &file, 1) != NGX_OK) {
+        वापस NGX_CONF_ERROR;
     }
 
-    if (strpbrk((char *) file.data, "*?[") == NULL) {
+    अगर (strpbrk((अक्षर *) file.तथ्य, "*?[") == शून्य) {
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.data);
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.तथ्य);
 
-        return ngx_conf_parse(cf, &file);
+        वापस ngx_conf_parse(cf, &file);
     }
 
-    ngx_memzero(&gl, sizeof(ngx_glob_t));
+    ngx_memzero(&gl, माप(ngx_glob_t));
 
-    gl.pattern = file.data;
+    gl.pattern = file.तथ्य;
     gl.log = cf->log;
     gl.test = 1;
 
-    if (ngx_open_glob(&gl) != NGX_OK) {
+    अगर (ngx_open_glob(&gl) != NGX_OK) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
-                           ngx_open_glob_n " \"%s\" failed", file.data);
-        return NGX_CONF_ERROR;
+                           ngx_open_glob_n " \"%s\" failed", file.तथ्य);
+        वापस NGX_CONF_ERROR;
     }
 
     rv = NGX_CONF_OK;
 
-    for ( ;; ) {
+    क्रम ( ;; ) {
         n = ngx_read_glob(&gl, &name);
 
-        if (n != NGX_OK) {
-            break;
+        अगर (n != NGX_OK) {
+            अवरोध;
         }
 
         file.len = name.len++;
-        file.data = ngx_pstrdup(cf->pool, &name);
-        if (file.data == NULL) {
-            return NGX_CONF_ERROR;
+        file.तथ्य = ngx_pstrdup(cf->pool, &name);
+        अगर (file.तथ्य == शून्य) {
+            वापस NGX_CONF_ERROR;
         }
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.data);
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.तथ्य);
 
         rv = ngx_conf_parse(cf, &file);
 
-        if (rv != NGX_CONF_OK) {
-            break;
+        अगर (rv != NGX_CONF_OK) {
+            अवरोध;
         }
     }
 
     ngx_close_glob(&gl);
 
-    return rv;
+    वापस rv;
 }
 
 
@@ -896,7 +896,7 @@ ngx_conf_full_name(ngx_cycle_t *cycle, ngx_str_t *name, ngx_uint_t conf_prefix)
 
     prefix = conf_prefix ? &cycle->conf_prefix : &cycle->prefix;
 
-    return ngx_get_full_name(cycle->pool, prefix, name);
+    वापस ngx_get_full_name(cycle->pool, prefix, name);
 }
 
 
@@ -908,63 +908,63 @@ ngx_conf_open_file(ngx_cycle_t *cycle, ngx_str_t *name)
     ngx_list_part_t  *part;
     ngx_open_file_t  *file;
 
-#if (NGX_SUPPRESS_WARN)
+#अगर (NGX_SUPPRESS_WARN)
     ngx_str_null(&full);
-#endif
+#पूर्ण_अगर
 
-    if (name->len) {
+    अगर (name->len) {
         full = *name;
 
-        if (ngx_conf_full_name(cycle, &full, 0) != NGX_OK) {
-            return NULL;
+        अगर (ngx_conf_full_name(cycle, &full, 0) != NGX_OK) {
+            वापस शून्य;
         }
 
         part = &cycle->open_files.part;
         file = part->elts;
 
-        for (i = 0; /* void */ ; i++) {
+        क्रम (i = 0; /* void */ ; i++) {
 
-            if (i >= part->nelts) {
-                if (part->next == NULL) {
-                    break;
+            अगर (i >= part->nelts) {
+                अगर (part->अग्र == शून्य) {
+                    अवरोध;
                 }
-                part = part->next;
+                part = part->अग्र;
                 file = part->elts;
                 i = 0;
             }
 
-            if (full.len != file[i].name.len) {
-                continue;
+            अगर (full.len != file[i].name.len) {
+                जारी;
             }
 
-            if (ngx_strcmp(full.data, file[i].name.data) == 0) {
-                return &file[i];
+            अगर (ngx_strcmp(full.तथ्य, file[i].name.तथ्य) == 0) {
+                वापस &file[i];
             }
         }
     }
 
-    file = ngx_list_push(&cycle->open_files);
-    if (file == NULL) {
-        return NULL;
+    file = ngx_list_धकेलो(&cycle->open_files);
+    अगर (file == शून्य) {
+        वापस शून्य;
     }
 
-    if (name->len) {
+    अगर (name->len) {
         file->fd = NGX_INVALID_FILE;
         file->name = full;
 
-    } else {
+    } अन्यथा {
         file->fd = ngx_stderr;
         file->name = *name;
     }
 
-    file->flush = NULL;
-    file->data = NULL;
+    file->flush = शून्य;
+    file->तथ्य = शून्य;
 
-    return file;
+    वापस file;
 }
 
 
-static void
+अटल व्योम
 ngx_conf_flush_files(ngx_cycle_t *cycle)
 {
     ngx_uint_t        i;
@@ -976,480 +976,480 @@ ngx_conf_flush_files(ngx_cycle_t *cycle)
     part = &cycle->open_files.part;
     file = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    क्रम (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        अगर (i >= part->nelts) {
+            अगर (part->अग्र == शून्य) {
+                अवरोध;
             }
-            part = part->next;
+            part = part->अग्र;
             file = part->elts;
             i = 0;
         }
 
-        if (file[i].flush) {
+        अगर (file[i].flush) {
             file[i].flush(&file[i], cycle->log);
         }
     }
 }
 
 
-void ngx_cdecl
+व्योम ngx_cdecl
 ngx_conf_log_error(ngx_uint_t level, ngx_conf_t *cf, ngx_err_t err,
-    const char *fmt, ...)
+    स्थिर अक्षर *fmt, ...)
 {
     u_char   errstr[NGX_MAX_CONF_ERRSTR], *p, *last;
-    va_list  args;
+    बहु_सूची  args;
 
     last = errstr + NGX_MAX_CONF_ERRSTR;
 
-    va_start(args, fmt);
+    बहु_शुरू(args, fmt);
     p = ngx_vslprintf(errstr, last, fmt, args);
-    va_end(args);
+    बहु_पूर्ण(args);
 
-    if (err) {
+    अगर (err) {
         p = ngx_log_errno(p, last, err);
     }
 
-    if (cf->conf_file == NULL) {
+    अगर (cf->conf_file == शून्य) {
         ngx_log_error(level, cf->log, 0, "%*s", p - errstr, errstr);
-        return;
+        वापस;
     }
 
-    if (cf->conf_file->file.fd == NGX_INVALID_FILE) {
+    अगर (cf->conf_file->file.fd == NGX_INVALID_FILE) {
         ngx_log_error(level, cf->log, 0, "%*s in command line",
                       p - errstr, errstr);
-        return;
+        वापस;
     }
 
     ngx_log_error(level, cf->log, 0, "%*s in %s:%ui",
                   p - errstr, errstr,
-                  cf->conf_file->file.name.data, cf->conf_file->line);
+                  cf->conf_file->file.name.तथ्य, cf->conf_file->पंक्ति);
 }
 
 
-char *
-ngx_conf_set_flag_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_flag_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char  *p = conf;
+    अक्षर  *p = conf;
 
-    ngx_str_t        *value;
+    ngx_str_t        *मूल्य;
     ngx_flag_t       *fp;
     ngx_conf_post_t  *post;
 
     fp = (ngx_flag_t *) (p + cmd->offset);
 
-    if (*fp != NGX_CONF_UNSET) {
-        return "is duplicate";
+    अगर (*fp != NGX_CONF_UNSET) {
+        वापस "is duplicate";
     }
 
-    value = cf->args->elts;
+    मूल्य = cf->args->elts;
 
-    if (ngx_strcasecmp(value[1].data, (u_char *) "on") == 0) {
+    अगर (ngx_strcasecmp(मूल्य[1].तथ्य, (u_char *) "on") == 0) {
         *fp = 1;
 
-    } else if (ngx_strcasecmp(value[1].data, (u_char *) "off") == 0) {
+    } अन्यथा अगर (ngx_strcasecmp(मूल्य[1].तथ्य, (u_char *) "off") == 0) {
         *fp = 0;
 
-    } else {
+    } अन्यथा {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                      "invalid value \"%s\" in \"%s\" directive, "
                      "it must be \"on\" or \"off\"",
-                     value[1].data, cmd->name.data);
-        return NGX_CONF_ERROR;
+                     मूल्य[1].तथ्य, cmd->name.तथ्य);
+        वापस NGX_CONF_ERROR;
     }
 
-    if (cmd->post) {
+    अगर (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, fp);
+        वापस post->post_handler(cf, post, fp);
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_str_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_str_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char  *p = conf;
+    अक्षर  *p = conf;
 
-    ngx_str_t        *field, *value;
+    ngx_str_t        *field, *मूल्य;
     ngx_conf_post_t  *post;
 
     field = (ngx_str_t *) (p + cmd->offset);
 
-    if (field->data) {
-        return "is duplicate";
+    अगर (field->तथ्य) {
+        वापस "is duplicate";
     }
 
-    value = cf->args->elts;
+    मूल्य = cf->args->elts;
 
-    *field = value[1];
+    *field = मूल्य[1];
 
-    if (cmd->post) {
+    अगर (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, field);
+        वापस post->post_handler(cf, post, field);
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_str_array_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_str_array_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char  *p = conf;
+    अक्षर  *p = conf;
 
-    ngx_str_t         *value, *s;
+    ngx_str_t         *मूल्य, *s;
     ngx_array_t      **a;
     ngx_conf_post_t   *post;
 
     a = (ngx_array_t **) (p + cmd->offset);
 
-    if (*a == NGX_CONF_UNSET_PTR) {
-        *a = ngx_array_create(cf->pool, 4, sizeof(ngx_str_t));
-        if (*a == NULL) {
-            return NGX_CONF_ERROR;
+    अगर (*a == NGX_CONF_UNSET_PTR) {
+        *a = ngx_array_create(cf->pool, 4, माप(ngx_str_t));
+        अगर (*a == शून्य) {
+            वापस NGX_CONF_ERROR;
         }
     }
 
-    s = ngx_array_push(*a);
-    if (s == NULL) {
-        return NGX_CONF_ERROR;
+    s = ngx_array_धकेलो(*a);
+    अगर (s == शून्य) {
+        वापस NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
+    मूल्य = cf->args->elts;
 
-    *s = value[1];
+    *s = मूल्य[1];
 
-    if (cmd->post) {
+    अगर (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, s);
+        वापस post->post_handler(cf, post, s);
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char  *p = conf;
+    अक्षर  *p = conf;
 
-    ngx_str_t         *value;
+    ngx_str_t         *मूल्य;
     ngx_array_t      **a;
     ngx_keyval_t      *kv;
     ngx_conf_post_t   *post;
 
     a = (ngx_array_t **) (p + cmd->offset);
 
-    if (*a == NGX_CONF_UNSET_PTR || *a == NULL) {
-        *a = ngx_array_create(cf->pool, 4, sizeof(ngx_keyval_t));
-        if (*a == NULL) {
-            return NGX_CONF_ERROR;
+    अगर (*a == NGX_CONF_UNSET_PTR || *a == शून्य) {
+        *a = ngx_array_create(cf->pool, 4, माप(ngx_keyval_t));
+        अगर (*a == शून्य) {
+            वापस NGX_CONF_ERROR;
         }
     }
 
-    kv = ngx_array_push(*a);
-    if (kv == NULL) {
-        return NGX_CONF_ERROR;
+    kv = ngx_array_धकेलो(*a);
+    अगर (kv == शून्य) {
+        वापस NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
+    मूल्य = cf->args->elts;
 
-    kv->key = value[1];
-    kv->value = value[2];
+    kv->कुंजी = मूल्य[1];
+    kv->मूल्य = मूल्य[2];
 
-    if (cmd->post) {
+    अगर (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, kv);
+        वापस post->post_handler(cf, post, kv);
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_num_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_अंक_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char  *p = conf;
+    अक्षर  *p = conf;
 
     ngx_int_t        *np;
-    ngx_str_t        *value;
+    ngx_str_t        *मूल्य;
     ngx_conf_post_t  *post;
 
 
     np = (ngx_int_t *) (p + cmd->offset);
 
-    if (*np != NGX_CONF_UNSET) {
-        return "is duplicate";
+    अगर (*np != NGX_CONF_UNSET) {
+        वापस "is duplicate";
     }
 
-    value = cf->args->elts;
-    *np = ngx_atoi(value[1].data, value[1].len);
-    if (*np == NGX_ERROR) {
-        return "invalid number";
+    मूल्य = cf->args->elts;
+    *np = ngx_atoi(मूल्य[1].तथ्य, मूल्य[1].len);
+    अगर (*np == NGX_ERROR) {
+        वापस "invalid number";
     }
 
-    if (cmd->post) {
+    अगर (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, np);
+        वापस post->post_handler(cf, post, np);
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_size_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_आकार_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char  *p = conf;
+    अक्षर  *p = conf;
 
-    size_t           *sp;
-    ngx_str_t        *value;
+    माप_प्रकार           *sp;
+    ngx_str_t        *मूल्य;
     ngx_conf_post_t  *post;
 
 
-    sp = (size_t *) (p + cmd->offset);
-    if (*sp != NGX_CONF_UNSET_SIZE) {
-        return "is duplicate";
+    sp = (माप_प्रकार *) (p + cmd->offset);
+    अगर (*sp != NGX_CONF_UNSET_आकार) {
+        वापस "is duplicate";
     }
 
-    value = cf->args->elts;
+    मूल्य = cf->args->elts;
 
-    *sp = ngx_parse_size(&value[1]);
-    if (*sp == (size_t) NGX_ERROR) {
-        return "invalid value";
+    *sp = ngx_parse_आकार(&मूल्य[1]);
+    अगर (*sp == (माप_प्रकार) NGX_ERROR) {
+        वापस "invalid value";
     }
 
-    if (cmd->post) {
+    अगर (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, sp);
+        वापस post->post_handler(cf, post, sp);
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_off_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_off_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char  *p = conf;
+    अक्षर  *p = conf;
 
     off_t            *op;
-    ngx_str_t        *value;
+    ngx_str_t        *मूल्य;
     ngx_conf_post_t  *post;
 
 
     op = (off_t *) (p + cmd->offset);
-    if (*op != NGX_CONF_UNSET) {
-        return "is duplicate";
+    अगर (*op != NGX_CONF_UNSET) {
+        वापस "is duplicate";
     }
 
-    value = cf->args->elts;
+    मूल्य = cf->args->elts;
 
-    *op = ngx_parse_offset(&value[1]);
-    if (*op == (off_t) NGX_ERROR) {
-        return "invalid value";
+    *op = ngx_parse_offset(&मूल्य[1]);
+    अगर (*op == (off_t) NGX_ERROR) {
+        वापस "invalid value";
     }
 
-    if (cmd->post) {
+    अगर (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, op);
+        वापस post->post_handler(cf, post, op);
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_msec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_msec_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char  *p = conf;
+    अक्षर  *p = conf;
 
     ngx_msec_t       *msp;
-    ngx_str_t        *value;
+    ngx_str_t        *मूल्य;
     ngx_conf_post_t  *post;
 
 
     msp = (ngx_msec_t *) (p + cmd->offset);
-    if (*msp != NGX_CONF_UNSET_MSEC) {
-        return "is duplicate";
+    अगर (*msp != NGX_CONF_UNSET_MSEC) {
+        वापस "is duplicate";
     }
 
-    value = cf->args->elts;
+    मूल्य = cf->args->elts;
 
-    *msp = ngx_parse_time(&value[1], 0);
-    if (*msp == (ngx_msec_t) NGX_ERROR) {
-        return "invalid value";
+    *msp = ngx_parse_time(&मूल्य[1], 0);
+    अगर (*msp == (ngx_msec_t) NGX_ERROR) {
+        वापस "invalid value";
     }
 
-    if (cmd->post) {
+    अगर (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, msp);
+        वापस post->post_handler(cf, post, msp);
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_sec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_sec_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char  *p = conf;
+    अक्षर  *p = conf;
 
-    time_t           *sp;
-    ngx_str_t        *value;
+    समय_प्रकार           *sp;
+    ngx_str_t        *मूल्य;
     ngx_conf_post_t  *post;
 
 
-    sp = (time_t *) (p + cmd->offset);
-    if (*sp != NGX_CONF_UNSET) {
-        return "is duplicate";
+    sp = (समय_प्रकार *) (p + cmd->offset);
+    अगर (*sp != NGX_CONF_UNSET) {
+        वापस "is duplicate";
     }
 
-    value = cf->args->elts;
+    मूल्य = cf->args->elts;
 
-    *sp = ngx_parse_time(&value[1], 1);
-    if (*sp == (time_t) NGX_ERROR) {
-        return "invalid value";
+    *sp = ngx_parse_time(&मूल्य[1], 1);
+    अगर (*sp == (समय_प्रकार) NGX_ERROR) {
+        वापस "invalid value";
     }
 
-    if (cmd->post) {
+    अगर (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, sp);
+        वापस post->post_handler(cf, post, sp);
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_bufs_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_bufs_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char *p = conf;
+    अक्षर *p = conf;
 
-    ngx_str_t   *value;
+    ngx_str_t   *मूल्य;
     ngx_bufs_t  *bufs;
 
 
     bufs = (ngx_bufs_t *) (p + cmd->offset);
-    if (bufs->num) {
-        return "is duplicate";
+    अगर (bufs->अंक) {
+        वापस "is duplicate";
     }
 
-    value = cf->args->elts;
+    मूल्य = cf->args->elts;
 
-    bufs->num = ngx_atoi(value[1].data, value[1].len);
-    if (bufs->num == NGX_ERROR || bufs->num == 0) {
-        return "invalid value";
+    bufs->अंक = ngx_atoi(मूल्य[1].तथ्य, मूल्य[1].len);
+    अगर (bufs->अंक == NGX_ERROR || bufs->अंक == 0) {
+        वापस "invalid value";
     }
 
-    bufs->size = ngx_parse_size(&value[2]);
-    if (bufs->size == (size_t) NGX_ERROR || bufs->size == 0) {
-        return "invalid value";
+    bufs->आकार = ngx_parse_आकार(&मूल्य[2]);
+    अगर (bufs->आकार == (माप_प्रकार) NGX_ERROR || bufs->आकार == 0) {
+        वापस "invalid value";
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char  *p = conf;
+    अक्षर  *p = conf;
 
     ngx_uint_t       *np, i;
-    ngx_str_t        *value;
+    ngx_str_t        *मूल्य;
     ngx_conf_enum_t  *e;
 
     np = (ngx_uint_t *) (p + cmd->offset);
 
-    if (*np != NGX_CONF_UNSET_UINT) {
-        return "is duplicate";
+    अगर (*np != NGX_CONF_UNSET_UINT) {
+        वापस "is duplicate";
     }
 
-    value = cf->args->elts;
+    मूल्य = cf->args->elts;
     e = cmd->post;
 
-    for (i = 0; e[i].name.len != 0; i++) {
-        if (e[i].name.len != value[1].len
-            || ngx_strcasecmp(e[i].name.data, value[1].data) != 0)
+    क्रम (i = 0; e[i].name.len != 0; i++) {
+        अगर (e[i].name.len != मूल्य[1].len
+            || ngx_strcasecmp(e[i].name.तथ्य, मूल्य[1].तथ्य) != 0)
         {
-            continue;
+            जारी;
         }
 
-        *np = e[i].value;
+        *np = e[i].मूल्य;
 
-        return NGX_CONF_OK;
+        वापस NGX_CONF_OK;
     }
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                       "invalid value \"%s\"", value[1].data);
+                       "invalid value \"%s\"", मूल्य[1].तथ्य);
 
-    return NGX_CONF_ERROR;
+    वापस NGX_CONF_ERROR;
 }
 
 
-char *
-ngx_conf_set_bitmask_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_set_bitmask_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    char  *p = conf;
+    अक्षर  *p = conf;
 
     ngx_uint_t          *np, i, m;
-    ngx_str_t           *value;
+    ngx_str_t           *मूल्य;
     ngx_conf_bitmask_t  *mask;
 
 
     np = (ngx_uint_t *) (p + cmd->offset);
-    value = cf->args->elts;
+    मूल्य = cf->args->elts;
     mask = cmd->post;
 
-    for (i = 1; i < cf->args->nelts; i++) {
-        for (m = 0; mask[m].name.len != 0; m++) {
+    क्रम (i = 1; i < cf->args->nelts; i++) {
+        क्रम (m = 0; mask[m].name.len != 0; m++) {
 
-            if (mask[m].name.len != value[i].len
-                || ngx_strcasecmp(mask[m].name.data, value[i].data) != 0)
+            अगर (mask[m].name.len != मूल्य[i].len
+                || ngx_strcasecmp(mask[m].name.तथ्य, मूल्य[i].तथ्य) != 0)
             {
-                continue;
+                जारी;
             }
 
-            if (*np & mask[m].mask) {
+            अगर (*np & mask[m].mask) {
                 ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
-                                   "duplicate value \"%s\"", value[i].data);
+                                   "duplicate value \"%s\"", मूल्य[i].तथ्य);
 
-            } else {
+            } अन्यथा {
                 *np |= mask[m].mask;
             }
 
-            break;
+            अवरोध;
         }
 
-        if (mask[m].name.len == 0) {
+        अगर (mask[m].name.len == 0) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                               "invalid value \"%s\"", value[i].data);
+                               "invalid value \"%s\"", मूल्य[i].तथ्य);
 
-            return NGX_CONF_ERROR;
+            वापस NGX_CONF_ERROR;
         }
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-#if 0
+#अगर 0
 
-char *
-ngx_conf_unsupported(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+अक्षर *
+ngx_conf_unsupported(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf)
 {
-    return "unsupported on this platform";
+    वापस "unsupported on this platform";
 }
 
-#endif
+#पूर्ण_अगर
 
 
-char *
-ngx_conf_deprecated(ngx_conf_t *cf, void *post, void *data)
+अक्षर *
+ngx_conf_deprecated(ngx_conf_t *cf, व्योम *post, व्योम *तथ्य)
 {
     ngx_conf_deprecated_t  *d = post;
 
@@ -1458,48 +1458,48 @@ ngx_conf_deprecated(ngx_conf_t *cf, void *post, void *data)
                        "use the \"%s\" directive instead",
                        d->old_name, d->new_name);
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_check_num_bounds(ngx_conf_t *cf, void *post, void *data)
+अक्षर *
+ngx_conf_check_अंक_bounds(ngx_conf_t *cf, व्योम *post, व्योम *तथ्य)
 {
-    ngx_conf_num_bounds_t  *bounds = post;
-    ngx_int_t  *np = data;
+    ngx_conf_अंक_bounds_t  *bounds = post;
+    ngx_int_t  *np = तथ्य;
 
-    if (bounds->high == -1) {
-        if (*np >= bounds->low) {
-            return NGX_CONF_OK;
+    अगर (bounds->ऊपरी == -1) {
+        अगर (*np >= bounds->निचला) {
+            वापस NGX_CONF_OK;
         }
 
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "value must be equal to or greater than %i",
-                           bounds->low);
+                           bounds->निचला);
 
-        return NGX_CONF_ERROR;
+        वापस NGX_CONF_ERROR;
     }
 
-    if (*np >= bounds->low && *np <= bounds->high) {
-        return NGX_CONF_OK;
+    अगर (*np >= bounds->निचला && *np <= bounds->ऊपरी) {
+        वापस NGX_CONF_OK;
     }
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                        "value must be between %i and %i",
-                       bounds->low, bounds->high);
+                       bounds->निचला, bounds->ऊपरी);
 
-    return NGX_CONF_ERROR;
+    वापस NGX_CONF_ERROR;
 }
 
 
-char *
-ngx_conf_check_size_nonzero(ngx_conf_t *cf, void *post, void *data)
+अक्षर *
+ngx_conf_check_आकार_nonzero(ngx_conf_t *cf, व्योम *post, व्योम *तथ्य)
 {
-    size_t  *sp = data;
+    माप_प्रकार  *sp = तथ्य;
 
-    if (*sp == 0) {
-        return "value must be nonzero";
+    अगर (*sp == 0) {
+        वापस "value must be nonzero";
     }
 
-    return NGX_CONF_OK;
+    वापस NGX_CONF_OK;
 }

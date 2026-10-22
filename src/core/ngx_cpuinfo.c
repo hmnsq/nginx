@@ -5,19 +5,19 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
 
-#if (( __i386__ || __amd64__ ) && ( __GNUC__ || __INTEL_COMPILER ))
+#अगर (( __i386__ || __amd64__ ) && ( __GNUC__ || __INTEL_COMPILER ))
 
 
-static ngx_inline void ngx_cpuid(uint32_t i, uint32_t *buf);
+अटल ngx_inline व्योम ngx_cpuid(uint32_t i, uint32_t *buf);
 
 
-#if ( __i386__ )
+#अगर ( __i386__ )
 
-static ngx_inline void
+अटल ngx_inline व्योम
 ngx_cpuid(uint32_t i, uint32_t *buf)
 {
 
@@ -43,10 +43,10 @@ ngx_cpuid(uint32_t i, uint32_t *buf)
 }
 
 
-#else /* __amd64__ */
+#अन्यथा /* __amd64__ */
 
 
-static ngx_inline void
+अटल ngx_inline व्योम
 ngx_cpuid(uint32_t i, uint32_t *buf)
 {
     uint32_t  eax, ebx, ecx, edx;
@@ -64,13 +64,13 @@ ngx_cpuid(uint32_t i, uint32_t *buf)
 }
 
 
-#endif
+#पूर्ण_अगर
 
 
 /* auto detect the L2 cache line size of modern and widespread CPUs */
 
-void
-ngx_cpuinfo(void)
+व्योम
+ngx_cpuinfo(व्योम)
 {
     u_char    *vendor;
     uint32_t   vbuf[5], cpu[4], model;
@@ -85,55 +85,55 @@ ngx_cpuinfo(void)
 
     vendor = (u_char *) &vbuf[1];
 
-    if (vbuf[0] == 0) {
-        return;
+    अगर (vbuf[0] == 0) {
+        वापस;
     }
 
     ngx_cpuid(1, cpu);
 
-    if (ngx_strcmp(vendor, "GenuineIntel") == 0) {
+    अगर (ngx_strcmp(vendor, "GenuineIntel") == 0) {
 
-        switch ((cpu[0] & 0xf00) >> 8) {
+        चयन ((cpu[0] & 0xf00) >> 8) {
 
         /* Pentium */
-        case 5:
-            ngx_cacheline_size = 32;
-            break;
+        हाल 5:
+            ngx_cacheline_आकार = 32;
+            अवरोध;
 
         /* Pentium Pro, II, III */
-        case 6:
-            ngx_cacheline_size = 32;
+        हाल 6:
+            ngx_cacheline_आकार = 32;
 
             model = ((cpu[0] & 0xf0000) >> 8) | (cpu[0] & 0xf0);
 
-            if (model >= 0xd0) {
+            अगर (model >= 0xd0) {
                 /* Intel Core, Core 2, Atom */
-                ngx_cacheline_size = 64;
+                ngx_cacheline_आकार = 64;
             }
 
-            break;
+            अवरोध;
 
         /*
          * Pentium 4, although its cache line size is 64 bytes,
          * it prefetches up to two cache lines during memory read
          */
-        case 15:
-            ngx_cacheline_size = 128;
-            break;
+        हाल 15:
+            ngx_cacheline_आकार = 128;
+            अवरोध;
         }
 
-    } else if (ngx_strcmp(vendor, "AuthenticAMD") == 0) {
-        ngx_cacheline_size = 64;
+    } अन्यथा अगर (ngx_strcmp(vendor, "AuthenticAMD") == 0) {
+        ngx_cacheline_आकार = 64;
     }
 }
 
-#else
+#अन्यथा
 
 
-void
-ngx_cpuinfo(void)
+व्योम
+ngx_cpuinfo(व्योम)
 {
 }
 
 
-#endif
+#पूर्ण_अगर

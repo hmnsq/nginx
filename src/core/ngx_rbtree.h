@@ -5,83 +5,83 @@
  */
 
 
-#ifndef _NGX_RBTREE_H_INCLUDED_
-#define _NGX_RBTREE_H_INCLUDED_
+#अगर_अघोषित _NGX_RBTREE_H_INCLUDED_
+#घोषणा _NGX_RBTREE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
 
-typedef ngx_uint_t  ngx_rbtree_key_t;
-typedef ngx_int_t   ngx_rbtree_key_int_t;
+प्रकार ngx_uint_t  ngx_rbtree_कुंजी_t;
+प्रकार ngx_int_t   ngx_rbtree_कुंजी_int_t;
 
 
-typedef struct ngx_rbtree_node_s  ngx_rbtree_node_t;
+प्रकार काष्ठा ngx_rbtree_गाँठ_s  ngx_rbtree_गाँठ_t;
 
-struct ngx_rbtree_node_s {
-    ngx_rbtree_key_t       key;
-    ngx_rbtree_node_t     *left;
-    ngx_rbtree_node_t     *right;
-    ngx_rbtree_node_t     *parent;
+काष्ठा ngx_rbtree_गाँठ_s {
+    ngx_rbtree_कुंजी_t       कुंजी;
+    ngx_rbtree_गाँठ_t     *बायाँ;
+    ngx_rbtree_गाँठ_t     *दायाँ;
+    ngx_rbtree_गाँठ_t     *parent;
     u_char                 color;
-    u_char                 data;
+    u_char                 तथ्य;
 };
 
 
-typedef struct ngx_rbtree_s  ngx_rbtree_t;
+प्रकार काष्ठा ngx_rbtree_s  ngx_rbtree_t;
 
-typedef void (*ngx_rbtree_insert_pt) (ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
+प्रकार व्योम (*ngx_rbtree_जोड़ो_pt) (ngx_rbtree_गाँठ_t *मूल,
+    ngx_rbtree_गाँठ_t *गाँठ, ngx_rbtree_गाँठ_t *sentinel);
 
-struct ngx_rbtree_s {
-    ngx_rbtree_node_t     *root;
-    ngx_rbtree_node_t     *sentinel;
-    ngx_rbtree_insert_pt   insert;
+काष्ठा ngx_rbtree_s {
+    ngx_rbtree_गाँठ_t     *मूल;
+    ngx_rbtree_गाँठ_t     *sentinel;
+    ngx_rbtree_जोड़ो_pt   जोड़ो;
 };
 
 
-#define ngx_rbtree_init(tree, s, i)                                           \
+#घोषणा ngx_rbtree_init(वृक्ष, s, i)                                           \
     ngx_rbtree_sentinel_init(s);                                              \
-    (tree)->root = s;                                                         \
-    (tree)->sentinel = s;                                                     \
-    (tree)->insert = i
+    (वृक्ष)->मूल = s;                                                         \
+    (वृक्ष)->sentinel = s;                                                     \
+    (वृक्ष)->जोड़ो = i
 
-#define ngx_rbtree_data(node, type, link)                                     \
-    (type *) ((u_char *) (node) - offsetof(type, link))
-
-
-void ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_insert_value(ngx_rbtree_node_t *root, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel);
-void ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-ngx_rbtree_node_t *ngx_rbtree_next(ngx_rbtree_t *tree,
-    ngx_rbtree_node_t *node);
+#घोषणा ngx_rbtree_तथ्य(गाँठ, type, link)                                     \
+    (type *) ((u_char *) (गाँठ) - दुरत्व(type, link))
 
 
-#define ngx_rbt_red(node)               ((node)->color = 1)
-#define ngx_rbt_black(node)             ((node)->color = 0)
-#define ngx_rbt_is_red(node)            ((node)->color)
-#define ngx_rbt_is_black(node)          (!ngx_rbt_is_red(node))
-#define ngx_rbt_copy_color(n1, n2)      (n1->color = n2->color)
+व्योम ngx_rbtree_जोड़ो(ngx_rbtree_t *वृक्ष, ngx_rbtree_गाँठ_t *गाँठ);
+व्योम ngx_rbtree_delete(ngx_rbtree_t *वृक्ष, ngx_rbtree_गाँठ_t *गाँठ);
+व्योम ngx_rbtree_जोड़ो_मूल्य(ngx_rbtree_गाँठ_t *मूल, ngx_rbtree_गाँठ_t *गाँठ,
+    ngx_rbtree_गाँठ_t *sentinel);
+व्योम ngx_rbtree_जोड़ो_timer_मूल्य(ngx_rbtree_गाँठ_t *मूल,
+    ngx_rbtree_गाँठ_t *गाँठ, ngx_rbtree_गाँठ_t *sentinel);
+ngx_rbtree_गाँठ_t *ngx_rbtree_अग्र(ngx_rbtree_t *वृक्ष,
+    ngx_rbtree_गाँठ_t *गाँठ);
+
+
+#घोषणा ngx_rbt_red(गाँठ)               ((गाँठ)->color = 1)
+#घोषणा ngx_rbt_black(गाँठ)             ((गाँठ)->color = 0)
+#घोषणा ngx_rbt_is_red(गाँठ)            ((गाँठ)->color)
+#घोषणा ngx_rbt_is_black(गाँठ)          (!ngx_rbt_is_red(गाँठ))
+#घोषणा ngx_rbt_copy_color(n1, n2)      (n1->color = n2->color)
 
 
 /* a sentinel must be black */
 
-#define ngx_rbtree_sentinel_init(node)  ngx_rbt_black(node)
+#घोषणा ngx_rbtree_sentinel_init(गाँठ)  ngx_rbt_black(गाँठ)
 
 
-static ngx_inline ngx_rbtree_node_t *
-ngx_rbtree_min(ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+अटल ngx_inline ngx_rbtree_गाँठ_t *
+ngx_rbtree_min(ngx_rbtree_गाँठ_t *गाँठ, ngx_rbtree_गाँठ_t *sentinel)
 {
-    while (node->left != sentinel) {
-        node = node->left;
+    जबतक (गाँठ->बायाँ != sentinel) {
+        गाँठ = गाँठ->बायाँ;
     }
 
-    return node;
+    वापस गाँठ;
 }
 
 
-#endif /* _NGX_RBTREE_H_INCLUDED_ */
+#पूर्ण_अगर /* _NGX_RBTREE_H_INCLUDED_ */

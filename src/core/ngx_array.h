@@ -5,31 +5,31 @@
  */
 
 
-#ifndef _NGX_ARRAY_H_INCLUDED_
-#define _NGX_ARRAY_H_INCLUDED_
+#अगर_अघोषित _NGX_ARRAY_H_INCLUDED_
+#घोषणा _NGX_ARRAY_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
 
-typedef struct {
-    void        *elts;
+प्रकार काष्ठा {
+    व्योम        *elts;
     ngx_uint_t   nelts;
-    size_t       size;
+    माप_प्रकार       आकार;
     ngx_uint_t   nalloc;
     ngx_pool_t  *pool;
 } ngx_array_t;
 
 
-ngx_array_t *ngx_array_create(ngx_pool_t *p, ngx_uint_t n, size_t size);
-void ngx_array_destroy(ngx_array_t *a);
-void *ngx_array_push(ngx_array_t *a);
-void *ngx_array_push_n(ngx_array_t *a, ngx_uint_t n);
+ngx_array_t *ngx_array_create(ngx_pool_t *p, ngx_uint_t n, माप_प्रकार आकार);
+व्योम ngx_array_destroy(ngx_array_t *a);
+व्योम *ngx_array_धकेलो(ngx_array_t *a);
+व्योम *ngx_array_धकेलो_n(ngx_array_t *a, ngx_uint_t n);
 
 
-static ngx_inline ngx_int_t
-ngx_array_init(ngx_array_t *array, ngx_pool_t *pool, ngx_uint_t n, size_t size)
+अटल ngx_inline ngx_int_t
+ngx_array_init(ngx_array_t *array, ngx_pool_t *pool, ngx_uint_t n, माप_प्रकार आकार)
 {
     /*
      * set "array->nelts" before "array->elts", otherwise MSVC thinks
@@ -37,17 +37,17 @@ ngx_array_init(ngx_array_t *array, ngx_pool_t *pool, ngx_uint_t n, size_t size)
      */
 
     array->nelts = 0;
-    array->size = size;
+    array->आकार = आकार;
     array->nalloc = n;
     array->pool = pool;
 
-    array->elts = ngx_palloc(pool, n * size);
-    if (array->elts == NULL) {
-        return NGX_ERROR;
+    array->elts = ngx_palloc(pool, n * आकार);
+    अगर (array->elts == शून्य) {
+        वापस NGX_ERROR;
     }
 
-    return NGX_OK;
+    वापस NGX_OK;
 }
 
 
-#endif /* _NGX_ARRAY_H_INCLUDED_ */
+#पूर्ण_अगर /* _NGX_ARRAY_H_INCLUDED_ */

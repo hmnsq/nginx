@@ -5,45 +5,45 @@
  */
 
 
-#ifndef _NGX_SHMTX_H_INCLUDED_
-#define _NGX_SHMTX_H_INCLUDED_
+#अगर_अघोषित _NGX_SHMTX_H_INCLUDED_
+#घोषणा _NGX_SHMTX_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
 
-typedef struct {
+प्रकार काष्ठा {
     ngx_atomic_t   lock;
-#if (NGX_HAVE_POSIX_SEM)
-    ngx_atomic_t   wait;
-#endif
+#अगर (NGX_HAVE_POSIX_SEM)
+    ngx_atomic_t   रुको;
+#पूर्ण_अगर
 } ngx_shmtx_sh_t;
 
 
-typedef struct {
-#if (NGX_HAVE_ATOMIC_OPS)
+प्रकार काष्ठा {
+#अगर (NGX_HAVE_ATOMIC_OPS)
     ngx_atomic_t  *lock;
-#if (NGX_HAVE_POSIX_SEM)
-    ngx_atomic_t  *wait;
+#अगर (NGX_HAVE_POSIX_SEM)
+    ngx_atomic_t  *रुको;
     ngx_uint_t     semaphore;
     sem_t          sem;
-#endif
-#else
+#पूर्ण_अगर
+#अन्यथा
     ngx_fd_t       fd;
     u_char        *name;
-#endif
+#पूर्ण_अगर
     ngx_uint_t     spin;
 } ngx_shmtx_t;
 
 
 ngx_int_t ngx_shmtx_create(ngx_shmtx_t *mtx, ngx_shmtx_sh_t *addr,
     u_char *name);
-void ngx_shmtx_destroy(ngx_shmtx_t *mtx);
+व्योम ngx_shmtx_destroy(ngx_shmtx_t *mtx);
 ngx_uint_t ngx_shmtx_trylock(ngx_shmtx_t *mtx);
-void ngx_shmtx_lock(ngx_shmtx_t *mtx);
-void ngx_shmtx_unlock(ngx_shmtx_t *mtx);
+व्योम ngx_shmtx_lock(ngx_shmtx_t *mtx);
+व्योम ngx_shmtx_unlock(ngx_shmtx_t *mtx);
 ngx_uint_t ngx_shmtx_force_unlock(ngx_shmtx_t *mtx, ngx_pid_t pid);
 
 
-#endif /* _NGX_SHMTX_H_INCLUDED_ */
+#पूर्ण_अगर /* _NGX_SHMTX_H_INCLUDED_ */

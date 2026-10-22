@@ -5,64 +5,64 @@
  */
 
 
-#ifndef _NGX_CRC32_H_INCLUDED_
-#define _NGX_CRC32_H_INCLUDED_
+#अगर_अघोषित _NGX_CRC32_H_INCLUDED_
+#घोषणा _NGX_CRC32_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
 
-extern uint32_t  *ngx_crc32_table_short;
-extern uint32_t   ngx_crc32_table256[];
-extern uint32_t   ngx_crc32c_table256[];
+बाह्य uint32_t  *ngx_crc32_table_short;
+बाह्य uint32_t   ngx_crc32_table256[];
+बाह्य uint32_t   ngx_crc32c_table256[];
 
 
-static ngx_inline uint32_t
-ngx_crc32_short(u_char *p, size_t len)
+अटल ngx_inline uint32_t
+ngx_crc32_short(u_char *p, माप_प्रकार len)
 {
     u_char    c;
     uint32_t  crc;
 
     crc = 0xffffffff;
 
-    while (len--) {
+    जबतक (len--) {
         c = *p++;
         crc = ngx_crc32_table_short[(crc ^ (c & 0xf)) & 0xf] ^ (crc >> 4);
         crc = ngx_crc32_table_short[(crc ^ (c >> 4)) & 0xf] ^ (crc >> 4);
     }
 
-    return crc ^ 0xffffffff;
+    वापस crc ^ 0xffffffff;
 }
 
 
-static ngx_inline uint32_t
-ngx_crc32_long(u_char *p, size_t len)
+अटल ngx_inline uint32_t
+ngx_crc32_long(u_char *p, माप_प्रकार len)
 {
     uint32_t  crc;
 
     crc = 0xffffffff;
 
-    while (len--) {
+    जबतक (len--) {
         crc = ngx_crc32_table256[(crc ^ *p++) & 0xff] ^ (crc >> 8);
     }
 
-    return crc ^ 0xffffffff;
+    वापस crc ^ 0xffffffff;
 }
 
 
-#define ngx_crc32_init(crc)                                                   \
+#घोषणा ngx_crc32_init(crc)                                                   \
     crc = 0xffffffff
 
 
-static ngx_inline void
-ngx_crc32_update(uint32_t *crc, u_char *p, size_t len)
+अटल ngx_inline व्योम
+ngx_crc32_update(uint32_t *crc, u_char *p, माप_प्रकार len)
 {
     uint32_t  c;
 
     c = *crc;
 
-    while (len--) {
+    जबतक (len--) {
         c = ngx_crc32_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
     }
 
@@ -70,37 +70,37 @@ ngx_crc32_update(uint32_t *crc, u_char *p, size_t len)
 }
 
 
-#define ngx_crc32_final(crc)                                                  \
+#घोषणा ngx_crc32_final(crc)                                                  \
     crc ^= 0xffffffff
 
 
-static ngx_inline uint32_t
-ngx_crc32c_long(u_char *p, size_t len)
+अटल ngx_inline uint32_t
+ngx_crc32c_long(u_char *p, माप_प्रकार len)
 {
     uint32_t  crc;
 
     crc = 0xffffffff;
 
-    while (len--) {
+    जबतक (len--) {
         crc = ngx_crc32c_table256[(crc ^ *p++) & 0xff] ^ (crc >> 8);
     }
 
-    return crc ^ 0xffffffff;
+    वापस crc ^ 0xffffffff;
 }
 
 
-#define ngx_crc32c_init(crc)                                                  \
+#घोषणा ngx_crc32c_init(crc)                                                  \
     crc = 0xffffffff
 
 
-static ngx_inline void
-ngx_crc32c_update(uint32_t *crc, u_char *p, size_t len)
+अटल ngx_inline व्योम
+ngx_crc32c_update(uint32_t *crc, u_char *p, माप_प्रकार len)
 {
     uint32_t  c;
 
     c = *crc;
 
-    while (len--) {
+    जबतक (len--) {
         c = ngx_crc32c_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
     }
 
@@ -108,11 +108,11 @@ ngx_crc32c_update(uint32_t *crc, u_char *p, size_t len)
 }
 
 
-#define ngx_crc32c_final(crc)                                                 \
+#घोषणा ngx_crc32c_final(crc)                                                 \
     crc ^= 0xffffffff
 
 
-ngx_int_t ngx_crc32_table_init(void);
+ngx_int_t ngx_crc32_table_init(व्योम);
 
 
-#endif /* _NGX_CRC32_H_INCLUDED_ */
+#पूर्ण_अगर /* _NGX_CRC32_H_INCLUDED_ */

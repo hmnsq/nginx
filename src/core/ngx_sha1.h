@@ -5,24 +5,24 @@
  */
 
 
-#ifndef _NGX_SHA1_H_INCLUDED_
-#define _NGX_SHA1_H_INCLUDED_
+#अगर_अघोषित _NGX_SHA1_H_INCLUDED_
+#घोषणा _NGX_SHA1_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
 
-typedef struct {
+प्रकार काष्ठा {
     uint64_t  bytes;
     uint32_t  a, b, c, d, e, f;
-    u_char    buffer[64];
+    u_char    बफर[64];
 } ngx_sha1_t;
 
 
-void ngx_sha1_init(ngx_sha1_t *ctx);
-void ngx_sha1_update(ngx_sha1_t *ctx, const void *data, size_t size);
-void ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx);
+व्योम ngx_sha1_init(ngx_sha1_t *ctx);
+व्योम ngx_sha1_update(ngx_sha1_t *ctx, स्थिर व्योम *तथ्य, माप_प्रकार आकार);
+व्योम ngx_sha1_final(u_char परिणाम[20], ngx_sha1_t *ctx);
 
 
-#endif /* _NGX_SHA1_H_INCLUDED_ */
+#पूर्ण_अगर /* _NGX_SHA1_H_INCLUDED_ */

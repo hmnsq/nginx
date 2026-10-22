@@ -5,50 +5,50 @@
  */
 
 
-#ifndef _NGX_LIST_H_INCLUDED_
-#define _NGX_LIST_H_INCLUDED_
+#अगर_अघोषित _NGX_LIST_H_INCLUDED_
+#घोषणा _NGX_LIST_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
 
-typedef struct ngx_list_part_s  ngx_list_part_t;
+प्रकार काष्ठा ngx_list_part_s  ngx_list_part_t;
 
-struct ngx_list_part_s {
-    void             *elts;
+काष्ठा ngx_list_part_s {
+    व्योम             *elts;
     ngx_uint_t        nelts;
-    ngx_list_part_t  *next;
+    ngx_list_part_t  *अग्र;
 };
 
 
-typedef struct {
+प्रकार काष्ठा {
     ngx_list_part_t  *last;
     ngx_list_part_t   part;
-    size_t            size;
+    माप_प्रकार            आकार;
     ngx_uint_t        nalloc;
     ngx_pool_t       *pool;
 } ngx_list_t;
 
 
-ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size);
+ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, माप_प्रकार आकार);
 
-static ngx_inline ngx_int_t
-ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
+अटल ngx_inline ngx_int_t
+ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, माप_प्रकार आकार)
 {
-    list->part.elts = ngx_palloc(pool, n * size);
-    if (list->part.elts == NULL) {
-        return NGX_ERROR;
+    list->part.elts = ngx_palloc(pool, n * आकार);
+    अगर (list->part.elts == शून्य) {
+        वापस NGX_ERROR;
     }
 
     list->part.nelts = 0;
-    list->part.next = NULL;
+    list->part.अग्र = शून्य;
     list->last = &list->part;
-    list->size = size;
+    list->आकार = आकार;
     list->nalloc = n;
     list->pool = pool;
 
-    return NGX_OK;
+    वापस NGX_OK;
 }
 
 
@@ -77,7 +77,7 @@ ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
  */
 
 
-void *ngx_list_push(ngx_list_t *list);
+व्योम *ngx_list_धकेलो(ngx_list_t *list);
 
 
-#endif /* _NGX_LIST_H_INCLUDED_ */
+#पूर्ण_अगर /* _NGX_LIST_H_INCLUDED_ */

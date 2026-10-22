@@ -5,18 +5,18 @@
  */
 
 
-#ifndef _NGX_PARSE_TIME_H_INCLUDED_
-#define _NGX_PARSE_TIME_H_INCLUDED_
+#अगर_अघोषित _NGX_PARSE_TIME_H_INCLUDED_
+#घोषणा _NGX_PARSE_TIME_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
 
-time_t ngx_parse_http_time(u_char *value, size_t len);
+समय_प्रकार ngx_parse_http_time(u_char *मूल्य, माप_प्रकार len);
 
 /* compatibility */
-#define ngx_http_parse_time(value, len)  ngx_parse_http_time(value, len)
+#घोषणा ngx_http_parse_time(मूल्य, len)  ngx_parse_http_time(मूल्य, len)
 
 
-#endif /* _NGX_PARSE_TIME_H_INCLUDED_ */
+#पूर्ण_अगर /* _NGX_PARSE_TIME_H_INCLUDED_ */

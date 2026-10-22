@@ -5,36 +5,36 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
+#समावेश <ngx_event.h>
 
 
 ngx_os_io_t  ngx_io;
 
 
-static void ngx_drain_connections(ngx_cycle_t *cycle);
+अटल व्योम ngx_drain_connections(ngx_cycle_t *cycle);
 
 
 ngx_listening_t *
-ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
+ngx_create_listening(ngx_conf_t *cf, काष्ठा sockaddr *sockaddr,
     socklen_t socklen)
 {
-    size_t            len;
+    माप_प्रकार            len;
     ngx_listening_t  *ls;
-    struct sockaddr  *sa;
+    काष्ठा sockaddr  *sa;
     u_char            text[NGX_SOCKADDR_STRLEN];
 
-    ls = ngx_array_push(&cf->cycle->listening);
-    if (ls == NULL) {
-        return NULL;
+    ls = ngx_array_धकेलो(&cf->cycle->listening);
+    अगर (ls == शून्य) {
+        वापस शून्य;
     }
 
-    ngx_memzero(ls, sizeof(ngx_listening_t));
+    ngx_memzero(ls, माप(ngx_listening_t));
 
     sa = ngx_palloc(cf->pool, socklen);
-    if (sa == NULL) {
-        return NULL;
+    अगर (sa == शून्य) {
+        वापस शून्य;
     }
 
     ngx_memcpy(sa, sockaddr, socklen);
@@ -45,36 +45,36 @@ ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
     len = ngx_sock_ntop(sa, socklen, text, NGX_SOCKADDR_STRLEN, 1);
     ls->addr_text.len = len;
 
-    switch (ls->sockaddr->sa_family) {
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
+    चयन (ls->sockaddr->sa_family) {
+#अगर (NGX_HAVE_INET6)
+    हाल AF_INET6:
         ls->addr_text_max_len = NGX_INET6_ADDRSTRLEN;
-        break;
-#endif
-#if (NGX_HAVE_UNIX_DOMAIN)
-    case AF_UNIX:
+        अवरोध;
+#पूर्ण_अगर
+#अगर (NGX_HAVE_UNIX_DOMAIN)
+    हाल AF_UNIX:
         ls->addr_text_max_len = NGX_UNIX_ADDRSTRLEN;
         len++;
-        break;
-#endif
-    case AF_INET:
+        अवरोध;
+#पूर्ण_अगर
+    हाल AF_INET:
         ls->addr_text_max_len = NGX_INET_ADDRSTRLEN;
-        break;
-    default:
+        अवरोध;
+    शेष:
         ls->addr_text_max_len = NGX_SOCKADDR_STRLEN;
-        break;
+        अवरोध;
     }
 
-    ls->addr_text.data = ngx_pnalloc(cf->pool, len);
-    if (ls->addr_text.data == NULL) {
-        return NULL;
+    ls->addr_text.तथ्य = ngx_pnalloc(cf->pool, len);
+    अगर (ls->addr_text.तथ्य == शून्य) {
+        वापस शून्य;
     }
 
-    ngx_memcpy(ls->addr_text.data, text, len);
+    ngx_memcpy(ls->addr_text.तथ्य, text, len);
 
-#if !(NGX_WIN32)
-    ngx_rbtree_init(&ls->rbtree, &ls->sentinel, ngx_udp_rbtree_insert_value);
-#endif
+#अगर !(NGX_WIN32)
+    ngx_rbtree_init(&ls->rbtree, &ls->sentinel, ngx_udp_rbtree_जोड़ो_मूल्य);
+#पूर्ण_अगर
 
     ls->fd = (ngx_socket_t) -1;
     ls->type = SOCK_STREAM;
@@ -83,154 +83,154 @@ ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
     ls->rcvbuf = -1;
     ls->sndbuf = -1;
 
-#if (NGX_HAVE_SETFIB)
+#अगर (NGX_HAVE_SETFIB)
     ls->setfib = -1;
-#endif
+#पूर्ण_अगर
 
-#if (NGX_HAVE_TCP_FASTOPEN)
+#अगर (NGX_HAVE_TCP_FASTOPEN)
     ls->fastopen = -1;
-#endif
+#पूर्ण_अगर
 
-    return ls;
+    वापस ls;
 }
 
 
 ngx_int_t
 ngx_clone_listening(ngx_cycle_t *cycle, ngx_listening_t *ls)
 {
-#if (NGX_HAVE_REUSEPORT)
+#अगर (NGX_HAVE_REUSEPORT)
 
     ngx_int_t         n;
     ngx_core_conf_t  *ccf;
     ngx_listening_t   ols;
 
-    if (!ls->reuseport || ls->worker != 0) {
-        return NGX_OK;
+    अगर (!ls->reuseport || ls->worker != 0) {
+        वापस NGX_OK;
     }
 
     ols = *ls;
 
     ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
 
-    for (n = 1; n < ccf->worker_processes; n++) {
+    क्रम (n = 1; n < ccf->worker_processes; n++) {
 
         /* create a socket for each worker process */
 
-        ls = ngx_array_push(&cycle->listening);
-        if (ls == NULL) {
-            return NGX_ERROR;
+        ls = ngx_array_धकेलो(&cycle->listening);
+        अगर (ls == शून्य) {
+            वापस NGX_ERROR;
         }
 
         *ls = ols;
         ls->worker = n;
     }
 
-#endif
+#पूर्ण_अगर
 
-    return NGX_OK;
+    वापस NGX_OK;
 }
 
 
 ngx_int_t
 ngx_set_inherited_sockets(ngx_cycle_t *cycle)
 {
-    size_t                     len;
+    माप_प्रकार                     len;
     ngx_uint_t                 i;
     ngx_listening_t           *ls;
     socklen_t                  olen;
-#if (NGX_HAVE_DEFERRED_ACCEPT || NGX_HAVE_TCP_FASTOPEN)
+#अगर (NGX_HAVE_DEFERRED_ACCEPT || NGX_HAVE_TCP_FASTOPEN)
     ngx_err_t                  err;
-#endif
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
-    struct accept_filter_arg   af;
-#endif
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
-    int                        timeout;
-#endif
-#if (NGX_HAVE_REUSEPORT)
-    int                        reuseport;
-#endif
+#पूर्ण_अगर
+#अगर (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+    काष्ठा accept_filter_arg   af;
+#पूर्ण_अगर
+#अगर (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
+    पूर्णांक                        timeout;
+#पूर्ण_अगर
+#अगर (NGX_HAVE_REUSEPORT)
+    पूर्णांक                        reuseport;
+#पूर्ण_अगर
 
     ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
+    क्रम (i = 0; i < cycle->listening.nelts; i++) {
 
-        ls[i].sockaddr = ngx_palloc(cycle->pool, sizeof(ngx_sockaddr_t));
-        if (ls[i].sockaddr == NULL) {
-            return NGX_ERROR;
+        ls[i].sockaddr = ngx_palloc(cycle->pool, माप(ngx_sockaddr_t));
+        अगर (ls[i].sockaddr == शून्य) {
+            वापस NGX_ERROR;
         }
 
-        ls[i].socklen = sizeof(ngx_sockaddr_t);
-        if (getsockname(ls[i].fd, ls[i].sockaddr, &ls[i].socklen) == -1) {
+        ls[i].socklen = माप(ngx_sockaddr_t);
+        अगर (getsockname(ls[i].fd, ls[i].sockaddr, &ls[i].socklen) == -1) {
             ngx_log_error(NGX_LOG_CRIT, cycle->log, ngx_socket_errno,
                           "getsockname() of the inherited "
                           "socket #%d failed", ls[i].fd);
             ls[i].ignore = 1;
-            continue;
+            जारी;
         }
 
-        if (ls[i].socklen > (socklen_t) sizeof(ngx_sockaddr_t)) {
-            ls[i].socklen = sizeof(ngx_sockaddr_t);
+        अगर (ls[i].socklen > (socklen_t) माप(ngx_sockaddr_t)) {
+            ls[i].socklen = माप(ngx_sockaddr_t);
         }
 
-        switch (ls[i].sockaddr->sa_family) {
+        चयन (ls[i].sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-        case AF_INET6:
+#अगर (NGX_HAVE_INET6)
+        हाल AF_INET6:
             ls[i].addr_text_max_len = NGX_INET6_ADDRSTRLEN;
-            len = NGX_INET6_ADDRSTRLEN + sizeof("[]:65535") - 1;
-            break;
-#endif
+            len = NGX_INET6_ADDRSTRLEN + माप("[]:65535") - 1;
+            अवरोध;
+#पूर्ण_अगर
 
-#if (NGX_HAVE_UNIX_DOMAIN)
-        case AF_UNIX:
+#अगर (NGX_HAVE_UNIX_DOMAIN)
+        हाल AF_UNIX:
             ls[i].addr_text_max_len = NGX_UNIX_ADDRSTRLEN;
             len = NGX_UNIX_ADDRSTRLEN;
-            break;
-#endif
+            अवरोध;
+#पूर्ण_अगर
 
-        case AF_INET:
+        हाल AF_INET:
             ls[i].addr_text_max_len = NGX_INET_ADDRSTRLEN;
-            len = NGX_INET_ADDRSTRLEN + sizeof(":65535") - 1;
-            break;
+            len = NGX_INET_ADDRSTRLEN + माप(":65535") - 1;
+            अवरोध;
 
-        default:
+        शेष:
             ngx_log_error(NGX_LOG_CRIT, cycle->log, ngx_socket_errno,
                           "the inherited socket #%d has "
                           "an unsupported protocol family", ls[i].fd);
             ls[i].ignore = 1;
-            continue;
+            जारी;
         }
 
-        ls[i].addr_text.data = ngx_pnalloc(cycle->pool, len);
-        if (ls[i].addr_text.data == NULL) {
-            return NGX_ERROR;
+        ls[i].addr_text.तथ्य = ngx_pnalloc(cycle->pool, len);
+        अगर (ls[i].addr_text.तथ्य == शून्य) {
+            वापस NGX_ERROR;
         }
 
         len = ngx_sock_ntop(ls[i].sockaddr, ls[i].socklen,
-                            ls[i].addr_text.data, len, 1);
-        if (len == 0) {
-            return NGX_ERROR;
+                            ls[i].addr_text.तथ्य, len, 1);
+        अगर (len == 0) {
+            वापस NGX_ERROR;
         }
 
         ls[i].addr_text.len = len;
 
         ls[i].backlog = NGX_LISTEN_BACKLOG;
 
-        olen = sizeof(int);
+        olen = माप(पूर्णांक);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_TYPE, (void *) &ls[i].type,
+        अगर (getsockopt(ls[i].fd, SOL_SOCKET, SO_TYPE, (व्योम *) &ls[i].type,
                        &olen)
             == -1)
         {
             ngx_log_error(NGX_LOG_CRIT, cycle->log, ngx_socket_errno,
                           "getsockopt(SO_TYPE) %V failed", &ls[i].addr_text);
             ls[i].ignore = 1;
-            continue;
+            जारी;
         }
 
-        olen = sizeof(int);
+        olen = माप(पूर्णांक);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF, (void *) &ls[i].rcvbuf,
+        अगर (getsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF, (व्योम *) &ls[i].rcvbuf,
                        &olen)
             == -1)
         {
@@ -241,9 +241,9 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
             ls[i].rcvbuf = -1;
         }
 
-        olen = sizeof(int);
+        olen = माप(पूर्णांक);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF, (void *) &ls[i].sndbuf,
+        अगर (getsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF, (व्योम *) &ls[i].sndbuf,
                        &olen)
             == -1)
         {
@@ -254,15 +254,15 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
             ls[i].sndbuf = -1;
         }
 
-#if 0
+#अगर 0
         /* SO_SETFIB is currently a set only option */
 
-#if (NGX_HAVE_SETFIB)
+#अगर (NGX_HAVE_SETFIB)
 
-        olen = sizeof(int);
+        olen = माप(पूर्णांक);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
-                       (void *) &ls[i].setfib, &olen)
+        अगर (getsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
+                       (व्योम *) &ls[i].setfib, &olen)
             == -1)
         {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -272,55 +272,55 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
             ls[i].setfib = -1;
         }
 
-#endif
-#endif
+#पूर्ण_अगर
+#पूर्ण_अगर
 
-#if (NGX_HAVE_REUSEPORT)
+#अगर (NGX_HAVE_REUSEPORT)
 
         reuseport = 0;
-        olen = sizeof(int);
+        olen = माप(पूर्णांक);
 
-#ifdef SO_REUSEPORT_LB
+#अगर_घोषित SO_REUSEPORT_LB
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
-                       (void *) &reuseport, &olen)
+        अगर (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
+                       (व्योम *) &reuseport, &olen)
             == -1)
         {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
                           "getsockopt(SO_REUSEPORT_LB) %V failed, ignored",
                           &ls[i].addr_text);
 
-        } else {
+        } अन्यथा {
             ls[i].reuseport = reuseport ? 1 : 0;
         }
 
-#else
+#अन्यथा
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
-                       (void *) &reuseport, &olen)
+        अगर (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
+                       (व्योम *) &reuseport, &olen)
             == -1)
         {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
                           "getsockopt(SO_REUSEPORT) %V failed, ignored",
                           &ls[i].addr_text);
 
-        } else {
+        } अन्यथा {
             ls[i].reuseport = reuseport ? 1 : 0;
         }
-#endif
+#पूर्ण_अगर
 
-#endif
+#पूर्ण_अगर
 
-        if (ls[i].type != SOCK_STREAM) {
-            continue;
+        अगर (ls[i].type != SOCK_STREAM) {
+            जारी;
         }
 
-#ifdef SO_PROTOCOL
+#अगर_घोषित SO_PROTOCOL
 
-        olen = sizeof(int);
+        olen = माप(पूर्णांक);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_PROTOCOL,
-                       (void *) &ls[i].protocol, &olen)
+        अगर (getsockopt(ls[i].fd, SOL_SOCKET, SO_PROTOCOL,
+                       (व्योम *) &ls[i].protocol, &olen)
             == -1)
         {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -328,23 +328,23 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
                           &ls[i].addr_text);
             ls[i].protocol = 0;
 
-        } else if (ls[i].protocol == IPPROTO_TCP) {
+        } अन्यथा अगर (ls[i].protocol == IPPROTO_TCP) {
             ls[i].protocol = 0;
         }
 
-#endif
+#पूर्ण_अगर
 
-#if (NGX_HAVE_TCP_FASTOPEN)
+#अगर (NGX_HAVE_TCP_FASTOPEN)
 
-        olen = sizeof(int);
+        olen = माप(पूर्णांक);
 
-        if (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
-                       (void *) &ls[i].fastopen, &olen)
+        अगर (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
+                       (व्योम *) &ls[i].fastopen, &olen)
             == -1)
         {
             err = ngx_socket_errno;
 
-            if (err != NGX_EOPNOTSUPP && err != NGX_ENOPROTOOPT
+            अगर (err != NGX_EOPNOTSUPP && err != NGX_ENOPROTOOPT
                 && err != NGX_EINVAL)
             {
                 ngx_log_error(NGX_LOG_NOTICE, cycle->log, err,
@@ -355,77 +355,77 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
             ls[i].fastopen = -1;
         }
 
-#endif
+#पूर्ण_अगर
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+#अगर (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
 
-        ngx_memzero(&af, sizeof(struct accept_filter_arg));
-        olen = sizeof(struct accept_filter_arg);
+        ngx_memzero(&af, माप(काष्ठा accept_filter_arg));
+        olen = माप(काष्ठा accept_filter_arg);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, &af, &olen)
+        अगर (getsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, &af, &olen)
             == -1)
         {
             err = ngx_socket_errno;
 
-            if (err == NGX_EINVAL) {
-                continue;
+            अगर (err == NGX_EINVAL) {
+                जारी;
             }
 
             ngx_log_error(NGX_LOG_NOTICE, cycle->log, err,
                           "getsockopt(SO_ACCEPTFILTER) for %V failed, ignored",
                           &ls[i].addr_text);
-            continue;
+            जारी;
         }
 
-        if (olen < sizeof(struct accept_filter_arg) || af.af_name[0] == '\0') {
-            continue;
+        अगर (olen < माप(काष्ठा accept_filter_arg) || af.af_name[0] == '\0') {
+            जारी;
         }
 
         ls[i].accept_filter = ngx_palloc(cycle->pool, 16);
-        if (ls[i].accept_filter == NULL) {
-            return NGX_ERROR;
+        अगर (ls[i].accept_filter == शून्य) {
+            वापस NGX_ERROR;
         }
 
-        (void) ngx_cpystrn((u_char *) ls[i].accept_filter,
+        (व्योम) ngx_cpystrn((u_char *) ls[i].accept_filter,
                            (u_char *) af.af_name, 16);
-#endif
+#पूर्ण_अगर
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
+#अगर (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
 
         timeout = 0;
-        olen = sizeof(int);
+        olen = माप(पूर्णांक);
 
-        if (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT, &timeout, &olen)
+        अगर (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT, &timeout, &olen)
             == -1)
         {
             err = ngx_socket_errno;
 
-            if (err == NGX_EOPNOTSUPP) {
-                continue;
+            अगर (err == NGX_EOPNOTSUPP) {
+                जारी;
             }
 
             ngx_log_error(NGX_LOG_NOTICE, cycle->log, err,
                           "getsockopt(TCP_DEFER_ACCEPT) for %V failed, ignored",
                           &ls[i].addr_text);
-            continue;
+            जारी;
         }
 
-        if (olen < sizeof(int) || timeout == 0) {
-            continue;
+        अगर (olen < माप(पूर्णांक) || timeout == 0) {
+            जारी;
         }
 
         ls[i].deferred_accept = 1;
-#endif
+#पूर्ण_अगर
     }
 
-    return NGX_OK;
+    वापस NGX_OK;
 }
 
 
 ngx_int_t
 ngx_open_listening_sockets(ngx_cycle_t *cycle)
 {
-    int               reuseaddr;
+    पूर्णांक               reuseaddr;
     ngx_uint_t        i, tries, failed;
     ngx_err_t         err;
     ngx_log_t        *log;
@@ -433,29 +433,29 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
     ngx_listening_t  *ls;
 
     reuseaddr = 1;
-#if (NGX_SUPPRESS_WARN)
+#अगर (NGX_SUPPRESS_WARN)
     failed = 0;
-#endif
+#पूर्ण_अगर
 
     log = cycle->log;
 
     /* TODO: configurable try number */
 
-    for (tries = 5; tries; tries--) {
+    क्रम (tries = 5; tries; tries--) {
         failed = 0;
 
         /* for each listening socket */
 
         ls = cycle->listening.elts;
-        for (i = 0; i < cycle->listening.nelts; i++) {
+        क्रम (i = 0; i < cycle->listening.nelts; i++) {
 
-            if (ls[i].ignore) {
-                continue;
+            अगर (ls[i].ignore) {
+                जारी;
             }
 
-#if (NGX_HAVE_REUSEPORT)
+#अगर (NGX_HAVE_REUSEPORT)
 
-            if (ls[i].add_reuseport || ls[i].change_protocol) {
+            अगर (ls[i].add_reuseport || ls[i].change_protocol) {
 
                 /*
                  * to allow transition from a socket without SO_REUSEPORT
@@ -467,12 +467,12 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
                  * and new sockets
                  */
 
-                int  reuseport = 1;
+                पूर्णांक  reuseport = 1;
 
-#ifdef SO_REUSEPORT_LB
+#अगर_घोषित SO_REUSEPORT_LB
 
-                if (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
-                               (const void *) &reuseport, sizeof(int))
+                अगर (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
+                               (स्थिर व्योम *) &reuseport, माप(पूर्णांक))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -481,123 +481,123 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
                                   &ls[i].addr_text);
                 }
 
-#else
+#अन्यथा
 
-                if (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
-                               (const void *) &reuseport, sizeof(int))
+                अगर (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
+                               (स्थिर व्योम *) &reuseport, माप(पूर्णांक))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
                                   "setsockopt(SO_REUSEPORT) %V failed, ignored",
                                   &ls[i].addr_text);
                 }
-#endif
+#पूर्ण_अगर
 
                 ls[i].add_reuseport = 0;
             }
-#endif
+#पूर्ण_अगर
 
-            if (ls[i].fd != (ngx_socket_t) -1 && !ls[i].change_protocol) {
-                continue;
+            अगर (ls[i].fd != (ngx_socket_t) -1 && !ls[i].change_protocol) {
+                जारी;
             }
 
-            if (ls[i].inherited) {
+            अगर (ls[i].inherited) {
 
                 /* TODO: close on exit */
                 /* TODO: nonblocking */
                 /* TODO: deferred accept */
 
-                continue;
+                जारी;
             }
 
             s = ngx_socket(ls[i].sockaddr->sa_family, ls[i].type,
                            ls[i].protocol);
 
-            if (s == (ngx_socket_t) -1) {
+            अगर (s == (ngx_socket_t) -1) {
                 ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                               ngx_socket_n " %V failed", &ls[i].addr_text);
-                return NGX_ERROR;
+                वापस NGX_ERROR;
             }
 
-            if (ls[i].type != SOCK_DGRAM || !ngx_test_config) {
+            अगर (ls[i].type != SOCK_DGRAM || !ngx_test_config) {
 
-                if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
-                               (const void *) &reuseaddr, sizeof(int))
+                अगर (setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
+                               (स्थिर व्योम *) &reuseaddr, माप(पूर्णांक))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   "setsockopt(SO_REUSEADDR) %V failed",
                                   &ls[i].addr_text);
 
-                    if (ngx_close_socket(s) == -1) {
+                    अगर (ngx_close_socket(s) == -1) {
                         ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                       ngx_close_socket_n " %V failed",
                                       &ls[i].addr_text);
                     }
 
-                    return NGX_ERROR;
+                    वापस NGX_ERROR;
                 }
             }
 
-#if (NGX_HAVE_REUSEPORT)
+#अगर (NGX_HAVE_REUSEPORT)
 
-            if ((ls[i].reuseport || ls[i].change_protocol)
+            अगर ((ls[i].reuseport || ls[i].change_protocol)
                 && !ngx_test_config)
             {
-                int  reuseport;
+                पूर्णांक  reuseport;
 
                 reuseport = 1;
 
-#ifdef SO_REUSEPORT_LB
+#अगर_घोषित SO_REUSEPORT_LB
 
-                if (setsockopt(s, SOL_SOCKET, SO_REUSEPORT_LB,
-                               (const void *) &reuseport, sizeof(int))
+                अगर (setsockopt(s, SOL_SOCKET, SO_REUSEPORT_LB,
+                               (स्थिर व्योम *) &reuseport, माप(पूर्णांक))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   "setsockopt(SO_REUSEPORT_LB) %V failed",
                                   &ls[i].addr_text);
 
-                    if (ngx_close_socket(s) == -1) {
+                    अगर (ngx_close_socket(s) == -1) {
                         ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                       ngx_close_socket_n " %V failed",
                                       &ls[i].addr_text);
                     }
 
-                    return NGX_ERROR;
+                    वापस NGX_ERROR;
                 }
 
-#else
+#अन्यथा
 
-                if (setsockopt(s, SOL_SOCKET, SO_REUSEPORT,
-                               (const void *) &reuseport, sizeof(int))
+                अगर (setsockopt(s, SOL_SOCKET, SO_REUSEPORT,
+                               (स्थिर व्योम *) &reuseport, माप(पूर्णांक))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   "setsockopt(SO_REUSEPORT) %V failed",
                                   &ls[i].addr_text);
 
-                    if (ngx_close_socket(s) == -1) {
+                    अगर (ngx_close_socket(s) == -1) {
                         ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                       ngx_close_socket_n " %V failed",
                                       &ls[i].addr_text);
                     }
 
-                    return NGX_ERROR;
+                    वापस NGX_ERROR;
                 }
-#endif
+#पूर्ण_अगर
             }
-#endif
+#पूर्ण_अगर
 
-#if (NGX_HAVE_INET6 && defined IPV6_V6ONLY)
+#अगर (NGX_HAVE_INET6 && defined IPV6_V6ONLY)
 
-            if (ls[i].sockaddr->sa_family == AF_INET6) {
-                int  ipv6only;
+            अगर (ls[i].sockaddr->sa_family == AF_INET6) {
+                पूर्णांक  ipv6only;
 
                 ipv6only = ls[i].ipv6only;
 
-                if (setsockopt(s, IPPROTO_IPV6, IPV6_V6ONLY,
-                               (const void *) &ipv6only, sizeof(int))
+                अगर (setsockopt(s, IPPROTO_IPV6, IPV6_V6ONLY,
+                               (स्थिर व्योम *) &ipv6only, माप(पूर्णांक))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
@@ -605,81 +605,81 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
                                   &ls[i].addr_text);
                 }
             }
-#endif
+#पूर्ण_अगर
             /* TODO: close on exit */
 
-            if (ngx_nonblocking(s) == -1) {
+            अगर (ngx_nonblocking(s) == -1) {
                 ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                               ngx_nonblocking_n " %V failed",
                               &ls[i].addr_text);
 
-                if (ngx_close_socket(s) == -1) {
+                अगर (ngx_close_socket(s) == -1) {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   ngx_close_socket_n " %V failed",
                                   &ls[i].addr_text);
                 }
 
-                return NGX_ERROR;
+                वापस NGX_ERROR;
             }
 
             ngx_log_debug2(NGX_LOG_DEBUG_CORE, log, 0,
                            "bind() %V #%d ", &ls[i].addr_text, s);
 
-            if (bind(s, ls[i].sockaddr, ls[i].socklen) == -1) {
+            अगर (bind(s, ls[i].sockaddr, ls[i].socklen) == -1) {
                 err = ngx_socket_errno;
 
-                if (err != NGX_EADDRINUSE || !ngx_test_config) {
+                अगर (err != NGX_EADDRINUSE || !ngx_test_config) {
                     ngx_log_error(NGX_LOG_EMERG, log, err,
                                   "bind() to %V failed", &ls[i].addr_text);
                 }
 
-                if (ngx_close_socket(s) == -1) {
+                अगर (ngx_close_socket(s) == -1) {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   ngx_close_socket_n " %V failed",
                                   &ls[i].addr_text);
                 }
 
-                if (err != NGX_EADDRINUSE) {
-                    return NGX_ERROR;
+                अगर (err != NGX_EADDRINUSE) {
+                    वापस NGX_ERROR;
                 }
 
-                if (!ngx_test_config) {
+                अगर (!ngx_test_config) {
                     failed = 1;
                 }
 
-                continue;
+                जारी;
             }
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#अगर (NGX_HAVE_UNIX_DOMAIN)
 
-            if (ls[i].sockaddr->sa_family == AF_UNIX) {
+            अगर (ls[i].sockaddr->sa_family == AF_UNIX) {
                 mode_t   mode;
                 u_char  *name;
 
-                name = ls[i].addr_text.data + sizeof("unix:") - 1;
+                name = ls[i].addr_text.तथ्य + माप("unix:") - 1;
                 mode = (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
 
-                if (chmod((char *) name, mode) == -1) {
+                अगर (chmod((अक्षर *) name, mode) == -1) {
                     ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
                                   "chmod() \"%s\" failed", name);
                 }
 
-                if (ngx_test_config) {
-                    if (ngx_delete_file(name) == NGX_FILE_ERROR) {
+                अगर (ngx_test_config) {
+                    अगर (ngx_delete_file(name) == NGX_FILE_ERROR) {
                         ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
                                       ngx_delete_file_n " %s failed", name);
                     }
                 }
             }
-#endif
+#पूर्ण_अगर
 
-            if (ls[i].type != SOCK_STREAM) {
+            अगर (ls[i].type != SOCK_STREAM) {
                 ls[i].fd = s;
-                ls[i].open = 1;
-                continue;
+                ls[i].खोलो = 1;
+                जारी;
             }
 
-            if (listen(s, ls[i].backlog) == -1) {
+            अगर (listen(s, ls[i].backlog) == -1) {
                 err = ngx_socket_errno;
 
                 /*
@@ -688,37 +688,37 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
                  * https://bugs.openvz.org/browse/OVZ-5587
                  */
 
-                if (err != NGX_EADDRINUSE || !ngx_test_config) {
+                अगर (err != NGX_EADDRINUSE || !ngx_test_config) {
                     ngx_log_error(NGX_LOG_EMERG, log, err,
                                   "listen() to %V, backlog %d failed",
                                   &ls[i].addr_text, ls[i].backlog);
                 }
 
-                if (ngx_close_socket(s) == -1) {
+                अगर (ngx_close_socket(s) == -1) {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   ngx_close_socket_n " %V failed",
                                   &ls[i].addr_text);
                 }
 
-                if (err != NGX_EADDRINUSE) {
-                    return NGX_ERROR;
+                अगर (err != NGX_EADDRINUSE) {
+                    वापस NGX_ERROR;
                 }
 
-                if (!ngx_test_config) {
+                अगर (!ngx_test_config) {
                     failed = 1;
                 }
 
-                continue;
+                जारी;
             }
 
             ls[i].listen = 1;
 
             ls[i].fd = s;
-            ls[i].open = 1;
+            ls[i].खोलो = 1;
         }
 
-        if (!failed) {
-            break;
+        अगर (!failed) {
+            अवरोध;
         }
 
         /* TODO: delay configurable */
@@ -729,34 +729,34 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
         ngx_msleep(500);
     }
 
-    if (failed) {
+    अगर (failed) {
         ngx_log_error(NGX_LOG_EMERG, log, 0, "still could not bind()");
-        return NGX_ERROR;
+        वापस NGX_ERROR;
     }
 
-    return NGX_OK;
+    वापस NGX_OK;
 }
 
 
-void
+व्योम
 ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 {
-    int                        value;
+    पूर्णांक                        मूल्य;
     ngx_uint_t                 i;
     ngx_listening_t           *ls;
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
-    struct accept_filter_arg   af;
-#endif
+#अगर (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+    काष्ठा accept_filter_arg   af;
+#पूर्ण_अगर
 
     ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
+    क्रम (i = 0; i < cycle->listening.nelts; i++) {
 
         ls[i].log = *ls[i].logp;
 
-        if (ls[i].rcvbuf != -1) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF,
-                           (const void *) &ls[i].rcvbuf, sizeof(int))
+        अगर (ls[i].rcvbuf != -1) {
+            अगर (setsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF,
+                           (स्थिर व्योम *) &ls[i].rcvbuf, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -765,9 +765,9 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-        if (ls[i].sndbuf != -1) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF,
-                           (const void *) &ls[i].sndbuf, sizeof(int))
+        अगर (ls[i].sndbuf != -1) {
+            अगर (setsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF,
+                           (स्थिर व्योम *) &ls[i].sndbuf, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -776,62 +776,62 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-        if (ls[i].keepalive) {
-            value = (ls[i].keepalive == 1) ? 1 : 0;
+        अगर (ls[i].keepalive) {
+            मूल्य = (ls[i].keepalive == 1) ? 1 : 0;
 
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_KEEPALIVE,
-                           (const void *) &value, sizeof(int))
+            अगर (setsockopt(ls[i].fd, SOL_SOCKET, SO_KEEPALIVE,
+                           (स्थिर व्योम *) &मूल्य, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
                               "setsockopt(SO_KEEPALIVE, %d) %V failed, ignored",
-                              value, &ls[i].addr_text);
+                              मूल्य, &ls[i].addr_text);
             }
         }
 
-#if (NGX_HAVE_KEEPALIVE_TUNABLE)
+#अगर (NGX_HAVE_KEEPALIVE_TUNABLE)
 
-#if !(NGX_DARWIN)
+#अगर !(NGX_DARWIN)
 
-        if (ls[i].keepidle) {
-            value = ls[i].keepidle;
+        अगर (ls[i].keepidle) {
+            मूल्य = ls[i].keepidle;
 
-#if (NGX_KEEPALIVE_FACTOR)
-            value *= NGX_KEEPALIVE_FACTOR;
-#endif
+#अगर (NGX_KEEPALIVE_FACTOR)
+            मूल्य *= NGX_KEEPALIVE_FACTOR;
+#पूर्ण_अगर
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPIDLE,
-                           (const void *) &value, sizeof(int))
+            अगर (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPIDLE,
+                           (स्थिर व्योम *) &मूल्य, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
                               "setsockopt(TCP_KEEPIDLE, %d) %V failed, ignored",
-                              value, &ls[i].addr_text);
+                              मूल्य, &ls[i].addr_text);
             }
         }
 
-#endif
+#पूर्ण_अगर
 
-        if (ls[i].keepintvl) {
-            value = ls[i].keepintvl;
+        अगर (ls[i].keepintvl) {
+            मूल्य = ls[i].keepintvl;
 
-#if (NGX_KEEPALIVE_FACTOR)
-            value *= NGX_KEEPALIVE_FACTOR;
-#endif
+#अगर (NGX_KEEPALIVE_FACTOR)
+            मूल्य *= NGX_KEEPALIVE_FACTOR;
+#पूर्ण_अगर
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPINTVL,
-                           (const void *) &value, sizeof(int))
+            अगर (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPINTVL,
+                           (स्थिर व्योम *) &मूल्य, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
                              "setsockopt(TCP_KEEPINTVL, %d) %V failed, ignored",
-                             value, &ls[i].addr_text);
+                             मूल्य, &ls[i].addr_text);
             }
         }
 
-        if (ls[i].keepcnt) {
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPCNT,
-                           (const void *) &ls[i].keepcnt, sizeof(int))
+        अगर (ls[i].keepcnt) {
+            अगर (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPCNT,
+                           (स्थिर व्योम *) &ls[i].keepcnt, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -840,12 +840,12 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-#endif
+#पूर्ण_अगर
 
-#if (NGX_HAVE_SETFIB)
-        if (ls[i].setfib != -1) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
-                           (const void *) &ls[i].setfib, sizeof(int))
+#अगर (NGX_HAVE_SETFIB)
+        अगर (ls[i].setfib != -1) {
+            अगर (setsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
+                           (स्थिर व्योम *) &ls[i].setfib, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -853,12 +853,12 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
                               ls[i].setfib, &ls[i].addr_text);
             }
         }
-#endif
+#पूर्ण_अगर
 
-#if (NGX_HAVE_TCP_FASTOPEN)
-        if (ls[i].fastopen != -1) {
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
-                           (const void *) &ls[i].fastopen, sizeof(int))
+#अगर (NGX_HAVE_TCP_FASTOPEN)
+        अगर (ls[i].fastopen != -1) {
+            अगर (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
+                           (स्थिर व्योम *) &ls[i].fastopen, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -866,14 +866,14 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
                               ls[i].fastopen, &ls[i].addr_text);
             }
         }
-#endif
+#पूर्ण_अगर
 
-#if 0
-        if (1) {
-            int tcp_nodelay = 1;
+#अगर 0
+        अगर (1) {
+            पूर्णांक tcp_nodelay = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_NODELAY,
-                       (const void *) &tcp_nodelay, sizeof(int))
+            अगर (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_NODELAY,
+                       (स्थिर व्योम *) &tcp_nodelay, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -881,13 +881,13 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
                               &ls[i].addr_text);
             }
         }
-#endif
+#पूर्ण_अगर
 
-        if (ls[i].listen) {
+        अगर (ls[i].listen) {
 
             /* change backlog via listen() */
 
-            if (listen(ls[i].fd, ls[i].backlog) == -1) {
+            अगर (listen(ls[i].fd, ls[i].backlog) == -1) {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
                               "listen() to %V, backlog %d failed, ignored",
                               &ls[i].addr_text, ls[i].backlog);
@@ -899,12 +899,12 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
          * because code may prematurely continue cycle on failure
          */
 
-#if (NGX_HAVE_DEFERRED_ACCEPT)
+#अगर (NGX_HAVE_DEFERRED_ACCEPT)
 
-#ifdef SO_ACCEPTFILTER
+#अगर_घोषित SO_ACCEPTFILTER
 
-        if (ls[i].delete_deferred) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, NULL, 0)
+        अगर (ls[i].delete_deferred) {
+            अगर (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, शून्य, 0)
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -912,88 +912,88 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
                               "for %V failed, ignored",
                               &ls[i].addr_text);
 
-                if (ls[i].accept_filter) {
+                अगर (ls[i].accept_filter) {
                     ngx_log_error(NGX_LOG_ALERT, cycle->log, 0,
                                   "could not change the accept filter "
                                   "to \"%s\" for %V, ignored",
                                   ls[i].accept_filter, &ls[i].addr_text);
                 }
 
-                continue;
+                जारी;
             }
 
             ls[i].deferred_accept = 0;
         }
 
-        if (ls[i].add_deferred) {
-            ngx_memzero(&af, sizeof(struct accept_filter_arg));
-            (void) ngx_cpystrn((u_char *) af.af_name,
+        अगर (ls[i].add_deferred) {
+            ngx_memzero(&af, माप(काष्ठा accept_filter_arg));
+            (व्योम) ngx_cpystrn((u_char *) af.af_name,
                                (u_char *) ls[i].accept_filter, 16);
 
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER,
-                           &af, sizeof(struct accept_filter_arg))
+            अगर (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER,
+                           &af, माप(काष्ठा accept_filter_arg))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
                               "setsockopt(SO_ACCEPTFILTER, \"%s\") "
                               "for %V failed, ignored",
                               ls[i].accept_filter, &ls[i].addr_text);
-                continue;
+                जारी;
             }
 
             ls[i].deferred_accept = 1;
         }
 
-#endif
+#पूर्ण_अगर
 
-#ifdef TCP_DEFER_ACCEPT
+#अगर_घोषित TCP_DEFER_ACCEPT
 
-        if (ls[i].add_deferred || ls[i].delete_deferred) {
+        अगर (ls[i].add_deferred || ls[i].delete_deferred) {
 
-            if (ls[i].add_deferred) {
+            अगर (ls[i].add_deferred) {
                 /*
                  * There is no way to find out how long a connection was
                  * in queue (and a connection may bypass deferred queue at all
                  * if syncookies were used), hence we use 1 second timeout
                  * here.
                  */
-                value = 1;
+                मूल्य = 1;
 
-            } else {
-                value = 0;
+            } अन्यथा {
+                मूल्य = 0;
             }
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT,
-                           &value, sizeof(int))
+            अगर (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT,
+                           &मूल्य, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
                               "setsockopt(TCP_DEFER_ACCEPT, %d) for %V failed, "
                               "ignored",
-                              value, &ls[i].addr_text);
+                              मूल्य, &ls[i].addr_text);
 
-                continue;
+                जारी;
             }
         }
 
-        if (ls[i].add_deferred) {
+        अगर (ls[i].add_deferred) {
             ls[i].deferred_accept = 1;
         }
 
-#endif
+#पूर्ण_अगर
 
-#endif /* NGX_HAVE_DEFERRED_ACCEPT */
+#पूर्ण_अगर /* NGX_HAVE_DEFERRED_ACCEPT */
 
-#if (NGX_HAVE_IP_RECVDSTADDR)
+#अगर (NGX_HAVE_IP_RECVDSTADDR)
 
-        if (ls[i].wildcard
+        अगर (ls[i].wildcard
             && ls[i].type == SOCK_DGRAM
             && ls[i].sockaddr->sa_family == AF_INET)
         {
-            value = 1;
+            मूल्य = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_RECVDSTADDR,
-                           (const void *) &value, sizeof(int))
+            अगर (setsockopt(ls[i].fd, IPPROTO_IP, IP_RECVDSTADDR,
+                           (स्थिर व्योम *) &मूल्य, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1003,16 +1003,16 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-#elif (NGX_HAVE_IP_PKTINFO)
+#या_अगर (NGX_HAVE_IP_PKTINFO)
 
-        if (ls[i].wildcard
+        अगर (ls[i].wildcard
             && ls[i].type == SOCK_DGRAM
             && ls[i].sockaddr->sa_family == AF_INET)
         {
-            value = 1;
+            मूल्य = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_PKTINFO,
-                           (const void *) &value, sizeof(int))
+            अगर (setsockopt(ls[i].fd, IPPROTO_IP, IP_PKTINFO,
+                           (स्थिर व्योम *) &मूल्य, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1022,18 +1022,18 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-#endif
+#पूर्ण_अगर
 
-#if (NGX_HAVE_INET6 && NGX_HAVE_IPV6_RECVPKTINFO)
+#अगर (NGX_HAVE_INET6 && NGX_HAVE_IPV6_RECVPKTINFO)
 
-        if (ls[i].wildcard
+        अगर (ls[i].wildcard
             && ls[i].type == SOCK_DGRAM
             && ls[i].sockaddr->sa_family == AF_INET6)
         {
-            value = 1;
+            मूल्य = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_RECVPKTINFO,
-                           (const void *) &value, sizeof(int))
+            अगर (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_RECVPKTINFO,
+                           (स्थिर व्योम *) &मूल्य, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1043,15 +1043,15 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-#endif
+#पूर्ण_अगर
 
-#if (NGX_HAVE_IP_MTU_DISCOVER)
+#अगर (NGX_HAVE_IP_MTU_DISCOVER)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
-            value = IP_PMTUDISC_DO;
+        अगर (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
+            मूल्य = IP_PMTUDISC_DO;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_MTU_DISCOVER,
-                           (const void *) &value, sizeof(int))
+            अगर (setsockopt(ls[i].fd, IPPROTO_IP, IP_MTU_DISCOVER,
+                           (स्थिर व्योम *) &मूल्य, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1061,13 +1061,13 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-#elif (NGX_HAVE_IP_DONTFRAG)
+#या_अगर (NGX_HAVE_IP_DONTFRAG)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
-            value = 1;
+        अगर (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
+            मूल्य = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_DONTFRAG,
-                           (const void *) &value, sizeof(int))
+            अगर (setsockopt(ls[i].fd, IPPROTO_IP, IP_DONTFRAG,
+                           (स्थिर व्योम *) &मूल्य, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1077,17 +1077,17 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-#endif
+#पूर्ण_अगर
 
-#if (NGX_HAVE_INET6)
+#अगर (NGX_HAVE_INET6)
 
-#if (NGX_HAVE_IPV6_MTU_DISCOVER)
+#अगर (NGX_HAVE_IPV6_MTU_DISCOVER)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
-            value = IPV6_PMTUDISC_DO;
+        अगर (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
+            मूल्य = IPV6_PMTUDISC_DO;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_MTU_DISCOVER,
-                           (const void *) &value, sizeof(int))
+            अगर (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_MTU_DISCOVER,
+                           (स्थिर व्योम *) &मूल्य, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1097,13 +1097,13 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-#elif (NGX_HAVE_IPV6_DONTFRAG)
+#या_अगर (NGX_HAVE_IPV6_DONTFRAG)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
-            value = 1;
+        अगर (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
+            मूल्य = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_DONTFRAG,
-                           (const void *) &value, sizeof(int))
+            अगर (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_DONTFRAG,
+                           (स्थिर व्योम *) &मूल्य, माप(पूर्णांक))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1113,16 +1113,16 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-#endif
+#पूर्ण_अगर
 
-#endif
+#पूर्ण_अगर
     }
 
-    return;
+    वापस;
 }
 
 
-void
+व्योम
 ngx_close_listening_sockets(ngx_cycle_t *cycle)
 {
     ngx_uint_t         i;
@@ -1133,21 +1133,21 @@ ngx_close_listening_sockets(ngx_cycle_t *cycle)
     ngx_use_accept_mutex = 0;
 
     ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
+    क्रम (i = 0; i < cycle->listening.nelts; i++) {
 
-#if (NGX_QUIC)
-        if (ls[i].quic
+#अगर (NGX_QUIC)
+        अगर (ls[i].quic
             && (!ls[i].reuseport || !ngx_quic_bpf_enabled(cycle)))
         {
-            continue;
+            जारी;
         }
-#endif
+#पूर्ण_अगर
 
         c = ls[i].connection;
 
-        if (c) {
-            if (c->read->active) {
-                if (ngx_event_flags & NGX_USE_EPOLL_EVENT) {
+        अगर (c) {
+            अगर (c->पढ़ो->active) {
+                अगर (ngx_event_flags & NGX_USE_EPOLL_EVENT) {
 
                     /*
                      * it seems that Linux-2.6.x OpenVZ sends events
@@ -1155,15 +1155,15 @@ ngx_close_listening_sockets(ngx_cycle_t *cycle)
                      * the events was explicitly deleted
                      */
 
-                    ngx_del_event(c->read, NGX_READ_EVENT, 0);
+                    ngx_del_event(c->पढ़ो, NGX_READ_EVENT, 0);
 
-                } else {
-                    ngx_del_event(c->read, NGX_READ_EVENT, NGX_CLOSE_EVENT);
+                } अन्यथा {
+                    ngx_del_event(c->पढ़ो, NGX_READ_EVENT, NGX_CLOSE_EVENT);
                 }
             }
 
-            if (c->read->timer_set) {
-                ngx_del_timer(c->read);
+            अगर (c->पढ़ो->timer_set) {
+                ngx_del_timer(c->पढ़ो);
             }
 
             ngx_free_connection(c);
@@ -1174,27 +1174,27 @@ ngx_close_listening_sockets(ngx_cycle_t *cycle)
         ngx_log_debug2(NGX_LOG_DEBUG_CORE, cycle->log, 0,
                        "close listening %V #%d ", &ls[i].addr_text, ls[i].fd);
 
-        if (ngx_close_socket(ls[i].fd) == -1) {
+        अगर (ngx_close_socket(ls[i].fd) == -1) {
             ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_socket_errno,
                           ngx_close_socket_n " %V failed", &ls[i].addr_text);
         }
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#अगर (NGX_HAVE_UNIX_DOMAIN)
 
-        if (ls[i].sockaddr->sa_family == AF_UNIX
+        अगर (ls[i].sockaddr->sa_family == AF_UNIX
             && ngx_process <= NGX_PROCESS_MASTER
-            && ngx_new_binary == 0
+            && ngx_new_द्विआधारी == 0
             && (!ls[i].inherited || ngx_getppid() != ngx_parent))
         {
-            u_char *name = ls[i].addr_text.data + sizeof("unix:") - 1;
+            u_char *name = ls[i].addr_text.तथ्य + माप("unix:") - 1;
 
-            if (ngx_delete_file(name) == NGX_FILE_ERROR) {
+            अगर (ngx_delete_file(name) == NGX_FILE_ERROR) {
                 ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_socket_errno,
                               ngx_delete_file_n " %s failed", name);
             }
         }
 
-#endif
+#पूर्ण_अगर
 
         ls[i].fd = (ngx_socket_t) -1;
     }
@@ -1212,121 +1212,121 @@ ngx_get_connection(ngx_socket_t s, ngx_log_t *log)
 
     /* disable warning: Win32 SOCKET is u_int while UNIX socket is int */
 
-    if (ngx_cycle->files && (ngx_uint_t) s >= ngx_cycle->files_n) {
+    अगर (ngx_cycle->files && (ngx_uint_t) s >= ngx_cycle->files_n) {
         ngx_log_error(NGX_LOG_ALERT, log, 0,
                       "the new socket has number %d, "
                       "but only %ui files are available",
                       s, ngx_cycle->files_n);
-        return NULL;
+        वापस शून्य;
     }
 
     ngx_drain_connections((ngx_cycle_t *) ngx_cycle);
 
     c = ngx_cycle->free_connections;
 
-    if (c == NULL) {
+    अगर (c == शून्य) {
         ngx_log_error(NGX_LOG_ALERT, log, 0,
                       "%ui worker_connections are not enough",
                       ngx_cycle->connection_n);
 
-        return NULL;
+        वापस शून्य;
     }
 
-    ngx_cycle->free_connections = c->data;
+    ngx_cycle->free_connections = c->तथ्य;
     ngx_cycle->free_connection_n--;
 
-    if (ngx_cycle->files && ngx_cycle->files[s] == NULL) {
+    अगर (ngx_cycle->files && ngx_cycle->files[s] == शून्य) {
         ngx_cycle->files[s] = c;
     }
 
-    rev = c->read;
-    wev = c->write;
+    rev = c->पढ़ो;
+    wev = c->ग_लिखो;
 
-    ngx_memzero(c, sizeof(ngx_connection_t));
+    ngx_memzero(c, माप(ngx_connection_t));
 
-    c->read = rev;
-    c->write = wev;
+    c->पढ़ो = rev;
+    c->ग_लिखो = wev;
     c->fd = s;
     c->log = log;
 
     instance = rev->instance;
 
-    ngx_memzero(rev, sizeof(ngx_event_t));
-    ngx_memzero(wev, sizeof(ngx_event_t));
+    ngx_memzero(rev, माप(ngx_event_t));
+    ngx_memzero(wev, माप(ngx_event_t));
 
     rev->instance = !instance;
     wev->instance = !instance;
 
-    rev->index = NGX_INVALID_INDEX;
-    wev->index = NGX_INVALID_INDEX;
+    rev->सूचकांक = NGX_INVALID_सूचकांक;
+    wev->सूचकांक = NGX_INVALID_सूचकांक;
 
-    rev->data = c;
-    wev->data = c;
+    rev->तथ्य = c;
+    wev->तथ्य = c;
 
-    wev->write = 1;
+    wev->ग_लिखो = 1;
 
-    return c;
+    वापस c;
 }
 
 
-void
+व्योम
 ngx_free_connection(ngx_connection_t *c)
 {
-    c->data = ngx_cycle->free_connections;
+    c->तथ्य = ngx_cycle->free_connections;
     ngx_cycle->free_connections = c;
     ngx_cycle->free_connection_n++;
 
-    if (ngx_cycle->files && ngx_cycle->files[c->fd] == c) {
-        ngx_cycle->files[c->fd] = NULL;
+    अगर (ngx_cycle->files && ngx_cycle->files[c->fd] == c) {
+        ngx_cycle->files[c->fd] = शून्य;
     }
 }
 
 
-void
+व्योम
 ngx_close_connection(ngx_connection_t *c)
 {
     ngx_err_t     err;
     ngx_uint_t    log_error, level;
     ngx_socket_t  fd;
 
-    if (c->fd == (ngx_socket_t) -1) {
+    अगर (c->fd == (ngx_socket_t) -1) {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0, "connection already closed");
-        return;
+        वापस;
     }
 
-    if (c->read->timer_set) {
-        ngx_del_timer(c->read);
+    अगर (c->पढ़ो->timer_set) {
+        ngx_del_timer(c->पढ़ो);
     }
 
-    if (c->write->timer_set) {
-        ngx_del_timer(c->write);
+    अगर (c->ग_लिखो->timer_set) {
+        ngx_del_timer(c->ग_लिखो);
     }
 
-    if (!c->shared) {
-        if (ngx_del_conn) {
+    अगर (!c->shared) {
+        अगर (ngx_del_conn) {
             ngx_del_conn(c, NGX_CLOSE_EVENT);
 
-        } else {
-            if (c->read->active || c->read->disabled) {
-                ngx_del_event(c->read, NGX_READ_EVENT, NGX_CLOSE_EVENT);
+        } अन्यथा {
+            अगर (c->पढ़ो->active || c->पढ़ो->disabled) {
+                ngx_del_event(c->पढ़ो, NGX_READ_EVENT, NGX_CLOSE_EVENT);
             }
 
-            if (c->write->active || c->write->disabled) {
-                ngx_del_event(c->write, NGX_WRITE_EVENT, NGX_CLOSE_EVENT);
+            अगर (c->ग_लिखो->active || c->ग_लिखो->disabled) {
+                ngx_del_event(c->ग_लिखो, NGX_WRITE_EVENT, NGX_CLOSE_EVENT);
             }
         }
     }
 
-    if (c->read->posted) {
-        ngx_delete_posted_event(c->read);
+    अगर (c->पढ़ो->posted) {
+        ngx_delete_posted_event(c->पढ़ो);
     }
 
-    if (c->write->posted) {
-        ngx_delete_posted_event(c->write);
+    अगर (c->ग_लिखो->posted) {
+        ngx_delete_posted_event(c->ग_लिखो);
     }
 
-    c->read->closed = 1;
-    c->write->closed = 1;
+    c->पढ़ो->closed = 1;
+    c->ग_लिखो->closed = 1;
 
     ngx_reusable_connection(c, 0);
 
@@ -1337,31 +1337,31 @@ ngx_close_connection(ngx_connection_t *c)
     fd = c->fd;
     c->fd = (ngx_socket_t) -1;
 
-    if (c->shared) {
-        return;
+    अगर (c->shared) {
+        वापस;
     }
 
-    if (ngx_close_socket(fd) == -1) {
+    अगर (ngx_close_socket(fd) == -1) {
 
         err = ngx_socket_errno;
 
-        if (err == NGX_ECONNRESET || err == NGX_ENOTCONN) {
+        अगर (err == NGX_ECONNRESET || err == NGX_ENOTCONN) {
 
-            switch (log_error) {
+            चयन (log_error) {
 
-            case NGX_ERROR_INFO:
+            हाल NGX_ERROR_INFO:
                 level = NGX_LOG_INFO;
-                break;
+                अवरोध;
 
-            case NGX_ERROR_ERR:
+            हाल NGX_ERROR_ERR:
                 level = NGX_LOG_ERR;
-                break;
+                अवरोध;
 
-            default:
+            शेष:
                 level = NGX_LOG_CRIT;
             }
 
-        } else {
+        } अन्यथा {
             level = NGX_LOG_CRIT;
         }
 
@@ -1370,51 +1370,51 @@ ngx_close_connection(ngx_connection_t *c)
 }
 
 
-void
+व्योम
 ngx_reusable_connection(ngx_connection_t *c, ngx_uint_t reusable)
 {
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
                    "reusable connection: %ui", reusable);
 
-    if (c->reusable) {
+    अगर (c->reusable) {
         ngx_queue_remove(&c->queue);
         ngx_cycle->reusable_connections_n--;
 
-#if (NGX_STAT_STUB)
-        (void) ngx_atomic_fetch_add(ngx_stat_waiting, -1);
-#endif
+#अगर (NGX_STAT_STUB)
+        (व्योम) ngx_atomic_fetch_add(ngx_stat_waiting, -1);
+#पूर्ण_अगर
     }
 
     c->reusable = reusable;
 
-    if (reusable) {
+    अगर (reusable) {
         /* need cast as ngx_cycle is volatile */
 
-        ngx_queue_insert_head(
+        ngx_queue_जोड़ो_शीर्ष(
             (ngx_queue_t *) &ngx_cycle->reusable_connections_queue, &c->queue);
         ngx_cycle->reusable_connections_n++;
 
-#if (NGX_STAT_STUB)
-        (void) ngx_atomic_fetch_add(ngx_stat_waiting, 1);
-#endif
+#अगर (NGX_STAT_STUB)
+        (व्योम) ngx_atomic_fetch_add(ngx_stat_waiting, 1);
+#पूर्ण_अगर
     }
 }
 
 
-static void
+अटल व्योम
 ngx_drain_connections(ngx_cycle_t *cycle)
 {
     ngx_uint_t         i, n;
     ngx_queue_t       *q;
     ngx_connection_t  *c;
 
-    if (cycle->free_connection_n > cycle->connection_n / 16
+    अगर (cycle->free_connection_n > cycle->connection_n / 16
         || cycle->reusable_connections_n == 0)
     {
-        return;
+        वापस;
     }
 
-    if (cycle->connections_reuse_time != ngx_time()) {
+    अगर (cycle->connections_reuse_time != ngx_time()) {
         cycle->connections_reuse_time = ngx_time();
 
         ngx_log_error(NGX_LOG_WARN, cycle->log, 0,
@@ -1423,25 +1423,25 @@ ngx_drain_connections(ngx_cycle_t *cycle)
                       cycle->connection_n);
     }
 
-    c = NULL;
+    c = शून्य;
     n = ngx_max(ngx_min(32, cycle->reusable_connections_n / 8), 1);
 
-    for (i = 0; i < n; i++) {
-        if (ngx_queue_empty(&cycle->reusable_connections_queue)) {
-            break;
+    क्रम (i = 0; i < n; i++) {
+        अगर (ngx_queue_empty(&cycle->reusable_connections_queue)) {
+            अवरोध;
         }
 
         q = ngx_queue_last(&cycle->reusable_connections_queue);
-        c = ngx_queue_data(q, ngx_connection_t, queue);
+        c = ngx_queue_तथ्य(q, ngx_connection_t, queue);
 
         ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->log, 0,
                        "reusing connection");
 
-        c->close = 1;
-        c->read->handler(c->read);
+        c->बंद = 1;
+        c->पढ़ो->handler(c->पढ़ो);
     }
 
-    if (cycle->free_connection_n == 0 && c && c->reusable) {
+    अगर (cycle->free_connection_n == 0 && c && c->reusable) {
 
         /*
          * if no connections were freed, try to reuse the last
@@ -1452,13 +1452,13 @@ ngx_drain_connections(ngx_cycle_t *cycle)
         ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->log, 0,
                        "reusing connection again");
 
-        c->close = 1;
-        c->read->handler(c->read);
+        c->बंद = 1;
+        c->पढ़ो->handler(c->पढ़ो);
     }
 }
 
 
-void
+व्योम
 ngx_close_idle_connections(ngx_cycle_t *cycle)
 {
     ngx_uint_t         i;
@@ -1466,13 +1466,13 @@ ngx_close_idle_connections(ngx_cycle_t *cycle)
 
     c = cycle->connections;
 
-    for (i = 0; i < cycle->connection_n; i++) {
+    क्रम (i = 0; i < cycle->connection_n; i++) {
 
         /* THREAD: lock */
 
-        if (c[i].fd != (ngx_socket_t) -1 && c[i].idle) {
-            c[i].close = 1;
-            c[i].read->handler(c[i].read);
+        अगर (c[i].fd != (ngx_socket_t) -1 && c[i].idle) {
+            c[i].बंद = 1;
+            c[i].पढ़ो->handler(c[i].पढ़ो);
         }
     }
 }
@@ -1485,53 +1485,53 @@ ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
     socklen_t             len;
     ngx_uint_t            addr;
     ngx_sockaddr_t        sa;
-    struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
+    काष्ठा sockaddr_in   *sin;
+#अगर (NGX_HAVE_INET6)
     ngx_uint_t            i;
-    struct sockaddr_in6  *sin6;
-#endif
+    काष्ठा sockaddr_in6  *sin6;
+#पूर्ण_अगर
 
     addr = 0;
 
-    if (c->local_socklen) {
-        switch (c->local_sockaddr->sa_family) {
+    अगर (c->local_socklen) {
+        चयन (c->local_sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
-        case AF_INET6:
-            sin6 = (struct sockaddr_in6 *) c->local_sockaddr;
+#अगर (NGX_HAVE_INET6)
+        हाल AF_INET6:
+            sin6 = (काष्ठा sockaddr_in6 *) c->local_sockaddr;
 
-            for (i = 0; addr == 0 && i < 16; i++) {
+            क्रम (i = 0; addr == 0 && i < 16; i++) {
                 addr |= sin6->sin6_addr.s6_addr[i];
             }
 
-            break;
-#endif
+            अवरोध;
+#पूर्ण_अगर
 
-#if (NGX_HAVE_UNIX_DOMAIN)
-        case AF_UNIX:
+#अगर (NGX_HAVE_UNIX_DOMAIN)
+        हाल AF_UNIX:
             addr = 1;
-            break;
-#endif
+            अवरोध;
+#पूर्ण_अगर
 
-        default: /* AF_INET */
-            sin = (struct sockaddr_in *) c->local_sockaddr;
+        शेष: /* AF_INET */
+            sin = (काष्ठा sockaddr_in *) c->local_sockaddr;
             addr = sin->sin_addr.s_addr;
-            break;
+            अवरोध;
         }
     }
 
-    if (addr == 0) {
+    अगर (addr == 0) {
 
-        len = sizeof(ngx_sockaddr_t);
+        len = माप(ngx_sockaddr_t);
 
-        if (getsockname(c->fd, &sa.sockaddr, &len) == -1) {
+        अगर (getsockname(c->fd, &sa.sockaddr, &len) == -1) {
             ngx_connection_error(c, ngx_socket_errno, "getsockname() failed");
-            return NGX_ERROR;
+            वापस NGX_ERROR;
         }
 
         c->local_sockaddr = ngx_palloc(c->pool, len);
-        if (c->local_sockaddr == NULL) {
-            return NGX_ERROR;
+        अगर (c->local_sockaddr == शून्य) {
+            वापस NGX_ERROR;
         }
 
         ngx_memcpy(c->local_sockaddr, &sa, len);
@@ -1539,36 +1539,36 @@ ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
         c->local_socklen = len;
     }
 
-    if (s == NULL) {
-        return NGX_OK;
+    अगर (s == शून्य) {
+        वापस NGX_OK;
     }
 
     s->len = ngx_sock_ntop(c->local_sockaddr, c->local_socklen,
-                           s->data, s->len, port);
+                           s->तथ्य, s->len, port);
 
-    return NGX_OK;
+    वापस NGX_OK;
 }
 
 
 ngx_int_t
 ngx_tcp_nodelay(ngx_connection_t *c)
 {
-    int  tcp_nodelay;
+    पूर्णांक  tcp_nodelay;
 
-    if (c->tcp_nodelay != NGX_TCP_NODELAY_UNSET) {
-        return NGX_OK;
+    अगर (c->tcp_nodelay != NGX_TCP_NODELAY_UNSET) {
+        वापस NGX_OK;
     }
 
     ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->log, 0, "tcp_nodelay");
 
     tcp_nodelay = 1;
 
-    if (setsockopt(c->fd, IPPROTO_TCP, TCP_NODELAY,
-                   (const void *) &tcp_nodelay, sizeof(int))
+    अगर (setsockopt(c->fd, IPPROTO_TCP, TCP_NODELAY,
+                   (स्थिर व्योम *) &tcp_nodelay, माप(पूर्णांक))
         == -1)
     {
-#if (NGX_SOLARIS)
-        if (c->log_error == NGX_ERROR_INFO) {
+#अगर (NGX_SOLARIS)
+        अगर (c->log_error == NGX_ERROR_INFO) {
 
             /* Solaris returns EINVAL if a socket has been shut down */
             c->log_error = NGX_ERROR_IGNORE_EINVAL;
@@ -1578,60 +1578,60 @@ ngx_tcp_nodelay(ngx_connection_t *c)
 
             c->log_error = NGX_ERROR_INFO;
 
-            return NGX_ERROR;
+            वापस NGX_ERROR;
         }
-#endif
+#पूर्ण_अगर
 
         ngx_connection_error(c, ngx_socket_errno,
                              "setsockopt(TCP_NODELAY) failed");
-        return NGX_ERROR;
+        वापस NGX_ERROR;
     }
 
     c->tcp_nodelay = NGX_TCP_NODELAY_SET;
 
-    return NGX_OK;
+    वापस NGX_OK;
 }
 
 
 ngx_int_t
-ngx_connection_error(ngx_connection_t *c, ngx_err_t err, char *text)
+ngx_connection_error(ngx_connection_t *c, ngx_err_t err, अक्षर *text)
 {
     ngx_uint_t  level;
 
     /* Winsock may return NGX_ECONNABORTED instead of NGX_ECONNRESET */
 
-    if ((err == NGX_ECONNRESET
-#if (NGX_WIN32)
+    अगर ((err == NGX_ECONNRESET
+#अगर (NGX_WIN32)
          || err == NGX_ECONNABORTED
-#endif
+#पूर्ण_अगर
         ) && c->log_error == NGX_ERROR_IGNORE_ECONNRESET)
     {
-        return 0;
+        वापस 0;
     }
 
-#if (NGX_SOLARIS)
-    if (err == NGX_EINVAL && c->log_error == NGX_ERROR_IGNORE_EINVAL) {
-        return 0;
+#अगर (NGX_SOLARIS)
+    अगर (err == NGX_EINVAL && c->log_error == NGX_ERROR_IGNORE_EINVAL) {
+        वापस 0;
     }
-#endif
+#पूर्ण_अगर
 
-    if (err == NGX_EMSGSIZE && c->log_error == NGX_ERROR_IGNORE_EMSGSIZE) {
-        return 0;
+    अगर (err == NGX_EMSGSIZE && c->log_error == NGX_ERROR_IGNORE_EMSGSIZE) {
+        वापस 0;
     }
 
-#if (NGX_LINUX)
-    if (err == NGX_EIO && c->ktls_recv) {
-        return 0;
+#अगर (NGX_LINUX)
+    अगर (err == NGX_EIO && c->ktls_recv) {
+        वापस 0;
     }
-#endif
+#पूर्ण_अगर
 
-    if (err == 0
+    अगर (err == 0
         || err == NGX_ECONNRESET
-#if (NGX_WIN32)
+#अगर (NGX_WIN32)
         || err == NGX_ECONNABORTED
-#else
+#अन्यथा
         || err == NGX_EPIPE
-#endif
+#पूर्ण_अगर
         || err == NGX_ENOTCONN
         || err == NGX_ETIMEDOUT
         || err == NGX_ECONNREFUSED
@@ -1640,24 +1640,24 @@ ngx_connection_error(ngx_connection_t *c, ngx_err_t err, char *text)
         || err == NGX_EHOSTDOWN
         || err == NGX_EHOSTUNREACH)
     {
-        switch (c->log_error) {
+        चयन (c->log_error) {
 
-        case NGX_ERROR_IGNORE_EMSGSIZE:
-        case NGX_ERROR_IGNORE_EINVAL:
-        case NGX_ERROR_IGNORE_ECONNRESET:
-        case NGX_ERROR_INFO:
+        हाल NGX_ERROR_IGNORE_EMSGSIZE:
+        हाल NGX_ERROR_IGNORE_EINVAL:
+        हाल NGX_ERROR_IGNORE_ECONNRESET:
+        हाल NGX_ERROR_INFO:
             level = NGX_LOG_INFO;
-            break;
+            अवरोध;
 
-        default:
+        शेष:
             level = NGX_LOG_ERR;
         }
 
-    } else {
+    } अन्यथा {
         level = NGX_LOG_ALERT;
     }
 
     ngx_log_error(level, c->log, err, text);
 
-    return NGX_ERROR;
+    वापस NGX_ERROR;
 }

@@ -5,40 +5,40 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#अगर (NGX_HAVE_ATOMIC_OPS)
 
 
-#define NGX_RWLOCK_SPIN   2048
-#define NGX_RWLOCK_WLOCK  ((ngx_atomic_uint_t) -1)
+#घोषणा NGX_RWLOCK_SPIN   2048
+#घोषणा NGX_RWLOCK_WLOCK  ((ngx_atomic_uint_t) -1)
 
 
-void
+व्योम
 ngx_rwlock_wlock(ngx_atomic_t *lock)
 {
     ngx_uint_t  i, n;
 
-    for ( ;; ) {
+    क्रम ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK)) {
-            return;
+        अगर (*lock == 0 && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK)) {
+            वापस;
         }
 
-        if (ngx_ncpu > 1) {
+        अगर (ngx_ncpu > 1) {
 
-            for (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
+            क्रम (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                क्रम (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0
+                अगर (*lock == 0
                     && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK))
                 {
-                    return;
+                    वापस;
                 }
             }
         }
@@ -48,35 +48,35 @@ ngx_rwlock_wlock(ngx_atomic_t *lock)
 }
 
 
-void
+व्योम
 ngx_rwlock_rlock(ngx_atomic_t *lock)
 {
     ngx_uint_t         i, n;
     ngx_atomic_uint_t  readers;
 
-    for ( ;; ) {
+    क्रम ( ;; ) {
         readers = *lock;
 
-        if (readers != NGX_RWLOCK_WLOCK
+        अगर (readers != NGX_RWLOCK_WLOCK
             && ngx_atomic_cmp_set(lock, readers, readers + 1))
         {
-            return;
+            वापस;
         }
 
-        if (ngx_ncpu > 1) {
+        अगर (ngx_ncpu > 1) {
 
-            for (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
+            क्रम (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                क्रम (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
                 readers = *lock;
 
-                if (readers != NGX_RWLOCK_WLOCK
+                अगर (readers != NGX_RWLOCK_WLOCK
                     && ngx_atomic_cmp_set(lock, readers, readers + 1))
                 {
-                    return;
+                    वापस;
                 }
             }
         }
@@ -86,32 +86,32 @@ ngx_rwlock_rlock(ngx_atomic_t *lock)
 }
 
 
-void
+व्योम
 ngx_rwlock_unlock(ngx_atomic_t *lock)
 {
-    if (*lock == NGX_RWLOCK_WLOCK) {
-        (void) ngx_atomic_cmp_set(lock, NGX_RWLOCK_WLOCK, 0);
-    } else {
-        (void) ngx_atomic_fetch_add(lock, -1);
+    अगर (*lock == NGX_RWLOCK_WLOCK) {
+        (व्योम) ngx_atomic_cmp_set(lock, NGX_RWLOCK_WLOCK, 0);
+    } अन्यथा {
+        (व्योम) ngx_atomic_fetch_add(lock, -1);
     }
 }
 
 
-void
+व्योम
 ngx_rwlock_downgrade(ngx_atomic_t *lock)
 {
-    if (*lock == NGX_RWLOCK_WLOCK) {
+    अगर (*lock == NGX_RWLOCK_WLOCK) {
         *lock = 1;
     }
 }
 
 
-#else
+#अन्यथा
 
-#if (NGX_HTTP_UPSTREAM_ZONE || NGX_STREAM_UPSTREAM_ZONE)
+#अगर (NGX_HTTP_UPSTREAM_ZONE || NGX_STREAM_UPSTREAM_ZONE)
 
-#error ngx_atomic_cmp_set() is not defined!
+#त्रुटि ngx_atomic_cmp_set() is not defined!
 
-#endif
+#पूर्ण_अगर
 
-#endif
+#पूर्ण_अगर

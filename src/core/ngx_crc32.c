@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
 
 /*
@@ -23,7 +23,7 @@
  */
 
 
-static uint32_t  ngx_crc32_table16[] = {
+अटल uint32_t  ngx_crc32_table16[] = {
     0x00000000, 0x1db71064, 0x3b6e20c8, 0x26d930ac,
     0x76dc4190, 0x6b6b51f4, 0x4db26158, 0x5005713c,
     0xedb88320, 0xf00f9344, 0xd6d6a3e8, 0xcb61b38c,
@@ -176,27 +176,27 @@ uint32_t  ngx_crc32c_table256[] = {
 
 
 ngx_int_t
-ngx_crc32_table_init(void)
+ngx_crc32_table_init(व्योम)
 {
-    void  *p;
+    व्योम  *p;
 
-    if (((uintptr_t) ngx_crc32_table_short
-          & ~((uintptr_t) ngx_cacheline_size - 1))
+    अगर (((uintptr_t) ngx_crc32_table_short
+          & ~((uintptr_t) ngx_cacheline_आकार - 1))
         == (uintptr_t) ngx_crc32_table_short)
     {
-        return NGX_OK;
+        वापस NGX_OK;
     }
 
-    p = ngx_alloc(16 * sizeof(uint32_t) + ngx_cacheline_size, ngx_cycle->log);
-    if (p == NULL) {
-        return NGX_ERROR;
+    p = ngx_alloc(16 * माप(uint32_t) + ngx_cacheline_आकार, ngx_cycle->log);
+    अगर (p == शून्य) {
+        वापस NGX_ERROR;
     }
 
-    p = ngx_align_ptr(p, ngx_cacheline_size);
+    p = ngx_align_ptr(p, ngx_cacheline_आकार);
 
-    ngx_memcpy(p, ngx_crc32_table16, 16 * sizeof(uint32_t));
+    ngx_memcpy(p, ngx_crc32_table16, 16 * माप(uint32_t));
 
     ngx_crc32_table_short = p;
 
-    return NGX_OK;
+    वापस NGX_OK;
 }

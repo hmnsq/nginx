@@ -5,12 +5,12 @@
  */
 
 
-#ifndef _NGX_CONF_FILE_H_INCLUDED_
-#define _NGX_CONF_FILE_H_INCLUDED_
+#अगर_अघोषित _NGX_CONF_FILE_H_INCLUDED_
+#घोषणा _NGX_CONF_FILE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#समावेश <ngx_config.h>
+#समावेश <ngx_core.h>
 
 
 /*
@@ -19,281 +19,281 @@
  *    TT        command type, i.e. HTTP "location" or "server" command
  */
 
-#define NGX_CONF_NOARGS      0x00000001
-#define NGX_CONF_TAKE1       0x00000002
-#define NGX_CONF_TAKE2       0x00000004
-#define NGX_CONF_TAKE3       0x00000008
-#define NGX_CONF_TAKE4       0x00000010
-#define NGX_CONF_TAKE5       0x00000020
-#define NGX_CONF_TAKE6       0x00000040
-#define NGX_CONF_TAKE7       0x00000080
+#घोषणा NGX_CONF_NOARGS      0x00000001
+#घोषणा NGX_CONF_TAKE1       0x00000002
+#घोषणा NGX_CONF_TAKE2       0x00000004
+#घोषणा NGX_CONF_TAKE3       0x00000008
+#घोषणा NGX_CONF_TAKE4       0x00000010
+#घोषणा NGX_CONF_TAKE5       0x00000020
+#घोषणा NGX_CONF_TAKE6       0x00000040
+#घोषणा NGX_CONF_TAKE7       0x00000080
 
-#define NGX_CONF_MAX_ARGS    8
+#घोषणा NGX_CONF_MAX_ARGS    8
 
-#define NGX_CONF_TAKE12      (NGX_CONF_TAKE1|NGX_CONF_TAKE2)
-#define NGX_CONF_TAKE13      (NGX_CONF_TAKE1|NGX_CONF_TAKE3)
+#घोषणा NGX_CONF_TAKE12      (NGX_CONF_TAKE1|NGX_CONF_TAKE2)
+#घोषणा NGX_CONF_TAKE13      (NGX_CONF_TAKE1|NGX_CONF_TAKE3)
 
-#define NGX_CONF_TAKE23      (NGX_CONF_TAKE2|NGX_CONF_TAKE3)
+#घोषणा NGX_CONF_TAKE23      (NGX_CONF_TAKE2|NGX_CONF_TAKE3)
 
-#define NGX_CONF_TAKE123     (NGX_CONF_TAKE1|NGX_CONF_TAKE2|NGX_CONF_TAKE3)
-#define NGX_CONF_TAKE1234    (NGX_CONF_TAKE1|NGX_CONF_TAKE2|NGX_CONF_TAKE3   \
+#घोषणा NGX_CONF_TAKE123     (NGX_CONF_TAKE1|NGX_CONF_TAKE2|NGX_CONF_TAKE3)
+#घोषणा NGX_CONF_TAKE1234    (NGX_CONF_TAKE1|NGX_CONF_TAKE2|NGX_CONF_TAKE3   \
                               |NGX_CONF_TAKE4)
 
-#define NGX_CONF_ARGS_NUMBER 0x000000ff
-#define NGX_CONF_BLOCK       0x00000100
-#define NGX_CONF_FLAG        0x00000200
-#define NGX_CONF_ANY         0x00000400
-#define NGX_CONF_1MORE       0x00000800
-#define NGX_CONF_2MORE       0x00001000
+#घोषणा NGX_CONF_ARGS_संख्या 0x000000ff
+#घोषणा NGX_CONF_BLOCK       0x00000100
+#घोषणा NGX_CONF_FLAG        0x00000200
+#घोषणा NGX_CONF_ANY         0x00000400
+#घोषणा NGX_CONF_1MORE       0x00000800
+#घोषणा NGX_CONF_2MORE       0x00001000
 
-#define NGX_DIRECT_CONF      0x00010000
+#घोषणा NGX_DIRECT_CONF      0x00010000
 
-#define NGX_MAIN_CONF        0x01000000
-#define NGX_ANY_CONF         0xFF000000
-
-
-
-#define NGX_CONF_UNSET       -1
-#define NGX_CONF_UNSET_UINT  (ngx_uint_t) -1
-#define NGX_CONF_UNSET_PTR   (void *) -1
-#define NGX_CONF_UNSET_SIZE  (size_t) -1
-#define NGX_CONF_UNSET_MSEC  (ngx_msec_t) -1
+#घोषणा NGX_MAIN_CONF        0x01000000
+#घोषणा NGX_ANY_CONF         0xFF000000
 
 
-#define NGX_CONF_OK          NULL
-#define NGX_CONF_ERROR       (void *) -1
 
-#define NGX_CONF_BLOCK_START 1
-#define NGX_CONF_BLOCK_DONE  2
-#define NGX_CONF_FILE_DONE   3
-
-#define NGX_CORE_MODULE      0x45524F43  /* "CORE" */
-#define NGX_CONF_MODULE      0x464E4F43  /* "CONF" */
+#घोषणा NGX_CONF_UNSET       -1
+#घोषणा NGX_CONF_UNSET_UINT  (ngx_uint_t) -1
+#घोषणा NGX_CONF_UNSET_PTR   (व्योम *) -1
+#घोषणा NGX_CONF_UNSET_आकार  (माप_प्रकार) -1
+#घोषणा NGX_CONF_UNSET_MSEC  (ngx_msec_t) -1
 
 
-#define NGX_MAX_CONF_ERRSTR  1024
+#घोषणा NGX_CONF_OK          शून्य
+#घोषणा NGX_CONF_ERROR       (व्योम *) -1
+
+#घोषणा NGX_CONF_BLOCK_START 1
+#घोषणा NGX_CONF_BLOCK_DONE  2
+#घोषणा NGX_CONF_FILE_DONE   3
+
+#घोषणा NGX_CORE_MODULE      0x45524F43  /* "CORE" */
+#घोषणा NGX_CONF_MODULE      0x464E4F43  /* "CONF" */
 
 
-struct ngx_command_s {
+#घोषणा NGX_MAX_CONF_ERRSTR  1024
+
+
+काष्ठा ngx_command_s {
     ngx_str_t             name;
     ngx_uint_t            type;
-    char               *(*set)(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+    अक्षर               *(*set)(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
     ngx_uint_t            conf;
     ngx_uint_t            offset;
-    void                 *post;
+    व्योम                 *post;
 };
 
-#define ngx_null_command  { ngx_null_string, 0, NULL, 0, 0, NULL }
+#घोषणा ngx_null_command  { ngx_null_string, 0, शून्य, 0, 0, शून्य }
 
 
-struct ngx_open_file_s {
+काष्ठा ngx_open_file_s {
     ngx_fd_t              fd;
     ngx_str_t             name;
 
-    void                (*flush)(ngx_open_file_t *file, ngx_log_t *log);
-    void                 *data;
+    व्योम                (*flush)(ngx_open_file_t *file, ngx_log_t *log);
+    व्योम                 *तथ्य;
 };
 
 
-typedef struct {
+प्रकार काष्ठा {
     ngx_file_t            file;
-    ngx_buf_t            *buffer;
+    ngx_buf_t            *बफर;
     ngx_buf_t            *dump;
-    ngx_uint_t            line;
+    ngx_uint_t            पंक्ति;
 } ngx_conf_file_t;
 
 
-typedef struct {
+प्रकार काष्ठा {
     ngx_str_t             name;
-    ngx_buf_t            *buffer;
+    ngx_buf_t            *बफर;
 } ngx_conf_dump_t;
 
 
-typedef char *(*ngx_conf_handler_pt)(ngx_conf_t *cf,
-    ngx_command_t *dummy, void *conf);
+प्रकार अक्षर *(*ngx_conf_handler_pt)(ngx_conf_t *cf,
+    ngx_command_t *dummy, व्योम *conf);
 
 
-struct ngx_conf_s {
-    char                 *name;
+काष्ठा ngx_conf_s {
+    अक्षर                 *name;
     ngx_array_t          *args;
 
     ngx_cycle_t          *cycle;
     ngx_pool_t           *pool;
-    ngx_pool_t           *temp_pool;
+    ngx_pool_t           *अस्थायी_pool;
     ngx_conf_file_t      *conf_file;
     ngx_log_t            *log;
 
-    void                 *ctx;
+    व्योम                 *ctx;
     ngx_uint_t            module_type;
     ngx_uint_t            cmd_type;
 
     ngx_conf_handler_pt   handler;
-    void                 *handler_conf;
+    व्योम                 *handler_conf;
 };
 
 
-typedef char *(*ngx_conf_post_handler_pt) (ngx_conf_t *cf,
-    void *data, void *conf);
+प्रकार अक्षर *(*ngx_conf_post_handler_pt) (ngx_conf_t *cf,
+    व्योम *तथ्य, व्योम *conf);
 
-typedef struct {
+प्रकार काष्ठा {
     ngx_conf_post_handler_pt  post_handler;
 } ngx_conf_post_t;
 
 
-typedef struct {
+प्रकार काष्ठा {
     ngx_conf_post_handler_pt  post_handler;
-    char                     *old_name;
-    char                     *new_name;
+    अक्षर                     *old_name;
+    अक्षर                     *new_name;
 } ngx_conf_deprecated_t;
 
 
-typedef struct {
+प्रकार काष्ठा {
     ngx_conf_post_handler_pt  post_handler;
-    ngx_int_t                 low;
-    ngx_int_t                 high;
-} ngx_conf_num_bounds_t;
+    ngx_int_t                 निचला;
+    ngx_int_t                 ऊपरी;
+} ngx_conf_अंक_bounds_t;
 
 
-typedef struct {
+प्रकार काष्ठा {
     ngx_str_t                 name;
-    ngx_uint_t                value;
+    ngx_uint_t                मूल्य;
 } ngx_conf_enum_t;
 
 
-#define NGX_CONF_BITMASK_SET  1
+#घोषणा NGX_CONF_BITMASK_SET  1
 
-typedef struct {
+प्रकार काष्ठा {
     ngx_str_t                 name;
     ngx_uint_t                mask;
 } ngx_conf_bitmask_t;
 
 
 
-char * ngx_conf_deprecated(ngx_conf_t *cf, void *post, void *data);
-char *ngx_conf_check_num_bounds(ngx_conf_t *cf, void *post, void *data);
-char *ngx_conf_check_size_nonzero(ngx_conf_t *cf, void *post, void *data);
+अक्षर * ngx_conf_deprecated(ngx_conf_t *cf, व्योम *post, व्योम *तथ्य);
+अक्षर *ngx_conf_check_अंक_bounds(ngx_conf_t *cf, व्योम *post, व्योम *तथ्य);
+अक्षर *ngx_conf_check_आकार_nonzero(ngx_conf_t *cf, व्योम *post, व्योम *तथ्य);
 
 
-extern ngx_conf_post_t  ngx_conf_size_nonzero_post;
+बाह्य ngx_conf_post_t  ngx_conf_आकार_nonzero_post;
 
 
-#define ngx_get_conf(conf_ctx, module)  conf_ctx[module.index]
+#घोषणा ngx_get_conf(conf_ctx, module)  conf_ctx[module.सूचकांक]
 
 
 
-#define ngx_conf_init_value(conf, default)                                   \
-    if (conf == NGX_CONF_UNSET) {                                            \
-        conf = default;                                                      \
+#घोषणा ngx_conf_init_मूल्य(conf, शेष)                                   \
+    अगर (conf == NGX_CONF_UNSET) {                                            \
+        conf = शेष;                                                      \
     }
 
-#define ngx_conf_init_ptr_value(conf, default)                               \
-    if (conf == NGX_CONF_UNSET_PTR) {                                        \
-        conf = default;                                                      \
+#घोषणा ngx_conf_init_ptr_मूल्य(conf, शेष)                               \
+    अगर (conf == NGX_CONF_UNSET_PTR) {                                        \
+        conf = शेष;                                                      \
     }
 
-#define ngx_conf_init_uint_value(conf, default)                              \
-    if (conf == NGX_CONF_UNSET_UINT) {                                       \
-        conf = default;                                                      \
+#घोषणा ngx_conf_init_uint_मूल्य(conf, शेष)                              \
+    अगर (conf == NGX_CONF_UNSET_UINT) {                                       \
+        conf = शेष;                                                      \
     }
 
-#define ngx_conf_init_size_value(conf, default)                              \
-    if (conf == NGX_CONF_UNSET_SIZE) {                                       \
-        conf = default;                                                      \
+#घोषणा ngx_conf_init_आकार_मूल्य(conf, शेष)                              \
+    अगर (conf == NGX_CONF_UNSET_आकार) {                                       \
+        conf = शेष;                                                      \
     }
 
-#define ngx_conf_init_msec_value(conf, default)                              \
-    if (conf == NGX_CONF_UNSET_MSEC) {                                       \
-        conf = default;                                                      \
+#घोषणा ngx_conf_init_msec_मूल्य(conf, शेष)                              \
+    अगर (conf == NGX_CONF_UNSET_MSEC) {                                       \
+        conf = शेष;                                                      \
     }
 
-#define ngx_conf_merge_value(conf, prev, default)                            \
-    if (conf == NGX_CONF_UNSET) {                                            \
-        conf = (prev == NGX_CONF_UNSET) ? default : prev;                    \
+#घोषणा ngx_conf_merge_मूल्य(conf, पूर्व, शेष)                            \
+    अगर (conf == NGX_CONF_UNSET) {                                            \
+        conf = (पूर्व == NGX_CONF_UNSET) ? शेष : पूर्व;                    \
     }
 
-#define ngx_conf_merge_ptr_value(conf, prev, default)                        \
-    if (conf == NGX_CONF_UNSET_PTR) {                                        \
-        conf = (prev == NGX_CONF_UNSET_PTR) ? default : prev;                \
+#घोषणा ngx_conf_merge_ptr_मूल्य(conf, पूर्व, शेष)                        \
+    अगर (conf == NGX_CONF_UNSET_PTR) {                                        \
+        conf = (पूर्व == NGX_CONF_UNSET_PTR) ? शेष : पूर्व;                \
     }
 
-#define ngx_conf_merge_uint_value(conf, prev, default)                       \
-    if (conf == NGX_CONF_UNSET_UINT) {                                       \
-        conf = (prev == NGX_CONF_UNSET_UINT) ? default : prev;               \
+#घोषणा ngx_conf_merge_uint_मूल्य(conf, पूर्व, शेष)                       \
+    अगर (conf == NGX_CONF_UNSET_UINT) {                                       \
+        conf = (पूर्व == NGX_CONF_UNSET_UINT) ? शेष : पूर्व;               \
     }
 
-#define ngx_conf_merge_msec_value(conf, prev, default)                       \
-    if (conf == NGX_CONF_UNSET_MSEC) {                                       \
-        conf = (prev == NGX_CONF_UNSET_MSEC) ? default : prev;               \
+#घोषणा ngx_conf_merge_msec_मूल्य(conf, पूर्व, शेष)                       \
+    अगर (conf == NGX_CONF_UNSET_MSEC) {                                       \
+        conf = (पूर्व == NGX_CONF_UNSET_MSEC) ? शेष : पूर्व;               \
     }
 
-#define ngx_conf_merge_sec_value(conf, prev, default)                        \
-    if (conf == NGX_CONF_UNSET) {                                            \
-        conf = (prev == NGX_CONF_UNSET) ? default : prev;                    \
+#घोषणा ngx_conf_merge_sec_मूल्य(conf, पूर्व, शेष)                        \
+    अगर (conf == NGX_CONF_UNSET) {                                            \
+        conf = (पूर्व == NGX_CONF_UNSET) ? शेष : पूर्व;                    \
     }
 
-#define ngx_conf_merge_size_value(conf, prev, default)                       \
-    if (conf == NGX_CONF_UNSET_SIZE) {                                       \
-        conf = (prev == NGX_CONF_UNSET_SIZE) ? default : prev;               \
+#घोषणा ngx_conf_merge_आकार_मूल्य(conf, पूर्व, शेष)                       \
+    अगर (conf == NGX_CONF_UNSET_आकार) {                                       \
+        conf = (पूर्व == NGX_CONF_UNSET_आकार) ? शेष : पूर्व;               \
     }
 
-#define ngx_conf_merge_off_value(conf, prev, default)                        \
-    if (conf == NGX_CONF_UNSET) {                                            \
-        conf = (prev == NGX_CONF_UNSET) ? default : prev;                    \
+#घोषणा ngx_conf_merge_off_मूल्य(conf, पूर्व, शेष)                        \
+    अगर (conf == NGX_CONF_UNSET) {                                            \
+        conf = (पूर्व == NGX_CONF_UNSET) ? शेष : पूर्व;                    \
     }
 
-#define ngx_conf_merge_str_value(conf, prev, default)                        \
-    if (conf.data == NULL) {                                                 \
-        if (prev.data) {                                                     \
-            conf.len = prev.len;                                             \
-            conf.data = prev.data;                                           \
-        } else {                                                             \
-            conf.len = sizeof(default) - 1;                                  \
-            conf.data = (u_char *) default;                                  \
+#घोषणा ngx_conf_merge_str_मूल्य(conf, पूर्व, शेष)                        \
+    अगर (conf.तथ्य == शून्य) {                                                 \
+        अगर (पूर्व.तथ्य) {                                                     \
+            conf.len = पूर्व.len;                                             \
+            conf.तथ्य = पूर्व.तथ्य;                                           \
+        } अन्यथा {                                                             \
+            conf.len = माप(शेष) - 1;                                  \
+            conf.तथ्य = (u_char *) शेष;                                  \
         }                                                                    \
     }
 
-#define ngx_conf_merge_bufs_value(conf, prev, default_num, default_size)     \
-    if (conf.num == 0) {                                                     \
-        if (prev.num) {                                                      \
-            conf.num = prev.num;                                             \
-            conf.size = prev.size;                                           \
-        } else {                                                             \
-            conf.num = default_num;                                          \
-            conf.size = default_size;                                        \
+#घोषणा ngx_conf_merge_bufs_मूल्य(conf, पूर्व, default_अंक, default_आकार)     \
+    अगर (conf.अंक == 0) {                                                     \
+        अगर (पूर्व.अंक) {                                                      \
+            conf.अंक = पूर्व.अंक;                                             \
+            conf.आकार = पूर्व.आकार;                                           \
+        } अन्यथा {                                                             \
+            conf.अंक = default_अंक;                                          \
+            conf.आकार = default_आकार;                                        \
         }                                                                    \
     }
 
-#define ngx_conf_merge_bitmask_value(conf, prev, default)                    \
-    if (conf == 0) {                                                         \
-        conf = (prev == 0) ? default : prev;                                 \
+#घोषणा ngx_conf_merge_bitmask_मूल्य(conf, पूर्व, शेष)                    \
+    अगर (conf == 0) {                                                         \
+        conf = (पूर्व == 0) ? शेष : पूर्व;                                 \
     }
 
 
-char *ngx_conf_param(ngx_conf_t *cf);
-char *ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename);
-char *ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+अक्षर *ngx_conf_param(ngx_conf_t *cf);
+अक्षर *ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename);
+अक्षर *ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
 
 
 ngx_int_t ngx_conf_full_name(ngx_cycle_t *cycle, ngx_str_t *name,
     ngx_uint_t conf_prefix);
 ngx_open_file_t *ngx_conf_open_file(ngx_cycle_t *cycle, ngx_str_t *name);
-void ngx_cdecl ngx_conf_log_error(ngx_uint_t level, ngx_conf_t *cf,
-    ngx_err_t err, const char *fmt, ...);
+व्योम ngx_cdecl ngx_conf_log_error(ngx_uint_t level, ngx_conf_t *cf,
+    ngx_err_t err, स्थिर अक्षर *fmt, ...);
 
 
-char *ngx_conf_set_flag_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_str_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_str_array_slot(ngx_conf_t *cf, ngx_command_t *cmd,
-    void *conf);
-char *ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_num_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_size_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_off_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_msec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_sec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_bufs_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_set_bitmask_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+अक्षर *ngx_conf_set_flag_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
+अक्षर *ngx_conf_set_str_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
+अक्षर *ngx_conf_set_str_array_slot(ngx_conf_t *cf, ngx_command_t *cmd,
+    व्योम *conf);
+अक्षर *ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
+अक्षर *ngx_conf_set_अंक_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
+अक्षर *ngx_conf_set_आकार_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
+अक्षर *ngx_conf_set_off_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
+अक्षर *ngx_conf_set_msec_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
+अक्षर *ngx_conf_set_sec_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
+अक्षर *ngx_conf_set_bufs_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
+अक्षर *ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
+अक्षर *ngx_conf_set_bitmask_slot(ngx_conf_t *cf, ngx_command_t *cmd, व्योम *conf);
 
 
-#endif /* _NGX_CONF_FILE_H_INCLUDED_ */
+#पूर्ण_अगर /* _NGX_CONF_FILE_H_INCLUDED_ */
