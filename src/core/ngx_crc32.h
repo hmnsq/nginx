@@ -5,114 +5,114 @@
  */
 
 
-#ifndef _NGX_CRC32_H_INCLUDED_
-#define _NGX_CRC32_H_INCLUDED_
+#که_نه_تعریف_شوی NGX_دوراني_ازموینه_32_H_INCLUDED
+#تعریف_کړه NGX_دوراني_ازموینه_32_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-extern uint32_t  *ngx_crc32_table_short;
-extern uint32_t   ngx_crc32_table256[];
-extern uint32_t   ngx_crc32c_table256[];
+خارجي uint32_t  *ngx_دوراني_ازموینه_32_جدول_short;
+خارجي uint32_t   ngx_دوراني_ازموینه_32_table256[];
+خارجي uint32_t   ngx_crc32c_table256[];
 
 
-static ngx_inline uint32_t
-ngx_crc32_short(u_char *p, size_t len)
+ساكن ngx_inline uint32_t
+ngx_دوراني_ازموینه_32_short(u_char *p, اندازه_t len)
 {
     u_char    c;
-    uint32_t  crc;
+    uint32_t  دوراني_ازموینه;
 
-    crc = 0xffffffff;
+    دوراني_ازموینه = 0xffffffff;
 
-    while (len--) {
+    طالما (len--) {
         c = *p++;
-        crc = ngx_crc32_table_short[(crc ^ (c & 0xf)) & 0xf] ^ (crc >> 4);
-        crc = ngx_crc32_table_short[(crc ^ (c >> 4)) & 0xf] ^ (crc >> 4);
+        دوراني_ازموینه = ngx_دوراني_ازموینه_32_جدول_short[(دوراني_ازموینه ^ (c & 0xf)) & 0xf] ^ (دوراني_ازموینه >> 4);
+        دوراني_ازموینه = ngx_دوراني_ازموینه_32_جدول_short[(دوراني_ازموینه ^ (c >> 4)) & 0xf] ^ (دوراني_ازموینه >> 4);
     }
 
-    return crc ^ 0xffffffff;
+    أرجع دوراني_ازموینه ^ 0xffffffff;
 }
 
 
-static ngx_inline uint32_t
-ngx_crc32_long(u_char *p, size_t len)
+ساكن ngx_inline uint32_t
+ngx_دوراني_ازموینه_32_long(u_char *p, اندازه_t len)
 {
-    uint32_t  crc;
+    uint32_t  دوراني_ازموینه;
 
-    crc = 0xffffffff;
+    دوراني_ازموینه = 0xffffffff;
 
-    while (len--) {
-        crc = ngx_crc32_table256[(crc ^ *p++) & 0xff] ^ (crc >> 8);
+    طالما (len--) {
+        دوراني_ازموینه = ngx_دوراني_ازموینه_32_table256[(دوراني_ازموینه ^ *p++) & 0xff] ^ (دوراني_ازموینه >> 8);
     }
 
-    return crc ^ 0xffffffff;
+    أرجع دوراني_ازموینه ^ 0xffffffff;
 }
 
 
-#define ngx_crc32_init(crc)                                                   \
-    crc = 0xffffffff
+#تعریف_کړه ngx_دوراني_ازموینه_32_init(دوراني_ازموینه)                                                   \
+    دوراني_ازموینه = 0xffffffff
 
 
-static ngx_inline void
-ngx_crc32_update(uint32_t *crc, u_char *p, size_t len)
-{
-    uint32_t  c;
-
-    c = *crc;
-
-    while (len--) {
-        c = ngx_crc32_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
-    }
-
-    *crc = c;
-}
-
-
-#define ngx_crc32_final(crc)                                                  \
-    crc ^= 0xffffffff
-
-
-static ngx_inline uint32_t
-ngx_crc32c_long(u_char *p, size_t len)
-{
-    uint32_t  crc;
-
-    crc = 0xffffffff;
-
-    while (len--) {
-        crc = ngx_crc32c_table256[(crc ^ *p++) & 0xff] ^ (crc >> 8);
-    }
-
-    return crc ^ 0xffffffff;
-}
-
-
-#define ngx_crc32c_init(crc)                                                  \
-    crc = 0xffffffff
-
-
-static ngx_inline void
-ngx_crc32c_update(uint32_t *crc, u_char *p, size_t len)
+ساكن ngx_inline فراغ
+ngx_دوراني_ازموینه_32_update(uint32_t *دوراني_ازموینه, u_char *p, اندازه_t len)
 {
     uint32_t  c;
 
-    c = *crc;
+    c = *دوراني_ازموینه;
 
-    while (len--) {
+    طالما (len--) {
+        c = ngx_دوراني_ازموینه_32_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
+    }
+
+    *دوراني_ازموینه = c;
+}
+
+
+#تعریف_کړه ngx_دوراني_ازموینه_32_final(دوراني_ازموینه)                                                  \
+    دوراني_ازموینه ^= 0xffffffff
+
+
+ساكن ngx_inline uint32_t
+ngx_crc32c_long(u_char *p, اندازه_t len)
+{
+    uint32_t  دوراني_ازموینه;
+
+    دوراني_ازموینه = 0xffffffff;
+
+    طالما (len--) {
+        دوراني_ازموینه = ngx_crc32c_table256[(دوراني_ازموینه ^ *p++) & 0xff] ^ (دوراني_ازموینه >> 8);
+    }
+
+    أرجع دوراني_ازموینه ^ 0xffffffff;
+}
+
+
+#تعریف_کړه ngx_crc32c_init(دوراني_ازموینه)                                                  \
+    دوراني_ازموینه = 0xffffffff
+
+
+ساكن ngx_inline فراغ
+ngx_crc32c_update(uint32_t *دوراني_ازموینه, u_char *p, اندازه_t len)
+{
+    uint32_t  c;
+
+    c = *دوراني_ازموینه;
+
+    طالما (len--) {
         c = ngx_crc32c_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
     }
 
-    *crc = c;
+    *دوراني_ازموینه = c;
 }
 
 
-#define ngx_crc32c_final(crc)                                                 \
-    crc ^= 0xffffffff
+#تعریف_کړه ngx_crc32c_final(دوراني_ازموینه)                                                 \
+    دوراني_ازموینه ^= 0xffffffff
 
 
-ngx_int_t ngx_crc32_table_init(void);
+ngx_int_t ngx_دوراني_ازموینه_32_جدول_init(فراغ);
 
 
-#endif /* _NGX_CRC32_H_INCLUDED_ */
+#د_که_پای /* _NGX_CRC32_H_INCLUDED_ */

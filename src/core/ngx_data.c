@@ -4,214 +4,214 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-static size_t  ngx_data_sizes[] = {
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_OBJECT_TYPE */
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_LIST_TYPE */
-    sizeof(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
-    sizeof(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
-    sizeof(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
+ساكن اندازه_t  ngx_معلومات_sizes[] = {
+    حجم(ngx_معلومات_obj_t),            /* NGX_DATA_OBJECT_TYPE */
+    حجم(ngx_معلومات_obj_t),            /* NGX_DATA_LIST_TYPE */
+    حجم(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
+    حجم(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
+    حجم(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
     0,                                 /* NGX_DATA_NULL_TYPE */
 };
 
 
-ngx_data_item_t *
-ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type)
+ngx_معلومات_توکی_t *
+ngx_معلومات_new_توکی(ngx_pool_t *pool, ngx_uint_t type)
 {
-    ngx_data_item_t  *item;
+    ngx_معلومات_توکی_t  *توکی;
 
-    item = ngx_pcalloc(pool, offsetof(ngx_data_item_t, data)
-                             + ngx_data_sizes[type]);
-    if (item == NULL) {
-        return NULL;
+    توکی = ngx_pcalloc(pool, offsetof(ngx_معلومات_توکی_t, معلومات)
+                             + ngx_معلومات_sizes[type]);
+    إذا (توکی == عدم) {
+        أرجع عدم;
     }
 
-    item->type = type;
+    توکی->type = type;
 
-    return item;
+    أرجع توکی;
 }
 
 
-void
-ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name, ngx_data_item_t *item)
+فراغ
+ngx_معلومات_جمع_کړه_توکی(ngx_معلومات_توکی_t *obj, ngx_str_t *name, ngx_معلومات_توکی_t *توکی)
 {
-    ngx_data_obj_t  *object;
+    ngx_معلومات_obj_t  *object;
 
-    if (obj->type != NGX_DATA_OBJECT_TYPE && obj->type != NGX_DATA_LIST_TYPE) {
-        return;
+    إذا (obj->type != NGX_معلومات_OBJECT_TYPE && obj->type != NGX_معلومات_LIST_TYPE) {
+        أرجع;
     }
 
-    object = &obj->data.object;
+    object = &obj->معلومات.object;
 
-    if (name) {
-        item->name = *name;
+    إذا (name) {
+        توکی->name = *name;
     }
 
-    if (object->next == NULL) {
-        object->next = &object->item;
+    إذا (object->بل == عدم) {
+        object->بل = &object->توکی;
     }
 
-    *object->next = item;
-    object->next = &item->next;
+    *object->بل = توکی;
+    object->بل = &توکی->بل;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_معلومات_توکی_t *
+ngx_معلومات_obj_handler(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_معلومات_توکی_t  *obj, *توکی;
+    ngx_معلومات_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_معلومات_new_object(pool);
+    إذا (obj == عدم) {
+        أرجع عدم;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_معلومات_decl_t *) معلومات;
 
-    while (decl->name.len) {
+    طالما (decl->name.len) {
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        توکی = decl->handler(decl->معلومات, pool, ctx);
+        إذا (توکی == عدم) {
+            أرجع عدم;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        إذا (توکی != NGX_معلومات_DECLINE) {
+            ngx_معلومات_جمع_کړه_توکی(obj, &decl->name, توکی);
         }
 
         decl++;
     }
 
-    return obj;
+    أرجع obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
+ngx_معلومات_توکی_t *
+ngx_معلومات_obj_fields_handler(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx,
     ngx_array_t *fields)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *ارزښت;
     ngx_uint_t        i;
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_معلومات_توکی_t  *obj, *توکی;
+    ngx_معلومات_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_معلومات_new_object(pool);
+    إذا (obj == عدم) {
+        أرجع عدم;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_معلومات_decl_t *) معلومات;
 
-    while (decl->name.len) {
+    طالما (decl->name.len) {
 
-        if (fields) {
-            value = fields->elts;
+        إذا (fields) {
+            ارزښت = fields->elts;
 
-            for (i = 0; i < fields->nelts; i++) {
+            لكل (i = 0; i < fields->nelts; i++) {
 
-                if (decl->name.len == value[i].len
-                    && ngx_strncmp(decl->name.data, value[i].data,
-                                   value[i].len)
+                إذا (decl->name.len == ارزښت[i].len
+                    && ngx_strncmp(decl->name.معلومات, ارزښت[i].معلومات,
+                                   ارزښت[i].len)
                     == 0)
                 {
-                    goto found;
+                    اذهب وموندل;
                 }
             }
 
             decl++;
-            continue;
+            استمر;
         }
 
-found:
+وموندل:
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        توکی = decl->handler(decl->معلومات, pool, ctx);
+        إذا (توکی == عدم) {
+            أرجع عدم;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        إذا (توکی != NGX_معلومات_DECLINE) {
+            ngx_معلومات_جمع_کړه_توکی(obj, &decl->name, توکی);
         }
 
         decl++;
     }
 
-    return obj;
+    أرجع obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_معلومات_توکی_t *
+ngx_معلومات_شمېره_handler(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_معلومات_توکی_t  *توکی;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    توکی = ngx_معلومات_new_integer(pool);
+    إذا (توکی == عدم) {
+        أرجع عدم;
     }
 
-    item->data.integer = data;
+    توکی->معلومات.integer = معلومات;
 
-    return item;
+    أرجع توکی;
 }
 
 
-ngx_data_item_t *
-ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_معلومات_توکی_t *
+ngx_معلومات_string_handler(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *ارزښت, *src;
+    ngx_معلومات_توکی_t  *توکی;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    توکی = ngx_معلومات_new_string(pool);
+    إذا (توکی == عدم) {
+        أرجع عدم;
     }
 
-    value = &item->data.string;
+    ارزښت = &توکی->معلومات.string;
 
-    src = (ngx_str_t *) data;
+    src = (ngx_str_t *) معلومات;
 
-    value->len = src->len;
+    ارزښت->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    ارزښت->معلومات = ngx_pstrdup(pool, src);
+    إذا (ارزښت->معلومات == عدم) {
+        أرجع عدم;
     }
 
-    return item;
+    أرجع توکی;
 }
 
 
-ngx_data_item_t *
-ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_معلومات_توکی_t *
+ngx_معلومات_boolean_handler(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_معلومات_توکی_t  *توکی;
 
-    item = ngx_data_new_boolean(pool);
-    if (item == NULL) {
-        return NULL;
+    توکی = ngx_معلومات_new_boolean(pool);
+    إذا (توکی == عدم) {
+        أرجع عدم;
     }
 
-    item->data.boolean = data;
+    توکی->معلومات.boolean = معلومات;
 
-    return item;
+    أرجع توکی;
 }
 
 
-ngx_data_item_t *
-ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_معلومات_توکی_t *
+ngx_معلومات_وخت_handler(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx)
 {
     u_char      *p;
     ngx_tm_t     tm;
     ngx_str_t    src;
-    ngx_time_t  *tp;
-    u_char       iso8601[sizeof("1974-01-19T13:00:00.000Z") - 1];
+    ngx_وخت_t  *tp;
+    u_char       iso8601[حجم("1974-01-19T13:00:00.000Z") - 1];
 
-    tp = (ngx_time_t *) data;
+    tp = (ngx_وخت_t *) معلومات;
 
     ngx_gmtime(tp->sec, &tm);
 
@@ -219,94 +219,94 @@ ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
                     tm.ngx_tm_year, tm.ngx_tm_mon, tm.ngx_tm_mday,
                     tm.ngx_tm_hour, tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    if (tp->msec) {
+    إذا (tp->msec) {
         p = ngx_sprintf(p, ".%03ui", tp->msec);
     }
 
     *p++ = 'Z';
 
-    src.data = iso8601;
+    src.معلومات = iso8601;
     src.len = p - iso8601;
 
-    return ngx_data_string_handler((uintptr_t) &src, pool, NULL);
+    أرجع ngx_معلومات_string_handler((uintptr_t) &src, pool, عدم);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_معلومات_توکی_t *
+ngx_معلومات_struct_int64_handler(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_معلومات_توکی_t  *توکی;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    توکی = ngx_معلومات_new_integer(pool);
+    إذا (توکی == عدم) {
+        أرجع عدم;
     }
 
-    item->data.integer = *(int64_t *) ((u_char *) ctx + data);
+    توکی->معلومات.integer = *(int64_t *) ((u_char *) ctx + معلومات);
 
-    return item;
+    أرجع توکی;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_معلومات_توکی_t *
+ngx_معلومات_struct_int_handler(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_int_t  value;
+    ngx_int_t  ارزښت;
 
-    value = *(ngx_int_t *) ((u_char *) ctx + data);
+    ارزښت = *(ngx_int_t *) ((u_char *) ctx + معلومات);
 
-    return ngx_data_number_handler(value, pool, NULL);
+    أرجع ngx_معلومات_شمېره_handler(ارزښت, pool, عدم);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_atomic_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_معلومات_توکی_t *
+ngx_معلومات_struct_atomic_handler(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_معلومات_توکی_t  *توکی;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    توکی = ngx_معلومات_new_integer(pool);
+    إذا (توکی == عدم) {
+        أرجع عدم;
     }
 
-    item->data.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + data);
+    توکی->معلومات.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + معلومات);
 
-    return item;
+    أرجع توکی;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_معلومات_توکی_t *
+ngx_معلومات_struct_str_handler(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *ارزښت, *src;
+    ngx_معلومات_توکی_t  *توکی;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    توکی = ngx_معلومات_new_string(pool);
+    إذا (توکی == عدم) {
+        أرجع عدم;
     }
 
-    value = &item->data.string;
+    ارزښت = &توکی->معلومات.string;
 
-    src = (ngx_str_t *) ((u_char *) ctx + data);
+    src = (ngx_str_t *) ((u_char *) ctx + معلومات);
 
-    value->len = src->len;
+    ارزښت->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    ارزښت->معلومات = ngx_pstrdup(pool, src);
+    إذا (ارزښت->معلومات == عدم) {
+        أرجع عدم;
     }
 
-    return item;
+    أرجع توکی;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_معلومات_توکی_t *
+ngx_معلومات_struct_boolean_handler(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_uint_t  value;
+    ngx_uint_t  ارزښت;
 
-    value = *(ngx_uint_t *) ((u_char *) ctx + data);
+    ارزښت = *(ngx_uint_t *) ((u_char *) ctx + معلومات);
 
-    return ngx_data_boolean_handler(value, pool, NULL);
+    أرجع ngx_معلومات_boolean_handler(ارزښت, pool, عدم);
 }

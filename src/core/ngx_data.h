@@ -4,98 +4,98 @@
  */
 
 
-#ifndef _NGX_DATA_H_INCLUDED_
-#define _NGX_DATA_H_INCLUDED_
+#که_نه_تعریف_شوی NGX_معلومات_H_INCLUDED
+#تعریف_کړه NGX_معلومات_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef struct ngx_data_item_s ngx_data_item_t;
+تعريفنوع بنية ngx_معلومات_توکی_s ngx_معلومات_توکی_t;
 
 
-typedef struct {
-    ngx_data_item_t          *item;
-    ngx_data_item_t         **next;
-} ngx_data_obj_t;
+تعريفنوع بنية {
+    ngx_معلومات_توکی_t          *توکی;
+    ngx_معلومات_توکی_t         **بل;
+} ngx_معلومات_obj_t;
 
 
-struct ngx_data_item_s {
-    ngx_data_item_t          *next;
+بنية ngx_معلومات_توکی_s {
+    ngx_معلومات_توکی_t          *بل;
     ngx_str_t                 name;
     ngx_uint_t                type;
 
-    union {
-        ngx_data_obj_t        object;
+    اتحاد {
+        ngx_معلومات_obj_t        object;
         ngx_str_t             string;
         int64_t               integer;
         ngx_uint_t            boolean;
-    } data;
+    } معلومات;
 };
 
 
-ngx_data_item_t *ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type);
+ngx_معلومات_توکی_t *ngx_معلومات_new_توکی(ngx_pool_t *pool, ngx_uint_t type);
 
-void ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name,
-    ngx_data_item_t *item);
+فراغ ngx_معلومات_جمع_کړه_توکی(ngx_معلومات_توکی_t *obj, ngx_str_t *name,
+    ngx_معلومات_توکی_t *توکی);
 
-#define NGX_DATA_OBJECT_TYPE  0
-#define NGX_DATA_LIST_TYPE    1
-#define NGX_DATA_STRING_TYPE  2
-#define NGX_DATA_INTEGER_TYPE 3
-#define NGX_DATA_BOOLEAN_TYPE 4
-#define NGX_DATA_NULL_TYPE    5
-
-
-#define ngx_data_new_object(pool)                                             \
-    ngx_data_new_item(pool, NGX_DATA_OBJECT_TYPE)
-#define ngx_data_new_list(pool)                                               \
-    ngx_data_new_item(pool, NGX_DATA_LIST_TYPE)
-#define ngx_data_new_string(pool)                                             \
-    ngx_data_new_item(pool, NGX_DATA_STRING_TYPE)
-#define ngx_data_new_integer(pool)                                            \
-    ngx_data_new_item(pool, NGX_DATA_INTEGER_TYPE)
-#define ngx_data_new_boolean(pool)                                            \
-    ngx_data_new_item(pool, NGX_DATA_BOOLEAN_TYPE)
-#define ngx_data_new_null(pool)                                               \
-    ngx_data_new_item(pool, NGX_DATA_NULL_TYPE)
+#تعریف_کړه NGX_معلومات_OBJECT_TYPE  0
+#تعریف_کړه NGX_معلومات_LIST_TYPE    1
+#تعریف_کړه NGX_معلومات_STRING_TYPE  2
+#تعریف_کړه NGX_معلومات_INTEGER_TYPE 3
+#تعریف_کړه NGX_معلومات_BOOLEAN_TYPE 4
+#تعریف_کړه NGX_معلومات_NULL_TYPE    5
 
 
-typedef struct {
+#تعریف_کړه ngx_معلومات_new_object(pool)                                             \
+    ngx_معلومات_new_توکی(pool, NGX_معلومات_OBJECT_TYPE)
+#تعریف_کړه ngx_معلومات_new_list(pool)                                               \
+    ngx_معلومات_new_توکی(pool, NGX_معلومات_LIST_TYPE)
+#تعریف_کړه ngx_معلومات_new_string(pool)                                             \
+    ngx_معلومات_new_توکی(pool, NGX_معلومات_STRING_TYPE)
+#تعریف_کړه ngx_معلومات_new_integer(pool)                                            \
+    ngx_معلومات_new_توکی(pool, NGX_معلومات_INTEGER_TYPE)
+#تعریف_کړه ngx_معلومات_new_boolean(pool)                                            \
+    ngx_معلومات_new_توکی(pool, NGX_معلومات_BOOLEAN_TYPE)
+#تعریف_کړه ngx_معلومات_new_null(pool)                                               \
+    ngx_معلومات_new_توکی(pool, NGX_معلومات_NULL_TYPE)
+
+
+تعريفنوع بنية {
     ngx_str_t            name;
-    ngx_data_item_t   *(*handler)(uintptr_t data, ngx_pool_t *pool, void *ctx);
-    uintptr_t            data;
-} ngx_data_decl_t;
+    ngx_معلومات_توکی_t   *(*handler)(uintptr_t معلومات, ngx_pool_t *pool, فراغ *ctx);
+    uintptr_t            معلومات;
+} ngx_معلومات_decl_t;
 
-#define ngx_data_null_decl  { ngx_null_string, NULL, 0 }
+#تعریف_کړه ngx_معلومات_null_decl  { ngx_null_string, عدم, 0 }
 
-#define NGX_DATA_DECLINE  (ngx_data_item_t *) -1
+#تعریف_کړه NGX_معلومات_DECLINE  (ngx_معلومات_توکی_t *) -1
 
 
-ngx_data_item_t *ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx, ngx_array_t *fields);
+ngx_معلومات_توکی_t *ngx_معلومات_obj_handler(uintptr_t معلومات, ngx_pool_t *pool,
+    فراغ *ctx);
+ngx_معلومات_توکی_t *ngx_معلومات_obj_fields_handler(uintptr_t معلومات, ngx_pool_t *pool,
+    فراغ *ctx, ngx_array_t *fields);
 
-ngx_data_item_t *ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
+ngx_معلومات_توکی_t *ngx_معلومات_شمېره_handler(uintptr_t معلومات, ngx_pool_t *pool,
+    فراغ *ctx);
+ngx_معلومات_توکی_t *ngx_معلومات_string_handler(uintptr_t معلومات, ngx_pool_t *pool,
+    فراغ *ctx);
+ngx_معلومات_توکی_t *ngx_معلومات_boolean_handler(uintptr_t معلومات, ngx_pool_t *pool,
+    فراغ *ctx);
+ngx_معلومات_توکی_t *ngx_معلومات_وخت_handler(uintptr_t معلومات, ngx_pool_t *pool,
+    فراغ *ctx);
 
-ngx_data_item_t *ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_struct_atomic_handler(uintptr_t data,
-    ngx_pool_t *pool, void *ctx);
-ngx_data_item_t *ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool,
-    void *ctx);
-ngx_data_item_t *ngx_data_struct_boolean_handler(uintptr_t data,
-    ngx_pool_t *pool, void *ctx);
+ngx_معلومات_توکی_t *ngx_معلومات_struct_int64_handler(uintptr_t معلومات, ngx_pool_t *pool,
+    فراغ *ctx);
+ngx_معلومات_توکی_t *ngx_معلومات_struct_int_handler(uintptr_t معلومات, ngx_pool_t *pool,
+    فراغ *ctx);
+ngx_معلومات_توکی_t *ngx_معلومات_struct_atomic_handler(uintptr_t معلومات,
+    ngx_pool_t *pool, فراغ *ctx);
+ngx_معلومات_توکی_t *ngx_معلومات_struct_str_handler(uintptr_t معلومات, ngx_pool_t *pool,
+    فراغ *ctx);
+ngx_معلومات_توکی_t *ngx_معلومات_struct_boolean_handler(uintptr_t معلومات,
+    ngx_pool_t *pool, فراغ *ctx);
 
-#endif /* _NGX_DATA_H_INCLUDED_ */
+#د_که_پای /* _NGX_DATA_H_INCLUDED_ */

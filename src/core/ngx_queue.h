@@ -5,111 +5,111 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-#ifndef _NGX_QUEUE_H_INCLUDED_
-#define _NGX_QUEUE_H_INCLUDED_
+#که_نه_تعریف_شوی NGX_کتار_H_INCLUDED
+#تعریف_کړه NGX_کتار_H_INCLUDED
 
 
-typedef struct ngx_queue_s  ngx_queue_t;
+تعريفنوع بنية ngx_کتار_s  ngx_کتار_t;
 
-struct ngx_queue_s {
-    ngx_queue_t  *prev;
-    ngx_queue_t  *next;
+بنية ngx_کتار_s {
+    ngx_کتار_t  *prev;
+    ngx_کتار_t  *بل;
 };
 
 
-#define ngx_queue_init(q)                                                     \
+#تعریف_کړه ngx_کتار_init(q)                                                     \
     (q)->prev = q;                                                            \
-    (q)->next = q
+    (q)->بل = q
 
 
-#define ngx_queue_empty(h)                                                    \
+#تعریف_کړه ngx_کتار_تشه(h)                                                    \
     (h == (h)->prev)
 
 
-#define ngx_queue_insert_head(h, x)                                           \
-    (x)->next = (h)->next;                                                    \
-    (x)->next->prev = x;                                                      \
+#تعریف_کړه ngx_کتار_ورننباسه_سر(h, x)                                           \
+    (x)->بل = (h)->بل;                                                    \
+    (x)->بل->prev = x;                                                      \
     (x)->prev = h;                                                            \
-    (h)->next = x
+    (h)->بل = x
 
 
-#define ngx_queue_insert_after   ngx_queue_insert_head
+#تعریف_کړه ngx_کتار_ورننباسه_after   ngx_کتار_ورننباسه_سر
 
 
-#define ngx_queue_insert_tail(h, x)                                           \
+#تعریف_کړه ngx_کتار_ورننباسه_لکۍ(h, x)                                           \
     (x)->prev = (h)->prev;                                                    \
-    (x)->prev->next = x;                                                      \
-    (x)->next = h;                                                            \
+    (x)->prev->بل = x;                                                      \
+    (x)->بل = h;                                                            \
     (h)->prev = x
 
 
-#define ngx_queue_insert_before   ngx_queue_insert_tail
+#تعریف_کړه ngx_کتار_ورننباسه_before   ngx_کتار_ورننباسه_لکۍ
 
 
-#define ngx_queue_head(h)                                                     \
-    (h)->next
+#تعریف_کړه ngx_کتار_سر(h)                                                     \
+    (h)->بل
 
 
-#define ngx_queue_last(h)                                                     \
+#تعریف_کړه ngx_کتار_وروستی(h)                                                     \
     (h)->prev
 
 
-#define ngx_queue_sentinel(h)                                                 \
+#تعریف_کړه ngx_کتار_sentinel(h)                                                 \
     (h)
 
 
-#define ngx_queue_next(q)                                                     \
-    (q)->next
+#تعریف_کړه ngx_کتار_بل(q)                                                     \
+    (q)->بل
 
 
-#define ngx_queue_prev(q)                                                     \
+#تعریف_کړه ngx_کتار_prev(q)                                                     \
     (q)->prev
 
 
-#if (NGX_DEBUG)
+#إذا (NGX_DEBUG)
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next;                                              \
-    (x)->prev = NULL;                                                         \
-    (x)->next = NULL
+#تعریف_کړه ngx_کتار_remove(x)                                                   \
+    (x)->بل->prev = (x)->prev;                                              \
+    (x)->prev->بل = (x)->بل;                                              \
+    (x)->prev = عدم;                                                         \
+    (x)->بل = عدم
 
-#else
+#وإلا
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next
+#تعریف_کړه ngx_کتار_remove(x)                                                   \
+    (x)->بل->prev = (x)->prev;                                              \
+    (x)->prev->بل = (x)->بل
 
-#endif
+#د_که_پای
 
 
-#define ngx_queue_split(h, q, n)                                              \
+#تعریف_کړه ngx_کتار_وېشل(h, q, n)                                              \
     (n)->prev = (h)->prev;                                                    \
-    (n)->prev->next = n;                                                      \
-    (n)->next = q;                                                            \
+    (n)->prev->بل = n;                                                      \
+    (n)->بل = q;                                                            \
     (h)->prev = (q)->prev;                                                    \
-    (h)->prev->next = h;                                                      \
+    (h)->prev->بل = h;                                                      \
     (q)->prev = n;
 
 
-#define ngx_queue_add(h, n)                                                   \
-    (h)->prev->next = (n)->next;                                              \
-    (n)->next->prev = (h)->prev;                                              \
+#تعریف_کړه ngx_کتار_جمع_کړه(h, n)                                                   \
+    (h)->prev->بل = (n)->بل;                                              \
+    (n)->بل->prev = (h)->prev;                                              \
     (h)->prev = (n)->prev;                                                    \
-    (h)->prev->next = h;
+    (h)->prev->بل = h;
 
 
-#define ngx_queue_data(q, type, link)                                         \
+#تعریف_کړه ngx_کتار_معلومات(q, type, link)                                         \
     (type *) ((u_char *) q - offsetof(type, link))
 
 
-ngx_queue_t *ngx_queue_middle(ngx_queue_t *queue);
-void ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ngx_کتار_t *ngx_کتار_منځ(ngx_کتار_t *کتار);
+فراغ ngx_کتار_ترتیبول(ngx_کتار_t *کتار,
+    ngx_int_t (*cmp)(ثابت ngx_کتار_t *, ثابت ngx_کتار_t *));
 
 
-#endif /* _NGX_QUEUE_H_INCLUDED_ */
+#د_که_پای /* _NGX_QUEUE_H_INCLUDED_ */

@@ -5,12 +5,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ساكن فراغ ngx_کتار_یوځای(ngx_کتار_t *کتار, ngx_کتار_t *لکۍ,
+    ngx_int_t (*cmp)(ثابت ngx_کتار_t *, ثابت ngx_کتار_t *));
 
 
 /*
@@ -18,32 +18,32 @@ static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
  * or the first element of the queue's second part otherwise
  */
 
-ngx_queue_t *
-ngx_queue_middle(ngx_queue_t *queue)
+ngx_کتار_t *
+ngx_کتار_منځ(ngx_کتار_t *کتار)
 {
-    ngx_queue_t  *middle, *next;
+    ngx_کتار_t  *منځ, *بل;
 
-    middle = ngx_queue_head(queue);
+    منځ = ngx_کتار_سر(کتار);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    إذا (منځ == ngx_کتار_وروستی(کتار)) {
+        أرجع منځ;
     }
 
-    next = ngx_queue_head(queue);
+    بل = ngx_کتار_سر(کتار);
 
-    for ( ;; ) {
-        middle = ngx_queue_next(middle);
+    لكل ( ;; ) {
+        منځ = ngx_کتار_بل(منځ);
 
-        next = ngx_queue_next(next);
+        بل = ngx_کتار_بل(بل);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        إذا (بل == ngx_کتار_وروستی(کتار)) {
+            أرجع منځ;
         }
 
-        next = ngx_queue_next(next);
+        بل = ngx_کتار_بل(بل);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        إذا (بل == ngx_کتار_وروستی(کتار)) {
+            أرجع منځ;
         }
     }
 }
@@ -51,56 +51,56 @@ ngx_queue_middle(ngx_queue_t *queue)
 
 /* the stable merge sort */
 
-void
-ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+فراغ
+ngx_کتار_ترتیبول(ngx_کتار_t *کتار,
+    ngx_int_t (*cmp)(ثابت ngx_کتار_t *, ثابت ngx_کتار_t *))
 {
-    ngx_queue_t  *q, tail;
+    ngx_کتار_t  *q, لکۍ;
 
-    q = ngx_queue_head(queue);
+    q = ngx_کتار_سر(کتار);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    إذا (q == ngx_کتار_وروستی(کتار)) {
+        أرجع;
     }
 
-    q = ngx_queue_middle(queue);
+    q = ngx_کتار_منځ(کتار);
 
-    ngx_queue_split(queue, q, &tail);
+    ngx_کتار_وېشل(کتار, q, &لکۍ);
 
-    ngx_queue_sort(queue, cmp);
-    ngx_queue_sort(&tail, cmp);
+    ngx_کتار_ترتیبول(کتار, cmp);
+    ngx_کتار_ترتیبول(&لکۍ, cmp);
 
-    ngx_queue_merge(queue, &tail, cmp);
+    ngx_کتار_یوځای(کتار, &لکۍ, cmp);
 }
 
 
-static void
-ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+ساكن فراغ
+ngx_کتار_یوځای(ngx_کتار_t *کتار, ngx_کتار_t *لکۍ,
+    ngx_int_t (*cmp)(ثابت ngx_کتار_t *, ثابت ngx_کتار_t *))
 {
-    ngx_queue_t  *q1, *q2;
+    ngx_کتار_t  *q1, *q2;
 
-    q1 = ngx_queue_head(queue);
-    q2 = ngx_queue_head(tail);
+    q1 = ngx_کتار_سر(کتار);
+    q2 = ngx_کتار_سر(لکۍ);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
-            ngx_queue_add(queue, tail);
-            break;
+    لكل ( ;; ) {
+        إذا (q1 == ngx_کتار_sentinel(کتار)) {
+            ngx_کتار_جمع_کړه(کتار, لکۍ);
+            اكسر;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        إذا (q2 == ngx_کتار_sentinel(لکۍ)) {
+            اكسر;
         }
 
-        if (cmp(q1, q2) <= 0) {
-            q1 = ngx_queue_next(q1);
-            continue;
+        إذا (cmp(q1, q2) <= 0) {
+            q1 = ngx_کتار_بل(q1);
+            استمر;
         }
 
-        ngx_queue_remove(q2);
-        ngx_queue_insert_before(q1, q2);
+        ngx_کتار_remove(q2);
+        ngx_کتار_ورننباسه_before(q1, q2);
 
-        q2 = ngx_queue_head(tail);
+        q2 = ngx_کتار_سر(لکۍ);
     }
 }

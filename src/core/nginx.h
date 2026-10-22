@@ -5,22 +5,22 @@
  */
 
 
-#ifndef _NGINX_H_INCLUDED_
-#define _NGINX_H_INCLUDED_
+#که_نه_تعریف_شوی _NGINX_H_INCLUDED_
+#تعریف_کړه _NGINX_H_INCLUDED_
 
 
-#define nginx_version      1031009
-#define NGINX_VERSION      "1.31.9"
-#define NGINX_VER          "nginx/" NGINX_VERSION
+#تعریف_کړه nginx_نسخه      1031009
+#تعریف_کړه NGINX_نسخه      "1.31.9"
+#تعریف_کړه NGINX_VER          "nginx/" NGINX_نسخه
 
-#ifdef NGX_BUILD
-#define NGINX_VER_BUILD    NGINX_VER " (" NGX_BUILD ")"
-#else
-#define NGINX_VER_BUILD    NGINX_VER
-#endif
+#که_تعریف_شوی NGX_BUILD
+#تعریف_کړه NGINX_VER_BUILD    NGINX_VER " (" NGX_BUILD ")"
+#وإلا
+#تعریف_کړه NGINX_VER_BUILD    NGINX_VER
+#د_که_پای
 
-#define NGINX_VAR          "NGINX"
-#define NGX_OLDPID_EXT     ".oldbin"
+#تعریف_کړه NGINX_VAR          "NGINX"
+#تعریف_کړه NGX_OLDPID_EXT     ".oldbin"
 
 
-#endif /* _NGINX_H_INCLUDED_ */
+#د_که_پای /* _NGINX_H_INCLUDED_ */

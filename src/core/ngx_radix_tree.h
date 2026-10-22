@@ -5,51 +5,51 @@
  */
 
 
-#ifndef _NGX_RADIX_TREE_H_INCLUDED_
-#define _NGX_RADIX_TREE_H_INCLUDED_
+#که_نه_تعریف_شوی NGX_RADIX_ونه_H_INCLUDED
+#تعریف_کړه NGX_RADIX_ونه_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-#define NGX_RADIX_NO_VALUE   (uintptr_t) -1
+#تعریف_کړه NGX_RADIX_NO_ارزښت   (uintptr_t) -1
 
-typedef struct ngx_radix_node_s  ngx_radix_node_t;
+تعريفنوع بنية ngx_radix_غوټه_s  ngx_radix_غوټه_t;
 
-struct ngx_radix_node_s {
-    ngx_radix_node_t  *right;
-    ngx_radix_node_t  *left;
-    ngx_radix_node_t  *parent;
-    uintptr_t          value;
+بنية ngx_radix_غوټه_s {
+    ngx_radix_غوټه_t  *ښی;
+    ngx_radix_غوټه_t  *کیڼ;
+    ngx_radix_غوټه_t  *پلار;
+    uintptr_t          ارزښت;
 };
 
 
-typedef struct {
-    ngx_radix_node_t  *root;
+تعريفنوع بنية {
+    ngx_radix_غوټه_t  *ریښه;
     ngx_pool_t        *pool;
-    ngx_radix_node_t  *free;
-    char              *start;
-    size_t             size;
-} ngx_radix_tree_t;
+    ngx_radix_غوټه_t  *حرر;
+    حرف              *پیل;
+    اندازه_t             اندازه;
+} ngx_radix_ونه_t;
 
 
-ngx_radix_tree_t *ngx_radix_tree_create(ngx_pool_t *pool,
+ngx_radix_ونه_t *ngx_radix_ونه_create(ngx_pool_t *pool,
     ngx_int_t preallocate);
 
-ngx_int_t ngx_radix32tree_insert(ngx_radix_tree_t *tree,
-    uint32_t key, uint32_t mask, uintptr_t value);
-ngx_int_t ngx_radix32tree_delete(ngx_radix_tree_t *tree,
-    uint32_t key, uint32_t mask);
-uintptr_t ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key);
+ngx_int_t ngx_radix32tree_ورننباسه(ngx_radix_ونه_t *ونه,
+    uint32_t کلی, uint32_t ماسک, uintptr_t ارزښت);
+ngx_int_t ngx_radix32tree_delete(ngx_radix_ونه_t *ونه,
+    uint32_t کلی, uint32_t ماسک);
+uintptr_t ngx_radix32tree_پیدا_کړه(ngx_radix_ونه_t *ونه, uint32_t کلی);
 
-#if (NGX_HAVE_INET6)
-ngx_int_t ngx_radix128tree_insert(ngx_radix_tree_t *tree,
-    u_char *key, u_char *mask, uintptr_t value);
-ngx_int_t ngx_radix128tree_delete(ngx_radix_tree_t *tree,
-    u_char *key, u_char *mask);
-uintptr_t ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key);
-#endif
+#إذا (NGX_HAVE_INET6)
+ngx_int_t ngx_radix128tree_ورننباسه(ngx_radix_ونه_t *ونه,
+    u_char *کلی, u_char *ماسک, uintptr_t ارزښت);
+ngx_int_t ngx_radix128tree_delete(ngx_radix_ونه_t *ونه,
+    u_char *کلی, u_char *ماسک);
+uintptr_t ngx_radix128tree_پیدا_کړه(ngx_radix_ونه_t *ونه, u_char *کلی);
+#د_که_پای
 
 
-#endif /* _NGX_RADIX_TREE_H_INCLUDED_ */
+#د_که_پای /* _NGX_RADIX_TREE_H_INCLUDED_ */

@@ -4,160 +4,160 @@
  * Copyright (C) Nginx, Inc.
  */
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-#define NGX_SLAB_PAGE_MASK   3
-#define NGX_SLAB_PAGE        0
-#define NGX_SLAB_BIG         1
-#define NGX_SLAB_EXACT       2
-#define NGX_SLAB_SMALL       3
+#تعریف_کړه NGX_SLAB_پاڼه_ماسک   3
+#تعریف_کړه NGX_SLAB_پاڼه        0
+#تعریف_کړه NGX_SLAB_BIG         1
+#تعریف_کړه NGX_SLAB_EXACT       2
+#تعریف_کړه NGX_SLAB_SMALL       3
 
-#if (NGX_PTR_SIZE == 4)
+#إذا (NGX_PTR_اندازه == 4)
 
-#define NGX_SLAB_PAGE_FREE   0
-#define NGX_SLAB_PAGE_BUSY   0xffffffff
-#define NGX_SLAB_PAGE_START  0x80000000
+#تعریف_کړه NGX_SLAB_پاڼه_FREE   0
+#تعریف_کړه NGX_SLAB_پاڼه_BUSY   0xffffffff
+#تعریف_کړه NGX_SLAB_پاڼه_پیل  0x80000000
 
-#define NGX_SLAB_SHIFT_MASK  0x0000000f
-#define NGX_SLAB_MAP_MASK    0xffff0000
-#define NGX_SLAB_MAP_SHIFT   16
+#تعریف_کړه NGX_SLAB_ښويدنه_ماسک  0x0000000f
+#تعریف_کړه NGX_SLAB_MAP_ماسک    0xffff0000
+#تعریف_کړه NGX_SLAB_MAP_ښويدنه   16
 
-#define NGX_SLAB_BUSY        0xffffffff
+#تعریف_کړه NGX_SLAB_BUSY        0xffffffff
 
-#else /* (NGX_PTR_SIZE == 8) */
+#وإلا /* (NGX_PTR_SIZE == 8) */
 
-#define NGX_SLAB_PAGE_FREE   0
-#define NGX_SLAB_PAGE_BUSY   0xffffffffffffffff
-#define NGX_SLAB_PAGE_START  0x8000000000000000
+#تعریف_کړه NGX_SLAB_پاڼه_FREE   0
+#تعریف_کړه NGX_SLAB_پاڼه_BUSY   0xffffffffffffffff
+#تعریف_کړه NGX_SLAB_پاڼه_پیل  0x8000000000000000
 
-#define NGX_SLAB_SHIFT_MASK  0x000000000000000f
-#define NGX_SLAB_MAP_MASK    0xffffffff00000000
-#define NGX_SLAB_MAP_SHIFT   32
+#تعریف_کړه NGX_SLAB_ښويدنه_ماسک  0x000000000000000f
+#تعریف_کړه NGX_SLAB_MAP_ماسک    0xffffffff00000000
+#تعریف_کړه NGX_SLAB_MAP_ښويدنه   32
 
-#define NGX_SLAB_BUSY        0xffffffffffffffff
+#تعریف_کړه NGX_SLAB_BUSY        0xffffffffffffffff
 
-#endif
-
-
-#define ngx_slab_slots(pool)                                                  \
-    (ngx_slab_page_t *) ((u_char *) (pool) + sizeof(ngx_slab_pool_t))
-
-#define ngx_slab_page_type(page)   ((page)->prev & NGX_SLAB_PAGE_MASK)
-
-#define ngx_slab_page_prev(page)                                              \
-    (ngx_slab_page_t *) ((page)->prev & ~NGX_SLAB_PAGE_MASK)
-
-#define ngx_slab_page_addr(pool, page)                                        \
-    ((((page) - (pool)->pages) << ngx_pagesize_shift)                         \
-     + (uintptr_t) (pool)->start)
+#د_که_پای
 
 
-#if (NGX_DEBUG_MALLOC)
+#تعریف_کړه ngx_slab_slots(pool)                                                  \
+    (ngx_slab_پاڼه_t *) ((u_char *) (pool) + حجم(ngx_slab_pool_t))
 
-#define ngx_slab_junk(p, size)     ngx_memset(p, 0xA5, size)
+#تعریف_کړه ngx_slab_پاڼه_type(پاڼه)   ((پاڼه)->prev & NGX_SLAB_پاڼه_ماسک)
 
-#elif (NGX_HAVE_DEBUG_MALLOC)
+#تعریف_کړه ngx_slab_پاڼه_prev(پاڼه)                                              \
+    (ngx_slab_پاڼه_t *) ((پاڼه)->prev & ~NGX_SLAB_پاڼه_ماسک)
 
-#define ngx_slab_junk(p, size)                                                \
-    if (ngx_debug_malloc)          ngx_memset(p, 0xA5, size)
-
-#else
-
-#define ngx_slab_junk(p, size)
-
-#endif
-
-static ngx_slab_page_t *ngx_slab_alloc_pages(ngx_slab_pool_t *pool,
-    ngx_uint_t pages);
-static void ngx_slab_free_pages(ngx_slab_pool_t *pool, ngx_slab_page_t *page,
-    ngx_uint_t pages);
-static void ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level,
-    char *text);
+#تعریف_کړه ngx_slab_پاڼه_addr(pool, پاڼه)                                        \
+    ((((پاڼه) - (pool)->پاڼې) << ngx_pagesize_ښويدنه)                         \
+     + (uintptr_t) (pool)->پیل)
 
 
-static ngx_uint_t  ngx_slab_max_size;
-static ngx_uint_t  ngx_slab_exact_size;
-static ngx_uint_t  ngx_slab_exact_shift;
+#إذا (NGX_DEBUG_MALLOC)
+
+#تعریف_کړه ngx_slab_junk(p, اندازه)     ngx_memset(p, 0xA5, اندازه)
+
+#وإلاإذا (NGX_HAVE_DEBUG_MALLOC)
+
+#تعریف_کړه ngx_slab_junk(p, اندازه)                                                \
+    إذا (ngx_debug_malloc)          ngx_memset(p, 0xA5, اندازه)
+
+#وإلا
+
+#تعریف_کړه ngx_slab_junk(p, اندازه)
+
+#د_که_پای
+
+ساكن ngx_slab_پاڼه_t *ngx_slab_alloc_پاڼې(ngx_slab_pool_t *pool,
+    ngx_uint_t پاڼې);
+ساكن فراغ ngx_slab_free_پاڼې(ngx_slab_pool_t *pool, ngx_slab_پاڼه_t *پاڼه,
+    ngx_uint_t پاڼې);
+ساكن فراغ ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level,
+    حرف *متن);
 
 
-void
-ngx_slab_sizes_init(void)
+ساكن ngx_uint_t  ngx_slab_max_اندازه;
+ساكن ngx_uint_t  ngx_slab_exact_اندازه;
+ساكن ngx_uint_t  ngx_slab_exact_ښويدنه;
+
+
+فراغ
+ngx_slab_sizes_init(فراغ)
 {
     ngx_uint_t  n;
 
-    ngx_slab_max_size = ngx_pagesize / 2;
-    ngx_slab_exact_size = ngx_pagesize / (8 * sizeof(uintptr_t));
-    for (n = ngx_slab_exact_size; n >>= 1; ngx_slab_exact_shift++) {
+    ngx_slab_max_اندازه = ngx_pagesize / 2;
+    ngx_slab_exact_اندازه = ngx_pagesize / (8 * حجم(uintptr_t));
+    لكل (n = ngx_slab_exact_اندازه; n >>= 1; ngx_slab_exact_ښويدنه++) {
         /* void */
     }
 }
 
 
-void
+فراغ
 ngx_slab_init(ngx_slab_pool_t *pool)
 {
     u_char           *p;
-    size_t            size;
+    اندازه_t            اندازه;
     ngx_int_t         m;
-    ngx_uint_t        i, n, pages;
-    ngx_slab_page_t  *slots, *page;
+    ngx_uint_t        i, n, پاڼې;
+    ngx_slab_پاڼه_t  *slots, *پاڼه;
 
-    pool->min_size = (size_t) 1 << pool->min_shift;
+    pool->min_اندازه = (اندازه_t) 1 << pool->min_ښويدنه;
 
     slots = ngx_slab_slots(pool);
 
     p = (u_char *) slots;
-    size = pool->end - p;
+    اندازه = pool->پای_ټکی - p;
 
-    ngx_slab_junk(p, size);
+    ngx_slab_junk(p, اندازه);
 
-    n = ngx_pagesize_shift - pool->min_shift;
+    n = ngx_pagesize_ښويدنه - pool->min_ښويدنه;
 
-    for (i = 0; i < n; i++) {
+    لكل (i = 0; i < n; i++) {
         /* only "next" is used in list head */
         slots[i].slab = 0;
-        slots[i].next = &slots[i];
+        slots[i].بل = &slots[i];
         slots[i].prev = 0;
     }
 
-    p += n * sizeof(ngx_slab_page_t);
+    p += n * حجم(ngx_slab_پاڼه_t);
 
     pool->stats = (ngx_slab_stat_t *) p;
-    ngx_memzero(pool->stats, n * sizeof(ngx_slab_stat_t));
+    ngx_memzero(pool->stats, n * حجم(ngx_slab_stat_t));
 
-    p += n * sizeof(ngx_slab_stat_t);
+    p += n * حجم(ngx_slab_stat_t);
 
-    size -= n * (sizeof(ngx_slab_page_t) + sizeof(ngx_slab_stat_t));
+    اندازه -= n * (حجم(ngx_slab_پاڼه_t) + حجم(ngx_slab_stat_t));
 
-    pages = (ngx_uint_t) (size / (ngx_pagesize + sizeof(ngx_slab_page_t)));
+    پاڼې = (ngx_uint_t) (اندازه / (ngx_pagesize + حجم(ngx_slab_پاڼه_t)));
 
-    pool->pages = (ngx_slab_page_t *) p;
-    ngx_memzero(pool->pages, pages * sizeof(ngx_slab_page_t));
+    pool->پاڼې = (ngx_slab_پاڼه_t *) p;
+    ngx_memzero(pool->پاڼې, پاڼې * حجم(ngx_slab_پاڼه_t));
 
-    page = pool->pages;
+    پاڼه = pool->پاڼې;
 
     /* only "next" is used in list head */
-    pool->free.slab = 0;
-    pool->free.next = page;
-    pool->free.prev = 0;
+    pool->حرر.slab = 0;
+    pool->حرر.بل = پاڼه;
+    pool->حرر.prev = 0;
 
-    page->slab = pages;
-    page->next = &pool->free;
-    page->prev = (uintptr_t) &pool->free;
+    پاڼه->slab = پاڼې;
+    پاڼه->بل = &pool->حرر;
+    پاڼه->prev = (uintptr_t) &pool->حرر;
 
-    pool->start = ngx_align_ptr(p + pages * sizeof(ngx_slab_page_t),
+    pool->پیل = ngx_align_ptr(p + پاڼې * حجم(ngx_slab_پاڼه_t),
                                 ngx_pagesize);
 
-    m = pages - (pool->end - pool->start) / ngx_pagesize;
-    if (m > 0) {
-        pages -= m;
-        page->slab = pages;
+    m = پاڼې - (pool->پای_ټکی - pool->پیل) / ngx_pagesize;
+    إذا (m > 0) {
+        پاڼې -= m;
+        پاڼه->slab = پاڼې;
     }
 
-    pool->last = pool->pages + pages;
-    pool->pfree = pages;
+    pool->وروستی = pool->پاڼې + پاڼې;
+    pool->pfree = پاڼې;
 
     pool->log_nomem = 1;
     pool->log_ctx = &pool->zero;
@@ -165,291 +165,291 @@ ngx_slab_init(ngx_slab_pool_t *pool)
 }
 
 
-void *
-ngx_slab_alloc(ngx_slab_pool_t *pool, size_t size)
+فراغ *
+ngx_slab_alloc(ngx_slab_pool_t *pool, اندازه_t اندازه)
 {
-    void  *p;
+    فراغ  *p;
 
-    ngx_shmtx_lock(&pool->mutex);
+    ngx_shmtx_قلف(&pool->mutex);
 
-    p = ngx_slab_alloc_locked(pool, size);
+    p = ngx_slab_alloc_locked(pool, اندازه);
 
     ngx_shmtx_unlock(&pool->mutex);
 
-    return p;
+    أرجع p;
 }
 
 
-void *
-ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
+فراغ *
+ngx_slab_alloc_locked(ngx_slab_pool_t *pool, اندازه_t اندازه)
 {
-    size_t            s;
-    uintptr_t         p, m, mask, *bitmap;
-    ngx_uint_t        i, n, slot, shift, map;
-    ngx_slab_page_t  *page, *prev, *slots;
+    اندازه_t            s;
+    uintptr_t         p, m, ماسک, *bitmap;
+    ngx_uint_t        i, n, خونه, ښويدنه, map;
+    ngx_slab_پاڼه_t  *پاڼه, *prev, *slots;
 
-    if (size > ngx_slab_max_size) {
+    إذا (اندازه > ngx_slab_max_اندازه) {
 
-        ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0,
-                       "slab alloc: %uz", size);
+        ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_دوره->لوګاریتم, 0,
+                       "slab alloc: %uz", اندازه);
 
-        page = ngx_slab_alloc_pages(pool, (size >> ngx_pagesize_shift)
-                                          + ((size % ngx_pagesize) ? 1 : 0));
-        if (page) {
-            p = ngx_slab_page_addr(pool, page);
+        پاڼه = ngx_slab_alloc_پاڼې(pool, (اندازه >> ngx_pagesize_ښويدنه)
+                                          + ((اندازه % ngx_pagesize) ? 1 : 0));
+        إذا (پاڼه) {
+            p = ngx_slab_پاڼه_addr(pool, پاڼه);
 
-        } else {
+        } وإلا {
             p = 0;
         }
 
-        goto done;
+        اذهب بشپړ;
     }
 
-    if (size > pool->min_size) {
-        shift = 1;
-        for (s = size - 1; s >>= 1; shift++) { /* void */ }
-        slot = shift - pool->min_shift;
+    إذا (اندازه > pool->min_اندازه) {
+        ښويدنه = 1;
+        لكل (s = اندازه - 1; s >>= 1; ښويدنه++) { /* void */ }
+        خونه = ښويدنه - pool->min_ښويدنه;
 
-    } else {
-        shift = pool->min_shift;
-        slot = 0;
+    } وإلا {
+        ښويدنه = pool->min_ښويدنه;
+        خونه = 0;
     }
 
-    pool->stats[slot].reqs++;
+    pool->stats[خونه].reqs++;
 
-    ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0,
-                   "slab alloc: %uz slot: %ui", size, slot);
+    ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, ngx_دوره->لوګاریتم, 0,
+                   "slab alloc: %uz slot: %ui", اندازه, خونه);
 
     slots = ngx_slab_slots(pool);
-    page = slots[slot].next;
+    پاڼه = slots[خونه].بل;
 
-    if (page->next != page) {
+    إذا (پاڼه->بل != پاڼه) {
 
-        if (shift < ngx_slab_exact_shift) {
+        إذا (ښويدنه < ngx_slab_exact_ښويدنه) {
 
-            bitmap = (uintptr_t *) ngx_slab_page_addr(pool, page);
+            bitmap = (uintptr_t *) ngx_slab_پاڼه_addr(pool, پاڼه);
 
-            map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
+            map = (ngx_pagesize >> ښويدنه) / (8 * حجم(uintptr_t));
 
-            for (n = 0; n < map; n++) {
+            لكل (n = 0; n < map; n++) {
 
-                if (bitmap[n] != NGX_SLAB_BUSY) {
+                إذا (bitmap[n] != NGX_SLAB_BUSY) {
 
-                    for (m = 1, i = 0; m; m <<= 1, i++) {
-                        if (bitmap[n] & m) {
-                            continue;
+                    لكل (m = 1, i = 0; m; m <<= 1, i++) {
+                        إذا (bitmap[n] & m) {
+                            استمر;
                         }
 
                         bitmap[n] |= m;
 
-                        i = (n * 8 * sizeof(uintptr_t) + i) << shift;
+                        i = (n * 8 * حجم(uintptr_t) + i) << ښويدنه;
 
                         p = (uintptr_t) bitmap + i;
 
-                        pool->stats[slot].used++;
+                        pool->stats[خونه].کارول_شوی++;
 
-                        if (bitmap[n] == NGX_SLAB_BUSY) {
-                            for (n = n + 1; n < map; n++) {
-                                if (bitmap[n] != NGX_SLAB_BUSY) {
-                                    goto done;
+                        إذا (bitmap[n] == NGX_SLAB_BUSY) {
+                            لكل (n = n + 1; n < map; n++) {
+                                إذا (bitmap[n] != NGX_SLAB_BUSY) {
+                                    اذهب بشپړ;
                                 }
                             }
 
-                            prev = ngx_slab_page_prev(page);
-                            prev->next = page->next;
-                            page->next->prev = page->prev;
+                            prev = ngx_slab_پاڼه_prev(پاڼه);
+                            prev->بل = پاڼه->بل;
+                            پاڼه->بل->prev = پاڼه->prev;
 
-                            page->next = NULL;
-                            page->prev = NGX_SLAB_SMALL;
+                            پاڼه->بل = عدم;
+                            پاڼه->prev = NGX_SLAB_SMALL;
                         }
 
-                        goto done;
+                        اذهب بشپړ;
                     }
                 }
             }
 
-        } else if (shift == ngx_slab_exact_shift) {
+        } وإلا إذا (ښويدنه == ngx_slab_exact_ښويدنه) {
 
-            for (m = 1, i = 0; m; m <<= 1, i++) {
-                if (page->slab & m) {
-                    continue;
+            لكل (m = 1, i = 0; m; m <<= 1, i++) {
+                إذا (پاڼه->slab & m) {
+                    استمر;
                 }
 
-                page->slab |= m;
+                پاڼه->slab |= m;
 
-                if (page->slab == NGX_SLAB_BUSY) {
-                    prev = ngx_slab_page_prev(page);
-                    prev->next = page->next;
-                    page->next->prev = page->prev;
+                إذا (پاڼه->slab == NGX_SLAB_BUSY) {
+                    prev = ngx_slab_پاڼه_prev(پاڼه);
+                    prev->بل = پاڼه->بل;
+                    پاڼه->بل->prev = پاڼه->prev;
 
-                    page->next = NULL;
-                    page->prev = NGX_SLAB_EXACT;
+                    پاڼه->بل = عدم;
+                    پاڼه->prev = NGX_SLAB_EXACT;
                 }
 
-                p = ngx_slab_page_addr(pool, page) + (i << shift);
+                p = ngx_slab_پاڼه_addr(pool, پاڼه) + (i << ښويدنه);
 
-                pool->stats[slot].used++;
+                pool->stats[خونه].کارول_شوی++;
 
-                goto done;
+                اذهب بشپړ;
             }
 
-        } else { /* shift > ngx_slab_exact_shift */
+        } وإلا { /* shift > ngx_slab_exact_shift */
 
-            mask = ((uintptr_t) 1 << (ngx_pagesize >> shift)) - 1;
-            mask <<= NGX_SLAB_MAP_SHIFT;
+            ماسک = ((uintptr_t) 1 << (ngx_pagesize >> ښويدنه)) - 1;
+            ماسک <<= NGX_SLAB_MAP_ښويدنه;
 
-            for (m = (uintptr_t) 1 << NGX_SLAB_MAP_SHIFT, i = 0;
-                 m & mask;
+            لكل (m = (uintptr_t) 1 << NGX_SLAB_MAP_ښويدنه, i = 0;
+                 m & ماسک;
                  m <<= 1, i++)
             {
-                if (page->slab & m) {
-                    continue;
+                إذا (پاڼه->slab & m) {
+                    استمر;
                 }
 
-                page->slab |= m;
+                پاڼه->slab |= m;
 
-                if ((page->slab & NGX_SLAB_MAP_MASK) == mask) {
-                    prev = ngx_slab_page_prev(page);
-                    prev->next = page->next;
-                    page->next->prev = page->prev;
+                إذا ((پاڼه->slab & NGX_SLAB_MAP_ماسک) == ماسک) {
+                    prev = ngx_slab_پاڼه_prev(پاڼه);
+                    prev->بل = پاڼه->بل;
+                    پاڼه->بل->prev = پاڼه->prev;
 
-                    page->next = NULL;
-                    page->prev = NGX_SLAB_BIG;
+                    پاڼه->بل = عدم;
+                    پاڼه->prev = NGX_SLAB_BIG;
                 }
 
-                p = ngx_slab_page_addr(pool, page) + (i << shift);
+                p = ngx_slab_پاڼه_addr(pool, پاڼه) + (i << ښويدنه);
 
-                pool->stats[slot].used++;
+                pool->stats[خونه].کارول_شوی++;
 
-                goto done;
+                اذهب بشپړ;
             }
         }
 
         ngx_slab_error(pool, NGX_LOG_ALERT, "ngx_slab_alloc(): page is busy");
-        ngx_debug_point();
+        ngx_debug_ټکی();
     }
 
-    page = ngx_slab_alloc_pages(pool, 1);
+    پاڼه = ngx_slab_alloc_پاڼې(pool, 1);
 
-    if (page) {
-        if (shift < ngx_slab_exact_shift) {
-            bitmap = (uintptr_t *) ngx_slab_page_addr(pool, page);
+    إذا (پاڼه) {
+        إذا (ښويدنه < ngx_slab_exact_ښويدنه) {
+            bitmap = (uintptr_t *) ngx_slab_پاڼه_addr(pool, پاڼه);
 
-            n = (ngx_pagesize >> shift) / ((1 << shift) * 8);
+            n = (ngx_pagesize >> ښويدنه) / ((1 << ښويدنه) * 8);
 
-            if (n == 0) {
+            إذا (n == 0) {
                 n = 1;
             }
 
             /* "n" elements for bitmap, plus one requested */
 
-            for (i = 0; i < (n + 1) / (8 * sizeof(uintptr_t)); i++) {
+            لكل (i = 0; i < (n + 1) / (8 * حجم(uintptr_t)); i++) {
                 bitmap[i] = NGX_SLAB_BUSY;
             }
 
-            m = ((uintptr_t) 1 << ((n + 1) % (8 * sizeof(uintptr_t)))) - 1;
+            m = ((uintptr_t) 1 << ((n + 1) % (8 * حجم(uintptr_t)))) - 1;
             bitmap[i] = m;
 
-            map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
+            map = (ngx_pagesize >> ښويدنه) / (8 * حجم(uintptr_t));
 
-            for (i = i + 1; i < map; i++) {
+            لكل (i = i + 1; i < map; i++) {
                 bitmap[i] = 0;
             }
 
-            page->slab = shift;
-            page->next = &slots[slot];
-            page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_SMALL;
+            پاڼه->slab = ښويدنه;
+            پاڼه->بل = &slots[خونه];
+            پاڼه->prev = (uintptr_t) &slots[خونه] | NGX_SLAB_SMALL;
 
-            slots[slot].next = page;
+            slots[خونه].بل = پاڼه;
 
-            pool->stats[slot].total += (ngx_pagesize >> shift) - n;
+            pool->stats[خونه].ټول += (ngx_pagesize >> ښويدنه) - n;
 
-            p = ngx_slab_page_addr(pool, page) + (n << shift);
+            p = ngx_slab_پاڼه_addr(pool, پاڼه) + (n << ښويدنه);
 
-            pool->stats[slot].used++;
+            pool->stats[خونه].کارول_شوی++;
 
-            goto done;
+            اذهب بشپړ;
 
-        } else if (shift == ngx_slab_exact_shift) {
+        } وإلا إذا (ښويدنه == ngx_slab_exact_ښويدنه) {
 
-            page->slab = 1;
-            page->next = &slots[slot];
-            page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_EXACT;
+            پاڼه->slab = 1;
+            پاڼه->بل = &slots[خونه];
+            پاڼه->prev = (uintptr_t) &slots[خونه] | NGX_SLAB_EXACT;
 
-            slots[slot].next = page;
+            slots[خونه].بل = پاڼه;
 
-            pool->stats[slot].total += 8 * sizeof(uintptr_t);
+            pool->stats[خونه].ټول += 8 * حجم(uintptr_t);
 
-            p = ngx_slab_page_addr(pool, page);
+            p = ngx_slab_پاڼه_addr(pool, پاڼه);
 
-            pool->stats[slot].used++;
+            pool->stats[خونه].کارول_شوی++;
 
-            goto done;
+            اذهب بشپړ;
 
-        } else { /* shift > ngx_slab_exact_shift */
+        } وإلا { /* shift > ngx_slab_exact_shift */
 
-            page->slab = ((uintptr_t) 1 << NGX_SLAB_MAP_SHIFT) | shift;
-            page->next = &slots[slot];
-            page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_BIG;
+            پاڼه->slab = ((uintptr_t) 1 << NGX_SLAB_MAP_ښويدنه) | ښويدنه;
+            پاڼه->بل = &slots[خونه];
+            پاڼه->prev = (uintptr_t) &slots[خونه] | NGX_SLAB_BIG;
 
-            slots[slot].next = page;
+            slots[خونه].بل = پاڼه;
 
-            pool->stats[slot].total += ngx_pagesize >> shift;
+            pool->stats[خونه].ټول += ngx_pagesize >> ښويدنه;
 
-            p = ngx_slab_page_addr(pool, page);
+            p = ngx_slab_پاڼه_addr(pool, پاڼه);
 
-            pool->stats[slot].used++;
+            pool->stats[خونه].کارول_شوی++;
 
-            goto done;
+            اذهب بشپړ;
         }
     }
 
     p = 0;
 
-    pool->stats[slot].fails++;
+    pool->stats[خونه].fails++;
 
-done:
+بشپړ:
 
-    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0,
-                   "slab alloc: %p", (void *) p);
+    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_دوره->لوګاریتم, 0,
+                   "slab alloc: %p", (فراغ *) p);
 
-    return (void *) p;
+    أرجع (فراغ *) p;
 }
 
 
-void *
-ngx_slab_calloc(ngx_slab_pool_t *pool, size_t size)
+فراغ *
+ngx_slab_calloc(ngx_slab_pool_t *pool, اندازه_t اندازه)
 {
-    void  *p;
+    فراغ  *p;
 
-    ngx_shmtx_lock(&pool->mutex);
+    ngx_shmtx_قلف(&pool->mutex);
 
-    p = ngx_slab_calloc_locked(pool, size);
+    p = ngx_slab_calloc_locked(pool, اندازه);
 
     ngx_shmtx_unlock(&pool->mutex);
 
-    return p;
+    أرجع p;
 }
 
 
-void *
-ngx_slab_calloc_locked(ngx_slab_pool_t *pool, size_t size)
+فراغ *
+ngx_slab_calloc_locked(ngx_slab_pool_t *pool, اندازه_t اندازه)
 {
-    void  *p;
+    فراغ  *p;
 
-    p = ngx_slab_alloc_locked(pool, size);
-    if (p) {
-        ngx_memzero(p, size);
+    p = ngx_slab_alloc_locked(pool, اندازه);
+    إذا (p) {
+        ngx_memzero(p, اندازه);
     }
 
-    return p;
+    أرجع p;
 }
 
 
-void
-ngx_slab_free(ngx_slab_pool_t *pool, void *p)
+فراغ
+ngx_slab_free(ngx_slab_pool_t *pool, فراغ *p)
 {
-    ngx_shmtx_lock(&pool->mutex);
+    ngx_shmtx_قلف(&pool->mutex);
 
     ngx_slab_free_locked(pool, p);
 
@@ -457,211 +457,211 @@ ngx_slab_free(ngx_slab_pool_t *pool, void *p)
 }
 
 
-void
-ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
+فراغ
+ngx_slab_free_locked(ngx_slab_pool_t *pool, فراغ *p)
 {
-    size_t            size;
+    اندازه_t            اندازه;
     uintptr_t         slab, m, *bitmap;
-    ngx_uint_t        i, n, type, slot, shift, map;
-    ngx_slab_page_t  *slots, *page;
+    ngx_uint_t        i, n, type, خونه, ښويدنه, map;
+    ngx_slab_پاڼه_t  *slots, *پاڼه;
 
-    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0, "slab free: %p", p);
+    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_دوره->لوګاریتم, 0, "slab free: %p", p);
 
-    if ((u_char *) p < pool->start || (u_char *) p > pool->end) {
+    إذا ((u_char *) p < pool->پیل || (u_char *) p > pool->پای_ټکی) {
         ngx_slab_error(pool, NGX_LOG_ALERT, "ngx_slab_free(): outside of pool");
-        goto fail;
+        اذهب fail;
     }
 
-    n = ((u_char *) p - pool->start) >> ngx_pagesize_shift;
-    page = &pool->pages[n];
-    slab = page->slab;
-    type = ngx_slab_page_type(page);
+    n = ((u_char *) p - pool->پیل) >> ngx_pagesize_ښويدنه;
+    پاڼه = &pool->پاڼې[n];
+    slab = پاڼه->slab;
+    type = ngx_slab_پاڼه_type(پاڼه);
 
-    switch (type) {
+    بدل (type) {
 
-    case NGX_SLAB_SMALL:
+    حالة NGX_SLAB_SMALL:
 
-        shift = slab & NGX_SLAB_SHIFT_MASK;
-        size = (size_t) 1 << shift;
+        ښويدنه = slab & NGX_SLAB_ښويدنه_ماسک;
+        اندازه = (اندازه_t) 1 << ښويدنه;
 
-        if ((uintptr_t) p & (size - 1)) {
-            goto wrong_chunk;
+        إذا ((uintptr_t) p & (اندازه - 1)) {
+            اذهب wrong_chunk;
         }
 
-        n = ((uintptr_t) p & (ngx_pagesize - 1)) >> shift;
-        m = (uintptr_t) 1 << (n % (8 * sizeof(uintptr_t)));
-        n /= 8 * sizeof(uintptr_t);
+        n = ((uintptr_t) p & (ngx_pagesize - 1)) >> ښويدنه;
+        m = (uintptr_t) 1 << (n % (8 * حجم(uintptr_t)));
+        n /= 8 * حجم(uintptr_t);
         bitmap = (uintptr_t *)
                              ((uintptr_t) p & ~((uintptr_t) ngx_pagesize - 1));
 
-        if (bitmap[n] & m) {
-            slot = shift - pool->min_shift;
+        إذا (bitmap[n] & m) {
+            خونه = ښويدنه - pool->min_ښويدنه;
 
-            if (page->next == NULL) {
+            إذا (پاڼه->بل == عدم) {
                 slots = ngx_slab_slots(pool);
 
-                page->next = slots[slot].next;
-                slots[slot].next = page;
+                پاڼه->بل = slots[خونه].بل;
+                slots[خونه].بل = پاڼه;
 
-                page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_SMALL;
-                page->next->prev = (uintptr_t) page | NGX_SLAB_SMALL;
+                پاڼه->prev = (uintptr_t) &slots[خونه] | NGX_SLAB_SMALL;
+                پاڼه->بل->prev = (uintptr_t) پاڼه | NGX_SLAB_SMALL;
             }
 
             bitmap[n] &= ~m;
 
-            n = (ngx_pagesize >> shift) / ((1 << shift) * 8);
+            n = (ngx_pagesize >> ښويدنه) / ((1 << ښويدنه) * 8);
 
-            if (n == 0) {
+            إذا (n == 0) {
                 n = 1;
             }
 
-            i = n / (8 * sizeof(uintptr_t));
-            m = ((uintptr_t) 1 << (n % (8 * sizeof(uintptr_t)))) - 1;
+            i = n / (8 * حجم(uintptr_t));
+            m = ((uintptr_t) 1 << (n % (8 * حجم(uintptr_t)))) - 1;
 
-            if (bitmap[i] & ~m) {
-                goto done;
+            إذا (bitmap[i] & ~m) {
+                اذهب بشپړ;
             }
 
-            map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
+            map = (ngx_pagesize >> ښويدنه) / (8 * حجم(uintptr_t));
 
-            for (i = i + 1; i < map; i++) {
-                if (bitmap[i]) {
-                    goto done;
+            لكل (i = i + 1; i < map; i++) {
+                إذا (bitmap[i]) {
+                    اذهب بشپړ;
                 }
             }
 
-            ngx_slab_free_pages(pool, page, 1);
+            ngx_slab_free_پاڼې(pool, پاڼه, 1);
 
-            pool->stats[slot].total -= (ngx_pagesize >> shift) - n;
+            pool->stats[خونه].ټول -= (ngx_pagesize >> ښويدنه) - n;
 
-            goto done;
+            اذهب بشپړ;
         }
 
-        goto chunk_already_free;
+        اذهب chunk_already_free;
 
-    case NGX_SLAB_EXACT:
+    حالة NGX_SLAB_EXACT:
 
         m = (uintptr_t) 1 <<
-                (((uintptr_t) p & (ngx_pagesize - 1)) >> ngx_slab_exact_shift);
-        size = ngx_slab_exact_size;
+                (((uintptr_t) p & (ngx_pagesize - 1)) >> ngx_slab_exact_ښويدنه);
+        اندازه = ngx_slab_exact_اندازه;
 
-        if ((uintptr_t) p & (size - 1)) {
-            goto wrong_chunk;
+        إذا ((uintptr_t) p & (اندازه - 1)) {
+            اذهب wrong_chunk;
         }
 
-        if (slab & m) {
-            slot = ngx_slab_exact_shift - pool->min_shift;
+        إذا (slab & m) {
+            خونه = ngx_slab_exact_ښويدنه - pool->min_ښويدنه;
 
-            if (slab == NGX_SLAB_BUSY) {
+            إذا (slab == NGX_SLAB_BUSY) {
                 slots = ngx_slab_slots(pool);
 
-                page->next = slots[slot].next;
-                slots[slot].next = page;
+                پاڼه->بل = slots[خونه].بل;
+                slots[خونه].بل = پاڼه;
 
-                page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_EXACT;
-                page->next->prev = (uintptr_t) page | NGX_SLAB_EXACT;
+                پاڼه->prev = (uintptr_t) &slots[خونه] | NGX_SLAB_EXACT;
+                پاڼه->بل->prev = (uintptr_t) پاڼه | NGX_SLAB_EXACT;
             }
 
-            page->slab &= ~m;
+            پاڼه->slab &= ~m;
 
-            if (page->slab) {
-                goto done;
+            إذا (پاڼه->slab) {
+                اذهب بشپړ;
             }
 
-            ngx_slab_free_pages(pool, page, 1);
+            ngx_slab_free_پاڼې(pool, پاڼه, 1);
 
-            pool->stats[slot].total -= 8 * sizeof(uintptr_t);
+            pool->stats[خونه].ټول -= 8 * حجم(uintptr_t);
 
-            goto done;
+            اذهب بشپړ;
         }
 
-        goto chunk_already_free;
+        اذهب chunk_already_free;
 
-    case NGX_SLAB_BIG:
+    حالة NGX_SLAB_BIG:
 
-        shift = slab & NGX_SLAB_SHIFT_MASK;
-        size = (size_t) 1 << shift;
+        ښويدنه = slab & NGX_SLAB_ښويدنه_ماسک;
+        اندازه = (اندازه_t) 1 << ښويدنه;
 
-        if ((uintptr_t) p & (size - 1)) {
-            goto wrong_chunk;
+        إذا ((uintptr_t) p & (اندازه - 1)) {
+            اذهب wrong_chunk;
         }
 
-        m = (uintptr_t) 1 << ((((uintptr_t) p & (ngx_pagesize - 1)) >> shift)
-                              + NGX_SLAB_MAP_SHIFT);
+        m = (uintptr_t) 1 << ((((uintptr_t) p & (ngx_pagesize - 1)) >> ښويدنه)
+                              + NGX_SLAB_MAP_ښويدنه);
 
-        if (slab & m) {
-            slot = shift - pool->min_shift;
+        إذا (slab & m) {
+            خونه = ښويدنه - pool->min_ښويدنه;
 
-            if (page->next == NULL) {
+            إذا (پاڼه->بل == عدم) {
                 slots = ngx_slab_slots(pool);
 
-                page->next = slots[slot].next;
-                slots[slot].next = page;
+                پاڼه->بل = slots[خونه].بل;
+                slots[خونه].بل = پاڼه;
 
-                page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_BIG;
-                page->next->prev = (uintptr_t) page | NGX_SLAB_BIG;
+                پاڼه->prev = (uintptr_t) &slots[خونه] | NGX_SLAB_BIG;
+                پاڼه->بل->prev = (uintptr_t) پاڼه | NGX_SLAB_BIG;
             }
 
-            page->slab &= ~m;
+            پاڼه->slab &= ~m;
 
-            if (page->slab & NGX_SLAB_MAP_MASK) {
-                goto done;
+            إذا (پاڼه->slab & NGX_SLAB_MAP_ماسک) {
+                اذهب بشپړ;
             }
 
-            ngx_slab_free_pages(pool, page, 1);
+            ngx_slab_free_پاڼې(pool, پاڼه, 1);
 
-            pool->stats[slot].total -= ngx_pagesize >> shift;
+            pool->stats[خونه].ټول -= ngx_pagesize >> ښويدنه;
 
-            goto done;
+            اذهب بشپړ;
         }
 
-        goto chunk_already_free;
+        اذهب chunk_already_free;
 
-    case NGX_SLAB_PAGE:
+    حالة NGX_SLAB_پاڼه:
 
-        if ((uintptr_t) p & (ngx_pagesize - 1)) {
-            goto wrong_chunk;
+        إذا ((uintptr_t) p & (ngx_pagesize - 1)) {
+            اذهب wrong_chunk;
         }
 
-        if (!(slab & NGX_SLAB_PAGE_START)) {
+        إذا (!(slab & NGX_SLAB_پاڼه_پیل)) {
             ngx_slab_error(pool, NGX_LOG_ALERT,
                            "ngx_slab_free(): page is already free");
-            goto fail;
+            اذهب fail;
         }
 
-        if (slab == NGX_SLAB_PAGE_BUSY) {
+        إذا (slab == NGX_SLAB_پاڼه_BUSY) {
             ngx_slab_error(pool, NGX_LOG_ALERT,
                            "ngx_slab_free(): pointer to wrong page");
-            goto fail;
+            اذهب fail;
         }
 
-        size = slab & ~NGX_SLAB_PAGE_START;
+        اندازه = slab & ~NGX_SLAB_پاڼه_پیل;
 
-        ngx_slab_free_pages(pool, page, size);
+        ngx_slab_free_پاڼې(pool, پاڼه, اندازه);
 
-        ngx_slab_junk(p, size << ngx_pagesize_shift);
+        ngx_slab_junk(p, اندازه << ngx_pagesize_ښويدنه);
 
-        return;
+        أرجع;
     }
 
     /* not reached */
 
-    return;
+    أرجع;
 
-done:
+بشپړ:
 
-    pool->stats[slot].used--;
+    pool->stats[خونه].کارول_شوی--;
 
-    ngx_slab_junk(p, size);
+    ngx_slab_junk(p, اندازه);
 
-    return;
+    أرجع;
 
 wrong_chunk:
 
     ngx_slab_error(pool, NGX_LOG_ALERT,
                    "ngx_slab_free(): pointer to wrong chunk");
 
-    goto fail;
+    اذهب fail;
 
 chunk_already_free:
 
@@ -670,148 +670,148 @@ chunk_already_free:
 
 fail:
 
-    return;
+    أرجع;
 }
 
 
-static ngx_slab_page_t *
-ngx_slab_alloc_pages(ngx_slab_pool_t *pool, ngx_uint_t pages)
+ساكن ngx_slab_پاڼه_t *
+ngx_slab_alloc_پاڼې(ngx_slab_pool_t *pool, ngx_uint_t پاڼې)
 {
-    ngx_slab_page_t  *page, *p;
+    ngx_slab_پاڼه_t  *پاڼه, *p;
 
-    for (page = pool->free.next; page != &pool->free; page = page->next) {
+    لكل (پاڼه = pool->حرر.بل; پاڼه != &pool->حرر; پاڼه = پاڼه->بل) {
 
-        if (page->slab >= pages) {
+        إذا (پاڼه->slab >= پاڼې) {
 
-            if (page->slab > pages) {
-                page[page->slab - 1].prev = (uintptr_t) &page[pages];
+            إذا (پاڼه->slab > پاڼې) {
+                پاڼه[پاڼه->slab - 1].prev = (uintptr_t) &پاڼه[پاڼې];
 
-                page[pages].slab = page->slab - pages;
-                page[pages].next = page->next;
-                page[pages].prev = page->prev;
+                پاڼه[پاڼې].slab = پاڼه->slab - پاڼې;
+                پاڼه[پاڼې].بل = پاڼه->بل;
+                پاڼه[پاڼې].prev = پاڼه->prev;
 
-                p = (ngx_slab_page_t *) page->prev;
-                p->next = &page[pages];
-                page->next->prev = (uintptr_t) &page[pages];
+                p = (ngx_slab_پاڼه_t *) پاڼه->prev;
+                p->بل = &پاڼه[پاڼې];
+                پاڼه->بل->prev = (uintptr_t) &پاڼه[پاڼې];
 
-            } else {
-                p = (ngx_slab_page_t *) page->prev;
-                p->next = page->next;
-                page->next->prev = page->prev;
+            } وإلا {
+                p = (ngx_slab_پاڼه_t *) پاڼه->prev;
+                p->بل = پاڼه->بل;
+                پاڼه->بل->prev = پاڼه->prev;
             }
 
-            page->slab = pages | NGX_SLAB_PAGE_START;
-            page->next = NULL;
-            page->prev = NGX_SLAB_PAGE;
+            پاڼه->slab = پاڼې | NGX_SLAB_پاڼه_پیل;
+            پاڼه->بل = عدم;
+            پاڼه->prev = NGX_SLAB_پاڼه;
 
-            pool->pfree -= pages;
+            pool->pfree -= پاڼې;
 
-            if (--pages == 0) {
-                return page;
+            إذا (--پاڼې == 0) {
+                أرجع پاڼه;
             }
 
-            for (p = page + 1; pages; pages--) {
-                p->slab = NGX_SLAB_PAGE_BUSY;
-                p->next = NULL;
-                p->prev = NGX_SLAB_PAGE;
+            لكل (p = پاڼه + 1; پاڼې; پاڼې--) {
+                p->slab = NGX_SLAB_پاڼه_BUSY;
+                p->بل = عدم;
+                p->prev = NGX_SLAB_پاڼه;
                 p++;
             }
 
-            return page;
+            أرجع پاڼه;
         }
     }
 
-    if (pool->log_nomem) {
+    إذا (pool->log_nomem) {
         ngx_slab_error(pool, NGX_LOG_CRIT,
                        "ngx_slab_alloc() failed: no memory");
     }
 
-    return NULL;
+    أرجع عدم;
 }
 
 
-static void
-ngx_slab_free_pages(ngx_slab_pool_t *pool, ngx_slab_page_t *page,
-    ngx_uint_t pages)
+ساكن فراغ
+ngx_slab_free_پاڼې(ngx_slab_pool_t *pool, ngx_slab_پاڼه_t *پاڼه,
+    ngx_uint_t پاڼې)
 {
-    ngx_slab_page_t  *prev, *join;
+    ngx_slab_پاڼه_t  *prev, *join;
 
-    pool->pfree += pages;
+    pool->pfree += پاڼې;
 
-    page->slab = pages--;
+    پاڼه->slab = پاڼې--;
 
-    if (pages) {
-        ngx_memzero(&page[1], pages * sizeof(ngx_slab_page_t));
+    إذا (پاڼې) {
+        ngx_memzero(&پاڼه[1], پاڼې * حجم(ngx_slab_پاڼه_t));
     }
 
-    if (page->next) {
-        prev = ngx_slab_page_prev(page);
-        prev->next = page->next;
-        page->next->prev = page->prev;
+    إذا (پاڼه->بل) {
+        prev = ngx_slab_پاڼه_prev(پاڼه);
+        prev->بل = پاڼه->بل;
+        پاڼه->بل->prev = پاڼه->prev;
     }
 
-    join = page + page->slab;
+    join = پاڼه + پاڼه->slab;
 
-    if (join < pool->last) {
+    إذا (join < pool->وروستی) {
 
-        if (ngx_slab_page_type(join) == NGX_SLAB_PAGE) {
+        إذا (ngx_slab_پاڼه_type(join) == NGX_SLAB_پاڼه) {
 
-            if (join->next != NULL) {
-                pages += join->slab;
-                page->slab += join->slab;
+            إذا (join->بل != عدم) {
+                پاڼې += join->slab;
+                پاڼه->slab += join->slab;
 
-                prev = ngx_slab_page_prev(join);
-                prev->next = join->next;
-                join->next->prev = join->prev;
+                prev = ngx_slab_پاڼه_prev(join);
+                prev->بل = join->بل;
+                join->بل->prev = join->prev;
 
-                join->slab = NGX_SLAB_PAGE_FREE;
-                join->next = NULL;
-                join->prev = NGX_SLAB_PAGE;
+                join->slab = NGX_SLAB_پاڼه_FREE;
+                join->بل = عدم;
+                join->prev = NGX_SLAB_پاڼه;
             }
         }
     }
 
-    if (page > pool->pages) {
-        join = page - 1;
+    إذا (پاڼه > pool->پاڼې) {
+        join = پاڼه - 1;
 
-        if (ngx_slab_page_type(join) == NGX_SLAB_PAGE) {
+        إذا (ngx_slab_پاڼه_type(join) == NGX_SLAB_پاڼه) {
 
-            if (join->slab == NGX_SLAB_PAGE_FREE) {
-                join = ngx_slab_page_prev(join);
+            إذا (join->slab == NGX_SLAB_پاڼه_FREE) {
+                join = ngx_slab_پاڼه_prev(join);
             }
 
-            if (join->next != NULL) {
-                pages += join->slab;
-                join->slab += page->slab;
+            إذا (join->بل != عدم) {
+                پاڼې += join->slab;
+                join->slab += پاڼه->slab;
 
-                prev = ngx_slab_page_prev(join);
-                prev->next = join->next;
-                join->next->prev = join->prev;
+                prev = ngx_slab_پاڼه_prev(join);
+                prev->بل = join->بل;
+                join->بل->prev = join->prev;
 
-                page->slab = NGX_SLAB_PAGE_FREE;
-                page->next = NULL;
-                page->prev = NGX_SLAB_PAGE;
+                پاڼه->slab = NGX_SLAB_پاڼه_FREE;
+                پاڼه->بل = عدم;
+                پاڼه->prev = NGX_SLAB_پاڼه;
 
-                page = join;
+                پاڼه = join;
             }
         }
     }
 
-    if (pages) {
-        page[pages].prev = (uintptr_t) page;
+    إذا (پاڼې) {
+        پاڼه[پاڼې].prev = (uintptr_t) پاڼه;
     }
 
-    page->prev = (uintptr_t) &pool->free;
-    page->next = pool->free.next;
+    پاڼه->prev = (uintptr_t) &pool->حرر;
+    پاڼه->بل = pool->حرر.بل;
 
-    page->next->prev = (uintptr_t) page;
+    پاڼه->بل->prev = (uintptr_t) پاڼه;
 
-    pool->free.next = page;
+    pool->حرر.بل = پاڼه;
 }
 
 
-static void
-ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level, char *text)
+ساكن فراغ
+ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level, حرف *متن)
 {
-    ngx_log_error(level, ngx_cycle->log, 0, "%s%s", text, pool->log_ctx);
+    ngx_log_error(level, ngx_دوره->لوګاریتم, 0, "%s%s", متن, pool->log_ctx);
 }

@@ -5,17 +5,17 @@
  */
 
 
-#ifndef _NGX_PARSE_H_INCLUDED_
-#define _NGX_PARSE_H_INCLUDED_
+#که_نه_تعریف_شوی _NGX_PARSE_H_INCLUDED_
+#تعریف_کړه _NGX_PARSE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-ssize_t ngx_parse_size(ngx_str_t *line);
-off_t ngx_parse_offset(ngx_str_t *line);
-ngx_int_t ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec);
+ssize_t ngx_parse_اندازه(ngx_str_t *کرښه);
+off_t ngx_parse_دننه_واټن(ngx_str_t *کرښه);
+ngx_int_t ngx_parse_وخت(ngx_str_t *کرښه, ngx_uint_t is_sec);
 
 
-#endif /* _NGX_PARSE_H_INCLUDED_ */
+#د_که_پای /* _NGX_PARSE_H_INCLUDED_ */
