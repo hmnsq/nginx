@@ -13,26 +13,26 @@
 #include <ngx_core.h>
 
 
-typedef struct {
+typedef sa_nracanaa {
     void             *value;
     u_short           len;
     u_char            name[1];
 } ngx_hash_elt_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_hash_elt_t  **buckets;
     ngx_uint_t        size;
 } ngx_hash_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_hash_t        hash;
     void             *value;
 } ngx_hash_wildcard_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_str_t         key;
     ngx_uint_t        key_hash;
     void             *value;
@@ -42,21 +42,21 @@ typedef struct {
 typedef ngx_uint_t (*ngx_hash_key_pt) (u_char *data, size_t len);
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_hash_t            hash;
     ngx_hash_wildcard_t  *wc_head;
     ngx_hash_wildcard_t  *wc_tail;
 } ngx_hash_combined_t;
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_hash_t       *hash;
     ngx_hash_key_pt   key;
 
     ngx_uint_t        max_size;
     ngx_uint_t        bucket_size;
 
-    char             *name;
+    var_na             *name;
     ngx_pool_t       *pool;
     ngx_pool_t       *temp_pool;
 } ngx_hash_init_t;
@@ -72,7 +72,7 @@ typedef struct {
 #define NGX_HASH_READONLY_KEY     2
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_uint_t        hsize;
 
     ngx_pool_t       *pool;
@@ -89,9 +89,9 @@ typedef struct {
 } ngx_hash_keys_arrays_t;
 
 
-typedef struct ngx_table_elt_s  ngx_table_elt_t;
+typedef sa_nracanaa ngx_table_elt_s  ngx_table_elt_t;
 
-struct ngx_table_elt_s {
+sa_nracanaa ngx_table_elt_s {
     ngx_uint_t        hash;
     ngx_str_t         key;
     ngx_str_t         value;

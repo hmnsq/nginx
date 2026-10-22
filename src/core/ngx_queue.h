@@ -13,9 +13,9 @@
 #define _NGX_QUEUE_H_INCLUDED_
 
 
-typedef struct ngx_queue_s  ngx_queue_t;
+typedef sa_nracanaa ngx_queue_s  ngx_queue_t;
 
-struct ngx_queue_s {
+sa_nracanaa ngx_queue_s {
     ngx_queue_t  *prev;
     ngx_queue_t  *next;
 };
@@ -70,7 +70,7 @@ struct ngx_queue_s {
     (q)->prev
 
 
-#if (NGX_DEBUG)
+#ᬬᬾᬦ᭄ (NGX_DEBUG)
 
 #define ngx_queue_remove(x)                                                   \
     (x)->next->prev = (x)->prev;                                              \
@@ -78,7 +78,7 @@ struct ngx_queue_s {
     (x)->prev = NULL;                                                         \
     (x)->next = NULL
 
-#else
+#ᬮᬶᬬ
 
 #define ngx_queue_remove(x)                                                   \
     (x)->next->prev = (x)->prev;                                              \

@@ -26,7 +26,7 @@
         v0 += v3; v3 = ngx_siphash_rotl(v3, 21); v3 ^= v0;                    \
         v2 += v1; v1 = ngx_siphash_rotl(v1, 17); v1 ^= v2;                    \
         v2 = ngx_siphash_rotl(v2, 32);                                        \
-    } while (0)
+    } ᬲᭂᬤᭂᬮ (0)
 
 
 uint64_t
@@ -55,29 +55,29 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
     m = (uint64_t) len << 56;
 
     switch (remainder) {
-    case 7:
+    pak_sa 7:
         m |= (uint64_t) data[6] << 48;
         /* fall through */
-    case 6:
+    pak_sa 6:
         m |= (uint64_t) data[5] << 40;
         /* fall through */
-    case 5:
+    pak_sa 5:
         m |= (uint64_t) data[4] << 32;
         /* fall through */
-    case 4:
+    pak_sa 4:
         m |= (uint64_t) data[3] << 24;
         /* fall through */
-    case 3:
+    pak_sa 3:
         m |= (uint64_t) data[2] << 16;
         /* fall through */
-    case 2:
+    pak_sa 2:
         m |= (uint64_t) data[1] << 8;
         /* fall through */
-    case 1:
+    pak_sa 1:
         m |= (uint64_t) data[0];
-        break;
-    case 0:
-        break;
+        bha_nga;
+    pak_sa 0:
+        bha_nga;
     }
 
     v3 ^= m;
@@ -91,5 +91,5 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
     ngx_sipround;
     ngx_sipround;
 
-    return v0 ^ v1 ^ v2 ^ v3;
+    ᬯᬮᬶ v0 ^ v1 ^ v2 ^ v3;
 }

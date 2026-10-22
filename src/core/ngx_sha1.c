@@ -37,12 +37,12 @@ ngx_sha1_update(ngx_sha1_t *ctx, const void *data, size_t size)
     used = (size_t) (ctx->bytes & 0x3f);
     ctx->bytes += size;
 
-    if (used) {
+    ᬬᬾᬦ᭄ (used) {
         free = 64 - used;
 
-        if (size < free) {
+        ᬬᬾᬦ᭄ (size < free) {
             ngx_memcpy(&ctx->buffer[used], data, size);
-            return;
+            ᬯᬮᬶ;
         }
 
         ngx_memcpy(&ctx->buffer[used], data, free);
@@ -51,7 +51,7 @@ ngx_sha1_update(ngx_sha1_t *ctx, const void *data, size_t size)
         (void) ngx_sha1_body(ctx, ctx->buffer, 64);
     }
 
-    if (size >= 64) {
+    ᬬᬾᬦ᭄ (size >= 64) {
         data = ngx_sha1_body(ctx, data, size & ~(size_t) 0x3f);
         size &= 0x3f;
     }
@@ -71,7 +71,7 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
 
     free = 64 - used;
 
-    if (free < 8) {
+    ᬬᬾᬦ᭄ (free < 8) {
         ngx_memzero(&ctx->buffer[used], free);
         (void) ngx_sha1_body(ctx, ctx->buffer, 64);
         used = 0;
@@ -113,7 +113,7 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
     result[18] = (u_char) (ctx->e >> 8);
     result[19] = (u_char) ctx->e;
 
-    ngx_memzero(ctx, sizeof(*ctx));
+    ngx_memzero(ctx, parimaa_na(*ctx));
 }
 
 
@@ -282,7 +282,7 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
 
         p += 64;
 
-    } while (size -= 64);
+    } ᬲᭂᬤᭂᬮ (size -= 64);
 
     ctx->a = a;
     ctx->b = b;
@@ -290,5 +290,5 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
     ctx->d = d;
     ctx->e = e;
 
-    return p;
+    ᬯᬮᬶ p;
 }

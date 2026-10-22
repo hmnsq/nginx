@@ -13,26 +13,26 @@
 #include <ngx_core.h>
 
 
-typedef struct ngx_listening_s  ngx_listening_t;
+typedef sa_nracanaa ngx_listening_s  ngx_listening_t;
 
-struct ngx_listening_s {
+sa_nracanaa ngx_listening_s {
     ngx_socket_t        fd;
 
-    struct sockaddr    *sockaddr;
+    sa_nracanaa sockaddr    *sockaddr;
     socklen_t           socklen;    /* size of sockaddr */
     size_t              addr_text_max_len;
     ngx_str_t           addr_text;
 
-    int                 type;
-    int                 protocol;
+    puur_naa_nka                 type;
+    puur_naa_nka                 protocol;
 
-    int                 backlog;
-    int                 rcvbuf;
-    int                 sndbuf;
-#if (NGX_HAVE_KEEPALIVE_TUNABLE)
-    int                 keepidle;
-    int                 keepintvl;
-    int                 keepcnt;
+    puur_naa_nka                 backlog;
+    puur_naa_nka                 rcvbuf;
+    puur_naa_nka                 sndbuf;
+#ᬬᬾᬦ᭄ (NGX_HAVE_KEEPALIVE_TUNABLE)
+    puur_naa_nka                 keepidle;
+    puur_naa_nka                 keepintvl;
+    puur_naa_nka                 keepcnt;
 #endif
 
     /* handler of accepted connection */
@@ -66,7 +66,7 @@ struct ngx_listening_s {
     unsigned            addr_ntop:1;
     unsigned            wildcard:1;
 
-#if (NGX_HAVE_INET6)
+#ᬬᬾᬦ᭄ (NGX_HAVE_INET6)
     unsigned            ipv6only:1;
 #endif
     unsigned            reuseport:1;
@@ -79,21 +79,21 @@ struct ngx_listening_s {
     unsigned            deferred_accept:1;
     unsigned            delete_deferred:1;
     unsigned            add_deferred:1;
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
-    char               *accept_filter;
+#ᬬᬾᬦ᭄ (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+    var_na               *accept_filter;
 #endif
-#if (NGX_HAVE_SETFIB)
-    int                 setfib;
+#ᬬᬾᬦ᭄ (NGX_HAVE_SETFIB)
+    puur_naa_nka                 setfib;
 #endif
 
-#if (NGX_HAVE_TCP_FASTOPEN)
-    int                 fastopen;
+#ᬬᬾᬦ᭄ (NGX_HAVE_TCP_FASTOPEN)
+    puur_naa_nka                 fastopen;
 #endif
 
 };
 
 
-typedef enum {
+typedef ga_nanaa {
     NGX_ERROR_ALERT = 0,
     NGX_ERROR_ERR,
     NGX_ERROR_INFO,
@@ -103,14 +103,14 @@ typedef enum {
 } ngx_connection_log_error_e;
 
 
-typedef enum {
+typedef ga_nanaa {
     NGX_TCP_NODELAY_UNSET = 0,
     NGX_TCP_NODELAY_SET,
     NGX_TCP_NODELAY_DISABLED
 } ngx_connection_tcp_nodelay_e;
 
 
-typedef enum {
+typedef ga_nanaa {
     NGX_TCP_NOPUSH_UNSET = 0,
     NGX_TCP_NOPUSH_SET,
     NGX_TCP_NOPUSH_DISABLED
@@ -122,7 +122,7 @@ typedef enum {
 #define NGX_HTTP_V2_BUFFERED   0x02
 
 
-struct ngx_connection_s {
+sa_nracanaa ngx_connection_s {
     void               *data;
     ngx_event_t        *read;
     ngx_event_t        *write;
@@ -142,25 +142,25 @@ struct ngx_connection_s {
 
     ngx_pool_t         *pool;
 
-    int                 type;
+    puur_naa_nka                 type;
 
-    struct sockaddr    *sockaddr;
+    sa_nracanaa sockaddr    *sockaddr;
     socklen_t           socklen;
     ngx_str_t           addr_text;
 
     ngx_proxy_protocol_t  *proxy_protocol;
 
-#if (NGX_QUIC || NGX_COMPAT)
+#ᬬᬾᬦ᭄ (NGX_QUIC || NGX_COMPAT)
     ngx_quic_stream_t     *quic;
 #endif
 
-#if (NGX_SSL || NGX_COMPAT)
+#ᬬᬾᬦ᭄ (NGX_SSL || NGX_COMPAT)
     ngx_ssl_connection_t  *ssl;
 #endif
 
     ngx_udp_connection_t  *udp;
 
-    struct sockaddr    *local_sockaddr;
+    sa_nracanaa sockaddr    *local_sockaddr;
     socklen_t           local_socklen;
 
     ngx_buf_t          *buffer;
@@ -194,13 +194,13 @@ struct ngx_connection_s {
     unsigned            need_last_buf:1;
     unsigned            need_flush_buf:1;
 
-#if (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
+#ᬬᬾᬦ᭄ (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
     unsigned            busy_count:2;
 #endif
 
     unsigned            ktls_recv:1;
 
-#if (NGX_THREADS || NGX_COMPAT)
+#ᬬᬾᬦ᭄ (NGX_THREADS || NGX_COMPAT)
     ngx_thread_task_t  *sendfile_task;
 #endif
 };
@@ -212,12 +212,12 @@ struct ngx_connection_s {
     c->log->next = l->next;                                                  \
     c->log->writer = l->writer;                                              \
     c->log->wdata = l->wdata;                                                \
-    if (!(c->log->log_level & NGX_LOG_DEBUG_CONNECTION)) {                   \
+    ᬬᬾᬦ᭄ (!(c->log->log_level & NGX_LOG_DEBUG_CONNECTION)) {                   \
         c->log->log_level = l->log_level;                                    \
     }
 
 
-ngx_listening_t *ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
+ngx_listening_t *ngx_create_listening(ngx_conf_t *cf, sa_nracanaa sockaddr *sockaddr,
     socklen_t socklen);
 ngx_int_t ngx_clone_listening(ngx_cycle_t *cycle, ngx_listening_t *ls);
 ngx_int_t ngx_set_inherited_sockets(ngx_cycle_t *cycle);
@@ -229,7 +229,7 @@ void ngx_close_idle_connections(ngx_cycle_t *cycle);
 ngx_int_t ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
     ngx_uint_t port);
 ngx_int_t ngx_tcp_nodelay(ngx_connection_t *c);
-ngx_int_t ngx_connection_error(ngx_connection_t *c, ngx_err_t err, char *text);
+ngx_int_t ngx_connection_error(ngx_connection_t *c, ngx_err_t err, var_na *text);
 
 ngx_connection_t *ngx_get_connection(ngx_socket_t s, ngx_log_t *log);
 void ngx_free_connection(ngx_connection_t *c);
