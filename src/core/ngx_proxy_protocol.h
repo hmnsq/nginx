@@ -17,7 +17,7 @@
 #define NGX_PROXY_PROTOCOL_MAX_HEADER     4096
 
 
-struct ngx_proxy_protocol_s {
+sa_nracanaa ngx_proxy_protocol_s {
     ngx_str_t           src_addr;
     ngx_str_t           dst_addr;
     in_port_t           src_port;

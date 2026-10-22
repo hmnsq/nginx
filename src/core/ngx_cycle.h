@@ -22,11 +22,11 @@
 #define NGX_DEBUG_POINTS_ABORT  2
 
 
-typedef struct ngx_shm_zone_s  ngx_shm_zone_t;
+typedef sa_nracanaa ngx_shm_zone_s  ngx_shm_zone_t;
 
 typedef ngx_int_t (*ngx_shm_zone_init_pt) (ngx_shm_zone_t *zone, void *data);
 
-struct ngx_shm_zone_s {
+sa_nracanaa ngx_shm_zone_s {
     void                     *data;
     ngx_shm_t                 shm;
     ngx_shm_zone_init_pt      init;
@@ -36,7 +36,7 @@ struct ngx_shm_zone_s {
 };
 
 
-struct ngx_cycle_s {
+sa_nracanaa ngx_cycle_s {
     void                  ****conf_ctx;
     ngx_pool_t               *pool;
 
@@ -86,7 +86,7 @@ struct ngx_cycle_s {
 };
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_flag_t                daemon;
     ngx_flag_t                master;
 
@@ -99,13 +99,13 @@ typedef struct {
     ngx_int_t                 rlimit_nofile;
     off_t                     rlimit_core;
 
-    int                       priority;
+    ཧྲིལ                       priority;
 
     ngx_uint_t                cpu_affinity_auto;
     ngx_uint_t                cpu_affinity_n;
     ngx_cpuset_t             *cpu_affinity;
 
-    char                     *username;
+    var_na                     *username;
     ngx_uid_t                 user;
     ngx_gid_t                 group;
 
@@ -116,7 +116,7 @@ typedef struct {
     ngx_str_t                 oldpid;
 
     ngx_array_t               env;
-    char                    **environment;
+    var_na                    **environment;
 
     ngx_uint_t                transparent;  /* unsigned  transparent:1; */
 } ngx_core_conf_t;
@@ -128,17 +128,17 @@ typedef struct {
 ngx_cycle_t *ngx_init_cycle(ngx_cycle_t *old_cycle);
 ngx_int_t ngx_create_pidfile(ngx_str_t *name, ngx_log_t *log);
 void ngx_delete_pidfile(ngx_cycle_t *cycle);
-ngx_int_t ngx_signal_process(ngx_cycle_t *cycle, char *sig);
+ngx_int_t ngx_signal_process(ngx_cycle_t *cycle, var_na *sig);
 void ngx_reopen_files(ngx_cycle_t *cycle, ngx_uid_t user);
-char **ngx_set_environment(ngx_cycle_t *cycle, ngx_uint_t *last);
-ngx_pid_t ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv);
+var_na **ngx_set_environment(ngx_cycle_t *cycle, ngx_uint_t *last);
+ngx_pid_t ngx_exec_new_binary(ngx_cycle_t *cycle, var_na *const *argv);
 ngx_cpuset_t *ngx_get_cpu_affinity(ngx_uint_t n);
 ngx_shm_zone_t *ngx_shared_memory_add(ngx_conf_t *cf, ngx_str_t *name,
     size_t size, void *tag);
 void ngx_set_shutdown_timer(ngx_cycle_t *cycle);
 
 
-extern volatile ngx_cycle_t  *ngx_cycle;
+extern ca_ncala ngx_cycle_t  *ngx_cycle;
 extern ngx_array_t            ngx_old_cycles;
 extern ngx_module_t           ngx_core_module;
 extern ngx_uint_t             ngx_test_config;
