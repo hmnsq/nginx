@@ -12,7 +12,7 @@ typedef ssize_t   (*ngx_json_length_pt)(ngx_data_item_t *item);
 typedef u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_data_item_t *item);
 
 
-typedef struct {
+typedef sa_nracanaa {
     ngx_json_length_pt        length;
     ngx_json_encode_pt        encode;
 } ngx_json_encode_t;
@@ -68,18 +68,18 @@ ngx_json_render(ngx_pool_t *pool, ngx_data_item_t *item)
     ngx_buf_t  *buf;
 
     length = ngx_json_encode[item->type].length(item);
-    if (length == (size_t) NGX_ERROR) {
-        return NULL;
+    ᰀᰧ (length == (size_t) NGX_ERROR) {
+        ᰀᰧᰌ NULL;
     }
 
     buf = ngx_create_temp_buf(pool, length);
-    if (buf == NULL) {
-        return NULL;
+    ᰀᰧ (buf == NULL) {
+        ᰀᰧᰌ NULL;
     }
 
     buf->last = ngx_json_encode[item->type].encode(buf->last, item);
 
-    return buf;
+    ᰀᰧᰌ buf;
 }
 
 
@@ -91,57 +91,57 @@ ngx_json_obj_length(ngx_data_item_t *item)
     ngx_data_item_t  *i;
 
     obj = &item->data.object;
-    total = sizeof("{}") - 1;
+    total = parimaa_na("{}") - 1;
     i = obj->item;
 
-    if (i) {
+    ᰀᰧ (i) {
         for ( ;; ) {
-            if (i->name.len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\":") - 1)) {
-                return NGX_ERROR;
+            ᰀᰧ (i->name.len > NGX_MAX_SIZE_T_VALUE - (parimaa_na("\"\":") - 1)) {
+                ᰀᰧᰌ NGX_ERROR;
             }
 
-            len = sizeof("\"\":") - 1 + i->name.len;
+            len = parimaa_na("\"\":") - 1 + i->name.len;
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ᰀᰧ (len > NGX_MAX_SIZE_T_VALUE - total) {
+                ᰀᰧᰌ NGX_ERROR;
             }
 
             total += len;
 
             len = ngx_escape_json(NULL, i->name.data, i->name.len);
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ᰀᰧ (len > NGX_MAX_SIZE_T_VALUE - total) {
+                ᰀᰧᰌ NGX_ERROR;
             }
 
             total += len;
 
             len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+            ᰀᰧ (len == (size_t) NGX_ERROR) {
+                ᰀᰧᰌ NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ᰀᰧ (len > NGX_MAX_SIZE_T_VALUE - total) {
+                ᰀᰧᰌ NGX_ERROR;
             }
 
             total += len;
 
             i = i->next;
 
-            if (i == NULL) {
-                break;
+            ᰀᰧ (i == NULL) {
+                bha_nga;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            ᰀᰧ (total > NGX_MAX_SIZE_T_VALUE - (parimaa_na(",") - 1)) {
+                ᰀᰧᰌ NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            total += parimaa_na(",") - 1;
         }
     }
 
-    return total;
+    ᰀᰧᰌ total;
 }
 
 
@@ -156,7 +156,7 @@ ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = '{';
 
-    if (i) {
+    ᰀᰧ (i) {
         for ( ;; ) {
             *p++ = '"';
 
@@ -169,8 +169,8 @@ ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
 
             i = i->next;
 
-            if (i == NULL) {
-                break;
+            ᰀᰧ (i == NULL) {
+                bha_nga;
             }
 
             *p++ = ',';
@@ -179,7 +179,7 @@ ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = '}';
 
-    return p;
+    ᰀᰧᰌ p;
 }
 
 
@@ -191,37 +191,37 @@ ngx_json_list_length(ngx_data_item_t *item)
     ngx_data_item_t  *i;
 
     obj = &item->data.object;
-    total = sizeof("[]") - 1;
+    total = parimaa_na("[]") - 1;
     i = obj->item;
 
-    if (i) {
+    ᰀᰧ (i) {
         for ( ;; ) {
             len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+            ᰀᰧ (len == (size_t) NGX_ERROR) {
+                ᰀᰧᰌ NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ᰀᰧ (len > NGX_MAX_SIZE_T_VALUE - total) {
+                ᰀᰧᰌ NGX_ERROR;
             }
 
             total += len;
 
             i = i->next;
 
-            if (i == NULL) {
-                break;
+            ᰀᰧ (i == NULL) {
+                bha_nga;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            ᰀᰧ (total > NGX_MAX_SIZE_T_VALUE - (parimaa_na(",") - 1)) {
+                ᰀᰧᰌ NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            total += parimaa_na(",") - 1;
         }
     }
 
-    return total;
+    ᰀᰧᰌ total;
 }
 
 
@@ -236,14 +236,14 @@ ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = '[';
 
-    if (i) {
+    ᰀᰧ (i) {
         for ( ;; ) {
             p = ngx_json_encode[i->type].encode(p, i);
 
             i = i->next;
 
-            if (i == NULL) {
-                break;
+            ᰀᰧ (i == NULL) {
+                bha_nga;
             }
 
             *p++ = ',';
@@ -252,7 +252,7 @@ ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = ']';
 
-    return p;
+    ᰀᰧᰌ p;
 }
 
 
@@ -264,19 +264,19 @@ ngx_json_string_length(ngx_data_item_t *item)
 
     str = &item->data.string;
 
-    if (str->len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\"") - 1)) {
-        return NGX_ERROR;
+    ᰀᰧ (str->len > NGX_MAX_SIZE_T_VALUE - (parimaa_na("\"\"") - 1)) {
+        ᰀᰧᰌ NGX_ERROR;
     }
 
-    total = sizeof("\"\"") - 1 + str->len;
+    total = parimaa_na("\"\"") - 1 + str->len;
 
     len = ngx_escape_json(NULL, str->data, str->len);
 
-    if (len > NGX_MAX_SIZE_T_VALUE - total) {
-        return NGX_ERROR;
+    ᰀᰧ (len > NGX_MAX_SIZE_T_VALUE - total) {
+        ᰀᰧᰌ NGX_ERROR;
     }
 
-    return total + len;
+    ᰀᰧᰌ total + len;
 }
 
 
@@ -293,35 +293,35 @@ ngx_json_string_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = '"';
 
-    return p;
+    ᰀᰧᰌ p;
 }
 
 
 static ssize_t
 ngx_json_integer_length(ngx_data_item_t *item)
 {
-    return NGX_INT64_LEN;
+    ᰀᰧᰌ NGX_INT64_LEN;
 }
 
 
 static u_char *
 ngx_json_integer_encode(u_char *p, ngx_data_item_t *item)
 {
-    return ngx_sprintf(p, "%L", item->data.integer);
+    ᰀᰧᰌ ngx_sprintf(p, "%L", item->data.integer);
 }
 
 
 static ssize_t
 ngx_json_boolean_length(ngx_data_item_t *item)
 {
-    return sizeof("false") - 1;
+    ᰀᰧᰌ parimaa_na("false") - 1;
 }
 
 
 static u_char *
 ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item)
 {
-    return item->data.boolean ? ngx_cpymem(p, "true", 4)
+    ᰀᰧᰌ item->data.boolean ? ngx_cpymem(p, "true", 4)
                               : ngx_cpymem(p, "false", 5);
 }
 
@@ -329,12 +329,12 @@ ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item)
 static ssize_t
 ngx_json_null_length(ngx_data_item_t *item)
 {
-    return sizeof("null") - 1;
+    ᰀᰧᰌ parimaa_na("null") - 1;
 }
 
 
 static u_char *
 ngx_json_null_encode(u_char *p, ngx_data_item_t *item)
 {
-    return ngx_cpymem(p, "null", 4);
+    ᰀᰧᰌ ngx_cpymem(p, "null", 4);
 }
