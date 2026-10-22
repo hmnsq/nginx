@@ -5,87 +5,87 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_config.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_core.h>
 
 
-void *
-ngx_hash_find(ngx_hash_t *hash, ngx_uint_t key, u_char *name, size_t len)
+ଶୂନ୍ୟ *
+ngx_hash_find(ngx_hash_t *hash, ngx_uint_t ଚାବି, u_char *name, size_t len)
 {
     ngx_uint_t       i;
     ngx_hash_elt_t  *elt;
 
-#if 0
+#ଯଦି 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "hf:\"%*s\"", len, name);
 #endif
 
-    elt = hash->buckets[key % hash->size];
+    elt = hash->buckets[ଚାବି % hash->size];
 
-    if (elt == NULL) {
-        return NULL;
+    ଯଦି (elt == ଖାଲି) {
+        ଫେରନ୍ତୁ ଖାଲି;
     }
 
-    while (elt->value) {
-        if (len != (size_t) elt->len) {
-            goto next;
+    ଯେତେବେଳେ (elt->ମୂଲ୍ୟ) {
+        ଯଦି (len != (size_t) elt->len) {
+            ଯାଅ next;
         }
 
-        for (i = 0; i < len; i++) {
-            if (name[i] != elt->name[i]) {
-                goto next;
+        ପାଇଁ (i = 0; i < len; i++) {
+            ଯଦି (name[i] != elt->name[i]) {
+                ଯାଅ next;
             }
         }
 
-        return elt->value;
+        ଫେରନ୍ତୁ elt->ମୂଲ୍ୟ;
 
     next:
 
         elt = (ngx_hash_elt_t *) ngx_align_ptr(&elt->name[0] + elt->len,
-                                               sizeof(void *));
-        continue;
+                                               ଆକାର(ଶୂନ୍ୟ *));
+        ଜାରି;
     }
 
-    return NULL;
+    ଫେରନ୍ତୁ ଖାଲି;
 }
 
 
-void *
+ଶୂନ୍ୟ *
 ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
 {
-    void        *value;
-    ngx_uint_t   i, n, key;
+    ଶୂନ୍ୟ        *ମୂଲ୍ୟ;
+    ngx_uint_t   i, n, ଚାବି;
 
-#if 0
+#ଯଦି 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "wch:\"%*s\"", len, name);
 #endif
 
     n = len;
 
-    while (n) {
-        if (name[n - 1] == '.') {
-            break;
+    ଯେତେବେଳେ (n) {
+        ଯଦି (name[n - 1] == '.') {
+            ଭାଙ୍ଗ;
         }
 
         n--;
     }
 
-    key = 0;
+    ଚାବି = 0;
 
-    for (i = n; i < len; i++) {
-        key = ngx_hash(key, name[i]);
+    ପାଇଁ (i = n; i < len; i++) {
+        ଚାବି = ngx_hash(ଚାବି, name[i]);
     }
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", key);
+#ଯଦି 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", ଚାବି);
 #endif
 
-    value = ngx_hash_find(&hwc->hash, key, &name[n], len - n);
+    ମୂଲ୍ୟ = ngx_hash_find(&hwc->hash, ଚାବି, &name[n], len - n);
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", value);
+#ଯଦି 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", ମୂଲ୍ୟ);
 #endif
 
-    if (value) {
+    ଯଦି (ମୂଲ୍ୟ) {
 
         /*
          * the 2 low bits of value have the special meaning:
@@ -98,86 +98,86 @@ ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
          *          "*.example.com" only.
          */
 
-        if ((uintptr_t) value & 2) {
+        ଯଦି ((uintptr_t) ମୂଲ୍ୟ & 2) {
 
-            if (n == 0) {
+            ଯଦି (n == 0) {
 
                 /* "example.com" */
 
-                if ((uintptr_t) value & 1) {
-                    return NULL;
+                ଯଦି ((uintptr_t) ମୂଲ୍ୟ & 1) {
+                    ଫେରନ୍ତୁ ଖାଲି;
                 }
 
                 hwc = (ngx_hash_wildcard_t *)
-                                          ((uintptr_t) value & (uintptr_t) ~3);
-                return hwc->value;
+                                          ((uintptr_t) ମୂଲ୍ୟ & (uintptr_t) ~3);
+                ଫେରନ୍ତୁ hwc->ମୂଲ୍ୟ;
             }
 
-            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) value & (uintptr_t) ~3);
+            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) ମୂଲ୍ୟ & (uintptr_t) ~3);
 
-            value = ngx_hash_find_wc_head(hwc, name, n - 1);
+            ମୂଲ୍ୟ = ngx_hash_find_wc_head(hwc, name, n - 1);
 
-            if (value) {
-                return value;
+            ଯଦି (ମୂଲ୍ୟ) {
+                ଫେରନ୍ତୁ ମୂଲ୍ୟ;
             }
 
-            return hwc->value;
+            ଫେରନ୍ତୁ hwc->ମୂଲ୍ୟ;
         }
 
-        if ((uintptr_t) value & 1) {
+        ଯଦି ((uintptr_t) ମୂଲ୍ୟ & 1) {
 
-            if (n == 0) {
+            ଯଦି (n == 0) {
 
                 /* "example.com" */
 
-                return NULL;
+                ଫେରନ୍ତୁ ଖାଲି;
             }
 
-            return (void *) ((uintptr_t) value & (uintptr_t) ~3);
+            ଫେରନ୍ତୁ (ଶୂନ୍ୟ *) ((uintptr_t) ମୂଲ୍ୟ & (uintptr_t) ~3);
         }
 
-        return value;
+        ଫେରନ୍ତୁ ମୂଲ୍ୟ;
     }
 
-    return hwc->value;
+    ଫେରନ୍ତୁ hwc->ମୂଲ୍ୟ;
 }
 
 
-void *
+ଶୂନ୍ୟ *
 ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
 {
-    void        *value;
-    ngx_uint_t   i, key;
+    ଶୂନ୍ୟ        *ମୂଲ୍ୟ;
+    ngx_uint_t   i, ଚାବି;
 
-#if 0
+#ଯଦି 0
     ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "wct:\"%*s\"", len, name);
 #endif
 
-    key = 0;
+    ଚାବି = 0;
 
-    for (i = 0; i < len; i++) {
-        if (name[i] == '.') {
-            break;
+    ପାଇଁ (i = 0; i < len; i++) {
+        ଯଦି (name[i] == '.') {
+            ଭାଙ୍ଗ;
         }
 
-        key = ngx_hash(key, name[i]);
+        ଚାବି = ngx_hash(ଚାବି, name[i]);
     }
 
-    if (i == len) {
-        return NULL;
+    ଯଦି (i == len) {
+        ଫେରନ୍ତୁ ଖାଲି;
     }
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", key);
+#ଯଦି 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "key:\"%ui\"", ଚାବି);
 #endif
 
-    value = ngx_hash_find(&hwc->hash, key, name, i);
+    ମୂଲ୍ୟ = ngx_hash_find(&hwc->hash, ଚାବି, name, i);
 
-#if 0
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", value);
+#ଯଦି 0
+    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "value:\"%p\"", ମୂଲ୍ୟ);
 #endif
 
-    if (value) {
+    ଯଦି (ମୂଲ୍ୟ) {
 
         /*
          * the 2 low bits of value have the special meaning:
@@ -185,153 +185,153 @@ ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len)
          *     11 - value is pointer to wildcard hash allowing "example.*".
          */
 
-        if ((uintptr_t) value & 2) {
+        ଯଦି ((uintptr_t) ମୂଲ୍ୟ & 2) {
 
             i++;
 
-            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) value & (uintptr_t) ~3);
+            hwc = (ngx_hash_wildcard_t *) ((uintptr_t) ମୂଲ୍ୟ & (uintptr_t) ~3);
 
-            value = ngx_hash_find_wc_tail(hwc, &name[i], len - i);
+            ମୂଲ୍ୟ = ngx_hash_find_wc_tail(hwc, &name[i], len - i);
 
-            if (value) {
-                return value;
+            ଯଦି (ମୂଲ୍ୟ) {
+                ଫେରନ୍ତୁ ମୂଲ୍ୟ;
             }
 
-            return hwc->value;
+            ଫେରନ୍ତୁ hwc->ମୂଲ୍ୟ;
         }
 
-        return value;
+        ଫେରନ୍ତୁ ମୂଲ୍ୟ;
     }
 
-    return hwc->value;
+    ଫେରନ୍ତୁ hwc->ମୂଲ୍ୟ;
 }
 
 
-void *
-ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t key, u_char *name,
+ଶୂନ୍ୟ *
+ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t ଚାବି, u_char *name,
     size_t len)
 {
-    void  *value;
+    ଶୂନ୍ୟ  *ମୂଲ୍ୟ;
 
-    if (hash->hash.buckets) {
-        value = ngx_hash_find(&hash->hash, key, name, len);
+    ଯଦି (hash->hash.buckets) {
+        ମୂଲ୍ୟ = ngx_hash_find(&hash->hash, ଚାବି, name, len);
 
-        if (value) {
-            return value;
+        ଯଦି (ମୂଲ୍ୟ) {
+            ଫେରନ୍ତୁ ମୂଲ୍ୟ;
         }
     }
 
-    if (len == 0) {
-        return NULL;
+    ଯଦି (len == 0) {
+        ଫେରନ୍ତୁ ଖାଲି;
     }
 
-    if (hash->wc_head && hash->wc_head->hash.buckets) {
-        value = ngx_hash_find_wc_head(hash->wc_head, name, len);
+    ଯଦି (hash->wc_head && hash->wc_head->hash.buckets) {
+        ମୂଲ୍ୟ = ngx_hash_find_wc_head(hash->wc_head, name, len);
 
-        if (value) {
-            return value;
+        ଯଦି (ମୂଲ୍ୟ) {
+            ଫେରନ୍ତୁ ମୂଲ୍ୟ;
         }
     }
 
-    if (hash->wc_tail && hash->wc_tail->hash.buckets) {
-        value = ngx_hash_find_wc_tail(hash->wc_tail, name, len);
+    ଯଦି (hash->wc_tail && hash->wc_tail->hash.buckets) {
+        ମୂଲ୍ୟ = ngx_hash_find_wc_tail(hash->wc_tail, name, len);
 
-        if (value) {
-            return value;
+        ଯଦି (ମୂଲ୍ୟ) {
+            ଫେରନ୍ତୁ ମୂଲ୍ୟ;
         }
     }
 
-    return NULL;
+    ଫେରନ୍ତୁ ଖାଲି;
 }
 
 
 #define NGX_HASH_ELT_SIZE(name)                                               \
-    (sizeof(void *) + ngx_align((name)->key.len + 2, sizeof(void *)))
+    (ଆକାର(ଶୂନ୍ୟ *) + ngx_align((name)->ଚାବି.len + 2, ଆକାର(ଶୂନ୍ୟ *)))
 
 ngx_int_t
-ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names, ngx_uint_t nelts)
+ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_ଚାବି_t *names, ngx_uint_t nelts)
 {
     u_char          *elts;
     size_t           len;
     u_short         *test;
-    ngx_uint_t       i, n, key, size, start, bucket_size;
+    ngx_uint_t       i, n, ଚାବି, size, start, bucket_size;
     ngx_hash_elt_t  *elt, **buckets;
 
-    if (hinit->max_size == 0) {
+    ଯଦି (hinit->max_size == 0) {
         ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                       "could not build %s, you should "
                       "increase %s_max_size: %i",
                       hinit->name, hinit->name, hinit->max_size);
-        return NGX_ERROR;
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    if (hinit->bucket_size > 65536 - ngx_cacheline_size) {
+    ଯଦି (hinit->bucket_size > 65536 - ngx_cacheline_size) {
         ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                       "could not build %s, too large "
                       "%s_bucket_size: %i",
                       hinit->name, hinit->name, hinit->bucket_size);
-        return NGX_ERROR;
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    ପାଇଁ (n = 0; n < nelts; n++) {
+        ଯଦି (names[n].ଚାବି.data == ଖାଲି) {
+            ଜାରି;
         }
 
-        if (hinit->bucket_size < NGX_HASH_ELT_SIZE(&names[n]) + sizeof(void *))
+        ଯଦି (hinit->bucket_size < NGX_HASH_ELT_SIZE(&names[n]) + ଆକାର(ଶୂନ୍ୟ *))
         {
             ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                           "could not build %s, you should "
                           "increase %s_bucket_size: %i",
                           hinit->name, hinit->name, hinit->bucket_size);
-            return NGX_ERROR;
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
     }
 
-    test = ngx_alloc(hinit->max_size * sizeof(u_short), hinit->pool->log);
-    if (test == NULL) {
-        return NGX_ERROR;
+    test = ngx_alloc(hinit->max_size * ଆକାର(u_short), hinit->pool->log);
+    ଯଦି (test == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    bucket_size = hinit->bucket_size - sizeof(void *);
+    bucket_size = hinit->bucket_size - ଆକାର(ଶୂନ୍ୟ *);
 
-    start = nelts / (bucket_size / (2 * sizeof(void *)));
+    start = nelts / (bucket_size / (2 * ଆକାର(ଶୂନ୍ୟ *)));
     start = start ? start : 1;
 
-    if (hinit->max_size > 10000 && nelts && hinit->max_size / nelts < 100) {
+    ଯଦି (hinit->max_size > 10000 && nelts && hinit->max_size / nelts < 100) {
         start = hinit->max_size - 1000;
     }
 
-    for (size = start; size <= hinit->max_size; size++) {
+    ପାଇଁ (size = start; size <= hinit->max_size; size++) {
 
-        ngx_memzero(test, size * sizeof(u_short));
+        ngx_memzero(test, size * ଆକାର(u_short));
 
-        for (n = 0; n < nelts; n++) {
-            if (names[n].key.data == NULL) {
-                continue;
+        ପାଇଁ (n = 0; n < nelts; n++) {
+            ଯଦି (names[n].ଚାବି.data == ଖାଲି) {
+                ଜାରି;
             }
 
-            key = names[n].key_hash % size;
-            len = test[key] + NGX_HASH_ELT_SIZE(&names[n]);
+            ଚାବି = names[n].ଚାବି_hash % size;
+            len = test[ଚାବି] + NGX_HASH_ELT_SIZE(&names[n]);
 
-#if 0
+#ଯଦି 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "%ui: %ui %uz \"%V\"",
-                          size, key, len, &names[n].key);
+                          size, ଚାବି, len, &names[n].ଚାବି);
 #endif
 
-            if (len > bucket_size) {
-                goto next;
+            ଯଦି (len > bucket_size) {
+                ଯାଅ next;
             }
 
-            test[key] = (u_short) len;
+            test[ଚାବି] = (u_short) len;
         }
 
-        goto found;
+        ଯାଅ found;
 
     next:
 
-        continue;
+        ଜାରି;
     }
 
     size = hinit->max_size;
@@ -345,35 +345,35 @@ ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names, ngx_uint_t nelts)
 
 found:
 
-    for (i = 0; i < size; i++) {
-        test[i] = sizeof(void *);
+    ପାଇଁ (i = 0; i < size; i++) {
+        test[i] = ଆକାର(ଶୂନ୍ୟ *);
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    ପାଇଁ (n = 0; n < nelts; n++) {
+        ଯଦି (names[n].ଚାବି.data == ଖାଲି) {
+            ଜାରି;
         }
 
-        key = names[n].key_hash % size;
-        len = test[key] + NGX_HASH_ELT_SIZE(&names[n]);
+        ଚାବି = names[n].ଚାବି_hash % size;
+        len = test[ଚାବି] + NGX_HASH_ELT_SIZE(&names[n]);
 
-        if (len > 65536 - ngx_cacheline_size) {
+        ଯଦି (len > 65536 - ngx_cacheline_size) {
             ngx_log_error(NGX_LOG_EMERG, hinit->pool->log, 0,
                           "could not build %s, you should "
                           "increase %s_max_size: %i",
                           hinit->name, hinit->name, hinit->max_size);
             ngx_free(test);
-            return NGX_ERROR;
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
 
-        test[key] = (u_short) len;
+        test[ଚାବି] = (u_short) len;
     }
 
     len = 0;
 
-    for (i = 0; i < size; i++) {
-        if (test[i] == sizeof(void *)) {
-            continue;
+    ପାଇଁ (i = 0; i < size; i++) {
+        ଯଦି (test[i] == ଆକାର(ଶୂନ୍ୟ *)) {
+            ଜାରି;
         }
 
         test[i] = (u_short) (ngx_align(test[i], ngx_cacheline_size));
@@ -381,70 +381,70 @@ found:
         len += test[i];
     }
 
-    if (hinit->hash == NULL) {
-        hinit->hash = ngx_pcalloc(hinit->pool, sizeof(ngx_hash_wildcard_t)
-                                             + size * sizeof(ngx_hash_elt_t *));
-        if (hinit->hash == NULL) {
+    ଯଦି (hinit->hash == ଖାଲି) {
+        hinit->hash = ngx_pcalloc(hinit->pool, ଆକାର(ngx_hash_wildcard_t)
+                                             + size * ଆକାର(ngx_hash_elt_t *));
+        ଯଦି (hinit->hash == ଖାଲି) {
             ngx_free(test);
-            return NGX_ERROR;
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
 
         buckets = (ngx_hash_elt_t **)
-                      ((u_char *) hinit->hash + sizeof(ngx_hash_wildcard_t));
+                      ((u_char *) hinit->hash + ଆକାର(ngx_hash_wildcard_t));
 
-    } else {
-        buckets = ngx_pcalloc(hinit->pool, size * sizeof(ngx_hash_elt_t *));
-        if (buckets == NULL) {
+    } ଅନ୍ୟଥା {
+        buckets = ngx_pcalloc(hinit->pool, size * ଆକାର(ngx_hash_elt_t *));
+        ଯଦି (buckets == ଖାଲି) {
             ngx_free(test);
-            return NGX_ERROR;
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
     }
 
     elts = ngx_palloc(hinit->pool, len + ngx_cacheline_size);
-    if (elts == NULL) {
+    ଯଦି (elts == ଖାଲି) {
         ngx_free(test);
-        return NGX_ERROR;
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
     elts = ngx_align_ptr(elts, ngx_cacheline_size);
 
-    for (i = 0; i < size; i++) {
-        if (test[i] == sizeof(void *)) {
-            continue;
+    ପାଇଁ (i = 0; i < size; i++) {
+        ଯଦି (test[i] == ଆକାର(ଶୂନ୍ୟ *)) {
+            ଜାରି;
         }
 
         buckets[i] = (ngx_hash_elt_t *) elts;
         elts += test[i];
     }
 
-    for (i = 0; i < size; i++) {
+    ପାଇଁ (i = 0; i < size; i++) {
         test[i] = 0;
     }
 
-    for (n = 0; n < nelts; n++) {
-        if (names[n].key.data == NULL) {
-            continue;
+    ପାଇଁ (n = 0; n < nelts; n++) {
+        ଯଦି (names[n].ଚାବି.data == ଖାଲି) {
+            ଜାରି;
         }
 
-        key = names[n].key_hash % size;
-        elt = (ngx_hash_elt_t *) ((u_char *) buckets[key] + test[key]);
+        ଚାବି = names[n].ଚାବି_hash % size;
+        elt = (ngx_hash_elt_t *) ((u_char *) buckets[ଚାବି] + test[ଚାବି]);
 
-        elt->value = names[n].value;
-        elt->len = (u_short) names[n].key.len;
+        elt->ମୂଲ୍ୟ = names[n].ମୂଲ୍ୟ;
+        elt->len = (u_short) names[n].ଚାବି.len;
 
-        ngx_strlow(elt->name, names[n].key.data, names[n].key.len);
+        ngx_strlow(elt->name, names[n].ଚାବି.data, names[n].ଚାବି.len);
 
-        test[key] = (u_short) (test[key] + NGX_HASH_ELT_SIZE(&names[n]));
+        test[ଚାବି] = (u_short) (test[ଚାବି] + NGX_HASH_ELT_SIZE(&names[n]));
     }
 
-    for (i = 0; i < size; i++) {
-        if (buckets[i] == NULL) {
-            continue;
+    ପାଇଁ (i = 0; i < size; i++) {
+        ଯଦି (buckets[i] == ଖାଲି) {
+            ଜାରି;
         }
 
         elt = (ngx_hash_elt_t *) ((u_char *) buckets[i] + test[i]);
 
-        elt->value = NULL;
+        elt->ମୂଲ୍ୟ = ଖାଲି;
     }
 
     ngx_free(test);
@@ -452,302 +452,302 @@ found:
     hinit->hash->buckets = buckets;
     hinit->hash->size = size;
 
-#if 0
+#ଯଦି 0
 
-    for (i = 0; i < size; i++) {
+    ପାଇଁ (i = 0; i < size; i++) {
         ngx_str_t   val;
-        ngx_uint_t  key;
+        ngx_uint_t  ଚାବି;
 
         elt = buckets[i];
 
-        if (elt == NULL) {
+        ଯଦି (elt == ଖାଲି) {
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
                           "%ui: NULL", i);
-            continue;
+            ଜାରି;
         }
 
-        while (elt->value) {
+        ଯେତେବେଳେ (elt->ମୂଲ୍ୟ) {
             val.len = elt->len;
             val.data = &elt->name[0];
 
-            key = hinit->key(val.data, val.len);
+            ଚାବି = hinit->ଚାବି(val.data, val.len);
 
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                          "%ui: %p \"%V\" %ui", i, elt, &val, key);
+                          "%ui: %p \"%V\" %ui", i, elt, &val, ଚାବି);
 
             elt = (ngx_hash_elt_t *) ngx_align_ptr(&elt->name[0] + elt->len,
-                                                   sizeof(void *));
+                                                   ଆକାର(ଶୂନ୍ୟ *));
         }
     }
 
 #endif
 
-    return NGX_OK;
+    ଫେରନ୍ତୁ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
+ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_ଚାବି_t *names,
     ngx_uint_t nelts)
 {
     size_t                len, dot_len;
     ngx_uint_t            i, n, dot;
     ngx_array_t           curr_names, next_names;
-    ngx_hash_key_t       *name, *next_name;
+    ngx_hash_ଚାବି_t       *name, *next_name;
     ngx_hash_init_t       h;
     ngx_hash_wildcard_t  *wdc;
 
-    if (ngx_array_init(&curr_names, hinit->temp_pool, nelts,
-                       sizeof(ngx_hash_key_t))
+    ଯଦି (ngx_array_init(&curr_names, hinit->temp_pool, nelts,
+                       ଆକାର(ngx_hash_ଚାବି_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    if (ngx_array_init(&next_names, hinit->temp_pool, nelts,
-                       sizeof(ngx_hash_key_t))
+    ଯଦି (ngx_array_init(&next_names, hinit->temp_pool, nelts,
+                       ଆକାର(ngx_hash_ଚାବି_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    for (n = 0; n < nelts; n = i) {
+    ପାଇଁ (n = 0; n < nelts; n = i) {
 
-#if 0
+#ଯଦି 0
         ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                      "wc0: \"%V\"", &names[n].key);
+                      "wc0: \"%V\"", &names[n].ଚାବି);
 #endif
 
         dot = 0;
 
-        for (len = 0; len < names[n].key.len; len++) {
-            if (names[n].key.data[len] == '.') {
+        ପାଇଁ (len = 0; len < names[n].ଚାବି.len; len++) {
+            ଯଦି (names[n].ଚାବି.data[len] == '.') {
                 dot = 1;
-                break;
+                ଭାଙ୍ଗ;
             }
         }
 
-        name = ngx_array_push(&curr_names);
-        if (name == NULL) {
-            return NGX_ERROR;
+        name = ngx_array_ଠେଲ(&curr_names);
+        ଯଦି (name == ଖାଲି) {
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
 
-        name->key.len = len;
-        name->key.data = names[n].key.data;
-        name->key_hash = hinit->key(name->key.data, name->key.len);
-        name->value = names[n].value;
+        name->ଚାବି.len = len;
+        name->ଚାବି.data = names[n].ଚାବି.data;
+        name->ଚାବି_hash = hinit->ଚାବି(name->ଚାବି.data, name->ଚାବି.len);
+        name->ମୂଲ୍ୟ = names[n].ମୂଲ୍ୟ;
 
-#if 0
+#ଯଦି 0
         ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                      "wc1: \"%V\" %ui", &name->key, dot);
+                      "wc1: \"%V\" %ui", &name->ଚାବି, dot);
 #endif
 
         dot_len = len + 1;
 
-        if (dot) {
+        ଯଦି (dot) {
             len++;
         }
 
         next_names.nelts = 0;
 
-        if (names[n].key.len != len) {
-            next_name = ngx_array_push(&next_names);
-            if (next_name == NULL) {
-                return NGX_ERROR;
+        ଯଦି (names[n].ଚାବି.len != len) {
+            next_name = ngx_array_ଠେଲ(&next_names);
+            ଯଦି (next_name == ଖାଲି) {
+                ଫେରନ୍ତୁ NGX_ERROR;
             }
 
-            next_name->key.len = names[n].key.len - len;
-            next_name->key.data = names[n].key.data + len;
-            next_name->key_hash = 0;
-            next_name->value = names[n].value;
+            next_name->ଚାବି.len = names[n].ଚାବି.len - len;
+            next_name->ଚାବି.data = names[n].ଚାବି.data + len;
+            next_name->ଚାବି_hash = 0;
+            next_name->ମୂଲ୍ୟ = names[n].ମୂଲ୍ୟ;
 
-#if 0
+#ଯଦି 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                          "wc2: \"%V\"", &next_name->key);
+                          "wc2: \"%V\"", &next_name->ଚାବି);
 #endif
         }
 
-        for (i = n + 1; i < nelts; i++) {
-            if (ngx_strncmp(names[n].key.data, names[i].key.data, len) != 0) {
-                break;
+        ପାଇଁ (i = n + 1; i < nelts; i++) {
+            ଯଦି (ngx_strncmp(names[n].ଚାବି.data, names[i].ଚାବି.data, len) != 0) {
+                ଭାଙ୍ଗ;
             }
 
-            if (!dot
-                && names[i].key.len > len
-                && names[i].key.data[len] != '.')
+            ଯଦି (!dot
+                && names[i].ଚାବି.len > len
+                && names[i].ଚାବି.data[len] != '.')
             {
-                break;
+                ଭାଙ୍ଗ;
             }
 
-            next_name = ngx_array_push(&next_names);
-            if (next_name == NULL) {
-                return NGX_ERROR;
+            next_name = ngx_array_ଠେଲ(&next_names);
+            ଯଦି (next_name == ଖାଲି) {
+                ଫେରନ୍ତୁ NGX_ERROR;
             }
 
-            next_name->key.len = names[i].key.len - dot_len;
-            next_name->key.data = names[i].key.data + dot_len;
-            next_name->key_hash = 0;
-            next_name->value = names[i].value;
+            next_name->ଚାବି.len = names[i].ଚାବି.len - dot_len;
+            next_name->ଚାବି.data = names[i].ଚାବି.data + dot_len;
+            next_name->ଚାବି_hash = 0;
+            next_name->ମୂଲ୍ୟ = names[i].ମୂଲ୍ୟ;
 
-#if 0
+#ଯଦି 0
             ngx_log_error(NGX_LOG_ALERT, hinit->pool->log, 0,
-                          "wc3: \"%V\"", &next_name->key);
+                          "wc3: \"%V\"", &next_name->ଚାବି);
 #endif
         }
 
-        if (next_names.nelts) {
+        ଯଦି (next_names.nelts) {
 
             h = *hinit;
-            h.hash = NULL;
+            h.hash = ଖାଲି;
 
-            if (ngx_hash_wildcard_init(&h, (ngx_hash_key_t *) next_names.elts,
+            ଯଦି (ngx_hash_wildcard_init(&h, (ngx_hash_ଚାବି_t *) next_names.elts,
                                        next_names.nelts)
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                ଫେରନ୍ତୁ NGX_ERROR;
             }
 
             wdc = (ngx_hash_wildcard_t *) h.hash;
 
-            if (names[n].key.len == len) {
-                wdc->value = names[n].value;
+            ଯଦି (names[n].ଚାବି.len == len) {
+                wdc->ମୂଲ୍ୟ = names[n].ମୂଲ୍ୟ;
             }
 
-            name->value = (void *) ((uintptr_t) wdc | (dot ? 3 : 2));
+            name->ମୂଲ୍ୟ = (ଶୂନ୍ୟ *) ((uintptr_t) wdc | (dot ? 3 : 2));
 
-        } else if (dot) {
-            name->value = (void *) ((uintptr_t) name->value | 1);
+        } ଅନ୍ୟଥା ଯଦି (dot) {
+            name->ମୂଲ୍ୟ = (ଶୂନ୍ୟ *) ((uintptr_t) name->ମୂଲ୍ୟ | 1);
         }
     }
 
-    if (ngx_hash_init(hinit, (ngx_hash_key_t *) curr_names.elts,
+    ଯଦି (ngx_hash_init(hinit, (ngx_hash_ଚାବି_t *) curr_names.elts,
                       curr_names.nelts)
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    return NGX_OK;
+    ଫେରନ୍ତୁ NGX_OK;
 }
 
 
 ngx_uint_t
-ngx_hash_key(u_char *data, size_t len)
+ngx_hash_ଚାବି(u_char *data, size_t len)
 {
-    ngx_uint_t  i, key;
+    ngx_uint_t  i, ଚାବି;
 
-    key = 0;
+    ଚାବି = 0;
 
-    for (i = 0; i < len; i++) {
-        key = ngx_hash(key, data[i]);
+    ପାଇଁ (i = 0; i < len; i++) {
+        ଚାବି = ngx_hash(ଚାବି, data[i]);
     }
 
-    return key;
+    ଫେରନ୍ତୁ ଚାବି;
 }
 
 
 ngx_uint_t
-ngx_hash_key_lc(u_char *data, size_t len)
+ngx_hash_ଚାବି_lc(u_char *data, size_t len)
 {
-    ngx_uint_t  i, key;
+    ngx_uint_t  i, ଚାବି;
 
-    key = 0;
+    ଚାବି = 0;
 
-    for (i = 0; i < len; i++) {
-        key = ngx_hash(key, ngx_tolower(data[i]));
+    ପାଇଁ (i = 0; i < len; i++) {
+        ଚାବି = ngx_hash(ଚାବି, ngx_tolower(data[i]));
     }
 
-    return key;
+    ଫେରନ୍ତୁ ଚାବି;
 }
 
 
 ngx_uint_t
 ngx_hash_strlow(u_char *dst, u_char *src, size_t n)
 {
-    ngx_uint_t  key;
+    ngx_uint_t  ଚାବି;
 
-    key = 0;
+    ଚାବି = 0;
 
-    while (n--) {
+    ଯେତେବେଳେ (n--) {
         *dst = ngx_tolower(*src);
-        key = ngx_hash(key, *dst);
+        ଚାବି = ngx_hash(ଚାବି, *dst);
         dst++;
         src++;
     }
 
-    return key;
+    ଫେରନ୍ତୁ ଚାବି;
 }
 
 
 ngx_int_t
-ngx_hash_keys_array_init(ngx_hash_keys_arrays_t *ha, ngx_uint_t type)
+ngx_hash_ଚାବିଗୁଡ଼ିକ_array_init(ngx_hash_ଚାବିଗୁଡ଼ିକ_arrays_t *ha, ngx_uint_t type)
 {
     ngx_uint_t  asize;
 
-    if (type == NGX_HASH_SMALL) {
+    ଯଦି (type == NGX_HASH_SMALL) {
         asize = 4;
         ha->hsize = 107;
 
-    } else {
+    } ଅନ୍ୟଥା {
         asize = NGX_HASH_LARGE_ASIZE;
         ha->hsize = NGX_HASH_LARGE_HSIZE;
     }
 
-    if (ngx_array_init(&ha->keys, ha->temp_pool, asize, sizeof(ngx_hash_key_t))
+    ଯଦି (ngx_array_init(&ha->ଚାବିଗୁଡ଼ିକ, ha->temp_pool, asize, ଆକାର(ngx_hash_ଚାବି_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    if (ngx_array_init(&ha->dns_wc_head, ha->temp_pool, asize,
-                       sizeof(ngx_hash_key_t))
+    ଯଦି (ngx_array_init(&ha->dns_wc_head, ha->temp_pool, asize,
+                       ଆକାର(ngx_hash_ଚାବି_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    if (ngx_array_init(&ha->dns_wc_tail, ha->temp_pool, asize,
-                       sizeof(ngx_hash_key_t))
+    ଯଦି (ngx_array_init(&ha->dns_wc_tail, ha->temp_pool, asize,
+                       ଆକାର(ngx_hash_ଚାବି_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    ha->keys_hash = ngx_pcalloc(ha->temp_pool, sizeof(ngx_array_t) * ha->hsize);
-    if (ha->keys_hash == NULL) {
-        return NGX_ERROR;
+    ha->ଚାବିଗୁଡ଼ିକ_hash = ngx_pcalloc(ha->temp_pool, ଆକାର(ngx_array_t) * ha->hsize);
+    ଯଦି (ha->ଚାବିଗୁଡ଼ିକ_hash == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
     ha->dns_wc_head_hash = ngx_pcalloc(ha->temp_pool,
-                                       sizeof(ngx_array_t) * ha->hsize);
-    if (ha->dns_wc_head_hash == NULL) {
-        return NGX_ERROR;
+                                       ଆକାର(ngx_array_t) * ha->hsize);
+    ଯଦି (ha->dns_wc_head_hash == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
     ha->dns_wc_tail_hash = ngx_pcalloc(ha->temp_pool,
-                                       sizeof(ngx_array_t) * ha->hsize);
-    if (ha->dns_wc_tail_hash == NULL) {
-        return NGX_ERROR;
+                                       ଆକାର(ngx_array_t) * ha->hsize);
+    ଯଦି (ha->dns_wc_tail_hash == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    return NGX_OK;
+    ଫେରନ୍ତୁ NGX_OK;
 }
 
 
 ngx_int_t
-ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
+ngx_hash_add_ଚାବି(ngx_hash_ଚାବିଗୁଡ଼ିକ_arrays_t *ha, ngx_str_t *ଚାବି, ଶୂନ୍ୟ *ମୂଲ୍ୟ,
     ngx_uint_t flags)
 {
     size_t           len;
     u_char          *p;
     ngx_str_t       *name;
     ngx_uint_t       i, k, n, skip, last;
-    ngx_array_t     *keys, *hwc;
-    ngx_hash_key_t  *hk;
+    ngx_array_t     *ଚାବିଗୁଡ଼ିକ, *hwc;
+    ngx_hash_ଚାବି_t  *hk;
 
-    last = key->len;
+    last = ଚାବି->len;
 
-    if (flags & NGX_HASH_WILDCARD_KEY) {
+    ଯଦି (flags & NGX_HASH_WILDCARD_ଚାବି) {
 
         /*
          * supported wildcards:
@@ -756,44 +756,44 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
         n = 0;
 
-        for (i = 0; i < key->len; i++) {
+        ପାଇଁ (i = 0; i < ଚାବି->len; i++) {
 
-            if (key->data[i] == '*') {
-                if (++n > 1) {
-                    return NGX_DECLINED;
+            ଯଦି (ଚାବି->data[i] == '*') {
+                ଯଦି (++n > 1) {
+                    ଫେରନ୍ତୁ NGX_DECLINED;
                 }
             }
 
-            if (key->data[i] == '.' && key->data[i + 1] == '.') {
-                return NGX_DECLINED;
+            ଯଦି (ଚାବି->data[i] == '.' && ଚାବି->data[i + 1] == '.') {
+                ଫେରନ୍ତୁ NGX_DECLINED;
             }
 
-            if (key->data[i] == '\0') {
-                return NGX_DECLINED;
+            ଯଦି (ଚାବି->data[i] == '\0') {
+                ଫେରନ୍ତୁ NGX_DECLINED;
             }
         }
 
-        if (key->len > 1 && key->data[0] == '.') {
+        ଯଦି (ଚାବି->len > 1 && ଚାବି->data[0] == '.') {
             skip = 1;
-            goto wildcard;
+            ଯାଅ wildcard;
         }
 
-        if (key->len > 2) {
+        ଯଦି (ଚାବି->len > 2) {
 
-            if (key->data[0] == '*' && key->data[1] == '.') {
+            ଯଦି (ଚାବି->data[0] == '*' && ଚାବି->data[1] == '.') {
                 skip = 2;
-                goto wildcard;
+                ଯାଅ wildcard;
             }
 
-            if (key->data[i - 2] == '.' && key->data[i - 1] == '*') {
+            ଯଦି (ଚାବି->data[i - 2] == '.' && ଚାବି->data[i - 1] == '*') {
                 skip = 0;
                 last -= 2;
-                goto wildcard;
+                ଯାଅ wildcard;
             }
         }
 
-        if (n) {
-            return NGX_DECLINED;
+        ଯଦି (n) {
+            ଫେରନ୍ତୁ NGX_DECLINED;
         }
     }
 
@@ -801,110 +801,110 @@ ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key, void *value,
 
     k = 0;
 
-    for (i = 0; i < last; i++) {
-        if (!(flags & NGX_HASH_READONLY_KEY)) {
-            key->data[i] = ngx_tolower(key->data[i]);
+    ପାଇଁ (i = 0; i < last; i++) {
+        ଯଦି (!(flags & NGX_HASH_READONLY_ଚାବି)) {
+            ଚାବି->data[i] = ngx_tolower(ଚାବି->data[i]);
         }
-        k = ngx_hash(k, key->data[i]);
+        k = ngx_hash(k, ଚାବି->data[i]);
     }
 
     k %= ha->hsize;
 
     /* check conflicts in exact hash */
 
-    name = ha->keys_hash[k].elts;
+    name = ha->ଚାବିଗୁଡ଼ିକ_hash[k].elts;
 
-    if (name) {
-        for (i = 0; i < ha->keys_hash[k].nelts; i++) {
-            if (last != name[i].len) {
-                continue;
+    ଯଦି (name) {
+        ପାଇଁ (i = 0; i < ha->ଚାବିଗୁଡ଼ିକ_hash[k].nelts; i++) {
+            ଯଦି (last != name[i].len) {
+                ଜାରି;
             }
 
-            if (ngx_strncmp(key->data, name[i].data, last) == 0) {
-                return NGX_BUSY;
+            ଯଦି (ngx_strncmp(ଚାବି->data, name[i].data, last) == 0) {
+                ଫେରନ୍ତୁ NGX_BUSY;
             }
         }
 
-    } else {
-        if (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
-                           sizeof(ngx_str_t))
+    } ଅନ୍ୟଥା {
+        ଯଦି (ngx_array_init(&ha->ଚାବିଗୁଡ଼ିକ_hash[k], ha->temp_pool, 4,
+                           ଆକାର(ngx_str_t))
             != NGX_OK)
         {
-            return NGX_ERROR;
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
     }
 
-    name = ngx_array_push(&ha->keys_hash[k]);
-    if (name == NULL) {
-        return NGX_ERROR;
+    name = ngx_array_ଠେଲ(&ha->ଚାବିଗୁଡ଼ିକ_hash[k]);
+    ଯଦି (name == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    *name = *key;
+    *name = *ଚାବି;
 
-    hk = ngx_array_push(&ha->keys);
-    if (hk == NULL) {
-        return NGX_ERROR;
+    hk = ngx_array_ଠେଲ(&ha->ଚାବିଗୁଡ଼ିକ);
+    ଯଦି (hk == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    hk->key = *key;
-    hk->key_hash = ngx_hash_key(key->data, last);
-    hk->value = value;
+    hk->ଚାବି = *ଚାବି;
+    hk->ଚାବି_hash = ngx_hash_ଚାବି(ଚାବି->data, last);
+    hk->ମୂଲ୍ୟ = ମୂଲ୍ୟ;
 
-    return NGX_OK;
+    ଫେରନ୍ତୁ NGX_OK;
 
 
 wildcard:
 
     /* wildcard hash */
 
-    k = ngx_hash_strlow(&key->data[skip], &key->data[skip], last - skip);
+    k = ngx_hash_strlow(&ଚାବି->data[skip], &ଚାବି->data[skip], last - skip);
 
     k %= ha->hsize;
 
-    if (skip == 1) {
+    ଯଦି (skip == 1) {
 
         /* check conflicts in exact hash for ".example.com" */
 
-        name = ha->keys_hash[k].elts;
+        name = ha->ଚାବିଗୁଡ଼ିକ_hash[k].elts;
 
-        if (name) {
+        ଯଦି (name) {
             len = last - skip;
 
-            for (i = 0; i < ha->keys_hash[k].nelts; i++) {
-                if (len != name[i].len) {
-                    continue;
+            ପାଇଁ (i = 0; i < ha->ଚାବିଗୁଡ଼ିକ_hash[k].nelts; i++) {
+                ଯଦି (len != name[i].len) {
+                    ଜାରି;
                 }
 
-                if (ngx_strncmp(&key->data[1], name[i].data, len) == 0) {
-                    return NGX_BUSY;
+                ଯଦି (ngx_strncmp(&ଚାବି->data[1], name[i].data, len) == 0) {
+                    ଫେରନ୍ତୁ NGX_BUSY;
                 }
             }
 
-        } else {
-            if (ngx_array_init(&ha->keys_hash[k], ha->temp_pool, 4,
-                               sizeof(ngx_str_t))
+        } ଅନ୍ୟଥା {
+            ଯଦି (ngx_array_init(&ha->ଚାବିଗୁଡ଼ିକ_hash[k], ha->temp_pool, 4,
+                               ଆକାର(ngx_str_t))
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                ଫେରନ୍ତୁ NGX_ERROR;
             }
         }
 
-        name = ngx_array_push(&ha->keys_hash[k]);
-        if (name == NULL) {
-            return NGX_ERROR;
+        name = ngx_array_ଠେଲ(&ha->ଚାବିଗୁଡ଼ିକ_hash[k]);
+        ଯଦି (name == ଖାଲି) {
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
 
         name->len = last - 1;
         name->data = ngx_pnalloc(ha->temp_pool, name->len);
-        if (name->data == NULL) {
-            return NGX_ERROR;
+        ଯଦି (name->data == ଖାଲି) {
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
 
-        ngx_memcpy(name->data, &key->data[1], name->len);
+        ngx_memcpy(name->data, &ଚାବି->data[1], name->len);
     }
 
 
-    if (skip) {
+    ଯଦି (skip) {
 
         /*
          * convert "*.example.com" to "com.example.\0"
@@ -912,102 +912,102 @@ wildcard:
          */
 
         p = ngx_pnalloc(ha->temp_pool, last);
-        if (p == NULL) {
-            return NGX_ERROR;
+        ଯଦି (p == ଖାଲି) {
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
 
         len = 0;
         n = 0;
 
-        for (i = last - 1; i; i--) {
-            if (key->data[i] == '.') {
-                ngx_memcpy(&p[n], &key->data[i + 1], len);
+        ପାଇଁ (i = last - 1; i; i--) {
+            ଯଦି (ଚାବି->data[i] == '.') {
+                ngx_memcpy(&p[n], &ଚାବି->data[i + 1], len);
                 n += len;
                 p[n++] = '.';
                 len = 0;
-                continue;
+                ଜାରି;
             }
 
             len++;
         }
 
-        if (len) {
-            ngx_memcpy(&p[n], &key->data[1], len);
+        ଯଦି (len) {
+            ngx_memcpy(&p[n], &ଚାବି->data[1], len);
             n += len;
         }
 
         p[n] = '\0';
 
         hwc = &ha->dns_wc_head;
-        keys = &ha->dns_wc_head_hash[k];
+        ଚାବିଗୁଡ଼ିକ = &ha->dns_wc_head_hash[k];
 
-    } else {
+    } ଅନ୍ୟଥା {
 
         /* convert "www.example.*" to "www.example\0" */
 
         last++;
 
         p = ngx_pnalloc(ha->temp_pool, last);
-        if (p == NULL) {
-            return NGX_ERROR;
+        ଯଦି (p == ଖାଲି) {
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
 
-        ngx_cpystrn(p, key->data, last);
+        ngx_cpystrn(p, ଚାବି->data, last);
 
         hwc = &ha->dns_wc_tail;
-        keys = &ha->dns_wc_tail_hash[k];
+        ଚାବିଗୁଡ଼ିକ = &ha->dns_wc_tail_hash[k];
     }
 
 
     /* check conflicts in wildcard hash */
 
-    name = keys->elts;
+    name = ଚାବିଗୁଡ଼ିକ->elts;
 
-    if (name) {
+    ଯଦି (name) {
         len = last - skip;
 
-        for (i = 0; i < keys->nelts; i++) {
-            if (len != name[i].len) {
-                continue;
+        ପାଇଁ (i = 0; i < ଚାବିଗୁଡ଼ିକ->nelts; i++) {
+            ଯଦି (len != name[i].len) {
+                ଜାରି;
             }
 
-            if (ngx_strncmp(key->data + skip, name[i].data, len) == 0) {
-                return NGX_BUSY;
+            ଯଦି (ngx_strncmp(ଚାବି->data + skip, name[i].data, len) == 0) {
+                ଫେରନ୍ତୁ NGX_BUSY;
             }
         }
 
-    } else {
-        if (ngx_array_init(keys, ha->temp_pool, 4, sizeof(ngx_str_t)) != NGX_OK)
+    } ଅନ୍ୟଥା {
+        ଯଦି (ngx_array_init(ଚାବିଗୁଡ଼ିକ, ha->temp_pool, 4, ଆକାର(ngx_str_t)) != NGX_OK)
         {
-            return NGX_ERROR;
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
     }
 
-    name = ngx_array_push(keys);
-    if (name == NULL) {
-        return NGX_ERROR;
+    name = ngx_array_ଠେଲ(ଚାବିଗୁଡ଼ିକ);
+    ଯଦି (name == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
     name->len = last - skip;
     name->data = ngx_pnalloc(ha->temp_pool, name->len);
-    if (name->data == NULL) {
-        return NGX_ERROR;
+    ଯଦି (name->data == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    ngx_memcpy(name->data, key->data + skip, name->len);
+    ngx_memcpy(name->data, ଚାବି->data + skip, name->len);
 
 
     /* add to wildcard hash */
 
-    hk = ngx_array_push(hwc);
-    if (hk == NULL) {
-        return NGX_ERROR;
+    hk = ngx_array_ଠେଲ(hwc);
+    ଯଦି (hk == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    hk->key.len = last - 1;
-    hk->key.data = p;
-    hk->key_hash = 0;
-    hk->value = value;
+    hk->ଚାବି.len = last - 1;
+    hk->ଚାବି.data = p;
+    hk->ଚାବି_hash = 0;
+    hk->ମୂଲ୍ୟ = ମୂଲ୍ୟ;
 
-    return NGX_OK;
+    ଫେରନ୍ତୁ NGX_OK;
 }

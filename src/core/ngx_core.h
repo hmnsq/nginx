@@ -9,31 +9,31 @@
 #define _NGX_CORE_H_INCLUDED_
 
 
-#include <ngx_config.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_config.h>
 
 
-typedef struct ngx_module_s          ngx_module_t;
-typedef struct ngx_conf_s            ngx_conf_t;
-typedef struct ngx_cycle_s           ngx_cycle_t;
-typedef struct ngx_pool_s            ngx_pool_t;
-typedef struct ngx_chain_s           ngx_chain_t;
-typedef struct ngx_log_s             ngx_log_t;
-typedef struct ngx_open_file_s       ngx_open_file_t;
-typedef struct ngx_command_s         ngx_command_t;
-typedef struct ngx_file_s            ngx_file_t;
-typedef struct ngx_event_s           ngx_event_t;
-typedef struct ngx_event_aio_s       ngx_event_aio_t;
-typedef struct ngx_connection_s      ngx_connection_t;
-typedef struct ngx_thread_task_s     ngx_thread_task_t;
-typedef struct ngx_ssl_s             ngx_ssl_t;
-typedef struct ngx_ssl_cache_s       ngx_ssl_cache_t;
-typedef struct ngx_proxy_protocol_s  ngx_proxy_protocol_t;
-typedef struct ngx_quic_stream_s     ngx_quic_stream_t;
-typedef struct ngx_ssl_connection_s  ngx_ssl_connection_t;
-typedef struct ngx_udp_connection_s  ngx_udp_connection_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_module_s          ngx_module_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_conf_s            ngx_conf_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_cycle_s           ngx_cycle_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_pool_s            ngx_pool_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_chain_s           ngx_chain_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_log_s             ngx_log_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_open_file_s       ngx_open_file_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_command_s         ngx_command_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_file_s            ngx_file_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_event_s           ngx_event_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_event_aio_s       ngx_event_aio_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_connection_s      ngx_connection_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_thread_task_s     ngx_thread_task_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_ssl_s             ngx_ssl_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_ssl_cache_s       ngx_ssl_cache_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_proxy_protocol_s  ngx_proxy_protocol_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_quic_stream_s     ngx_quic_stream_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_ssl_connection_s  ngx_ssl_connection_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_udp_connection_s  ngx_udp_connection_t;
 
-typedef void (*ngx_event_handler_pt)(ngx_event_t *ev);
-typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଶୂନ୍ୟ (*ngx_event_handler_pt)(ngx_event_t *ev);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଶୂନ୍ୟ (*ngx_connection_handler_pt)(ngx_connection_t *c);
 
 
 #define  NGX_OK          0
@@ -45,65 +45,65 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 #define  NGX_ABORT      -6
 
 
-#include <ngx_errno.h>
-#include <ngx_atomic.h>
-#include <ngx_thread.h>
-#include <ngx_rbtree.h>
-#include <ngx_time.h>
-#include <ngx_socket.h>
-#include <ngx_string.h>
-#include <ngx_files.h>
-#include <ngx_shmem.h>
-#include <ngx_process.h>
-#include <ngx_user.h>
-#include <ngx_dlopen.h>
-#include <ngx_parse.h>
-#include <ngx_parse_time.h>
-#include <ngx_log.h>
-#include <ngx_alloc.h>
-#include <ngx_palloc.h>
-#include <ngx_buf.h>
-#include <ngx_queue.h>
-#include <ngx_array.h>
-#include <ngx_list.h>
-#include <ngx_hash.h>
-#include <ngx_file.h>
-#include <ngx_crc.h>
-#include <ngx_crc32.h>
-#include <ngx_murmurhash.h>
-#include <ngx_siphash.h>
-#if (NGX_PCRE)
-#include <ngx_regex.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_errno.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_atomic.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_thread.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_rbtree.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_time.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_socket.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_string.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_files.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_shmem.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_process.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_user.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_dlopen.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_parse.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_parse_time.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_log.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_alloc.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_palloc.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_buf.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_queue.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_array.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_list.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_hash.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_file.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_crc.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_crc32.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_murmurhash.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_siphash.h>
+#ଯଦି (NGX_PCRE)
+#ଅନ୍ତର୍ଭାଵ <ngx_regex.h>
 #endif
-#include <ngx_radix_tree.h>
-#include <ngx_times.h>
-#include <ngx_rwlock.h>
-#include <ngx_shmtx.h>
-#include <ngx_data.h>
-#include <ngx_json.h>
-#include <ngx_slab.h>
-#include <ngx_inet.h>
-#include <ngx_cycle.h>
-#include <ngx_resolver.h>
-#if (NGX_OPENSSL)
-#include <ngx_event_openssl.h>
-#if (NGX_QUIC)
-#include <ngx_event_quic.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_radix_tree.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_times.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_rwlock.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_shmtx.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_data.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_json.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_slab.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_inet.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_cycle.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_resolver.h>
+#ଯଦି (NGX_OPENSSL)
+#ଅନ୍ତର୍ଭାଵ <ngx_event_openssl.h>
+#ଯଦି (NGX_QUIC)
+#ଅନ୍ତର୍ଭାଵ <ngx_event_quic.h>
 #endif
 #endif
-#include <ngx_process_cycle.h>
-#if (NGX_CONTROL_API)
-#include <ngx_control.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_process_cycle.h>
+#ଯଦି (NGX_CONTROL_API)
+#ଅନ୍ତର୍ଭାଵ <ngx_control.h>
 #endif
-#include <ngx_conf_file.h>
-#include <ngx_module.h>
-#include <ngx_open_file_cache.h>
-#include <ngx_os.h>
-#include <ngx_connection.h>
-#include <ngx_syslog.h>
-#include <ngx_proxy_protocol.h>
-#if (NGX_HAVE_BPF)
-#include <ngx_bpf.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_conf_file.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_module.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_open_file_cache.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_os.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_connection.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_syslog.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_proxy_protocol.h>
+#ଯଦି (NGX_HAVE_BPF)
+#ଅନ୍ତର୍ଭାଵ <ngx_bpf.h>
 #endif
 
 
@@ -112,13 +112,13 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 #define CRLF   "\r\n"
 
 
-#define ngx_abs(value)       (((value) >= 0) ? (value) : - (value))
+#define ngx_abs(ମୂଲ୍ୟ)       (((ମୂଲ୍ୟ) >= 0) ? (ମୂଲ୍ୟ) : - (ମୂଲ୍ୟ))
 #define ngx_max(val1, val2)  ((val1 < val2) ? (val2) : (val1))
 #define ngx_min(val1, val2)  ((val1 > val2) ? (val2) : (val1))
 
-void ngx_cpuinfo(void);
+ଶୂନ୍ୟ ngx_cpuinfo(ଶୂନ୍ୟ);
 
-#if (NGX_HAVE_OPENAT)
+#ଯଦି (NGX_HAVE_OPENAT)
 #define NGX_DISABLE_SYMLINKS_OFF        0
 #define NGX_DISABLE_SYMLINKS_ON         1
 #define NGX_DISABLE_SYMLINKS_NOTOWNER   2

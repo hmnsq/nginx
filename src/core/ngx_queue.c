@@ -5,12 +5,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_config.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_core.h>
 
 
-static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ସ୍ଥିର ଶୂନ୍ୟ ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
+    ngx_int_t (*cmp)(ଅଚଳ ngx_queue_t *, ଅଚଳ ngx_queue_t *));
 
 
 /*
@@ -19,31 +19,31 @@ static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
  */
 
 ngx_queue_t *
-ngx_queue_middle(ngx_queue_t *queue)
+ngx_queue_ମଧ୍ୟ(ngx_queue_t *queue)
 {
-    ngx_queue_t  *middle, *next;
+    ngx_queue_t  *ମଧ୍ୟ, *next;
 
-    middle = ngx_queue_head(queue);
+    ମଧ୍ୟ = ngx_queue_head(queue);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    ଯଦି (ମଧ୍ୟ == ngx_queue_last(queue)) {
+        ଫେରନ୍ତୁ ମଧ୍ୟ;
     }
 
     next = ngx_queue_head(queue);
 
-    for ( ;; ) {
-        middle = ngx_queue_next(middle);
+    ପାଇଁ ( ;; ) {
+        ମଧ୍ୟ = ngx_queue_next(ମଧ୍ୟ);
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ଯଦି (next == ngx_queue_last(queue)) {
+            ଫେରନ୍ତୁ ମଧ୍ୟ;
         }
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ଯଦି (next == ngx_queue_last(queue)) {
+            ଫେରନ୍ତୁ ମଧ୍ୟ;
         }
     }
 }
@@ -51,19 +51,19 @@ ngx_queue_middle(ngx_queue_t *queue)
 
 /* the stable merge sort */
 
-void
+ଶୂନ୍ୟ
 ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+    ngx_int_t (*cmp)(ଅଚଳ ngx_queue_t *, ଅଚଳ ngx_queue_t *))
 {
     ngx_queue_t  *q, tail;
 
     q = ngx_queue_head(queue);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    ଯଦି (q == ngx_queue_last(queue)) {
+        ଫେରନ୍ତୁ;
     }
 
-    q = ngx_queue_middle(queue);
+    q = ngx_queue_ମଧ୍ୟ(queue);
 
     ngx_queue_split(queue, q, &tail);
 
@@ -74,32 +74,32 @@ ngx_queue_sort(ngx_queue_t *queue,
 }
 
 
-static void
+ସ୍ଥିର ଶୂନ୍ୟ
 ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+    ngx_int_t (*cmp)(ଅଚଳ ngx_queue_t *, ଅଚଳ ngx_queue_t *))
 {
     ngx_queue_t  *q1, *q2;
 
     q1 = ngx_queue_head(queue);
     q2 = ngx_queue_head(tail);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
+    ପାଇଁ ( ;; ) {
+        ଯଦି (q1 == ngx_queue_sentinel(queue)) {
             ngx_queue_add(queue, tail);
-            break;
+            ଭାଙ୍ଗ;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        ଯଦି (q2 == ngx_queue_sentinel(tail)) {
+            ଭାଙ୍ଗ;
         }
 
-        if (cmp(q1, q2) <= 0) {
+        ଯଦି (cmp(q1, q2) <= 0) {
             q1 = ngx_queue_next(q1);
-            continue;
+            ଜାରି;
         }
 
         ngx_queue_remove(q2);
-        ngx_queue_insert_before(q1, q2);
+        ngx_queue_ଭର୍ତ୍ତି_before(q1, q2);
 
         q2 = ngx_queue_head(tail);
     }

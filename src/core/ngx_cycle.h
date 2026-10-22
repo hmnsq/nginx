@@ -9,8 +9,8 @@
 #define _NGX_CYCLE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_config.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_core.h>
 
 
 #ifndef NGX_CYCLE_POOL_SIZE
@@ -22,22 +22,22 @@
 #define NGX_DEBUG_POINTS_ABORT  2
 
 
-typedef struct ngx_shm_zone_s  ngx_shm_zone_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_shm_zone_s  ngx_shm_zone_t;
 
-typedef ngx_int_t (*ngx_shm_zone_init_pt) (ngx_shm_zone_t *zone, void *data);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ngx_int_t (*ngx_shm_zone_init_pt) (ngx_shm_zone_t *zone, ଶୂନ୍ୟ *data);
 
-struct ngx_shm_zone_s {
-    void                     *data;
+ସଂରଚନା ngx_shm_zone_s {
+    ଶୂନ୍ୟ                     *data;
     ngx_shm_t                 shm;
     ngx_shm_zone_init_pt      init;
-    void                     *tag;
-    void                     *sync;
+    ଶୂନ୍ୟ                     *tag;
+    ଶୂନ୍ୟ                     *sync;
     ngx_uint_t                noreuse;  /* unsigned  noreuse:1; */
 };
 
 
-struct ngx_cycle_s {
-    void                  ****conf_ctx;
+ସଂରଚନା ngx_cycle_s {
+    ଶୂନ୍ୟ                  ****conf_ctx;
     ngx_pool_t               *pool;
 
     ngx_log_t                *log;
@@ -62,7 +62,7 @@ struct ngx_cycle_s {
 
     ngx_array_t               config_dump;
     ngx_rbtree_t              config_dump_rbtree;
-    ngx_rbtree_node_t         config_dump_sentinel;
+    ngx_rbtree_ଗଣ୍ଠି_t         config_dump_sentinel;
 
     ngx_list_t                open_files;
     ngx_list_t                shared_memory;
@@ -86,7 +86,7 @@ struct ngx_cycle_s {
 };
 
 
-typedef struct {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା {
     ngx_flag_t                daemon;
     ngx_flag_t                master;
 
@@ -99,13 +99,13 @@ typedef struct {
     ngx_int_t                 rlimit_nofile;
     off_t                     rlimit_core;
 
-    int                       priority;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା                       priority;
 
     ngx_uint_t                cpu_affinity_auto;
     ngx_uint_t                cpu_affinity_n;
     ngx_cpuset_t             *cpu_affinity;
 
-    char                     *username;
+    ଅକ୍ଷର                     *username;
     ngx_uid_t                 user;
     ngx_gid_t                 group;
 
@@ -116,34 +116,34 @@ typedef struct {
     ngx_str_t                 oldpid;
 
     ngx_array_t               env;
-    char                    **environment;
+    ଅକ୍ଷର                    **environment;
 
     ngx_uint_t                transparent;  /* unsigned  transparent:1; */
 } ngx_core_conf_t;
 
 
-#define ngx_is_init_cycle(cycle)  (cycle->conf_ctx == NULL)
+#define ngx_is_init_cycle(cycle)  (cycle->conf_ctx == ଖାଲି)
 
 
 ngx_cycle_t *ngx_init_cycle(ngx_cycle_t *old_cycle);
 ngx_int_t ngx_create_pidfile(ngx_str_t *name, ngx_log_t *log);
-void ngx_delete_pidfile(ngx_cycle_t *cycle);
-ngx_int_t ngx_signal_process(ngx_cycle_t *cycle, char *sig);
-void ngx_reopen_files(ngx_cycle_t *cycle, ngx_uid_t user);
-char **ngx_set_environment(ngx_cycle_t *cycle, ngx_uint_t *last);
-ngx_pid_t ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv);
+ଶୂନ୍ୟ ngx_delete_pidfile(ngx_cycle_t *cycle);
+ngx_int_t ngx_signal_process(ngx_cycle_t *cycle, ଅକ୍ଷର *sig);
+ଶୂନ୍ୟ ngx_reopen_files(ngx_cycle_t *cycle, ngx_uid_t user);
+ଅକ୍ଷର **ngx_set_environment(ngx_cycle_t *cycle, ngx_uint_t *last);
+ngx_pid_t ngx_exec_new_ଦ୍ୱିମିକ(ngx_cycle_t *cycle, ଅକ୍ଷର *ଅଚଳ *argv);
 ngx_cpuset_t *ngx_get_cpu_affinity(ngx_uint_t n);
 ngx_shm_zone_t *ngx_shared_memory_add(ngx_conf_t *cf, ngx_str_t *name,
-    size_t size, void *tag);
-void ngx_set_shutdown_timer(ngx_cycle_t *cycle);
+    size_t size, ଶୂନ୍ୟ *tag);
+ଶୂନ୍ୟ ngx_set_shutdown_timer(ngx_cycle_t *cycle);
 
 
-extern volatile ngx_cycle_t  *ngx_cycle;
-extern ngx_array_t            ngx_old_cycles;
-extern ngx_module_t           ngx_core_module;
-extern ngx_uint_t             ngx_test_config;
-extern ngx_uint_t             ngx_dump_config;
-extern ngx_uint_t             ngx_quiet_mode;
+ବାହ୍ୟ ଅସ୍ଥିର ngx_cycle_t  *ngx_cycle;
+ବାହ୍ୟ ngx_array_t            ngx_old_cycles;
+ବାହ୍ୟ ngx_module_t           ngx_core_module;
+ବାହ୍ୟ ngx_uint_t             ngx_test_config;
+ବାହ୍ୟ ngx_uint_t             ngx_dump_config;
+ବାହ୍ୟ ngx_uint_t             ngx_quiet_mode;
 
 
 #endif /* _NGX_CYCLE_H_INCLUDED_ */

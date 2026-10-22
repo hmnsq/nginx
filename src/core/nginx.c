@@ -5,83 +5,83 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <nginx.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_config.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_core.h>
+#ଅନ୍ତର୍ଭାଵ <nginx.h>
 
 
-static void ngx_show_version_info(void);
-static ngx_int_t ngx_add_inherited_sockets(ngx_cycle_t *cycle);
-static void ngx_cleanup_environment(void *data);
-static void ngx_cleanup_environment_variable(void *data);
-static ngx_int_t ngx_get_options(int argc, char *const *argv);
-static ngx_int_t ngx_process_options(ngx_cycle_t *cycle);
-static ngx_int_t ngx_save_argv(ngx_cycle_t *cycle, int argc, char *const *argv);
-static void *ngx_core_module_create_conf(ngx_cycle_t *cycle);
-static char *ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf);
-static char *ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_set_env(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd,
-    void *conf);
-static char *ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd,
-    void *conf);
-static char *ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-#if (NGX_HAVE_DLOPEN)
-static void ngx_unload_module(void *data);
+ସ୍ଥିର ଶୂନ୍ୟ ngx_show_version_info(ଶୂନ୍ୟ);
+ସ୍ଥିର ngx_int_t ngx_add_inherited_sockets(ngx_cycle_t *cycle);
+ସ୍ଥିର ଶୂନ୍ୟ ngx_cleanup_environment(ଶୂନ୍ୟ *data);
+ସ୍ଥିର ଶୂନ୍ୟ ngx_cleanup_environment_variable(ଶୂନ୍ୟ *data);
+ସ୍ଥିର ngx_int_t ngx_get_options(ପୂର୍ଣ୍ଣସଂଖ୍ୟା argc, ଅକ୍ଷର *ଅଚଳ *argv);
+ସ୍ଥିର ngx_int_t ngx_process_options(ngx_cycle_t *cycle);
+ସ୍ଥିର ngx_int_t ngx_save_argv(ngx_cycle_t *cycle, ପୂର୍ଣ୍ଣସଂଖ୍ୟା argc, ଅକ୍ଷର *ଅଚଳ *argv);
+ସ୍ଥିର ଶୂନ୍ୟ *ngx_core_module_create_conf(ngx_cycle_t *cycle);
+ସ୍ଥିର ଅକ୍ଷର *ngx_core_module_init_conf(ngx_cycle_t *cycle, ଶୂନ୍ୟ *conf);
+ସ୍ଥିର ଅକ୍ଷର *ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, ଶୂନ୍ୟ *conf);
+ସ୍ଥିର ଅକ୍ଷର *ngx_set_env(ngx_conf_t *cf, ngx_command_t *cmd, ଶୂନ୍ୟ *conf);
+ସ୍ଥିର ଅକ୍ଷର *ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, ଶୂନ୍ୟ *conf);
+ସ୍ଥିର ଅକ୍ଷର *ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd,
+    ଶୂନ୍ୟ *conf);
+ସ୍ଥିର ଅକ୍ଷର *ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd,
+    ଶୂନ୍ୟ *conf);
+ସ୍ଥିର ଅକ୍ଷର *ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, ଶୂନ୍ୟ *conf);
+#ଯଦି (NGX_HAVE_DLOPEN)
+ସ୍ଥିର ଶୂନ୍ୟ ngx_unload_module(ଶୂନ୍ୟ *data);
 #endif
 
 
-static ngx_conf_enum_t  ngx_debug_points[] = {
+ସ୍ଥିର ngx_conf_enum_t  ngx_debug_points[] = {
     { ngx_string("stop"), NGX_DEBUG_POINTS_STOP },
     { ngx_string("abort"), NGX_DEBUG_POINTS_ABORT },
     { ngx_null_string, 0 }
 };
 
 
-static ngx_command_t  ngx_core_commands[] = {
+ସ୍ଥିର ngx_command_t  ngx_core_commands[] = {
 
     { ngx_string("daemon"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_FLAG,
       ngx_conf_set_flag_slot,
       0,
       offsetof(ngx_core_conf_t, daemon),
-      NULL },
+      ଖାଲି },
 
     { ngx_string("master_process"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_FLAG,
       ngx_conf_set_flag_slot,
       0,
       offsetof(ngx_core_conf_t, master),
-      NULL },
+      ଖାଲି },
 
     { ngx_string("timer_resolution"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_msec_slot,
       0,
       offsetof(ngx_core_conf_t, timer_resolution),
-      NULL },
+      ଖାଲି },
 
     { ngx_string("pid"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_str_slot,
       0,
       offsetof(ngx_core_conf_t, pid),
-      NULL },
+      ଖାଲି },
 
     { ngx_string("lock_file"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_str_slot,
       0,
       offsetof(ngx_core_conf_t, lock_file),
-      NULL },
+      ଖାଲି },
 
     { ngx_string("worker_processes"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_set_worker_processes,
       0,
       0,
-      NULL },
+      ଖାଲି },
 
     { ngx_string("debug_points"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
@@ -95,69 +95,69 @@ static ngx_command_t  ngx_core_commands[] = {
       ngx_set_user,
       0,
       0,
-      NULL },
+      ଖାଲି },
 
     { ngx_string("worker_priority"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_set_priority,
       0,
       0,
-      NULL },
+      ଖାଲି },
 
     { ngx_string("worker_cpu_affinity"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_1MORE,
       ngx_set_cpu_affinity,
       0,
       0,
-      NULL },
+      ଖାଲି },
 
     { ngx_string("worker_rlimit_nofile"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_num_slot,
+      ngx_conf_set_ଅଙ୍କ_slot,
       0,
       offsetof(ngx_core_conf_t, rlimit_nofile),
-      NULL },
+      ଖାଲି },
 
     { ngx_string("worker_rlimit_core"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_off_slot,
       0,
       offsetof(ngx_core_conf_t, rlimit_core),
-      NULL },
+      ଖାଲି },
 
     { ngx_string("worker_shutdown_timeout"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_msec_slot,
       0,
       offsetof(ngx_core_conf_t, shutdown_timeout),
-      NULL },
+      ଖାଲି },
 
     { ngx_string("working_directory"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_str_slot,
       0,
       offsetof(ngx_core_conf_t, working_directory),
-      NULL },
+      ଖାଲି },
 
     { ngx_string("env"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_set_env,
       0,
       0,
-      NULL },
+      ଖାଲି },
 
     { ngx_string("load_module"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
       ngx_load_module,
       0,
       0,
-      NULL },
+      ଖାଲି },
 
       ngx_null_command
 };
 
 
-static ngx_core_module_t  ngx_core_module_ctx = {
+ସ୍ଥିର ngx_core_module_t  ngx_core_module_ctx = {
     ngx_string("core"),
     ngx_core_module_create_conf,
     ngx_core_module_init_conf
@@ -169,35 +169,35 @@ ngx_module_t  ngx_core_module = {
     &ngx_core_module_ctx,                  /* module context */
     ngx_core_commands,                     /* module directives */
     NGX_CORE_MODULE,                       /* module type */
-    NULL,                                  /* init master */
-    NULL,                                  /* init module */
-    NULL,                                  /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
-    NULL,                                  /* exit process */
-    NULL,                                  /* exit master */
+    ଖାଲି,                                  /* init master */
+    ଖାଲି,                                  /* init module */
+    ଖାଲି,                                  /* init process */
+    ଖାଲି,                                  /* init thread */
+    ଖାଲି,                                  /* exit thread */
+    ଖାଲି,                                  /* exit process */
+    ଖାଲି,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
-static ngx_uint_t   ngx_show_help;
-static ngx_uint_t   ngx_show_version;
-static ngx_uint_t   ngx_show_configure;
-static u_char      *ngx_prefix;
-static u_char      *ngx_error_log;
-static u_char      *ngx_conf_file;
-static u_char      *ngx_conf_params;
-#if (NGX_CONTROL_API)
-static u_char      *ngx_control_addr;
+ସ୍ଥିର ngx_uint_t   ngx_show_help;
+ସ୍ଥିର ngx_uint_t   ngx_show_version;
+ସ୍ଥିର ngx_uint_t   ngx_show_configure;
+ସ୍ଥିର u_char      *ngx_prefix;
+ସ୍ଥିର u_char      *ngx_error_log;
+ସ୍ଥିର u_char      *ngx_conf_file;
+ସ୍ଥିର u_char      *ngx_conf_params;
+#ଯଦି (NGX_CONTROL_API)
+ସ୍ଥିର u_char      *ngx_control_addr;
 #endif
-static char        *ngx_signal;
+ସ୍ଥିର ଅକ୍ଷର        *ngx_signal;
 
 
-static char **ngx_os_environ;
+ସ୍ଥିର ଅକ୍ଷର **ngx_os_environ;
 
 
-int ngx_cdecl
-main(int argc, char *const *argv)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ngx_cdecl
+ମୁଖ୍ୟ(ପୂର୍ଣ୍ଣସଂଖ୍ୟା argc, ଅକ୍ଷର *ଅଚଳ *argv)
 {
     ngx_buf_t        *b;
     ngx_log_t        *log;
@@ -208,19 +208,19 @@ main(int argc, char *const *argv)
 
     ngx_debug_init();
 
-    if (ngx_strerror_init() != NGX_OK) {
-        return 1;
+    ଯଦି (ngx_strerror_init() != NGX_OK) {
+        ଫେରନ୍ତୁ 1;
     }
 
-    if (ngx_get_options(argc, argv) != NGX_OK) {
-        return 1;
+    ଯଦି (ngx_get_options(argc, argv) != NGX_OK) {
+        ଫେରନ୍ତୁ 1;
     }
 
-    if (ngx_show_version) {
+    ଯଦି (ngx_show_version) {
         ngx_show_version_info();
 
-        if (!ngx_test_config) {
-            return 0;
+        ଯଦି (!ngx_test_config) {
+            ଫେରନ୍ତୁ 0;
         }
     }
 
@@ -228,7 +228,7 @@ main(int argc, char *const *argv)
 
     ngx_time_init();
 
-#if (NGX_PCRE)
+#ଯଦି (NGX_PCRE)
     ngx_regex_init();
 #endif
 
@@ -236,12 +236,12 @@ main(int argc, char *const *argv)
     ngx_parent = ngx_getppid();
 
     log = ngx_log_init(ngx_prefix, ngx_error_log);
-    if (log == NULL) {
-        return 1;
+    ଯଦି (log == ଖାଲି) {
+        ଫେରନ୍ତୁ 1;
     }
 
     /* STUB */
-#if (NGX_OPENSSL)
+#ଯଦି (NGX_OPENSSL)
     ngx_ssl_init(log);
 #endif
 
@@ -250,33 +250,33 @@ main(int argc, char *const *argv)
      * ngx_process_options()
      */
 
-    ngx_memzero(&init_cycle, sizeof(ngx_cycle_t));
+    ngx_memzero(&init_cycle, ଆକାର(ngx_cycle_t));
     init_cycle.log = log;
     ngx_cycle = &init_cycle;
 
     init_cycle.pool = ngx_create_pool(1024, log);
-    if (init_cycle.pool == NULL) {
-        return 1;
+    ଯଦି (init_cycle.pool == ଖାଲି) {
+        ଫେରନ୍ତୁ 1;
     }
 
-    if (ngx_save_argv(&init_cycle, argc, argv) != NGX_OK) {
-        return 1;
+    ଯଦି (ngx_save_argv(&init_cycle, argc, argv) != NGX_OK) {
+        ଫେରନ୍ତୁ 1;
     }
 
-    if (ngx_process_options(&init_cycle) != NGX_OK) {
-        return 1;
+    ଯଦି (ngx_process_options(&init_cycle) != NGX_OK) {
+        ଫେରନ୍ତୁ 1;
     }
 
-    if (ngx_os_init(log) != NGX_OK) {
-        return 1;
+    ଯଦି (ngx_os_init(log) != NGX_OK) {
+        ଫେରନ୍ତୁ 1;
     }
 
     /*
      * ngx_crc32_table_init() requires ngx_cacheline_size set in ngx_os_init()
      */
 
-    if (ngx_crc32_table_init() != NGX_OK) {
-        return 1;
+    ଯଦି (ngx_crc32_table_init() != NGX_OK) {
+        ଫେରନ୍ତୁ 1;
     }
 
     /*
@@ -285,56 +285,56 @@ main(int argc, char *const *argv)
 
     ngx_slab_sizes_init();
 
-    if (ngx_add_inherited_sockets(&init_cycle) != NGX_OK) {
-        return 1;
+    ଯଦି (ngx_add_inherited_sockets(&init_cycle) != NGX_OK) {
+        ଫେରନ୍ତୁ 1;
     }
 
-#if (NGX_CONTROL_API)
+#ଯଦି (NGX_CONTROL_API)
     ngx_control_preinit();
 #endif
 
-    if (ngx_preinit_modules() != NGX_OK) {
-        return 1;
+    ଯଦି (ngx_preinit_modules() != NGX_OK) {
+        ଫେରନ୍ତୁ 1;
     }
 
     cycle = ngx_init_cycle(&init_cycle);
-    if (cycle == NULL) {
-        if (ngx_test_config) {
+    ଯଦି (cycle == ଖାଲି) {
+        ଯଦି (ngx_test_config) {
             ngx_log_stderr(0, "configuration file %s test failed",
                            init_cycle.conf_file.data);
         }
 
-        return 1;
+        ଫେରନ୍ତୁ 1;
     }
 
-    if (ngx_test_config) {
-        if (!ngx_quiet_mode) {
+    ଯଦି (ngx_test_config) {
+        ଯଦି (!ngx_quiet_mode) {
             ngx_log_stderr(0, "configuration file %s test is successful",
                            cycle->conf_file.data);
         }
 
-        if (ngx_dump_config) {
+        ଯଦି (ngx_dump_config) {
             cd = cycle->config_dump.elts;
 
-            for (i = 0; i < cycle->config_dump.nelts; i++) {
+            ପାଇଁ (i = 0; i < cycle->config_dump.nelts; i++) {
 
                 ngx_write_stdout("# configuration file ");
-                (void) ngx_write_fd(ngx_stdout, cd[i].name.data,
+                (ଶୂନ୍ୟ) ngx_write_fd(ngx_stdout, cd[i].name.data,
                                     cd[i].name.len);
                 ngx_write_stdout(":" NGX_LINEFEED);
 
                 b = cd[i].buffer;
 
-                (void) ngx_write_fd(ngx_stdout, b->pos, b->last - b->pos);
+                (ଶୂନ୍ୟ) ngx_write_fd(ngx_stdout, b->pos, b->last - b->pos);
                 ngx_write_stdout(NGX_LINEFEED);
             }
         }
 
-        return 0;
+        ଫେରନ୍ତୁ 0;
     }
 
-    if (ngx_signal) {
-        return ngx_signal_process(cycle, ngx_signal);
+    ଯଦି (ngx_signal) {
+        ଫେରନ୍ତୁ ngx_signal_process(cycle, ngx_signal);
     }
 
     ngx_os_status(cycle->log);
@@ -343,52 +343,52 @@ main(int argc, char *const *argv)
 
     ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
 
-    if (ccf->master && ngx_process == NGX_PROCESS_SINGLE) {
+    ଯଦି (ccf->master && ngx_process == NGX_PROCESS_SINGLE) {
         ngx_process = NGX_PROCESS_MASTER;
     }
 
-#if !(NGX_WIN32)
+#ଯଦି !(NGX_WIN32)
 
-    if (ngx_init_signals(cycle->log) != NGX_OK) {
-        return 1;
+    ଯଦି (ngx_init_signals(cycle->log) != NGX_OK) {
+        ଫେରନ୍ତୁ 1;
     }
 
-    if (!ngx_inherited && ccf->daemon) {
-        if (ngx_daemon(cycle->log) != NGX_OK) {
-            return 1;
+    ଯଦି (!ngx_inherited && ccf->daemon) {
+        ଯଦି (ngx_daemon(cycle->log) != NGX_OK) {
+            ଫେରନ୍ତୁ 1;
         }
 
         ngx_daemonized = 1;
     }
 
-    if (ngx_inherited) {
+    ଯଦି (ngx_inherited) {
         ngx_daemonized = 1;
     }
 
 #endif
 
-#if (NGX_CONTROL_API)
-    if (ngx_process == NGX_PROCESS_SINGLE) {
+#ଯଦି (NGX_CONTROL_API)
+    ଯଦି (ngx_process == NGX_PROCESS_SINGLE) {
         ngx_log_error(NGX_LOG_WARN, cycle->log, 0,
                       "control API unavailable in single process mode");
 
-    } else {
-        if (ngx_control_init(ngx_control_addr) != NGX_OK) {
-            return 1;
+    } ଅନ୍ୟଥା {
+        ଯଦି (ngx_control_init(ngx_control_addr) != NGX_OK) {
+            ଫେରନ୍ତୁ 1;
         }
     }
 #endif
 
-    if (ngx_create_pidfile(&ccf->pid, cycle->log) != NGX_OK) {
-        return 1;
+    ଯଦି (ngx_create_pidfile(&ccf->pid, cycle->log) != NGX_OK) {
+        ଫେରନ୍ତୁ 1;
     }
 
-    if (ngx_log_redirect_stderr(cycle) != NGX_OK) {
-        return 1;
+    ଯଦି (ngx_log_redirect_stderr(cycle) != NGX_OK) {
+        ଫେରନ୍ତୁ 1;
     }
 
-    if (log->file->fd != ngx_stderr) {
-        if (ngx_close_file(log->file->fd) == NGX_FILE_ERROR) {
+    ଯଦି (log->file->fd != ngx_stderr) {
+        ଯଦି (ngx_close_file(log->file->fd) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
                           ngx_close_file_n " built-in log failed");
         }
@@ -396,23 +396,23 @@ main(int argc, char *const *argv)
 
     ngx_use_stderr = 0;
 
-    if (ngx_process == NGX_PROCESS_SINGLE) {
+    ଯଦି (ngx_process == NGX_PROCESS_SINGLE) {
         ngx_single_process_cycle(cycle);
 
-    } else {
+    } ଅନ୍ୟଥା {
         ngx_master_process_cycle(cycle);
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
 
-static void
-ngx_show_version_info(void)
+ସ୍ଥିର ଶୂନ୍ୟ
+ngx_show_version_info(ଶୂନ୍ୟ)
 {
     ngx_write_stderr("nginx version: " NGINX_VER_BUILD NGX_LINEFEED);
 
-    if (ngx_show_help) {
+    ଯଦି (ngx_show_help) {
         ngx_write_stderr(
             "Usage: nginx [-?hvVtTq] [-s signal] [-p prefix]" NGX_LINEFEED
             "             [-e filename] [-c filename] [-g directives]"
@@ -429,19 +429,19 @@ ngx_show_version_info(void)
                                "during configuration testing" NGX_LINEFEED
             "  -s signal     : send signal to a master process: "
                                "stop, quit, reopen, reload" NGX_LINEFEED
-#if (NGX_CONTROL_API)
+#ଯଦି (NGX_CONTROL_API)
             "  -l addr       : open control socket on address" NGX_LINEFEED
 #endif
 #ifdef NGX_PREFIX
             "  -p prefix     : set prefix path (default: " NGX_PREFIX ")"
                                NGX_LINEFEED
-#else
+#ଅନ୍ୟଥା
             "  -p prefix     : set prefix path (default: NONE)" NGX_LINEFEED
 #endif
             "  -e filename   : set error log file (default: "
 #ifdef NGX_ERROR_LOG_STDERR
                                "stderr)" NGX_LINEFEED
-#else
+#ଅନ୍ୟଥା
                                NGX_ERROR_LOG_PATH ")" NGX_LINEFEED
 #endif
             "  -c filename   : set configuration file (default: " NGX_CONF_PATH
@@ -451,24 +451,24 @@ ngx_show_version_info(void)
         );
     }
 
-    if (ngx_show_configure) {
+    ଯଦି (ngx_show_configure) {
 
 #ifdef NGX_COMPILER
         ngx_write_stderr("built by " NGX_COMPILER NGX_LINEFEED);
 #endif
 
-#if (NGX_SSL)
-        if (ngx_strcmp(ngx_ssl_version(), OPENSSL_VERSION_TEXT) == 0) {
+#ଯଦି (NGX_SSL)
+        ଯଦି (ngx_strcmp(ngx_ssl_version(), OPENSSL_VERSION_TEXT) == 0) {
             ngx_write_stderr("built with " OPENSSL_VERSION_TEXT NGX_LINEFEED);
-        } else {
+        } ଅନ୍ୟଥା {
             ngx_write_stderr("built with " OPENSSL_VERSION_TEXT
                              " (running with ");
-            ngx_write_stderr((char *) (uintptr_t) ngx_ssl_version());
+            ngx_write_stderr((ଅକ୍ଷର *) (uintptr_t) ngx_ssl_version());
             ngx_write_stderr(")" NGX_LINEFEED);
         }
 #ifdef SSL_CTRL_SET_TLSEXT_HOSTNAME
         ngx_write_stderr("TLS SNI support enabled" NGX_LINEFEED);
-#else
+#ଅନ୍ୟଥା
         ngx_write_stderr("TLS SNI support disabled" NGX_LINEFEED);
 #endif
 #endif
@@ -478,7 +478,7 @@ ngx_show_version_info(void)
 }
 
 
-static ngx_int_t
+ସ୍ଥିର ngx_int_t
 ngx_add_inherited_sockets(ngx_cycle_t *cycle)
 {
     u_char           *p, *v, *inherited;
@@ -487,46 +487,46 @@ ngx_add_inherited_sockets(ngx_cycle_t *cycle)
 
     inherited = (u_char *) getenv(NGINX_VAR);
 
-    if (inherited == NULL) {
-        return NGX_OK;
+    ଯଦି (inherited == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_OK;
     }
 
     ngx_log_error(NGX_LOG_NOTICE, cycle->log, 0,
                   "using inherited sockets from \"%s\"", inherited);
 
-    if (ngx_array_init(&cycle->listening, cycle->pool, 10,
-                       sizeof(ngx_listening_t))
+    ଯଦି (ngx_array_init(&cycle->listening, cycle->pool, 10,
+                       ଆକାର(ngx_listening_t))
         != NGX_OK)
     {
-        return NGX_ERROR;
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    for (p = inherited, v = p; *p; p++) {
-        if (*p == ':' || *p == ';') {
+    ପାଇଁ (p = inherited, v = p; *p; p++) {
+        ଯଦି (*p == ':' || *p == ';') {
             s = ngx_atoi(v, p - v);
-            if (s == NGX_ERROR) {
+            ଯଦି (s == NGX_ERROR) {
                 ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
                               "invalid socket number \"%s\" in " NGINX_VAR
                               " environment variable, ignoring the rest"
                               " of the variable", v);
-                break;
+                ଭାଙ୍ଗ;
             }
 
             v = p + 1;
 
-            ls = ngx_array_push(&cycle->listening);
-            if (ls == NULL) {
-                return NGX_ERROR;
+            ls = ngx_array_ଠେଲ(&cycle->listening);
+            ଯଦି (ls == ଖାଲି) {
+                ଫେରନ୍ତୁ NGX_ERROR;
             }
 
-            ngx_memzero(ls, sizeof(ngx_listening_t));
+            ngx_memzero(ls, ଆକାର(ngx_listening_t));
 
             ls->fd = (ngx_socket_t) s;
             ls->inherited = 1;
         }
     }
 
-    if (v != p) {
+    ଯଦି (v != p) {
         ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
                       "invalid socket number \"%s\" in " NGINX_VAR
                       " environment variable, ignoring", v);
@@ -534,14 +534,14 @@ ngx_add_inherited_sockets(ngx_cycle_t *cycle)
 
     ngx_inherited = 1;
 
-    return ngx_set_inherited_sockets(cycle);
+    ଫେରନ୍ତୁ ngx_set_inherited_sockets(cycle);
 }
 
 
-char **
+ଅକ୍ଷର **
 ngx_set_environment(ngx_cycle_t *cycle, ngx_uint_t *last)
 {
-    char                **p, **env, *str;
+    ଅକ୍ଷର                **p, **env, *str;
     size_t                len;
     ngx_str_t            *var;
     ngx_uint_t            i, n;
@@ -550,23 +550,23 @@ ngx_set_environment(ngx_cycle_t *cycle, ngx_uint_t *last)
 
     ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
 
-    if (last == NULL && ccf->environment) {
-        return ccf->environment;
+    ଯଦି (last == ଖାଲି && ccf->environment) {
+        ଫେରନ୍ତୁ ccf->environment;
     }
 
     var = ccf->env.elts;
 
-    for (i = 0; i < ccf->env.nelts; i++) {
-        if (ngx_strcmp(var[i].data, "TZ") == 0
+    ପାଇଁ (i = 0; i < ccf->env.nelts; i++) {
+        ଯଦି (ngx_strcmp(var[i].data, "TZ") == 0
             || ngx_strncmp(var[i].data, "TZ=", 3) == 0)
         {
-            goto tz_found;
+            ଯାଅ tz_found;
         }
     }
 
-    var = ngx_array_push(&ccf->env);
-    if (var == NULL) {
-        return NULL;
+    var = ngx_array_ଠେଲ(&ccf->env);
+    ଯଦି (var == ଖାଲି) {
+        ଫେରନ୍ତୁ ଖାଲି;
     }
 
     var->len = 2;
@@ -578,41 +578,41 @@ tz_found:
 
     n = 0;
 
-    for (i = 0; i < ccf->env.nelts; i++) {
+    ପାଇଁ (i = 0; i < ccf->env.nelts; i++) {
 
-        if (var[i].data[var[i].len] == '=') {
+        ଯଦି (var[i].data[var[i].len] == '=') {
             n++;
-            continue;
+            ଜାରି;
         }
 
-        for (p = ngx_os_environ; *p; p++) {
+        ପାଇଁ (p = ngx_os_environ; *p; p++) {
 
-            if (ngx_strncmp(*p, var[i].data, var[i].len) == 0
+            ଯଦି (ngx_strncmp(*p, var[i].data, var[i].len) == 0
                 && (*p)[var[i].len] == '=')
             {
                 n++;
-                break;
+                ଭାଙ୍ଗ;
             }
         }
     }
 
-    if (last) {
-        env = ngx_alloc((*last + n + 1) * sizeof(char *), cycle->log);
-        if (env == NULL) {
-            return NULL;
+    ଯଦି (last) {
+        env = ngx_alloc((*last + n + 1) * ଆକାର(ଅକ୍ଷର *), cycle->log);
+        ଯଦି (env == ଖାଲି) {
+            ଫେରନ୍ତୁ ଖାଲି;
         }
 
         *last = n;
 
-    } else {
+    } ଅନ୍ୟଥା {
         cln = ngx_pool_cleanup_add(cycle->pool, 0);
-        if (cln == NULL) {
-            return NULL;
+        ଯଦି (cln == ଖାଲି) {
+            ଫେରନ୍ତୁ ଖାଲି;
         }
 
-        env = ngx_alloc((n + 1) * sizeof(char *), cycle->log);
-        if (env == NULL) {
-            return NULL;
+        env = ngx_alloc((n + 1) * ଆକାର(ଅକ୍ଷର *), cycle->log);
+        ଯଦି (env == ଖାଲି) {
+            ଫେରନ୍ତୁ ଖାଲି;
         }
 
         cln->handler = ngx_cleanup_environment;
@@ -621,25 +621,25 @@ tz_found:
 
     n = 0;
 
-    for (i = 0; i < ccf->env.nelts; i++) {
+    ପାଇଁ (i = 0; i < ccf->env.nelts; i++) {
 
-        if (var[i].data[var[i].len] == '=') {
+        ଯଦି (var[i].data[var[i].len] == '=') {
 
-            if (last) {
-                env[n++] = (char *) var[i].data;
-                continue;
+            ଯଦି (last) {
+                env[n++] = (ଅକ୍ଷର *) var[i].data;
+                ଜାରି;
             }
 
             cln = ngx_pool_cleanup_add(cycle->pool, 0);
-            if (cln == NULL) {
-                return NULL;
+            ଯଦି (cln == ଖାଲି) {
+                ଫେରନ୍ତୁ ଖାଲି;
             }
 
             len = ngx_strlen(var[i].data) + 1;
 
             str = ngx_alloc(len, cycle->log);
-            if (str == NULL) {
-                return NULL;
+            ଯଦି (str == ଖାଲି) {
+                ଫେରନ୍ତୁ ଖାଲି;
             }
 
             ngx_memcpy(str, var[i].data, len);
@@ -649,66 +649,66 @@ tz_found:
 
             env[n++] = str;
 
-            continue;
+            ଜାରି;
         }
 
-        for (p = ngx_os_environ; *p; p++) {
+        ପାଇଁ (p = ngx_os_environ; *p; p++) {
 
-            if (ngx_strncmp(*p, var[i].data, var[i].len) == 0
+            ଯଦି (ngx_strncmp(*p, var[i].data, var[i].len) == 0
                 && (*p)[var[i].len] == '=')
             {
                 env[n++] = *p;
-                break;
+                ଭାଙ୍ଗ;
             }
         }
     }
 
-    env[n] = NULL;
+    env[n] = ଖାଲି;
 
-    if (last == NULL) {
+    ଯଦି (last == ଖାଲି) {
         ccf->environment = env;
         environ = env;
     }
 
-    return env;
+    ଫେରନ୍ତୁ env;
 }
 
 
-static void
-ngx_cleanup_environment(void *data)
+ସ୍ଥିର ଶୂନ୍ୟ
+ngx_cleanup_environment(ଶୂନ୍ୟ *data)
 {
-    char  **env = data;
+    ଅକ୍ଷର  **env = data;
 
-    if (environ == env) {
+    ଯଦି (environ == env) {
 
         /*
          * if the environment is still used, as it happens on exit,
          * the only option is to leak it
          */
 
-        return;
+        ଫେରନ୍ତୁ;
     }
 
     ngx_free(env);
 }
 
 
-static void
-ngx_cleanup_environment_variable(void *data)
+ସ୍ଥିର ଶୂନ୍ୟ
+ngx_cleanup_environment_variable(ଶୂନ୍ୟ *data)
 {
-    char  *var = data;
+    ଅକ୍ଷର  *var = data;
 
-    char  **p;
+    ଅକ୍ଷର  **p;
 
-    for (p = environ; *p; p++) {
+    ପାଇଁ (p = environ; *p; p++) {
 
         /*
          * if an environment variable is still used, as it happens on exit,
          * the only option is to leak it
          */
 
-        if (*p == var) {
-            return;
+        ଯଦି (*p == var) {
+            ଫେରନ୍ତୁ;
         }
     }
 
@@ -717,9 +717,9 @@ ngx_cleanup_environment_variable(void *data)
 
 
 ngx_pid_t
-ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
+ngx_exec_new_ଦ୍ୱିମିକ(ngx_cycle_t *cycle, ଅକ୍ଷର *ଅଚଳ *argv)
 {
-    char             **env, *var;
+    ଅକ୍ଷର             **env, *var;
     u_char            *p;
     ngx_uint_t         i, n;
     ngx_pid_t          pid;
@@ -727,7 +727,7 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
     ngx_core_conf_t   *ccf;
     ngx_listening_t   *ls;
 
-    ngx_memzero(&ctx, sizeof(ngx_exec_ctx_t));
+    ngx_memzero(&ctx, ଆକାର(ngx_exec_ctx_t));
 
     ctx.path = argv[0];
     ctx.name = "new binary process";
@@ -735,24 +735,24 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
 
     n = 3;
     env = ngx_set_environment(cycle, &n);
-    if (env == NULL) {
-        return NGX_INVALID_PID;
+    ଯଦି (env == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_INVALID_PID;
     }
 
-    var = ngx_alloc(sizeof(NGINX_VAR)
+    var = ngx_alloc(ଆକାର(NGINX_VAR)
                     + cycle->listening.nelts * (NGX_INT32_LEN + 1) + 2,
                     cycle->log);
-    if (var == NULL) {
+    ଯଦି (var == ଖାଲି) {
         ngx_free(env);
-        return NGX_INVALID_PID;
+        ଫେରନ୍ତୁ NGX_INVALID_PID;
     }
 
-    p = ngx_cpymem(var, NGINX_VAR "=", sizeof(NGINX_VAR));
+    p = ngx_cpymem(var, NGINX_VAR "=", ଆକାର(NGINX_VAR));
 
     ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
-        if (ls[i].ignore) {
-            continue;
+    ପାଇଁ (i = 0; i < cycle->listening.nelts; i++) {
+        ଯଦି (ls[i].ignore) {
+            ଜାରି;
         }
         p = ngx_sprintf(p, "%ud;", ls[i].fd);
     }
@@ -761,7 +761,7 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
 
     env[n++] = var;
 
-#if (NGX_SETPROCTITLE_USES_ENV)
+#ଯଦି (NGX_SETPROCTITLE_USES_ENV)
 
     /* allocate the spare 300 bytes for the new binary process title */
 
@@ -773,30 +773,30 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
 
 #endif
 
-#if (NGX_CONTROL_API)
+#ଯଦି (NGX_CONTROL_API)
     env[n] = ngx_control_handoff();
 
-    if (env[n] != NULL) {
+    ଯଦି (env[n] != ଖାଲି) {
         n++;
     }
 #endif
 
-    env[n] = NULL;
+    env[n] = ଖାଲି;
 
-#if (NGX_DEBUG)
+#ଯଦି (NGX_DEBUG)
     {
-    char  **e;
-    for (e = env; *e; e++) {
+    ଅକ୍ଷର  **e;
+    ପାଇଁ (e = env; *e; e++) {
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, cycle->log, 0, "env: %s", *e);
     }
     }
 #endif
 
-    ctx.envp = (char *const *) env;
+    ctx.envp = (ଅକ୍ଷର *ଅଚଳ *) env;
 
     ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
 
-    if (ngx_rename_file(ccf->pid.data, ccf->oldpid.data) == NGX_FILE_ERROR) {
+    ଯଦି (ngx_rename_file(ccf->pid.data, ccf->oldpid.data) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
                       ngx_rename_file_n " %s to %s failed "
                       "before executing new binary process \"%s\"",
@@ -805,13 +805,13 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
         ngx_free(env);
         ngx_free(var);
 
-        return NGX_INVALID_PID;
+        ଫେରନ୍ତୁ NGX_INVALID_PID;
     }
 
     pid = ngx_execute(cycle, &ctx);
 
-    if (pid == NGX_INVALID_PID) {
-        if (ngx_rename_file(ccf->oldpid.data, ccf->pid.data)
+    ଯଦି (pid == NGX_INVALID_PID) {
+        ଯଦି (ngx_rename_file(ccf->oldpid.data, ccf->pid.data)
             == NGX_FILE_ERROR)
         {
             ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
@@ -824,230 +824,230 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
     ngx_free(env);
     ngx_free(var);
 
-    return pid;
+    ଫେରନ୍ତୁ pid;
 }
 
 
-static ngx_int_t
-ngx_get_options(int argc, char *const *argv)
+ସ୍ଥିର ngx_int_t
+ngx_get_options(ପୂର୍ଣ୍ଣସଂଖ୍ୟା argc, ଅକ୍ଷର *ଅଚଳ *argv)
 {
     u_char     *p;
     ngx_int_t   i;
 
-    for (i = 1; i < argc; i++) {
+    ପାଇଁ (i = 1; i < argc; i++) {
 
         p = (u_char *) argv[i];
 
-        if (*p++ != '-') {
+        ଯଦି (*p++ != '-') {
             ngx_log_stderr(0, "invalid option: \"%s\"", argv[i]);
-            return NGX_ERROR;
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
 
-        while (*p) {
+        ଯେତେବେଳେ (*p) {
 
-            switch (*p++) {
+            ବାଛ (*p++) {
 
-            case '?':
-            case 'h':
+            ସ୍ଥିତି '?':
+            ସ୍ଥିତି 'h':
                 ngx_show_version = 1;
                 ngx_show_help = 1;
-                break;
+                ଭାଙ୍ଗ;
 
-            case 'v':
+            ସ୍ଥିତି 'v':
                 ngx_show_version = 1;
-                break;
+                ଭାଙ୍ଗ;
 
-            case 'V':
+            ସ୍ଥିତି 'V':
                 ngx_show_version = 1;
                 ngx_show_configure = 1;
-                break;
+                ଭାଙ୍ଗ;
 
-            case 't':
+            ସ୍ଥିତି 't':
                 ngx_test_config = 1;
-                break;
+                ଭାଙ୍ଗ;
 
-            case 'T':
+            ସ୍ଥିତି 'T':
                 ngx_test_config = 1;
                 ngx_dump_config = 1;
-                break;
+                ଭାଙ୍ଗ;
 
-            case 'q':
+            ସ୍ଥିତି 'q':
                 ngx_quiet_mode = 1;
-                break;
+                ଭାଙ୍ଗ;
 
-            case 'p':
-                if (*p) {
+            ସ୍ଥିତି 'p':
+                ଯଦି (*p) {
                     ngx_prefix = p;
-                    goto next;
+                    ଯାଅ next;
                 }
 
-                if (argv[++i]) {
+                ଯଦି (argv[++i]) {
                     ngx_prefix = (u_char *) argv[i];
-                    goto next;
+                    ଯାଅ next;
                 }
 
                 ngx_log_stderr(0, "option \"-p\" requires directory name");
-                return NGX_ERROR;
+                ଫେରନ୍ତୁ NGX_ERROR;
 
-            case 'e':
-                if (*p) {
+            ସ୍ଥିତି 'e':
+                ଯଦି (*p) {
                     ngx_error_log = p;
 
-                } else if (argv[++i]) {
+                } ଅନ୍ୟଥା ଯଦି (argv[++i]) {
                     ngx_error_log = (u_char *) argv[i];
 
-                } else {
+                } ଅନ୍ୟଥା {
                     ngx_log_stderr(0, "option \"-e\" requires file name");
-                    return NGX_ERROR;
+                    ଫେରନ୍ତୁ NGX_ERROR;
                 }
 
-                if (ngx_strcmp(ngx_error_log, "stderr") == 0) {
+                ଯଦି (ngx_strcmp(ngx_error_log, "stderr") == 0) {
                     ngx_error_log = (u_char *) "";
                 }
 
-                goto next;
+                ଯାଅ next;
 
-            case 'c':
-                if (*p) {
+            ସ୍ଥିତି 'c':
+                ଯଦି (*p) {
                     ngx_conf_file = p;
-                    goto next;
+                    ଯାଅ next;
                 }
 
-                if (argv[++i]) {
+                ଯଦି (argv[++i]) {
                     ngx_conf_file = (u_char *) argv[i];
-                    goto next;
+                    ଯାଅ next;
                 }
 
                 ngx_log_stderr(0, "option \"-c\" requires file name");
-                return NGX_ERROR;
+                ଫେରନ୍ତୁ NGX_ERROR;
 
-            case 'g':
-                if (*p) {
+            ସ୍ଥିତି 'g':
+                ଯଦି (*p) {
                     ngx_conf_params = p;
-                    goto next;
+                    ଯାଅ next;
                 }
 
-                if (argv[++i]) {
+                ଯଦି (argv[++i]) {
                     ngx_conf_params = (u_char *) argv[i];
-                    goto next;
+                    ଯାଅ next;
                 }
 
                 ngx_log_stderr(0, "option \"-g\" requires parameter");
-                return NGX_ERROR;
+                ଫେରନ୍ତୁ NGX_ERROR;
 
-            case 's':
-                if (*p) {
-                    ngx_signal = (char *) p;
+            ସ୍ଥିତି 's':
+                ଯଦି (*p) {
+                    ngx_signal = (ଅକ୍ଷର *) p;
 
-                } else if (argv[++i]) {
+                } ଅନ୍ୟଥା ଯଦି (argv[++i]) {
                     ngx_signal = argv[i];
 
-                } else {
+                } ଅନ୍ୟଥା {
                     ngx_log_stderr(0, "option \"-s\" requires parameter");
-                    return NGX_ERROR;
+                    ଫେରନ୍ତୁ NGX_ERROR;
                 }
 
-                if (ngx_strcmp(ngx_signal, "stop") == 0
+                ଯଦି (ngx_strcmp(ngx_signal, "stop") == 0
                     || ngx_strcmp(ngx_signal, "quit") == 0
                     || ngx_strcmp(ngx_signal, "reopen") == 0
                     || ngx_strcmp(ngx_signal, "reload") == 0)
                 {
                     ngx_process = NGX_PROCESS_SIGNALLER;
-                    goto next;
+                    ଯାଅ next;
                 }
 
                 ngx_log_stderr(0, "invalid option: \"-s %s\"", ngx_signal);
-                return NGX_ERROR;
+                ଫେରନ୍ତୁ NGX_ERROR;
 
-#if (NGX_CONTROL_API)
-            case 'l':
+#ଯଦି (NGX_CONTROL_API)
+            ସ୍ଥିତି 'l':
                 ngx_control_api_enabled = 1;
 
-                if (*p) {
+                ଯଦି (*p) {
                     ngx_control_addr = p;
-                    goto next;
+                    ଯାଅ next;
                 }
 
-                if (argv[++i]) {
+                ଯଦି (argv[++i]) {
                     ngx_control_addr = (u_char *) argv[i];
-                    goto next;
+                    ଯାଅ next;
                 }
 
                 ngx_log_stderr(0, "option \"-l\" requires listen address");
-                return NGX_ERROR;
+                ଫେରନ୍ତୁ NGX_ERROR;
 #endif
 
-            default:
+            ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
                 ngx_log_stderr(0, "invalid option: \"%c\"", *(p - 1));
-                return NGX_ERROR;
+                ଫେରନ୍ତୁ NGX_ERROR;
             }
         }
 
     next:
 
-        continue;
+        ଜାରି;
     }
 
-    return NGX_OK;
+    ଫେରନ୍ତୁ NGX_OK;
 }
 
 
-static ngx_int_t
-ngx_save_argv(ngx_cycle_t *cycle, int argc, char *const *argv)
+ସ୍ଥିର ngx_int_t
+ngx_save_argv(ngx_cycle_t *cycle, ପୂର୍ଣ୍ଣସଂଖ୍ୟା argc, ଅକ୍ଷର *ଅଚଳ *argv)
 {
-#if (NGX_FREEBSD)
+#ଯଦି (NGX_FREEBSD)
 
-    ngx_os_argv = (char **) argv;
+    ngx_os_argv = (ଅକ୍ଷର **) argv;
     ngx_argc = argc;
-    ngx_argv = (char **) argv;
+    ngx_argv = (ଅକ୍ଷର **) argv;
 
-#else
+#ଅନ୍ୟଥା
     size_t     len;
     ngx_int_t  i;
 
-    ngx_os_argv = (char **) argv;
+    ngx_os_argv = (ଅକ୍ଷର **) argv;
     ngx_argc = argc;
 
-    ngx_argv = ngx_alloc((argc + 1) * sizeof(char *), cycle->log);
-    if (ngx_argv == NULL) {
-        return NGX_ERROR;
+    ngx_argv = ngx_alloc((argc + 1) * ଆକାର(ଅକ୍ଷର *), cycle->log);
+    ଯଦି (ngx_argv == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    for (i = 0; i < argc; i++) {
+    ପାଇଁ (i = 0; i < argc; i++) {
         len = ngx_strlen(argv[i]) + 1;
 
         ngx_argv[i] = ngx_alloc(len, cycle->log);
-        if (ngx_argv[i] == NULL) {
-            return NGX_ERROR;
+        ଯଦି (ngx_argv[i] == ଖାଲି) {
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
 
-        (void) ngx_cpystrn((u_char *) ngx_argv[i], (u_char *) argv[i], len);
+        (ଶୂନ୍ୟ) ngx_cpystrn((u_char *) ngx_argv[i], (u_char *) argv[i], len);
     }
 
-    ngx_argv[i] = NULL;
+    ngx_argv[i] = ଖାଲି;
 
 #endif
 
     ngx_os_environ = environ;
 
-    return NGX_OK;
+    ଫେରନ୍ତୁ NGX_OK;
 }
 
 
-static ngx_int_t
+ସ୍ଥିର ngx_int_t
 ngx_process_options(ngx_cycle_t *cycle)
 {
     u_char  *p;
     size_t   len;
 
-    if (ngx_prefix) {
+    ଯଦି (ngx_prefix) {
         len = ngx_strlen(ngx_prefix);
         p = ngx_prefix;
 
-        if (len && !ngx_path_separator(p[len - 1])) {
+        ଯଦି (len && !ngx_path_separator(p[len - 1])) {
             p = ngx_pnalloc(cycle->pool, len + 1);
-            if (p == NULL) {
-                return NGX_ERROR;
+            ଯଦି (p == ଖାଲି) {
+                ଫେରନ୍ତୁ NGX_ERROR;
             }
 
             ngx_memcpy(p, ngx_prefix, len);
@@ -1059,18 +1059,18 @@ ngx_process_options(ngx_cycle_t *cycle)
         cycle->prefix.len = len;
         cycle->prefix.data = p;
 
-    } else {
+    } ଅନ୍ୟଥା {
 
 #ifndef NGX_PREFIX
 
         p = ngx_pnalloc(cycle->pool, NGX_MAX_PATH);
-        if (p == NULL) {
-            return NGX_ERROR;
+        ଯଦି (p == ଖାଲି) {
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
 
-        if (ngx_getcwd(p, NGX_MAX_PATH) == 0) {
+        ଯଦି (ngx_getcwd(p, NGX_MAX_PATH) == 0) {
             ngx_log_stderr(ngx_errno, "[emerg]: " ngx_getcwd_n " failed");
-            return NGX_ERROR;
+            ଫେରନ୍ତୁ NGX_ERROR;
         }
 
         len = ngx_strlen(p);
@@ -1082,11 +1082,11 @@ ngx_process_options(ngx_cycle_t *cycle)
         cycle->prefix.len = len;
         cycle->prefix.data = p;
 
-#else
+#ଅନ୍ୟଥା
 
 #ifdef NGX_CONF_PREFIX
         ngx_str_set(&cycle->conf_prefix, NGX_CONF_PREFIX);
-#else
+#ଅନ୍ୟଥା
         ngx_str_set(&cycle->conf_prefix, NGX_PREFIX);
 #endif
         ngx_str_set(&cycle->prefix, NGX_PREFIX);
@@ -1094,58 +1094,58 @@ ngx_process_options(ngx_cycle_t *cycle)
 #endif
     }
 
-    if (ngx_conf_file) {
+    ଯଦି (ngx_conf_file) {
         cycle->conf_file.len = ngx_strlen(ngx_conf_file);
         cycle->conf_file.data = ngx_conf_file;
 
-    } else {
+    } ଅନ୍ୟଥା {
         ngx_str_set(&cycle->conf_file, NGX_CONF_PATH);
     }
 
-    if (ngx_conf_full_name(cycle, &cycle->conf_file, 0) != NGX_OK) {
-        return NGX_ERROR;
+    ଯଦି (ngx_conf_full_name(cycle, &cycle->conf_file, 0) != NGX_OK) {
+        ଫେରନ୍ତୁ NGX_ERROR;
     }
 
-    for (p = cycle->conf_file.data + cycle->conf_file.len - 1;
+    ପାଇଁ (p = cycle->conf_file.data + cycle->conf_file.len - 1;
          p > cycle->conf_file.data;
          p--)
     {
-        if (ngx_path_separator(*p)) {
+        ଯଦି (ngx_path_separator(*p)) {
             cycle->conf_prefix.len = p - cycle->conf_file.data + 1;
             cycle->conf_prefix.data = cycle->conf_file.data;
-            break;
+            ଭାଙ୍ଗ;
         }
     }
 
-    if (ngx_error_log) {
+    ଯଦି (ngx_error_log) {
         cycle->error_log.len = ngx_strlen(ngx_error_log);
         cycle->error_log.data = ngx_error_log;
 
-    } else {
+    } ଅନ୍ୟଥା {
         ngx_str_set(&cycle->error_log, NGX_ERROR_LOG_PATH);
     }
 
-    if (ngx_conf_params) {
+    ଯଦି (ngx_conf_params) {
         cycle->conf_param.len = ngx_strlen(ngx_conf_params);
         cycle->conf_param.data = ngx_conf_params;
     }
 
-    if (ngx_test_config) {
+    ଯଦି (ngx_test_config) {
         cycle->log->log_level = NGX_LOG_INFO;
     }
 
-    return NGX_OK;
+    ଫେରନ୍ତୁ NGX_OK;
 }
 
 
-static void *
+ସ୍ଥିର ଶୂନ୍ୟ *
 ngx_core_module_create_conf(ngx_cycle_t *cycle)
 {
     ngx_core_conf_t  *ccf;
 
-    ccf = ngx_pcalloc(cycle->pool, sizeof(ngx_core_conf_t));
-    if (ccf == NULL) {
-        return NULL;
+    ccf = ngx_pcalloc(cycle->pool, ଆକାର(ngx_core_conf_t));
+    ଯଦି (ccf == ଖାଲି) {
+        ଫେରନ୍ତୁ ଖାଲି;
     }
 
     /*
@@ -1173,32 +1173,32 @@ ngx_core_module_create_conf(ngx_cycle_t *cycle)
     ccf->user = (ngx_uid_t) NGX_CONF_UNSET_UINT;
     ccf->group = (ngx_gid_t) NGX_CONF_UNSET_UINT;
 
-    if (ngx_array_init(&ccf->env, cycle->pool, 1, sizeof(ngx_str_t))
+    ଯଦି (ngx_array_init(&ccf->env, cycle->pool, 1, ଆକାର(ngx_str_t))
         != NGX_OK)
     {
-        return NULL;
+        ଫେରନ୍ତୁ ଖାଲି;
     }
 
-    return ccf;
+    ଫେରନ୍ତୁ ccf;
 }
 
 
-static char *
-ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
+ସ୍ଥିର ଅକ୍ଷର *
+ngx_core_module_init_conf(ngx_cycle_t *cycle, ଶୂନ୍ୟ *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_conf_init_value(ccf->daemon, 1);
-    ngx_conf_init_value(ccf->master, 1);
-    ngx_conf_init_msec_value(ccf->timer_resolution, 0);
-    ngx_conf_init_msec_value(ccf->shutdown_timeout, 0);
+    ngx_conf_init_ମୂଲ୍ୟ(ccf->daemon, 1);
+    ngx_conf_init_ମୂଲ୍ୟ(ccf->master, 1);
+    ngx_conf_init_msec_ମୂଲ୍ୟ(ccf->timer_resolution, 0);
+    ngx_conf_init_msec_ମୂଲ୍ୟ(ccf->shutdown_timeout, 0);
 
-    ngx_conf_init_value(ccf->worker_processes, 1);
-    ngx_conf_init_value(ccf->debug_points, 0);
+    ngx_conf_init_ମୂଲ୍ୟ(ccf->worker_processes, 1);
+    ngx_conf_init_ମୂଲ୍ୟ(ccf->debug_points, 0);
 
-#if (NGX_HAVE_CPU_AFFINITY)
+#ଯଦି (NGX_HAVE_CPU_AFFINITY)
 
-    if (!ccf->cpu_affinity_auto
+    ଯଦି (!ccf->cpu_affinity_auto
         && ccf->cpu_affinity_n
         && ccf->cpu_affinity_n != 1
         && ccf->cpu_affinity_n != (ngx_uint_t) ccf->worker_processes)
@@ -1212,60 +1212,60 @@ ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
 #endif
 
 
-    if (ccf->pid.len == 0) {
+    ଯଦି (ccf->pid.len == 0) {
         ngx_str_set(&ccf->pid, NGX_PID_PATH);
     }
 
-    if (ngx_conf_full_name(cycle, &ccf->pid, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    ଯଦି (ngx_conf_full_name(cycle, &ccf->pid, 0) != NGX_OK) {
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
-    ccf->oldpid.len = ccf->pid.len + sizeof(NGX_OLDPID_EXT);
+    ccf->oldpid.len = ccf->pid.len + ଆକାର(NGX_OLDPID_EXT);
 
     ccf->oldpid.data = ngx_pnalloc(cycle->pool, ccf->oldpid.len);
-    if (ccf->oldpid.data == NULL) {
-        return NGX_CONF_ERROR;
+    ଯଦି (ccf->oldpid.data == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
     ngx_memcpy(ngx_cpymem(ccf->oldpid.data, ccf->pid.data, ccf->pid.len),
-               NGX_OLDPID_EXT, sizeof(NGX_OLDPID_EXT));
+               NGX_OLDPID_EXT, ଆକାର(NGX_OLDPID_EXT));
 
 
-    if (ccf->working_directory.len) {
+    ଯଦି (ccf->working_directory.len) {
         ngx_file_info_t  fi;
 
-        if (ngx_conf_full_name(cycle, &ccf->working_directory, 0) != NGX_OK) {
-            return NGX_CONF_ERROR;
+        ଯଦି (ngx_conf_full_name(cycle, &ccf->working_directory, 0) != NGX_OK) {
+            ଫେରନ୍ତୁ NGX_CONF_ERROR;
         }
 
-        if (ngx_file_info(ccf->working_directory.data, &fi) == NGX_FILE_ERROR) {
+        ଯଦି (ngx_file_info(ccf->working_directory.data, &fi) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
                           ngx_file_info_n " \"%s\" failed",
                           ccf->working_directory.data);
-            return NGX_CONF_ERROR;
+            ଫେରନ୍ତୁ NGX_CONF_ERROR;
         }
 
-        if (!ngx_is_dir(&fi)) {
+        ଯଦି (!ngx_is_dir(&fi)) {
             ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
                           "\"%s\" is not a directory",
                           ccf->working_directory.data);
-            return NGX_CONF_ERROR;
+            ଫେରନ୍ତୁ NGX_CONF_ERROR;
         }
     }
 
 
-#if !(NGX_WIN32)
+#ଯଦି !(NGX_WIN32)
 
-    if (ccf->user == (uid_t) NGX_CONF_UNSET_UINT && geteuid() == 0) {
-        struct group   *grp;
-        struct passwd  *pwd;
+    ଯଦି (ccf->user == (uid_t) NGX_CONF_UNSET_UINT && geteuid() == 0) {
+        ସଂରଚନା group   *grp;
+        ସଂରଚନା passwd  *pwd;
 
         ngx_set_errno(0);
         pwd = getpwnam(NGX_USER);
-        if (pwd == NULL) {
+        ଯଦି (pwd == ଖାଲି) {
             ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
                           "getpwnam(\"" NGX_USER "\") failed");
-            return NGX_CONF_ERROR;
+            ଫେରନ୍ତୁ NGX_CONF_ERROR;
         }
 
         ccf->username = NGX_USER;
@@ -1273,22 +1273,22 @@ ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
 
         ngx_set_errno(0);
         grp = getgrnam(NGX_GROUP);
-        if (grp == NULL) {
+        ଯଦି (grp == ଖାଲି) {
             ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
                           "getgrnam(\"" NGX_GROUP "\") failed");
-            return NGX_CONF_ERROR;
+            ଫେରନ୍ତୁ NGX_CONF_ERROR;
         }
 
         ccf->group = grp->gr_gid;
     }
 
 
-    if (ccf->lock_file.len == 0) {
+    ଯଦି (ccf->lock_file.len == 0) {
         ngx_str_set(&ccf->lock_file, NGX_LOCK_PATH);
     }
 
-    if (ngx_conf_full_name(cycle, &ccf->lock_file, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    ଯଦି (ngx_conf_full_name(cycle, &ccf->lock_file, 0) != NGX_OK) {
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
     {
@@ -1296,10 +1296,10 @@ ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
 
     lock_file = cycle->old_cycle->lock_file;
 
-    if (lock_file.len) {
+    ଯଦି (lock_file.len) {
         lock_file.len--;
 
-        if (ccf->lock_file.len != lock_file.len
+        ଯଦି (ccf->lock_file.len != lock_file.len
             || ngx_strncmp(ccf->lock_file.data, lock_file.data, lock_file.len)
                != 0)
         {
@@ -1308,293 +1308,293 @@ ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
         }
 
         cycle->lock_file.len = lock_file.len + 1;
-        lock_file.len += sizeof(".accept");
+        lock_file.len += ଆକାର(".accept");
 
         cycle->lock_file.data = ngx_pstrdup(cycle->pool, &lock_file);
-        if (cycle->lock_file.data == NULL) {
-            return NGX_CONF_ERROR;
+        ଯଦି (cycle->lock_file.data == ଖାଲି) {
+            ଫେରନ୍ତୁ NGX_CONF_ERROR;
         }
 
-    } else {
+    } ଅନ୍ୟଥା {
         cycle->lock_file.len = ccf->lock_file.len + 1;
         cycle->lock_file.data = ngx_pnalloc(cycle->pool,
-                                      ccf->lock_file.len + sizeof(".accept"));
-        if (cycle->lock_file.data == NULL) {
-            return NGX_CONF_ERROR;
+                                      ccf->lock_file.len + ଆକାର(".accept"));
+        ଯଦି (cycle->lock_file.data == ଖାଲି) {
+            ଫେରନ୍ତୁ NGX_CONF_ERROR;
         }
 
         ngx_memcpy(ngx_cpymem(cycle->lock_file.data, ccf->lock_file.data,
                               ccf->lock_file.len),
-                   ".accept", sizeof(".accept"));
+                   ".accept", ଆକାର(".accept"));
     }
     }
 
 #endif
 
-    return NGX_CONF_OK;
+    ଫେରନ୍ତୁ NGX_CONF_OK;
 }
 
 
-static char *
-ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ସ୍ଥିର ଅକ୍ଷର *
+ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, ଶୂନ୍ୟ *conf)
 {
-#if (NGX_WIN32)
+#ଯଦି (NGX_WIN32)
 
     ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                        "\"user\" is not supported, ignored");
 
-    return NGX_CONF_OK;
+    ଫେରନ୍ତୁ NGX_CONF_OK;
 
-#else
+#ଅନ୍ୟଥା
 
     ngx_core_conf_t  *ccf = conf;
 
-    char             *group;
-    struct passwd    *pwd;
-    struct group     *grp;
-    ngx_str_t        *value;
+    ଅକ୍ଷର             *group;
+    ସଂରଚନା passwd    *pwd;
+    ସଂରଚନା group     *grp;
+    ngx_str_t        *ମୂଲ୍ୟ;
 
-    if (ccf->user != (uid_t) NGX_CONF_UNSET_UINT) {
-        return "is duplicate";
+    ଯଦି (ccf->user != (uid_t) NGX_CONF_UNSET_UINT) {
+        ଫେରନ୍ତୁ "is duplicate";
     }
 
-    if (geteuid() != 0) {
+    ଯଦି (geteuid() != 0) {
         ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                            "the \"user\" directive makes sense only "
                            "if the master process runs "
                            "with super-user privileges, ignored");
-        return NGX_CONF_OK;
+        ଫେରନ୍ତୁ NGX_CONF_OK;
     }
 
-    value = cf->args->elts;
+    ମୂଲ୍ୟ = cf->args->elts;
 
-    ccf->username = (char *) value[1].data;
+    ccf->username = (ଅକ୍ଷର *) ମୂଲ୍ୟ[1].data;
 
     ngx_set_errno(0);
-    pwd = getpwnam((const char *) value[1].data);
-    if (pwd == NULL) {
+    pwd = getpwnam((ଅଚଳ ଅକ୍ଷର *) ମୂଲ୍ୟ[1].data);
+    ଯଦି (pwd == ଖାଲି) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
-                           "getpwnam(\"%s\") failed", value[1].data);
-        return NGX_CONF_ERROR;
+                           "getpwnam(\"%s\") failed", ମୂଲ୍ୟ[1].data);
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
     ccf->user = pwd->pw_uid;
 
-    group = (char *) ((cf->args->nelts == 2) ? value[1].data : value[2].data);
+    group = (ଅକ୍ଷର *) ((cf->args->nelts == 2) ? ମୂଲ୍ୟ[1].data : ମୂଲ୍ୟ[2].data);
 
     ngx_set_errno(0);
     grp = getgrnam(group);
-    if (grp == NULL) {
+    ଯଦି (grp == ଖାଲି) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
                            "getgrnam(\"%s\") failed", group);
-        return NGX_CONF_ERROR;
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
     ccf->group = grp->gr_gid;
 
-    return NGX_CONF_OK;
+    ଫେରନ୍ତୁ NGX_CONF_OK;
 
 #endif
 }
 
 
-static char *
-ngx_set_env(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ସ୍ଥିର ଅକ୍ଷର *
+ngx_set_env(ngx_conf_t *cf, ngx_command_t *cmd, ଶୂନ୍ୟ *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_str_t   *value, *var;
+    ngx_str_t   *ମୂଲ୍ୟ, *var;
     ngx_uint_t   i;
 
-    var = ngx_array_push(&ccf->env);
-    if (var == NULL) {
-        return NGX_CONF_ERROR;
+    var = ngx_array_ଠେଲ(&ccf->env);
+    ଯଦି (var == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
-    *var = value[1];
+    ମୂଲ୍ୟ = cf->args->elts;
+    *var = ମୂଲ୍ୟ[1];
 
-    for (i = 0; i < value[1].len; i++) {
+    ପାଇଁ (i = 0; i < ମୂଲ୍ୟ[1].len; i++) {
 
-        if (value[1].data[i] == '=') {
+        ଯଦି (ମୂଲ୍ୟ[1].data[i] == '=') {
 
             var->len = i;
 
-            return NGX_CONF_OK;
+            ଫେରନ୍ତୁ NGX_CONF_OK;
         }
     }
 
-    return NGX_CONF_OK;
+    ଫେରନ୍ତୁ NGX_CONF_OK;
 }
 
 
-static char *
-ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ସ୍ଥିର ଅକ୍ଷର *
+ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, ଶୂନ୍ୟ *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_str_t        *value;
+    ngx_str_t        *ମୂଲ୍ୟ;
     ngx_uint_t        n, minus;
 
-    if (ccf->priority != 0) {
-        return "is duplicate";
+    ଯଦି (ccf->priority != 0) {
+        ଫେରନ୍ତୁ "is duplicate";
     }
 
-    value = cf->args->elts;
+    ମୂଲ୍ୟ = cf->args->elts;
 
-    if (value[1].data[0] == '-') {
+    ଯଦି (ମୂଲ୍ୟ[1].data[0] == '-') {
         n = 1;
         minus = 1;
 
-    } else if (value[1].data[0] == '+') {
+    } ଅନ୍ୟଥା ଯଦି (ମୂଲ୍ୟ[1].data[0] == '+') {
         n = 1;
         minus = 0;
 
-    } else {
+    } ଅନ୍ୟଥା {
         n = 0;
         minus = 0;
     }
 
-    ccf->priority = ngx_atoi(&value[1].data[n], value[1].len - n);
-    if (ccf->priority == NGX_ERROR) {
-        return "invalid number";
+    ccf->priority = ngx_atoi(&ମୂଲ୍ୟ[1].data[n], ମୂଲ୍ୟ[1].len - n);
+    ଯଦି (ccf->priority == NGX_ERROR) {
+        ଫେରନ୍ତୁ "invalid number";
     }
 
-    if (minus) {
+    ଯଦି (minus) {
         ccf->priority = -ccf->priority;
     }
 
-    return NGX_CONF_OK;
+    ଫେରନ୍ତୁ NGX_CONF_OK;
 }
 
 
-static char *
-ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ସ୍ଥିର ଅକ୍ଷର *
+ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd, ଶୂନ୍ୟ *conf)
 {
-#if (NGX_HAVE_CPU_AFFINITY)
+#ଯଦି (NGX_HAVE_CPU_AFFINITY)
     ngx_core_conf_t  *ccf = conf;
 
     u_char            ch, *p;
-    ngx_str_t        *value;
+    ngx_str_t        *ମୂଲ୍ୟ;
     ngx_uint_t        i, n;
     ngx_cpuset_t     *mask;
 
-    if (ccf->cpu_affinity) {
-        return "is duplicate";
+    ଯଦି (ccf->cpu_affinity) {
+        ଫେରନ୍ତୁ "is duplicate";
     }
 
-    mask = ngx_palloc(cf->pool, (cf->args->nelts - 1) * sizeof(ngx_cpuset_t));
-    if (mask == NULL) {
-        return NGX_CONF_ERROR;
+    mask = ngx_palloc(cf->pool, (cf->args->nelts - 1) * ଆକାର(ngx_cpuset_t));
+    ଯଦି (mask == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
     ccf->cpu_affinity_n = cf->args->nelts - 1;
     ccf->cpu_affinity = mask;
 
-    value = cf->args->elts;
+    ମୂଲ୍ୟ = cf->args->elts;
 
-    if (ngx_strcmp(value[1].data, "auto") == 0) {
+    ଯଦି (ngx_strcmp(ମୂଲ୍ୟ[1].data, "auto") == 0) {
 
-        if (cf->args->nelts > 3) {
+        ଯଦି (cf->args->nelts > 3) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "invalid number of arguments in "
                                "\"worker_cpu_affinity\" directive");
-            return NGX_CONF_ERROR;
+            ଫେରନ୍ତୁ NGX_CONF_ERROR;
         }
 
         ccf->cpu_affinity_auto = 1;
 
         CPU_ZERO(&mask[0]);
-        for (i = 0; i < (ngx_uint_t) ngx_min(ngx_ncpu, CPU_SETSIZE); i++) {
+        ପାଇଁ (i = 0; i < (ngx_uint_t) ngx_min(ngx_ncpu, CPU_SETSIZE); i++) {
             CPU_SET(i, &mask[0]);
         }
 
         n = 2;
 
-    } else {
+    } ଅନ୍ୟଥା {
         n = 1;
     }
 
-    for ( /* void */ ; n < cf->args->nelts; n++) {
+    ପାଇଁ ( /* void */ ; n < cf->args->nelts; n++) {
 
-        if (value[n].len > CPU_SETSIZE) {
+        ଯଦି (ମୂଲ୍ୟ[n].len > CPU_SETSIZE) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                          "\"worker_cpu_affinity\" supports up to %d CPUs only",
                          CPU_SETSIZE);
-            return NGX_CONF_ERROR;
+            ଫେରନ୍ତୁ NGX_CONF_ERROR;
         }
 
         i = 0;
         CPU_ZERO(&mask[n - 1]);
 
-        for (p = value[n].data + value[n].len - 1;
-             p >= value[n].data;
+        ପାଇଁ (p = ମୂଲ୍ୟ[n].data + ମୂଲ୍ୟ[n].len - 1;
+             p >= ମୂଲ୍ୟ[n].data;
              p--)
         {
             ch = *p;
 
-            if (ch == ' ') {
-                continue;
+            ଯଦି (ch == ' ') {
+                ଜାରି;
             }
 
             i++;
 
-            if (ch == '0') {
-                continue;
+            ଯଦି (ch == '0') {
+                ଜାରି;
             }
 
-            if (ch == '1') {
+            ଯଦି (ch == '1') {
                 CPU_SET(i - 1, &mask[n - 1]);
-                continue;
+                ଜାରି;
             }
 
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                           "invalid character \"%c\" in \"worker_cpu_affinity\"",
                           ch);
-            return NGX_CONF_ERROR;
+            ଫେରନ୍ତୁ NGX_CONF_ERROR;
         }
     }
 
-#else
+#ଅନ୍ୟଥା
 
     ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                        "\"worker_cpu_affinity\" is not supported "
                        "on this platform, ignored");
 #endif
 
-    return NGX_CONF_OK;
+    ଫେରନ୍ତୁ NGX_CONF_OK;
 }
 
 
 ngx_cpuset_t *
 ngx_get_cpu_affinity(ngx_uint_t n)
 {
-#if (NGX_HAVE_CPU_AFFINITY)
+#ଯଦି (NGX_HAVE_CPU_AFFINITY)
     ngx_uint_t        i, j;
     ngx_cpuset_t     *mask;
     ngx_core_conf_t  *ccf;
 
-    static ngx_cpuset_t  result;
+    ସ୍ଥିର ngx_cpuset_t  result;
 
     ccf = (ngx_core_conf_t *) ngx_get_conf(ngx_cycle->conf_ctx,
                                            ngx_core_module);
 
-    if (ccf->cpu_affinity == NULL) {
-        return NULL;
+    ଯଦି (ccf->cpu_affinity == ଖାଲି) {
+        ଫେରନ୍ତୁ ଖାଲି;
     }
 
-    if (ccf->cpu_affinity_auto) {
+    ଯଦି (ccf->cpu_affinity_auto) {
         mask = &ccf->cpu_affinity[ccf->cpu_affinity_n - 1];
 
-        for (i = 0, j = n; /* void */ ; i++) {
+        ପାଇଁ (i = 0, j = n; /* void */ ; i++) {
 
-            if (CPU_ISSET(i % CPU_SETSIZE, mask) && j-- == 0) {
-                break;
+            ଯଦି (CPU_ISSET(i % CPU_SETSIZE, mask) && j-- == 0) {
+                ଭାଙ୍ଗ;
             }
 
-            if (i == CPU_SETSIZE && j == n) {
+            ଯଦି (i == CPU_SETSIZE && j == n) {
                 /* empty mask */
-                return NULL;
+                ଫେରନ୍ତୁ ଖାଲି;
             }
 
             /* void */
@@ -1603,142 +1603,142 @@ ngx_get_cpu_affinity(ngx_uint_t n)
         CPU_ZERO(&result);
         CPU_SET(i % CPU_SETSIZE, &result);
 
-        return &result;
+        ଫେରନ୍ତୁ &result;
     }
 
-    if (ccf->cpu_affinity_n > n) {
-        return &ccf->cpu_affinity[n];
+    ଯଦି (ccf->cpu_affinity_n > n) {
+        ଫେରନ୍ତୁ &ccf->cpu_affinity[n];
     }
 
-    return &ccf->cpu_affinity[ccf->cpu_affinity_n - 1];
+    ଫେରନ୍ତୁ &ccf->cpu_affinity[ccf->cpu_affinity_n - 1];
 
-#else
+#ଅନ୍ୟଥା
 
-    return NULL;
+    ଫେରନ୍ତୁ ଖାଲି;
 
 #endif
 }
 
 
-static char *
-ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ସ୍ଥିର ଅକ୍ଷର *
+ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd, ଶୂନ୍ୟ *conf)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *ମୂଲ୍ୟ;
     ngx_core_conf_t  *ccf;
 
     ccf = (ngx_core_conf_t *) conf;
 
-    if (ccf->worker_processes != NGX_CONF_UNSET) {
-        return "is duplicate";
+    ଯଦି (ccf->worker_processes != NGX_CONF_UNSET) {
+        ଫେରନ୍ତୁ "is duplicate";
     }
 
-    value = cf->args->elts;
+    ମୂଲ୍ୟ = cf->args->elts;
 
-    if (ngx_strcmp(value[1].data, "auto") == 0) {
+    ଯଦି (ngx_strcmp(ମୂଲ୍ୟ[1].data, "auto") == 0) {
         ccf->worker_processes = ngx_ncpu;
-        return NGX_CONF_OK;
+        ଫେରନ୍ତୁ NGX_CONF_OK;
     }
 
-    ccf->worker_processes = ngx_atoi(value[1].data, value[1].len);
+    ccf->worker_processes = ngx_atoi(ମୂଲ୍ୟ[1].data, ମୂଲ୍ୟ[1].len);
 
-    if (ccf->worker_processes == NGX_ERROR) {
-        return "invalid value";
+    ଯଦି (ccf->worker_processes == NGX_ERROR) {
+        ଫେରନ୍ତୁ "invalid value";
     }
 
-    return NGX_CONF_OK;
+    ଫେରନ୍ତୁ NGX_CONF_OK;
 }
 
 
-static char *
-ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ସ୍ଥିର ଅକ୍ଷର *
+ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, ଶୂନ୍ୟ *conf)
 {
-#if (NGX_HAVE_DLOPEN)
-    void                *handle;
-    char               **names, **order;
-    ngx_str_t           *value, file;
+#ଯଦି (NGX_HAVE_DLOPEN)
+    ଶୂନ୍ୟ                *handle;
+    ଅକ୍ଷର               **names, **order;
+    ngx_str_t           *ମୂଲ୍ୟ, file;
     ngx_uint_t           i;
     ngx_module_t        *module, **modules;
     ngx_pool_cleanup_t  *cln;
 
-    if (cf->cycle->modules_used) {
-        return "is specified too late";
+    ଯଦି (cf->cycle->modules_used) {
+        ଫେରନ୍ତୁ "is specified too late";
     }
 
-    value = cf->args->elts;
+    ମୂଲ୍ୟ = cf->args->elts;
 
-    file = value[1];
+    file = ମୂଲ୍ୟ[1];
 
-    if (ngx_conf_full_name(cf->cycle, &file, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    ଯଦି (ngx_conf_full_name(cf->cycle, &file, 0) != NGX_OK) {
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
     cln = ngx_pool_cleanup_add(cf->cycle->pool, 0);
-    if (cln == NULL) {
-        return NGX_CONF_ERROR;
+    ଯଦି (cln == ଖାଲି) {
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
     handle = ngx_dlopen(file.data);
-    if (handle == NULL) {
+    ଯଦି (handle == ଖାଲି) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            ngx_dlopen_n " \"%s\" failed (%s)",
                            file.data, ngx_dlerror());
-        return NGX_CONF_ERROR;
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
     cln->handler = ngx_unload_module;
     cln->data = handle;
 
     modules = ngx_dlsym(handle, "ngx_modules");
-    if (modules == NULL) {
+    ଯଦି (modules == ଖାଲି) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            ngx_dlsym_n " \"%V\", \"%s\" failed (%s)",
-                           &value[1], "ngx_modules", ngx_dlerror());
-        return NGX_CONF_ERROR;
+                           &ମୂଲ୍ୟ[1], "ngx_modules", ngx_dlerror());
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
     names = ngx_dlsym(handle, "ngx_module_names");
-    if (names == NULL) {
+    ଯଦି (names == ଖାଲି) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            ngx_dlsym_n " \"%V\", \"%s\" failed (%s)",
-                           &value[1], "ngx_module_names", ngx_dlerror());
-        return NGX_CONF_ERROR;
+                           &ମୂଲ୍ୟ[1], "ngx_module_names", ngx_dlerror());
+        ଫେରନ୍ତୁ NGX_CONF_ERROR;
     }
 
     order = ngx_dlsym(handle, "ngx_module_order");
 
-    for (i = 0; modules[i]; i++) {
+    ପାଇଁ (i = 0; modules[i]; i++) {
         module = modules[i];
         module->name = names[i];
 
-        if (ngx_add_module(cf, &file, module, order) != NGX_OK) {
-            return NGX_CONF_ERROR;
+        ଯଦି (ngx_add_module(cf, &file, module, order) != NGX_OK) {
+            ଫେରନ୍ତୁ NGX_CONF_ERROR;
         }
 
         ngx_log_debug2(NGX_LOG_DEBUG_CORE, cf->log, 0, "module: %s i:%ui",
                        module->name, module->index);
     }
 
-    return NGX_CONF_OK;
+    ଫେରନ୍ତୁ NGX_CONF_OK;
 
-#else
+#ଅନ୍ୟଥା
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                        "\"load_module\" is not supported "
                        "on this platform");
-    return NGX_CONF_ERROR;
+    ଫେରନ୍ତୁ NGX_CONF_ERROR;
 
 #endif
 }
 
 
-#if (NGX_HAVE_DLOPEN)
+#ଯଦି (NGX_HAVE_DLOPEN)
 
-static void
-ngx_unload_module(void *data)
+ସ୍ଥିର ଶୂନ୍ୟ
+ngx_unload_module(ଶୂନ୍ୟ *data)
 {
-    void  *handle = data;
+    ଶୂନ୍ୟ  *handle = data;
 
-    if (ngx_dlclose(handle) != 0) {
+    ଯଦି (ngx_dlclose(handle) != 0) {
         ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0,
                       ngx_dlclose_n " failed (%s)", ngx_dlerror());
     }

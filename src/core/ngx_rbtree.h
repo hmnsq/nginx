@@ -9,78 +9,78 @@
 #define _NGX_RBTREE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_config.h>
+#ଅନ୍ତର୍ଭାଵ <ngx_core.h>
 
 
-typedef ngx_uint_t  ngx_rbtree_key_t;
-typedef ngx_int_t   ngx_rbtree_key_int_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ngx_uint_t  ngx_rbtree_ଚାବି_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ngx_int_t   ngx_rbtree_ଚାବି_int_t;
 
 
-typedef struct ngx_rbtree_node_s  ngx_rbtree_node_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_rbtree_ଗଣ୍ଠି_s  ngx_rbtree_ଗଣ୍ଠି_t;
 
-struct ngx_rbtree_node_s {
-    ngx_rbtree_key_t       key;
-    ngx_rbtree_node_t     *left;
-    ngx_rbtree_node_t     *right;
-    ngx_rbtree_node_t     *parent;
+ସଂରଚନା ngx_rbtree_ଗଣ୍ଠି_s {
+    ngx_rbtree_ଚାବି_t       ଚାବି;
+    ngx_rbtree_ଗଣ୍ଠି_t     *ବାମ;
+    ngx_rbtree_ଗଣ୍ଠି_t     *ଡାହାଣ;
+    ngx_rbtree_ଗଣ୍ଠି_t     *parent;
     u_char                 color;
     u_char                 data;
 };
 
 
-typedef struct ngx_rbtree_s  ngx_rbtree_t;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା ngx_rbtree_s  ngx_rbtree_t;
 
-typedef void (*ngx_rbtree_insert_pt) (ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଶୂନ୍ୟ (*ngx_rbtree_ଭର୍ତ୍ତି_pt) (ngx_rbtree_ଗଣ୍ଠି_t *ମୂଳ,
+    ngx_rbtree_ଗଣ୍ଠି_t *ଗଣ୍ଠି, ngx_rbtree_ଗଣ୍ଠି_t *sentinel);
 
-struct ngx_rbtree_s {
-    ngx_rbtree_node_t     *root;
-    ngx_rbtree_node_t     *sentinel;
-    ngx_rbtree_insert_pt   insert;
+ସଂରଚନା ngx_rbtree_s {
+    ngx_rbtree_ଗଣ୍ଠି_t     *ମୂଳ;
+    ngx_rbtree_ଗଣ୍ଠି_t     *sentinel;
+    ngx_rbtree_ଭର୍ତ୍ତି_pt   ଭର୍ତ୍ତି;
 };
 
 
-#define ngx_rbtree_init(tree, s, i)                                           \
+#define ngx_rbtree_init(ବୃକ୍ଷ, s, i)                                           \
     ngx_rbtree_sentinel_init(s);                                              \
-    (tree)->root = s;                                                         \
-    (tree)->sentinel = s;                                                     \
-    (tree)->insert = i
+    (ବୃକ୍ଷ)->ମୂଳ = s;                                                         \
+    (ବୃକ୍ଷ)->sentinel = s;                                                     \
+    (ବୃକ୍ଷ)->ଭର୍ତ୍ତି = i
 
-#define ngx_rbtree_data(node, type, link)                                     \
-    (type *) ((u_char *) (node) - offsetof(type, link))
-
-
-void ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_insert_value(ngx_rbtree_node_t *root, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel);
-void ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-ngx_rbtree_node_t *ngx_rbtree_next(ngx_rbtree_t *tree,
-    ngx_rbtree_node_t *node);
+#define ngx_rbtree_data(ଗଣ୍ଠି, type, link)                                     \
+    (type *) ((u_char *) (ଗଣ୍ଠି) - offsetof(type, link))
 
 
-#define ngx_rbt_red(node)               ((node)->color = 1)
-#define ngx_rbt_black(node)             ((node)->color = 0)
-#define ngx_rbt_is_red(node)            ((node)->color)
-#define ngx_rbt_is_black(node)          (!ngx_rbt_is_red(node))
+ଶୂନ୍ୟ ngx_rbtree_ଭର୍ତ୍ତି(ngx_rbtree_t *ବୃକ୍ଷ, ngx_rbtree_ଗଣ୍ଠି_t *ଗଣ୍ଠି);
+ଶୂନ୍ୟ ngx_rbtree_delete(ngx_rbtree_t *ବୃକ୍ଷ, ngx_rbtree_ଗଣ୍ଠି_t *ଗଣ୍ଠି);
+ଶୂନ୍ୟ ngx_rbtree_ଭର୍ତ୍ତି_ମୂଲ୍ୟ(ngx_rbtree_ଗଣ୍ଠି_t *ମୂଳ, ngx_rbtree_ଗଣ୍ଠି_t *ଗଣ୍ଠି,
+    ngx_rbtree_ଗଣ୍ଠି_t *sentinel);
+ଶୂନ୍ୟ ngx_rbtree_ଭର୍ତ୍ତି_timer_ମୂଲ୍ୟ(ngx_rbtree_ଗଣ୍ଠି_t *ମୂଳ,
+    ngx_rbtree_ଗଣ୍ଠି_t *ଗଣ୍ଠି, ngx_rbtree_ଗଣ୍ଠି_t *sentinel);
+ngx_rbtree_ଗଣ୍ଠି_t *ngx_rbtree_next(ngx_rbtree_t *ବୃକ୍ଷ,
+    ngx_rbtree_ଗଣ୍ଠି_t *ଗଣ୍ଠି);
+
+
+#define ngx_rbt_red(ଗଣ୍ଠି)               ((ଗଣ୍ଠି)->color = 1)
+#define ngx_rbt_black(ଗଣ୍ଠି)             ((ଗଣ୍ଠି)->color = 0)
+#define ngx_rbt_is_red(ଗଣ୍ଠି)            ((ଗଣ୍ଠି)->color)
+#define ngx_rbt_is_black(ଗଣ୍ଠି)          (!ngx_rbt_is_red(ଗଣ୍ଠି))
 #define ngx_rbt_copy_color(n1, n2)      (n1->color = n2->color)
 
 
 /* a sentinel must be black */
 
-#define ngx_rbtree_sentinel_init(node)  ngx_rbt_black(node)
+#define ngx_rbtree_sentinel_init(ଗଣ୍ଠି)  ngx_rbt_black(ଗଣ୍ଠି)
 
 
-static ngx_inline ngx_rbtree_node_t *
-ngx_rbtree_min(ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ସ୍ଥିର ngx_inline ngx_rbtree_ଗଣ୍ଠି_t *
+ngx_rbtree_min(ngx_rbtree_ଗଣ୍ଠି_t *ଗଣ୍ଠି, ngx_rbtree_ଗଣ୍ଠି_t *sentinel)
 {
-    while (node->left != sentinel) {
-        node = node->left;
+    ଯେତେବେଳେ (ଗଣ୍ଠି->ବାମ != sentinel) {
+        ଗଣ୍ଠି = ଗଣ୍ଠି->ବାମ;
     }
 
-    return node;
+    ଫେରନ୍ତୁ ଗଣ୍ଠି;
 }
 
 
