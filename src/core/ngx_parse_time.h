@@ -9,14 +9,14 @@
 #define _NGX_PARSE_TIME_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-time_t ngx_parse_http_time(u_char *value, size_t len);
+समय_प्रकार ngx_parse_http_time(u_char *मूल्य, माप_प्रकार len);
 
 /* compatibility */
-#define ngx_http_parse_time(value, len)  ngx_parse_http_time(value, len)
+#define ngx_http_parse_time(मूल्य, len)  ngx_parse_http_time(मूल्य, len)
 
 
 #endif /* _NGX_PARSE_TIME_H_INCLUDED_ */
