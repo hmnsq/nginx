@@ -5,35 +5,35 @@
  */
 
 
-#ifndef _NGX_PROXY_PROTOCOL_H_INCLUDED_
-#define _NGX_PROXY_PROTOCOL_H_INCLUDED_
+#اگر_تعریف_نشده _NGX_PROXY_PROTOCOL_H_INCLUDED_
+#تعریف_کن _NGX_PROXY_PROTOCOL_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-#define NGX_PROXY_PROTOCOL_V1_MAX_HEADER  107
-#define NGX_PROXY_PROTOCOL_MAX_HEADER     4096
+#تعریف_کن NGX_PROXY_PROTOCOL_V1_MAX_سرآیند  107
+#تعریف_کن NGX_PROXY_PROTOCOL_MAX_سرآیند     4096
 
 
-struct ngx_proxy_protocol_s {
+بنية ngx_proxy_protocol_s {
     ngx_str_t           src_addr;
     ngx_str_t           dst_addr;
-    in_port_t           src_port;
-    in_port_t           dst_port;
+    درون_پورت_t           src_پورت;
+    درون_پورت_t           dst_پورت;
     ngx_str_t           tlvs;
 };
 
 
 u_char *ngx_proxy_protocol_read(ngx_connection_t *c, u_char *buf,
-    u_char *last);
+    u_char *آخرین);
 u_char *ngx_proxy_protocol_write(ngx_connection_t *c, u_char *buf,
-    u_char *last);
+    u_char *آخرین);
 u_char *ngx_proxy_protocol_v2_write(ngx_connection_t *c, u_char *buf,
-    u_char *last, ngx_array_t *tlvs);
+    u_char *آخرین, ngx_array_t *tlvs);
 ngx_int_t ngx_proxy_protocol_get_tlv(ngx_connection_t *c, ngx_str_t *name,
-    ngx_str_t *value);
+    ngx_str_t *مقدار);
 
 
-#endif /* _NGX_PROXY_PROTOCOL_H_INCLUDED_ */
+#پایان_اگر /* _NGX_PROXY_PROTOCOL_H_INCLUDED_ */

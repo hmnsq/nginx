@@ -5,16 +5,16 @@
  */
 
 
-#ifndef _NGX_CRYPT_H_INCLUDED_
-#define _NGX_CRYPT_H_INCLUDED_
+#اگر_تعریف_نشده _NGX_CRYPT_H_INCLUDED_
+#تعریف_کن _NGX_CRYPT_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-ngx_int_t ngx_crypt(ngx_pool_t *pool, u_char *key, u_char *salt,
+ngx_int_t ngx_crypt(ngx_pool_t *pool, u_char *کلید, u_char *salt,
     u_char **encrypted);
 
 
-#endif /* _NGX_CRYPT_H_INCLUDED_ */
+#پایان_اگر /* _NGX_CRYPT_H_INCLUDED_ */

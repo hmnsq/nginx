@@ -5,11 +5,11 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-static ngx_msec_t ngx_monotonic_time(time_t sec, ngx_uint_t msec);
+ساكن ngx_msec_t ngx_monotonic_زمان(زمان_t sec, ngx_uint_t msec);
 
 
 /*
@@ -21,20 +21,20 @@ static ngx_msec_t ngx_monotonic_time(time_t sec, ngx_uint_t msec);
  * to run more than NGX_TIME_SLOTS seconds.
  */
 
-#define NGX_TIME_SLOTS   64
+#تعریف_کن NGX_زمان_SLOTS   64
 
-static ngx_uint_t        slot;
-static ngx_atomic_t      ngx_time_lock;
+ساكن ngx_uint_t        جایگاه;
+ساكن ngx_atomic_t      ngx_زمان_قفل;
 
-volatile ngx_msec_t      ngx_current_msec;
-volatile ngx_time_t     *ngx_cached_time;
-volatile ngx_str_t       ngx_cached_err_log_time;
-volatile ngx_str_t       ngx_cached_http_time;
-volatile ngx_str_t       ngx_cached_http_log_time;
-volatile ngx_str_t       ngx_cached_http_log_iso8601;
-volatile ngx_str_t       ngx_cached_syslog_time;
+متطاير ngx_msec_t      ngx_current_msec;
+متطاير ngx_زمان_t     *ngx_cached_زمان;
+متطاير ngx_str_t       ngx_cached_err_log_زمان;
+متطاير ngx_str_t       ngx_cached_http_زمان;
+متطاير ngx_str_t       ngx_cached_http_log_زمان;
+متطاير ngx_str_t       ngx_cached_http_log_iso8601;
+متطاير ngx_str_t       ngx_cached_syslog_زمان;
 
-#if !(NGX_WIN32)
+#إذا !(NGX_WIN32)
 
 /*
  * localtime() and localtime_r() are not Async-Signal-Safe functions, therefore,
@@ -42,53 +42,53 @@ volatile ngx_str_t       ngx_cached_syslog_time;
  * GMT offset value. Fortunately the value is changed only two times a year.
  */
 
-static ngx_int_t         cached_gmtoff;
-#endif
+ساكن ngx_int_t         cached_gmtoff;
+#پایان_اگر
 
-static ngx_time_t        cached_time[NGX_TIME_SLOTS];
-static u_char            cached_err_log_time[NGX_TIME_SLOTS]
-                                    [sizeof("1970/09/28 12:00:00")];
-static u_char            cached_http_time[NGX_TIME_SLOTS]
-                                    [sizeof("Mon, 28 Sep 1970 06:00:00 GMT")];
-static u_char            cached_http_log_time[NGX_TIME_SLOTS]
-                                    [sizeof("28/Sep/1970:12:00:00 +0600")];
-static u_char            cached_http_log_iso8601[NGX_TIME_SLOTS]
-                                    [sizeof("1970-09-28T12:00:00+06:00")];
-static u_char            cached_syslog_time[NGX_TIME_SLOTS]
-                                    [sizeof("Sep 28 12:00:00")];
+ساكن ngx_زمان_t        cached_زمان[NGX_زمان_SLOTS];
+ساكن u_char            cached_err_log_زمان[NGX_زمان_SLOTS]
+                                    [حجم("1970/09/28 12:00:00")];
+ساكن u_char            cached_http_زمان[NGX_زمان_SLOTS]
+                                    [حجم("Mon, 28 Sep 1970 06:00:00 GMT")];
+ساكن u_char            cached_http_log_زمان[NGX_زمان_SLOTS]
+                                    [حجم("28/Sep/1970:12:00:00 +0600")];
+ساكن u_char            cached_http_log_iso8601[NGX_زمان_SLOTS]
+                                    [حجم("1970-09-28T12:00:00+06:00")];
+ساكن u_char            cached_syslog_زمان[NGX_زمان_SLOTS]
+                                    [حجم("Sep 28 12:00:00")];
 
 
-static char  *week[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+ساكن حرف  *week[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+ساكن حرف  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
-void
-ngx_time_init(void)
+فراغ
+ngx_زمان_init(فراغ)
 {
-    ngx_cached_err_log_time.len = sizeof("1970/09/28 12:00:00") - 1;
-    ngx_cached_http_time.len = sizeof("Mon, 28 Sep 1970 06:00:00 GMT") - 1;
-    ngx_cached_http_log_time.len = sizeof("28/Sep/1970:12:00:00 +0600") - 1;
-    ngx_cached_http_log_iso8601.len = sizeof("1970-09-28T12:00:00+06:00") - 1;
-    ngx_cached_syslog_time.len = sizeof("Sep 28 12:00:00") - 1;
+    ngx_cached_err_log_زمان.len = حجم("1970/09/28 12:00:00") - 1;
+    ngx_cached_http_زمان.len = حجم("Mon, 28 Sep 1970 06:00:00 GMT") - 1;
+    ngx_cached_http_log_زمان.len = حجم("28/Sep/1970:12:00:00 +0600") - 1;
+    ngx_cached_http_log_iso8601.len = حجم("1970-09-28T12:00:00+06:00") - 1;
+    ngx_cached_syslog_زمان.len = حجم("Sep 28 12:00:00") - 1;
 
-    ngx_cached_time = &cached_time[0];
+    ngx_cached_زمان = &cached_زمان[0];
 
-    ngx_time_update();
+    ngx_زمان_update();
 }
 
 
-void
-ngx_time_update(void)
+فراغ
+ngx_زمان_update(فراغ)
 {
     u_char          *p0, *p1, *p2, *p3, *p4;
     ngx_tm_t         tm, gmt;
-    time_t           sec;
+    زمان_t           sec;
     ngx_uint_t       msec;
-    ngx_time_t      *tp;
-    struct timeval   tv;
+    ngx_زمان_t      *tp;
+    بنية timeval   tv;
 
-    if (!ngx_trylock(&ngx_time_lock)) {
-        return;
+    إذا (!ngx_trylock(&ngx_زمان_قفل)) {
+        أرجع;
     }
 
     ngx_gettimeofday(&tv);
@@ -96,23 +96,23 @@ ngx_time_update(void)
     sec = tv.tv_sec;
     msec = tv.tv_usec / 1000;
 
-    ngx_current_msec = ngx_monotonic_time(sec, msec);
+    ngx_current_msec = ngx_monotonic_زمان(sec, msec);
 
-    tp = &cached_time[slot];
+    tp = &cached_زمان[جایگاه];
 
-    if (tp->sec == sec) {
+    إذا (tp->sec == sec) {
         tp->msec = msec;
-        ngx_unlock(&ngx_time_lock);
-        return;
+        ngx_unlock(&ngx_زمان_قفل);
+        أرجع;
     }
 
-    if (slot == NGX_TIME_SLOTS - 1) {
-        slot = 0;
-    } else {
-        slot++;
+    إذا (جایگاه == NGX_زمان_SLOTS - 1) {
+        جایگاه = 0;
+    } وإلا {
+        جایگاه++;
     }
 
-    tp = &cached_time[slot];
+    tp = &cached_زمان[جایگاه];
 
     tp->sec = sec;
     tp->msec = msec;
@@ -120,165 +120,165 @@ ngx_time_update(void)
     ngx_gmtime(sec, &gmt);
 
 
-    p0 = &cached_http_time[slot][0];
+    p0 = &cached_http_زمان[جایگاه][0];
 
-    (void) ngx_sprintf(p0, "%s, %02d %s %4d %02d:%02d:%02d GMT",
+    (فراغ) ngx_sprintf(p0, "%s, %02d %s %4d %02d:%02d:%02d GMT",
                        week[gmt.ngx_tm_wday], gmt.ngx_tm_mday,
                        months[gmt.ngx_tm_mon - 1], gmt.ngx_tm_year,
                        gmt.ngx_tm_hour, gmt.ngx_tm_min, gmt.ngx_tm_sec);
 
-#if (NGX_HAVE_GETTIMEZONE)
+#إذا (NGX_HAVE_GETTIMEZONE)
 
     tp->gmtoff = ngx_gettimezone();
     ngx_gmtime(sec + tp->gmtoff * 60, &tm);
 
-#elif (NGX_HAVE_GMTOFF)
+#وإلاإذا (NGX_HAVE_GMTOFF)
 
     ngx_localtime(sec, &tm);
     cached_gmtoff = (ngx_int_t) (tm.ngx_tm_gmtoff / 60);
     tp->gmtoff = cached_gmtoff;
 
-#else
+#وإلا
 
     ngx_localtime(sec, &tm);
     cached_gmtoff = ngx_timezone(tm.ngx_tm_isdst);
     tp->gmtoff = cached_gmtoff;
 
-#endif
+#پایان_اگر
 
 
-    p1 = &cached_err_log_time[slot][0];
+    p1 = &cached_err_log_زمان[جایگاه][0];
 
-    (void) ngx_sprintf(p1, "%4d/%02d/%02d %02d:%02d:%02d",
+    (فراغ) ngx_sprintf(p1, "%4d/%02d/%02d %02d:%02d:%02d",
                        tm.ngx_tm_year, tm.ngx_tm_mon,
                        tm.ngx_tm_mday, tm.ngx_tm_hour,
                        tm.ngx_tm_min, tm.ngx_tm_sec);
 
 
-    p2 = &cached_http_log_time[slot][0];
+    p2 = &cached_http_log_زمان[جایگاه][0];
 
-    (void) ngx_sprintf(p2, "%02d/%s/%d:%02d:%02d:%02d %c%02i%02i",
+    (فراغ) ngx_sprintf(p2, "%02d/%s/%d:%02d:%02d:%02d %c%02i%02i",
                        tm.ngx_tm_mday, months[tm.ngx_tm_mon - 1],
                        tm.ngx_tm_year, tm.ngx_tm_hour,
                        tm.ngx_tm_min, tm.ngx_tm_sec,
                        tp->gmtoff < 0 ? '-' : '+',
                        ngx_abs(tp->gmtoff / 60), ngx_abs(tp->gmtoff % 60));
 
-    p3 = &cached_http_log_iso8601[slot][0];
+    p3 = &cached_http_log_iso8601[جایگاه][0];
 
-    (void) ngx_sprintf(p3, "%4d-%02d-%02dT%02d:%02d:%02d%c%02i:%02i",
+    (فراغ) ngx_sprintf(p3, "%4d-%02d-%02dT%02d:%02d:%02d%c%02i:%02i",
                        tm.ngx_tm_year, tm.ngx_tm_mon,
                        tm.ngx_tm_mday, tm.ngx_tm_hour,
                        tm.ngx_tm_min, tm.ngx_tm_sec,
                        tp->gmtoff < 0 ? '-' : '+',
                        ngx_abs(tp->gmtoff / 60), ngx_abs(tp->gmtoff % 60));
 
-    p4 = &cached_syslog_time[slot][0];
+    p4 = &cached_syslog_زمان[جایگاه][0];
 
-    (void) ngx_sprintf(p4, "%s %2d %02d:%02d:%02d",
+    (فراغ) ngx_sprintf(p4, "%s %2d %02d:%02d:%02d",
                        months[tm.ngx_tm_mon - 1], tm.ngx_tm_mday,
                        tm.ngx_tm_hour, tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    ngx_memory_barrier();
+    ngx_حافظه_barrier();
 
-    ngx_cached_time = tp;
-    ngx_cached_http_time.data = p0;
-    ngx_cached_err_log_time.data = p1;
-    ngx_cached_http_log_time.data = p2;
-    ngx_cached_http_log_iso8601.data = p3;
-    ngx_cached_syslog_time.data = p4;
+    ngx_cached_زمان = tp;
+    ngx_cached_http_زمان.داده = p0;
+    ngx_cached_err_log_زمان.داده = p1;
+    ngx_cached_http_log_زمان.داده = p2;
+    ngx_cached_http_log_iso8601.داده = p3;
+    ngx_cached_syslog_زمان.داده = p4;
 
-    ngx_unlock(&ngx_time_lock);
+    ngx_unlock(&ngx_زمان_قفل);
 }
 
 
-static ngx_msec_t
-ngx_monotonic_time(time_t sec, ngx_uint_t msec)
+ساكن ngx_msec_t
+ngx_monotonic_زمان(زمان_t sec, ngx_uint_t msec)
 {
-#if (NGX_HAVE_CLOCK_MONOTONIC)
-    struct timespec  ts;
+#إذا (NGX_HAVE_CLOCK_MONOTONIC)
+    بنية timespec  ts;
 
     clock_gettime(CLOCK_MONOTONIC, &ts);
 
     sec = ts.tv_sec;
     msec = ts.tv_nsec / 1000000;
 
-#endif
+#پایان_اگر
 
-    return (ngx_msec_t) sec * 1000 + msec;
+    أرجع (ngx_msec_t) sec * 1000 + msec;
 }
 
 
-#if !(NGX_WIN32)
+#إذا !(NGX_WIN32)
 
-void
-ngx_time_sigsafe_update(void)
+فراغ
+ngx_زمان_sigsafe_update(فراغ)
 {
     u_char          *p, *p2;
     ngx_tm_t         tm;
-    time_t           sec;
-    ngx_time_t      *tp;
-    struct timeval   tv;
+    زمان_t           sec;
+    ngx_زمان_t      *tp;
+    بنية timeval   tv;
 
-    if (!ngx_trylock(&ngx_time_lock)) {
-        return;
+    إذا (!ngx_trylock(&ngx_زمان_قفل)) {
+        أرجع;
     }
 
     ngx_gettimeofday(&tv);
 
     sec = tv.tv_sec;
 
-    tp = &cached_time[slot];
+    tp = &cached_زمان[جایگاه];
 
-    if (tp->sec == sec) {
-        ngx_unlock(&ngx_time_lock);
-        return;
+    إذا (tp->sec == sec) {
+        ngx_unlock(&ngx_زمان_قفل);
+        أرجع;
     }
 
-    if (slot == NGX_TIME_SLOTS - 1) {
-        slot = 0;
-    } else {
-        slot++;
+    إذا (جایگاه == NGX_زمان_SLOTS - 1) {
+        جایگاه = 0;
+    } وإلا {
+        جایگاه++;
     }
 
-    tp = &cached_time[slot];
+    tp = &cached_زمان[جایگاه];
 
     tp->sec = 0;
 
     ngx_gmtime(sec + cached_gmtoff * 60, &tm);
 
-    p = &cached_err_log_time[slot][0];
+    p = &cached_err_log_زمان[جایگاه][0];
 
-    (void) ngx_sprintf(p, "%4d/%02d/%02d %02d:%02d:%02d",
+    (فراغ) ngx_sprintf(p, "%4d/%02d/%02d %02d:%02d:%02d",
                        tm.ngx_tm_year, tm.ngx_tm_mon,
                        tm.ngx_tm_mday, tm.ngx_tm_hour,
                        tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    p2 = &cached_syslog_time[slot][0];
+    p2 = &cached_syslog_زمان[جایگاه][0];
 
-    (void) ngx_sprintf(p2, "%s %2d %02d:%02d:%02d",
+    (فراغ) ngx_sprintf(p2, "%s %2d %02d:%02d:%02d",
                        months[tm.ngx_tm_mon - 1], tm.ngx_tm_mday,
                        tm.ngx_tm_hour, tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    ngx_memory_barrier();
+    ngx_حافظه_barrier();
 
-    ngx_cached_err_log_time.data = p;
-    ngx_cached_syslog_time.data = p2;
+    ngx_cached_err_log_زمان.داده = p;
+    ngx_cached_syslog_زمان.داده = p2;
 
-    ngx_unlock(&ngx_time_lock);
+    ngx_unlock(&ngx_زمان_قفل);
 }
 
-#endif
+#پایان_اگر
 
 
 u_char *
-ngx_http_time(u_char *buf, time_t t)
+ngx_http_زمان(u_char *buf, زمان_t t)
 {
     ngx_tm_t  tm;
 
     ngx_gmtime(t, &tm);
 
-    return ngx_sprintf(buf, "%s, %02d %s %4d %02d:%02d:%02d GMT",
+    أرجع ngx_sprintf(buf, "%s, %02d %s %4d %02d:%02d:%02d GMT",
                        week[tm.ngx_tm_wday],
                        tm.ngx_tm_mday,
                        months[tm.ngx_tm_mon - 1],
@@ -290,7 +290,7 @@ ngx_http_time(u_char *buf, time_t t)
 
 
 u_char *
-ngx_http_cookie_time(u_char *buf, time_t t)
+ngx_http_cookie_زمان(u_char *buf, زمان_t t)
 {
     ngx_tm_t  tm;
 
@@ -301,7 +301,7 @@ ngx_http_cookie_time(u_char *buf, time_t t)
      * 2-digit years more than "37"
      */
 
-    return ngx_sprintf(buf,
+    أرجع ngx_sprintf(buf,
                        (tm.ngx_tm_year > 2037) ?
                                          "%s, %02d-%s-%d %02d:%02d:%02d GMT":
                                          "%s, %02d-%s-%02d %02d:%02d:%02d GMT",
@@ -316,15 +316,15 @@ ngx_http_cookie_time(u_char *buf, time_t t)
 }
 
 
-void
-ngx_gmtime(time_t t, ngx_tm_t *tp)
+فراغ
+ngx_gmtime(زمان_t t, ngx_tm_t *tp)
 {
     ngx_int_t   yday;
     ngx_uint_t  sec, min, hour, mday, mon, year, wday, days, leap;
 
     /* the calculation is valid for positive time_t only */
 
-    if (t < 0) {
+    إذا (t < 0) {
         t = 0;
     }
 
@@ -336,7 +336,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
      * truncate to December 31, 9999, 23:59:59
      */
 
-    if (days > 2932896) {
+    إذا (days > 2932896) {
         days = 2932896;
         sec = 86399;
     }
@@ -369,7 +369,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
 
     yday = days - (365 * year + year / 4 - year / 100 + year / 400);
 
-    if (yday < 0) {
+    إذا (yday < 0) {
         leap = (year % 4 == 0) && (year % 100 || (year % 400 == 0));
         yday = 365 + leap + yday;
         year--;
@@ -389,7 +389,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
 
     mday = yday - (367 * mon / 12 - 30) + 1;
 
-    if (yday >= 306) {
+    إذا (yday >= 306) {
 
         year++;
         mon -= 10;
@@ -400,7 +400,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
          * yday -= 306;
          */
 
-    } else {
+    } وإلا {
 
         mon += 2;
 
@@ -421,40 +421,40 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
 }
 
 
-time_t
-ngx_next_time(time_t when)
+زمان_t
+ngx_بعدی_زمان(زمان_t when)
 {
-    time_t     now, next;
-    struct tm  tm;
+    زمان_t     now, بعدی;
+    بنية tm  tm;
 
-    now = ngx_time();
+    now = ngx_زمان();
 
     ngx_libc_localtime(now, &tm);
 
-    tm.tm_hour = (int) (when / 3600);
+    tm.tm_hour = (صحيح) (when / 3600);
     when %= 3600;
-    tm.tm_min = (int) (when / 60);
-    tm.tm_sec = (int) (when % 60);
+    tm.tm_min = (صحيح) (when / 60);
+    tm.tm_sec = (صحيح) (when % 60);
 
-    next = mktime(&tm);
+    بعدی = mktime(&tm);
 
-    if (next == -1) {
-        return -1;
+    إذا (بعدی == -1) {
+        أرجع -1;
     }
 
-    if (next - now > 0) {
-        return next;
+    إذا (بعدی - now > 0) {
+        أرجع بعدی;
     }
 
     tm.tm_mday++;
 
     /* mktime() should normalize a date (Jan 32, etc) */
 
-    next = mktime(&tm);
+    بعدی = mktime(&tm);
 
-    if (next != -1) {
-        return next;
+    إذا (بعدی != -1) {
+        أرجع بعدی;
     }
 
-    return -1;
+    أرجع -1;
 }

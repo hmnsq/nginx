@@ -5,9 +5,9 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
+#ضمن <ngx_event.h>
 
 
 /*
@@ -18,122 +18,122 @@
  */
 
 
-#define NGX_MIN_READ_AHEAD  (128 * 1024)
+#تعریف_کن NGX_MIN_READ_AHEAD  (128 * 1024)
 
 
-static void ngx_open_file_cache_cleanup(void *data);
-#if (NGX_HAVE_OPENAT)
-static ngx_fd_t ngx_openat_file_owner(ngx_fd_t at_fd, const u_char *name,
-    ngx_int_t mode, ngx_int_t create, ngx_int_t access, ngx_log_t *log);
-#if (NGX_HAVE_O_PATH)
-static ngx_int_t ngx_file_o_path_info(ngx_fd_t fd, ngx_file_info_t *fi,
-    ngx_log_t *log);
-#endif
-#endif
-static ngx_fd_t ngx_open_file_wrapper(ngx_str_t *name,
-    ngx_open_file_info_t *of, ngx_int_t mode, ngx_int_t create,
-    ngx_int_t access, ngx_log_t *log);
-static ngx_int_t ngx_file_info_wrapper(ngx_str_t *name,
-    ngx_open_file_info_t *of, ngx_file_info_t *fi, ngx_log_t *log);
-static ngx_int_t ngx_open_and_stat_file(ngx_str_t *name,
-    ngx_open_file_info_t *of, ngx_log_t *log);
-static void ngx_open_file_add_event(ngx_open_file_cache_t *cache,
-    ngx_cached_open_file_t *file, ngx_open_file_info_t *of, ngx_log_t *log);
-static void ngx_open_file_cleanup(void *data);
-static void ngx_close_cached_file(ngx_open_file_cache_t *cache,
-    ngx_cached_open_file_t *file, ngx_uint_t min_uses, ngx_log_t *log);
-static void ngx_open_file_del_event(ngx_cached_open_file_t *file);
-static void ngx_expire_old_cached_files(ngx_open_file_cache_t *cache,
-    ngx_uint_t n, ngx_log_t *log);
-static void ngx_open_file_cache_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-static ngx_cached_open_file_t *
+ساكن فراغ ngx_open_file_cache_cleanup(فراغ *داده);
+#إذا (NGX_HAVE_OPENAT)
+ساكن ngx_fd_t ngx_openat_file_owner(ngx_fd_t at_fd, ثابت u_char *name,
+    ngx_int_t نما, ngx_int_t create, ngx_int_t access, ngx_log_t *لگاریتم);
+#إذا (NGX_HAVE_O_مسیر)
+ساكن ngx_int_t ngx_file_o_مسیر_info(ngx_fd_t fd, ngx_file_info_t *fi,
+    ngx_log_t *لگاریتم);
+#پایان_اگر
+#پایان_اگر
+ساكن ngx_fd_t ngx_open_file_wrapper(ngx_str_t *name,
+    ngx_open_file_info_t *از, ngx_int_t نما, ngx_int_t create,
+    ngx_int_t access, ngx_log_t *لگاریتم);
+ساكن ngx_int_t ngx_file_info_wrapper(ngx_str_t *name,
+    ngx_open_file_info_t *از, ngx_file_info_t *fi, ngx_log_t *لگاریتم);
+ساكن ngx_int_t ngx_open_and_stat_file(ngx_str_t *name,
+    ngx_open_file_info_t *از, ngx_log_t *لگاریتم);
+ساكن فراغ ngx_open_file_جمع_کن_event(ngx_open_file_cache_t *cache,
+    ngx_cached_open_file_t *file, ngx_open_file_info_t *از, ngx_log_t *لگاریتم);
+ساكن فراغ ngx_open_file_cleanup(فراغ *داده);
+ساكن فراغ ngx_close_cached_file(ngx_open_file_cache_t *cache,
+    ngx_cached_open_file_t *file, ngx_uint_t min_استفاده_میکند, ngx_log_t *لگاریتم);
+ساكن فراغ ngx_open_file_del_event(ngx_cached_open_file_t *file);
+ساكن فراغ ngx_expire_old_cached_files(ngx_open_file_cache_t *cache,
+    ngx_uint_t n, ngx_log_t *لگاریتم);
+ساكن فراغ ngx_open_file_cache_rbtree_درج_مقدار(ngx_rbtree_گره_t *موقت,
+    ngx_rbtree_گره_t *گره, ngx_rbtree_گره_t *sentinel);
+ساكن ngx_cached_open_file_t *
     ngx_open_file_lookup(ngx_open_file_cache_t *cache, ngx_str_t *name,
     uint32_t hash);
-static void ngx_open_file_cache_remove(ngx_event_t *ev);
+ساكن فراغ ngx_open_file_cache_remove(ngx_event_t *ev);
 
 
 ngx_open_file_cache_t *
-ngx_open_file_cache_init(ngx_pool_t *pool, ngx_uint_t max, time_t inactive)
+ngx_open_file_cache_init(ngx_pool_t *pool, ngx_uint_t max, زمان_t inactive)
 {
     ngx_pool_cleanup_t     *cln;
     ngx_open_file_cache_t  *cache;
 
-    cache = ngx_palloc(pool, sizeof(ngx_open_file_cache_t));
-    if (cache == NULL) {
-        return NULL;
+    cache = ngx_palloc(pool, حجم(ngx_open_file_cache_t));
+    إذا (cache == عدم) {
+        أرجع عدم;
     }
 
     ngx_rbtree_init(&cache->rbtree, &cache->sentinel,
-                    ngx_open_file_cache_rbtree_insert_value);
+                    ngx_open_file_cache_rbtree_درج_مقدار);
 
-    ngx_queue_init(&cache->expire_queue);
+    ngx_صف_init(&cache->expire_صف);
 
     cache->current = 0;
     cache->max = max;
     cache->inactive = inactive;
 
-    cln = ngx_pool_cleanup_add(pool, 0);
-    if (cln == NULL) {
-        return NULL;
+    cln = ngx_pool_cleanup_جمع_کن(pool, 0);
+    إذا (cln == عدم) {
+        أرجع عدم;
     }
 
     cln->handler = ngx_open_file_cache_cleanup;
-    cln->data = cache;
+    cln->داده = cache;
 
-    return cache;
+    أرجع cache;
 }
 
 
-static void
-ngx_open_file_cache_cleanup(void *data)
+ساكن فراغ
+ngx_open_file_cache_cleanup(فراغ *داده)
 {
-    ngx_open_file_cache_t  *cache = data;
+    ngx_open_file_cache_t  *cache = داده;
 
-    ngx_queue_t             *q;
+    ngx_صف_t             *q;
     ngx_cached_open_file_t  *file;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, ngx_cycle->log, 0,
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, ngx_چرخه->لگاریتم, 0,
                    "open file cache cleanup");
 
-    for ( ;; ) {
+    لكل ( ;; ) {
 
-        if (ngx_queue_empty(&cache->expire_queue)) {
-            break;
+        إذا (ngx_صف_خالی(&cache->expire_صف)) {
+            اكسر;
         }
 
-        q = ngx_queue_last(&cache->expire_queue);
+        q = ngx_صف_آخرین(&cache->expire_صف);
 
-        file = ngx_queue_data(q, ngx_cached_open_file_t, queue);
+        file = ngx_صف_داده(q, ngx_cached_open_file_t, صف);
 
-        ngx_queue_remove(q);
+        ngx_صف_remove(q);
 
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+        ngx_rbtree_delete(&cache->rbtree, &file->گره);
 
         cache->current--;
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ngx_cycle->log, 0,
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ngx_چرخه->لگاریتم, 0,
                        "delete cached open file: %s", file->name);
 
-        if (!file->err && !file->is_dir) {
+        إذا (!file->err && !file->is_dir) {
             file->close = 1;
-            file->count = 0;
-            ngx_close_cached_file(cache, file, 0, ngx_cycle->log);
+            file->شمار = 0;
+            ngx_close_cached_file(cache, file, 0, ngx_چرخه->لگاریتم);
 
-        } else {
+        } وإلا {
             ngx_free(file->name);
             ngx_free(file);
         }
     }
 
-    if (cache->current) {
-        ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0,
+    إذا (cache->current) {
+        ngx_log_error(NGX_LOG_ALERT, ngx_چرخه->لگاریتم, 0,
                       "%ui items still left in open file cache",
                       cache->current);
     }
 
-    if (cache->rbtree.root != cache->rbtree.sentinel) {
-        ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0,
+    إذا (cache->rbtree.ریشه != cache->rbtree.sentinel) {
+        ngx_log_error(NGX_LOG_ALERT, ngx_چرخه->لگاریتم, 0,
                       "rbtree still is not empty in open file cache");
 
     }
@@ -142,9 +142,9 @@ ngx_open_file_cache_cleanup(void *data)
 
 ngx_int_t
 ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
-    ngx_open_file_info_t *of, ngx_pool_t *pool)
+    ngx_open_file_info_t *از, ngx_pool_t *pool)
 {
-    time_t                          now;
+    زمان_t                          now;
     uint32_t                        hash;
     ngx_int_t                       rc;
     ngx_file_info_t                 fi;
@@ -153,126 +153,126 @@ ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
     ngx_pool_cleanup_file_t        *clnf;
     ngx_open_file_cache_cleanup_t  *ofcln;
 
-    of->fd = NGX_INVALID_FILE;
-    of->err = 0;
+    از->fd = NGX_INVALID_FILE;
+    از->err = 0;
 
-    if (cache == NULL) {
+    إذا (cache == عدم) {
 
-        if (of->test_only) {
+        إذا (از->test_only) {
 
-            if (ngx_file_info_wrapper(name, of, &fi, pool->log)
+            إذا (ngx_file_info_wrapper(name, از, &fi, pool->لگاریتم)
                 == NGX_FILE_ERROR)
             {
-                return NGX_ERROR;
+                أرجع NGX_ERROR;
             }
 
-            of->uniq = ngx_file_uniq(&fi);
-            of->mtime = ngx_file_mtime(&fi);
-            of->size = ngx_file_size(&fi);
-            of->fs_size = ngx_file_fs_size(&fi);
-            of->is_dir = ngx_is_dir(&fi);
-            of->is_file = ngx_is_file(&fi);
-            of->is_link = ngx_is_link(&fi);
-            of->is_exec = ngx_is_exec(&fi);
+            از->uniq = ngx_file_uniq(&fi);
+            از->mtime = ngx_file_mtime(&fi);
+            از->اندازه = ngx_file_اندازه(&fi);
+            از->fs_اندازه = ngx_file_fs_اندازه(&fi);
+            از->is_dir = ngx_is_dir(&fi);
+            از->is_file = ngx_is_file(&fi);
+            از->is_link = ngx_is_link(&fi);
+            از->is_exec = ngx_is_exec(&fi);
 
-            return NGX_OK;
+            أرجع NGX_OK;
         }
 
-        cln = ngx_pool_cleanup_add(pool, sizeof(ngx_pool_cleanup_file_t));
-        if (cln == NULL) {
-            return NGX_ERROR;
+        cln = ngx_pool_cleanup_جمع_کن(pool, حجم(ngx_pool_cleanup_file_t));
+        إذا (cln == عدم) {
+            أرجع NGX_ERROR;
         }
 
-        rc = ngx_open_and_stat_file(name, of, pool->log);
+        rc = ngx_open_and_stat_file(name, از, pool->لگاریتم);
 
-        if (rc == NGX_OK && !of->is_dir) {
+        إذا (rc == NGX_OK && !از->is_dir) {
             cln->handler = ngx_pool_cleanup_file;
-            clnf = cln->data;
+            clnf = cln->داده;
 
-            clnf->fd = of->fd;
-            clnf->name = name->data;
-            clnf->log = pool->log;
+            clnf->fd = از->fd;
+            clnf->name = name->داده;
+            clnf->لگاریتم = pool->لگاریتم;
         }
 
-        return rc;
+        أرجع rc;
     }
 
-    cln = ngx_pool_cleanup_add(pool, sizeof(ngx_open_file_cache_cleanup_t));
-    if (cln == NULL) {
-        return NGX_ERROR;
+    cln = ngx_pool_cleanup_جمع_کن(pool, حجم(ngx_open_file_cache_cleanup_t));
+    إذا (cln == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    now = ngx_time();
+    now = ngx_زمان();
 
-    hash = ngx_crc32_long(name->data, name->len);
+    hash = ngx_بررسی_چرخهای_32_long(name->داده, name->len);
 
     file = ngx_open_file_lookup(cache, name, hash);
 
-    if (file) {
+    إذا (file) {
 
-        file->uses++;
+        file->استفاده_میکند++;
 
-        ngx_queue_remove(&file->queue);
+        ngx_صف_remove(&file->صف);
 
-        if (file->fd == NGX_INVALID_FILE && file->err == 0 && !file->is_dir) {
+        إذا (file->fd == NGX_INVALID_FILE && file->err == 0 && !file->is_dir) {
 
             /* file was not used often enough to keep open */
 
-            rc = ngx_open_and_stat_file(name, of, pool->log);
+            rc = ngx_open_and_stat_file(name, از, pool->لگاریتم);
 
-            if (rc != NGX_OK && (of->err == 0 || !of->errors)) {
-                goto failed;
+            إذا (rc != NGX_OK && (از->err == 0 || !از->errors)) {
+                اذهب failed;
             }
 
-            goto add_event;
+            اذهب جمع_کن_event;
         }
 
-        if (file->use_event
-            || (file->event == NULL
-                && (of->uniq == 0 || of->uniq == file->uniq)
-                && now - file->created < of->valid
-#if (NGX_HAVE_OPENAT)
-                && of->disable_symlinks == file->disable_symlinks
-                && of->disable_symlinks_from == file->disable_symlinks_from
-#endif
+        إذا (file->use_event
+            || (file->event == عدم
+                && (از->uniq == 0 || از->uniq == file->uniq)
+                && now - file->created < از->valid
+#إذا (NGX_HAVE_OPENAT)
+                && از->disable_symlinks == file->disable_symlinks
+                && از->disable_symlinks_from == file->disable_symlinks_from
+#پایان_اگر
             ))
         {
-            if (file->err == 0) {
+            إذا (file->err == 0) {
 
-                of->fd = file->fd;
-                of->uniq = file->uniq;
-                of->mtime = file->mtime;
-                of->size = file->size;
+                از->fd = file->fd;
+                از->uniq = file->uniq;
+                از->mtime = file->mtime;
+                از->اندازه = file->اندازه;
 
-                of->is_dir = file->is_dir;
-                of->is_file = file->is_file;
-                of->is_link = file->is_link;
-                of->is_exec = file->is_exec;
-                of->is_directio = file->is_directio;
+                از->is_dir = file->is_dir;
+                از->is_file = file->is_file;
+                از->is_link = file->is_link;
+                از->is_exec = file->is_exec;
+                از->is_directio = file->is_directio;
 
-                if (!file->is_dir) {
-                    file->count++;
-                    ngx_open_file_add_event(cache, file, of, pool->log);
+                إذا (!file->is_dir) {
+                    file->شمار++;
+                    ngx_open_file_جمع_کن_event(cache, file, از, pool->لگاریتم);
                 }
 
-            } else {
-                of->err = file->err;
-#if (NGX_HAVE_OPENAT)
-                of->failed = file->disable_symlinks ? ngx_openat_file_n
+            } وإلا {
+                از->err = file->err;
+#إذا (NGX_HAVE_OPENAT)
+                از->failed = file->disable_symlinks ? ngx_openat_file_n
                                                     : ngx_open_file_n;
-#else
-                of->failed = ngx_open_file_n;
-#endif
+#وإلا
+                از->failed = ngx_open_file_n;
+#پایان_اگر
             }
 
-            goto found;
+            اذهب یافت;
         }
 
-        ngx_log_debug4(NGX_LOG_DEBUG_CORE, pool->log, 0,
+        ngx_log_debug4(NGX_LOG_DEBUG_CORE, pool->لگاریتم, 0,
                        "retest open file: %s, fd:%d, c:%d, e:%d",
-                       file->name, file->fd, file->count, file->err);
+                       file->name, file->fd, file->شمار, file->err);
 
-        if (file->is_dir) {
+        إذا (file->is_dir) {
 
             /*
              * chances that directory became file are very small
@@ -280,188 +280,188 @@ ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
              * in ngx_file_info() instead of three syscalls
              */
 
-            of->test_dir = 1;
+            از->test_dir = 1;
         }
 
-        of->fd = file->fd;
-        of->uniq = file->uniq;
+        از->fd = file->fd;
+        از->uniq = file->uniq;
 
-        rc = ngx_open_and_stat_file(name, of, pool->log);
+        rc = ngx_open_and_stat_file(name, از, pool->لگاریتم);
 
-        if (rc != NGX_OK && (of->err == 0 || !of->errors)) {
-            goto failed;
+        إذا (rc != NGX_OK && (از->err == 0 || !از->errors)) {
+            اذهب failed;
         }
 
-        if (of->is_dir) {
+        إذا (از->is_dir) {
 
-            if (file->is_dir || file->err) {
-                goto update;
+            إذا (file->is_dir || file->err) {
+                اذهب update;
             }
 
             /* file became directory */
 
-        } else if (of->err == 0) {  /* file */
+        } وإلا إذا (از->err == 0) {  /* file */
 
-            if (file->is_dir || file->err) {
-                goto add_event;
+            إذا (file->is_dir || file->err) {
+                اذهب جمع_کن_event;
             }
 
-            if (of->uniq == file->uniq) {
+            إذا (از->uniq == file->uniq) {
 
-                if (file->event) {
+                إذا (file->event) {
                     file->use_event = 1;
                 }
 
-                of->is_directio = file->is_directio;
+                از->is_directio = file->is_directio;
 
-                goto update;
+                اذهب update;
             }
 
             /* file was changed */
 
-        } else { /* error to cache */
+        } وإلا { /* error to cache */
 
-            if (file->err || file->is_dir) {
-                goto update;
+            إذا (file->err || file->is_dir) {
+                اذهب update;
             }
 
             /* file was removed, etc. */
         }
 
-        if (file->count == 0) {
+        إذا (file->شمار == 0) {
 
             ngx_open_file_del_event(file);
 
-            if (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_ALERT, pool->log, ngx_errno,
+            إذا (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_ALERT, pool->لگاریتم, ngx_errno,
                               ngx_close_file_n " \"%V\" failed", name);
             }
 
-            goto add_event;
+            اذهب جمع_کن_event;
         }
 
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+        ngx_rbtree_delete(&cache->rbtree, &file->گره);
 
         cache->current--;
 
         file->close = 1;
 
-        goto create;
+        اذهب create;
     }
 
     /* not found */
 
-    rc = ngx_open_and_stat_file(name, of, pool->log);
+    rc = ngx_open_and_stat_file(name, از, pool->لگاریتم);
 
-    if (rc != NGX_OK && (of->err == 0 || !of->errors)) {
-        goto failed;
+    إذا (rc != NGX_OK && (از->err == 0 || !از->errors)) {
+        اذهب failed;
     }
 
 create:
 
-    if (cache->current >= cache->max) {
-        ngx_expire_old_cached_files(cache, 0, pool->log);
+    إذا (cache->current >= cache->max) {
+        ngx_expire_old_cached_files(cache, 0, pool->لگاریتم);
     }
 
-    file = ngx_alloc(sizeof(ngx_cached_open_file_t), pool->log);
+    file = ngx_alloc(حجم(ngx_cached_open_file_t), pool->لگاریتم);
 
-    if (file == NULL) {
-        goto failed;
+    إذا (file == عدم) {
+        اذهب failed;
     }
 
-    file->name = ngx_alloc(name->len + 1, pool->log);
+    file->name = ngx_alloc(name->len + 1, pool->لگاریتم);
 
-    if (file->name == NULL) {
+    إذا (file->name == عدم) {
         ngx_free(file);
-        file = NULL;
-        goto failed;
+        file = عدم;
+        اذهب failed;
     }
 
-    ngx_cpystrn(file->name, name->data, name->len + 1);
+    ngx_cpystrn(file->name, name->داده, name->len + 1);
 
-    file->node.key = hash;
+    file->گره.کلید = hash;
 
-    ngx_rbtree_insert(&cache->rbtree, &file->node);
+    ngx_rbtree_درج(&cache->rbtree, &file->گره);
 
     cache->current++;
 
-    file->uses = 1;
-    file->count = 0;
+    file->استفاده_میکند = 1;
+    file->شمار = 0;
     file->use_event = 0;
-    file->event = NULL;
+    file->event = عدم;
 
-add_event:
+جمع_کن_event:
 
-    ngx_open_file_add_event(cache, file, of, pool->log);
+    ngx_open_file_جمع_کن_event(cache, file, از, pool->لگاریتم);
 
 update:
 
-    file->fd = of->fd;
-    file->err = of->err;
-#if (NGX_HAVE_OPENAT)
-    file->disable_symlinks = of->disable_symlinks;
-    file->disable_symlinks_from = of->disable_symlinks_from;
-#endif
+    file->fd = از->fd;
+    file->err = از->err;
+#إذا (NGX_HAVE_OPENAT)
+    file->disable_symlinks = از->disable_symlinks;
+    file->disable_symlinks_from = از->disable_symlinks_from;
+#پایان_اگر
 
-    if (of->err == 0) {
-        file->uniq = of->uniq;
-        file->mtime = of->mtime;
-        file->size = of->size;
+    إذا (از->err == 0) {
+        file->uniq = از->uniq;
+        file->mtime = از->mtime;
+        file->اندازه = از->اندازه;
 
         file->close = 0;
 
-        file->is_dir = of->is_dir;
-        file->is_file = of->is_file;
-        file->is_link = of->is_link;
-        file->is_exec = of->is_exec;
-        file->is_directio = of->is_directio;
+        file->is_dir = از->is_dir;
+        file->is_file = از->is_file;
+        file->is_link = از->is_link;
+        file->is_exec = از->is_exec;
+        file->is_directio = از->is_directio;
 
-        if (!of->is_dir) {
-            file->count++;
+        إذا (!از->is_dir) {
+            file->شمار++;
         }
     }
 
     file->created = now;
 
-found:
+یافت:
 
     file->accessed = now;
 
-    ngx_queue_insert_head(&cache->expire_queue, &file->queue);
+    ngx_صف_درج_سر(&cache->expire_صف, &file->صف);
 
-    ngx_log_debug5(NGX_LOG_DEBUG_CORE, pool->log, 0,
+    ngx_log_debug5(NGX_LOG_DEBUG_CORE, pool->لگاریتم, 0,
                    "cached open file: %s, fd:%d, c:%d, e:%d, u:%d",
-                   file->name, file->fd, file->count, file->err, file->uses);
+                   file->name, file->fd, file->شمار, file->err, file->استفاده_میکند);
 
-    if (of->err == 0) {
+    إذا (از->err == 0) {
 
-        if (!of->is_dir) {
+        إذا (!از->is_dir) {
             cln->handler = ngx_open_file_cleanup;
-            ofcln = cln->data;
+            ofcln = cln->داده;
 
             ofcln->cache = cache;
             ofcln->file = file;
-            ofcln->min_uses = of->min_uses;
-            ofcln->log = pool->log;
+            ofcln->min_استفاده_میکند = از->min_استفاده_میکند;
+            ofcln->لگاریتم = pool->لگاریتم;
         }
 
-        return NGX_OK;
+        أرجع NGX_OK;
     }
 
-    return NGX_ERROR;
+    أرجع NGX_ERROR;
 
 failed:
 
-    if (file) {
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+    إذا (file) {
+        ngx_rbtree_delete(&cache->rbtree, &file->گره);
 
         cache->current--;
 
-        if (file->count == 0) {
+        إذا (file->شمار == 0) {
 
-            if (file->fd != NGX_INVALID_FILE) {
-                if (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
-                    ngx_log_error(NGX_LOG_ALERT, pool->log, ngx_errno,
+            إذا (file->fd != NGX_INVALID_FILE) {
+                إذا (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
+                    ngx_log_error(NGX_LOG_ALERT, pool->لگاریتم, ngx_errno,
                                   ngx_close_file_n " \"%s\" failed",
                                   file->name);
                 }
@@ -470,27 +470,27 @@ failed:
             ngx_free(file->name);
             ngx_free(file);
 
-        } else {
+        } وإلا {
             file->close = 1;
         }
     }
 
-    if (of->fd != NGX_INVALID_FILE) {
-        if (ngx_close_file(of->fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, pool->log, ngx_errno,
+    إذا (از->fd != NGX_INVALID_FILE) {
+        إذا (ngx_close_file(از->fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, pool->لگاریتم, ngx_errno,
                           ngx_close_file_n " \"%V\" failed", name);
         }
     }
 
-    return NGX_ERROR;
+    أرجع NGX_ERROR;
 }
 
 
-#if (NGX_HAVE_OPENAT)
+#إذا (NGX_HAVE_OPENAT)
 
-static ngx_fd_t
-ngx_openat_file_owner(ngx_fd_t at_fd, const u_char *name,
-    ngx_int_t mode, ngx_int_t create, ngx_int_t access, ngx_log_t *log)
+ساكن ngx_fd_t
+ngx_openat_file_owner(ngx_fd_t at_fd, ثابت u_char *name,
+    ngx_int_t نما, ngx_int_t create, ngx_int_t access, ngx_log_t *لگاریتم)
 {
     ngx_fd_t         fd;
     ngx_err_t        err;
@@ -508,57 +508,57 @@ ngx_openat_file_owner(ngx_fd_t at_fd, const u_char *name,
      * symlink during openat() or not).
      */
 
-    fd = ngx_openat_file(at_fd, name, mode, create, access);
+    fd = ngx_openat_file(at_fd, name, نما, create, access);
 
-    if (fd == NGX_INVALID_FILE) {
-        return NGX_INVALID_FILE;
+    إذا (fd == NGX_INVALID_FILE) {
+        أرجع NGX_INVALID_FILE;
     }
 
-    if (ngx_file_at_info(at_fd, name, &atfi, AT_SYMLINK_NOFOLLOW)
+    إذا (ngx_file_at_info(at_fd, name, &atfi, AT_SYMLINK_NOFOLLOW)
         == NGX_FILE_ERROR)
     {
         err = ngx_errno;
-        goto failed;
+        اذهب failed;
     }
 
-#if (NGX_HAVE_O_PATH)
-    if (ngx_file_o_path_info(fd, &fi, log) == NGX_ERROR) {
+#إذا (NGX_HAVE_O_مسیر)
+    إذا (ngx_file_o_مسیر_info(fd, &fi, لگاریتم) == NGX_ERROR) {
         err = ngx_errno;
-        goto failed;
+        اذهب failed;
     }
-#else
-    if (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
+#وإلا
+    إذا (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
         err = ngx_errno;
-        goto failed;
+        اذهب failed;
     }
-#endif
+#پایان_اگر
 
-    if (fi.st_uid != atfi.st_uid) {
+    إذا (fi.st_uid != atfi.st_uid) {
         err = NGX_ELOOP;
-        goto failed;
+        اذهب failed;
     }
 
-    return fd;
+    أرجع fd;
 
 failed:
 
-    if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    إذا (ngx_close_file(fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, لگاریتم, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", name);
     }
 
-    ngx_set_errno(err);
+    ngx_مجموعه_errno(err);
 
-    return NGX_INVALID_FILE;
+    أرجع NGX_INVALID_FILE;
 }
 
 
-#if (NGX_HAVE_O_PATH)
+#إذا (NGX_HAVE_O_مسیر)
 
-static ngx_int_t
-ngx_file_o_path_info(ngx_fd_t fd, ngx_file_info_t *fi, ngx_log_t *log)
+ساكن ngx_int_t
+ngx_file_o_مسیر_info(ngx_fd_t fd, ngx_file_info_t *fi, ngx_log_t *لگاریتم)
 {
-    static ngx_uint_t  use_fstat = 1;
+    ساكن ngx_uint_t  use_fstat = 1;
 
     /*
      * In Linux 2.6.39 the O_PATH flag was introduced that allows to obtain
@@ -582,157 +582,157 @@ ngx_file_o_path_info(ngx_fd_t fd, ngx_file_info_t *fi, ngx_log_t *log)
      *    actually used.  In this case fstat() just works.
      */
 
-    if (use_fstat) {
-        if (ngx_fd_info(fd, fi) != NGX_FILE_ERROR) {
-            return NGX_OK;
+    إذا (use_fstat) {
+        إذا (ngx_fd_info(fd, fi) != NGX_FILE_ERROR) {
+            أرجع NGX_OK;
         }
 
-        if (ngx_errno != NGX_EBADF) {
-            return NGX_ERROR;
+        إذا (ngx_errno != NGX_EBADF) {
+            أرجع NGX_ERROR;
         }
 
-        ngx_log_error(NGX_LOG_NOTICE, log, 0,
+        ngx_log_error(NGX_LOG_NOTICE, لگاریتم, 0,
                       "fstat(O_PATH) failed with EBADF, "
                       "switching to fstatat(AT_EMPTY_PATH)");
 
         use_fstat = 0;
     }
 
-    if (ngx_file_at_info(fd, "", fi, AT_EMPTY_PATH) != NGX_FILE_ERROR) {
-        return NGX_OK;
+    إذا (ngx_file_at_info(fd, "", fi, AT_خالی_مسیر) != NGX_FILE_ERROR) {
+        أرجع NGX_OK;
     }
 
-    return NGX_ERROR;
+    أرجع NGX_ERROR;
 }
 
-#endif
+#پایان_اگر
 
-#endif /* NGX_HAVE_OPENAT */
+#پایان_اگر /* NGX_HAVE_OPENAT */
 
 
-static ngx_fd_t
-ngx_open_file_wrapper(ngx_str_t *name, ngx_open_file_info_t *of,
-    ngx_int_t mode, ngx_int_t create, ngx_int_t access, ngx_log_t *log)
+ساكن ngx_fd_t
+ngx_open_file_wrapper(ngx_str_t *name, ngx_open_file_info_t *از,
+    ngx_int_t نما, ngx_int_t create, ngx_int_t access, ngx_log_t *لگاریتم)
 {
     ngx_fd_t  fd;
 
-#if !(NGX_HAVE_OPENAT)
+#إذا !(NGX_HAVE_OPENAT)
 
-    fd = ngx_open_file(name->data, mode, create, access);
+    fd = ngx_open_file(name->داده, نما, create, access);
 
-    if (fd == NGX_INVALID_FILE) {
-        of->err = ngx_errno;
-        of->failed = ngx_open_file_n;
-        return NGX_INVALID_FILE;
+    إذا (fd == NGX_INVALID_FILE) {
+        از->err = ngx_errno;
+        از->failed = ngx_open_file_n;
+        أرجع NGX_INVALID_FILE;
     }
 
-    return fd;
+    أرجع fd;
 
-#else
+#وإلا
 
-    u_char           *p, *cp, *end;
+    u_char           *p, *cp, *انتها;
     ngx_fd_t          at_fd;
     ngx_str_t         at_name;
 
-    if (of->disable_symlinks == NGX_DISABLE_SYMLINKS_OFF) {
-        fd = ngx_open_file(name->data, mode, create, access);
+    إذا (از->disable_symlinks == NGX_DISABLE_SYMLINKS_OFF) {
+        fd = ngx_open_file(name->داده, نما, create, access);
 
-        if (fd == NGX_INVALID_FILE) {
-            of->err = ngx_errno;
-            of->failed = ngx_open_file_n;
-            return NGX_INVALID_FILE;
+        إذا (fd == NGX_INVALID_FILE) {
+            از->err = ngx_errno;
+            از->failed = ngx_open_file_n;
+            أرجع NGX_INVALID_FILE;
         }
 
-        return fd;
+        أرجع fd;
     }
 
-    p = name->data;
-    end = p + name->len;
+    p = name->داده;
+    انتها = p + name->len;
 
     at_name = *name;
 
-    if (of->disable_symlinks_from) {
+    إذا (از->disable_symlinks_from) {
 
-        cp = p + of->disable_symlinks_from;
+        cp = p + از->disable_symlinks_from;
 
         *cp = '\0';
 
-        at_fd = ngx_open_file(p, NGX_FILE_SEARCH|NGX_FILE_NONBLOCK,
+        at_fd = ngx_open_file(p, NGX_FILE_جستجو|NGX_FILE_NONBLOCK,
                               NGX_FILE_OPEN, 0);
 
         *cp = '/';
 
-        if (at_fd == NGX_INVALID_FILE) {
-            of->err = ngx_errno;
-            of->failed = ngx_open_file_n;
-            return NGX_INVALID_FILE;
+        إذا (at_fd == NGX_INVALID_FILE) {
+            از->err = ngx_errno;
+            از->failed = ngx_open_file_n;
+            أرجع NGX_INVALID_FILE;
         }
 
-        at_name.len = of->disable_symlinks_from;
+        at_name.len = از->disable_symlinks_from;
         p = cp + 1;
 
-    } else if (*p == '/') {
+    } وإلا إذا (*p == '/') {
 
         at_fd = ngx_open_file("/",
-                              NGX_FILE_SEARCH|NGX_FILE_NONBLOCK,
+                              NGX_FILE_جستجو|NGX_FILE_NONBLOCK,
                               NGX_FILE_OPEN, 0);
 
-        if (at_fd == NGX_INVALID_FILE) {
-            of->err = ngx_errno;
-            of->failed = ngx_openat_file_n;
-            return NGX_INVALID_FILE;
+        إذا (at_fd == NGX_INVALID_FILE) {
+            از->err = ngx_errno;
+            از->failed = ngx_openat_file_n;
+            أرجع NGX_INVALID_FILE;
         }
 
         at_name.len = 1;
         p++;
 
-    } else {
+    } وإلا {
         at_fd = NGX_AT_FDCWD;
     }
 
-    for ( ;; ) {
-        cp = ngx_strlchr(p, end, '/');
-        if (cp == NULL) {
-            break;
+    لكل ( ;; ) {
+        cp = ngx_strlchr(p, انتها, '/');
+        إذا (cp == عدم) {
+            اكسر;
         }
 
-        if (cp == p) {
+        إذا (cp == p) {
             p++;
-            continue;
+            استمر;
         }
 
         *cp = '\0';
 
-        if (of->disable_symlinks == NGX_DISABLE_SYMLINKS_NOTOWNER) {
+        إذا (از->disable_symlinks == NGX_DISABLE_SYMLINKS_NOTOWNER) {
             fd = ngx_openat_file_owner(at_fd, p,
-                                       NGX_FILE_SEARCH|NGX_FILE_NONBLOCK,
-                                       NGX_FILE_OPEN, 0, log);
+                                       NGX_FILE_جستجو|NGX_FILE_NONBLOCK,
+                                       NGX_FILE_OPEN, 0, لگاریتم);
 
-        } else {
+        } وإلا {
             fd = ngx_openat_file(at_fd, p,
-                           NGX_FILE_SEARCH|NGX_FILE_NONBLOCK|NGX_FILE_NOFOLLOW,
+                           NGX_FILE_جستجو|NGX_FILE_NONBLOCK|NGX_FILE_NOFOLLOW,
                            NGX_FILE_OPEN, 0);
         }
 
         *cp = '/';
 
-        if (fd == NGX_INVALID_FILE) {
-            of->err = ngx_errno;
-            of->failed = ngx_openat_file_n;
-            goto failed;
+        إذا (fd == NGX_INVALID_FILE) {
+            از->err = ngx_errno;
+            از->failed = ngx_openat_file_n;
+            اذهب failed;
         }
 
-        if (at_fd != NGX_AT_FDCWD && ngx_close_file(at_fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+        إذا (at_fd != NGX_AT_FDCWD && ngx_close_file(at_fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, لگاریتم, ngx_errno,
                           ngx_close_file_n " \"%V\" failed", &at_name);
         }
 
         p = cp + 1;
         at_fd = fd;
-        at_name.len = cp - at_name.data;
+        at_name.len = cp - at_name.داده;
     }
 
-    if (p == end) {
+    إذا (p == انتها) {
 
         /*
          * If pathname ends with a trailing slash, assume the last path
@@ -745,203 +745,203 @@ ngx_open_file_wrapper(ngx_str_t *name, ngx_open_file_info_t *of,
          * reopening a directory, we don't depend on it at all.
          */
 
-        fd = ngx_openat_file(at_fd, ".", mode, create, access);
-        goto done;
+        fd = ngx_openat_file(at_fd, ".", نما, create, access);
+        اذهب انجامشده;
     }
 
-    if (of->disable_symlinks == NGX_DISABLE_SYMLINKS_NOTOWNER
+    إذا (از->disable_symlinks == NGX_DISABLE_SYMLINKS_NOTOWNER
         && !(create & (NGX_FILE_CREATE_OR_OPEN|NGX_FILE_TRUNCATE)))
     {
-        fd = ngx_openat_file_owner(at_fd, p, mode, create, access, log);
+        fd = ngx_openat_file_owner(at_fd, p, نما, create, access, لگاریتم);
 
-    } else {
-        fd = ngx_openat_file(at_fd, p, mode|NGX_FILE_NOFOLLOW, create, access);
+    } وإلا {
+        fd = ngx_openat_file(at_fd, p, نما|NGX_FILE_NOFOLLOW, create, access);
     }
 
-done:
+انجامشده:
 
-    if (fd == NGX_INVALID_FILE) {
-        of->err = ngx_errno;
-        of->failed = ngx_openat_file_n;
+    إذا (fd == NGX_INVALID_FILE) {
+        از->err = ngx_errno;
+        از->failed = ngx_openat_file_n;
     }
 
 failed:
 
-    if (at_fd != NGX_AT_FDCWD && ngx_close_file(at_fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    إذا (at_fd != NGX_AT_FDCWD && ngx_close_file(at_fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, لگاریتم, ngx_errno,
                       ngx_close_file_n " \"%V\" failed", &at_name);
     }
 
-    return fd;
-#endif
+    أرجع fd;
+#پایان_اگر
 }
 
 
-static ngx_int_t
-ngx_file_info_wrapper(ngx_str_t *name, ngx_open_file_info_t *of,
-    ngx_file_info_t *fi, ngx_log_t *log)
+ساكن ngx_int_t
+ngx_file_info_wrapper(ngx_str_t *name, ngx_open_file_info_t *از,
+    ngx_file_info_t *fi, ngx_log_t *لگاریتم)
 {
     ngx_int_t  rc;
 
-#if !(NGX_HAVE_OPENAT)
+#إذا !(NGX_HAVE_OPENAT)
 
-    rc = ngx_file_info(name->data, fi);
+    rc = ngx_file_info(name->داده, fi);
 
-    if (rc == NGX_FILE_ERROR) {
-        of->err = ngx_errno;
-        of->failed = ngx_file_info_n;
-        return NGX_FILE_ERROR;
+    إذا (rc == NGX_FILE_ERROR) {
+        از->err = ngx_errno;
+        از->failed = ngx_file_info_n;
+        أرجع NGX_FILE_ERROR;
     }
 
-    return rc;
+    أرجع rc;
 
-#else
+#وإلا
 
     ngx_fd_t  fd;
 
-    if (of->disable_symlinks == NGX_DISABLE_SYMLINKS_OFF) {
+    إذا (از->disable_symlinks == NGX_DISABLE_SYMLINKS_OFF) {
 
-        rc = ngx_file_info(name->data, fi);
+        rc = ngx_file_info(name->داده, fi);
 
-        if (rc == NGX_FILE_ERROR) {
-            of->err = ngx_errno;
-            of->failed = ngx_file_info_n;
-            return NGX_FILE_ERROR;
+        إذا (rc == NGX_FILE_ERROR) {
+            از->err = ngx_errno;
+            از->failed = ngx_file_info_n;
+            أرجع NGX_FILE_ERROR;
         }
 
-        return rc;
+        أرجع rc;
     }
 
-    fd = ngx_open_file_wrapper(name, of, NGX_FILE_RDONLY|NGX_FILE_NONBLOCK,
-                               NGX_FILE_OPEN, 0, log);
+    fd = ngx_open_file_wrapper(name, از, NGX_FILE_RDONLY|NGX_FILE_NONBLOCK,
+                               NGX_FILE_OPEN, 0, لگاریتم);
 
-    if (fd == NGX_INVALID_FILE) {
-        return NGX_FILE_ERROR;
+    إذا (fd == NGX_INVALID_FILE) {
+        أرجع NGX_FILE_ERROR;
     }
 
     rc = ngx_fd_info(fd, fi);
 
-    if (rc == NGX_FILE_ERROR) {
-        of->err = ngx_errno;
-        of->failed = ngx_fd_info_n;
+    إذا (rc == NGX_FILE_ERROR) {
+        از->err = ngx_errno;
+        از->failed = ngx_fd_info_n;
     }
 
-    if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    إذا (ngx_close_file(fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, لگاریتم, ngx_errno,
                       ngx_close_file_n " \"%V\" failed", name);
     }
 
-    return rc;
-#endif
+    أرجع rc;
+#پایان_اگر
 }
 
 
-static ngx_int_t
-ngx_open_and_stat_file(ngx_str_t *name, ngx_open_file_info_t *of,
-    ngx_log_t *log)
+ساكن ngx_int_t
+ngx_open_and_stat_file(ngx_str_t *name, ngx_open_file_info_t *از,
+    ngx_log_t *لگاریتم)
 {
     ngx_fd_t         fd;
     ngx_file_info_t  fi;
 
-    if (of->fd != NGX_INVALID_FILE) {
+    إذا (از->fd != NGX_INVALID_FILE) {
 
-        if (ngx_file_info_wrapper(name, of, &fi, log) == NGX_FILE_ERROR) {
-            of->fd = NGX_INVALID_FILE;
-            return NGX_ERROR;
+        إذا (ngx_file_info_wrapper(name, از, &fi, لگاریتم) == NGX_FILE_ERROR) {
+            از->fd = NGX_INVALID_FILE;
+            أرجع NGX_ERROR;
         }
 
-        if (of->uniq == ngx_file_uniq(&fi)) {
-            goto done;
+        إذا (از->uniq == ngx_file_uniq(&fi)) {
+            اذهب انجامشده;
         }
 
-    } else if (of->test_dir) {
+    } وإلا إذا (از->test_dir) {
 
-        if (ngx_file_info_wrapper(name, of, &fi, log) == NGX_FILE_ERROR) {
-            of->fd = NGX_INVALID_FILE;
-            return NGX_ERROR;
+        إذا (ngx_file_info_wrapper(name, از, &fi, لگاریتم) == NGX_FILE_ERROR) {
+            از->fd = NGX_INVALID_FILE;
+            أرجع NGX_ERROR;
         }
 
-        if (ngx_is_dir(&fi)) {
-            goto done;
+        إذا (ngx_is_dir(&fi)) {
+            اذهب انجامشده;
         }
     }
 
-    if (!of->log) {
+    إذا (!از->لگاریتم) {
 
         /*
          * Use non-blocking open() not to hang on FIFO files, etc.
          * This flag has no effect on a regular files.
          */
 
-        fd = ngx_open_file_wrapper(name, of, NGX_FILE_RDONLY|NGX_FILE_NONBLOCK,
-                                   NGX_FILE_OPEN, 0, log);
+        fd = ngx_open_file_wrapper(name, از, NGX_FILE_RDONLY|NGX_FILE_NONBLOCK,
+                                   NGX_FILE_OPEN, 0, لگاریتم);
 
-    } else {
-        fd = ngx_open_file_wrapper(name, of, NGX_FILE_APPEND,
+    } وإلا {
+        fd = ngx_open_file_wrapper(name, از, NGX_FILE_APPEND,
                                    NGX_FILE_CREATE_OR_OPEN,
-                                   NGX_FILE_DEFAULT_ACCESS, log);
+                                   NGX_FILE_DEFAULT_ACCESS, لگاریتم);
     }
 
-    if (fd == NGX_INVALID_FILE) {
-        of->fd = NGX_INVALID_FILE;
-        return NGX_ERROR;
+    إذا (fd == NGX_INVALID_FILE) {
+        از->fd = NGX_INVALID_FILE;
+        أرجع NGX_ERROR;
     }
 
-    if (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_CRIT, log, ngx_errno,
+    إذا (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_CRIT, لگاریتم, ngx_errno,
                       ngx_fd_info_n " \"%V\" failed", name);
 
-        if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+        إذا (ngx_close_file(fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, لگاریتم, ngx_errno,
                           ngx_close_file_n " \"%V\" failed", name);
         }
 
-        of->fd = NGX_INVALID_FILE;
+        از->fd = NGX_INVALID_FILE;
 
-        return NGX_ERROR;
+        أرجع NGX_ERROR;
     }
 
-    if (ngx_is_dir(&fi)) {
-        if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    إذا (ngx_is_dir(&fi)) {
+        إذا (ngx_close_file(fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, لگاریتم, ngx_errno,
                           ngx_close_file_n " \"%V\" failed", name);
         }
 
-        of->fd = NGX_INVALID_FILE;
+        از->fd = NGX_INVALID_FILE;
 
-    } else {
-        of->fd = fd;
+    } وإلا {
+        از->fd = fd;
 
-        if (of->read_ahead && ngx_file_size(&fi) > NGX_MIN_READ_AHEAD) {
-            if (ngx_read_ahead(fd, of->read_ahead) == NGX_ERROR) {
-                ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+        إذا (از->read_ahead && ngx_file_اندازه(&fi) > NGX_MIN_READ_AHEAD) {
+            إذا (ngx_read_ahead(fd, از->read_ahead) == NGX_ERROR) {
+                ngx_log_error(NGX_LOG_ALERT, لگاریتم, ngx_errno,
                               ngx_read_ahead_n " \"%V\" failed", name);
             }
         }
 
-        if (of->directio <= ngx_file_size(&fi)) {
-            if (ngx_directio_on(fd) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+        إذا (از->directio <= ngx_file_اندازه(&fi)) {
+            إذا (ngx_directio_on(fd) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_ALERT, لگاریتم, ngx_errno,
                               ngx_directio_on_n " \"%V\" failed", name);
 
-            } else {
-                of->is_directio = 1;
+            } وإلا {
+                از->is_directio = 1;
             }
         }
     }
 
-done:
+انجامشده:
 
-    of->uniq = ngx_file_uniq(&fi);
-    of->mtime = ngx_file_mtime(&fi);
-    of->size = ngx_file_size(&fi);
-    of->fs_size = ngx_file_fs_size(&fi);
-    of->is_dir = ngx_is_dir(&fi);
-    of->is_file = ngx_is_file(&fi);
-    of->is_link = ngx_is_link(&fi);
-    of->is_exec = ngx_is_exec(&fi);
+    از->uniq = ngx_file_uniq(&fi);
+    از->mtime = ngx_file_mtime(&fi);
+    از->اندازه = ngx_file_اندازه(&fi);
+    از->fs_اندازه = ngx_file_fs_اندازه(&fi);
+    از->is_dir = ngx_is_dir(&fi);
+    از->is_file = ngx_is_file(&fi);
+    از->is_link = ngx_is_link(&fi);
+    از->is_exec = ngx_is_exec(&fi);
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
@@ -950,41 +950,41 @@ done:
  * fallback to usual periodic file retests
  */
 
-static void
-ngx_open_file_add_event(ngx_open_file_cache_t *cache,
-    ngx_cached_open_file_t *file, ngx_open_file_info_t *of, ngx_log_t *log)
+ساكن فراغ
+ngx_open_file_جمع_کن_event(ngx_open_file_cache_t *cache,
+    ngx_cached_open_file_t *file, ngx_open_file_info_t *از, ngx_log_t *لگاریتم)
 {
     ngx_open_file_cache_event_t  *fev;
 
-    if (!(ngx_event_flags & NGX_USE_VNODE_EVENT)
-        || !of->events
+    إذا (!(ngx_event_flags & NGX_USE_VNODE_EVENT)
+        || !از->events
         || file->event
-        || of->fd == NGX_INVALID_FILE
-        || file->uses < of->min_uses)
+        || از->fd == NGX_INVALID_FILE
+        || file->استفاده_میکند < از->min_استفاده_میکند)
     {
-        return;
+        أرجع;
     }
 
     file->use_event = 0;
 
-    file->event = ngx_calloc(sizeof(ngx_event_t), log);
-    if (file->event== NULL) {
-        return;
+    file->event = ngx_calloc(حجم(ngx_event_t), لگاریتم);
+    إذا (file->event== عدم) {
+        أرجع;
     }
 
-    fev = ngx_alloc(sizeof(ngx_open_file_cache_event_t), log);
-    if (fev == NULL) {
+    fev = ngx_alloc(حجم(ngx_open_file_cache_event_t), لگاریتم);
+    إذا (fev == عدم) {
         ngx_free(file->event);
-        file->event = NULL;
-        return;
+        file->event = عدم;
+        أرجع;
     }
 
-    fev->fd = of->fd;
+    fev->fd = از->fd;
     fev->file = file;
     fev->cache = cache;
 
     file->event->handler = ngx_open_file_cache_remove;
-    file->event->data = fev;
+    file->event->داده = fev;
 
     /*
      * although vnode event may be called while ngx_cycle->poll
@@ -992,15 +992,15 @@ ngx_open_file_add_event(ngx_open_file_cache_t *cache,
      * memory freeing and events will be canceled.
      */
 
-    file->event->log = ngx_cycle->log;
+    file->event->لگاریتم = ngx_چرخه->لگاریتم;
 
-    if (ngx_add_event(file->event, NGX_VNODE_EVENT, NGX_ONESHOT_EVENT)
+    إذا (ngx_جمع_کن_event(file->event, NGX_VNODE_EVENT, NGX_ONESHOT_EVENT)
         != NGX_OK)
     {
-        ngx_free(file->event->data);
+        ngx_free(file->event->داده);
         ngx_free(file->event);
-        file->event = NULL;
-        return;
+        file->event = عدم;
+        أرجع;
     }
 
     /*
@@ -1010,63 +1010,63 @@ ngx_open_file_add_event(ngx_open_file_cache_t *cache,
      * one file revalidation on next file access
      */
 
-    return;
+    أرجع;
 }
 
 
-static void
-ngx_open_file_cleanup(void *data)
+ساكن فراغ
+ngx_open_file_cleanup(فراغ *داده)
 {
-    ngx_open_file_cache_cleanup_t  *c = data;
+    ngx_open_file_cache_cleanup_t  *c = داده;
 
-    c->file->count--;
+    c->file->شمار--;
 
-    ngx_close_cached_file(c->cache, c->file, c->min_uses, c->log);
+    ngx_close_cached_file(c->cache, c->file, c->min_استفاده_میکند, c->لگاریتم);
 
     /* drop one or two expired open files */
-    ngx_expire_old_cached_files(c->cache, 1, c->log);
+    ngx_expire_old_cached_files(c->cache, 1, c->لگاریتم);
 }
 
 
-static void
+ساكن فراغ
 ngx_close_cached_file(ngx_open_file_cache_t *cache,
-    ngx_cached_open_file_t *file, ngx_uint_t min_uses, ngx_log_t *log)
+    ngx_cached_open_file_t *file, ngx_uint_t min_استفاده_میکند, ngx_log_t *لگاریتم)
 {
-    ngx_log_debug5(NGX_LOG_DEBUG_CORE, log, 0,
+    ngx_log_debug5(NGX_LOG_DEBUG_CORE, لگاریتم, 0,
                    "close cached open file: %s, fd:%d, c:%d, u:%d, %d",
-                   file->name, file->fd, file->count, file->uses, file->close);
+                   file->name, file->fd, file->شمار, file->استفاده_میکند, file->close);
 
-    if (!file->close) {
+    إذا (!file->close) {
 
-        file->accessed = ngx_time();
+        file->accessed = ngx_زمان();
 
-        ngx_queue_remove(&file->queue);
+        ngx_صف_remove(&file->صف);
 
-        ngx_queue_insert_head(&cache->expire_queue, &file->queue);
+        ngx_صف_درج_سر(&cache->expire_صف, &file->صف);
 
-        if (file->uses >= min_uses || file->count) {
-            return;
+        إذا (file->استفاده_میکند >= min_استفاده_میکند || file->شمار) {
+            أرجع;
         }
     }
 
     ngx_open_file_del_event(file);
 
-    if (file->count) {
-        return;
+    إذا (file->شمار) {
+        أرجع;
     }
 
-    if (file->fd != NGX_INVALID_FILE) {
+    إذا (file->fd != NGX_INVALID_FILE) {
 
-        if (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+        إذا (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, لگاریتم, ngx_errno,
                           ngx_close_file_n " \"%s\" failed", file->name);
         }
 
         file->fd = NGX_INVALID_FILE;
     }
 
-    if (!file->close) {
-        return;
+    إذا (!file->close) {
+        أرجع;
     }
 
     ngx_free(file->name);
@@ -1074,32 +1074,32 @@ ngx_close_cached_file(ngx_open_file_cache_t *cache,
 }
 
 
-static void
+ساكن فراغ
 ngx_open_file_del_event(ngx_cached_open_file_t *file)
 {
-    if (file->event == NULL) {
-        return;
+    إذا (file->event == عدم) {
+        أرجع;
     }
 
-    (void) ngx_del_event(file->event, NGX_VNODE_EVENT,
-                         file->count ? NGX_FLUSH_EVENT : NGX_CLOSE_EVENT);
+    (فراغ) ngx_del_event(file->event, NGX_VNODE_EVENT,
+                         file->شمار ? NGX_FLUSH_EVENT : NGX_CLOSE_EVENT);
 
-    ngx_free(file->event->data);
+    ngx_free(file->event->داده);
     ngx_free(file->event);
-    file->event = NULL;
+    file->event = عدم;
     file->use_event = 0;
 }
 
 
-static void
+ساكن فراغ
 ngx_expire_old_cached_files(ngx_open_file_cache_t *cache, ngx_uint_t n,
-    ngx_log_t *log)
+    ngx_log_t *لگاریتم)
 {
-    time_t                   now;
-    ngx_queue_t             *q;
+    زمان_t                   now;
+    ngx_صف_t             *q;
     ngx_cached_open_file_t  *file;
 
-    now = ngx_time();
+    now = ngx_زمان();
 
     /*
      * n == 1 deletes one or two inactive files
@@ -1107,34 +1107,34 @@ ngx_expire_old_cached_files(ngx_open_file_cache_t *cache, ngx_uint_t n,
      *        and one or two inactive files
      */
 
-    while (n < 3) {
+    طالما (n < 3) {
 
-        if (ngx_queue_empty(&cache->expire_queue)) {
-            return;
+        إذا (ngx_صف_خالی(&cache->expire_صف)) {
+            أرجع;
         }
 
-        q = ngx_queue_last(&cache->expire_queue);
+        q = ngx_صف_آخرین(&cache->expire_صف);
 
-        file = ngx_queue_data(q, ngx_cached_open_file_t, queue);
+        file = ngx_صف_داده(q, ngx_cached_open_file_t, صف);
 
-        if (n++ != 0 && now - file->accessed <= cache->inactive) {
-            return;
+        إذا (n++ != 0 && now - file->accessed <= cache->inactive) {
+            أرجع;
         }
 
-        ngx_queue_remove(q);
+        ngx_صف_remove(q);
 
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+        ngx_rbtree_delete(&cache->rbtree, &file->گره);
 
         cache->current--;
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0,
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, لگاریتم, 0,
                        "expire cached open file: %s", file->name);
 
-        if (!file->err && !file->is_dir) {
+        إذا (!file->err && !file->is_dir) {
             file->close = 1;
-            ngx_close_cached_file(cache, file, 0, log);
+            ngx_close_cached_file(cache, file, 0, لگاریتم);
 
-        } else {
+        } وإلا {
             ngx_free(file->name);
             ngx_free(file);
         }
@@ -1142,112 +1142,112 @@ ngx_expire_old_cached_files(ngx_open_file_cache_t *cache, ngx_uint_t n,
 }
 
 
-static void
-ngx_open_file_cache_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ساكن فراغ
+ngx_open_file_cache_rbtree_درج_مقدار(ngx_rbtree_گره_t *موقت,
+    ngx_rbtree_گره_t *گره, ngx_rbtree_گره_t *sentinel)
 {
-    ngx_rbtree_node_t       **p;
-    ngx_cached_open_file_t    *file, *file_temp;
+    ngx_rbtree_گره_t       **p;
+    ngx_cached_open_file_t    *file, *file_موقت;
 
-    for ( ;; ) {
+    لكل ( ;; ) {
 
-        if (node->key < temp->key) {
+        إذا (گره->کلید < موقت->کلید) {
 
-            p = &temp->left;
+            p = &موقت->چپ;
 
-        } else if (node->key > temp->key) {
+        } وإلا إذا (گره->کلید > موقت->کلید) {
 
-            p = &temp->right;
+            p = &موقت->راست;
 
-        } else { /* node->key == temp->key */
+        } وإلا { /* node->key == temp->key */
 
-            file = (ngx_cached_open_file_t *) node;
-            file_temp = (ngx_cached_open_file_t *) temp;
+            file = (ngx_cached_open_file_t *) گره;
+            file_موقت = (ngx_cached_open_file_t *) موقت;
 
-            p = (ngx_strcmp(file->name, file_temp->name) < 0)
-                    ? &temp->left : &temp->right;
+            p = (ngx_strcmp(file->name, file_موقت->name) < 0)
+                    ? &موقت->چپ : &موقت->راست;
         }
 
-        if (*p == sentinel) {
-            break;
+        إذا (*p == sentinel) {
+            اكسر;
         }
 
-        temp = *p;
+        موقت = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = گره;
+    گره->والد = موقت;
+    گره->چپ = sentinel;
+    گره->راست = sentinel;
+    ngx_rbt_red(گره);
 }
 
 
-static ngx_cached_open_file_t *
+ساكن ngx_cached_open_file_t *
 ngx_open_file_lookup(ngx_open_file_cache_t *cache, ngx_str_t *name,
     uint32_t hash)
 {
     ngx_int_t                rc;
-    ngx_rbtree_node_t       *node, *sentinel;
+    ngx_rbtree_گره_t       *گره, *sentinel;
     ngx_cached_open_file_t  *file;
 
-    node = cache->rbtree.root;
+    گره = cache->rbtree.ریشه;
     sentinel = cache->rbtree.sentinel;
 
-    while (node != sentinel) {
+    طالما (گره != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
-            continue;
+        إذا (hash < گره->کلید) {
+            گره = گره->چپ;
+            استمر;
         }
 
-        if (hash > node->key) {
-            node = node->right;
-            continue;
+        إذا (hash > گره->کلید) {
+            گره = گره->راست;
+            استمر;
         }
 
         /* hash == node->key */
 
-        file = (ngx_cached_open_file_t *) node;
+        file = (ngx_cached_open_file_t *) گره;
 
-        rc = ngx_strcmp(name->data, file->name);
+        rc = ngx_strcmp(name->داده, file->name);
 
-        if (rc == 0) {
-            return file;
+        إذا (rc == 0) {
+            أرجع file;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        گره = (rc < 0) ? گره->چپ : گره->راست;
     }
 
-    return NULL;
+    أرجع عدم;
 }
 
 
-static void
+ساكن فراغ
 ngx_open_file_cache_remove(ngx_event_t *ev)
 {
     ngx_cached_open_file_t       *file;
     ngx_open_file_cache_event_t  *fev;
 
-    fev = ev->data;
+    fev = ev->داده;
     file = fev->file;
 
-    ngx_queue_remove(&file->queue);
+    ngx_صف_remove(&file->صف);
 
-    ngx_rbtree_delete(&fev->cache->rbtree, &file->node);
+    ngx_rbtree_delete(&fev->cache->rbtree, &file->گره);
 
     fev->cache->current--;
 
     /* NGX_ONESHOT_EVENT was already deleted */
-    file->event = NULL;
+    file->event = عدم;
     file->use_event = 0;
 
     file->close = 1;
 
-    ngx_close_cached_file(fev->cache, file, 0, ev->log);
+    ngx_close_cached_file(fev->cache, file, 0, ev->لگاریتم);
 
     /* free memory only when fev->cache and fev->file are already not needed */
 
-    ngx_free(ev->data);
+    ngx_free(ev->داده);
     ngx_free(ev);
 }

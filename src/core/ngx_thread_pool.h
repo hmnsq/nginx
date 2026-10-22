@@ -5,32 +5,32 @@
  */
 
 
-#ifndef _NGX_THREAD_POOL_H_INCLUDED_
-#define _NGX_THREAD_POOL_H_INCLUDED_
+#اگر_تعریف_نشده _NGX_THREAD_POOL_H_INCLUDED_
+#تعریف_کن _NGX_THREAD_POOL_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
+#ضمن <ngx_event.h>
 
 
-struct ngx_thread_task_s {
-    ngx_thread_task_t   *next;
+بنية ngx_thread_task_s {
+    ngx_thread_task_t   *بعدی;
     ngx_uint_t           id;
-    void                *ctx;
-    void               (*handler)(void *data, ngx_log_t *log);
+    فراغ                *ctx;
+    فراغ               (*handler)(فراغ *داده, ngx_log_t *لگاریتم);
     ngx_event_t          event;
 };
 
 
-typedef struct ngx_thread_pool_s  ngx_thread_pool_t;
+تعريفنوع بنية ngx_thread_pool_s  ngx_thread_pool_t;
 
 
-ngx_thread_pool_t *ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name);
-ngx_thread_pool_t *ngx_thread_pool_get(ngx_cycle_t *cycle, ngx_str_t *name);
+ngx_thread_pool_t *ngx_thread_pool_جمع_کن(ngx_conf_t *cf, ngx_str_t *name);
+ngx_thread_pool_t *ngx_thread_pool_get(ngx_چرخه_t *چرخه, ngx_str_t *name);
 
-ngx_thread_task_t *ngx_thread_task_alloc(ngx_pool_t *pool, size_t size);
+ngx_thread_task_t *ngx_thread_task_alloc(ngx_pool_t *pool, اندازه_t اندازه);
 ngx_int_t ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task);
 
 
-#endif /* _NGX_THREAD_POOL_H_INCLUDED_ */
+#پایان_اگر /* _NGX_THREAD_POOL_H_INCLUDED_ */

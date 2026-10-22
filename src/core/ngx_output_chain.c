@@ -5,14 +5,14 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
+#ضمن <ngx_event.h>
 
 
-#if 0
-#define NGX_SENDFILE_LIMIT  4096
-#endif
+#إذا 0
+#تعریف_کن NGX_SENDFILE_حد  4096
+#پایان_اگر
 
 /*
  * When DIRECTIO is enabled FreeBSD, Solaris, and MacOSX read directly
@@ -24,31 +24,31 @@
  * usually 512 bytes, however, on XFS it may be 4096 bytes.
  */
 
-#define NGX_NONE            1
+#تعریف_کن NGX_NONE            1
 
 
-static ngx_inline ngx_int_t
+ساكن ngx_inline ngx_int_t
     ngx_output_chain_as_is(ngx_output_chain_ctx_t *ctx, ngx_buf_t *buf);
-static ngx_int_t ngx_output_chain_add_copy(ngx_pool_t *pool,
-    ngx_chain_t **chain, ngx_chain_t *in);
-static ngx_int_t ngx_output_chain_align_file_buf(ngx_output_chain_ctx_t *ctx,
+ساكن ngx_int_t ngx_output_chain_جمع_کن_copy(ngx_pool_t *pool,
+    ngx_chain_t **chain, ngx_chain_t *درون);
+ساكن ngx_int_t ngx_output_chain_align_file_buf(ngx_output_chain_ctx_t *ctx,
     off_t bsize);
-static ngx_int_t ngx_output_chain_get_buf(ngx_output_chain_ctx_t *ctx,
+ساكن ngx_int_t ngx_output_chain_get_buf(ngx_output_chain_ctx_t *ctx,
     off_t bsize);
-static ngx_int_t ngx_output_chain_copy_buf(ngx_output_chain_ctx_t *ctx);
+ساكن ngx_int_t ngx_output_chain_copy_buf(ngx_output_chain_ctx_t *ctx);
 
 
 ngx_int_t
-ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *in)
+ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *درون)
 {
     off_t         bsize;
-    ngx_int_t     rc, last;
-    ngx_chain_t  *cl, *out, **last_out;
+    ngx_int_t     rc, آخرین;
+    ngx_chain_t  *cl, *بیرون, **آخرین_بیرون;
 
-    if (ctx->in == NULL && ctx->busy == NULL
-#if (NGX_HAVE_FILE_AIO || NGX_THREADS)
+    إذا (ctx->درون == عدم && ctx->busy == عدم
+#إذا (NGX_HAVE_FILE_AIO || NGX_نخها)
         && !ctx->aio
-#endif
+#پایان_اگر
        )
     {
         /*
@@ -57,359 +57,359 @@ ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *in)
          * that does not require the copy
          */
 
-        if (in == NULL) {
-            return ctx->output_filter(ctx->filter_ctx, in);
+        إذا (درون == عدم) {
+            أرجع ctx->output_filter(ctx->filter_ctx, درون);
         }
 
-        if (in->next == NULL
-#if (NGX_SENDFILE_LIMIT)
-            && !(in->buf->in_file && in->buf->file_last > NGX_SENDFILE_LIMIT)
-#endif
-            && ngx_output_chain_as_is(ctx, in->buf))
+        إذا (درون->بعدی == عدم
+#إذا (NGX_SENDFILE_حد)
+            && !(درون->buf->درون_file && درون->buf->file_آخرین > NGX_SENDFILE_حد)
+#پایان_اگر
+            && ngx_output_chain_as_is(ctx, درون->buf))
         {
-            return ctx->output_filter(ctx->filter_ctx, in);
+            أرجع ctx->output_filter(ctx->filter_ctx, درون);
         }
     }
 
     /* add the incoming buf to the chain ctx->in */
 
-    if (in) {
-        if (ngx_output_chain_add_copy(ctx->pool, &ctx->in, in) == NGX_ERROR) {
-            return NGX_ERROR;
+    إذا (درون) {
+        إذا (ngx_output_chain_جمع_کن_copy(ctx->pool, &ctx->درون, درون) == NGX_ERROR) {
+            أرجع NGX_ERROR;
         }
     }
 
-    out = NULL;
-    last_out = &out;
-    last = NGX_NONE;
+    بیرون = عدم;
+    آخرین_بیرون = &بیرون;
+    آخرین = NGX_NONE;
 
-    for ( ;; ) {
+    لكل ( ;; ) {
 
-#if (NGX_HAVE_FILE_AIO || NGX_THREADS)
-        if (ctx->aio) {
-            return NGX_AGAIN;
+#إذا (NGX_HAVE_FILE_AIO || NGX_نخها)
+        إذا (ctx->aio) {
+            أرجع NGX_AGAIN;
         }
-#endif
+#پایان_اگر
 
-        while (ctx->in) {
+        طالما (ctx->درون) {
 
             /*
              * cycle while there are the ctx->in bufs
              * and there are the free output bufs to copy in
              */
 
-            bsize = ngx_buf_size(ctx->in->buf);
+            bsize = ngx_buf_اندازه(ctx->درون->buf);
 
-            if (bsize == 0 && !ngx_buf_special(ctx->in->buf)) {
+            إذا (bsize == 0 && !ngx_buf_special(ctx->درون->buf)) {
 
-                ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+                ngx_log_error(NGX_LOG_ALERT, ctx->pool->لگاریتم, 0,
                               "zero size buf in output "
                               "t:%d r:%d f:%d %p %p-%p %p %O-%O",
-                              ctx->in->buf->temporary,
-                              ctx->in->buf->recycled,
-                              ctx->in->buf->in_file,
-                              ctx->in->buf->start,
-                              ctx->in->buf->pos,
-                              ctx->in->buf->last,
-                              ctx->in->buf->file,
-                              ctx->in->buf->file_pos,
-                              ctx->in->buf->file_last);
+                              ctx->درون->buf->temporary,
+                              ctx->درون->buf->recycled,
+                              ctx->درون->buf->درون_file,
+                              ctx->درون->buf->شروع,
+                              ctx->درون->buf->pos,
+                              ctx->درون->buf->آخرین,
+                              ctx->درون->buf->file,
+                              ctx->درون->buf->file_pos,
+                              ctx->درون->buf->file_آخرین);
 
-                ngx_debug_point();
+                ngx_debug_نقطه();
 
-                cl = ctx->in;
-                ctx->in = cl->next;
+                cl = ctx->درون;
+                ctx->درون = cl->بعدی;
 
                 ngx_free_chain(ctx->pool, cl);
 
-                continue;
+                استمر;
             }
 
-            if (bsize < 0) {
+            إذا (bsize < 0) {
 
-                ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+                ngx_log_error(NGX_LOG_ALERT, ctx->pool->لگاریتم, 0,
                               "negative size buf in output "
                               "t:%d r:%d f:%d %p %p-%p %p %O-%O",
-                              ctx->in->buf->temporary,
-                              ctx->in->buf->recycled,
-                              ctx->in->buf->in_file,
-                              ctx->in->buf->start,
-                              ctx->in->buf->pos,
-                              ctx->in->buf->last,
-                              ctx->in->buf->file,
-                              ctx->in->buf->file_pos,
-                              ctx->in->buf->file_last);
+                              ctx->درون->buf->temporary,
+                              ctx->درون->buf->recycled,
+                              ctx->درون->buf->درون_file,
+                              ctx->درون->buf->شروع,
+                              ctx->درون->buf->pos,
+                              ctx->درون->buf->آخرین,
+                              ctx->درون->buf->file,
+                              ctx->درون->buf->file_pos,
+                              ctx->درون->buf->file_آخرین);
 
-                ngx_debug_point();
+                ngx_debug_نقطه();
 
-                return NGX_ERROR;
+                أرجع NGX_ERROR;
             }
 
-            if (ngx_output_chain_as_is(ctx, ctx->in->buf)) {
+            إذا (ngx_output_chain_as_is(ctx, ctx->درون->buf)) {
 
                 /* move the chain link to the output chain */
 
-                cl = ctx->in;
-                ctx->in = cl->next;
+                cl = ctx->درون;
+                ctx->درون = cl->بعدی;
 
-                *last_out = cl;
-                last_out = &cl->next;
-                cl->next = NULL;
+                *آخرین_بیرون = cl;
+                آخرین_بیرون = &cl->بعدی;
+                cl->بعدی = عدم;
 
-                continue;
+                استمر;
             }
 
-            if (ctx->buf == NULL) {
+            إذا (ctx->buf == عدم) {
 
                 rc = ngx_output_chain_align_file_buf(ctx, bsize);
 
-                if (rc == NGX_ERROR) {
-                    return NGX_ERROR;
+                إذا (rc == NGX_ERROR) {
+                    أرجع NGX_ERROR;
                 }
 
-                if (rc != NGX_OK) {
+                إذا (rc != NGX_OK) {
 
-                    if (ctx->free) {
+                    إذا (ctx->حرر) {
 
                         /* get the free buf */
 
-                        cl = ctx->free;
+                        cl = ctx->حرر;
                         ctx->buf = cl->buf;
-                        ctx->free = cl->next;
+                        ctx->حرر = cl->بعدی;
 
                         ngx_free_chain(ctx->pool, cl);
 
-                    } else if (out || ctx->allocated == ctx->bufs.num) {
+                    } وإلا إذا (بیرون || ctx->allocated == ctx->bufs.رقم) {
 
-                        break;
+                        اكسر;
 
-                    } else if (ngx_output_chain_get_buf(ctx, bsize) != NGX_OK) {
-                        return NGX_ERROR;
+                    } وإلا إذا (ngx_output_chain_get_buf(ctx, bsize) != NGX_OK) {
+                        أرجع NGX_ERROR;
                     }
                 }
             }
 
             rc = ngx_output_chain_copy_buf(ctx);
 
-            if (rc == NGX_ERROR) {
-                return rc;
+            إذا (rc == NGX_ERROR) {
+                أرجع rc;
             }
 
-            if (rc == NGX_AGAIN) {
-                if (out) {
-                    break;
+            إذا (rc == NGX_AGAIN) {
+                إذا (بیرون) {
+                    اكسر;
                 }
 
-                return rc;
+                أرجع rc;
             }
 
             /* delete the completed buf from the ctx->in chain */
 
-            if (ngx_buf_size(ctx->in->buf) == 0) {
-                cl = ctx->in;
-                ctx->in = cl->next;
+            إذا (ngx_buf_اندازه(ctx->درون->buf) == 0) {
+                cl = ctx->درون;
+                ctx->درون = cl->بعدی;
 
                 ngx_free_chain(ctx->pool, cl);
             }
 
             cl = ngx_alloc_chain_link(ctx->pool);
-            if (cl == NULL) {
-                return NGX_ERROR;
+            إذا (cl == عدم) {
+                أرجع NGX_ERROR;
             }
 
             cl->buf = ctx->buf;
-            cl->next = NULL;
-            *last_out = cl;
-            last_out = &cl->next;
-            ctx->buf = NULL;
+            cl->بعدی = عدم;
+            *آخرین_بیرون = cl;
+            آخرین_بیرون = &cl->بعدی;
+            ctx->buf = عدم;
         }
 
-        if (out == NULL && last != NGX_NONE) {
+        إذا (بیرون == عدم && آخرین != NGX_NONE) {
 
-            if (ctx->in) {
-                return NGX_AGAIN;
+            إذا (ctx->درون) {
+                أرجع NGX_AGAIN;
             }
 
-            return last;
+            أرجع آخرین;
         }
 
-        last = ctx->output_filter(ctx->filter_ctx, out);
+        آخرین = ctx->output_filter(ctx->filter_ctx, بیرون);
 
-        if (last == NGX_ERROR || last == NGX_DONE) {
-            return last;
+        إذا (آخرین == NGX_ERROR || آخرین == NGX_انجامشده) {
+            أرجع آخرین;
         }
 
-        ngx_chain_update_chains(ctx->pool, &ctx->free, &ctx->busy, &out,
-                                ctx->tag);
-        last_out = &out;
+        ngx_chain_update_chains(ctx->pool, &ctx->حرر, &ctx->busy, &بیرون,
+                                ctx->برچسب);
+        آخرین_بیرون = &بیرون;
     }
 }
 
 
-static ngx_inline ngx_int_t
+ساكن ngx_inline ngx_int_t
 ngx_output_chain_as_is(ngx_output_chain_ctx_t *ctx, ngx_buf_t *buf)
 {
     ngx_uint_t  sendfile;
 
-    if (ngx_buf_special(buf)) {
-        return 1;
+    إذا (ngx_buf_special(buf)) {
+        أرجع 1;
     }
 
-#if (NGX_THREADS)
-    if (buf->in_file) {
+#إذا (NGX_نخها)
+    إذا (buf->درون_file) {
         buf->file->thread_handler = ctx->thread_handler;
         buf->file->thread_ctx = ctx->filter_ctx;
     }
-#endif
+#پایان_اگر
 
     sendfile = ctx->sendfile;
 
-#if (NGX_SENDFILE_LIMIT)
+#إذا (NGX_SENDFILE_حد)
 
-    if (buf->in_file && buf->file_pos >= NGX_SENDFILE_LIMIT) {
+    إذا (buf->درون_file && buf->file_pos >= NGX_SENDFILE_حد) {
         sendfile = 0;
     }
 
-#endif
+#پایان_اگر
 
-#if !(NGX_HAVE_SENDFILE_NODISKIO)
+#إذا !(NGX_HAVE_SENDFILE_NODISKIO)
 
     /*
      * With DIRECTIO, disable sendfile() unless sendfile(SF_NOCACHE)
      * is available.
      */
 
-    if (buf->in_file && buf->file->directio) {
+    إذا (buf->درون_file && buf->file->directio) {
         sendfile = 0;
     }
 
-#endif
+#پایان_اگر
 
-    if (!sendfile) {
+    إذا (!sendfile) {
 
-        if (!ngx_buf_in_memory(buf)) {
-            return 0;
+        إذا (!ngx_buf_درون_حافظه(buf)) {
+            أرجع 0;
         }
 
-        buf->in_file = 0;
+        buf->درون_file = 0;
     }
 
-    if (ctx->need_in_memory && !ngx_buf_in_memory(buf)) {
-        return 0;
+    إذا (ctx->need_درون_حافظه && !ngx_buf_درون_حافظه(buf)) {
+        أرجع 0;
     }
 
-    if (ctx->need_in_temp && (buf->memory || buf->mmap)) {
-        return 0;
+    إذا (ctx->need_درون_موقت && (buf->حافظه || buf->mmap)) {
+        أرجع 0;
     }
 
-    return 1;
+    أرجع 1;
 }
 
 
-static ngx_int_t
-ngx_output_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain,
-    ngx_chain_t *in)
+ساكن ngx_int_t
+ngx_output_chain_جمع_کن_copy(ngx_pool_t *pool, ngx_chain_t **chain,
+    ngx_chain_t *درون)
 {
     ngx_chain_t  *cl, **ll;
-#if (NGX_SENDFILE_LIMIT)
+#إذا (NGX_SENDFILE_حد)
     ngx_buf_t    *b, *buf;
-#endif
+#پایان_اگر
 
     ll = chain;
 
-    for (cl = *chain; cl; cl = cl->next) {
-        ll = &cl->next;
+    لكل (cl = *chain; cl; cl = cl->بعدی) {
+        ll = &cl->بعدی;
     }
 
-    while (in) {
+    طالما (درون) {
 
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            return NGX_ERROR;
+        إذا (cl == عدم) {
+            أرجع NGX_ERROR;
         }
 
-#if (NGX_SENDFILE_LIMIT)
+#إذا (NGX_SENDFILE_حد)
 
-        buf = in->buf;
+        buf = درون->buf;
 
-        if (buf->in_file
-            && buf->file_pos < NGX_SENDFILE_LIMIT
-            && buf->file_last > NGX_SENDFILE_LIMIT)
+        إذا (buf->درون_file
+            && buf->file_pos < NGX_SENDFILE_حد
+            && buf->file_آخرین > NGX_SENDFILE_حد)
         {
             /* split a file buf on two bufs by the sendfile limit */
 
             b = ngx_calloc_buf(pool);
-            if (b == NULL) {
-                return NGX_ERROR;
+            إذا (b == عدم) {
+                أرجع NGX_ERROR;
             }
 
-            ngx_memcpy(b, buf, sizeof(ngx_buf_t));
+            ngx_memcpy(b, buf, حجم(ngx_buf_t));
 
-            if (ngx_buf_in_memory(buf)) {
-                buf->pos += (ssize_t) (NGX_SENDFILE_LIMIT - buf->file_pos);
-                b->last = buf->pos;
+            إذا (ngx_buf_درون_حافظه(buf)) {
+                buf->pos += (ssize_t) (NGX_SENDFILE_حد - buf->file_pos);
+                b->آخرین = buf->pos;
             }
 
-            buf->file_pos = NGX_SENDFILE_LIMIT;
-            b->file_last = NGX_SENDFILE_LIMIT;
+            buf->file_pos = NGX_SENDFILE_حد;
+            b->file_آخرین = NGX_SENDFILE_حد;
 
             cl->buf = b;
 
-        } else {
+        } وإلا {
             cl->buf = buf;
-            in = in->next;
+            درون = درون->بعدی;
         }
 
-#else
-        cl->buf = in->buf;
-        in = in->next;
+#وإلا
+        cl->buf = درون->buf;
+        درون = درون->بعدی;
 
-#endif
+#پایان_اگر
 
-        cl->next = NULL;
+        cl->بعدی = عدم;
         *ll = cl;
-        ll = &cl->next;
+        ll = &cl->بعدی;
     }
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
-static ngx_int_t
+ساكن ngx_int_t
 ngx_output_chain_align_file_buf(ngx_output_chain_ctx_t *ctx, off_t bsize)
 {
-    size_t      size;
-    ngx_buf_t  *in;
+    اندازه_t      اندازه;
+    ngx_buf_t  *درون;
 
-    in = ctx->in->buf;
+    درون = ctx->درون->buf;
 
-    if (in->file == NULL || !in->file->directio) {
-        return NGX_DECLINED;
+    إذا (درون->file == عدم || !درون->file->directio) {
+        أرجع NGX_DECLINED;
     }
 
     ctx->directio = 1;
 
-    size = (size_t) (in->file_pos - (in->file_pos & ~(ctx->alignment - 1)));
+    اندازه = (اندازه_t) (درون->file_pos - (درون->file_pos & ~(ctx->alignment - 1)));
 
-    if (size == 0) {
+    إذا (اندازه == 0) {
 
-        if (bsize >= (off_t) ctx->bufs.size) {
-            return NGX_DECLINED;
+        إذا (bsize >= (off_t) ctx->bufs.اندازه) {
+            أرجع NGX_DECLINED;
         }
 
-        size = (size_t) bsize;
+        اندازه = (اندازه_t) bsize;
 
-    } else {
-        size = (size_t) ctx->alignment - size;
+    } وإلا {
+        اندازه = (اندازه_t) ctx->alignment - اندازه;
 
-        if ((off_t) size > bsize) {
-            size = (size_t) bsize;
+        إذا ((off_t) اندازه > bsize) {
+            اندازه = (اندازه_t) bsize;
         }
     }
 
-    ctx->buf = ngx_create_temp_buf(ctx->pool, size);
-    if (ctx->buf == NULL) {
-        return NGX_ERROR;
+    ctx->buf = ngx_create_موقت_buf(ctx->pool, اندازه);
+    إذا (ctx->buf == عدم) {
+        أرجع NGX_ERROR;
     }
 
     /*
@@ -417,40 +417,40 @@ ngx_output_chain_align_file_buf(ngx_output_chain_ctx_t *ctx, off_t bsize)
      * to reuse the buf via ctx->free list
      */
 
-#if (NGX_HAVE_ALIGNED_DIRECTIO)
+#إذا (NGX_HAVE_ALIGNED_DIRECTIO)
     ctx->unaligned = 1;
-#endif
+#پایان_اگر
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
-static ngx_int_t
+ساكن ngx_int_t
 ngx_output_chain_get_buf(ngx_output_chain_ctx_t *ctx, off_t bsize)
 {
-    size_t       size;
-    ngx_buf_t   *b, *in;
+    اندازه_t       اندازه;
+    ngx_buf_t   *b, *درون;
     ngx_uint_t   recycled;
 
-    in = ctx->in->buf;
-    size = ctx->bufs.size;
+    درون = ctx->درون->buf;
+    اندازه = ctx->bufs.اندازه;
     recycled = 1;
 
-    if (in->last_in_chain) {
+    إذا (درون->آخرین_درون_chain) {
 
-        if (bsize < (off_t) size) {
+        إذا (bsize < (off_t) اندازه) {
 
             /*
              * allocate a small temp buf for a small last buf
              * or its small last part
              */
 
-            size = (size_t) bsize;
+            اندازه = (اندازه_t) bsize;
             recycled = 0;
 
-        } else if (!ctx->directio
-                   && ctx->bufs.num == 1
-                   && (bsize < (off_t) (size + size / 4)))
+        } وإلا إذا (!ctx->directio
+                   && ctx->bufs.رقم == 1
+                   && (bsize < (off_t) (اندازه + اندازه / 4)))
         {
             /*
              * allocate a temp buf that equals to a last buf,
@@ -458,363 +458,363 @@ ngx_output_chain_get_buf(ngx_output_chain_ctx_t *ctx, off_t bsize)
              * than 1.25 of bufs.size and the temp buf is single
              */
 
-            size = (size_t) bsize;
+            اندازه = (اندازه_t) bsize;
             recycled = 0;
         }
     }
 
     b = ngx_calloc_buf(ctx->pool);
-    if (b == NULL) {
-        return NGX_ERROR;
+    إذا (b == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    if (ctx->directio) {
+    إذا (ctx->directio) {
 
         /*
          * allocate block aligned to a disk sector size to enable
          * userland buffer direct usage conjunctly with directio
          */
 
-        b->start = ngx_pmemalign(ctx->pool, size, (size_t) ctx->alignment);
-        if (b->start == NULL) {
-            return NGX_ERROR;
+        b->شروع = ngx_pmemalign(ctx->pool, اندازه, (اندازه_t) ctx->alignment);
+        إذا (b->شروع == عدم) {
+            أرجع NGX_ERROR;
         }
 
-    } else {
-        b->start = ngx_palloc(ctx->pool, size);
-        if (b->start == NULL) {
-            return NGX_ERROR;
+    } وإلا {
+        b->شروع = ngx_palloc(ctx->pool, اندازه);
+        إذا (b->شروع == عدم) {
+            أرجع NGX_ERROR;
         }
     }
 
-    b->pos = b->start;
-    b->last = b->start;
-    b->end = b->last + size;
+    b->pos = b->شروع;
+    b->آخرین = b->شروع;
+    b->انتها = b->آخرین + اندازه;
     b->temporary = 1;
-    b->tag = ctx->tag;
+    b->برچسب = ctx->برچسب;
     b->recycled = recycled;
 
     ctx->buf = b;
     ctx->allocated++;
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
-static ngx_int_t
+ساكن ngx_int_t
 ngx_output_chain_copy_buf(ngx_output_chain_ctx_t *ctx)
 {
-    off_t        size;
+    off_t        اندازه;
     ssize_t      n;
     ngx_buf_t   *src, *dst;
     ngx_uint_t   sendfile;
 
-    src = ctx->in->buf;
+    src = ctx->درون->buf;
     dst = ctx->buf;
 
-    size = ngx_buf_size(src);
-    size = ngx_min(size, dst->end - dst->pos);
+    اندازه = ngx_buf_اندازه(src);
+    اندازه = ngx_min(اندازه, dst->انتها - dst->pos);
 
     sendfile = ctx->sendfile && !ctx->directio;
 
-#if (NGX_SENDFILE_LIMIT)
+#إذا (NGX_SENDFILE_حد)
 
-    if (src->in_file && src->file_pos >= NGX_SENDFILE_LIMIT) {
+    إذا (src->درون_file && src->file_pos >= NGX_SENDFILE_حد) {
         sendfile = 0;
     }
 
-#endif
+#پایان_اگر
 
-    if (ngx_buf_in_memory(src)) {
-        ngx_memcpy(dst->pos, src->pos, (size_t) size);
-        src->pos += (size_t) size;
-        dst->last += (size_t) size;
+    إذا (ngx_buf_درون_حافظه(src)) {
+        ngx_memcpy(dst->pos, src->pos, (اندازه_t) اندازه);
+        src->pos += (اندازه_t) اندازه;
+        dst->آخرین += (اندازه_t) اندازه;
 
-        if (src->in_file) {
+        إذا (src->درون_file) {
 
-            if (sendfile) {
-                dst->in_file = 1;
+            إذا (sendfile) {
+                dst->درون_file = 1;
                 dst->file = src->file;
                 dst->file_pos = src->file_pos;
-                dst->file_last = src->file_pos + size;
+                dst->file_آخرین = src->file_pos + اندازه;
 
-            } else {
-                dst->in_file = 0;
+            } وإلا {
+                dst->درون_file = 0;
             }
 
-            src->file_pos += size;
+            src->file_pos += اندازه;
 
-        } else {
-            dst->in_file = 0;
+        } وإلا {
+            dst->درون_file = 0;
         }
 
-        if (src->pos == src->last) {
+        إذا (src->pos == src->آخرین) {
             dst->flush = src->flush;
-            dst->last_buf = src->last_buf;
-            dst->last_in_chain = src->last_in_chain;
+            dst->آخرین_buf = src->آخرین_buf;
+            dst->آخرین_درون_chain = src->آخرین_درون_chain;
 
-        } else {
+        } وإلا {
             dst->flush = 0;
-            dst->last_buf = 0;
-            dst->last_in_chain = 0;
+            dst->آخرین_buf = 0;
+            dst->آخرین_درون_chain = 0;
         }
 
-    } else {
+    } وإلا {
 
-#if (NGX_HAVE_ALIGNED_DIRECTIO)
+#إذا (NGX_HAVE_ALIGNED_DIRECTIO)
 
-        if (ctx->unaligned) {
-            if (ngx_directio_off(src->file->fd) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, ngx_errno,
+        إذا (ctx->unaligned) {
+            إذا (ngx_directio_off(src->file->fd) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_ALERT, ctx->pool->لگاریتم, ngx_errno,
                               ngx_directio_off_n " \"%s\" failed",
-                              src->file->name.data);
+                              src->file->name.داده);
             }
         }
 
-#endif
+#پایان_اگر
 
-#if (NGX_HAVE_FILE_AIO)
-        if (ctx->aio_handler) {
-            n = ngx_file_aio_read(src->file, dst->pos, (size_t) size,
+#إذا (NGX_HAVE_FILE_AIO)
+        إذا (ctx->aio_handler) {
+            n = ngx_file_aio_read(src->file, dst->pos, (اندازه_t) اندازه,
                                   src->file_pos, ctx->pool);
-            if (n == NGX_AGAIN) {
+            إذا (n == NGX_AGAIN) {
                 ctx->aio_handler(ctx, src->file);
-                return NGX_AGAIN;
+                أرجع NGX_AGAIN;
             }
 
-        } else
-#endif
-#if (NGX_THREADS)
-        if (ctx->thread_handler) {
+        } وإلا
+#پایان_اگر
+#إذا (NGX_نخها)
+        إذا (ctx->thread_handler) {
             src->file->thread_task = ctx->thread_task;
             src->file->thread_handler = ctx->thread_handler;
             src->file->thread_ctx = ctx->filter_ctx;
 
-            n = ngx_thread_read(src->file, dst->pos, (size_t) size,
+            n = ngx_thread_read(src->file, dst->pos, (اندازه_t) اندازه,
                                 src->file_pos, ctx->pool);
-            if (n == NGX_AGAIN) {
+            إذا (n == NGX_AGAIN) {
                 ctx->thread_task = src->file->thread_task;
-                return NGX_AGAIN;
+                أرجع NGX_AGAIN;
             }
 
-        } else
-#endif
+        } وإلا
+#پایان_اگر
         {
-            n = ngx_read_file(src->file, dst->pos, (size_t) size,
+            n = ngx_read_file(src->file, dst->pos, (اندازه_t) اندازه,
                               src->file_pos);
         }
 
-#if (NGX_HAVE_ALIGNED_DIRECTIO)
+#إذا (NGX_HAVE_ALIGNED_DIRECTIO)
 
-        if (ctx->unaligned) {
+        إذا (ctx->unaligned) {
             ngx_err_t  err;
 
             err = ngx_errno;
 
-            if (ngx_directio_on(src->file->fd) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, ngx_errno,
+            إذا (ngx_directio_on(src->file->fd) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_ALERT, ctx->pool->لگاریتم, ngx_errno,
                               ngx_directio_on_n " \"%s\" failed",
-                              src->file->name.data);
+                              src->file->name.داده);
             }
 
-            ngx_set_errno(err);
+            ngx_مجموعه_errno(err);
 
             ctx->unaligned = 0;
         }
 
-#endif
+#پایان_اگر
 
-        if (n == NGX_ERROR) {
-            return (ngx_int_t) n;
+        إذا (n == NGX_ERROR) {
+            أرجع (ngx_int_t) n;
         }
 
-        if (n != size) {
-            ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+        إذا (n != اندازه) {
+            ngx_log_error(NGX_LOG_ALERT, ctx->pool->لگاریتم, 0,
                           ngx_read_file_n " read only %z of %O from \"%s\"",
-                          n, size, src->file->name.data);
-            return NGX_ERROR;
+                          n, اندازه, src->file->name.داده);
+            أرجع NGX_ERROR;
         }
 
-        dst->last += n;
+        dst->آخرین += n;
 
-        if (sendfile) {
-            dst->in_file = 1;
+        إذا (sendfile) {
+            dst->درون_file = 1;
             dst->file = src->file;
             dst->file_pos = src->file_pos;
-            dst->file_last = src->file_pos + n;
+            dst->file_آخرین = src->file_pos + n;
 
-        } else {
-            dst->in_file = 0;
+        } وإلا {
+            dst->درون_file = 0;
         }
 
         src->file_pos += n;
 
-        if (src->file_pos == src->file_last) {
+        إذا (src->file_pos == src->file_آخرین) {
             dst->flush = src->flush;
-            dst->last_buf = src->last_buf;
-            dst->last_in_chain = src->last_in_chain;
+            dst->آخرین_buf = src->آخرین_buf;
+            dst->آخرین_درون_chain = src->آخرین_درون_chain;
 
-        } else {
+        } وإلا {
             dst->flush = 0;
-            dst->last_buf = 0;
-            dst->last_in_chain = 0;
+            dst->آخرین_buf = 0;
+            dst->آخرین_درون_chain = 0;
         }
     }
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
 ngx_int_t
-ngx_chain_writer(void *data, ngx_chain_t *in)
+ngx_chain_writer(فراغ *داده, ngx_chain_t *درون)
 {
-    ngx_chain_writer_ctx_t *ctx = data;
+    ngx_chain_writer_ctx_t *ctx = داده;
 
-    off_t              size;
+    off_t              اندازه;
     ngx_chain_t       *cl, *ln, *chain;
     ngx_connection_t  *c;
 
     c = ctx->connection;
 
-    for (size = 0; in; in = in->next) {
+    لكل (اندازه = 0; درون; درون = درون->بعدی) {
 
-        if (ngx_buf_size(in->buf) == 0 && !ngx_buf_special(in->buf)) {
+        إذا (ngx_buf_اندازه(درون->buf) == 0 && !ngx_buf_special(درون->buf)) {
 
-            ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+            ngx_log_error(NGX_LOG_ALERT, ctx->pool->لگاریتم, 0,
                           "zero size buf in chain writer "
                           "t:%d r:%d f:%d %p %p-%p %p %O-%O",
-                          in->buf->temporary,
-                          in->buf->recycled,
-                          in->buf->in_file,
-                          in->buf->start,
-                          in->buf->pos,
-                          in->buf->last,
-                          in->buf->file,
-                          in->buf->file_pos,
-                          in->buf->file_last);
+                          درون->buf->temporary,
+                          درون->buf->recycled,
+                          درون->buf->درون_file,
+                          درون->buf->شروع,
+                          درون->buf->pos,
+                          درون->buf->آخرین,
+                          درون->buf->file,
+                          درون->buf->file_pos,
+                          درون->buf->file_آخرین);
 
-            ngx_debug_point();
+            ngx_debug_نقطه();
 
-            continue;
+            استمر;
         }
 
-        if (ngx_buf_size(in->buf) < 0) {
+        إذا (ngx_buf_اندازه(درون->buf) < 0) {
 
-            ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+            ngx_log_error(NGX_LOG_ALERT, ctx->pool->لگاریتم, 0,
                           "negative size buf in chain writer "
                           "t:%d r:%d f:%d %p %p-%p %p %O-%O",
-                          in->buf->temporary,
-                          in->buf->recycled,
-                          in->buf->in_file,
-                          in->buf->start,
-                          in->buf->pos,
-                          in->buf->last,
-                          in->buf->file,
-                          in->buf->file_pos,
-                          in->buf->file_last);
+                          درون->buf->temporary,
+                          درون->buf->recycled,
+                          درون->buf->درون_file,
+                          درون->buf->شروع,
+                          درون->buf->pos,
+                          درون->buf->آخرین,
+                          درون->buf->file,
+                          درون->buf->file_pos,
+                          درون->buf->file_آخرین);
 
-            ngx_debug_point();
+            ngx_debug_نقطه();
 
-            return NGX_ERROR;
+            أرجع NGX_ERROR;
         }
 
-        size += ngx_buf_size(in->buf);
+        اندازه += ngx_buf_اندازه(درون->buf);
 
-        ngx_log_debug2(NGX_LOG_DEBUG_CORE, c->log, 0,
+        ngx_log_debug2(NGX_LOG_DEBUG_CORE, c->لگاریتم, 0,
                        "chain writer buf fl:%d s:%uO",
-                       in->buf->flush, ngx_buf_size(in->buf));
+                       درون->buf->flush, ngx_buf_اندازه(درون->buf));
 
         cl = ngx_alloc_chain_link(ctx->pool);
-        if (cl == NULL) {
-            return NGX_ERROR;
+        إذا (cl == عدم) {
+            أرجع NGX_ERROR;
         }
 
-        cl->buf = in->buf;
-        cl->next = NULL;
-        *ctx->last = cl;
-        ctx->last = &cl->next;
+        cl->buf = درون->buf;
+        cl->بعدی = عدم;
+        *ctx->آخرین = cl;
+        ctx->آخرین = &cl->بعدی;
     }
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
-                   "chain writer in: %p", ctx->out);
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->لگاریتم, 0,
+                   "chain writer in: %p", ctx->بیرون);
 
-    for (cl = ctx->out; cl; cl = cl->next) {
+    لكل (cl = ctx->بیرون; cl; cl = cl->بعدی) {
 
-        if (ngx_buf_size(cl->buf) == 0 && !ngx_buf_special(cl->buf)) {
+        إذا (ngx_buf_اندازه(cl->buf) == 0 && !ngx_buf_special(cl->buf)) {
 
-            ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+            ngx_log_error(NGX_LOG_ALERT, ctx->pool->لگاریتم, 0,
                           "zero size buf in chain writer "
                           "t:%d r:%d f:%d %p %p-%p %p %O-%O",
                           cl->buf->temporary,
                           cl->buf->recycled,
-                          cl->buf->in_file,
-                          cl->buf->start,
+                          cl->buf->درون_file,
+                          cl->buf->شروع,
                           cl->buf->pos,
-                          cl->buf->last,
+                          cl->buf->آخرین,
                           cl->buf->file,
                           cl->buf->file_pos,
-                          cl->buf->file_last);
+                          cl->buf->file_آخرین);
 
-            ngx_debug_point();
+            ngx_debug_نقطه();
 
-            continue;
+            استمر;
         }
 
-        if (ngx_buf_size(cl->buf) < 0) {
+        إذا (ngx_buf_اندازه(cl->buf) < 0) {
 
-            ngx_log_error(NGX_LOG_ALERT, ctx->pool->log, 0,
+            ngx_log_error(NGX_LOG_ALERT, ctx->pool->لگاریتم, 0,
                           "negative size buf in chain writer "
                           "t:%d r:%d f:%d %p %p-%p %p %O-%O",
                           cl->buf->temporary,
                           cl->buf->recycled,
-                          cl->buf->in_file,
-                          cl->buf->start,
+                          cl->buf->درون_file,
+                          cl->buf->شروع,
                           cl->buf->pos,
-                          cl->buf->last,
+                          cl->buf->آخرین,
                           cl->buf->file,
                           cl->buf->file_pos,
-                          cl->buf->file_last);
+                          cl->buf->file_آخرین);
 
-            ngx_debug_point();
+            ngx_debug_نقطه();
 
-            return NGX_ERROR;
+            أرجع NGX_ERROR;
         }
 
-        size += ngx_buf_size(cl->buf);
+        اندازه += ngx_buf_اندازه(cl->buf);
     }
 
-    if (size == 0 && !c->buffered) {
-        return NGX_OK;
+    إذا (اندازه == 0 && !c->buffered) {
+        أرجع NGX_OK;
     }
 
-    chain = c->send_chain(c, ctx->out, ctx->limit);
+    chain = c->send_chain(c, ctx->بیرون, ctx->حد);
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->لگاریتم, 0,
                    "chain writer out: %p", chain);
 
-    if (chain == NGX_CHAIN_ERROR) {
-        return NGX_ERROR;
+    إذا (chain == NGX_CHAIN_ERROR) {
+        أرجع NGX_ERROR;
     }
 
-    if (chain && c->write->ready) {
-        ngx_post_event(c->write, &ngx_posted_next_events);
+    إذا (chain && c->اكتب->ready) {
+        ngx_post_event(c->اكتب, &ngx_posted_بعدی_events);
     }
 
-    for (cl = ctx->out; cl && cl != chain; /* void */) {
+    لكل (cl = ctx->بیرون; cl && cl != chain; /* void */) {
         ln = cl;
-        cl = cl->next;
+        cl = cl->بعدی;
         ngx_free_chain(ctx->pool, ln);
     }
 
-    ctx->out = chain;
+    ctx->بیرون = chain;
 
-    if (ctx->out == NULL) {
-        ctx->last = &ctx->out;
+    إذا (ctx->بیرون == عدم) {
+        ctx->آخرین = &ctx->بیرون;
 
-        if (!c->buffered) {
-            return NGX_OK;
+        إذا (!c->buffered) {
+            أرجع NGX_OK;
         }
     }
 
-    return NGX_AGAIN;
+    أرجع NGX_AGAIN;
 }

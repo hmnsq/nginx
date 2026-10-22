@@ -5,111 +5,111 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-#ifndef _NGX_QUEUE_H_INCLUDED_
-#define _NGX_QUEUE_H_INCLUDED_
+#اگر_تعریف_نشده NGX_صف_H_INCLUDED
+#تعریف_کن NGX_صف_H_INCLUDED
 
 
-typedef struct ngx_queue_s  ngx_queue_t;
+تعريفنوع بنية ngx_صف_s  ngx_صف_t;
 
-struct ngx_queue_s {
-    ngx_queue_t  *prev;
-    ngx_queue_t  *next;
+بنية ngx_صف_s {
+    ngx_صف_t  *prev;
+    ngx_صف_t  *بعدی;
 };
 
 
-#define ngx_queue_init(q)                                                     \
+#تعریف_کن ngx_صف_init(q)                                                     \
     (q)->prev = q;                                                            \
-    (q)->next = q
+    (q)->بعدی = q
 
 
-#define ngx_queue_empty(h)                                                    \
+#تعریف_کن ngx_صف_خالی(h)                                                    \
     (h == (h)->prev)
 
 
-#define ngx_queue_insert_head(h, x)                                           \
-    (x)->next = (h)->next;                                                    \
-    (x)->next->prev = x;                                                      \
+#تعریف_کن ngx_صف_درج_سر(h, x)                                           \
+    (x)->بعدی = (h)->بعدی;                                                    \
+    (x)->بعدی->prev = x;                                                      \
     (x)->prev = h;                                                            \
-    (h)->next = x
+    (h)->بعدی = x
 
 
-#define ngx_queue_insert_after   ngx_queue_insert_head
+#تعریف_کن ngx_صف_درج_after   ngx_صف_درج_سر
 
 
-#define ngx_queue_insert_tail(h, x)                                           \
+#تعریف_کن ngx_صف_درج_دم(h, x)                                           \
     (x)->prev = (h)->prev;                                                    \
-    (x)->prev->next = x;                                                      \
-    (x)->next = h;                                                            \
+    (x)->prev->بعدی = x;                                                      \
+    (x)->بعدی = h;                                                            \
     (h)->prev = x
 
 
-#define ngx_queue_insert_before   ngx_queue_insert_tail
+#تعریف_کن ngx_صف_درج_before   ngx_صف_درج_دم
 
 
-#define ngx_queue_head(h)                                                     \
-    (h)->next
+#تعریف_کن ngx_صف_سر(h)                                                     \
+    (h)->بعدی
 
 
-#define ngx_queue_last(h)                                                     \
+#تعریف_کن ngx_صف_آخرین(h)                                                     \
     (h)->prev
 
 
-#define ngx_queue_sentinel(h)                                                 \
+#تعریف_کن ngx_صف_sentinel(h)                                                 \
     (h)
 
 
-#define ngx_queue_next(q)                                                     \
-    (q)->next
+#تعریف_کن ngx_صف_بعدی(q)                                                     \
+    (q)->بعدی
 
 
-#define ngx_queue_prev(q)                                                     \
+#تعریف_کن ngx_صف_prev(q)                                                     \
     (q)->prev
 
 
-#if (NGX_DEBUG)
+#إذا (NGX_DEBUG)
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next;                                              \
-    (x)->prev = NULL;                                                         \
-    (x)->next = NULL
+#تعریف_کن ngx_صف_remove(x)                                                   \
+    (x)->بعدی->prev = (x)->prev;                                              \
+    (x)->prev->بعدی = (x)->بعدی;                                              \
+    (x)->prev = عدم;                                                         \
+    (x)->بعدی = عدم
 
-#else
+#وإلا
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next
+#تعریف_کن ngx_صف_remove(x)                                                   \
+    (x)->بعدی->prev = (x)->prev;                                              \
+    (x)->prev->بعدی = (x)->بعدی
 
-#endif
+#پایان_اگر
 
 
-#define ngx_queue_split(h, q, n)                                              \
+#تعریف_کن ngx_صف_تقسیم(h, q, n)                                              \
     (n)->prev = (h)->prev;                                                    \
-    (n)->prev->next = n;                                                      \
-    (n)->next = q;                                                            \
+    (n)->prev->بعدی = n;                                                      \
+    (n)->بعدی = q;                                                            \
     (h)->prev = (q)->prev;                                                    \
-    (h)->prev->next = h;                                                      \
+    (h)->prev->بعدی = h;                                                      \
     (q)->prev = n;
 
 
-#define ngx_queue_add(h, n)                                                   \
-    (h)->prev->next = (n)->next;                                              \
-    (n)->next->prev = (h)->prev;                                              \
+#تعریف_کن ngx_صف_جمع_کن(h, n)                                                   \
+    (h)->prev->بعدی = (n)->بعدی;                                              \
+    (n)->بعدی->prev = (h)->prev;                                              \
     (h)->prev = (n)->prev;                                                    \
-    (h)->prev->next = h;
+    (h)->prev->بعدی = h;
 
 
-#define ngx_queue_data(q, type, link)                                         \
+#تعریف_کن ngx_صف_داده(q, type, link)                                         \
     (type *) ((u_char *) q - offsetof(type, link))
 
 
-ngx_queue_t *ngx_queue_middle(ngx_queue_t *queue);
-void ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ngx_صف_t *ngx_صف_میانه(ngx_صف_t *صف);
+فراغ ngx_صف_مرتب_سازی(ngx_صف_t *صف,
+    ngx_int_t (*cmp)(ثابت ngx_صف_t *, ثابت ngx_صف_t *));
 
 
-#endif /* _NGX_QUEUE_H_INCLUDED_ */
+#پایان_اگر /* _NGX_QUEUE_H_INCLUDED_ */

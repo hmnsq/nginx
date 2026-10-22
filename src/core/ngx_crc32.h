@@ -5,114 +5,114 @@
  */
 
 
-#ifndef _NGX_CRC32_H_INCLUDED_
-#define _NGX_CRC32_H_INCLUDED_
+#اگر_تعریف_نشده NGX_بررسی_چرخهای_32_H_INCLUDED
+#تعریف_کن NGX_بررسی_چرخهای_32_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-extern uint32_t  *ngx_crc32_table_short;
-extern uint32_t   ngx_crc32_table256[];
-extern uint32_t   ngx_crc32c_table256[];
+خارجي uint32_t  *ngx_بررسی_چرخهای_32_جدول_short;
+خارجي uint32_t   ngx_بررسی_چرخهای_32_table256[];
+خارجي uint32_t   ngx_crc32c_table256[];
 
 
-static ngx_inline uint32_t
-ngx_crc32_short(u_char *p, size_t len)
+ساكن ngx_inline uint32_t
+ngx_بررسی_چرخهای_32_short(u_char *p, اندازه_t len)
 {
     u_char    c;
-    uint32_t  crc;
+    uint32_t  بررسی_چرخهای;
 
-    crc = 0xffffffff;
+    بررسی_چرخهای = 0xffffffff;
 
-    while (len--) {
+    طالما (len--) {
         c = *p++;
-        crc = ngx_crc32_table_short[(crc ^ (c & 0xf)) & 0xf] ^ (crc >> 4);
-        crc = ngx_crc32_table_short[(crc ^ (c >> 4)) & 0xf] ^ (crc >> 4);
+        بررسی_چرخهای = ngx_بررسی_چرخهای_32_جدول_short[(بررسی_چرخهای ^ (c & 0xf)) & 0xf] ^ (بررسی_چرخهای >> 4);
+        بررسی_چرخهای = ngx_بررسی_چرخهای_32_جدول_short[(بررسی_چرخهای ^ (c >> 4)) & 0xf] ^ (بررسی_چرخهای >> 4);
     }
 
-    return crc ^ 0xffffffff;
+    أرجع بررسی_چرخهای ^ 0xffffffff;
 }
 
 
-static ngx_inline uint32_t
-ngx_crc32_long(u_char *p, size_t len)
+ساكن ngx_inline uint32_t
+ngx_بررسی_چرخهای_32_long(u_char *p, اندازه_t len)
 {
-    uint32_t  crc;
+    uint32_t  بررسی_چرخهای;
 
-    crc = 0xffffffff;
+    بررسی_چرخهای = 0xffffffff;
 
-    while (len--) {
-        crc = ngx_crc32_table256[(crc ^ *p++) & 0xff] ^ (crc >> 8);
+    طالما (len--) {
+        بررسی_چرخهای = ngx_بررسی_چرخهای_32_table256[(بررسی_چرخهای ^ *p++) & 0xff] ^ (بررسی_چرخهای >> 8);
     }
 
-    return crc ^ 0xffffffff;
+    أرجع بررسی_چرخهای ^ 0xffffffff;
 }
 
 
-#define ngx_crc32_init(crc)                                                   \
-    crc = 0xffffffff
+#تعریف_کن ngx_بررسی_چرخهای_32_init(بررسی_چرخهای)                                                   \
+    بررسی_چرخهای = 0xffffffff
 
 
-static ngx_inline void
-ngx_crc32_update(uint32_t *crc, u_char *p, size_t len)
-{
-    uint32_t  c;
-
-    c = *crc;
-
-    while (len--) {
-        c = ngx_crc32_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
-    }
-
-    *crc = c;
-}
-
-
-#define ngx_crc32_final(crc)                                                  \
-    crc ^= 0xffffffff
-
-
-static ngx_inline uint32_t
-ngx_crc32c_long(u_char *p, size_t len)
-{
-    uint32_t  crc;
-
-    crc = 0xffffffff;
-
-    while (len--) {
-        crc = ngx_crc32c_table256[(crc ^ *p++) & 0xff] ^ (crc >> 8);
-    }
-
-    return crc ^ 0xffffffff;
-}
-
-
-#define ngx_crc32c_init(crc)                                                  \
-    crc = 0xffffffff
-
-
-static ngx_inline void
-ngx_crc32c_update(uint32_t *crc, u_char *p, size_t len)
+ساكن ngx_inline فراغ
+ngx_بررسی_چرخهای_32_update(uint32_t *بررسی_چرخهای, u_char *p, اندازه_t len)
 {
     uint32_t  c;
 
-    c = *crc;
+    c = *بررسی_چرخهای;
 
-    while (len--) {
+    طالما (len--) {
+        c = ngx_بررسی_چرخهای_32_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
+    }
+
+    *بررسی_چرخهای = c;
+}
+
+
+#تعریف_کن ngx_بررسی_چرخهای_32_final(بررسی_چرخهای)                                                  \
+    بررسی_چرخهای ^= 0xffffffff
+
+
+ساكن ngx_inline uint32_t
+ngx_crc32c_long(u_char *p, اندازه_t len)
+{
+    uint32_t  بررسی_چرخهای;
+
+    بررسی_چرخهای = 0xffffffff;
+
+    طالما (len--) {
+        بررسی_چرخهای = ngx_crc32c_table256[(بررسی_چرخهای ^ *p++) & 0xff] ^ (بررسی_چرخهای >> 8);
+    }
+
+    أرجع بررسی_چرخهای ^ 0xffffffff;
+}
+
+
+#تعریف_کن ngx_crc32c_init(بررسی_چرخهای)                                                  \
+    بررسی_چرخهای = 0xffffffff
+
+
+ساكن ngx_inline فراغ
+ngx_crc32c_update(uint32_t *بررسی_چرخهای, u_char *p, اندازه_t len)
+{
+    uint32_t  c;
+
+    c = *بررسی_چرخهای;
+
+    طالما (len--) {
         c = ngx_crc32c_table256[(c ^ *p++) & 0xff] ^ (c >> 8);
     }
 
-    *crc = c;
+    *بررسی_چرخهای = c;
 }
 
 
-#define ngx_crc32c_final(crc)                                                 \
-    crc ^= 0xffffffff
+#تعریف_کن ngx_crc32c_final(بررسی_چرخهای)                                                 \
+    بررسی_چرخهای ^= 0xffffffff
 
 
-ngx_int_t ngx_crc32_table_init(void);
+ngx_int_t ngx_بررسی_چرخهای_32_جدول_init(فراغ);
 
 
-#endif /* _NGX_CRC32_H_INCLUDED_ */
+#پایان_اگر /* _NGX_CRC32_H_INCLUDED_ */

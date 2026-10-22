@@ -4,173 +4,173 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef ssize_t   (*ngx_json_length_pt)(ngx_data_item_t *item);
-typedef u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_data_item_t *item);
+تعريفنوع ssize_t   (*ngx_json_درازی_pt)(ngx_داده_قلم_t *قلم);
+تعريفنوع u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_داده_قلم_t *قلم);
 
 
-typedef struct {
-    ngx_json_length_pt        length;
+تعريفنوع بنية {
+    ngx_json_درازی_pt        درازی;
     ngx_json_encode_pt        encode;
 } ngx_json_encode_t;
 
 
-static ssize_t ngx_json_obj_length(ngx_data_item_t *item);
-static ssize_t ngx_json_list_length(ngx_data_item_t *item);
-static ssize_t ngx_json_string_length(ngx_data_item_t *item);
-static ssize_t ngx_json_integer_length(ngx_data_item_t *item);
-static ssize_t ngx_json_boolean_length(ngx_data_item_t *item);
-static ssize_t ngx_json_null_length(ngx_data_item_t *item);
+ساكن ssize_t ngx_json_obj_درازی(ngx_داده_قلم_t *قلم);
+ساكن ssize_t ngx_json_list_درازی(ngx_داده_قلم_t *قلم);
+ساكن ssize_t ngx_json_string_درازی(ngx_داده_قلم_t *قلم);
+ساكن ssize_t ngx_json_integer_درازی(ngx_داده_قلم_t *قلم);
+ساكن ssize_t ngx_json_boolean_درازی(ngx_داده_قلم_t *قلم);
+ساكن ssize_t ngx_json_null_درازی(ngx_داده_قلم_t *قلم);
 
-static u_char *ngx_json_obj_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_list_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_string_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_integer_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_null_encode(u_char *p, ngx_data_item_t *item);
+ساكن u_char *ngx_json_obj_encode(u_char *p, ngx_داده_قلم_t *قلم);
+ساكن u_char *ngx_json_list_encode(u_char *p, ngx_داده_قلم_t *قلم);
+ساكن u_char *ngx_json_string_encode(u_char *p, ngx_داده_قلم_t *قلم);
+ساكن u_char *ngx_json_integer_encode(u_char *p, ngx_داده_قلم_t *قلم);
+ساكن u_char *ngx_json_boolean_encode(u_char *p, ngx_داده_قلم_t *قلم);
+ساكن u_char *ngx_json_null_encode(u_char *p, ngx_داده_قلم_t *قلم);
 
 
-static ngx_json_encode_t  ngx_json_encode[] = {
+ساكن ngx_json_encode_t  ngx_json_encode[] = {
 
     /* NGX_DATA_OBJECT_TYPE */
-    { ngx_json_obj_length,
+    { ngx_json_obj_درازی,
       ngx_json_obj_encode },
 
     /* NGX_DATA_LIST_TYPE */
-    { ngx_json_list_length,
+    { ngx_json_list_درازی,
       ngx_json_list_encode },
 
     /* NGX_DATA_STRING_TYPE */
-    { ngx_json_string_length,
+    { ngx_json_string_درازی,
       ngx_json_string_encode },
 
     /* NGX_DATA_INTEGER_TYPE */
-    { ngx_json_integer_length,
+    { ngx_json_integer_درازی,
       ngx_json_integer_encode },
 
     /* NGX_DATA_BOOLEAN_TYPE */
-    { ngx_json_boolean_length,
+    { ngx_json_boolean_درازی,
       ngx_json_boolean_encode },
 
     /* NGX_DATA_NULL_TYPE */
-    { ngx_json_null_length,
+    { ngx_json_null_درازی,
       ngx_json_null_encode },
 };
 
 
 ngx_buf_t *
-ngx_json_render(ngx_pool_t *pool, ngx_data_item_t *item)
+ngx_json_render(ngx_pool_t *pool, ngx_داده_قلم_t *قلم)
 {
-    size_t      length;
+    اندازه_t      درازی;
     ngx_buf_t  *buf;
 
-    length = ngx_json_encode[item->type].length(item);
-    if (length == (size_t) NGX_ERROR) {
-        return NULL;
+    درازی = ngx_json_encode[قلم->type].درازی(قلم);
+    إذا (درازی == (اندازه_t) NGX_ERROR) {
+        أرجع عدم;
     }
 
-    buf = ngx_create_temp_buf(pool, length);
-    if (buf == NULL) {
-        return NULL;
+    buf = ngx_create_موقت_buf(pool, درازی);
+    إذا (buf == عدم) {
+        أرجع عدم;
     }
 
-    buf->last = ngx_json_encode[item->type].encode(buf->last, item);
+    buf->آخرین = ngx_json_encode[قلم->type].encode(buf->آخرین, قلم);
 
-    return buf;
+    أرجع buf;
 }
 
 
-static ssize_t
-ngx_json_obj_length(ngx_data_item_t *item)
+ساكن ssize_t
+ngx_json_obj_درازی(ngx_داده_قلم_t *قلم)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    اندازه_t            len, مجموع;
+    ngx_داده_obj_t   *obj;
+    ngx_داده_قلم_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("{}") - 1;
-    i = obj->item;
+    obj = &قلم->داده.object;
+    مجموع = حجم("{}") - 1;
+    i = obj->قلم;
 
-    if (i) {
-        for ( ;; ) {
-            if (i->name.len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\":") - 1)) {
-                return NGX_ERROR;
+    إذا (i) {
+        لكل ( ;; ) {
+            إذا (i->name.len > NGX_MAX_اندازه_T_مقدار - (حجم("\"\":") - 1)) {
+                أرجع NGX_ERROR;
             }
 
-            len = sizeof("\"\":") - 1 + i->name.len;
+            len = حجم("\"\":") - 1 + i->name.len;
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            إذا (len > NGX_MAX_اندازه_T_مقدار - مجموع) {
+                أرجع NGX_ERROR;
             }
 
-            total += len;
+            مجموع += len;
 
-            len = ngx_escape_json(NULL, i->name.data, i->name.len);
+            len = ngx_escape_json(عدم, i->name.داده, i->name.len);
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            إذا (len > NGX_MAX_اندازه_T_مقدار - مجموع) {
+                أرجع NGX_ERROR;
             }
 
-            total += len;
+            مجموع += len;
 
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+            len = ngx_json_encode[i->type].درازی(i);
+            إذا (len == (اندازه_t) NGX_ERROR) {
+                أرجع NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            إذا (len > NGX_MAX_اندازه_T_مقدار - مجموع) {
+                أرجع NGX_ERROR;
             }
 
-            total += len;
+            مجموع += len;
 
-            i = i->next;
+            i = i->بعدی;
 
-            if (i == NULL) {
-                break;
+            إذا (i == عدم) {
+                اكسر;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            إذا (مجموع > NGX_MAX_اندازه_T_مقدار - (حجم(",") - 1)) {
+                أرجع NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            مجموع += حجم(",") - 1;
         }
     }
 
-    return total;
+    أرجع مجموع;
 }
 
 
-static u_char *
-ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
+ساكن u_char *
+ngx_json_obj_encode(u_char *p, ngx_داده_قلم_t *قلم)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_داده_obj_t   *obj;
+    ngx_داده_قلم_t  *i;
 
-    obj = &item->data.object;
-    i = obj->item;
+    obj = &قلم->داده.object;
+    i = obj->قلم;
 
     *p++ = '{';
 
-    if (i) {
-        for ( ;; ) {
+    إذا (i) {
+        لكل ( ;; ) {
             *p++ = '"';
 
-            p = (u_char *) ngx_escape_json(p, i->name.data, i->name.len);
+            p = (u_char *) ngx_escape_json(p, i->name.داده, i->name.len);
 
             *p++ = '"';
             *p++ = ':';
 
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->بعدی;
 
-            if (i == NULL) {
-                break;
+            إذا (i == عدم) {
+                اكسر;
             }
 
             *p++ = ',';
@@ -179,71 +179,71 @@ ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = '}';
 
-    return p;
+    أرجع p;
 }
 
 
-static ssize_t
-ngx_json_list_length(ngx_data_item_t *item)
+ساكن ssize_t
+ngx_json_list_درازی(ngx_داده_قلم_t *قلم)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    اندازه_t            len, مجموع;
+    ngx_داده_obj_t   *obj;
+    ngx_داده_قلم_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("[]") - 1;
-    i = obj->item;
+    obj = &قلم->داده.object;
+    مجموع = حجم("[]") - 1;
+    i = obj->قلم;
 
-    if (i) {
-        for ( ;; ) {
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+    إذا (i) {
+        لكل ( ;; ) {
+            len = ngx_json_encode[i->type].درازی(i);
+            إذا (len == (اندازه_t) NGX_ERROR) {
+                أرجع NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            إذا (len > NGX_MAX_اندازه_T_مقدار - مجموع) {
+                أرجع NGX_ERROR;
             }
 
-            total += len;
+            مجموع += len;
 
-            i = i->next;
+            i = i->بعدی;
 
-            if (i == NULL) {
-                break;
+            إذا (i == عدم) {
+                اكسر;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            إذا (مجموع > NGX_MAX_اندازه_T_مقدار - (حجم(",") - 1)) {
+                أرجع NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            مجموع += حجم(",") - 1;
         }
     }
 
-    return total;
+    أرجع مجموع;
 }
 
 
-static u_char *
-ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
+ساكن u_char *
+ngx_json_list_encode(u_char *p, ngx_داده_قلم_t *قلم)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_داده_obj_t   *obj;
+    ngx_داده_قلم_t  *i;
 
-    obj = &item->data.object;
-    i = obj->item;
+    obj = &قلم->داده.object;
+    i = obj->قلم;
 
     *p++ = '[';
 
-    if (i) {
-        for ( ;; ) {
+    إذا (i) {
+        لكل ( ;; ) {
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->بعدی;
 
-            if (i == NULL) {
-                break;
+            إذا (i == عدم) {
+                اكسر;
             }
 
             *p++ = ',';
@@ -252,89 +252,89 @@ ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = ']';
 
-    return p;
+    أرجع p;
 }
 
 
-static ssize_t
-ngx_json_string_length(ngx_data_item_t *item)
+ساكن ssize_t
+ngx_json_string_درازی(ngx_داده_قلم_t *قلم)
 {
-    size_t      len, total;
+    اندازه_t      len, مجموع;
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &قلم->داده.string;
 
-    if (str->len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\"") - 1)) {
-        return NGX_ERROR;
+    إذا (str->len > NGX_MAX_اندازه_T_مقدار - (حجم("\"\"") - 1)) {
+        أرجع NGX_ERROR;
     }
 
-    total = sizeof("\"\"") - 1 + str->len;
+    مجموع = حجم("\"\"") - 1 + str->len;
 
-    len = ngx_escape_json(NULL, str->data, str->len);
+    len = ngx_escape_json(عدم, str->داده, str->len);
 
-    if (len > NGX_MAX_SIZE_T_VALUE - total) {
-        return NGX_ERROR;
+    إذا (len > NGX_MAX_اندازه_T_مقدار - مجموع) {
+        أرجع NGX_ERROR;
     }
 
-    return total + len;
+    أرجع مجموع + len;
 }
 
 
-static u_char *
-ngx_json_string_encode(u_char *p, ngx_data_item_t *item)
+ساكن u_char *
+ngx_json_string_encode(u_char *p, ngx_داده_قلم_t *قلم)
 {
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &قلم->داده.string;
 
     *p++ = '"';
 
-    p = (u_char *) ngx_escape_json(p, str->data, str->len);
+    p = (u_char *) ngx_escape_json(p, str->داده, str->len);
 
     *p++ = '"';
 
-    return p;
+    أرجع p;
 }
 
 
-static ssize_t
-ngx_json_integer_length(ngx_data_item_t *item)
+ساكن ssize_t
+ngx_json_integer_درازی(ngx_داده_قلم_t *قلم)
 {
-    return NGX_INT64_LEN;
+    أرجع NGX_INT64_LEN;
 }
 
 
-static u_char *
-ngx_json_integer_encode(u_char *p, ngx_data_item_t *item)
+ساكن u_char *
+ngx_json_integer_encode(u_char *p, ngx_داده_قلم_t *قلم)
 {
-    return ngx_sprintf(p, "%L", item->data.integer);
+    أرجع ngx_sprintf(p, "%L", قلم->داده.integer);
 }
 
 
-static ssize_t
-ngx_json_boolean_length(ngx_data_item_t *item)
+ساكن ssize_t
+ngx_json_boolean_درازی(ngx_داده_قلم_t *قلم)
 {
-    return sizeof("false") - 1;
+    أرجع حجم("false") - 1;
 }
 
 
-static u_char *
-ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item)
+ساكن u_char *
+ngx_json_boolean_encode(u_char *p, ngx_داده_قلم_t *قلم)
 {
-    return item->data.boolean ? ngx_cpymem(p, "true", 4)
+    أرجع قلم->داده.boolean ? ngx_cpymem(p, "true", 4)
                               : ngx_cpymem(p, "false", 5);
 }
 
 
-static ssize_t
-ngx_json_null_length(ngx_data_item_t *item)
+ساكن ssize_t
+ngx_json_null_درازی(ngx_داده_قلم_t *قلم)
 {
-    return sizeof("null") - 1;
+    أرجع حجم("null") - 1;
 }
 
 
-static u_char *
-ngx_json_null_encode(u_char *p, ngx_data_item_t *item)
+ساكن u_char *
+ngx_json_null_encode(u_char *p, ngx_داده_قلم_t *قلم)
 {
-    return ngx_cpymem(p, "null", 4);
+    أرجع ngx_cpymem(p, "null", 4);
 }

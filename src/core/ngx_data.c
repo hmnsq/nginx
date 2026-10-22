@@ -4,214 +4,214 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-static size_t  ngx_data_sizes[] = {
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_OBJECT_TYPE */
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_LIST_TYPE */
-    sizeof(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
-    sizeof(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
-    sizeof(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
+ساكن اندازه_t  ngx_داده_sizes[] = {
+    حجم(ngx_داده_obj_t),            /* NGX_DATA_OBJECT_TYPE */
+    حجم(ngx_داده_obj_t),            /* NGX_DATA_LIST_TYPE */
+    حجم(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
+    حجم(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
+    حجم(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
     0,                                 /* NGX_DATA_NULL_TYPE */
 };
 
 
-ngx_data_item_t *
-ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type)
+ngx_داده_قلم_t *
+ngx_داده_new_قلم(ngx_pool_t *pool, ngx_uint_t type)
 {
-    ngx_data_item_t  *item;
+    ngx_داده_قلم_t  *قلم;
 
-    item = ngx_pcalloc(pool, offsetof(ngx_data_item_t, data)
-                             + ngx_data_sizes[type]);
-    if (item == NULL) {
-        return NULL;
+    قلم = ngx_pcalloc(pool, offsetof(ngx_داده_قلم_t, داده)
+                             + ngx_داده_sizes[type]);
+    إذا (قلم == عدم) {
+        أرجع عدم;
     }
 
-    item->type = type;
+    قلم->type = type;
 
-    return item;
+    أرجع قلم;
 }
 
 
-void
-ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name, ngx_data_item_t *item)
+فراغ
+ngx_داده_جمع_کن_قلم(ngx_داده_قلم_t *obj, ngx_str_t *name, ngx_داده_قلم_t *قلم)
 {
-    ngx_data_obj_t  *object;
+    ngx_داده_obj_t  *object;
 
-    if (obj->type != NGX_DATA_OBJECT_TYPE && obj->type != NGX_DATA_LIST_TYPE) {
-        return;
+    إذا (obj->type != NGX_داده_OBJECT_TYPE && obj->type != NGX_داده_LIST_TYPE) {
+        أرجع;
     }
 
-    object = &obj->data.object;
+    object = &obj->داده.object;
 
-    if (name) {
-        item->name = *name;
+    إذا (name) {
+        قلم->name = *name;
     }
 
-    if (object->next == NULL) {
-        object->next = &object->item;
+    إذا (object->بعدی == عدم) {
+        object->بعدی = &object->قلم;
     }
 
-    *object->next = item;
-    object->next = &item->next;
+    *object->بعدی = قلم;
+    object->بعدی = &قلم->بعدی;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_داده_قلم_t *
+ngx_داده_obj_handler(uintptr_t داده, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_داده_قلم_t  *obj, *قلم;
+    ngx_داده_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_داده_new_object(pool);
+    إذا (obj == عدم) {
+        أرجع عدم;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_داده_decl_t *) داده;
 
-    while (decl->name.len) {
+    طالما (decl->name.len) {
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        قلم = decl->handler(decl->داده, pool, ctx);
+        إذا (قلم == عدم) {
+            أرجع عدم;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        إذا (قلم != NGX_داده_DECLINE) {
+            ngx_داده_جمع_کن_قلم(obj, &decl->name, قلم);
         }
 
         decl++;
     }
 
-    return obj;
+    أرجع obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
+ngx_داده_قلم_t *
+ngx_داده_obj_fields_handler(uintptr_t داده, ngx_pool_t *pool, فراغ *ctx,
     ngx_array_t *fields)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *مقدار;
     ngx_uint_t        i;
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_داده_قلم_t  *obj, *قلم;
+    ngx_داده_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_داده_new_object(pool);
+    إذا (obj == عدم) {
+        أرجع عدم;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_داده_decl_t *) داده;
 
-    while (decl->name.len) {
+    طالما (decl->name.len) {
 
-        if (fields) {
-            value = fields->elts;
+        إذا (fields) {
+            مقدار = fields->elts;
 
-            for (i = 0; i < fields->nelts; i++) {
+            لكل (i = 0; i < fields->nelts; i++) {
 
-                if (decl->name.len == value[i].len
-                    && ngx_strncmp(decl->name.data, value[i].data,
-                                   value[i].len)
+                إذا (decl->name.len == مقدار[i].len
+                    && ngx_strncmp(decl->name.داده, مقدار[i].داده,
+                                   مقدار[i].len)
                     == 0)
                 {
-                    goto found;
+                    اذهب یافت;
                 }
             }
 
             decl++;
-            continue;
+            استمر;
         }
 
-found:
+یافت:
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        قلم = decl->handler(decl->داده, pool, ctx);
+        إذا (قلم == عدم) {
+            أرجع عدم;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        إذا (قلم != NGX_داده_DECLINE) {
+            ngx_داده_جمع_کن_قلم(obj, &decl->name, قلم);
         }
 
         decl++;
     }
 
-    return obj;
+    أرجع obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_داده_قلم_t *
+ngx_داده_عدد_handler(uintptr_t داده, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_داده_قلم_t  *قلم;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    قلم = ngx_داده_new_integer(pool);
+    إذا (قلم == عدم) {
+        أرجع عدم;
     }
 
-    item->data.integer = data;
+    قلم->داده.integer = داده;
 
-    return item;
+    أرجع قلم;
 }
 
 
-ngx_data_item_t *
-ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_داده_قلم_t *
+ngx_داده_string_handler(uintptr_t داده, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *مقدار, *src;
+    ngx_داده_قلم_t  *قلم;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    قلم = ngx_داده_new_string(pool);
+    إذا (قلم == عدم) {
+        أرجع عدم;
     }
 
-    value = &item->data.string;
+    مقدار = &قلم->داده.string;
 
-    src = (ngx_str_t *) data;
+    src = (ngx_str_t *) داده;
 
-    value->len = src->len;
+    مقدار->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    مقدار->داده = ngx_pstrdup(pool, src);
+    إذا (مقدار->داده == عدم) {
+        أرجع عدم;
     }
 
-    return item;
+    أرجع قلم;
 }
 
 
-ngx_data_item_t *
-ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_داده_قلم_t *
+ngx_داده_boolean_handler(uintptr_t داده, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_داده_قلم_t  *قلم;
 
-    item = ngx_data_new_boolean(pool);
-    if (item == NULL) {
-        return NULL;
+    قلم = ngx_داده_new_boolean(pool);
+    إذا (قلم == عدم) {
+        أرجع عدم;
     }
 
-    item->data.boolean = data;
+    قلم->داده.boolean = داده;
 
-    return item;
+    أرجع قلم;
 }
 
 
-ngx_data_item_t *
-ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_داده_قلم_t *
+ngx_داده_زمان_handler(uintptr_t داده, ngx_pool_t *pool, فراغ *ctx)
 {
     u_char      *p;
     ngx_tm_t     tm;
     ngx_str_t    src;
-    ngx_time_t  *tp;
-    u_char       iso8601[sizeof("1974-01-19T13:00:00.000Z") - 1];
+    ngx_زمان_t  *tp;
+    u_char       iso8601[حجم("1974-01-19T13:00:00.000Z") - 1];
 
-    tp = (ngx_time_t *) data;
+    tp = (ngx_زمان_t *) داده;
 
     ngx_gmtime(tp->sec, &tm);
 
@@ -219,94 +219,94 @@ ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
                     tm.ngx_tm_year, tm.ngx_tm_mon, tm.ngx_tm_mday,
                     tm.ngx_tm_hour, tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    if (tp->msec) {
+    إذا (tp->msec) {
         p = ngx_sprintf(p, ".%03ui", tp->msec);
     }
 
     *p++ = 'Z';
 
-    src.data = iso8601;
+    src.داده = iso8601;
     src.len = p - iso8601;
 
-    return ngx_data_string_handler((uintptr_t) &src, pool, NULL);
+    أرجع ngx_داده_string_handler((uintptr_t) &src, pool, عدم);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_داده_قلم_t *
+ngx_داده_struct_int64_handler(uintptr_t داده, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_داده_قلم_t  *قلم;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    قلم = ngx_داده_new_integer(pool);
+    إذا (قلم == عدم) {
+        أرجع عدم;
     }
 
-    item->data.integer = *(int64_t *) ((u_char *) ctx + data);
+    قلم->داده.integer = *(int64_t *) ((u_char *) ctx + داده);
 
-    return item;
+    أرجع قلم;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_داده_قلم_t *
+ngx_داده_struct_int_handler(uintptr_t داده, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_int_t  value;
+    ngx_int_t  مقدار;
 
-    value = *(ngx_int_t *) ((u_char *) ctx + data);
+    مقدار = *(ngx_int_t *) ((u_char *) ctx + داده);
 
-    return ngx_data_number_handler(value, pool, NULL);
+    أرجع ngx_داده_عدد_handler(مقدار, pool, عدم);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_atomic_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_داده_قلم_t *
+ngx_داده_struct_atomic_handler(uintptr_t داده, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_داده_قلم_t  *قلم;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    قلم = ngx_داده_new_integer(pool);
+    إذا (قلم == عدم) {
+        أرجع عدم;
     }
 
-    item->data.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + data);
+    قلم->داده.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + داده);
 
-    return item;
+    أرجع قلم;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_داده_قلم_t *
+ngx_داده_struct_str_handler(uintptr_t داده, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *مقدار, *src;
+    ngx_داده_قلم_t  *قلم;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    قلم = ngx_داده_new_string(pool);
+    إذا (قلم == عدم) {
+        أرجع عدم;
     }
 
-    value = &item->data.string;
+    مقدار = &قلم->داده.string;
 
-    src = (ngx_str_t *) ((u_char *) ctx + data);
+    src = (ngx_str_t *) ((u_char *) ctx + داده);
 
-    value->len = src->len;
+    مقدار->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    مقدار->داده = ngx_pstrdup(pool, src);
+    إذا (مقدار->داده == عدم) {
+        أرجع عدم;
     }
 
-    return item;
+    أرجع قلم;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_داده_قلم_t *
+ngx_داده_struct_boolean_handler(uintptr_t داده, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_uint_t  value;
+    ngx_uint_t  مقدار;
 
-    value = *(ngx_uint_t *) ((u_char *) ctx + data);
+    مقدار = *(ngx_uint_t *) ((u_char *) ctx + داده);
 
-    return ngx_data_boolean_handler(value, pool, NULL);
+    أرجع ngx_داده_boolean_handler(مقدار, pool, عدم);
 }

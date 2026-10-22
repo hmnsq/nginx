@@ -6,199 +6,199 @@
  */
 
 
-#ifndef _NGX_MODULE_H_INCLUDED_
-#define _NGX_MODULE_H_INCLUDED_
+#اگر_تعریف_نشده _NGX_MODULE_H_INCLUDED_
+#تعریف_کن _NGX_MODULE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <nginx.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
+#ضمن <nginx.h>
 
 
-#define NGX_MODULE_UNSET_INDEX  (ngx_uint_t) -1
+#تعریف_کن NGX_MODULE_UNSET_شاخص  (ngx_uint_t) -1
 
 
-#define NGX_MODULE_SIGNATURE_0                                                \
-    ngx_value(NGX_PTR_SIZE) ","                                               \
-    ngx_value(NGX_SIG_ATOMIC_T_SIZE) ","                                      \
-    ngx_value(NGX_TIME_T_SIZE) ","
+#تعریف_کن NGX_MODULE_SIGNATURE_0                                                \
+    ngx_مقدار(NGX_PTR_اندازه) ","                                               \
+    ngx_مقدار(NGX_SIG_ATOMIC_T_اندازه) ","                                      \
+    ngx_مقدار(NGX_زمان_T_اندازه) ","
 
-#if (NGX_HAVE_KQUEUE)
-#define NGX_MODULE_SIGNATURE_1   "1"
-#else
-#define NGX_MODULE_SIGNATURE_1   "0"
-#endif
+#إذا (NGX_HAVE_KQUEUE)
+#تعریف_کن NGX_MODULE_SIGNATURE_1   "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_1   "0"
+#پایان_اگر
 
-#define NGX_MODULE_SIGNATURE_2   "0"
+#تعریف_کن NGX_MODULE_SIGNATURE_2   "0"
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
-#define NGX_MODULE_SIGNATURE_3   "1"
-#else
-#define NGX_MODULE_SIGNATURE_3   "0"
-#endif
+#إذا (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#تعریف_کن NGX_MODULE_SIGNATURE_3   "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_3   "0"
+#پایان_اگر
 
-#if (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
-#define NGX_MODULE_SIGNATURE_4   "1"
-#else
-#define NGX_MODULE_SIGNATURE_4   "0"
-#endif
+#إذا (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
+#تعریف_کن NGX_MODULE_SIGNATURE_4   "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_4   "0"
+#پایان_اگر
 
-#if (NGX_HAVE_EVENTFD)
-#define NGX_MODULE_SIGNATURE_5   "1"
-#else
-#define NGX_MODULE_SIGNATURE_5   "0"
-#endif
+#إذا (NGX_HAVE_EVENTFD)
+#تعریف_کن NGX_MODULE_SIGNATURE_5   "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_5   "0"
+#پایان_اگر
 
-#if (NGX_HAVE_EPOLL)
-#define NGX_MODULE_SIGNATURE_6   "1"
-#else
-#define NGX_MODULE_SIGNATURE_6   "0"
-#endif
+#إذا (NGX_HAVE_EPOLL)
+#تعریف_کن NGX_MODULE_SIGNATURE_6   "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_6   "0"
+#پایان_اگر
 
-#if (NGX_HAVE_KEEPALIVE_TUNABLE)
-#define NGX_MODULE_SIGNATURE_7   "1"
-#else
-#define NGX_MODULE_SIGNATURE_7   "0"
-#endif
+#إذا (NGX_HAVE_KEEPALIVE_TUNABLE)
+#تعریف_کن NGX_MODULE_SIGNATURE_7   "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_7   "0"
+#پایان_اگر
 
-#if (NGX_HAVE_INET6)
-#define NGX_MODULE_SIGNATURE_8   "1"
-#else
-#define NGX_MODULE_SIGNATURE_8   "0"
-#endif
+#إذا (NGX_HAVE_INET6)
+#تعریف_کن NGX_MODULE_SIGNATURE_8   "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_8   "0"
+#پایان_اگر
 
-#define NGX_MODULE_SIGNATURE_9   "1"
-#define NGX_MODULE_SIGNATURE_10  "1"
+#تعریف_کن NGX_MODULE_SIGNATURE_9   "1"
+#تعریف_کن NGX_MODULE_SIGNATURE_10  "1"
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
-#define NGX_MODULE_SIGNATURE_11  "1"
-#else
-#define NGX_MODULE_SIGNATURE_11  "0"
-#endif
+#إذا (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+#تعریف_کن NGX_MODULE_SIGNATURE_11  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_11  "0"
+#پایان_اگر
 
-#define NGX_MODULE_SIGNATURE_12  "1"
+#تعریف_کن NGX_MODULE_SIGNATURE_12  "1"
 
-#if (NGX_HAVE_SETFIB)
-#define NGX_MODULE_SIGNATURE_13  "1"
-#else
-#define NGX_MODULE_SIGNATURE_13  "0"
-#endif
+#إذا (NGX_HAVE_SETFIB)
+#تعریف_کن NGX_MODULE_SIGNATURE_13  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_13  "0"
+#پایان_اگر
 
-#if (NGX_HAVE_TCP_FASTOPEN)
-#define NGX_MODULE_SIGNATURE_14  "1"
-#else
-#define NGX_MODULE_SIGNATURE_14  "0"
-#endif
+#إذا (NGX_HAVE_TCP_FASTOPEN)
+#تعریف_کن NGX_MODULE_SIGNATURE_14  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_14  "0"
+#پایان_اگر
 
-#if (NGX_HAVE_UNIX_DOMAIN)
-#define NGX_MODULE_SIGNATURE_15  "1"
-#else
-#define NGX_MODULE_SIGNATURE_15  "0"
-#endif
+#إذا (NGX_HAVE_UNIX_DOMAIN)
+#تعریف_کن NGX_MODULE_SIGNATURE_15  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_15  "0"
+#پایان_اگر
 
-#if (NGX_HAVE_VARIADIC_MACROS)
-#define NGX_MODULE_SIGNATURE_16  "1"
-#else
-#define NGX_MODULE_SIGNATURE_16  "0"
-#endif
+#إذا (NGX_HAVE_VARIADIC_MACROS)
+#تعریف_کن NGX_MODULE_SIGNATURE_16  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_16  "0"
+#پایان_اگر
 
-#define NGX_MODULE_SIGNATURE_17  "0"
+#تعریف_کن NGX_MODULE_SIGNATURE_17  "0"
 
-#if (NGX_QUIC || NGX_COMPAT)
-#define NGX_MODULE_SIGNATURE_18  "1"
-#else
-#define NGX_MODULE_SIGNATURE_18  "0"
-#endif
+#إذا (NGX_QUIC || NGX_COMPAT)
+#تعریف_کن NGX_MODULE_SIGNATURE_18  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_18  "0"
+#پایان_اگر
 
-#if (NGX_HAVE_OPENAT)
-#define NGX_MODULE_SIGNATURE_19  "1"
-#else
-#define NGX_MODULE_SIGNATURE_19  "0"
-#endif
+#إذا (NGX_HAVE_OPENAT)
+#تعریف_کن NGX_MODULE_SIGNATURE_19  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_19  "0"
+#پایان_اگر
 
-#if (NGX_HAVE_ATOMIC_OPS)
-#define NGX_MODULE_SIGNATURE_20  "1"
-#else
-#define NGX_MODULE_SIGNATURE_20  "0"
-#endif
+#إذا (NGX_HAVE_ATOMIC_OPS)
+#تعریف_کن NGX_MODULE_SIGNATURE_20  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_20  "0"
+#پایان_اگر
 
-#if (NGX_HAVE_POSIX_SEM)
-#define NGX_MODULE_SIGNATURE_21  "1"
-#else
-#define NGX_MODULE_SIGNATURE_21  "0"
-#endif
+#إذا (NGX_HAVE_POSIX_SEM)
+#تعریف_کن NGX_MODULE_SIGNATURE_21  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_21  "0"
+#پایان_اگر
 
-#if (NGX_THREADS || NGX_COMPAT)
-#define NGX_MODULE_SIGNATURE_22  "1"
-#else
-#define NGX_MODULE_SIGNATURE_22  "0"
-#endif
+#إذا (NGX_نخها || NGX_COMPAT)
+#تعریف_کن NGX_MODULE_SIGNATURE_22  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_22  "0"
+#پایان_اگر
 
-#if (NGX_PCRE)
-#define NGX_MODULE_SIGNATURE_23  "1"
-#else
-#define NGX_MODULE_SIGNATURE_23  "0"
-#endif
+#إذا (NGX_PCRE)
+#تعریف_کن NGX_MODULE_SIGNATURE_23  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_23  "0"
+#پایان_اگر
 
-#if (NGX_HTTP_SSL || NGX_COMPAT)
-#define NGX_MODULE_SIGNATURE_24  "1"
-#else
-#define NGX_MODULE_SIGNATURE_24  "0"
-#endif
+#إذا (NGX_HTTP_SSL || NGX_COMPAT)
+#تعریف_کن NGX_MODULE_SIGNATURE_24  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_24  "0"
+#پایان_اگر
 
-#define NGX_MODULE_SIGNATURE_25  "1"
+#تعریف_کن NGX_MODULE_SIGNATURE_25  "1"
 
-#if (NGX_HTTP_GZIP)
-#define NGX_MODULE_SIGNATURE_26  "1"
-#else
-#define NGX_MODULE_SIGNATURE_26  "0"
-#endif
+#إذا (NGX_HTTP_GZIP)
+#تعریف_کن NGX_MODULE_SIGNATURE_26  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_26  "0"
+#پایان_اگر
 
-#define NGX_MODULE_SIGNATURE_27  "1"
+#تعریف_کن NGX_MODULE_SIGNATURE_27  "1"
 
-#if (NGX_HTTP_X_FORWARDED_FOR)
-#define NGX_MODULE_SIGNATURE_28  "1"
-#else
-#define NGX_MODULE_SIGNATURE_28  "0"
-#endif
+#إذا (NGX_HTTP_X_FORWARDED_FOR)
+#تعریف_کن NGX_MODULE_SIGNATURE_28  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_28  "0"
+#پایان_اگر
 
-#if (NGX_HTTP_REALIP)
-#define NGX_MODULE_SIGNATURE_29  "1"
-#else
-#define NGX_MODULE_SIGNATURE_29  "0"
-#endif
+#إذا (NGX_HTTP_REALIP)
+#تعریف_کن NGX_MODULE_SIGNATURE_29  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_29  "0"
+#پایان_اگر
 
-#if (NGX_HTTP_HEADERS)
-#define NGX_MODULE_SIGNATURE_30  "1"
-#else
-#define NGX_MODULE_SIGNATURE_30  "0"
-#endif
+#إذا (NGX_HTTP_سرآیندها)
+#تعریف_کن NGX_MODULE_SIGNATURE_30  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_30  "0"
+#پایان_اگر
 
-#if (NGX_HTTP_DAV)
-#define NGX_MODULE_SIGNATURE_31  "1"
-#else
-#define NGX_MODULE_SIGNATURE_31  "0"
-#endif
+#إذا (NGX_HTTP_DAV)
+#تعریف_کن NGX_MODULE_SIGNATURE_31  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_31  "0"
+#پایان_اگر
 
-#if (NGX_HTTP_CACHE)
-#define NGX_MODULE_SIGNATURE_32  "1"
-#else
-#define NGX_MODULE_SIGNATURE_32  "0"
-#endif
+#إذا (NGX_HTTP_CACHE)
+#تعریف_کن NGX_MODULE_SIGNATURE_32  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_32  "0"
+#پایان_اگر
 
-#if (NGX_HTTP_UPSTREAM_ZONE)
-#define NGX_MODULE_SIGNATURE_33  "1"
-#else
-#define NGX_MODULE_SIGNATURE_33  "0"
-#endif
+#إذا (NGX_HTTP_UPSTREAM_ZONE)
+#تعریف_کن NGX_MODULE_SIGNATURE_33  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_33  "0"
+#پایان_اگر
 
-#if (NGX_COMPAT)
-#define NGX_MODULE_SIGNATURE_34  "1"
-#else
-#define NGX_MODULE_SIGNATURE_34  "0"
-#endif
+#إذا (NGX_COMPAT)
+#تعریف_کن NGX_MODULE_SIGNATURE_34  "1"
+#وإلا
+#تعریف_کن NGX_MODULE_SIGNATURE_34  "0"
+#پایان_اگر
 
-#define NGX_MODULE_SIGNATURE                                                  \
+#تعریف_کن NGX_MODULE_SIGNATURE                                                  \
     NGX_MODULE_SIGNATURE_0 NGX_MODULE_SIGNATURE_1 NGX_MODULE_SIGNATURE_2      \
     NGX_MODULE_SIGNATURE_3 NGX_MODULE_SIGNATURE_4 NGX_MODULE_SIGNATURE_5      \
     NGX_MODULE_SIGNATURE_6 NGX_MODULE_SIGNATURE_7 NGX_MODULE_SIGNATURE_8      \
@@ -213,72 +213,72 @@
     NGX_MODULE_SIGNATURE_33 NGX_MODULE_SIGNATURE_34
 
 
-#define NGX_MODULE_V1                                                         \
-    NGX_MODULE_UNSET_INDEX, NGX_MODULE_UNSET_INDEX,                           \
-    NULL, 0, 0, nginx_version, NGX_MODULE_SIGNATURE
+#تعریف_کن NGX_MODULE_V1                                                         \
+    NGX_MODULE_UNSET_شاخص, NGX_MODULE_UNSET_شاخص,                           \
+    عدم, 0, 0, nginx_نسخه, NGX_MODULE_SIGNATURE
 
-#define NGX_MODULE_V1_PADDING  0, 0, 0, 0, 0, 0, 0, 0
+#تعریف_کن NGX_MODULE_V1_PADDING  0, 0, 0, 0, 0, 0, 0, 0
 
 
-struct ngx_module_s {
-    ngx_uint_t            ctx_index;
-    ngx_uint_t            index;
+بنية ngx_module_s {
+    ngx_uint_t            ctx_شاخص;
+    ngx_uint_t            شاخص;
 
-    char                 *name;
+    حرف                 *name;
 
     ngx_uint_t            spare0;
     ngx_uint_t            spare1;
 
-    ngx_uint_t            version;
-    const char           *signature;
+    ngx_uint_t            نسخه;
+    ثابت حرف           *signature;
 
-    void                 *ctx;
+    فراغ                 *ctx;
     ngx_command_t        *commands;
     ngx_uint_t            type;
 
-    ngx_int_t           (*init_master)(ngx_log_t *log);
+    ngx_int_t           (*init_master)(ngx_log_t *لگاریتم);
 
-    ngx_int_t           (*init_module)(ngx_cycle_t *cycle);
+    ngx_int_t           (*init_module)(ngx_چرخه_t *چرخه);
 
-    ngx_int_t           (*init_process)(ngx_cycle_t *cycle);
-    ngx_int_t           (*init_thread)(ngx_cycle_t *cycle);
-    void                (*exit_thread)(ngx_cycle_t *cycle);
-    void                (*exit_process)(ngx_cycle_t *cycle);
+    ngx_int_t           (*init_process)(ngx_چرخه_t *چرخه);
+    ngx_int_t           (*init_thread)(ngx_چرخه_t *چرخه);
+    فراغ                (*exit_thread)(ngx_چرخه_t *چرخه);
+    فراغ                (*exit_process)(ngx_چرخه_t *چرخه);
 
-    void                (*exit_master)(ngx_cycle_t *cycle);
+    فراغ                (*exit_master)(ngx_چرخه_t *چرخه);
 
-    uintptr_t             spare_hook0;
-    uintptr_t             spare_hook1;
-    uintptr_t             spare_hook2;
-    uintptr_t             spare_hook3;
-    uintptr_t             spare_hook4;
-    uintptr_t             spare_hook5;
-    uintptr_t             spare_hook6;
-    uintptr_t             spare_hook7;
+    uintptr_t             یدکی_hook0;
+    uintptr_t             یدکی_hook1;
+    uintptr_t             یدکی_hook2;
+    uintptr_t             یدکی_hook3;
+    uintptr_t             یدکی_hook4;
+    uintptr_t             یدکی_hook5;
+    uintptr_t             یدکی_hook6;
+    uintptr_t             یدکی_hook7;
 };
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_str_t             name;
-    void               *(*create_conf)(ngx_cycle_t *cycle);
-    char               *(*init_conf)(ngx_cycle_t *cycle, void *conf);
+    فراغ               *(*create_conf)(ngx_چرخه_t *چرخه);
+    حرف               *(*init_conf)(ngx_چرخه_t *چرخه, فراغ *conf);
 } ngx_core_module_t;
 
 
-ngx_int_t ngx_preinit_modules(void);
-ngx_int_t ngx_cycle_modules(ngx_cycle_t *cycle);
-ngx_int_t ngx_init_modules(ngx_cycle_t *cycle);
-ngx_int_t ngx_count_modules(ngx_cycle_t *cycle, ngx_uint_t type);
+ngx_int_t ngx_preinit_modules(فراغ);
+ngx_int_t ngx_چرخه_modules(ngx_چرخه_t *چرخه);
+ngx_int_t ngx_init_modules(ngx_چرخه_t *چرخه);
+ngx_int_t ngx_شمار_modules(ngx_چرخه_t *چرخه, ngx_uint_t type);
 
 
-ngx_int_t ngx_add_module(ngx_conf_t *cf, ngx_str_t *file,
-    ngx_module_t *module, char **order);
+ngx_int_t ngx_جمع_کن_module(ngx_conf_t *cf, ngx_str_t *file,
+    ngx_module_t *module, حرف **ترتیب);
 
 
-extern ngx_module_t  *ngx_modules[];
-extern ngx_uint_t     ngx_max_module;
+خارجي ngx_module_t  *ngx_modules[];
+خارجي ngx_uint_t     ngx_max_module;
 
-extern char          *ngx_module_names[];
+خارجي حرف          *ngx_module_نامها[];
 
 
-#endif /* _NGX_MODULE_H_INCLUDED_ */
+#پایان_اگر /* _NGX_MODULE_H_INCLUDED_ */

@@ -5,12 +5,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ساكن فراغ ngx_صف_ادغام(ngx_صف_t *صف, ngx_صف_t *دم,
+    ngx_int_t (*cmp)(ثابت ngx_صف_t *, ثابت ngx_صف_t *));
 
 
 /*
@@ -18,32 +18,32 @@ static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
  * or the first element of the queue's second part otherwise
  */
 
-ngx_queue_t *
-ngx_queue_middle(ngx_queue_t *queue)
+ngx_صف_t *
+ngx_صف_میانه(ngx_صف_t *صف)
 {
-    ngx_queue_t  *middle, *next;
+    ngx_صف_t  *میانه, *بعدی;
 
-    middle = ngx_queue_head(queue);
+    میانه = ngx_صف_سر(صف);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    إذا (میانه == ngx_صف_آخرین(صف)) {
+        أرجع میانه;
     }
 
-    next = ngx_queue_head(queue);
+    بعدی = ngx_صف_سر(صف);
 
-    for ( ;; ) {
-        middle = ngx_queue_next(middle);
+    لكل ( ;; ) {
+        میانه = ngx_صف_بعدی(میانه);
 
-        next = ngx_queue_next(next);
+        بعدی = ngx_صف_بعدی(بعدی);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        إذا (بعدی == ngx_صف_آخرین(صف)) {
+            أرجع میانه;
         }
 
-        next = ngx_queue_next(next);
+        بعدی = ngx_صف_بعدی(بعدی);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        إذا (بعدی == ngx_صف_آخرین(صف)) {
+            أرجع میانه;
         }
     }
 }
@@ -51,56 +51,56 @@ ngx_queue_middle(ngx_queue_t *queue)
 
 /* the stable merge sort */
 
-void
-ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+فراغ
+ngx_صف_مرتب_سازی(ngx_صف_t *صف,
+    ngx_int_t (*cmp)(ثابت ngx_صف_t *, ثابت ngx_صف_t *))
 {
-    ngx_queue_t  *q, tail;
+    ngx_صف_t  *q, دم;
 
-    q = ngx_queue_head(queue);
+    q = ngx_صف_سر(صف);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    إذا (q == ngx_صف_آخرین(صف)) {
+        أرجع;
     }
 
-    q = ngx_queue_middle(queue);
+    q = ngx_صف_میانه(صف);
 
-    ngx_queue_split(queue, q, &tail);
+    ngx_صف_تقسیم(صف, q, &دم);
 
-    ngx_queue_sort(queue, cmp);
-    ngx_queue_sort(&tail, cmp);
+    ngx_صف_مرتب_سازی(صف, cmp);
+    ngx_صف_مرتب_سازی(&دم, cmp);
 
-    ngx_queue_merge(queue, &tail, cmp);
+    ngx_صف_ادغام(صف, &دم, cmp);
 }
 
 
-static void
-ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+ساكن فراغ
+ngx_صف_ادغام(ngx_صف_t *صف, ngx_صف_t *دم,
+    ngx_int_t (*cmp)(ثابت ngx_صف_t *, ثابت ngx_صف_t *))
 {
-    ngx_queue_t  *q1, *q2;
+    ngx_صف_t  *q1, *q2;
 
-    q1 = ngx_queue_head(queue);
-    q2 = ngx_queue_head(tail);
+    q1 = ngx_صف_سر(صف);
+    q2 = ngx_صف_سر(دم);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
-            ngx_queue_add(queue, tail);
-            break;
+    لكل ( ;; ) {
+        إذا (q1 == ngx_صف_sentinel(صف)) {
+            ngx_صف_جمع_کن(صف, دم);
+            اكسر;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        إذا (q2 == ngx_صف_sentinel(دم)) {
+            اكسر;
         }
 
-        if (cmp(q1, q2) <= 0) {
-            q1 = ngx_queue_next(q1);
-            continue;
+        إذا (cmp(q1, q2) <= 0) {
+            q1 = ngx_صف_بعدی(q1);
+            استمر;
         }
 
-        ngx_queue_remove(q2);
-        ngx_queue_insert_before(q1, q2);
+        ngx_صف_remove(q2);
+        ngx_صف_درج_before(q1, q2);
 
-        q2 = ngx_queue_head(tail);
+        q2 = ngx_صف_سر(دم);
     }
 }

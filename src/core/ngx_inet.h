@@ -5,96 +5,96 @@
  */
 
 
-#ifndef _NGX_INET_H_INCLUDED_
-#define _NGX_INET_H_INCLUDED_
+#اگر_تعریف_نشده _NGX_INET_H_INCLUDED_
+#تعریف_کن _NGX_INET_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-#define NGX_INET_ADDRSTRLEN   (sizeof("255.255.255.255") - 1)
-#define NGX_INET6_ADDRSTRLEN                                                 \
-    (sizeof("ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255") - 1)
-#define NGX_UNIX_ADDRSTRLEN                                                  \
-    (sizeof("unix:") - 1 +                                                   \
-     sizeof(struct sockaddr_un) - offsetof(struct sockaddr_un, sun_path))
+#تعریف_کن NGX_INET_ADDRSTRLEN   (حجم("255.255.255.255") - 1)
+#تعریف_کن NGX_INET6_ADDRSTRLEN                                                 \
+    (حجم("ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255") - 1)
+#تعریف_کن NGX_UNIX_ADDRSTRLEN                                                  \
+    (حجم("unix:") - 1 +                                                   \
+     حجم(بنية sockaddr_un) - offsetof(بنية sockaddr_un, sun_مسیر))
 
-#if (NGX_HAVE_UNIX_DOMAIN)
-#define NGX_SOCKADDR_STRLEN   NGX_UNIX_ADDRSTRLEN
-#elif (NGX_HAVE_INET6)
-#define NGX_SOCKADDR_STRLEN   (NGX_INET6_ADDRSTRLEN + sizeof("[]:65535") - 1)
-#else
-#define NGX_SOCKADDR_STRLEN   (NGX_INET_ADDRSTRLEN + sizeof(":65535") - 1)
-#endif
+#إذا (NGX_HAVE_UNIX_DOMAIN)
+#تعریف_کن NGX_SOCKADDR_STRLEN   NGX_UNIX_ADDRSTRLEN
+#وإلاإذا (NGX_HAVE_INET6)
+#تعریف_کن NGX_SOCKADDR_STRLEN   (NGX_INET6_ADDRSTRLEN + حجم("[]:65535") - 1)
+#وإلا
+#تعریف_کن NGX_SOCKADDR_STRLEN   (NGX_INET_ADDRSTRLEN + حجم(":65535") - 1)
+#پایان_اگر
 
 /* compatibility */
-#define NGX_SOCKADDRLEN       sizeof(ngx_sockaddr_t)
+#تعریف_کن NGX_SOCKADDRLEN       حجم(ngx_sockaddr_t)
 
 
-typedef union {
-    struct sockaddr           sockaddr;
-    struct sockaddr_in        sockaddr_in;
-#if (NGX_HAVE_INET6)
-    struct sockaddr_in6       sockaddr_in6;
-#endif
-#if (NGX_HAVE_UNIX_DOMAIN)
-    struct sockaddr_un        sockaddr_un;
-#endif
+تعريفنوع اتحاد {
+    بنية sockaddr           sockaddr;
+    بنية sockaddr_درون        sockaddr_درون;
+#إذا (NGX_HAVE_INET6)
+    بنية sockaddr_in6       sockaddr_in6;
+#پایان_اگر
+#إذا (NGX_HAVE_UNIX_DOMAIN)
+    بنية sockaddr_un        sockaddr_un;
+#پایان_اگر
 } ngx_sockaddr_t;
 
 
-typedef struct {
-    in_addr_t                 addr;
-    in_addr_t                 mask;
-} ngx_in_cidr_t;
+تعريفنوع بنية {
+    درون_addr_t                 addr;
+    درون_addr_t                 ماسک;
+} ngx_درون_cidr_t;
 
 
-#if (NGX_HAVE_INET6)
+#إذا (NGX_HAVE_INET6)
 
-typedef struct {
-    struct in6_addr           addr;
-    struct in6_addr           mask;
+تعريفنوع بنية {
+    بنية in6_addr           addr;
+    بنية in6_addr           ماسک;
 } ngx_in6_cidr_t;
 
-#endif
+#پایان_اگر
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_uint_t                family;
-    union {
-        ngx_in_cidr_t         in;
-#if (NGX_HAVE_INET6)
+    اتحاد {
+        ngx_درون_cidr_t         درون;
+#إذا (NGX_HAVE_INET6)
         ngx_in6_cidr_t        in6;
-#endif
+#پایان_اگر
     } u;
 } ngx_cidr_t;
 
 
-typedef struct {
-    struct sockaddr          *sockaddr;
+تعريفنوع بنية {
+    بنية sockaddr          *sockaddr;
     socklen_t                 socklen;
     ngx_str_t                 name;
 } ngx_addr_t;
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_str_t                 url;
     ngx_str_t                 host;
-    ngx_str_t                 port_text;
+    ngx_str_t                 پورت_متن;
     ngx_str_t                 uri;
 
-    in_port_t                 port;
-    in_port_t                 default_port;
-    in_port_t                 last_port;
-    int                       family;
+    درون_پورت_t                 پورت;
+    درون_پورت_t                 default_پورت;
+    درون_پورت_t                 آخرین_پورت;
+    صحيح                       family;
 
-    unsigned                  listen:1;
-    unsigned                  uri_part:1;
-    unsigned                  no_resolve:1;
+    بیعلامت                  listen:1;
+    بیعلامت                  uri_part:1;
+    بیعلامت                  no_resolve:1;
 
-    unsigned                  no_port:1;
-    unsigned                  wildcard:1;
+    بیعلامت                  no_پورت:1;
+    بیعلامت                  wildcard:1;
 
     socklen_t                 socklen;
     ngx_sockaddr_t            sockaddr;
@@ -102,31 +102,31 @@ typedef struct {
     ngx_addr_t               *addrs;
     ngx_uint_t                naddrs;
 
-    char                     *err;
+    حرف                     *err;
 } ngx_url_t;
 
 
-in_addr_t ngx_inet_addr(u_char *text, size_t len);
-#if (NGX_HAVE_INET6)
-ngx_int_t ngx_inet6_addr(u_char *p, size_t len, u_char *addr);
-size_t ngx_inet6_ntop(u_char *p, u_char *text, size_t len);
-#endif
-size_t ngx_sock_ntop(struct sockaddr *sa, socklen_t socklen, u_char *text,
-    size_t len, ngx_uint_t port);
-size_t ngx_inet_ntop(int family, void *addr, u_char *text, size_t len);
-ngx_int_t ngx_ptocidr(ngx_str_t *text, ngx_cidr_t *cidr);
-ngx_int_t ngx_cidr_match(struct sockaddr *sa, ngx_array_t *cidrs);
-ngx_int_t ngx_parse_addr(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text,
-    size_t len);
-ngx_int_t ngx_parse_addr_port(ngx_pool_t *pool, ngx_addr_t *addr,
-    u_char *text, size_t len);
+درون_addr_t ngx_inet_addr(u_char *متن, اندازه_t len);
+#إذا (NGX_HAVE_INET6)
+ngx_int_t ngx_inet6_addr(u_char *p, اندازه_t len, u_char *addr);
+اندازه_t ngx_inet6_ntop(u_char *p, u_char *متن, اندازه_t len);
+#پایان_اگر
+اندازه_t ngx_sock_ntop(بنية sockaddr *sa, socklen_t socklen, u_char *متن,
+    اندازه_t len, ngx_uint_t پورت);
+اندازه_t ngx_inet_ntop(صحيح family, فراغ *addr, u_char *متن, اندازه_t len);
+ngx_int_t ngx_ptocidr(ngx_str_t *متن, ngx_cidr_t *cidr);
+ngx_int_t ngx_cidr_تطابق(بنية sockaddr *sa, ngx_array_t *cidrs);
+ngx_int_t ngx_parse_addr(ngx_pool_t *pool, ngx_addr_t *addr, u_char *متن,
+    اندازه_t len);
+ngx_int_t ngx_parse_addr_پورت(ngx_pool_t *pool, ngx_addr_t *addr,
+    u_char *متن, اندازه_t len);
 ngx_int_t ngx_parse_url(ngx_pool_t *pool, ngx_url_t *u);
 ngx_int_t ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u);
-ngx_int_t ngx_cmp_sockaddr(struct sockaddr *sa1, socklen_t slen1,
-    struct sockaddr *sa2, socklen_t slen2, ngx_uint_t cmp_port);
-in_port_t ngx_inet_get_port(struct sockaddr *sa);
-void ngx_inet_set_port(struct sockaddr *sa, in_port_t port);
-ngx_uint_t ngx_inet_wildcard(struct sockaddr *sa);
+ngx_int_t ngx_cmp_sockaddr(بنية sockaddr *sa1, socklen_t slen1,
+    بنية sockaddr *sa2, socklen_t slen2, ngx_uint_t cmp_پورت);
+درون_پورت_t ngx_inet_get_پورت(بنية sockaddr *sa);
+فراغ ngx_inet_مجموعه_پورت(بنية sockaddr *sa, درون_پورت_t پورت);
+ngx_uint_t ngx_inet_wildcard(بنية sockaddr *sa);
 
 
-#endif /* _NGX_INET_H_INCLUDED_ */
+#پایان_اگر /* _NGX_INET_H_INCLUDED_ */

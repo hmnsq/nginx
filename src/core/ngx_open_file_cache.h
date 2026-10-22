@@ -5,114 +5,114 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-#ifndef _NGX_OPEN_FILE_CACHE_H_INCLUDED_
-#define _NGX_OPEN_FILE_CACHE_H_INCLUDED_
+#اگر_تعریف_نشده _NGX_OPEN_FILE_CACHE_H_INCLUDED_
+#تعریف_کن _NGX_OPEN_FILE_CACHE_H_INCLUDED_
 
 
-#define NGX_OPEN_FILE_DIRECTIO_OFF  NGX_MAX_OFF_T_VALUE
+#تعریف_کن NGX_OPEN_FILE_DIRECTIO_OFF  NGX_MAX_OFF_T_مقدار
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_fd_t                 fd;
     ngx_file_uniq_t          uniq;
-    time_t                   mtime;
-    off_t                    size;
-    off_t                    fs_size;
+    زمان_t                   mtime;
+    off_t                    اندازه;
+    off_t                    fs_اندازه;
     off_t                    directio;
-    size_t                   read_ahead;
+    اندازه_t                   read_ahead;
 
     ngx_err_t                err;
-    char                    *failed;
+    حرف                    *failed;
 
-    time_t                   valid;
+    زمان_t                   valid;
 
-    ngx_uint_t               min_uses;
+    ngx_uint_t               min_استفاده_میکند;
 
-#if (NGX_HAVE_OPENAT)
-    size_t                   disable_symlinks_from;
-    unsigned                 disable_symlinks:2;
-#endif
+#إذا (NGX_HAVE_OPENAT)
+    اندازه_t                   disable_symlinks_from;
+    بیعلامت                 disable_symlinks:2;
+#پایان_اگر
 
-    unsigned                 test_dir:1;
-    unsigned                 test_only:1;
-    unsigned                 log:1;
-    unsigned                 errors:1;
-    unsigned                 events:1;
+    بیعلامت                 test_dir:1;
+    بیعلامت                 test_only:1;
+    بیعلامت                 لگاریتم:1;
+    بیعلامت                 errors:1;
+    بیعلامت                 events:1;
 
-    unsigned                 is_dir:1;
-    unsigned                 is_file:1;
-    unsigned                 is_link:1;
-    unsigned                 is_exec:1;
-    unsigned                 is_directio:1;
+    بیعلامت                 is_dir:1;
+    بیعلامت                 is_file:1;
+    بیعلامت                 is_link:1;
+    بیعلامت                 is_exec:1;
+    بیعلامت                 is_directio:1;
 } ngx_open_file_info_t;
 
 
-typedef struct ngx_cached_open_file_s  ngx_cached_open_file_t;
+تعريفنوع بنية ngx_cached_open_file_s  ngx_cached_open_file_t;
 
-struct ngx_cached_open_file_s {
-    ngx_rbtree_node_t        node;
-    ngx_queue_t              queue;
+بنية ngx_cached_open_file_s {
+    ngx_rbtree_گره_t        گره;
+    ngx_صف_t              صف;
 
     u_char                  *name;
-    time_t                   created;
-    time_t                   accessed;
+    زمان_t                   created;
+    زمان_t                   accessed;
 
     ngx_fd_t                 fd;
     ngx_file_uniq_t          uniq;
-    time_t                   mtime;
-    off_t                    size;
+    زمان_t                   mtime;
+    off_t                    اندازه;
     ngx_err_t                err;
 
-    uint32_t                 uses;
+    uint32_t                 استفاده_میکند;
 
-#if (NGX_HAVE_OPENAT)
-    size_t                   disable_symlinks_from;
-    unsigned                 disable_symlinks:2;
-#endif
+#إذا (NGX_HAVE_OPENAT)
+    اندازه_t                   disable_symlinks_from;
+    بیعلامت                 disable_symlinks:2;
+#پایان_اگر
 
-    unsigned                 count:24;
-    unsigned                 close:1;
-    unsigned                 use_event:1;
+    بیعلامت                 شمار:24;
+    بیعلامت                 close:1;
+    بیعلامت                 use_event:1;
 
-    unsigned                 is_dir:1;
-    unsigned                 is_file:1;
-    unsigned                 is_link:1;
-    unsigned                 is_exec:1;
-    unsigned                 is_directio:1;
+    بیعلامت                 is_dir:1;
+    بیعلامت                 is_file:1;
+    بیعلامت                 is_link:1;
+    بیعلامت                 is_exec:1;
+    بیعلامت                 is_directio:1;
 
     ngx_event_t             *event;
 };
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_rbtree_t             rbtree;
-    ngx_rbtree_node_t        sentinel;
-    ngx_queue_t              expire_queue;
+    ngx_rbtree_گره_t        sentinel;
+    ngx_صف_t              expire_صف;
 
     ngx_uint_t               current;
     ngx_uint_t               max;
-    time_t                   inactive;
+    زمان_t                   inactive;
 } ngx_open_file_cache_t;
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_open_file_cache_t   *cache;
     ngx_cached_open_file_t  *file;
-    ngx_uint_t               min_uses;
-    ngx_log_t               *log;
+    ngx_uint_t               min_استفاده_میکند;
+    ngx_log_t               *لگاریتم;
 } ngx_open_file_cache_cleanup_t;
 
 
-typedef struct {
+تعريفنوع بنية {
 
     /* ngx_connection_t stub to allow use c->fd as event ident */
-    void                    *data;
-    ngx_event_t             *read;
-    ngx_event_t             *write;
+    فراغ                    *داده;
+    ngx_event_t             *اقرأ;
+    ngx_event_t             *اكتب;
     ngx_fd_t                 fd;
 
     ngx_cached_open_file_t  *file;
@@ -121,9 +121,9 @@ typedef struct {
 
 
 ngx_open_file_cache_t *ngx_open_file_cache_init(ngx_pool_t *pool,
-    ngx_uint_t max, time_t inactive);
+    ngx_uint_t max, زمان_t inactive);
 ngx_int_t ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
-    ngx_open_file_info_t *of, ngx_pool_t *pool);
+    ngx_open_file_info_t *از, ngx_pool_t *pool);
 
 
-#endif /* _NGX_OPEN_FILE_CACHE_H_INCLUDED_ */
+#پایان_اگر /* _NGX_OPEN_FILE_CACHE_H_INCLUDED_ */

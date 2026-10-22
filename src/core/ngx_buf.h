@@ -5,163 +5,163 @@
  */
 
 
-#ifndef _NGX_BUF_H_INCLUDED_
-#define _NGX_BUF_H_INCLUDED_
+#اگر_تعریف_نشده _NGX_BUF_H_INCLUDED_
+#تعریف_کن _NGX_BUF_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef void *            ngx_buf_tag_t;
+تعريفنوع فراغ *            ngx_buf_برچسب_t;
 
-typedef struct ngx_buf_s  ngx_buf_t;
+تعريفنوع بنية ngx_buf_s  ngx_buf_t;
 
-struct ngx_buf_s {
+بنية ngx_buf_s {
     u_char          *pos;
-    u_char          *last;
+    u_char          *آخرین;
     off_t            file_pos;
-    off_t            file_last;
+    off_t            file_آخرین;
 
-    u_char          *start;         /* start of buffer */
-    u_char          *end;           /* end of buffer */
-    ngx_buf_tag_t    tag;
+    u_char          *شروع;         /* start of buffer */
+    u_char          *انتها;           /* end of buffer */
+    ngx_buf_برچسب_t    برچسب;
     ngx_file_t      *file;
     ngx_buf_t       *shadow;
 
 
     /* the buf's content could be changed */
-    unsigned         temporary:1;
+    بیعلامت         temporary:1;
 
     /*
      * the buf's content is in a memory cache or in a read only memory
      * and must not be changed
      */
-    unsigned         memory:1;
+    بیعلامت         حافظه:1;
 
     /* the buf's content is mmap()ed and must not be changed */
-    unsigned         mmap:1;
+    بیعلامت         mmap:1;
 
-    unsigned         recycled:1;
-    unsigned         in_file:1;
-    unsigned         flush:1;
-    unsigned         sync:1;
-    unsigned         last_buf:1;
-    unsigned         last_in_chain:1;
+    بیعلامت         recycled:1;
+    بیعلامت         درون_file:1;
+    بیعلامت         flush:1;
+    بیعلامت         sync:1;
+    بیعلامت         آخرین_buf:1;
+    بیعلامت         آخرین_درون_chain:1;
 
-    unsigned         last_shadow:1;
-    unsigned         temp_file:1;
+    بیعلامت         آخرین_shadow:1;
+    بیعلامت         موقت_file:1;
 
-    /* STUB */ int   num;
+    /* STUB */ صحيح   رقم;
 };
 
 
-struct ngx_chain_s {
+بنية ngx_chain_s {
     ngx_buf_t    *buf;
-    ngx_chain_t  *next;
+    ngx_chain_t  *بعدی;
 };
 
 
-typedef struct {
-    ngx_int_t    num;
-    size_t       size;
+تعريفنوع بنية {
+    ngx_int_t    رقم;
+    اندازه_t       اندازه;
 } ngx_bufs_t;
 
 
-typedef struct ngx_output_chain_ctx_s  ngx_output_chain_ctx_t;
+تعريفنوع بنية ngx_output_chain_ctx_s  ngx_output_chain_ctx_t;
 
-typedef ngx_int_t (*ngx_output_chain_filter_pt)(void *ctx, ngx_chain_t *in);
+تعريفنوع ngx_int_t (*ngx_output_chain_filter_pt)(فراغ *ctx, ngx_chain_t *درون);
 
-typedef void (*ngx_output_chain_aio_pt)(ngx_output_chain_ctx_t *ctx,
+تعريفنوع فراغ (*ngx_output_chain_aio_pt)(ngx_output_chain_ctx_t *ctx,
     ngx_file_t *file);
 
-struct ngx_output_chain_ctx_s {
+بنية ngx_output_chain_ctx_s {
     ngx_buf_t                   *buf;
-    ngx_chain_t                 *in;
-    ngx_chain_t                 *free;
+    ngx_chain_t                 *درون;
+    ngx_chain_t                 *حرر;
     ngx_chain_t                 *busy;
 
-    unsigned                     sendfile:1;
-    unsigned                     directio:1;
-    unsigned                     unaligned:1;
-    unsigned                     need_in_memory:1;
-    unsigned                     need_in_temp:1;
-    unsigned                     aio:1;
+    بیعلامت                     sendfile:1;
+    بیعلامت                     directio:1;
+    بیعلامت                     unaligned:1;
+    بیعلامت                     need_درون_حافظه:1;
+    بیعلامت                     need_درون_موقت:1;
+    بیعلامت                     aio:1;
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#إذا (NGX_HAVE_FILE_AIO || NGX_COMPAT)
     ngx_output_chain_aio_pt      aio_handler;
-#endif
+#پایان_اگر
 
-#if (NGX_THREADS || NGX_COMPAT)
+#إذا (NGX_نخها || NGX_COMPAT)
     ngx_int_t                  (*thread_handler)(ngx_thread_task_t *task,
                                                  ngx_file_t *file);
     ngx_thread_task_t           *thread_task;
-#endif
+#پایان_اگر
 
     off_t                        alignment;
 
     ngx_pool_t                  *pool;
     ngx_int_t                    allocated;
     ngx_bufs_t                   bufs;
-    ngx_buf_tag_t                tag;
+    ngx_buf_برچسب_t                برچسب;
 
     ngx_output_chain_filter_pt   output_filter;
-    void                        *filter_ctx;
+    فراغ                        *filter_ctx;
 };
 
 
-typedef struct {
-    ngx_chain_t                 *out;
-    ngx_chain_t                **last;
+تعريفنوع بنية {
+    ngx_chain_t                 *بیرون;
+    ngx_chain_t                **آخرین;
     ngx_connection_t            *connection;
     ngx_pool_t                  *pool;
-    off_t                        limit;
+    off_t                        حد;
 } ngx_chain_writer_ctx_t;
 
 
-#define NGX_CHAIN_ERROR     (ngx_chain_t *) NGX_ERROR
+#تعریف_کن NGX_CHAIN_ERROR     (ngx_chain_t *) NGX_ERROR
 
 
-#define ngx_buf_in_memory(b)       ((b)->temporary || (b)->memory || (b)->mmap)
-#define ngx_buf_in_memory_only(b)  (ngx_buf_in_memory(b) && !(b)->in_file)
+#تعریف_کن ngx_buf_درون_حافظه(b)       ((b)->temporary || (b)->حافظه || (b)->mmap)
+#تعریف_کن ngx_buf_درون_حافظه_only(b)  (ngx_buf_درون_حافظه(b) && !(b)->درون_file)
 
-#define ngx_buf_special(b)                                                   \
-    (((b)->flush || (b)->last_buf || (b)->sync)                              \
-     && !ngx_buf_in_memory(b) && !(b)->in_file)
+#تعریف_کن ngx_buf_special(b)                                                   \
+    (((b)->flush || (b)->آخرین_buf || (b)->sync)                              \
+     && !ngx_buf_درون_حافظه(b) && !(b)->درون_file)
 
-#define ngx_buf_sync_only(b)                                                 \
-    ((b)->sync && !ngx_buf_in_memory(b)                                      \
-     && !(b)->in_file && !(b)->flush && !(b)->last_buf)
+#تعریف_کن ngx_buf_sync_only(b)                                                 \
+    ((b)->sync && !ngx_buf_درون_حافظه(b)                                      \
+     && !(b)->درون_file && !(b)->flush && !(b)->آخرین_buf)
 
-#define ngx_buf_size(b)                                                      \
-    (ngx_buf_in_memory(b) ? (off_t) ((b)->last - (b)->pos):                  \
-                            ((b)->file_last - (b)->file_pos))
+#تعریف_کن ngx_buf_اندازه(b)                                                      \
+    (ngx_buf_درون_حافظه(b) ? (off_t) ((b)->آخرین - (b)->pos):                  \
+                            ((b)->file_آخرین - (b)->file_pos))
 
-ngx_buf_t *ngx_create_temp_buf(ngx_pool_t *pool, size_t size);
-ngx_chain_t *ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs);
+ngx_buf_t *ngx_create_موقت_buf(ngx_pool_t *pool, اندازه_t اندازه);
+ngx_chain_t *ngx_create_chain_از_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs);
 
 
-#define ngx_alloc_buf(pool)  ngx_palloc(pool, sizeof(ngx_buf_t))
-#define ngx_calloc_buf(pool) ngx_pcalloc(pool, sizeof(ngx_buf_t))
+#تعریف_کن ngx_alloc_buf(pool)  ngx_palloc(pool, حجم(ngx_buf_t))
+#تعریف_کن ngx_calloc_buf(pool) ngx_pcalloc(pool, حجم(ngx_buf_t))
 
 ngx_chain_t *ngx_alloc_chain_link(ngx_pool_t *pool);
-#define ngx_free_chain(pool, cl)                                             \
-    (cl)->next = (pool)->chain;                                              \
+#تعریف_کن ngx_free_chain(pool, cl)                                             \
+    (cl)->بعدی = (pool)->chain;                                              \
     (pool)->chain = (cl)
 
 
 
-ngx_int_t ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *in);
-ngx_int_t ngx_chain_writer(void *ctx, ngx_chain_t *in);
+ngx_int_t ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *درون);
+ngx_int_t ngx_chain_writer(فراغ *ctx, ngx_chain_t *درون);
 
-ngx_int_t ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain,
-    ngx_chain_t *in);
-ngx_chain_t *ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **free);
-void ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free,
-    ngx_chain_t **busy, ngx_chain_t **out, ngx_buf_tag_t tag);
+ngx_int_t ngx_chain_جمع_کن_copy(ngx_pool_t *pool, ngx_chain_t **chain,
+    ngx_chain_t *درون);
+ngx_chain_t *ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **حرر);
+فراغ ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **حرر,
+    ngx_chain_t **busy, ngx_chain_t **بیرون, ngx_buf_برچسب_t برچسب);
 
-off_t ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit);
+off_t ngx_chain_coalesce_file(ngx_chain_t **درون, off_t حد);
 
-ngx_chain_t *ngx_chain_update_sent(ngx_chain_t *in, off_t sent);
+ngx_chain_t *ngx_chain_update_فرستاده(ngx_chain_t *درون, off_t فرستاده);
 
-#endif /* _NGX_BUF_H_INCLUDED_ */
+#پایان_اگر /* _NGX_BUF_H_INCLUDED_ */

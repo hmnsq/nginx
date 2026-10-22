@@ -5,160 +5,160 @@
  */
 
 
-#ifndef _NGX_FILE_H_INCLUDED_
-#define _NGX_FILE_H_INCLUDED_
+#اگر_تعریف_نشده _NGX_FILE_H_INCLUDED_
+#تعریف_کن _NGX_FILE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-struct ngx_file_s {
+بنية ngx_file_s {
     ngx_fd_t                   fd;
     ngx_str_t                  name;
     ngx_file_info_t            info;
 
-    off_t                      offset;
-    off_t                      sys_offset;
+    off_t                      جابه_جایی;
+    off_t                      sys_جابه_جایی;
 
-    ngx_log_t                 *log;
+    ngx_log_t                 *لگاریتم;
 
-#if (NGX_THREADS || NGX_COMPAT)
+#إذا (NGX_نخها || NGX_COMPAT)
     ngx_int_t                (*thread_handler)(ngx_thread_task_t *task,
                                                ngx_file_t *file);
-    void                      *thread_ctx;
+    فراغ                      *thread_ctx;
     ngx_thread_task_t         *thread_task;
-#endif
+#پایان_اگر
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#إذا (NGX_HAVE_FILE_AIO || NGX_COMPAT)
     ngx_event_aio_t           *aio;
-#endif
+#پایان_اگر
 
-    unsigned                   valid_info:1;
-    unsigned                   directio:1;
+    بیعلامت                   valid_info:1;
+    بیعلامت                   directio:1;
 };
 
 
-#define NGX_MAX_PATH_LEVEL  3
+#تعریف_کن NGX_MAX_مسیر_LEVEL  3
 
 
-typedef ngx_msec_t (*ngx_path_manager_pt) (void *data);
-typedef ngx_msec_t (*ngx_path_purger_pt) (void *data);
-typedef void (*ngx_path_loader_pt) (void *data);
+تعريفنوع ngx_msec_t (*ngx_مسیر_manager_pt) (فراغ *داده);
+تعريفنوع ngx_msec_t (*ngx_مسیر_purger_pt) (فراغ *داده);
+تعريفنوع فراغ (*ngx_مسیر_loader_pt) (فراغ *داده);
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_str_t                  name;
-    size_t                     len;
-    size_t                     level[NGX_MAX_PATH_LEVEL];
+    اندازه_t                     len;
+    اندازه_t                     level[NGX_MAX_مسیر_LEVEL];
 
-    ngx_path_manager_pt        manager;
-    ngx_path_purger_pt         purger;
-    ngx_path_loader_pt         loader;
-    void                      *data;
+    ngx_مسیر_manager_pt        manager;
+    ngx_مسیر_purger_pt         purger;
+    ngx_مسیر_loader_pt         loader;
+    فراغ                      *داده;
 
     u_char                    *conf_file;
-    ngx_uint_t                 line;
-} ngx_path_t;
+    ngx_uint_t                 سطر;
+} ngx_مسیر_t;
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_str_t                  name;
-    size_t                     level[NGX_MAX_PATH_LEVEL];
-} ngx_path_init_t;
+    اندازه_t                     level[NGX_MAX_مسیر_LEVEL];
+} ngx_مسیر_init_t;
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_file_t                 file;
-    off_t                      offset;
-    ngx_path_t                *path;
+    off_t                      جابه_جایی;
+    ngx_مسیر_t                *مسیر;
     ngx_pool_t                *pool;
-    char                      *warn;
+    حرف                      *warn;
 
     ngx_uint_t                 access;
 
-    unsigned                   log_level:8;
-    unsigned                   persistent:1;
-    unsigned                   clean:1;
-    unsigned                   thread_write:1;
-} ngx_temp_file_t;
+    بیعلامت                   log_level:8;
+    بیعلامت                   persistent:1;
+    بیعلامت                   clean:1;
+    بیعلامت                   thread_write:1;
+} ngx_موقت_file_t;
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_uint_t                 access;
-    ngx_uint_t                 path_access;
-    time_t                     time;
+    ngx_uint_t                 مسیر_access;
+    زمان_t                     زمان;
     ngx_fd_t                   fd;
 
-    unsigned                   create_path:1;
-    unsigned                   delete_file:1;
+    بیعلامت                   create_مسیر:1;
+    بیعلامت                   delete_file:1;
 
-    ngx_log_t                 *log;
+    ngx_log_t                 *لگاریتم;
 } ngx_ext_rename_file_t;
 
 
-typedef struct {
-    off_t                      size;
-    size_t                     buf_size;
+تعريفنوع بنية {
+    off_t                      اندازه;
+    اندازه_t                     buf_اندازه;
 
     ngx_uint_t                 access;
-    time_t                     time;
+    زمان_t                     زمان;
 
-    ngx_log_t                 *log;
+    ngx_log_t                 *لگاریتم;
 } ngx_copy_file_t;
 
 
-typedef struct ngx_tree_ctx_s  ngx_tree_ctx_t;
+تعريفنوع بنية ngx_درخت_ctx_s  ngx_درخت_ctx_t;
 
-typedef ngx_int_t (*ngx_tree_init_handler_pt) (void *ctx, void *prev);
-typedef ngx_int_t (*ngx_tree_handler_pt) (ngx_tree_ctx_t *ctx, ngx_str_t *name);
+تعريفنوع ngx_int_t (*ngx_درخت_init_handler_pt) (فراغ *ctx, فراغ *prev);
+تعريفنوع ngx_int_t (*ngx_درخت_handler_pt) (ngx_درخت_ctx_t *ctx, ngx_str_t *name);
 
-struct ngx_tree_ctx_s {
-    off_t                      size;
-    off_t                      fs_size;
+بنية ngx_درخت_ctx_s {
+    off_t                      اندازه;
+    off_t                      fs_اندازه;
     ngx_uint_t                 access;
-    time_t                     mtime;
+    زمان_t                     mtime;
 
-    ngx_tree_init_handler_pt   init_handler;
-    ngx_tree_handler_pt        file_handler;
-    ngx_tree_handler_pt        pre_tree_handler;
-    ngx_tree_handler_pt        post_tree_handler;
-    ngx_tree_handler_pt        spec_handler;
+    ngx_درخت_init_handler_pt   init_handler;
+    ngx_درخت_handler_pt        file_handler;
+    ngx_درخت_handler_pt        pre_درخت_handler;
+    ngx_درخت_handler_pt        post_درخت_handler;
+    ngx_درخت_handler_pt        spec_handler;
 
-    void                      *data;
-    size_t                     alloc;
+    فراغ                      *داده;
+    اندازه_t                     alloc;
 
-    ngx_log_t                 *log;
+    ngx_log_t                 *لگاریتم;
 };
 
 
-ngx_int_t ngx_get_full_name(ngx_pool_t *pool, ngx_str_t *prefix,
+ngx_int_t ngx_get_پر_name(ngx_pool_t *pool, ngx_str_t *پیشوند,
     ngx_str_t *name);
 
-ssize_t ngx_write_chain_to_temp_file(ngx_temp_file_t *tf, ngx_chain_t *chain);
-ngx_int_t ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path,
+ssize_t ngx_write_chain_مقصد_موقت_file(ngx_موقت_file_t *tf, ngx_chain_t *chain);
+ngx_int_t ngx_create_موقت_file(ngx_file_t *file, ngx_مسیر_t *مسیر,
     ngx_pool_t *pool, ngx_uint_t persistent, ngx_uint_t clean,
     ngx_uint_t access);
-void ngx_create_hashed_filename(ngx_path_t *path, u_char *file, size_t len);
-ngx_int_t ngx_create_path(ngx_file_t *file, ngx_path_t *path);
-ngx_err_t ngx_create_full_path(u_char *dir, ngx_uint_t access);
-ngx_int_t ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot);
-ngx_int_t ngx_create_paths(ngx_cycle_t *cycle, ngx_uid_t user);
-ngx_int_t ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to,
+فراغ ngx_create_hashed_filename(ngx_مسیر_t *مسیر, u_char *file, اندازه_t len);
+ngx_int_t ngx_create_مسیر(ngx_file_t *file, ngx_مسیر_t *مسیر);
+ngx_err_t ngx_create_پر_مسیر(u_char *dir, ngx_uint_t access);
+ngx_int_t ngx_جمع_کن_مسیر(ngx_conf_t *cf, ngx_مسیر_t **جایگاه);
+ngx_int_t ngx_create_paths(ngx_چرخه_t *چرخه, ngx_uid_t user);
+ngx_int_t ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *مقصد,
     ngx_ext_rename_file_t *ext);
-ngx_int_t ngx_copy_file(u_char *from, u_char *to, ngx_copy_file_t *cf);
-ngx_int_t ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree);
+ngx_int_t ngx_copy_file(u_char *from, u_char *مقصد, ngx_copy_file_t *cf);
+ngx_int_t ngx_walk_درخت(ngx_درخت_ctx_t *ctx, ngx_str_t *درخت);
 
-ngx_atomic_uint_t ngx_next_temp_number(ngx_uint_t collision);
+ngx_atomic_uint_t ngx_بعدی_موقت_عدد(ngx_uint_t collision);
 
-char *ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_merge_path_value(ngx_conf_t *cf, ngx_path_t **path,
-    ngx_path_t *prev, ngx_path_init_t *init);
-char *ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-
-
-extern ngx_atomic_t      *ngx_temp_number;
-extern ngx_atomic_int_t   ngx_random_number;
+حرف *ngx_conf_مجموعه_مسیر_جایگاه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf);
+حرف *ngx_conf_ادغام_مسیر_مقدار(ngx_conf_t *cf, ngx_مسیر_t **مسیر,
+    ngx_مسیر_t *prev, ngx_مسیر_init_t *init);
+حرف *ngx_conf_مجموعه_access_جایگاه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf);
 
 
-#endif /* _NGX_FILE_H_INCLUDED_ */
+خارجي ngx_atomic_t      *ngx_موقت_عدد;
+خارجي ngx_atomic_int_t   ngx_random_عدد;
+
+
+#پایان_اگر /* _NGX_FILE_H_INCLUDED_ */

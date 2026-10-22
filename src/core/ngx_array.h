@@ -5,31 +5,31 @@
  */
 
 
-#ifndef _NGX_ARRAY_H_INCLUDED_
-#define _NGX_ARRAY_H_INCLUDED_
+#اگر_تعریف_نشده _NGX_ARRAY_H_INCLUDED_
+#تعریف_کن _NGX_ARRAY_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-typedef struct {
-    void        *elts;
+تعريفنوع بنية {
+    فراغ        *elts;
     ngx_uint_t   nelts;
-    size_t       size;
+    اندازه_t       اندازه;
     ngx_uint_t   nalloc;
     ngx_pool_t  *pool;
 } ngx_array_t;
 
 
-ngx_array_t *ngx_array_create(ngx_pool_t *p, ngx_uint_t n, size_t size);
-void ngx_array_destroy(ngx_array_t *a);
-void *ngx_array_push(ngx_array_t *a);
-void *ngx_array_push_n(ngx_array_t *a, ngx_uint_t n);
+ngx_array_t *ngx_array_create(ngx_pool_t *p, ngx_uint_t n, اندازه_t اندازه);
+فراغ ngx_array_destroy(ngx_array_t *a);
+فراغ *ngx_array_افزودن(ngx_array_t *a);
+فراغ *ngx_array_افزودن_n(ngx_array_t *a, ngx_uint_t n);
 
 
-static ngx_inline ngx_int_t
-ngx_array_init(ngx_array_t *array, ngx_pool_t *pool, ngx_uint_t n, size_t size)
+ساكن ngx_inline ngx_int_t
+ngx_array_init(ngx_array_t *array, ngx_pool_t *pool, ngx_uint_t n, اندازه_t اندازه)
 {
     /*
      * set "array->nelts" before "array->elts", otherwise MSVC thinks
@@ -37,17 +37,17 @@ ngx_array_init(ngx_array_t *array, ngx_pool_t *pool, ngx_uint_t n, size_t size)
      */
 
     array->nelts = 0;
-    array->size = size;
+    array->اندازه = اندازه;
     array->nalloc = n;
     array->pool = pool;
 
-    array->elts = ngx_palloc(pool, n * size);
-    if (array->elts == NULL) {
-        return NGX_ERROR;
+    array->elts = ngx_palloc(pool, n * اندازه);
+    إذا (array->elts == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
-#endif /* _NGX_ARRAY_H_INCLUDED_ */
+#پایان_اگر /* _NGX_ARRAY_H_INCLUDED_ */

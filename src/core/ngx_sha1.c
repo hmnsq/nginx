@@ -7,16 +7,16 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_sha1.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
+#ضمن <ngx_sha1.h>
 
 
-static const u_char *ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data,
-    size_t size);
+ساكن ثابت u_char *ngx_sha1_body(ngx_sha1_t *ctx, ثابت u_char *داده,
+    اندازه_t اندازه);
 
 
-void
+فراغ
 ngx_sha1_init(ngx_sha1_t *ctx)
 {
     ctx->a = 0x67452301;
@@ -25,95 +25,95 @@ ngx_sha1_init(ngx_sha1_t *ctx)
     ctx->d = 0x10325476;
     ctx->e = 0xc3d2e1f0;
 
-    ctx->bytes = 0;
+    ctx->بایتها = 0;
 }
 
 
-void
-ngx_sha1_update(ngx_sha1_t *ctx, const void *data, size_t size)
+فراغ
+ngx_sha1_update(ngx_sha1_t *ctx, ثابت فراغ *داده, اندازه_t اندازه)
 {
-    size_t  used, free;
+    اندازه_t  استفاده_شده, حرر;
 
-    used = (size_t) (ctx->bytes & 0x3f);
-    ctx->bytes += size;
+    استفاده_شده = (اندازه_t) (ctx->بایتها & 0x3f);
+    ctx->بایتها += اندازه;
 
-    if (used) {
-        free = 64 - used;
+    إذا (استفاده_شده) {
+        حرر = 64 - استفاده_شده;
 
-        if (size < free) {
-            ngx_memcpy(&ctx->buffer[used], data, size);
-            return;
+        إذا (اندازه < حرر) {
+            ngx_memcpy(&ctx->میانگیر[استفاده_شده], داده, اندازه);
+            أرجع;
         }
 
-        ngx_memcpy(&ctx->buffer[used], data, free);
-        data = (u_char *) data + free;
-        size -= free;
-        (void) ngx_sha1_body(ctx, ctx->buffer, 64);
+        ngx_memcpy(&ctx->میانگیر[استفاده_شده], داده, حرر);
+        داده = (u_char *) داده + حرر;
+        اندازه -= حرر;
+        (فراغ) ngx_sha1_body(ctx, ctx->میانگیر, 64);
     }
 
-    if (size >= 64) {
-        data = ngx_sha1_body(ctx, data, size & ~(size_t) 0x3f);
-        size &= 0x3f;
+    إذا (اندازه >= 64) {
+        داده = ngx_sha1_body(ctx, داده, اندازه & ~(اندازه_t) 0x3f);
+        اندازه &= 0x3f;
     }
 
-    ngx_memcpy(ctx->buffer, data, size);
+    ngx_memcpy(ctx->میانگیر, داده, اندازه);
 }
 
 
-void
-ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
+فراغ
+ngx_sha1_final(u_char نتیجه[20], ngx_sha1_t *ctx)
 {
-    size_t  used, free;
+    اندازه_t  استفاده_شده, حرر;
 
-    used = (size_t) (ctx->bytes & 0x3f);
+    استفاده_شده = (اندازه_t) (ctx->بایتها & 0x3f);
 
-    ctx->buffer[used++] = 0x80;
+    ctx->میانگیر[استفاده_شده++] = 0x80;
 
-    free = 64 - used;
+    حرر = 64 - استفاده_شده;
 
-    if (free < 8) {
-        ngx_memzero(&ctx->buffer[used], free);
-        (void) ngx_sha1_body(ctx, ctx->buffer, 64);
-        used = 0;
-        free = 64;
+    إذا (حرر < 8) {
+        ngx_memzero(&ctx->میانگیر[استفاده_شده], حرر);
+        (فراغ) ngx_sha1_body(ctx, ctx->میانگیر, 64);
+        استفاده_شده = 0;
+        حرر = 64;
     }
 
-    ngx_memzero(&ctx->buffer[used], free - 8);
+    ngx_memzero(&ctx->میانگیر[استفاده_شده], حرر - 8);
 
-    ctx->bytes <<= 3;
-    ctx->buffer[56] = (u_char) (ctx->bytes >> 56);
-    ctx->buffer[57] = (u_char) (ctx->bytes >> 48);
-    ctx->buffer[58] = (u_char) (ctx->bytes >> 40);
-    ctx->buffer[59] = (u_char) (ctx->bytes >> 32);
-    ctx->buffer[60] = (u_char) (ctx->bytes >> 24);
-    ctx->buffer[61] = (u_char) (ctx->bytes >> 16);
-    ctx->buffer[62] = (u_char) (ctx->bytes >> 8);
-    ctx->buffer[63] = (u_char) ctx->bytes;
+    ctx->بایتها <<= 3;
+    ctx->میانگیر[56] = (u_char) (ctx->بایتها >> 56);
+    ctx->میانگیر[57] = (u_char) (ctx->بایتها >> 48);
+    ctx->میانگیر[58] = (u_char) (ctx->بایتها >> 40);
+    ctx->میانگیر[59] = (u_char) (ctx->بایتها >> 32);
+    ctx->میانگیر[60] = (u_char) (ctx->بایتها >> 24);
+    ctx->میانگیر[61] = (u_char) (ctx->بایتها >> 16);
+    ctx->میانگیر[62] = (u_char) (ctx->بایتها >> 8);
+    ctx->میانگیر[63] = (u_char) ctx->بایتها;
 
-    (void) ngx_sha1_body(ctx, ctx->buffer, 64);
+    (فراغ) ngx_sha1_body(ctx, ctx->میانگیر, 64);
 
-    result[0] = (u_char) (ctx->a >> 24);
-    result[1] = (u_char) (ctx->a >> 16);
-    result[2] = (u_char) (ctx->a >> 8);
-    result[3] = (u_char) ctx->a;
-    result[4] = (u_char) (ctx->b >> 24);
-    result[5] = (u_char) (ctx->b >> 16);
-    result[6] = (u_char) (ctx->b >> 8);
-    result[7] = (u_char) ctx->b;
-    result[8] = (u_char) (ctx->c >> 24);
-    result[9] = (u_char) (ctx->c >> 16);
-    result[10] = (u_char) (ctx->c >> 8);
-    result[11] = (u_char) ctx->c;
-    result[12] = (u_char) (ctx->d >> 24);
-    result[13] = (u_char) (ctx->d >> 16);
-    result[14] = (u_char) (ctx->d >> 8);
-    result[15] = (u_char) ctx->d;
-    result[16] = (u_char) (ctx->e >> 24);
-    result[17] = (u_char) (ctx->e >> 16);
-    result[18] = (u_char) (ctx->e >> 8);
-    result[19] = (u_char) ctx->e;
+    نتیجه[0] = (u_char) (ctx->a >> 24);
+    نتیجه[1] = (u_char) (ctx->a >> 16);
+    نتیجه[2] = (u_char) (ctx->a >> 8);
+    نتیجه[3] = (u_char) ctx->a;
+    نتیجه[4] = (u_char) (ctx->b >> 24);
+    نتیجه[5] = (u_char) (ctx->b >> 16);
+    نتیجه[6] = (u_char) (ctx->b >> 8);
+    نتیجه[7] = (u_char) ctx->b;
+    نتیجه[8] = (u_char) (ctx->c >> 24);
+    نتیجه[9] = (u_char) (ctx->c >> 16);
+    نتیجه[10] = (u_char) (ctx->c >> 8);
+    نتیجه[11] = (u_char) ctx->c;
+    نتیجه[12] = (u_char) (ctx->d >> 24);
+    نتیجه[13] = (u_char) (ctx->d >> 16);
+    نتیجه[14] = (u_char) (ctx->d >> 8);
+    نتیجه[15] = (u_char) ctx->d;
+    نتیجه[16] = (u_char) (ctx->e >> 24);
+    نتیجه[17] = (u_char) (ctx->e >> 16);
+    نتیجه[18] = (u_char) (ctx->e >> 8);
+    نتیجه[19] = (u_char) ctx->e;
 
-    ngx_memzero(ctx, sizeof(*ctx));
+    ngx_memzero(ctx, حجم(*ctx));
 }
 
 
@@ -121,19 +121,19 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
  * Helper functions.
  */
 
-#define ROTATE(bits, word)  (((word) << (bits)) | ((word) >> (32 - (bits))))
+#تعریف_کن ROTATE(بیتها, کلمه)  (((کلمه) << (بیتها)) | ((کلمه) >> (32 - (بیتها))))
 
-#define F1(b, c, d)  (((b) & (c)) | ((~(b)) & (d)))
-#define F2(b, c, d)  ((b) ^ (c) ^ (d))
-#define F3(b, c, d)  (((b) & (c)) | ((b) & (d)) | ((c) & (d)))
+#تعریف_کن F1(b, c, d)  (((b) & (c)) | ((~(b)) & (d)))
+#تعریف_کن F2(b, c, d)  ((b) ^ (c) ^ (d))
+#تعریف_کن F3(b, c, d)  (((b) & (c)) | ((b) & (d)) | ((c) & (d)))
 
-#define STEP(f, a, b, c, d, e, w, t)                                          \
-    temp = ROTATE(5, (a)) + f((b), (c), (d)) + (e) + (w) + (t);               \
+#تعریف_کن گام(f, a, b, c, d, e, w, t)                                          \
+    موقت = ROTATE(5, (a)) + f((b), (c), (d)) + (e) + (w) + (t);               \
     (e) = (d);                                                                \
     (d) = (c);                                                                \
     (c) = ROTATE(30, (b));                                                    \
     (b) = (a);                                                                \
-    (a) = temp;
+    (a) = موقت;
 
 
 /*
@@ -141,7 +141,7 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
  * them as uint32_t.
  */
 
-#define GET(n)                                                                \
+#تعریف_کن GET(n)                                                                \
     ((uint32_t) p[n * 4 + 3] |                                                \
     ((uint32_t) p[n * 4 + 2] << 8) |                                          \
     ((uint32_t) p[n * 4 + 1] << 16) |                                         \
@@ -153,16 +153,16 @@ ngx_sha1_final(u_char result[20], ngx_sha1_t *ctx)
  * the bit counters.  There are no alignment requirements.
  */
 
-static const u_char *
-ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
+ساكن ثابت u_char *
+ngx_sha1_body(ngx_sha1_t *ctx, ثابت u_char *داده, اندازه_t اندازه)
 {
-    uint32_t       a, b, c, d, e, temp;
+    uint32_t       a, b, c, d, e, موقت;
     uint32_t       saved_a, saved_b, saved_c, saved_d, saved_e;
-    uint32_t       words[80];
+    uint32_t       واژگان[80];
     ngx_uint_t     i;
-    const u_char  *p;
+    ثابت u_char  *p;
 
-    p = data;
+    p = داده;
 
     a = ctx->a;
     b = ctx->b;
@@ -170,7 +170,7 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
     d = ctx->d;
     e = ctx->e;
 
-    do {
+    افعل {
         saved_a = a;
         saved_b = b;
         saved_c = c;
@@ -179,100 +179,100 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
 
         /* Load data block into the words array */
 
-        for (i = 0; i < 16; i++) {
-            words[i] = GET(i);
+        لكل (i = 0; i < 16; i++) {
+            واژگان[i] = GET(i);
         }
 
-        for (i = 16; i < 80; i++) {
-            words[i] = ROTATE(1, words[i - 3] ^ words[i - 8] ^ words[i - 14]
-                                 ^ words[i - 16]);
+        لكل (i = 16; i < 80; i++) {
+            واژگان[i] = ROTATE(1, واژگان[i - 3] ^ واژگان[i - 8] ^ واژگان[i - 14]
+                                 ^ واژگان[i - 16]);
         }
 
         /* Transformations */
 
-        STEP(F1, a, b, c, d, e, words[0],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[1],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[2],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[3],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[4],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[5],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[6],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[7],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[8],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[9],  0x5a827999);
-        STEP(F1, a, b, c, d, e, words[10], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[11], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[12], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[13], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[14], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[15], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[16], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[17], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[18], 0x5a827999);
-        STEP(F1, a, b, c, d, e, words[19], 0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[0],  0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[1],  0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[2],  0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[3],  0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[4],  0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[5],  0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[6],  0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[7],  0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[8],  0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[9],  0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[10], 0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[11], 0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[12], 0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[13], 0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[14], 0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[15], 0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[16], 0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[17], 0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[18], 0x5a827999);
+        گام(F1, a, b, c, d, e, واژگان[19], 0x5a827999);
 
-        STEP(F2, a, b, c, d, e, words[20], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[21], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[22], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[23], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[24], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[25], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[26], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[27], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[28], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[29], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[30], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[31], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[32], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[33], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[34], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[35], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[36], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[37], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[38], 0x6ed9eba1);
-        STEP(F2, a, b, c, d, e, words[39], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[20], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[21], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[22], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[23], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[24], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[25], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[26], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[27], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[28], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[29], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[30], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[31], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[32], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[33], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[34], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[35], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[36], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[37], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[38], 0x6ed9eba1);
+        گام(F2, a, b, c, d, e, واژگان[39], 0x6ed9eba1);
 
-        STEP(F3, a, b, c, d, e, words[40], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[41], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[42], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[43], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[44], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[45], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[46], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[47], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[48], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[49], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[50], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[51], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[52], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[53], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[54], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[55], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[56], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[57], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[58], 0x8f1bbcdc);
-        STEP(F3, a, b, c, d, e, words[59], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[40], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[41], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[42], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[43], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[44], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[45], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[46], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[47], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[48], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[49], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[50], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[51], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[52], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[53], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[54], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[55], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[56], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[57], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[58], 0x8f1bbcdc);
+        گام(F3, a, b, c, d, e, واژگان[59], 0x8f1bbcdc);
 
-        STEP(F2, a, b, c, d, e, words[60], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[61], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[62], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[63], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[64], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[65], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[66], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[67], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[68], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[69], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[70], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[71], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[72], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[73], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[74], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[75], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[76], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[77], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[78], 0xca62c1d6);
-        STEP(F2, a, b, c, d, e, words[79], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[60], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[61], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[62], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[63], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[64], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[65], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[66], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[67], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[68], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[69], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[70], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[71], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[72], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[73], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[74], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[75], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[76], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[77], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[78], 0xca62c1d6);
+        گام(F2, a, b, c, d, e, واژگان[79], 0xca62c1d6);
 
         a += saved_a;
         b += saved_b;
@@ -282,7 +282,7 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
 
         p += 64;
 
-    } while (size -= 64);
+    } طالما (اندازه -= 64);
 
     ctx->a = a;
     ctx->b = b;
@@ -290,5 +290,5 @@ ngx_sha1_body(ngx_sha1_t *ctx, const u_char *data, size_t size)
     ctx->d = d;
     ctx->e = e;
 
-    return p;
+    أرجع p;
 }

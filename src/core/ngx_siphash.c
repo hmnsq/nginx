@@ -4,8 +4,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 /*
@@ -15,25 +15,25 @@
  */
 
 
-#define ngx_siphash_rotl(x, b)                                                \
+#تعریف_کن ngx_siphash_rotl(x, b)                                                \
     (uint64_t) (((x) << (b)) | ((x) >> (64 - (b))))
 
-#define ngx_sipround                                                          \
-    do {                                                                      \
+#تعریف_کن ngx_sipround                                                          \
+    افعل {                                                                      \
         v0 += v1; v1 = ngx_siphash_rotl(v1, 13); v1 ^= v0;                    \
         v0 = ngx_siphash_rotl(v0, 32);                                        \
         v2 += v3; v3 = ngx_siphash_rotl(v3, 16); v3 ^= v2;                    \
         v0 += v3; v3 = ngx_siphash_rotl(v3, 21); v3 ^= v0;                    \
         v2 += v1; v1 = ngx_siphash_rotl(v1, 17); v1 ^= v2;                    \
         v2 = ngx_siphash_rotl(v2, 32);                                        \
-    } while (0)
+    } طالما (0)
 
 
 uint64_t
-ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
+ngx_siphash(uint64_t k0, uint64_t k1, u_char *داده, اندازه_t len)
 {
-    u_char    *end;
-    size_t     remainder;
+    u_char    *انتها;
+    اندازه_t     remainder;
     uint64_t   v0, v1, v2, v3, m;
 
     v0 = k0 ^ 0x736f6d6570736575ULL;
@@ -42,10 +42,10 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
     v3 = k1 ^ 0x7465646279746573ULL;
 
     remainder = len & 7;
-    end = data + len - remainder;
+    انتها = داده + len - remainder;
 
-    for ( /* void */ ; data != end; data += 8) {
-        ngx_memcpy(&m, data, 8);
+    لكل ( /* void */ ; داده != انتها; داده += 8) {
+        ngx_memcpy(&m, داده, 8);
         v3 ^= m;
         ngx_sipround;
         ngx_sipround;
@@ -54,30 +54,30 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
 
     m = (uint64_t) len << 56;
 
-    switch (remainder) {
-    case 7:
-        m |= (uint64_t) data[6] << 48;
+    بدل (remainder) {
+    حالة 7:
+        m |= (uint64_t) داده[6] << 48;
         /* fall through */
-    case 6:
-        m |= (uint64_t) data[5] << 40;
+    حالة 6:
+        m |= (uint64_t) داده[5] << 40;
         /* fall through */
-    case 5:
-        m |= (uint64_t) data[4] << 32;
+    حالة 5:
+        m |= (uint64_t) داده[4] << 32;
         /* fall through */
-    case 4:
-        m |= (uint64_t) data[3] << 24;
+    حالة 4:
+        m |= (uint64_t) داده[3] << 24;
         /* fall through */
-    case 3:
-        m |= (uint64_t) data[2] << 16;
+    حالة 3:
+        m |= (uint64_t) داده[2] << 16;
         /* fall through */
-    case 2:
-        m |= (uint64_t) data[1] << 8;
+    حالة 2:
+        m |= (uint64_t) داده[1] << 8;
         /* fall through */
-    case 1:
-        m |= (uint64_t) data[0];
-        break;
-    case 0:
-        break;
+    حالة 1:
+        m |= (uint64_t) داده[0];
+        اكسر;
+    حالة 0:
+        اكسر;
     }
 
     v3 ^= m;
@@ -91,5 +91,5 @@ ngx_siphash(uint64_t k0, uint64_t k1, u_char *data, size_t len)
     ngx_sipround;
     ngx_sipround;
 
-    return v0 ^ v1 ^ v2 ^ v3;
+    أرجع v0 ^ v1 ^ v2 ^ v3;
 }

@@ -4,22 +4,22 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 uint32_t
-ngx_murmur_hash2(u_char *data, size_t len)
+ngx_murmur_hash2(u_char *داده, اندازه_t len)
 {
     uint32_t  h, k;
 
     h = 0 ^ len;
 
-    while (len >= 4) {
-        k  = data[0];
-        k |= data[1] << 8;
-        k |= data[2] << 16;
-        k |= data[3] << 24;
+    طالما (len >= 4) {
+        k  = داده[0];
+        k |= داده[1] << 8;
+        k |= داده[2] << 16;
+        k |= داده[3] << 24;
 
         k *= 0x5bd1e995;
         k ^= k >> 24;
@@ -28,19 +28,19 @@ ngx_murmur_hash2(u_char *data, size_t len)
         h *= 0x5bd1e995;
         h ^= k;
 
-        data += 4;
+        داده += 4;
         len -= 4;
     }
 
-    switch (len) {
-    case 3:
-        h ^= data[2] << 16;
+    بدل (len) {
+    حالة 3:
+        h ^= داده[2] << 16;
         /* fall through */
-    case 2:
-        h ^= data[1] << 8;
+    حالة 2:
+        h ^= داده[1] << 8;
         /* fall through */
-    case 1:
-        h ^= data[0];
+    حالة 1:
+        h ^= داده[0];
         h *= 0x5bd1e995;
     }
 
@@ -48,5 +48,5 @@ ngx_murmur_hash2(u_char *data, size_t len)
     h *= 0x5bd1e995;
     h ^= h >> 15;
 
-    return h;
+    أرجع h;
 }

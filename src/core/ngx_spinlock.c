@@ -5,34 +5,34 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-void
-ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
+فراغ
+ngx_spinlock(ngx_atomic_t *قفل, ngx_atomic_int_t مقدار, ngx_uint_t spin)
 {
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#إذا (NGX_HAVE_ATOMIC_OPS)
 
     ngx_uint_t  i, n;
 
-    for ( ;; ) {
+    لكل ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-            return;
+        إذا (*قفل == 0 && ngx_atomic_cmp_مجموعه(قفل, 0, مقدار)) {
+            أرجع;
         }
 
-        if (ngx_ncpu > 1) {
+        إذا (ngx_ncpu > 1) {
 
-            for (n = 1; n < spin; n <<= 1) {
+            لكل (n = 1; n < spin; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                لكل (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-                    return;
+                إذا (*قفل == 0 && ngx_atomic_cmp_مجموعه(قفل, 0, مقدار)) {
+                    أرجع;
                 }
             }
         }
@@ -40,14 +40,14 @@ ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
         ngx_sched_yield();
     }
 
-#else
+#وإلا
 
-#if (NGX_THREADS)
+#إذا (NGX_نخها)
 
-#error ngx_spinlock() or ngx_atomic_cmp_set() are not defined !
+#خطا ngx_spinlock() or ngx_atomic_cmp_مجموعه() are not defined !
 
-#endif
+#پایان_اگر
 
-#endif
+#پایان_اگر
 
 }

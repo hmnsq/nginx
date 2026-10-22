@@ -5,253 +5,253 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-static ngx_int_t ngx_test_full_name(ngx_str_t *name);
+ساكن ngx_int_t ngx_test_پر_name(ngx_str_t *name);
 
 
-static ngx_atomic_t   temp_number = 0;
-ngx_atomic_t         *ngx_temp_number = &temp_number;
-ngx_atomic_int_t      ngx_random_number = 123456;
+ساكن ngx_atomic_t   موقت_عدد = 0;
+ngx_atomic_t         *ngx_موقت_عدد = &موقت_عدد;
+ngx_atomic_int_t      ngx_random_عدد = 123456;
 
 
 ngx_int_t
-ngx_get_full_name(ngx_pool_t *pool, ngx_str_t *prefix, ngx_str_t *name)
+ngx_get_پر_name(ngx_pool_t *pool, ngx_str_t *پیشوند, ngx_str_t *name)
 {
-    size_t      len;
+    اندازه_t      len;
     u_char     *p, *n;
     ngx_int_t   rc;
 
-    rc = ngx_test_full_name(name);
+    rc = ngx_test_پر_name(name);
 
-    if (rc == NGX_OK) {
-        return rc;
+    إذا (rc == NGX_OK) {
+        أرجع rc;
     }
 
-    len = prefix->len;
+    len = پیشوند->len;
 
-#if (NGX_WIN32)
+#إذا (NGX_WIN32)
 
-    if (rc == 2) {
+    إذا (rc == 2) {
         len = rc;
     }
 
-#endif
+#پایان_اگر
 
     n = ngx_pnalloc(pool, len + name->len + 1);
-    if (n == NULL) {
-        return NGX_ERROR;
+    إذا (n == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    p = ngx_cpymem(n, prefix->data, len);
-    ngx_cpystrn(p, name->data, name->len + 1);
+    p = ngx_cpymem(n, پیشوند->داده, len);
+    ngx_cpystrn(p, name->داده, name->len + 1);
 
     name->len += len;
-    name->data = n;
+    name->داده = n;
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
-static ngx_int_t
-ngx_test_full_name(ngx_str_t *name)
+ساكن ngx_int_t
+ngx_test_پر_name(ngx_str_t *name)
 {
-#if (NGX_WIN32)
+#إذا (NGX_WIN32)
     u_char  c0, c1;
 
-    c0 = name->data[0];
+    c0 = name->داده[0];
 
-    if (name->len < 2) {
-        if (c0 == '/') {
-            return 2;
+    إذا (name->len < 2) {
+        إذا (c0 == '/') {
+            أرجع 2;
         }
 
-        return NGX_DECLINED;
+        أرجع NGX_DECLINED;
     }
 
-    c1 = name->data[1];
+    c1 = name->داده[1];
 
-    if (c1 == ':') {
+    إذا (c1 == ':') {
         c0 |= 0x20;
 
-        if ((c0 >= 'a' && c0 <= 'z')) {
-            return NGX_OK;
+        إذا ((c0 >= 'a' && c0 <= 'z')) {
+            أرجع NGX_OK;
         }
 
-        return NGX_DECLINED;
+        أرجع NGX_DECLINED;
     }
 
-    if (c1 == '/') {
-        return NGX_OK;
+    إذا (c1 == '/') {
+        أرجع NGX_OK;
     }
 
-    if (c0 == '/') {
-        return 2;
+    إذا (c0 == '/') {
+        أرجع 2;
     }
 
-    return NGX_DECLINED;
+    أرجع NGX_DECLINED;
 
-#else
+#وإلا
 
-    if (name->data[0] == '/') {
-        return NGX_OK;
+    إذا (name->داده[0] == '/') {
+        أرجع NGX_OK;
     }
 
-    return NGX_DECLINED;
+    أرجع NGX_DECLINED;
 
-#endif
+#پایان_اگر
 }
 
 
 ssize_t
-ngx_write_chain_to_temp_file(ngx_temp_file_t *tf, ngx_chain_t *chain)
+ngx_write_chain_مقصد_موقت_file(ngx_موقت_file_t *tf, ngx_chain_t *chain)
 {
     ngx_int_t  rc;
 
-    if (tf->file.fd == NGX_INVALID_FILE) {
-        rc = ngx_create_temp_file(&tf->file, tf->path, tf->pool,
+    إذا (tf->file.fd == NGX_INVALID_FILE) {
+        rc = ngx_create_موقت_file(&tf->file, tf->مسیر, tf->pool,
                                   tf->persistent, tf->clean, tf->access);
 
-        if (rc != NGX_OK) {
-            return rc;
+        إذا (rc != NGX_OK) {
+            أرجع rc;
         }
 
-        if (tf->log_level) {
-            ngx_log_error(tf->log_level, tf->file.log, 0, "%s %V",
+        إذا (tf->log_level) {
+            ngx_log_error(tf->log_level, tf->file.لگاریتم, 0, "%s %V",
                           tf->warn, &tf->file.name);
         }
     }
 
-#if (NGX_THREADS && NGX_HAVE_PWRITEV)
+#إذا (NGX_نخها && NGX_HAVE_PWRITEV)
 
-    if (tf->thread_write) {
-        return ngx_thread_write_chain_to_file(&tf->file, chain, tf->offset,
+    إذا (tf->thread_write) {
+        أرجع ngx_thread_write_chain_مقصد_file(&tf->file, chain, tf->جابه_جایی,
                                               tf->pool);
     }
 
-#endif
+#پایان_اگر
 
-    return ngx_write_chain_to_file(&tf->file, chain, tf->offset, tf->pool);
+    أرجع ngx_write_chain_مقصد_file(&tf->file, chain, tf->جابه_جایی, tf->pool);
 }
 
 
 ngx_int_t
-ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
+ngx_create_موقت_file(ngx_file_t *file, ngx_مسیر_t *مسیر, ngx_pool_t *pool,
     ngx_uint_t persistent, ngx_uint_t clean, ngx_uint_t access)
 {
-    size_t                    levels;
+    اندازه_t                    سطوح;
     u_char                   *p;
     uint32_t                  n;
     ngx_err_t                 err;
     ngx_str_t                 name;
-    ngx_uint_t                prefix;
+    ngx_uint_t                پیشوند;
     ngx_pool_cleanup_t       *cln;
     ngx_pool_cleanup_file_t  *clnf;
 
-    if (file->name.len) {
+    إذا (file->name.len) {
         name = file->name;
-        levels = 0;
-        prefix = 1;
+        سطوح = 0;
+        پیشوند = 1;
 
-    } else {
-        name = path->name;
-        levels = path->len;
-        prefix = 0;
+    } وإلا {
+        name = مسیر->name;
+        سطوح = مسیر->len;
+        پیشوند = 0;
     }
 
-    file->name.len = name.len + 1 + levels + 10;
+    file->name.len = name.len + 1 + سطوح + 10;
 
-    file->name.data = ngx_pnalloc(pool, file->name.len + 1);
-    if (file->name.data == NULL) {
-        return NGX_ERROR;
+    file->name.داده = ngx_pnalloc(pool, file->name.len + 1);
+    إذا (file->name.داده == عدم) {
+        أرجع NGX_ERROR;
     }
 
-#if 0
-    for (i = 0; i < file->name.len; i++) {
-        file->name.data[i] = 'X';
+#إذا 0
+    لكل (i = 0; i < file->name.len; i++) {
+        file->name.داده[i] = 'X';
     }
-#endif
+#پایان_اگر
 
-    p = ngx_cpymem(file->name.data, name.data, name.len);
+    p = ngx_cpymem(file->name.داده, name.داده, name.len);
 
-    if (prefix) {
+    إذا (پیشوند) {
         *p = '.';
     }
 
-    p += 1 + levels;
+    p += 1 + سطوح;
 
-    n = (uint32_t) ngx_next_temp_number(0);
+    n = (uint32_t) ngx_بعدی_موقت_عدد(0);
 
-    cln = ngx_pool_cleanup_add(pool, sizeof(ngx_pool_cleanup_file_t));
-    if (cln == NULL) {
-        return NGX_ERROR;
+    cln = ngx_pool_cleanup_جمع_کن(pool, حجم(ngx_pool_cleanup_file_t));
+    إذا (cln == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    for ( ;; ) {
-        (void) ngx_sprintf(p, "%010uD%Z", n);
+    لكل ( ;; ) {
+        (فراغ) ngx_sprintf(p, "%010uD%Z", n);
 
-        if (!prefix) {
-            ngx_create_hashed_filename(path, file->name.data, file->name.len);
+        إذا (!پیشوند) {
+            ngx_create_hashed_filename(مسیر, file->name.داده, file->name.len);
         }
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, file->log, 0,
-                       "hashed path: %s", file->name.data);
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, file->لگاریتم, 0,
+                       "hashed path: %s", file->name.داده);
 
-        file->fd = ngx_open_tempfile(file->name.data, persistent, access);
+        file->fd = ngx_open_tempfile(file->name.داده, persistent, access);
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, file->log, 0,
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, file->لگاریتم, 0,
                        "temp fd:%d", file->fd);
 
-        if (file->fd != NGX_INVALID_FILE) {
+        إذا (file->fd != NGX_INVALID_FILE) {
 
             cln->handler = clean ? ngx_pool_delete_file : ngx_pool_cleanup_file;
-            clnf = cln->data;
+            clnf = cln->داده;
 
             clnf->fd = file->fd;
-            clnf->name = file->name.data;
-            clnf->log = pool->log;
+            clnf->name = file->name.داده;
+            clnf->لگاریتم = pool->لگاریتم;
 
-            return NGX_OK;
+            أرجع NGX_OK;
         }
 
         err = ngx_errno;
 
-        if (err == NGX_EEXIST_FILE) {
-            n = (uint32_t) ngx_next_temp_number(1);
-            continue;
+        إذا (err == NGX_EEXIST_FILE) {
+            n = (uint32_t) ngx_بعدی_موقت_عدد(1);
+            استمر;
         }
 
-        if ((path->level[0] == 0) || (err != NGX_ENOPATH)) {
-            ngx_log_error(NGX_LOG_CRIT, file->log, err,
+        إذا ((مسیر->level[0] == 0) || (err != NGX_ENOPATH)) {
+            ngx_log_error(NGX_LOG_CRIT, file->لگاریتم, err,
                           ngx_open_tempfile_n " \"%s\" failed",
-                          file->name.data);
-            return NGX_ERROR;
+                          file->name.داده);
+            أرجع NGX_ERROR;
         }
 
-        if (ngx_create_path(file, path) == NGX_ERROR) {
-            return NGX_ERROR;
+        إذا (ngx_create_مسیر(file, مسیر) == NGX_ERROR) {
+            أرجع NGX_ERROR;
         }
     }
 }
 
 
-void
-ngx_create_hashed_filename(ngx_path_t *path, u_char *file, size_t len)
+فراغ
+ngx_create_hashed_filename(ngx_مسیر_t *مسیر, u_char *file, اندازه_t len)
 {
-    size_t      i, level;
+    اندازه_t      i, level;
     ngx_uint_t  n;
 
-    i = path->name.len + 1;
+    i = مسیر->name.len + 1;
 
-    file[path->name.len + path->len]  = '/';
+    file[مسیر->name.len + مسیر->len]  = '/';
 
-    for (n = 0; n < NGX_MAX_PATH_LEVEL; n++) {
-        level = path->level[n];
+    لكل (n = 0; n < NGX_MAX_مسیر_LEVEL; n++) {
+        level = مسیر->level[n];
 
-        if (level == 0) {
-            break;
+        إذا (level == 0) {
+            اكسر;
         }
 
         len -= level;
@@ -263,505 +263,505 @@ ngx_create_hashed_filename(ngx_path_t *path, u_char *file, size_t len)
 
 
 ngx_int_t
-ngx_create_path(ngx_file_t *file, ngx_path_t *path)
+ngx_create_مسیر(ngx_file_t *file, ngx_مسیر_t *مسیر)
 {
-    size_t      pos;
+    اندازه_t      pos;
     ngx_err_t   err;
     ngx_uint_t  i;
 
-    pos = path->name.len;
+    pos = مسیر->name.len;
 
-    for (i = 0; i < NGX_MAX_PATH_LEVEL; i++) {
-        if (path->level[i] == 0) {
-            break;
+    لكل (i = 0; i < NGX_MAX_مسیر_LEVEL; i++) {
+        إذا (مسیر->level[i] == 0) {
+            اكسر;
         }
 
-        pos += path->level[i] + 1;
+        pos += مسیر->level[i] + 1;
 
-        file->name.data[pos] = '\0';
+        file->name.داده[pos] = '\0';
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, file->log, 0,
-                       "temp file: \"%s\"", file->name.data);
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, file->لگاریتم, 0,
+                       "temp file: \"%s\"", file->name.داده);
 
-        if (ngx_create_dir(file->name.data, 0700) == NGX_FILE_ERROR) {
+        إذا (ngx_create_dir(file->name.داده, 0700) == NGX_FILE_ERROR) {
             err = ngx_errno;
-            if (err != NGX_EEXIST) {
-                ngx_log_error(NGX_LOG_CRIT, file->log, err,
+            إذا (err != NGX_EEXIST) {
+                ngx_log_error(NGX_LOG_CRIT, file->لگاریتم, err,
                               ngx_create_dir_n " \"%s\" failed",
-                              file->name.data);
-                return NGX_ERROR;
+                              file->name.داده);
+                أرجع NGX_ERROR;
             }
         }
 
-        file->name.data[pos] = '/';
+        file->name.داده[pos] = '/';
     }
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
 ngx_err_t
-ngx_create_full_path(u_char *dir, ngx_uint_t access)
+ngx_create_پر_مسیر(u_char *dir, ngx_uint_t access)
 {
     u_char     *p, ch;
     ngx_err_t   err;
 
     err = 0;
 
-#if (NGX_WIN32)
+#إذا (NGX_WIN32)
     p = dir + 3;
-#else
+#وإلا
     p = dir + 1;
-#endif
+#پایان_اگر
 
-    for ( /* void */ ; *p; p++) {
+    لكل ( /* void */ ; *p; p++) {
         ch = *p;
 
-        if (ch != '/') {
-            continue;
+        إذا (ch != '/') {
+            استمر;
         }
 
         *p = '\0';
 
-        if (ngx_create_dir(dir, access) == NGX_FILE_ERROR) {
+        إذا (ngx_create_dir(dir, access) == NGX_FILE_ERROR) {
             err = ngx_errno;
 
-            switch (err) {
-            case NGX_EEXIST:
+            بدل (err) {
+            حالة NGX_EEXIST:
                 err = 0;
-            case NGX_EACCES:
-                break;
+            حالة NGX_EACCES:
+                اكسر;
 
-            default:
-                return err;
+            افتراضي:
+                أرجع err;
             }
         }
 
         *p = '/';
     }
 
-    return err;
+    أرجع err;
 }
 
 
 ngx_atomic_uint_t
-ngx_next_temp_number(ngx_uint_t collision)
+ngx_بعدی_موقت_عدد(ngx_uint_t collision)
 {
-    ngx_atomic_uint_t  n, add;
+    ngx_atomic_uint_t  n, جمع_کن;
 
-    add = collision ? ngx_random_number : 1;
+    جمع_کن = collision ? ngx_random_عدد : 1;
 
-    n = ngx_atomic_fetch_add(ngx_temp_number, add);
+    n = ngx_atomic_fetch_جمع_کن(ngx_موقت_عدد, جمع_کن);
 
-    return n + add;
+    أرجع n + جمع_کن;
 }
 
 
-char *
-ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_مجموعه_مسیر_جایگاه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *p = conf;
+    حرف  *p = conf;
 
     ssize_t      level;
-    ngx_str_t   *value;
+    ngx_str_t   *مقدار;
     ngx_uint_t   i, n;
-    ngx_path_t  *path, **slot;
+    ngx_مسیر_t  *مسیر, **جایگاه;
 
-    slot = (ngx_path_t **) (p + cmd->offset);
+    جایگاه = (ngx_مسیر_t **) (p + cmd->جابه_جایی);
 
-    if (*slot) {
-        return "is duplicate";
+    إذا (*جایگاه) {
+        أرجع "is duplicate";
     }
 
-    path = ngx_pcalloc(cf->pool, sizeof(ngx_path_t));
-    if (path == NULL) {
-        return NGX_CONF_ERROR;
+    مسیر = ngx_pcalloc(cf->pool, حجم(ngx_مسیر_t));
+    إذا (مسیر == عدم) {
+        أرجع NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
+    مقدار = cf->آرگومانها->elts;
 
-    path->name = value[1];
+    مسیر->name = مقدار[1];
 
-    if (path->name.data[path->name.len - 1] == '/') {
-        path->name.len--;
+    إذا (مسیر->name.داده[مسیر->name.len - 1] == '/') {
+        مسیر->name.len--;
     }
 
-    if (ngx_conf_full_name(cf->cycle, &path->name, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    إذا (ngx_conf_پر_name(cf->چرخه, &مسیر->name, 0) != NGX_OK) {
+        أرجع NGX_CONF_ERROR;
     }
 
-    path->conf_file = cf->conf_file->file.name.data;
-    path->line = cf->conf_file->line;
+    مسیر->conf_file = cf->conf_file->file.name.داده;
+    مسیر->سطر = cf->conf_file->سطر;
 
-    for (i = 0, n = 2; n < cf->args->nelts; i++, n++) {
-        level = ngx_atoi(value[n].data, value[n].len);
-        if (level == NGX_ERROR || level == 0) {
-            return "invalid value";
+    لكل (i = 0, n = 2; n < cf->آرگومانها->nelts; i++, n++) {
+        level = ngx_atoi(مقدار[n].داده, مقدار[n].len);
+        إذا (level == NGX_ERROR || level == 0) {
+            أرجع "invalid value";
         }
 
-        path->level[i] = level;
-        path->len += level + 1;
+        مسیر->level[i] = level;
+        مسیر->len += level + 1;
     }
 
-    if (path->len > 10 + i) {
-        return "invalid value";
+    إذا (مسیر->len > 10 + i) {
+        أرجع "invalid value";
     }
 
-    *slot = path;
+    *جایگاه = مسیر;
 
-    if (ngx_add_path(cf, slot) == NGX_ERROR) {
-        return NGX_CONF_ERROR;
+    إذا (ngx_جمع_کن_مسیر(cf, جایگاه) == NGX_ERROR) {
+        أرجع NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_merge_path_value(ngx_conf_t *cf, ngx_path_t **path, ngx_path_t *prev,
-    ngx_path_init_t *init)
+حرف *
+ngx_conf_ادغام_مسیر_مقدار(ngx_conf_t *cf, ngx_مسیر_t **مسیر, ngx_مسیر_t *prev,
+    ngx_مسیر_init_t *init)
 {
     ngx_uint_t  i;
 
-    if (*path) {
-        return NGX_CONF_OK;
+    إذا (*مسیر) {
+        أرجع NGX_CONF_OK;
     }
 
-    if (prev) {
-        *path = prev;
-        return NGX_CONF_OK;
+    إذا (prev) {
+        *مسیر = prev;
+        أرجع NGX_CONF_OK;
     }
 
-    *path = ngx_pcalloc(cf->pool, sizeof(ngx_path_t));
-    if (*path == NULL) {
-        return NGX_CONF_ERROR;
+    *مسیر = ngx_pcalloc(cf->pool, حجم(ngx_مسیر_t));
+    إذا (*مسیر == عدم) {
+        أرجع NGX_CONF_ERROR;
     }
 
-    (*path)->name = init->name;
+    (*مسیر)->name = init->name;
 
-    if (ngx_conf_full_name(cf->cycle, &(*path)->name, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    إذا (ngx_conf_پر_name(cf->چرخه, &(*مسیر)->name, 0) != NGX_OK) {
+        أرجع NGX_CONF_ERROR;
     }
 
-    for (i = 0; i < NGX_MAX_PATH_LEVEL; i++) {
-        (*path)->level[i] = init->level[i];
-        (*path)->len += init->level[i] + (init->level[i] ? 1 : 0);
+    لكل (i = 0; i < NGX_MAX_مسیر_LEVEL; i++) {
+        (*مسیر)->level[i] = init->level[i];
+        (*مسیر)->len += init->level[i] + (init->level[i] ? 1 : 0);
     }
 
-    if (ngx_add_path(cf, path) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    إذا (ngx_جمع_کن_مسیر(cf, مسیر) != NGX_OK) {
+        أرجع NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+حرف *
+ngx_conf_مجموعه_access_جایگاه(ngx_conf_t *cf, ngx_command_t *cmd, فراغ *conf)
 {
-    char  *confp = conf;
+    حرف  *confp = conf;
 
     u_char      *p;
-    ngx_str_t   *value;
-    ngx_uint_t   i, right, shift, *access, user;
+    ngx_str_t   *مقدار;
+    ngx_uint_t   i, راست, لغزش, *access, user;
 
-    access = (ngx_uint_t *) (confp + cmd->offset);
+    access = (ngx_uint_t *) (confp + cmd->جابه_جایی);
 
-    if (*access != NGX_CONF_UNSET_UINT) {
-        return "is duplicate";
+    إذا (*access != NGX_CONF_UNSET_UINT) {
+        أرجع "is duplicate";
     }
 
-    value = cf->args->elts;
+    مقدار = cf->آرگومانها->elts;
 
     *access = 0;
     user = 0600;
 
-    for (i = 1; i < cf->args->nelts; i++) {
+    لكل (i = 1; i < cf->آرگومانها->nelts; i++) {
 
-        p = value[i].data;
+        p = مقدار[i].داده;
 
-        if (ngx_strncmp(p, "user:", sizeof("user:") - 1) == 0) {
-            shift = 6;
-            p += sizeof("user:") - 1;
+        إذا (ngx_strncmp(p, "user:", حجم("user:") - 1) == 0) {
+            لغزش = 6;
+            p += حجم("user:") - 1;
             user = 0;
 
-        } else if (ngx_strncmp(p, "group:", sizeof("group:") - 1) == 0) {
-            shift = 3;
-            p += sizeof("group:") - 1;
+        } وإلا إذا (ngx_strncmp(p, "group:", حجم("group:") - 1) == 0) {
+            لغزش = 3;
+            p += حجم("group:") - 1;
 
-        } else if (ngx_strncmp(p, "all:", sizeof("all:") - 1) == 0) {
-            shift = 0;
-            p += sizeof("all:") - 1;
+        } وإلا إذا (ngx_strncmp(p, "all:", حجم("all:") - 1) == 0) {
+            لغزش = 0;
+            p += حجم("all:") - 1;
 
-        } else {
-            goto invalid;
+        } وإلا {
+            اذهب invalid;
         }
 
-        if (ngx_strcmp(p, "rw") == 0) {
-            right = 6;
+        إذا (ngx_strcmp(p, "rw") == 0) {
+            راست = 6;
 
-        } else if (ngx_strcmp(p, "r") == 0) {
-            right = 4;
+        } وإلا إذا (ngx_strcmp(p, "r") == 0) {
+            راست = 4;
 
-        } else {
-            goto invalid;
+        } وإلا {
+            اذهب invalid;
         }
 
-        *access |= right << shift;
+        *access |= راست << لغزش;
     }
 
     *access |= user;
 
-    return NGX_CONF_OK;
+    أرجع NGX_CONF_OK;
 
 invalid:
 
-    ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "invalid value \"%V\"", &value[i]);
+    ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "invalid value \"%V\"", &مقدار[i]);
 
-    return NGX_CONF_ERROR;
+    أرجع NGX_CONF_ERROR;
 }
 
 
 ngx_int_t
-ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot)
+ngx_جمع_کن_مسیر(ngx_conf_t *cf, ngx_مسیر_t **جایگاه)
 {
     ngx_uint_t   i, n;
-    ngx_path_t  *path, **p;
+    ngx_مسیر_t  *مسیر, **p;
 
-    path = *slot;
+    مسیر = *جایگاه;
 
-    p = cf->cycle->paths.elts;
-    for (i = 0; i < cf->cycle->paths.nelts; i++) {
-        if (p[i]->name.len == path->name.len
-            && ngx_strcmp(p[i]->name.data, path->name.data) == 0)
+    p = cf->چرخه->paths.elts;
+    لكل (i = 0; i < cf->چرخه->paths.nelts; i++) {
+        إذا (p[i]->name.len == مسیر->name.len
+            && ngx_strcmp(p[i]->name.داده, مسیر->name.داده) == 0)
         {
-            if (p[i]->data != path->data) {
+            إذا (p[i]->داده != مسیر->داده) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "the same path name \"%V\" "
                                    "used in %s:%ui and",
-                                   &p[i]->name, p[i]->conf_file, p[i]->line);
-                return NGX_ERROR;
+                                   &p[i]->name, p[i]->conf_file, p[i]->سطر);
+                أرجع NGX_ERROR;
             }
 
-            for (n = 0; n < NGX_MAX_PATH_LEVEL; n++) {
-                if (p[i]->level[n] != path->level[n]) {
-                    if (path->conf_file == NULL) {
-                        if (p[i]->conf_file == NULL) {
-                            ngx_log_error(NGX_LOG_EMERG, cf->log, 0,
+            لكل (n = 0; n < NGX_MAX_مسیر_LEVEL; n++) {
+                إذا (p[i]->level[n] != مسیر->level[n]) {
+                    إذا (مسیر->conf_file == عدم) {
+                        إذا (p[i]->conf_file == عدم) {
+                            ngx_log_error(NGX_LOG_EMERG, cf->لگاریتم, 0,
                                       "the default path name \"%V\" has "
                                       "the same name as another default path, "
                                       "but the different levels, you need to "
                                       "redefine one of them in http section",
                                       &p[i]->name);
-                            return NGX_ERROR;
+                            أرجع NGX_ERROR;
                         }
 
-                        ngx_log_error(NGX_LOG_EMERG, cf->log, 0,
+                        ngx_log_error(NGX_LOG_EMERG, cf->لگاریتم, 0,
                                       "the path name \"%V\" in %s:%ui has "
                                       "the same name as default path, but "
                                       "the different levels, you need to "
                                       "define default path in http section",
-                                      &p[i]->name, p[i]->conf_file, p[i]->line);
-                        return NGX_ERROR;
+                                      &p[i]->name, p[i]->conf_file, p[i]->سطر);
+                        أرجع NGX_ERROR;
                     }
 
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                       "the same path name \"%V\" in %s:%ui "
                                       "has the different levels than",
-                                      &p[i]->name, p[i]->conf_file, p[i]->line);
-                    return NGX_ERROR;
+                                      &p[i]->name, p[i]->conf_file, p[i]->سطر);
+                    أرجع NGX_ERROR;
                 }
 
-                if (p[i]->level[n] == 0) {
-                    break;
+                إذا (p[i]->level[n] == 0) {
+                    اكسر;
                 }
             }
 
-            *slot = p[i];
+            *جایگاه = p[i];
 
-            return NGX_OK;
+            أرجع NGX_OK;
         }
     }
 
-    p = ngx_array_push(&cf->cycle->paths);
-    if (p == NULL) {
-        return NGX_ERROR;
+    p = ngx_array_افزودن(&cf->چرخه->paths);
+    إذا (p == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    *p = path;
+    *p = مسیر;
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
 ngx_int_t
-ngx_create_paths(ngx_cycle_t *cycle, ngx_uid_t user)
+ngx_create_paths(ngx_چرخه_t *چرخه, ngx_uid_t user)
 {
     ngx_err_t         err;
     ngx_uint_t        i;
-    ngx_path_t      **path;
+    ngx_مسیر_t      **مسیر;
 
-    path = cycle->paths.elts;
-    for (i = 0; i < cycle->paths.nelts; i++) {
+    مسیر = چرخه->paths.elts;
+    لكل (i = 0; i < چرخه->paths.nelts; i++) {
 
-        if (ngx_create_dir(path[i]->name.data, 0700) == NGX_FILE_ERROR) {
+        إذا (ngx_create_dir(مسیر[i]->name.داده, 0700) == NGX_FILE_ERROR) {
             err = ngx_errno;
-            if (err != NGX_EEXIST) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, err,
+            إذا (err != NGX_EEXIST) {
+                ngx_log_error(NGX_LOG_EMERG, چرخه->لگاریتم, err,
                               ngx_create_dir_n " \"%s\" failed",
-                              path[i]->name.data);
-                return NGX_ERROR;
+                              مسیر[i]->name.داده);
+                أرجع NGX_ERROR;
             }
         }
 
-        if (user == (ngx_uid_t) NGX_CONF_UNSET_UINT) {
-            continue;
+        إذا (user == (ngx_uid_t) NGX_CONF_UNSET_UINT) {
+            استمر;
         }
 
-#if !(NGX_WIN32)
+#إذا !(NGX_WIN32)
         {
         ngx_file_info_t   fi;
 
-        if (ngx_file_info(path[i]->name.data, &fi) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
-                          ngx_file_info_n " \"%s\" failed", path[i]->name.data);
-            return NGX_ERROR;
+        إذا (ngx_file_info(مسیر[i]->name.داده, &fi) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_EMERG, چرخه->لگاریتم, ngx_errno,
+                          ngx_file_info_n " \"%s\" failed", مسیر[i]->name.داده);
+            أرجع NGX_ERROR;
         }
 
-        if (fi.st_uid != user) {
-            if (chown((const char *) path[i]->name.data, user, -1) == -1) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+        إذا (fi.st_uid != user) {
+            إذا (chown((ثابت حرف *) مسیر[i]->name.داده, user, -1) == -1) {
+                ngx_log_error(NGX_LOG_EMERG, چرخه->لگاریتم, ngx_errno,
                               "chown(\"%s\", %d) failed",
-                              path[i]->name.data, user);
-                return NGX_ERROR;
+                              مسیر[i]->name.داده, user);
+                أرجع NGX_ERROR;
             }
         }
 
-        if ((fi.st_mode & (S_IRUSR|S_IWUSR|S_IXUSR))
+        إذا ((fi.st_نما & (S_IRUSR|S_IWUSR|S_IXUSR))
                                                   != (S_IRUSR|S_IWUSR|S_IXUSR))
         {
-            fi.st_mode |= (S_IRUSR|S_IWUSR|S_IXUSR);
+            fi.st_نما |= (S_IRUSR|S_IWUSR|S_IXUSR);
 
-            if (chmod((const char *) path[i]->name.data, fi.st_mode) == -1) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
-                              "chmod() \"%s\" failed", path[i]->name.data);
-                return NGX_ERROR;
+            إذا (chmod((ثابت حرف *) مسیر[i]->name.داده, fi.st_نما) == -1) {
+                ngx_log_error(NGX_LOG_EMERG, چرخه->لگاریتم, ngx_errno,
+                              "chmod() \"%s\" failed", مسیر[i]->name.داده);
+                أرجع NGX_ERROR;
             }
         }
         }
-#endif
+#پایان_اگر
     }
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
 ngx_int_t
-ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to, ngx_ext_rename_file_t *ext)
+ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *مقصد, ngx_ext_rename_file_t *ext)
 {
     u_char           *name;
     ngx_err_t         err;
     ngx_copy_file_t   cf;
 
-#if !(NGX_WIN32)
+#إذا !(NGX_WIN32)
 
-    if (ext->access) {
-        if (ngx_change_file_access(src->data, ext->access) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
-                          ngx_change_file_access_n " \"%s\" failed", src->data);
+    إذا (ext->access) {
+        إذا (ngx_change_file_access(src->داده, ext->access) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_CRIT, ext->لگاریتم, ngx_errno,
+                          ngx_change_file_access_n " \"%s\" failed", src->داده);
             err = 0;
-            goto failed;
+            اذهب failed;
         }
     }
 
-#endif
+#پایان_اگر
 
-    if (ext->time != -1) {
-        if (ngx_set_file_time(src->data, ext->fd, ext->time) != NGX_OK) {
-            ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
-                          ngx_set_file_time_n " \"%s\" failed", src->data);
+    إذا (ext->زمان != -1) {
+        إذا (ngx_مجموعه_file_زمان(src->داده, ext->fd, ext->زمان) != NGX_OK) {
+            ngx_log_error(NGX_LOG_CRIT, ext->لگاریتم, ngx_errno,
+                          ngx_مجموعه_file_زمان_n " \"%s\" failed", src->داده);
             err = 0;
-            goto failed;
+            اذهب failed;
         }
     }
 
-    if (ngx_rename_file(src->data, to->data) != NGX_FILE_ERROR) {
-        return NGX_OK;
+    إذا (ngx_rename_file(src->داده, مقصد->داده) != NGX_FILE_ERROR) {
+        أرجع NGX_OK;
     }
 
     err = ngx_errno;
 
-    if (err == NGX_ENOPATH) {
+    إذا (err == NGX_ENOPATH) {
 
-        if (!ext->create_path) {
-            goto failed;
+        إذا (!ext->create_مسیر) {
+            اذهب failed;
         }
 
-        err = ngx_create_full_path(to->data, ngx_dir_access(ext->path_access));
+        err = ngx_create_پر_مسیر(مقصد->داده, ngx_dir_access(ext->مسیر_access));
 
-        if (err) {
-            ngx_log_error(NGX_LOG_CRIT, ext->log, err,
-                          ngx_create_dir_n " \"%s\" failed", to->data);
+        إذا (err) {
+            ngx_log_error(NGX_LOG_CRIT, ext->لگاریتم, err,
+                          ngx_create_dir_n " \"%s\" failed", مقصد->داده);
             err = 0;
-            goto failed;
+            اذهب failed;
         }
 
-        if (ngx_rename_file(src->data, to->data) != NGX_FILE_ERROR) {
-            return NGX_OK;
+        إذا (ngx_rename_file(src->داده, مقصد->داده) != NGX_FILE_ERROR) {
+            أرجع NGX_OK;
         }
 
         err = ngx_errno;
     }
 
-#if (NGX_WIN32)
+#إذا (NGX_WIN32)
 
-    if (err == NGX_EEXIST || err == NGX_EEXIST_FILE) {
-        err = ngx_win32_rename_file(src, to, ext->log);
+    إذا (err == NGX_EEXIST || err == NGX_EEXIST_FILE) {
+        err = ngx_win32_rename_file(src, مقصد, ext->لگاریتم);
 
-        if (err == 0) {
-            return NGX_OK;
+        إذا (err == 0) {
+            أرجع NGX_OK;
         }
     }
 
-#endif
+#پایان_اگر
 
-    if (err == NGX_EXDEV) {
+    إذا (err == NGX_EXDEV) {
 
-        cf.size = -1;
-        cf.buf_size = 0;
+        cf.اندازه = -1;
+        cf.buf_اندازه = 0;
         cf.access = ext->access;
-        cf.time = ext->time;
-        cf.log = ext->log;
+        cf.زمان = ext->زمان;
+        cf.لگاریتم = ext->لگاریتم;
 
-        name = ngx_alloc(to->len + 1 + 10 + 1, ext->log);
-        if (name == NULL) {
-            return NGX_ERROR;
+        name = ngx_alloc(مقصد->len + 1 + 10 + 1, ext->لگاریتم);
+        إذا (name == عدم) {
+            أرجع NGX_ERROR;
         }
 
-        (void) ngx_sprintf(name, "%*s.%010uD%Z", to->len, to->data,
-                           (uint32_t) ngx_next_temp_number(0));
+        (فراغ) ngx_sprintf(name, "%*s.%010uD%Z", مقصد->len, مقصد->داده,
+                           (uint32_t) ngx_بعدی_موقت_عدد(0));
 
-        if (ngx_copy_file(src->data, name, &cf) == NGX_OK) {
+        إذا (ngx_copy_file(src->داده, name, &cf) == NGX_OK) {
 
-            if (ngx_rename_file(name, to->data) != NGX_FILE_ERROR) {
+            إذا (ngx_rename_file(name, مقصد->داده) != NGX_FILE_ERROR) {
                 ngx_free(name);
 
-                if (ngx_delete_file(src->data) == NGX_FILE_ERROR) {
-                    ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
+                إذا (ngx_delete_file(src->داده) == NGX_FILE_ERROR) {
+                    ngx_log_error(NGX_LOG_CRIT, ext->لگاریتم, ngx_errno,
                                   ngx_delete_file_n " \"%s\" failed",
-                                  src->data);
-                    return NGX_ERROR;
+                                  src->داده);
+                    أرجع NGX_ERROR;
                 }
 
-                return NGX_OK;
+                أرجع NGX_OK;
             }
 
-            ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
+            ngx_log_error(NGX_LOG_CRIT, ext->لگاریتم, ngx_errno,
                           ngx_rename_file_n " \"%s\" to \"%s\" failed",
-                          name, to->data);
+                          name, مقصد->داده);
 
-            if (ngx_delete_file(name) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
+            إذا (ngx_delete_file(name) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_CRIT, ext->لگاریتم, ngx_errno,
                               ngx_delete_file_n " \"%s\" failed", name);
 
             }
@@ -774,30 +774,30 @@ ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to, ngx_ext_rename_file_t *ext)
 
 failed:
 
-    if (ext->delete_file) {
-        if (ngx_delete_file(src->data) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
-                          ngx_delete_file_n " \"%s\" failed", src->data);
+    إذا (ext->delete_file) {
+        إذا (ngx_delete_file(src->داده) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_CRIT, ext->لگاریتم, ngx_errno,
+                          ngx_delete_file_n " \"%s\" failed", src->داده);
         }
     }
 
-    if (err) {
-        ngx_log_error(NGX_LOG_CRIT, ext->log, err,
+    إذا (err) {
+        ngx_log_error(NGX_LOG_CRIT, ext->لگاریتم, err,
                       ngx_rename_file_n " \"%s\" to \"%s\" failed",
-                      src->data, to->data);
+                      src->داده, مقصد->داده);
     }
 
-    return NGX_ERROR;
+    أرجع NGX_ERROR;
 }
 
 
 ngx_int_t
-ngx_copy_file(u_char *from, u_char *to, ngx_copy_file_t *cf)
+ngx_copy_file(u_char *from, u_char *مقصد, ngx_copy_file_t *cf)
 {
-    char             *buf;
-    off_t             size;
-    time_t            time;
-    size_t            len;
+    حرف             *buf;
+    off_t             اندازه;
+    زمان_t            زمان;
+    اندازه_t            len;
     ssize_t           n;
     ngx_fd_t          fd, nfd;
     ngx_int_t         rc;
@@ -805,122 +805,122 @@ ngx_copy_file(u_char *from, u_char *to, ngx_copy_file_t *cf)
     ngx_file_info_t   fi;
 
     rc = NGX_ERROR;
-    buf = NULL;
+    buf = عدم;
     nfd = NGX_INVALID_FILE;
 
     fd = ngx_open_file(from, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0);
 
-    if (fd == NGX_INVALID_FILE) {
-        ngx_log_error(NGX_LOG_CRIT, cf->log, ngx_errno,
+    إذا (fd == NGX_INVALID_FILE) {
+        ngx_log_error(NGX_LOG_CRIT, cf->لگاریتم, ngx_errno,
                       ngx_open_file_n " \"%s\" failed", from);
-        goto failed;
+        اذهب failed;
     }
 
-    if (cf->size != -1 && cf->access != 0 && cf->time != -1) {
-        size = cf->size;
+    إذا (cf->اندازه != -1 && cf->access != 0 && cf->زمان != -1) {
+        اندازه = cf->اندازه;
         access = cf->access;
-        time = cf->time;
+        زمان = cf->زمان;
 
-    } else {
-        if (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
+    } وإلا {
+        إذا (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, cf->لگاریتم, ngx_errno,
                           ngx_fd_info_n " \"%s\" failed", from);
 
-            goto failed;
+            اذهب failed;
         }
 
-        size = (cf->size != -1) ? cf->size : ngx_file_size(&fi);
+        اندازه = (cf->اندازه != -1) ? cf->اندازه : ngx_file_اندازه(&fi);
         access = cf->access ? cf->access : ngx_file_access(&fi);
-        time = (cf->time != -1) ? cf->time : ngx_file_mtime(&fi);
+        زمان = (cf->زمان != -1) ? cf->زمان : ngx_file_mtime(&fi);
     }
 
-    len = cf->buf_size ? cf->buf_size : 65536;
+    len = cf->buf_اندازه ? cf->buf_اندازه : 65536;
 
-    if ((off_t) len > size) {
-        len = (size_t) size;
+    إذا ((off_t) len > اندازه) {
+        len = (اندازه_t) اندازه;
     }
 
-    buf = ngx_alloc(len, cf->log);
-    if (buf == NULL) {
-        goto failed;
+    buf = ngx_alloc(len, cf->لگاریتم);
+    إذا (buf == عدم) {
+        اذهب failed;
     }
 
-    nfd = ngx_open_file(to, NGX_FILE_WRONLY, NGX_FILE_TRUNCATE, access);
+    nfd = ngx_open_file(مقصد, NGX_FILE_WRONLY, NGX_FILE_TRUNCATE, access);
 
-    if (nfd == NGX_INVALID_FILE) {
-        ngx_log_error(NGX_LOG_CRIT, cf->log, ngx_errno,
-                      ngx_open_file_n " \"%s\" failed", to);
-        goto failed;
+    إذا (nfd == NGX_INVALID_FILE) {
+        ngx_log_error(NGX_LOG_CRIT, cf->لگاریتم, ngx_errno,
+                      ngx_open_file_n " \"%s\" failed", مقصد);
+        اذهب failed;
     }
 
-    while (size > 0) {
+    طالما (اندازه > 0) {
 
-        if ((off_t) len > size) {
-            len = (size_t) size;
+        إذا ((off_t) len > اندازه) {
+            len = (اندازه_t) اندازه;
         }
 
         n = ngx_read_fd(fd, buf, len);
 
-        if (n == -1) {
-            ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
+        إذا (n == -1) {
+            ngx_log_error(NGX_LOG_ALERT, cf->لگاریتم, ngx_errno,
                           ngx_read_fd_n " \"%s\" failed", from);
-            goto failed;
+            اذهب failed;
         }
 
-        if ((size_t) n != len) {
-            ngx_log_error(NGX_LOG_ALERT, cf->log, 0,
+        إذا ((اندازه_t) n != len) {
+            ngx_log_error(NGX_LOG_ALERT, cf->لگاریتم, 0,
                           ngx_read_fd_n " has read only %z of %O from %s",
-                          n, size, from);
-            goto failed;
+                          n, اندازه, from);
+            اذهب failed;
         }
 
         n = ngx_write_fd(nfd, buf, len);
 
-        if (n == -1) {
-            ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
-                          ngx_write_fd_n " \"%s\" failed", to);
-            goto failed;
+        إذا (n == -1) {
+            ngx_log_error(NGX_LOG_ALERT, cf->لگاریتم, ngx_errno,
+                          ngx_write_fd_n " \"%s\" failed", مقصد);
+            اذهب failed;
         }
 
-        if ((size_t) n != len) {
-            ngx_log_error(NGX_LOG_ALERT, cf->log, 0,
+        إذا ((اندازه_t) n != len) {
+            ngx_log_error(NGX_LOG_ALERT, cf->لگاریتم, 0,
                           ngx_write_fd_n " has written only %z of %O to %s",
-                          n, size, to);
-            goto failed;
+                          n, اندازه, مقصد);
+            اذهب failed;
         }
 
-        size -= n;
+        اندازه -= n;
     }
 
-    if (ngx_set_file_time(to, nfd, time) != NGX_OK) {
-        ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
-                      ngx_set_file_time_n " \"%s\" failed", to);
-        goto failed;
+    إذا (ngx_مجموعه_file_زمان(مقصد, nfd, زمان) != NGX_OK) {
+        ngx_log_error(NGX_LOG_ALERT, cf->لگاریتم, ngx_errno,
+                      ngx_مجموعه_file_زمان_n " \"%s\" failed", مقصد);
+        اذهب failed;
     }
 
     rc = NGX_OK;
 
 failed:
 
-    if (nfd != NGX_INVALID_FILE) {
-        if (ngx_close_file(nfd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
-                          ngx_close_file_n " \"%s\" failed", to);
+    إذا (nfd != NGX_INVALID_FILE) {
+        إذا (ngx_close_file(nfd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, cf->لگاریتم, ngx_errno,
+                          ngx_close_file_n " \"%s\" failed", مقصد);
         }
     }
 
-    if (fd != NGX_INVALID_FILE) {
-        if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
+    إذا (fd != NGX_INVALID_FILE) {
+        إذا (ngx_close_file(fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, cf->لگاریتم, ngx_errno,
                           ngx_close_file_n " \"%s\" failed", from);
         }
     }
 
-    if (buf) {
+    إذا (buf) {
         ngx_free(buf);
     }
 
-    return rc;
+    أرجع rc;
 }
 
 
@@ -943,11 +943,11 @@ failed:
  */
 
 ngx_int_t
-ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
+ngx_walk_درخت(ngx_درخت_ctx_t *ctx, ngx_str_t *درخت)
 {
-    void       *data, *prev;
+    فراغ       *داده, *prev;
     u_char     *p, *name;
-    size_t      len;
+    اندازه_t      len;
     ngx_int_t   rc;
     ngx_err_t   err;
     ngx_str_t   file, buf;
@@ -955,151 +955,151 @@ ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
 
     ngx_str_null(&buf);
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                   "walk tree \"%V\"", tree);
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->لگاریتم, 0,
+                   "walk tree \"%V\"", درخت);
 
-    if (ngx_open_dir(tree, &dir) == NGX_ERROR) {
-        ngx_log_error(NGX_LOG_CRIT, ctx->log, ngx_errno,
-                      ngx_open_dir_n " \"%s\" failed", tree->data);
-        return NGX_ERROR;
+    إذا (ngx_open_dir(درخت, &dir) == NGX_ERROR) {
+        ngx_log_error(NGX_LOG_CRIT, ctx->لگاریتم, ngx_errno,
+                      ngx_open_dir_n " \"%s\" failed", درخت->داده);
+        أرجع NGX_ERROR;
     }
 
-    prev = ctx->data;
+    prev = ctx->داده;
 
-    if (ctx->alloc) {
-        data = ngx_alloc(ctx->alloc, ctx->log);
-        if (data == NULL) {
-            goto failed;
+    إذا (ctx->alloc) {
+        داده = ngx_alloc(ctx->alloc, ctx->لگاریتم);
+        إذا (داده == عدم) {
+            اذهب failed;
         }
 
-        if (ctx->init_handler(data, prev) == NGX_ABORT) {
-            goto failed;
+        إذا (ctx->init_handler(داده, prev) == NGX_ABORT) {
+            اذهب failed;
         }
 
-        ctx->data = data;
+        ctx->داده = داده;
 
-    } else {
-        data = NULL;
+    } وإلا {
+        داده = عدم;
     }
 
-    for ( ;; ) {
+    لكل ( ;; ) {
 
-        ngx_set_errno(0);
+        ngx_مجموعه_errno(0);
 
-        if (ngx_read_dir(&dir) == NGX_ERROR) {
+        إذا (ngx_read_dir(&dir) == NGX_ERROR) {
             err = ngx_errno;
 
-            if (err == NGX_ENOMOREFILES) {
+            إذا (err == NGX_ENOMOREFILES) {
                 rc = NGX_OK;
 
-            } else {
-                ngx_log_error(NGX_LOG_CRIT, ctx->log, err,
-                              ngx_read_dir_n " \"%s\" failed", tree->data);
+            } وإلا {
+                ngx_log_error(NGX_LOG_CRIT, ctx->لگاریتم, err,
+                              ngx_read_dir_n " \"%s\" failed", درخت->داده);
                 rc = NGX_ERROR;
             }
 
-            goto done;
+            اذهب انجامشده;
         }
 
         len = ngx_de_namelen(&dir);
         name = ngx_de_name(&dir);
 
-        ngx_log_debug2(NGX_LOG_DEBUG_CORE, ctx->log, 0,
+        ngx_log_debug2(NGX_LOG_DEBUG_CORE, ctx->لگاریتم, 0,
                       "tree name %uz:\"%s\"", len, name);
 
-        if (len == 1 && name[0] == '.') {
-            continue;
+        إذا (len == 1 && name[0] == '.') {
+            استمر;
         }
 
-        if (len == 2 && name[0] == '.' && name[1] == '.') {
-            continue;
+        إذا (len == 2 && name[0] == '.' && name[1] == '.') {
+            استمر;
         }
 
-        file.len = tree->len + 1 + len;
+        file.len = درخت->len + 1 + len;
 
-        if (file.len > buf.len) {
+        إذا (file.len > buf.len) {
 
-            if (buf.len) {
-                ngx_free(buf.data);
+            إذا (buf.len) {
+                ngx_free(buf.داده);
             }
 
-            buf.len = tree->len + 1 + len;
+            buf.len = درخت->len + 1 + len;
 
-            buf.data = ngx_alloc(buf.len + 1, ctx->log);
-            if (buf.data == NULL) {
-                goto failed;
+            buf.داده = ngx_alloc(buf.len + 1, ctx->لگاریتم);
+            إذا (buf.داده == عدم) {
+                اذهب failed;
             }
         }
 
-        p = ngx_cpymem(buf.data, tree->data, tree->len);
+        p = ngx_cpymem(buf.داده, درخت->داده, درخت->len);
         *p++ = '/';
         ngx_memcpy(p, name, len + 1);
 
-        file.data = buf.data;
+        file.داده = buf.داده;
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                       "tree path \"%s\"", file.data);
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->لگاریتم, 0,
+                       "tree path \"%s\"", file.داده);
 
-        if (!dir.valid_info) {
-            if (ngx_de_info(file.data, &dir) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_CRIT, ctx->log, ngx_errno,
-                              ngx_de_info_n " \"%s\" failed", file.data);
-                continue;
+        إذا (!dir.valid_info) {
+            إذا (ngx_de_info(file.داده, &dir) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_CRIT, ctx->لگاریتم, ngx_errno,
+                              ngx_de_info_n " \"%s\" failed", file.داده);
+                استمر;
             }
         }
 
-        if (ngx_de_is_file(&dir)) {
+        إذا (ngx_de_is_file(&dir)) {
 
-            ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                           "tree file \"%s\"", file.data);
+            ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->لگاریتم, 0,
+                           "tree file \"%s\"", file.داده);
 
-            ctx->size = ngx_de_size(&dir);
-            ctx->fs_size = ngx_de_fs_size(&dir);
+            ctx->اندازه = ngx_de_اندازه(&dir);
+            ctx->fs_اندازه = ngx_de_fs_اندازه(&dir);
             ctx->access = ngx_de_access(&dir);
             ctx->mtime = ngx_de_mtime(&dir);
 
-            if (ctx->file_handler(ctx, &file) == NGX_ABORT) {
-                goto failed;
+            إذا (ctx->file_handler(ctx, &file) == NGX_ABORT) {
+                اذهب failed;
             }
 
-        } else if (ngx_de_is_dir(&dir)) {
+        } وإلا إذا (ngx_de_is_dir(&dir)) {
 
-            ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                           "tree enter dir \"%s\"", file.data);
-
-            ctx->access = ngx_de_access(&dir);
-            ctx->mtime = ngx_de_mtime(&dir);
-
-            rc = ctx->pre_tree_handler(ctx, &file);
-
-            if (rc == NGX_ABORT) {
-                goto failed;
-            }
-
-            if (rc == NGX_DECLINED) {
-                ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                               "tree skip dir \"%s\"", file.data);
-                continue;
-            }
-
-            if (ngx_walk_tree(ctx, &file) == NGX_ABORT) {
-                goto failed;
-            }
+            ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->لگاریتم, 0,
+                           "tree enter dir \"%s\"", file.داده);
 
             ctx->access = ngx_de_access(&dir);
             ctx->mtime = ngx_de_mtime(&dir);
 
-            if (ctx->post_tree_handler(ctx, &file) == NGX_ABORT) {
-                goto failed;
+            rc = ctx->pre_درخت_handler(ctx, &file);
+
+            إذا (rc == NGX_ABORT) {
+                اذهب failed;
             }
 
-        } else {
+            إذا (rc == NGX_DECLINED) {
+                ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->لگاریتم, 0,
+                               "tree skip dir \"%s\"", file.داده);
+                استمر;
+            }
 
-            ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                           "tree special \"%s\"", file.data);
+            إذا (ngx_walk_درخت(ctx, &file) == NGX_ABORT) {
+                اذهب failed;
+            }
 
-            if (ctx->spec_handler(ctx, &file) == NGX_ABORT) {
-                goto failed;
+            ctx->access = ngx_de_access(&dir);
+            ctx->mtime = ngx_de_mtime(&dir);
+
+            إذا (ctx->post_درخت_handler(ctx, &file) == NGX_ABORT) {
+                اذهب failed;
+            }
+
+        } وإلا {
+
+            ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->لگاریتم, 0,
+                           "tree special \"%s\"", file.داده);
+
+            إذا (ctx->spec_handler(ctx, &file) == NGX_ABORT) {
+                اذهب failed;
             }
         }
     }
@@ -1108,21 +1108,21 @@ failed:
 
     rc = NGX_ABORT;
 
-done:
+انجامشده:
 
-    if (buf.len) {
-        ngx_free(buf.data);
+    إذا (buf.len) {
+        ngx_free(buf.داده);
     }
 
-    if (data) {
-        ngx_free(data);
-        ctx->data = prev;
+    إذا (داده) {
+        ngx_free(داده);
+        ctx->داده = prev;
     }
 
-    if (ngx_close_dir(&dir) == NGX_ERROR) {
-        ngx_log_error(NGX_LOG_CRIT, ctx->log, ngx_errno,
-                      ngx_close_dir_n " \"%s\" failed", tree->data);
+    إذا (ngx_close_dir(&dir) == NGX_ERROR) {
+        ngx_log_error(NGX_LOG_CRIT, ctx->لگاریتم, ngx_errno,
+                      ngx_close_dir_n " \"%s\" failed", درخت->داده);
     }
 
-    return rc;
+    أرجع rc;
 }
