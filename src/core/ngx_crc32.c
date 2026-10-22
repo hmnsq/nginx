@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
 /*
@@ -23,7 +23,7 @@
  */
 
 
-static uint32_t  ngx_crc32_table16[] = {
+స్థిర uint32_t  ngx_చక్రీయ_తనిఖీ_32_table16[] = {
     0x00000000, 0x1db71064, 0x3b6e20c8, 0x26d930ac,
     0x76dc4190, 0x6b6b51f4, 0x4db26158, 0x5005713c,
     0xedb88320, 0xf00f9344, 0xd6d6a3e8, 0xcb61b38c,
@@ -31,7 +31,7 @@ static uint32_t  ngx_crc32_table16[] = {
 };
 
 
-uint32_t  ngx_crc32_table256[] = {
+uint32_t  ngx_చక్రీయ_తనిఖీ_32_table256[] = {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba,
     0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
     0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
@@ -99,7 +99,7 @@ uint32_t  ngx_crc32_table256[] = {
 };
 
 
-uint32_t *ngx_crc32_table_short = ngx_crc32_table16;
+uint32_t *ngx_చక్రీయ_తనిఖీ_32_పట్టిక_short = ngx_చక్రీయ_తనిఖీ_32_table16;
 
 
 /*
@@ -176,27 +176,27 @@ uint32_t  ngx_crc32c_table256[] = {
 
 
 ngx_int_t
-ngx_crc32_table_init(void)
+ngx_చక్రీయ_తనిఖీ_32_పట్టిక_init(శూన్య)
 {
-    void  *p;
+    శూన్య  *p;
 
-    if (((uintptr_t) ngx_crc32_table_short
-          & ~((uintptr_t) ngx_cacheline_size - 1))
-        == (uintptr_t) ngx_crc32_table_short)
+    ఒకవేళ (((uintptr_t) ngx_చక్రీయ_తనిఖీ_32_పట్టిక_short
+          & ~((uintptr_t) ngx_cacheline_కొలత - 1))
+        == (uintptr_t) ngx_చక్రీయ_తనిఖీ_32_పట్టిక_short)
     {
-        return NGX_OK;
+        తిరిగి NGX_OK;
     }
 
-    p = ngx_alloc(16 * sizeof(uint32_t) + ngx_cacheline_size, ngx_cycle->log);
-    if (p == NULL) {
-        return NGX_ERROR;
+    p = ngx_alloc(16 * పరిమాణం(uint32_t) + ngx_cacheline_కొలత, ngx_చక్రం->సంవర్గమానం);
+    ఒకవేళ (p == ఖాళీ) {
+        తిరిగి NGX_ERROR;
     }
 
-    p = ngx_align_ptr(p, ngx_cacheline_size);
+    p = ngx_align_ptr(p, ngx_cacheline_కొలత);
 
-    ngx_memcpy(p, ngx_crc32_table16, 16 * sizeof(uint32_t));
+    ngx_memcpy(p, ngx_చక్రీయ_తనిఖీ_32_table16, 16 * పరిమాణం(uint32_t));
 
-    ngx_crc32_table_short = p;
+    ngx_చక్రీయ_తనిఖీ_32_పట్టిక_short = p;
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }

@@ -5,32 +5,32 @@
  */
 
 
-#ifndef _NGX_THREAD_POOL_H_INCLUDED_
-#define _NGX_THREAD_POOL_H_INCLUDED_
+#నిర్వచితం_కాకపోతే _NGX_THREAD_POOL_H_INCLUDED_
+#నిర్వచించు _NGX_THREAD_POOL_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
+#అన్తర్భావ <ngx_event.h>
 
 
-struct ngx_thread_task_s {
-    ngx_thread_task_t   *next;
+నిర్మాణం ngx_thread_task_s {
+    ngx_thread_task_t   *తదుపరి;
     ngx_uint_t           id;
-    void                *ctx;
-    void               (*handler)(void *data, ngx_log_t *log);
+    శూన్య                *ctx;
+    శూన్య               (*handler)(శూన్య *దత్తాంశం, ngx_log_t *సంవర్గమానం);
     ngx_event_t          event;
 };
 
 
-typedef struct ngx_thread_pool_s  ngx_thread_pool_t;
+రకనిర్వచనం నిర్మాణం ngx_thread_pool_s  ngx_thread_pool_t;
 
 
-ngx_thread_pool_t *ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name);
-ngx_thread_pool_t *ngx_thread_pool_get(ngx_cycle_t *cycle, ngx_str_t *name);
+ngx_thread_pool_t *ngx_thread_pool_కూడు(ngx_conf_t *cf, ngx_str_t *name);
+ngx_thread_pool_t *ngx_thread_pool_get(ngx_చక్రం_t *చక్రం, ngx_str_t *name);
 
-ngx_thread_task_t *ngx_thread_task_alloc(ngx_pool_t *pool, size_t size);
+ngx_thread_task_t *ngx_thread_task_alloc(ngx_pool_t *pool, కొలత_t కొలత);
 ngx_int_t ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task);
 
 
-#endif /* _NGX_THREAD_POOL_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_THREAD_POOL_H_INCLUDED_ */

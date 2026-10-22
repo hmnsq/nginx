@@ -5,42 +5,42 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-typedef struct {
+రకనిర్వచనం నిర్మాణం {
     ngx_flag_t   pcre_jit;
     ngx_list_t  *studies;
 } ngx_regex_conf_t;
 
 
-static ngx_inline void ngx_regex_malloc_init(ngx_pool_t *pool);
-static ngx_inline void ngx_regex_malloc_done(void);
+స్థిర ngx_inline శూన్య ngx_regex_malloc_init(ngx_pool_t *pool);
+స్థిర ngx_inline శూన్య ngx_regex_malloc_పూర్తి(శూన్య);
 
-#if (NGX_PCRE2)
-static void * ngx_libc_cdecl ngx_regex_malloc(size_t size, void *data);
-static void ngx_libc_cdecl ngx_regex_free(void *p, void *data);
-#else
-static void * ngx_libc_cdecl ngx_regex_malloc(size_t size);
-static void ngx_libc_cdecl ngx_regex_free(void *p);
-#endif
-static void ngx_regex_cleanup(void *data);
+#ఒకవేళ (NGX_PCRE2)
+స్థిర శూన్య * ngx_libc_cdecl ngx_regex_malloc(కొలత_t కొలత, శూన్య *దత్తాంశం);
+స్థిర శూన్య ngx_libc_cdecl ngx_regex_free(శూన్య *p, శూన్య *దత్తాంశం);
+#లేకపోతే
+స్థిర శూన్య * ngx_libc_cdecl ngx_regex_malloc(కొలత_t కొలత);
+స్థిర శూన్య ngx_libc_cdecl ngx_regex_free(శూన్య *p);
+#అయితే_ముగింపు
+స్థిర శూన్య ngx_regex_cleanup(శూన్య *దత్తాంశం);
 
-static ngx_int_t ngx_regex_module_init(ngx_cycle_t *cycle);
+స్థిర ngx_int_t ngx_regex_module_init(ngx_చక్రం_t *చక్రం);
 
-static void *ngx_regex_create_conf(ngx_cycle_t *cycle);
-static char *ngx_regex_init_conf(ngx_cycle_t *cycle, void *conf);
+స్థిర శూన్య *ngx_regex_create_conf(ngx_చక్రం_t *చక్రం);
+స్థిర అక్షరం *ngx_regex_init_conf(ngx_చక్రం_t *చక్రం, శూన్య *conf);
 
-static char *ngx_regex_pcre_jit(ngx_conf_t *cf, void *post, void *data);
-static ngx_conf_post_t  ngx_regex_pcre_jit_post = { ngx_regex_pcre_jit };
+స్థిర అక్షరం *ngx_regex_pcre_jit(ngx_conf_t *cf, శూన్య *post, శూన్య *దత్తాంశం);
+స్థిర ngx_conf_post_t  ngx_regex_pcre_jit_post = { ngx_regex_pcre_jit };
 
 
-static ngx_command_t  ngx_regex_commands[] = {
+స్థిర ngx_command_t  ngx_regex_commands[] = {
 
     { ngx_string("pcre_jit"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_FLAG,
-      ngx_conf_set_flag_slot,
+      NGX_MAIN_CONF|NGX_ప్రత్యక్ష_CONF|NGX_CONF_FLAG,
+      ngx_conf_సమితి_flag_స్థానం,
       0,
       offsetof(ngx_regex_conf_t, pcre_jit),
       &ngx_regex_pcre_jit_post },
@@ -49,7 +49,7 @@ static ngx_command_t  ngx_regex_commands[] = {
 };
 
 
-static ngx_core_module_t  ngx_regex_module_ctx = {
+స్థిర ngx_core_module_t  ngx_regex_module_ctx = {
     ngx_string("regex"),
     ngx_regex_create_conf,
     ngx_regex_init_conf
@@ -61,338 +61,338 @@ ngx_module_t  ngx_regex_module = {
     &ngx_regex_module_ctx,                 /* module context */
     ngx_regex_commands,                    /* module directives */
     NGX_CORE_MODULE,                       /* module type */
-    NULL,                                  /* init master */
+    ఖాళీ,                                  /* init master */
     ngx_regex_module_init,                 /* init module */
-    NULL,                                  /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
-    NULL,                                  /* exit process */
-    NULL,                                  /* exit master */
+    ఖాళీ,                                  /* init process */
+    ఖాళీ,                                  /* init thread */
+    ఖాళీ,                                  /* exit thread */
+    ఖాళీ,                                  /* exit process */
+    ఖాళీ,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
-static ngx_pool_t             *ngx_regex_pool;
-static ngx_list_t             *ngx_regex_studies;
-static ngx_uint_t              ngx_regex_direct_alloc;
+స్థిర ngx_pool_t             *ngx_regex_pool;
+స్థిర ngx_list_t             *ngx_regex_studies;
+స్థిర ngx_uint_t              ngx_regex_ప్రత్యక్ష_alloc;
 
-#if (NGX_PCRE2)
-static pcre2_compile_context  *ngx_regex_compile_context;
-static pcre2_match_data       *ngx_regex_match_data;
-static ngx_uint_t              ngx_regex_match_data_size;
-#endif
+#ఒకవేళ (NGX_PCRE2)
+స్థిర pcre2_compile_context  *ngx_regex_compile_context;
+స్థిర pcre2_సరిపోలిక_దత్తాంశం       *ngx_regex_సరిపోలిక_దత్తాంశం;
+స్థిర ngx_uint_t              ngx_regex_సరిపోలిక_దత్తాంశం_కొలత;
+#అయితే_ముగింపు
 
 
-void
-ngx_regex_init(void)
+శూన్య
+ngx_regex_init(శూన్య)
 {
-#if !(NGX_PCRE2)
+#ఒకవేళ !(NGX_PCRE2)
     pcre_malloc = ngx_regex_malloc;
     pcre_free = ngx_regex_free;
-#endif
+#అయితే_ముగింపు
 }
 
 
-static ngx_inline void
+స్థిర ngx_inline శూన్య
 ngx_regex_malloc_init(ngx_pool_t *pool)
 {
     ngx_regex_pool = pool;
-    ngx_regex_direct_alloc = (pool == NULL) ? 1 : 0;
+    ngx_regex_ప్రత్యక్ష_alloc = (pool == ఖాళీ) ? 1 : 0;
 }
 
 
-static ngx_inline void
-ngx_regex_malloc_done(void)
+స్థిర ngx_inline శూన్య
+ngx_regex_malloc_పూర్తి(శూన్య)
 {
-    ngx_regex_pool = NULL;
-    ngx_regex_direct_alloc = 0;
+    ngx_regex_pool = ఖాళీ;
+    ngx_regex_ప్రత్యక్ష_alloc = 0;
 }
 
 
-#if (NGX_PCRE2)
+#ఒకవేళ (NGX_PCRE2)
 
 ngx_int_t
 ngx_regex_compile(ngx_regex_compile_t *rc)
 {
-    int                     n, errcode;
-    char                   *p;
+    పూర్ణాంకం                     n, errcode;
+    అక్షరం                   *p;
     u_char                  errstr[128];
-    size_t                  erroff;
+    కొలత_t                  erroff;
     uint32_t                options;
-    pcre2_code             *re;
+    pcre2_సంకేతం             *re;
     ngx_regex_elt_t        *elt;
     pcre2_general_context  *gctx;
     pcre2_compile_context  *cctx;
 
-    if (ngx_regex_compile_context == NULL) {
+    ఒకవేళ (ngx_regex_compile_context == ఖాళీ) {
         /*
          * Allocate a compile context if not yet allocated.  This uses
          * direct allocations from heap, so the result can be cached
          * even at runtime.
          */
 
-        ngx_regex_malloc_init(NULL);
+        ngx_regex_malloc_init(ఖాళీ);
 
         gctx = pcre2_general_context_create(ngx_regex_malloc, ngx_regex_free,
-                                            NULL);
-        if (gctx == NULL) {
-            ngx_regex_malloc_done();
-            goto nomem;
+                                            ఖాళీ);
+        ఒకవేళ (gctx == ఖాళీ) {
+            ngx_regex_malloc_పూర్తి();
+            వెళ్ళు nomem;
         }
 
         cctx = pcre2_compile_context_create(gctx);
-        if (cctx == NULL) {
+        ఒకవేళ (cctx == ఖాళీ) {
             pcre2_general_context_free(gctx);
-            ngx_regex_malloc_done();
-            goto nomem;
+            ngx_regex_malloc_పూర్తి();
+            వెళ్ళు nomem;
         }
 
         ngx_regex_compile_context = cctx;
 
         pcre2_general_context_free(gctx);
-        ngx_regex_malloc_done();
+        ngx_regex_malloc_పూర్తి();
     }
 
     options = 0;
 
-    if (rc->options & NGX_REGEX_CASELESS) {
+    ఒకవేళ (rc->options & NGX_REGEX_CASELESS) {
         options |= PCRE2_CASELESS;
     }
 
-    if (rc->options & NGX_REGEX_MULTILINE) {
+    ఒకవేళ (rc->options & NGX_REGEX_MULTILINE) {
         options |= PCRE2_MULTILINE;
     }
 
-    if (rc->options & ~(NGX_REGEX_CASELESS|NGX_REGEX_MULTILINE)) {
-        rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+    ఒకవేళ (rc->options & ~(NGX_REGEX_CASELESS|NGX_REGEX_MULTILINE)) {
+        rc->err.len = ngx_snprintf(rc->err.దత్తాంశం, rc->err.len,
                             "regex \"%V\" compilation failed: invalid options",
-                            &rc->pattern)
-                      - rc->err.data;
-        return NGX_ERROR;
+                            &rc->నమూనా)
+                      - rc->err.దత్తాంశం;
+        తిరిగి NGX_ERROR;
     }
 
     ngx_regex_malloc_init(rc->pool);
 
-    re = pcre2_compile(rc->pattern.data, rc->pattern.len, options,
+    re = pcre2_compile(rc->నమూనా.దత్తాంశం, rc->నమూనా.len, options,
                        &errcode, &erroff, ngx_regex_compile_context);
 
     /* ensure that there is no current pool */
-    ngx_regex_malloc_done();
+    ngx_regex_malloc_పూర్తి();
 
-    if (re == NULL) {
-        pcre2_get_error_message(errcode, errstr, 128);
+    ఒకవేళ (re == ఖాళీ) {
+        pcre2_get_error_సందేశం(errcode, errstr, 128);
 
-        if ((size_t) erroff == rc->pattern.len) {
-            rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+        ఒకవేళ ((కొలత_t) erroff == rc->నమూనా.len) {
+            rc->err.len = ngx_snprintf(rc->err.దత్తాంశం, rc->err.len,
                               "pcre2_compile() failed: %s in \"%V\"",
-                               errstr, &rc->pattern)
-                          - rc->err.data;
+                               errstr, &rc->నమూనా)
+                          - rc->err.దత్తాంశం;
 
-        } else {
-            rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+        } లేకపోతే {
+            rc->err.len = ngx_snprintf(rc->err.దత్తాంశం, rc->err.len,
                               "pcre2_compile() failed: %s in \"%V\" at \"%s\"",
-                               errstr, &rc->pattern, rc->pattern.data + erroff)
-                          - rc->err.data;
+                               errstr, &rc->నమూనా, rc->నమూనా.దత్తాంశం + erroff)
+                          - rc->err.దత్తాంశం;
         }
 
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
     rc->regex = re;
 
     /* do not study at runtime */
 
-    if (ngx_regex_studies != NULL) {
-        elt = ngx_list_push(ngx_regex_studies);
-        if (elt == NULL) {
-            goto nomem;
+    ఒకవేళ (ngx_regex_studies != ఖాళీ) {
+        elt = ngx_list_నెట్టు(ngx_regex_studies);
+        ఒకవేళ (elt == ఖాళీ) {
+            వెళ్ళు nomem;
         }
 
         elt->regex = rc->regex;
-        elt->name = rc->pattern.data;
+        elt->name = rc->నమూనా.దత్తాంశం;
     }
 
-    n = pcre2_pattern_info(re, PCRE2_INFO_CAPTURECOUNT, &rc->captures);
-    if (n < 0) {
+    n = pcre2_నమూనా_info(re, PCRE2_INFO_CAPTURECOUNT, &rc->captures);
+    ఒకవేళ (n < 0) {
         p = "pcre2_pattern_info(\"%V\", PCRE2_INFO_CAPTURECOUNT) failed: %d";
-        goto failed;
+        వెళ్ళు failed;
     }
 
-    if (rc->captures == 0) {
-        return NGX_OK;
+    ఒకవేళ (rc->captures == 0) {
+        తిరిగి NGX_OK;
     }
 
-    n = pcre2_pattern_info(re, PCRE2_INFO_NAMECOUNT, &rc->named_captures);
-    if (n < 0) {
+    n = pcre2_నమూనా_info(re, PCRE2_INFO_NAMECOUNT, &rc->named_captures);
+    ఒకవేళ (n < 0) {
         p = "pcre2_pattern_info(\"%V\", PCRE2_INFO_NAMECOUNT) failed: %d";
-        goto failed;
+        వెళ్ళు failed;
     }
 
-    if (rc->named_captures == 0) {
-        return NGX_OK;
+    ఒకవేళ (rc->named_captures == 0) {
+        తిరిగి NGX_OK;
     }
 
-    n = pcre2_pattern_info(re, PCRE2_INFO_NAMEENTRYSIZE, &rc->name_size);
-    if (n < 0) {
+    n = pcre2_నమూనా_info(re, PCRE2_INFO_NAMEENTRYSIZE, &rc->name_కొలత);
+    ఒకవేళ (n < 0) {
         p = "pcre2_pattern_info(\"%V\", PCRE2_INFO_NAMEENTRYSIZE) failed: %d";
-        goto failed;
+        వెళ్ళు failed;
     }
 
-    n = pcre2_pattern_info(re, PCRE2_INFO_NAMETABLE, &rc->names);
-    if (n < 0) {
+    n = pcre2_నమూనా_info(re, PCRE2_INFO_NAMETABLE, &rc->పేర్లు);
+    ఒకవేళ (n < 0) {
         p = "pcre2_pattern_info(\"%V\", PCRE2_INFO_NAMETABLE) failed: %d";
-        goto failed;
+        వెళ్ళు failed;
     }
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 
 failed:
 
-    rc->err.len = ngx_snprintf(rc->err.data, rc->err.len, p, &rc->pattern, n)
-                  - rc->err.data;
-    return NGX_ERROR;
+    rc->err.len = ngx_snprintf(rc->err.దత్తాంశం, rc->err.len, p, &rc->నమూనా, n)
+                  - rc->err.దత్తాంశం;
+    తిరిగి NGX_ERROR;
 
 nomem:
 
-    rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+    rc->err.len = ngx_snprintf(rc->err.దత్తాంశం, rc->err.len,
                                "regex \"%V\" compilation failed: no memory",
-                               &rc->pattern)
-                  - rc->err.data;
-    return NGX_ERROR;
+                               &rc->నమూనా)
+                  - rc->err.దత్తాంశం;
+    తిరిగి NGX_ERROR;
 }
 
-#else
+#లేకపోతే
 
 ngx_int_t
 ngx_regex_compile(ngx_regex_compile_t *rc)
 {
-    int               n, erroff;
-    char             *p;
+    పూర్ణాంకం               n, erroff;
+    అక్షరం             *p;
     pcre             *re;
-    const char       *errstr;
+    స్థిరరాశి అక్షరం       *errstr;
     ngx_uint_t        options;
     ngx_regex_elt_t  *elt;
 
     options = 0;
 
-    if (rc->options & NGX_REGEX_CASELESS) {
+    ఒకవేళ (rc->options & NGX_REGEX_CASELESS) {
         options |= PCRE_CASELESS;
     }
 
-    if (rc->options & NGX_REGEX_MULTILINE) {
+    ఒకవేళ (rc->options & NGX_REGEX_MULTILINE) {
         options |= PCRE_MULTILINE;
     }
 
-    if (rc->options & ~(NGX_REGEX_CASELESS|NGX_REGEX_MULTILINE)) {
-        rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+    ఒకవేళ (rc->options & ~(NGX_REGEX_CASELESS|NGX_REGEX_MULTILINE)) {
+        rc->err.len = ngx_snprintf(rc->err.దత్తాంశం, rc->err.len,
                             "regex \"%V\" compilation failed: invalid options",
-                            &rc->pattern)
-                      - rc->err.data;
-        return NGX_ERROR;
+                            &rc->నమూనా)
+                      - rc->err.దత్తాంశం;
+        తిరిగి NGX_ERROR;
     }
 
     ngx_regex_malloc_init(rc->pool);
 
-    re = pcre_compile((const char *) rc->pattern.data, (int) options,
-                      &errstr, &erroff, NULL);
+    re = pcre_compile((స్థిరరాశి అక్షరం *) rc->నమూనా.దత్తాంశం, (పూర్ణాంకం) options,
+                      &errstr, &erroff, ఖాళీ);
 
     /* ensure that there is no current pool */
-    ngx_regex_malloc_done();
+    ngx_regex_malloc_పూర్తి();
 
-    if (re == NULL) {
-        if ((size_t) erroff == rc->pattern.len) {
-           rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+    ఒకవేళ (re == ఖాళీ) {
+        ఒకవేళ ((కొలత_t) erroff == rc->నమూనా.len) {
+           rc->err.len = ngx_snprintf(rc->err.దత్తాంశం, rc->err.len,
                               "pcre_compile() failed: %s in \"%V\"",
-                               errstr, &rc->pattern)
-                         - rc->err.data;
+                               errstr, &rc->నమూనా)
+                         - rc->err.దత్తాంశం;
 
-        } else {
-           rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+        } లేకపోతే {
+           rc->err.len = ngx_snprintf(rc->err.దత్తాంశం, rc->err.len,
                               "pcre_compile() failed: %s in \"%V\" at \"%s\"",
-                               errstr, &rc->pattern, rc->pattern.data + erroff)
-                         - rc->err.data;
+                               errstr, &rc->నమూనా, rc->నమూనా.దత్తాంశం + erroff)
+                         - rc->err.దత్తాంశం;
         }
 
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
-    rc->regex = ngx_pcalloc(rc->pool, sizeof(ngx_regex_t));
-    if (rc->regex == NULL) {
-        goto nomem;
+    rc->regex = ngx_pcalloc(rc->pool, పరిమాణం(ngx_regex_t));
+    ఒకవేళ (rc->regex == ఖాళీ) {
+        వెళ్ళు nomem;
     }
 
-    rc->regex->code = re;
+    rc->regex->సంకేతం_2 = re;
 
     /* do not study at runtime */
 
-    if (ngx_regex_studies != NULL) {
-        elt = ngx_list_push(ngx_regex_studies);
-        if (elt == NULL) {
-            goto nomem;
+    ఒకవేళ (ngx_regex_studies != ఖాళీ) {
+        elt = ngx_list_నెట్టు(ngx_regex_studies);
+        ఒకవేళ (elt == ఖాళీ) {
+            వెళ్ళు nomem;
         }
 
         elt->regex = rc->regex;
-        elt->name = rc->pattern.data;
+        elt->name = rc->నమూనా.దత్తాంశం;
     }
 
-    n = pcre_fullinfo(re, NULL, PCRE_INFO_CAPTURECOUNT, &rc->captures);
-    if (n < 0) {
+    n = pcre_fullinfo(re, ఖాళీ, PCRE_INFO_CAPTURECOUNT, &rc->captures);
+    ఒకవేళ (n < 0) {
         p = "pcre_fullinfo(\"%V\", PCRE_INFO_CAPTURECOUNT) failed: %d";
-        goto failed;
+        వెళ్ళు failed;
     }
 
-    if (rc->captures == 0) {
-        return NGX_OK;
+    ఒకవేళ (rc->captures == 0) {
+        తిరిగి NGX_OK;
     }
 
-    n = pcre_fullinfo(re, NULL, PCRE_INFO_NAMECOUNT, &rc->named_captures);
-    if (n < 0) {
+    n = pcre_fullinfo(re, ఖాళీ, PCRE_INFO_NAMECOUNT, &rc->named_captures);
+    ఒకవేళ (n < 0) {
         p = "pcre_fullinfo(\"%V\", PCRE_INFO_NAMECOUNT) failed: %d";
-        goto failed;
+        వెళ్ళు failed;
     }
 
-    if (rc->named_captures == 0) {
-        return NGX_OK;
+    ఒకవేళ (rc->named_captures == 0) {
+        తిరిగి NGX_OK;
     }
 
-    n = pcre_fullinfo(re, NULL, PCRE_INFO_NAMEENTRYSIZE, &rc->name_size);
-    if (n < 0) {
+    n = pcre_fullinfo(re, ఖాళీ, PCRE_INFO_NAMEENTRYSIZE, &rc->name_కొలత);
+    ఒకవేళ (n < 0) {
         p = "pcre_fullinfo(\"%V\", PCRE_INFO_NAMEENTRYSIZE) failed: %d";
-        goto failed;
+        వెళ్ళు failed;
     }
 
-    n = pcre_fullinfo(re, NULL, PCRE_INFO_NAMETABLE, &rc->names);
-    if (n < 0) {
+    n = pcre_fullinfo(re, ఖాళీ, PCRE_INFO_NAMETABLE, &rc->పేర్లు);
+    ఒకవేళ (n < 0) {
         p = "pcre_fullinfo(\"%V\", PCRE_INFO_NAMETABLE) failed: %d";
-        goto failed;
+        వెళ్ళు failed;
     }
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 
 failed:
 
-    rc->err.len = ngx_snprintf(rc->err.data, rc->err.len, p, &rc->pattern, n)
-                  - rc->err.data;
-    return NGX_ERROR;
+    rc->err.len = ngx_snprintf(rc->err.దత్తాంశం, rc->err.len, p, &rc->నమూనా, n)
+                  - rc->err.దత్తాంశం;
+    తిరిగి NGX_ERROR;
 
 nomem:
 
-    rc->err.len = ngx_snprintf(rc->err.data, rc->err.len,
+    rc->err.len = ngx_snprintf(rc->err.దత్తాంశం, rc->err.len,
                                "regex \"%V\" compilation failed: no memory",
-                               &rc->pattern)
-                  - rc->err.data;
-    return NGX_ERROR;
+                               &rc->నమూనా)
+                  - rc->err.దత్తాంశం;
+    తిరిగి NGX_ERROR;
 }
 
-#endif
+#అయితే_ముగింపు
 
 
-#if (NGX_PCRE2)
+#ఒకవేళ (NGX_PCRE2)
 
 ngx_int_t
-ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures, ngx_uint_t size)
+ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, పూర్ణాంకం *captures, ngx_uint_t కొలత)
 {
-    size_t      *ov;
+    కొలత_t      *ov;
     ngx_int_t    rc;
     ngx_uint_t   n, i;
 
@@ -402,68 +402,68 @@ ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures, ngx_uint_t size)
      * is configured to do direct allocations from heap during matching.
      */
 
-    ngx_regex_malloc_init(NULL);
+    ngx_regex_malloc_init(ఖాళీ);
 
-    if (ngx_regex_match_data == NULL
-        || size > ngx_regex_match_data_size)
+    ఒకవేళ (ngx_regex_సరిపోలిక_దత్తాంశం == ఖాళీ
+        || కొలత > ngx_regex_సరిపోలిక_దత్తాంశం_కొలత)
     {
         /*
          * Allocate a match data if not yet allocated or smaller than
          * needed.
          */
 
-        if (ngx_regex_match_data) {
-            pcre2_match_data_free(ngx_regex_match_data);
+        ఒకవేళ (ngx_regex_సరిపోలిక_దత్తాంశం) {
+            pcre2_సరిపోలిక_దత్తాంశం_free(ngx_regex_సరిపోలిక_దత్తాంశం);
         }
 
-        ngx_regex_match_data_size = size;
-        ngx_regex_match_data = pcre2_match_data_create(size / 3, NULL);
+        ngx_regex_సరిపోలిక_దత్తాంశం_కొలత = కొలత;
+        ngx_regex_సరిపోలిక_దత్తాంశం = pcre2_సరిపోలిక_దత్తాంశం_create(కొలత / 3, ఖాళీ);
 
-        if (ngx_regex_match_data == NULL) {
+        ఒకవేళ (ngx_regex_సరిపోలిక_దత్తాంశం == ఖాళీ) {
             rc = PCRE2_ERROR_NOMEMORY;
-            goto failed;
+            వెళ్ళు failed;
         }
     }
 
-    rc = pcre2_match(re, s->data, s->len, 0, 0, ngx_regex_match_data, NULL);
+    rc = pcre2_సరిపోలిక(re, s->దత్తాంశం, s->len, 0, 0, ngx_regex_సరిపోలిక_దత్తాంశం, ఖాళీ);
 
-    if (rc < 0) {
-        goto failed;
+    ఒకవేళ (rc < 0) {
+        వెళ్ళు failed;
     }
 
-    n = pcre2_get_ovector_count(ngx_regex_match_data);
-    ov = pcre2_get_ovector_pointer(ngx_regex_match_data);
+    n = pcre2_get_ovector_లెక్క(ngx_regex_సరిపోలిక_దత్తాంశం);
+    ov = pcre2_get_ovector_సూచిక(ngx_regex_సరిపోలిక_దత్తాంశం);
 
-    if (n > size / 3) {
-        n = size / 3;
+    ఒకవేళ (n > కొలత / 3) {
+        n = కొలత / 3;
     }
 
-    for (i = 0; i < n; i++) {
+    కొరకు (i = 0; i < n; i++) {
         captures[i * 2] = ov[i * 2];
         captures[i * 2 + 1] = ov[i * 2 + 1];
     }
 
 failed:
 
-    ngx_regex_malloc_done();
+    ngx_regex_malloc_పూర్తి();
 
-    return rc;
+    తిరిగి rc;
 }
 
-#else
+#లేకపోతే
 
 ngx_int_t
-ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures, ngx_uint_t size)
+ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, పూర్ణాంకం *captures, ngx_uint_t కొలత)
 {
-    return pcre_exec(re->code, re->extra, (const char *) s->data, s->len,
-                     0, 0, captures, size);
+    తిరిగి pcre_exec(re->సంకేతం_2, re->extra, (స్థిరరాశి అక్షరం *) s->దత్తాంశం, s->len,
+                     0, 0, captures, కొలత);
 }
 
-#endif
+#అయితే_ముగింపు
 
 
 ngx_int_t
-ngx_regex_exec_array(ngx_array_t *a, ngx_str_t *s, ngx_log_t *log)
+ngx_regex_exec_array(ngx_array_t *a, ngx_str_t *s, ngx_log_t *సంవర్గమానం)
 {
     ngx_int_t         n;
     ngx_uint_t        i;
@@ -471,84 +471,84 @@ ngx_regex_exec_array(ngx_array_t *a, ngx_str_t *s, ngx_log_t *log)
 
     re = a->elts;
 
-    for (i = 0; i < a->nelts; i++) {
+    కొరకు (i = 0; i < a->nelts; i++) {
 
-        n = ngx_regex_exec(re[i].regex, s, NULL, 0);
+        n = ngx_regex_exec(re[i].regex, s, ఖాళీ, 0);
 
-        if (n == NGX_REGEX_NO_MATCHED) {
-            continue;
+        ఒకవేళ (n == NGX_REGEX_NO_MATCHED) {
+            కొనసాగు;
         }
 
-        if (n < 0) {
-            ngx_log_error(NGX_LOG_ALERT, log, 0,
+        ఒకవేళ (n < 0) {
+            ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, 0,
                           ngx_regex_exec_n " failed: %i on \"%V\" using \"%s\"",
                           n, s, re[i].name);
-            return NGX_ERROR;
+            తిరిగి NGX_ERROR;
         }
 
-        /* match */
+        /*సరిపోలిక*/
 
-        return NGX_OK;
+        తిరిగి NGX_OK;
     }
 
-    return NGX_DECLINED;
+    తిరిగి NGX_DECLINED;
 }
 
 
-#if (NGX_PCRE2)
+#ఒకవేళ (NGX_PCRE2)
 
-static void * ngx_libc_cdecl
-ngx_regex_malloc(size_t size, void *data)
+స్థిర శూన్య * ngx_libc_cdecl
+ngx_regex_malloc(కొలత_t కొలత, శూన్య *దత్తాంశం)
 {
-    if (ngx_regex_pool) {
-        return ngx_palloc(ngx_regex_pool, size);
+    ఒకవేళ (ngx_regex_pool) {
+        తిరిగి ngx_palloc(ngx_regex_pool, కొలత);
     }
 
-    if (ngx_regex_direct_alloc) {
-        return ngx_alloc(size, ngx_cycle->log);
+    ఒకవేళ (ngx_regex_ప్రత్యక్ష_alloc) {
+        తిరిగి ngx_alloc(కొలత, ngx_చక్రం->సంవర్గమానం);
     }
 
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
 
-static void ngx_libc_cdecl
-ngx_regex_free(void *p, void *data)
+స్థిర శూన్య ngx_libc_cdecl
+ngx_regex_free(శూన్య *p, శూన్య *దత్తాంశం)
 {
-    if (ngx_regex_direct_alloc) {
+    ఒకవేళ (ngx_regex_ప్రత్యక్ష_alloc) {
         ngx_free(p);
     }
 
-    return;
+    తిరిగి;
 }
 
-#else
+#లేకపోతే
 
-static void * ngx_libc_cdecl
-ngx_regex_malloc(size_t size)
+స్థిర శూన్య * ngx_libc_cdecl
+ngx_regex_malloc(కొలత_t కొలత)
 {
-    if (ngx_regex_pool) {
-        return ngx_palloc(ngx_regex_pool, size);
+    ఒకవేళ (ngx_regex_pool) {
+        తిరిగి ngx_palloc(ngx_regex_pool, కొలత);
     }
 
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
 
-static void ngx_libc_cdecl
-ngx_regex_free(void *p)
+స్థిర శూన్య ngx_libc_cdecl
+ngx_regex_free(శూన్య *p)
 {
-    return;
+    తిరిగి;
 }
 
-#endif
+#అయితే_ముగింపు
 
 
-static void
-ngx_regex_cleanup(void *data)
+స్థిర శూన్య
+ngx_regex_cleanup(శూన్య *దత్తాంశం)
 {
-#if (NGX_PCRE2 || NGX_HAVE_PCRE_JIT)
-    ngx_regex_conf_t *rcf = data;
+#ఒకవేళ (NGX_PCRE2 || NGX_HAVE_PCRE_JIT)
+    ngx_regex_conf_t *rcf = దత్తాంశం;
 
     ngx_uint_t        i;
     ngx_list_part_t  *part;
@@ -557,14 +557,14 @@ ngx_regex_cleanup(void *data)
     part = &rcf->studies->part;
     elts = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    కొరకు (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        ఒకవేళ (i >= part->nelts) {
+            ఒకవేళ (part->తదుపరి == ఖాళీ) {
+                ఆపు;
             }
 
-            part = part->next;
+            part = part->తదుపరి;
             elts = part->elts;
             i = 0;
         }
@@ -576,56 +576,56 @@ ngx_regex_cleanup(void *data)
          * for the same reason.
          */
 
-#if (NGX_PCRE2)
-        pcre2_code_free(elts[i].regex);
-#else
-        if (elts[i].regex->extra != NULL) {
+#ఒకవేళ (NGX_PCRE2)
+        pcre2_సంకేతం_free(elts[i].regex);
+#లేకపోతే
+        ఒకవేళ (elts[i].regex->extra != ఖాళీ) {
             pcre_free_study(elts[i].regex->extra);
         }
-#endif
+#అయితే_ముగింపు
     }
-#endif
+#అయితే_ముగింపు
 
     /*
      * On configuration parsing errors ngx_regex_module_init() will not
      * be called.  Make sure ngx_regex_studies is properly cleared anyway.
      */
 
-    ngx_regex_studies = NULL;
+    ngx_regex_studies = ఖాళీ;
 
-#if (NGX_PCRE2)
+#ఒకవేళ (NGX_PCRE2)
 
     /*
      * Free compile context and match data.  If needed at runtime by
      * the new cycle, these will be re-allocated.
      */
 
-    ngx_regex_malloc_init(NULL);
+    ngx_regex_malloc_init(ఖాళీ);
 
-    if (ngx_regex_compile_context) {
+    ఒకవేళ (ngx_regex_compile_context) {
         pcre2_compile_context_free(ngx_regex_compile_context);
-        ngx_regex_compile_context = NULL;
+        ngx_regex_compile_context = ఖాళీ;
     }
 
-    if (ngx_regex_match_data) {
-        pcre2_match_data_free(ngx_regex_match_data);
-        ngx_regex_match_data = NULL;
-        ngx_regex_match_data_size = 0;
+    ఒకవేళ (ngx_regex_సరిపోలిక_దత్తాంశం) {
+        pcre2_సరిపోలిక_దత్తాంశం_free(ngx_regex_సరిపోలిక_దత్తాంశం);
+        ngx_regex_సరిపోలిక_దత్తాంశం = ఖాళీ;
+        ngx_regex_సరిపోలిక_దత్తాంశం_కొలత = 0;
     }
 
-    ngx_regex_malloc_done();
+    ngx_regex_malloc_పూర్తి();
 
-#endif
+#అయితే_ముగింపు
 }
 
 
-static ngx_int_t
-ngx_regex_module_init(ngx_cycle_t *cycle)
+స్థిర ngx_int_t
+ngx_regex_module_init(ngx_చక్రం_t *చక్రం)
 {
-    int                opt;
-#if !(NGX_PCRE2)
-    const char        *errstr;
-#endif
+    పూర్ణాంకం                opt;
+#ఒకవేళ !(NGX_PCRE2)
+    స్థిరరాశి అక్షరం        *errstr;
+#అయితే_ముగింపు
     ngx_uint_t         i;
     ngx_list_part_t   *part;
     ngx_regex_elt_t   *elts;
@@ -633,172 +633,172 @@ ngx_regex_module_init(ngx_cycle_t *cycle)
 
     opt = 0;
 
-    rcf = (ngx_regex_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_regex_module);
+    rcf = (ngx_regex_conf_t *) ngx_get_conf(చక్రం->conf_ctx, ngx_regex_module);
 
-#if (NGX_PCRE2 || NGX_HAVE_PCRE_JIT)
+#ఒకవేళ (NGX_PCRE2 || NGX_HAVE_PCRE_JIT)
 
-    if (rcf->pcre_jit) {
-#if (NGX_PCRE2)
+    ఒకవేళ (rcf->pcre_jit) {
+#ఒకవేళ (NGX_PCRE2)
         opt = 1;
-#else
+#లేకపోతే
         opt = PCRE_STUDY_JIT_COMPILE;
-#endif
+#అయితే_ముగింపు
     }
 
-#endif
+#అయితే_ముగింపు
 
-    ngx_regex_malloc_init(cycle->pool);
+    ngx_regex_malloc_init(చక్రం->pool);
 
     part = &rcf->studies->part;
     elts = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    కొరకు (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        ఒకవేళ (i >= part->nelts) {
+            ఒకవేళ (part->తదుపరి == ఖాళీ) {
+                ఆపు;
             }
 
-            part = part->next;
+            part = part->తదుపరి;
             elts = part->elts;
             i = 0;
         }
 
-#if (NGX_PCRE2)
+#ఒకవేళ (NGX_PCRE2)
 
-        if (opt) {
-            int  n;
+        ఒకవేళ (opt) {
+            పూర్ణాంకం  n;
 
             n = pcre2_jit_compile(elts[i].regex, PCRE2_JIT_COMPLETE);
 
-            if (n != 0) {
-                ngx_log_error(NGX_LOG_INFO, cycle->log, 0,
+            ఒకవేళ (n != 0) {
+                ngx_log_error(NGX_LOG_INFO, చక్రం->సంవర్గమానం, 0,
                               "pcre2_jit_compile() failed: %d in \"%s\", "
                               "ignored",
                               n, elts[i].name);
             }
         }
 
-#else
+#లేకపోతే
 
-        elts[i].regex->extra = pcre_study(elts[i].regex->code, opt, &errstr);
+        elts[i].regex->extra = pcre_study(elts[i].regex->సంకేతం_2, opt, &errstr);
 
-        if (errstr != NULL) {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, 0,
+        ఒకవేళ (errstr != ఖాళీ) {
+            ngx_log_error(NGX_LOG_ALERT, చక్రం->సంవర్గమానం, 0,
                           "pcre_study() failed: %s in \"%s\"",
                           errstr, elts[i].name);
         }
 
-#if (NGX_HAVE_PCRE_JIT)
-        if (opt & PCRE_STUDY_JIT_COMPILE) {
-            int jit, n;
+#ఒకవేళ (NGX_HAVE_PCRE_JIT)
+        ఒకవేళ (opt & PCRE_STUDY_JIT_COMPILE) {
+            పూర్ణాంకం jit, n;
 
             jit = 0;
-            n = pcre_fullinfo(elts[i].regex->code, elts[i].regex->extra,
+            n = pcre_fullinfo(elts[i].regex->సంకేతం_2, elts[i].regex->extra,
                               PCRE_INFO_JIT, &jit);
 
-            if (n != 0 || jit != 1) {
-                ngx_log_error(NGX_LOG_INFO, cycle->log, 0,
+            ఒకవేళ (n != 0 || jit != 1) {
+                ngx_log_error(NGX_LOG_INFO, చక్రం->సంవర్గమానం, 0,
                               "JIT compiler does not support pattern: \"%s\"",
                               elts[i].name);
             }
         }
-#endif
-#endif
+#అయితే_ముగింపు
+#అయితే_ముగింపు
     }
 
-    ngx_regex_malloc_done();
+    ngx_regex_malloc_పూర్తి();
 
-    ngx_regex_studies = NULL;
+    ngx_regex_studies = ఖాళీ;
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
-static void *
-ngx_regex_create_conf(ngx_cycle_t *cycle)
+స్థిర శూన్య *
+ngx_regex_create_conf(ngx_చక్రం_t *చక్రం)
 {
     ngx_regex_conf_t    *rcf;
     ngx_pool_cleanup_t  *cln;
 
-    rcf = ngx_pcalloc(cycle->pool, sizeof(ngx_regex_conf_t));
-    if (rcf == NULL) {
-        return NULL;
+    rcf = ngx_pcalloc(చక్రం->pool, పరిమాణం(ngx_regex_conf_t));
+    ఒకవేళ (rcf == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
     rcf->pcre_jit = NGX_CONF_UNSET;
 
-    cln = ngx_pool_cleanup_add(cycle->pool, 0);
-    if (cln == NULL) {
-        return NULL;
+    cln = ngx_pool_cleanup_కూడు(చక్రం->pool, 0);
+    ఒకవేళ (cln == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
-    rcf->studies = ngx_list_create(cycle->pool, 8, sizeof(ngx_regex_elt_t));
-    if (rcf->studies == NULL) {
-        return NULL;
+    rcf->studies = ngx_list_create(చక్రం->pool, 8, పరిమాణం(ngx_regex_elt_t));
+    ఒకవేళ (rcf->studies == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
     cln->handler = ngx_regex_cleanup;
-    cln->data = rcf;
+    cln->దత్తాంశం = rcf;
 
     ngx_regex_studies = rcf->studies;
 
-    return rcf;
+    తిరిగి rcf;
 }
 
 
-static char *
-ngx_regex_init_conf(ngx_cycle_t *cycle, void *conf)
+స్థిర అక్షరం *
+ngx_regex_init_conf(ngx_చక్రం_t *చక్రం, శూన్య *conf)
 {
     ngx_regex_conf_t *rcf = conf;
 
-    ngx_conf_init_value(rcf->pcre_jit, 0);
+    ngx_conf_init_విలువ(rcf->pcre_jit, 0);
 
-    return NGX_CONF_OK;
+    తిరిగి NGX_CONF_OK;
 }
 
 
-static char *
-ngx_regex_pcre_jit(ngx_conf_t *cf, void *post, void *data)
+స్థిర అక్షరం *
+ngx_regex_pcre_jit(ngx_conf_t *cf, శూన్య *post, శూన్య *దత్తాంశం)
 {
-    ngx_flag_t  *fp = data;
+    ngx_flag_t  *fp = దత్తాంశం;
 
-    if (*fp == 0) {
-        return NGX_CONF_OK;
+    ఒకవేళ (*fp == 0) {
+        తిరిగి NGX_CONF_OK;
     }
 
-#if (NGX_PCRE2)
+#ఒకవేళ (NGX_PCRE2)
     {
-    int       r;
+    పూర్ణాంకం       r;
     uint32_t  jit;
 
     jit = 0;
     r = pcre2_config(PCRE2_CONFIG_JIT, &jit);
 
-    if (r != 0 || jit != 1) {
+    ఒకవేళ (r != 0 || jit != 1) {
         ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                            "PCRE2 library does not support JIT");
         *fp = 0;
     }
     }
-#elif (NGX_HAVE_PCRE_JIT)
+#లేదావేళ (NGX_HAVE_PCRE_JIT)
     {
-    int  jit, r;
+    పూర్ణాంకం  jit, r;
 
     jit = 0;
     r = pcre_config(PCRE_CONFIG_JIT, &jit);
 
-    if (r != 0 || jit != 1) {
+    ఒకవేళ (r != 0 || jit != 1) {
         ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                            "PCRE library does not support JIT");
         *fp = 0;
     }
     }
-#else
+#లేకపోతే
     ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                        "nginx was built without PCRE JIT support");
     *fp = 0;
-#endif
+#అయితే_ముగింపు
 
-    return NGX_CONF_OK;
+    తిరిగి NGX_CONF_OK;
 }

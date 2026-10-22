@@ -5,35 +5,35 @@
  */
 
 
-#ifndef _NGX_PROXY_PROTOCOL_H_INCLUDED_
-#define _NGX_PROXY_PROTOCOL_H_INCLUDED_
+#నిర్వచితం_కాకపోతే _NGX_PROXY_PROTOCOL_H_INCLUDED_
+#నిర్వచించు _NGX_PROXY_PROTOCOL_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-#define NGX_PROXY_PROTOCOL_V1_MAX_HEADER  107
-#define NGX_PROXY_PROTOCOL_MAX_HEADER     4096
+#నిర్వచించు NGX_PROXY_PROTOCOL_V1_MAX_శీర్షిక  107
+#నిర్వచించు NGX_PROXY_PROTOCOL_MAX_శీర్షిక     4096
 
 
-struct ngx_proxy_protocol_s {
+నిర్మాణం ngx_proxy_protocol_s {
     ngx_str_t           src_addr;
     ngx_str_t           dst_addr;
-    in_port_t           src_port;
-    in_port_t           dst_port;
+    లోపల_పోర్టు_t           src_పోర్టు;
+    లోపల_పోర్టు_t           dst_పోర్టు;
     ngx_str_t           tlvs;
 };
 
 
 u_char *ngx_proxy_protocol_read(ngx_connection_t *c, u_char *buf,
-    u_char *last);
+    u_char *చివరి);
 u_char *ngx_proxy_protocol_write(ngx_connection_t *c, u_char *buf,
-    u_char *last);
+    u_char *చివరి);
 u_char *ngx_proxy_protocol_v2_write(ngx_connection_t *c, u_char *buf,
-    u_char *last, ngx_array_t *tlvs);
+    u_char *చివరి, ngx_array_t *tlvs);
 ngx_int_t ngx_proxy_protocol_get_tlv(ngx_connection_t *c, ngx_str_t *name,
-    ngx_str_t *value);
+    ngx_str_t *విలువ);
 
 
-#endif /* _NGX_PROXY_PROTOCOL_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_PROXY_PROTOCOL_H_INCLUDED_ */

@@ -4,140 +4,140 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
-#define NGX_BPF_LOGBUF_SIZE  (32 * 1024)
+#నిర్వచించు NGX_BPF_LOGBUF_కొలత  (32 * 1024)
 
 
-static ngx_inline int
-ngx_bpf(enum bpf_cmd cmd, union bpf_attr *attr, unsigned int size)
+స్థిర ngx_inline పూర్ణాంకం
+ngx_bpf(గణన bpf_cmd cmd, సంఘం bpf_attr *attr, గుర్తులేని పూర్ణాంకం కొలత)
 {
-    return syscall(__NR_bpf, cmd, attr, size);
+    తిరిగి syscall(__NR_bpf, cmd, attr, కొలత);
 }
 
 
-void
-ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol, int fd)
+శూన్య
+ngx_bpf_కార్యక్రమం_link(ngx_bpf_కార్యక్రమం_t *కార్యక్రమం, స్థిరరాశి అక్షరం *చిహ్నం, పూర్ణాంకం fd)
 {
     ngx_uint_t        i;
     ngx_bpf_reloc_t  *rl;
 
-    rl = program->relocs;
+    rl = కార్యక్రమం->relocs;
 
-    for (i = 0; i < program->nrelocs; i++) {
-        if (ngx_strcmp(rl[i].name, symbol) == 0) {
-            program->ins[rl[i].offset].src_reg = 1;
-            program->ins[rl[i].offset].imm = fd;
+    కొరకు (i = 0; i < కార్యక్రమం->nrelocs; i++) {
+        ఒకవేళ (ngx_strcmp(rl[i].name, చిహ్నం) == 0) {
+            కార్యక్రమం->ins[rl[i].స్థానభ్రంశం].src_reg = 1;
+            కార్యక్రమం->ins[rl[i].స్థానభ్రంశం].imm = fd;
         }
     }
 }
 
 
-int
-ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program)
+పూర్ణాంకం
+ngx_bpf_ఎక్కించు_కార్యక్రమం(ngx_log_t *సంవర్గమానం, ngx_bpf_కార్యక్రమం_t *కార్యక్రమం)
 {
-    int             fd;
-    union bpf_attr  attr;
-#if (NGX_DEBUG)
-    char            buf[NGX_BPF_LOGBUF_SIZE];
-#endif
+    పూర్ణాంకం             fd;
+    సంఘం bpf_attr  attr;
+#ఒకవేళ (NGX_DEBUG)
+    అక్షరం            buf[NGX_BPF_LOGBUF_కొలత];
+#అయితే_ముగింపు
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, పరిమాణం(సంఘం bpf_attr));
 
-    attr.license = (uintptr_t) program->license;
-    attr.prog_type = program->type;
-    attr.insns = (uintptr_t) program->ins;
-    attr.insn_cnt = program->nins;
+    attr.license = (uintptr_t) కార్యక్రమం->license;
+    attr.prog_type = కార్యక్రమం->type;
+    attr.insns = (uintptr_t) కార్యక్రమం->ins;
+    attr.insn_cnt = కార్యక్రమం->nins;
 
-#if (NGX_DEBUG)
+#ఒకవేళ (NGX_DEBUG)
     /* for verifier errors */
     attr.log_buf = (uintptr_t) buf;
-    attr.log_size = NGX_BPF_LOGBUF_SIZE;
+    attr.log_కొలత = NGX_BPF_LOGBUF_కొలత;
     attr.log_level = 1;
-#endif
+#అయితే_ముగింపు
 
-    fd = ngx_bpf(BPF_PROG_LOAD, &attr, sizeof(attr));
-    if (fd < 0) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    fd = ngx_bpf(BPF_PROG_ఎక్కించు, &attr, పరిమాణం(attr));
+    ఒకవేళ (fd < 0) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                       "failed to load BPF program");
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0,
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, సంవర్గమానం, 0,
                        "bpf verifier: %s", buf);
 
-        return -1;
+        తిరిగి -1;
     }
 
-    return fd;
+    తిరిగి fd;
 }
 
 
-int
-ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags)
+పూర్ణాంకం
+ngx_bpf_map_create(ngx_log_t *సంవర్గమానం, గణన bpf_map_type type, పూర్ణాంకం కీలకం_కొలత,
+    పూర్ణాంకం విలువ_కొలత, పూర్ణాంకం max_entries, uint32_t map_flags)
 {
-    int             fd;
-    union bpf_attr  attr;
+    పూర్ణాంకం             fd;
+    సంఘం bpf_attr  attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, పరిమాణం(సంఘం bpf_attr));
 
     attr.map_type = type;
-    attr.key_size = key_size;
-    attr.value_size = value_size;
+    attr.కీలకం_కొలత = కీలకం_కొలత;
+    attr.విలువ_కొలత = విలువ_కొలత;
     attr.max_entries = max_entries;
     attr.map_flags = map_flags;
 
-    fd = ngx_bpf(BPF_MAP_CREATE, &attr, sizeof(attr));
-    if (fd < 0) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    fd = ngx_bpf(BPF_MAP_CREATE, &attr, పరిమాణం(attr));
+    ఒకవేళ (fd < 0) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                       "failed to create BPF map");
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
-    return fd;
+    తిరిగి fd;
 }
 
 
-int
-ngx_bpf_map_update(int fd, const void *key, const void *value, uint64_t flags)
+పూర్ణాంకం
+ngx_bpf_map_update(పూర్ణాంకం fd, స్థిరరాశి శూన్య *కీలకం, స్థిరరాశి శూన్య *విలువ, uint64_t flags)
 {
-    union bpf_attr attr;
+    సంఘం bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, పరిమాణం(సంఘం bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.కీలకం = (uintptr_t) కీలకం;
+    attr.విలువ = (uintptr_t) విలువ;
     attr.flags = flags;
 
-    return ngx_bpf(BPF_MAP_UPDATE_ELEM, &attr, sizeof(attr));
+    తిరిగి ngx_bpf(BPF_MAP_UPDATE_ELEM, &attr, పరిమాణం(attr));
 }
 
 
-int
-ngx_bpf_map_delete(int fd, const void *key)
+పూర్ణాంకం
+ngx_bpf_map_delete(పూర్ణాంకం fd, స్థిరరాశి శూన్య *కీలకం)
 {
-    union bpf_attr attr;
+    సంఘం bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, పరిమాణం(సంఘం bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
+    attr.కీలకం = (uintptr_t) కీలకం;
 
-    return ngx_bpf(BPF_MAP_DELETE_ELEM, &attr, sizeof(attr));
+    తిరిగి ngx_bpf(BPF_MAP_DELETE_ELEM, &attr, పరిమాణం(attr));
 }
 
 
-int
-ngx_bpf_map_lookup(int fd, const void *key, void *value)
+పూర్ణాంకం
+ngx_bpf_map_lookup(పూర్ణాంకం fd, స్థిరరాశి శూన్య *కీలకం, శూన్య *విలువ)
 {
-    union bpf_attr attr;
+    సంఘం bpf_attr attr;
 
-    ngx_memzero(&attr, sizeof(union bpf_attr));
+    ngx_memzero(&attr, పరిమాణం(సంఘం bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.కీలకం = (uintptr_t) కీలకం;
+    attr.విలువ = (uintptr_t) విలువ;
 
-    return ngx_bpf(BPF_MAP_LOOKUP_ELEM, &attr, sizeof(attr));
+    తిరిగి ngx_bpf(BPF_MAP_LOOKUP_ELEM, &attr, పరిమాణం(attr));
 }

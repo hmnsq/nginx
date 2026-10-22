@@ -5,23 +5,23 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
 ngx_buf_t *
-ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
+ngx_create_తాత్కాలిక_buf(ngx_pool_t *pool, కొలత_t కొలత)
 {
     ngx_buf_t *b;
 
     b = ngx_calloc_buf(pool);
-    if (b == NULL) {
-        return NULL;
+    ఒకవేళ (b == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
-    b->start = ngx_palloc(pool, size);
-    if (b->start == NULL) {
-        return NULL;
+    b->ప్రారంభం = ngx_palloc(pool, కొలత);
+    ఒకవేళ (b->ప్రారంభం == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
     /*
@@ -35,12 +35,12 @@ ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
      *     and flags
      */
 
-    b->pos = b->start;
-    b->last = b->start;
-    b->end = b->last + size;
+    b->pos = b->ప్రారంభం;
+    b->చివరి = b->ప్రారంభం;
+    b->చివర = b->చివరి + కొలత;
     b->temporary = 1;
 
-    return b;
+    తిరిగి b;
 }
 
 
@@ -51,40 +51,40 @@ ngx_alloc_chain_link(ngx_pool_t *pool)
 
     cl = pool->chain;
 
-    if (cl) {
-        pool->chain = cl->next;
-        return cl;
+    ఒకవేళ (cl) {
+        pool->chain = cl->తదుపరి;
+        తిరిగి cl;
     }
 
-    cl = ngx_palloc(pool, sizeof(ngx_chain_t));
-    if (cl == NULL) {
-        return NULL;
+    cl = ngx_palloc(pool, పరిమాణం(ngx_chain_t));
+    ఒకవేళ (cl == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
-    return cl;
+    తిరిగి cl;
 }
 
 
 ngx_chain_t *
-ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
+ngx_create_chain_యొక్క_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
 {
     u_char       *p;
     ngx_int_t     i;
     ngx_buf_t    *b;
     ngx_chain_t  *chain, *cl, **ll;
 
-    p = ngx_palloc(pool, bufs->num * bufs->size);
-    if (p == NULL) {
-        return NULL;
+    p = ngx_palloc(pool, bufs->అంకె * bufs->కొలత);
+    ఒకవేళ (p == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
     ll = &chain;
 
-    for (i = 0; i < bufs->num; i++) {
+    కొరకు (i = 0; i < bufs->అంకె; i++) {
 
         b = ngx_calloc_buf(pool);
-        if (b == NULL) {
-            return NULL;
+        ఒకవేళ (b == ఖాళీ) {
+            తిరిగి ఖాళీ;
         }
 
         /*
@@ -100,215 +100,215 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
          */
 
         b->pos = p;
-        b->last = p;
+        b->చివరి = p;
         b->temporary = 1;
 
-        b->start = p;
-        p += bufs->size;
-        b->end = p;
+        b->ప్రారంభం = p;
+        p += bufs->కొలత;
+        b->చివర = p;
 
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            return NULL;
+        ఒకవేళ (cl == ఖాళీ) {
+            తిరిగి ఖాళీ;
         }
 
         cl->buf = b;
         *ll = cl;
-        ll = &cl->next;
+        ll = &cl->తదుపరి;
     }
 
-    *ll = NULL;
+    *ll = ఖాళీ;
 
-    return chain;
+    తిరిగి chain;
 }
 
 
 ngx_int_t
-ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *in)
+ngx_chain_కూడు_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *లోపల)
 {
     ngx_chain_t  *cl, **ll;
 
     ll = chain;
 
-    for (cl = *chain; cl; cl = cl->next) {
-        ll = &cl->next;
+    కొరకు (cl = *chain; cl; cl = cl->తదుపరి) {
+        ll = &cl->తదుపరి;
     }
 
-    while (in) {
+    అయితే (లోపల) {
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            *ll = NULL;
-            return NGX_ERROR;
+        ఒకవేళ (cl == ఖాళీ) {
+            *ll = ఖాళీ;
+            తిరిగి NGX_ERROR;
         }
 
-        cl->buf = in->buf;
+        cl->buf = లోపల->buf;
         *ll = cl;
-        ll = &cl->next;
-        in = in->next;
+        ll = &cl->తదుపరి;
+        లోపల = లోపల->తదుపరి;
     }
 
-    *ll = NULL;
+    *ll = ఖాళీ;
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
 ngx_chain_t *
-ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **free)
+ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **విడుదల)
 {
     ngx_chain_t  *cl;
 
-    if (*free) {
-        cl = *free;
-        *free = cl->next;
-        cl->next = NULL;
-        return cl;
+    ఒకవేళ (*విడుదల) {
+        cl = *విడుదల;
+        *విడుదల = cl->తదుపరి;
+        cl->తదుపరి = ఖాళీ;
+        తిరిగి cl;
     }
 
     cl = ngx_alloc_chain_link(p);
-    if (cl == NULL) {
-        return NULL;
+    ఒకవేళ (cl == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
     cl->buf = ngx_calloc_buf(p);
-    if (cl->buf == NULL) {
-        return NULL;
+    ఒకవేళ (cl->buf == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
-    cl->next = NULL;
+    cl->తదుపరి = ఖాళీ;
 
-    return cl;
+    తిరిగి cl;
 }
 
 
-void
-ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free, ngx_chain_t **busy,
-    ngx_chain_t **out, ngx_buf_tag_t tag)
+శూన్య
+ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **విడుదల, ngx_chain_t **busy,
+    ngx_chain_t **బహిర్గతం, ngx_buf_ట్యాగ్_t ట్యాగ్)
 {
     ngx_chain_t  *cl;
 
-    if (*out) {
-        if (*busy == NULL) {
-            *busy = *out;
+    ఒకవేళ (*బహిర్గతం) {
+        ఒకవేళ (*busy == ఖాళీ) {
+            *busy = *బహిర్గతం;
 
-        } else {
-            for (cl = *busy; cl->next; cl = cl->next) { /* void */ }
+        } లేకపోతే {
+            కొరకు (cl = *busy; cl->తదుపరి; cl = cl->తదుపరి) { /* void */ }
 
-            cl->next = *out;
+            cl->తదుపరి = *బహిర్గతం;
         }
 
-        *out = NULL;
+        *బహిర్గతం = ఖాళీ;
     }
 
-    while (*busy) {
+    అయితే (*busy) {
         cl = *busy;
 
-        if (cl->buf->tag != tag) {
-            *busy = cl->next;
+        ఒకవేళ (cl->buf->ట్యాగ్ != ట్యాగ్) {
+            *busy = cl->తదుపరి;
             ngx_free_chain(p, cl);
-            continue;
+            కొనసాగు;
         }
 
-        if (ngx_buf_size(cl->buf) != 0) {
-            break;
+        ఒకవేళ (ngx_buf_కొలత(cl->buf) != 0) {
+            ఆపు;
         }
 
-        cl->buf->pos = cl->buf->start;
-        cl->buf->last = cl->buf->start;
+        cl->buf->pos = cl->buf->ప్రారంభం;
+        cl->buf->చివరి = cl->buf->ప్రారంభం;
 
-        *busy = cl->next;
-        cl->next = *free;
-        *free = cl;
+        *busy = cl->తదుపరి;
+        cl->తదుపరి = *విడుదల;
+        *విడుదల = cl;
     }
 }
 
 
 off_t
-ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit)
+ngx_chain_coalesce_file(ngx_chain_t **లోపల, off_t హద్దు)
 {
-    off_t         total, size, aligned, fprev;
+    off_t         మొత్తం, కొలత, aligned, fprev;
     ngx_fd_t      fd;
     ngx_chain_t  *cl;
 
-    total = 0;
+    మొత్తం = 0;
 
-    cl = *in;
+    cl = *లోపల;
     fd = cl->buf->file->fd;
 
-    do {
-        size = cl->buf->file_last - cl->buf->file_pos;
+    చేయి {
+        కొలత = cl->buf->file_చివరి - cl->buf->file_pos;
 
-        if (size > limit - total) {
-            size = limit - total;
+        ఒకవేళ (కొలత > హద్దు - మొత్తం) {
+            కొలత = హద్దు - మొత్తం;
 
-            aligned = (cl->buf->file_pos + size + ngx_pagesize - 1)
+            aligned = (cl->buf->file_pos + కొలత + ngx_pagesize - 1)
                        & ~((off_t) ngx_pagesize - 1);
 
-            if (aligned <= cl->buf->file_last) {
-                size = aligned - cl->buf->file_pos;
+            ఒకవేళ (aligned <= cl->buf->file_చివరి) {
+                కొలత = aligned - cl->buf->file_pos;
             }
 
-            total += size;
-            break;
+            మొత్తం += కొలత;
+            ఆపు;
         }
 
-        total += size;
-        fprev = cl->buf->file_pos + size;
-        cl = cl->next;
+        మొత్తం += కొలత;
+        fprev = cl->buf->file_pos + కొలత;
+        cl = cl->తదుపరి;
 
-    } while (cl
-             && cl->buf->in_file
-             && total < limit
+    } అయితే (cl
+             && cl->buf->లోపల_file
+             && మొత్తం < హద్దు
              && fd == cl->buf->file->fd
              && fprev == cl->buf->file_pos);
 
-    *in = cl;
+    *లోపల = cl;
 
-    return total;
+    తిరిగి మొత్తం;
 }
 
 
 ngx_chain_t *
-ngx_chain_update_sent(ngx_chain_t *in, off_t sent)
+ngx_chain_update_పంపిన(ngx_chain_t *లోపల, off_t పంపిన)
 {
-    off_t  size;
+    off_t  కొలత;
 
-    for ( /* void */ ; in; in = in->next) {
+    కొరకు ( /* void */ ; లోపల; లోపల = లోపల->తదుపరి) {
 
-        if (ngx_buf_special(in->buf)) {
-            continue;
+        ఒకవేళ (ngx_buf_special(లోపల->buf)) {
+            కొనసాగు;
         }
 
-        if (sent == 0) {
-            break;
+        ఒకవేళ (పంపిన == 0) {
+            ఆపు;
         }
 
-        size = ngx_buf_size(in->buf);
+        కొలత = ngx_buf_కొలత(లోపల->buf);
 
-        if (sent >= size) {
-            sent -= size;
+        ఒకవేళ (పంపిన >= కొలత) {
+            పంపిన -= కొలత;
 
-            if (ngx_buf_in_memory(in->buf)) {
-                in->buf->pos = in->buf->last;
+            ఒకవేళ (ngx_buf_లోపల_జ్ఞాపకం(లోపల->buf)) {
+                లోపల->buf->pos = లోపల->buf->చివరి;
             }
 
-            if (in->buf->in_file) {
-                in->buf->file_pos = in->buf->file_last;
+            ఒకవేళ (లోపల->buf->లోపల_file) {
+                లోపల->buf->file_pos = లోపల->buf->file_చివరి;
             }
 
-            continue;
+            కొనసాగు;
         }
 
-        if (ngx_buf_in_memory(in->buf)) {
-            in->buf->pos += (size_t) sent;
+        ఒకవేళ (ngx_buf_లోపల_జ్ఞాపకం(లోపల->buf)) {
+            లోపల->buf->pos += (కొలత_t) పంపిన;
         }
 
-        if (in->buf->in_file) {
-            in->buf->file_pos += sent;
+        ఒకవేళ (లోపల->buf->లోపల_file) {
+            లోపల->buf->file_pos += పంపిన;
         }
 
-        break;
+        ఆపు;
     }
 
-    return in;
+    తిరిగి లోపల;
 }

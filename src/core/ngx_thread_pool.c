@@ -6,74 +6,74 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_thread_pool.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
+#అన్తర్భావ <ngx_thread_pool.h>
 
 
-typedef struct {
+రకనిర్వచనం నిర్మాణం {
     ngx_array_t               pools;
 } ngx_thread_pool_conf_t;
 
 
-typedef struct {
-    ngx_thread_task_t        *first;
-    ngx_thread_task_t       **last;
-} ngx_thread_pool_queue_t;
+రకనిర్వచనం నిర్మాణం {
+    ngx_thread_task_t        *మొదటి;
+    ngx_thread_task_t       **చివరి;
+} ngx_thread_pool_వరుస_t;
 
-#define ngx_thread_pool_queue_init(q)                                         \
-    (q)->first = NULL;                                                        \
-    (q)->last = &(q)->first
+#నిర్వచించు ngx_thread_pool_వరుస_init(q)                                         \
+    (q)->మొదటి = ఖాళీ;                                                        \
+    (q)->చివరి = &(q)->మొదటి
 
 
-struct ngx_thread_pool_s {
+నిర్మాణం ngx_thread_pool_s {
     ngx_thread_mutex_t        mtx;
-    ngx_thread_pool_queue_t   queue;
-    ngx_int_t                 waiting;
+    ngx_thread_pool_వరుస_t   వరుస;
+    ngx_int_t                 నిరీక్షణ;
     ngx_thread_cond_t         cond;
 
-    ngx_log_t                *log;
+    ngx_log_t                *సంవర్గమానం;
 
     ngx_str_t                 name;
-    ngx_uint_t                threads;
-    ngx_int_t                 max_queue;
+    ngx_uint_t                దారాలు;
+    ngx_int_t                 max_వరుస;
 
     u_char                   *file;
-    ngx_uint_t                line;
+    ngx_uint_t                పంక్తి;
 };
 
 
-static ngx_int_t ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *log,
+స్థిర ngx_int_t ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *సంవర్గమానం,
     ngx_pool_t *pool);
-static void ngx_thread_pool_destroy(ngx_thread_pool_t *tp);
-static void ngx_thread_pool_exit_handler(void *data, ngx_log_t *log);
+స్థిర శూన్య ngx_thread_pool_destroy(ngx_thread_pool_t *tp);
+స్థిర శూన్య ngx_thread_pool_exit_handler(శూన్య *దత్తాంశం, ngx_log_t *సంవర్గమానం);
 
-static void *ngx_thread_pool_cycle(void *data);
-static void ngx_thread_pool_handler(ngx_event_t *ev);
+స్థిర శూన్య *ngx_thread_pool_చక్రం(శూన్య *దత్తాంశం);
+స్థిర శూన్య ngx_thread_pool_handler(ngx_event_t *ev);
 
-static char *ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+స్థిర అక్షరం *ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, శూన్య *conf);
 
-static void *ngx_thread_pool_create_conf(ngx_cycle_t *cycle);
-static char *ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf);
+స్థిర శూన్య *ngx_thread_pool_create_conf(ngx_చక్రం_t *చక్రం);
+స్థిర అక్షరం *ngx_thread_pool_init_conf(ngx_చక్రం_t *చక్రం, శూన్య *conf);
 
-static ngx_int_t ngx_thread_pool_init_worker(ngx_cycle_t *cycle);
-static void ngx_thread_pool_exit_worker(ngx_cycle_t *cycle);
+స్థిర ngx_int_t ngx_thread_pool_init_కార్మికుడు(ngx_చక్రం_t *చక్రం);
+స్థిర శూన్య ngx_thread_pool_exit_కార్మికుడు(ngx_చక్రం_t *చక్రం);
 
 
-static ngx_command_t  ngx_thread_pool_commands[] = {
+స్థిర ngx_command_t  ngx_thread_pool_commands[] = {
 
     { ngx_string("thread_pool"),
-      NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE23,
+      NGX_MAIN_CONF|NGX_ప్రత్యక్ష_CONF|NGX_CONF_TAKE23,
       ngx_thread_pool,
       0,
       0,
-      NULL },
+      ఖాళీ },
 
       ngx_null_command
 };
 
 
-static ngx_core_module_t  ngx_thread_pool_module_ctx = {
+స్థిర ngx_core_module_t  ngx_thread_pool_module_ctx = {
     ngx_string("thread_pool"),
     ngx_thread_pool_create_conf,
     ngx_thread_pool_init_conf
@@ -85,338 +85,338 @@ ngx_module_t  ngx_thread_pool_module = {
     &ngx_thread_pool_module_ctx,           /* module context */
     ngx_thread_pool_commands,              /* module directives */
     NGX_CORE_MODULE,                       /* module type */
-    NULL,                                  /* init master */
-    NULL,                                  /* init module */
-    ngx_thread_pool_init_worker,           /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
-    ngx_thread_pool_exit_worker,           /* exit process */
-    NULL,                                  /* exit master */
+    ఖాళీ,                                  /* init master */
+    ఖాళీ,                                  /* init module */
+    ngx_thread_pool_init_కార్మికుడు,           /* init process */
+    ఖాళీ,                                  /* init thread */
+    ఖాళీ,                                  /* exit thread */
+    ngx_thread_pool_exit_కార్మికుడు,           /* exit process */
+    ఖాళీ,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
-static ngx_str_t  ngx_thread_pool_default = ngx_string("default");
+స్థిర ngx_str_t  ngx_thread_pool_default = ngx_string("default");
 
-static ngx_uint_t               ngx_thread_pool_task_id;
-static ngx_atomic_t             ngx_thread_pool_done_lock;
-static ngx_thread_pool_queue_t  ngx_thread_pool_done;
+స్థిర ngx_uint_t               ngx_thread_pool_task_id;
+స్థిర ngx_atomic_t             ngx_thread_pool_పూర్తి_తాళం;
+స్థిర ngx_thread_pool_వరుస_t  ngx_thread_pool_పూర్తి;
 
 
-static ngx_int_t
-ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *log, ngx_pool_t *pool)
+స్థిర ngx_int_t
+ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *సంవర్గమానం, ngx_pool_t *pool)
 {
-    int             err;
+    పూర్ణాంకం             err;
     pthread_t       tid;
     ngx_uint_t      n;
     pthread_attr_t  attr;
 
-    if (ngx_notify == NULL) {
-        ngx_log_error(NGX_LOG_ALERT, log, 0,
+    ఒకవేళ (ngx_notify == ఖాళీ) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, 0,
                "the configured event method cannot be used with thread pools");
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
-    ngx_thread_pool_queue_init(&tp->queue);
+    ngx_thread_pool_వరుస_init(&tp->వరుస);
 
-    if (ngx_thread_mutex_create(&tp->mtx, log) != NGX_OK) {
-        return NGX_ERROR;
+    ఒకవేళ (ngx_thread_mutex_create(&tp->mtx, సంవర్గమానం) != NGX_OK) {
+        తిరిగి NGX_ERROR;
     }
 
-    if (ngx_thread_cond_create(&tp->cond, log) != NGX_OK) {
-        (void) ngx_thread_mutex_destroy(&tp->mtx, log);
-        return NGX_ERROR;
+    ఒకవేళ (ngx_thread_cond_create(&tp->cond, సంవర్గమానం) != NGX_OK) {
+        (శూన్య) ngx_thread_mutex_destroy(&tp->mtx, సంవర్గమానం);
+        తిరిగి NGX_ERROR;
     }
 
-    tp->log = log;
+    tp->సంవర్గమానం = సంవర్గమానం;
 
     err = pthread_attr_init(&attr);
-    if (err) {
-        ngx_log_error(NGX_LOG_ALERT, log, err,
+    ఒకవేళ (err) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, err,
                       "pthread_attr_init() failed");
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
     err = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    if (err) {
-        ngx_log_error(NGX_LOG_ALERT, log, err,
+    ఒకవేళ (err) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, err,
                       "pthread_attr_setdetachstate() failed");
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
-#if 0
-    err = pthread_attr_setstacksize(&attr, PTHREAD_STACK_MIN);
-    if (err) {
-        ngx_log_error(NGX_LOG_ALERT, log, err,
+#ఒకవేళ 0
+    err = pthread_attr_setstacksize(&attr, PTHREAD_దొంతర_MIN);
+    ఒకవేళ (err) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, err,
                       "pthread_attr_setstacksize() failed");
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
-#endif
+#అయితే_ముగింపు
 
-    for (n = 0; n < tp->threads; n++) {
-        err = pthread_create(&tid, &attr, ngx_thread_pool_cycle, tp);
-        if (err) {
-            ngx_log_error(NGX_LOG_ALERT, log, err,
+    కొరకు (n = 0; n < tp->దారాలు; n++) {
+        err = pthread_create(&tid, &attr, ngx_thread_pool_చక్రం, tp);
+        ఒకవేళ (err) {
+            ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, err,
                           "pthread_create() failed");
-            return NGX_ERROR;
+            తిరిగి NGX_ERROR;
         }
     }
 
-    (void) pthread_attr_destroy(&attr);
+    (శూన్య) pthread_attr_destroy(&attr);
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
-static void
+స్థిర శూన్య
 ngx_thread_pool_destroy(ngx_thread_pool_t *tp)
 {
     ngx_uint_t           n;
     ngx_thread_task_t    task;
-    volatile ngx_uint_t  lock;
+    అస్థిర ngx_uint_t  తాళం;
 
-    ngx_memzero(&task, sizeof(ngx_thread_task_t));
+    ngx_memzero(&task, పరిమాణం(ngx_thread_task_t));
 
     task.handler = ngx_thread_pool_exit_handler;
-    task.ctx = (void *) &lock;
+    task.ctx = (శూన్య *) &తాళం;
 
-    for (n = 0; n < tp->threads; n++) {
-        lock = 1;
+    కొరకు (n = 0; n < tp->దారాలు; n++) {
+        తాళం = 1;
 
-        if (ngx_thread_task_post(tp, &task) != NGX_OK) {
-            return;
+        ఒకవేళ (ngx_thread_task_post(tp, &task) != NGX_OK) {
+            తిరిగి;
         }
 
-        while (lock) {
+        అయితే (తాళం) {
             ngx_sched_yield();
         }
 
-        task.event.active = 0;
+        task.event.చురుకైన = 0;
     }
 
-    (void) ngx_thread_cond_destroy(&tp->cond, tp->log);
+    (శూన్య) ngx_thread_cond_destroy(&tp->cond, tp->సంవర్గమానం);
 
-    (void) ngx_thread_mutex_destroy(&tp->mtx, tp->log);
+    (శూన్య) ngx_thread_mutex_destroy(&tp->mtx, tp->సంవర్గమానం);
 }
 
 
-static void
-ngx_thread_pool_exit_handler(void *data, ngx_log_t *log)
+స్థిర శూన్య
+ngx_thread_pool_exit_handler(శూన్య *దత్తాంశం, ngx_log_t *సంవర్గమానం)
 {
-    ngx_uint_t *lock = data;
+    ngx_uint_t *తాళం = దత్తాంశం;
 
-    *lock = 0;
+    *తాళం = 0;
 
-    pthread_exit(NULL);
+    pthread_exit(ఖాళీ);
 }
 
 
 ngx_thread_task_t *
-ngx_thread_task_alloc(ngx_pool_t *pool, size_t size)
+ngx_thread_task_alloc(ngx_pool_t *pool, కొలత_t కొలత)
 {
     ngx_thread_task_t  *task;
 
-    task = ngx_pcalloc(pool, sizeof(ngx_thread_task_t) + size);
-    if (task == NULL) {
-        return NULL;
+    task = ngx_pcalloc(pool, పరిమాణం(ngx_thread_task_t) + కొలత);
+    ఒకవేళ (task == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
     task->ctx = task + 1;
 
-    return task;
+    తిరిగి task;
 }
 
 
 ngx_int_t
 ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
 {
-    if (task->event.active) {
-        ngx_log_error(NGX_LOG_ALERT, tp->log, 0,
+    ఒకవేళ (task->event.చురుకైన) {
+        ngx_log_error(NGX_LOG_ALERT, tp->సంవర్గమానం, 0,
                       "task #%ui already active", task->id);
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
-    if (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
-        return NGX_ERROR;
+    ఒకవేళ (ngx_thread_mutex_తాళం(&tp->mtx, tp->సంవర్గమానం) != NGX_OK) {
+        తిరిగి NGX_ERROR;
     }
 
-    if (tp->waiting >= tp->max_queue) {
-        (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
+    ఒకవేళ (tp->నిరీక్షణ >= tp->max_వరుస) {
+        (శూన్య) ngx_thread_mutex_unlock(&tp->mtx, tp->సంవర్గమానం);
 
-        ngx_log_error(NGX_LOG_ERR, tp->log, 0,
+        ngx_log_error(NGX_LOG_ERR, tp->సంవర్గమానం, 0,
                       "thread pool \"%V\" queue overflow: %i tasks waiting",
-                      &tp->name, tp->waiting);
-        return NGX_ERROR;
+                      &tp->name, tp->నిరీక్షణ);
+        తిరిగి NGX_ERROR;
     }
 
-    task->event.active = 1;
+    task->event.చురుకైన = 1;
 
     task->id = ngx_thread_pool_task_id++;
-    task->next = NULL;
+    task->తదుపరి = ఖాళీ;
 
-    if (ngx_thread_cond_signal(&tp->cond, tp->log) != NGX_OK) {
-        (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
-        return NGX_ERROR;
+    ఒకవేళ (ngx_thread_cond_signal(&tp->cond, tp->సంవర్గమానం) != NGX_OK) {
+        (శూన్య) ngx_thread_mutex_unlock(&tp->mtx, tp->సంవర్గమానం);
+        తిరిగి NGX_ERROR;
     }
 
-    *tp->queue.last = task;
-    tp->queue.last = &task->next;
+    *tp->వరుస.చివరి = task;
+    tp->వరుస.చివరి = &task->తదుపరి;
 
-    tp->waiting++;
+    tp->నిరీక్షణ++;
 
-    (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
+    (శూన్య) ngx_thread_mutex_unlock(&tp->mtx, tp->సంవర్గమానం);
 
-    ngx_log_debug2(NGX_LOG_DEBUG_CORE, tp->log, 0,
+    ngx_log_debug2(NGX_LOG_DEBUG_CORE, tp->సంవర్గమానం, 0,
                    "task #%ui added to thread pool \"%V\"",
                    task->id, &tp->name);
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
-static void *
-ngx_thread_pool_cycle(void *data)
+స్థిర శూన్య *
+ngx_thread_pool_చక్రం(శూన్య *దత్తాంశం)
 {
-    ngx_thread_pool_t *tp = data;
+    ngx_thread_pool_t *tp = దత్తాంశం;
 
-    int                 err;
-    sigset_t            set;
+    పూర్ణాంకం                 err;
+    sigset_t            సమితి;
     ngx_thread_task_t  *task;
 
-#if 0
-    ngx_time_update();
-#endif
+#ఒకవేళ 0
+    ngx_సమయం_update();
+#అయితే_ముగింపు
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, tp->log, 0,
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, tp->సంవర్గమానం, 0,
                    "thread in pool \"%V\" started", &tp->name);
 
-    sigfillset(&set);
+    sigfillset(&సమితి);
 
-    sigdelset(&set, SIGILL);
-    sigdelset(&set, SIGFPE);
-    sigdelset(&set, SIGSEGV);
-    sigdelset(&set, SIGBUS);
+    sigdelset(&సమితి, SIGILL);
+    sigdelset(&సమితి, SIGFPE);
+    sigdelset(&సమితి, SIGSEGV);
+    sigdelset(&సమితి, SIGBUS);
 
-    err = pthread_sigmask(SIG_BLOCK, &set, NULL);
-    if (err) {
-        ngx_log_error(NGX_LOG_ALERT, tp->log, err, "pthread_sigmask() failed");
-        return NULL;
+    err = pthread_sigmask(SIG_ఖండం, &సమితి, ఖాళీ);
+    ఒకవేళ (err) {
+        ngx_log_error(NGX_LOG_ALERT, tp->సంవర్గమానం, err, "pthread_sigmask() failed");
+        తిరిగి ఖాళీ;
     }
 
-    for ( ;; ) {
-        if (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
-            return NULL;
+    కొరకు ( ;; ) {
+        ఒకవేళ (ngx_thread_mutex_తాళం(&tp->mtx, tp->సంవర్గమానం) != NGX_OK) {
+            తిరిగి ఖాళీ;
         }
 
         /* the number may become negative */
-        tp->waiting--;
+        tp->నిరీక్షణ--;
 
-        while (tp->queue.first == NULL) {
-            if (ngx_thread_cond_wait(&tp->cond, &tp->mtx, tp->log)
+        అయితే (tp->వరుస.మొదటి == ఖాళీ) {
+            ఒకవేళ (ngx_thread_cond_wait(&tp->cond, &tp->mtx, tp->సంవర్గమానం)
                 != NGX_OK)
             {
-                (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
-                return NULL;
+                (శూన్య) ngx_thread_mutex_unlock(&tp->mtx, tp->సంవర్గమానం);
+                తిరిగి ఖాళీ;
             }
         }
 
-        task = tp->queue.first;
-        tp->queue.first = task->next;
+        task = tp->వరుస.మొదటి;
+        tp->వరుస.మొదటి = task->తదుపరి;
 
-        if (tp->queue.first == NULL) {
-            tp->queue.last = &tp->queue.first;
+        ఒకవేళ (tp->వరుస.మొదటి == ఖాళీ) {
+            tp->వరుస.చివరి = &tp->వరుస.మొదటి;
         }
 
-        if (ngx_thread_mutex_unlock(&tp->mtx, tp->log) != NGX_OK) {
-            return NULL;
+        ఒకవేళ (ngx_thread_mutex_unlock(&tp->mtx, tp->సంవర్గమానం) != NGX_OK) {
+            తిరిగి ఖాళీ;
         }
 
-#if 0
-        ngx_time_update();
-#endif
+#ఒకవేళ 0
+        ngx_సమయం_update();
+#అయితే_ముగింపు
 
-        ngx_log_debug2(NGX_LOG_DEBUG_CORE, tp->log, 0,
+        ngx_log_debug2(NGX_LOG_DEBUG_CORE, tp->సంవర్గమానం, 0,
                        "run task #%ui in thread pool \"%V\"",
                        task->id, &tp->name);
 
-        task->handler(task->ctx, tp->log);
+        task->handler(task->ctx, tp->సంవర్గమానం);
 
-        ngx_log_debug2(NGX_LOG_DEBUG_CORE, tp->log, 0,
+        ngx_log_debug2(NGX_LOG_DEBUG_CORE, tp->సంవర్గమానం, 0,
                        "complete task #%ui in thread pool \"%V\"",
                        task->id, &tp->name);
 
-        task->next = NULL;
+        task->తదుపరి = ఖాళీ;
 
-        ngx_spinlock(&ngx_thread_pool_done_lock, 1, 2048);
+        ngx_spinlock(&ngx_thread_pool_పూర్తి_తాళం, 1, 2048);
 
-        *ngx_thread_pool_done.last = task;
-        ngx_thread_pool_done.last = &task->next;
+        *ngx_thread_pool_పూర్తి.చివరి = task;
+        ngx_thread_pool_పూర్తి.చివరి = &task->తదుపరి;
 
-        ngx_memory_barrier();
+        ngx_జ్ఞాపకం_barrier();
 
-        ngx_unlock(&ngx_thread_pool_done_lock);
+        ngx_unlock(&ngx_thread_pool_పూర్తి_తాళం);
 
-        (void) ngx_notify(ngx_thread_pool_handler);
+        (శూన్య) ngx_notify(ngx_thread_pool_handler);
     }
 }
 
 
-static void
+స్థిర శూన్య
 ngx_thread_pool_handler(ngx_event_t *ev)
 {
     ngx_event_t        *event;
     ngx_thread_task_t  *task;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, ev->log, 0, "thread pool handler");
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, ev->సంవర్గమానం, 0, "thread pool handler");
 
-    ngx_spinlock(&ngx_thread_pool_done_lock, 1, 2048);
+    ngx_spinlock(&ngx_thread_pool_పూర్తి_తాళం, 1, 2048);
 
-    task = ngx_thread_pool_done.first;
-    ngx_thread_pool_done.first = NULL;
-    ngx_thread_pool_done.last = &ngx_thread_pool_done.first;
+    task = ngx_thread_pool_పూర్తి.మొదటి;
+    ngx_thread_pool_పూర్తి.మొదటి = ఖాళీ;
+    ngx_thread_pool_పూర్తి.చివరి = &ngx_thread_pool_పూర్తి.మొదటి;
 
-    ngx_memory_barrier();
+    ngx_జ్ఞాపకం_barrier();
 
-    ngx_unlock(&ngx_thread_pool_done_lock);
+    ngx_unlock(&ngx_thread_pool_పూర్తి_తాళం);
 
-    while (task) {
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ev->log, 0,
+    అయితే (task) {
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ev->సంవర్గమానం, 0,
                        "run completion handler for task #%ui", task->id);
 
         event = &task->event;
-        task = task->next;
+        task = task->తదుపరి;
 
         event->complete = 1;
-        event->active = 0;
+        event->చురుకైన = 0;
 
         event->handler(event);
     }
 }
 
 
-static void *
-ngx_thread_pool_create_conf(ngx_cycle_t *cycle)
+స్థిర శూన్య *
+ngx_thread_pool_create_conf(ngx_చక్రం_t *చక్రం)
 {
     ngx_thread_pool_conf_t  *tcf;
 
-    tcf = ngx_pcalloc(cycle->pool, sizeof(ngx_thread_pool_conf_t));
-    if (tcf == NULL) {
-        return NULL;
+    tcf = ngx_pcalloc(చక్రం->pool, పరిమాణం(ngx_thread_pool_conf_t));
+    ఒకవేళ (tcf == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
-    if (ngx_array_init(&tcf->pools, cycle->pool, 4,
-                       sizeof(ngx_thread_pool_t *))
+    ఒకవేళ (ngx_array_init(&tcf->pools, చక్రం->pool, 4,
+                       పరిమాణం(ngx_thread_pool_t *))
         != NGX_OK)
     {
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    return tcf;
+    తిరిగి tcf;
 }
 
 
-static char *
-ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
+స్థిర అక్షరం *
+ngx_thread_pool_init_conf(ngx_చక్రం_t *చక్రం, శూన్య *conf)
 {
     ngx_thread_pool_conf_t *tcf = conf;
 
@@ -425,217 +425,217 @@ ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    కొరకు (i = 0; i < tcf->pools.nelts; i++) {
 
-        if (tpp[i]->threads) {
-            continue;
+        ఒకవేళ (tpp[i]->దారాలు) {
+            కొనసాగు;
         }
 
-        if (tpp[i]->name.len == ngx_thread_pool_default.len
-            && ngx_strncmp(tpp[i]->name.data, ngx_thread_pool_default.data,
+        ఒకవేళ (tpp[i]->name.len == ngx_thread_pool_default.len
+            && ngx_strncmp(tpp[i]->name.దత్తాంశం, ngx_thread_pool_default.దత్తాంశం,
                            ngx_thread_pool_default.len)
                == 0)
         {
-            tpp[i]->threads = 32;
-            tpp[i]->max_queue = 65536;
-            continue;
+            tpp[i]->దారాలు = 32;
+            tpp[i]->max_వరుస = 65536;
+            కొనసాగు;
         }
 
-        ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
+        ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, 0,
                       "unknown thread pool \"%V\" in %s:%ui",
-                      &tpp[i]->name, tpp[i]->file, tpp[i]->line);
+                      &tpp[i]->name, tpp[i]->file, tpp[i]->పంక్తి);
 
-        return NGX_CONF_ERROR;
+        తిరిగి NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    తిరిగి NGX_CONF_OK;
 }
 
 
-static char *
-ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+స్థిర అక్షరం *
+ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, శూన్య *conf)
 {
-    ngx_str_t          *value;
+    ngx_str_t          *విలువ;
     ngx_uint_t          i;
     ngx_thread_pool_t  *tp;
 
-    value = cf->args->elts;
+    విలువ = cf->వాదనలు->elts;
 
-    tp = ngx_thread_pool_add(cf, &value[1]);
+    tp = ngx_thread_pool_కూడు(cf, &విలువ[1]);
 
-    if (tp == NULL) {
-        return NGX_CONF_ERROR;
+    ఒకవేళ (tp == ఖాళీ) {
+        తిరిగి NGX_CONF_ERROR;
     }
 
-    if (tp->threads) {
+    ఒకవేళ (tp->దారాలు) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "duplicate thread pool \"%V\"", &tp->name);
-        return NGX_CONF_ERROR;
+        తిరిగి NGX_CONF_ERROR;
     }
 
-    tp->max_queue = 65536;
+    tp->max_వరుస = 65536;
 
-    for (i = 2; i < cf->args->nelts; i++) {
+    కొరకు (i = 2; i < cf->వాదనలు->nelts; i++) {
 
-        if (ngx_strncmp(value[i].data, "threads=", 8) == 0) {
+        ఒకవేళ (ngx_strncmp(విలువ[i].దత్తాంశం, "threads=", 8) == 0) {
 
-            tp->threads = ngx_atoi(value[i].data + 8, value[i].len - 8);
+            tp->దారాలు = ngx_atoi(విలువ[i].దత్తాంశం + 8, విలువ[i].len - 8);
 
-            if (tp->threads == (ngx_uint_t) NGX_ERROR || tp->threads == 0) {
+            ఒకవేళ (tp->దారాలు == (ngx_uint_t) NGX_ERROR || tp->దారాలు == 0) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                                   "invalid threads value \"%V\"", &value[i]);
-                return NGX_CONF_ERROR;
+                                   "invalid threads value \"%V\"", &విలువ[i]);
+                తిరిగి NGX_CONF_ERROR;
             }
 
-            continue;
+            కొనసాగు;
         }
 
-        if (ngx_strncmp(value[i].data, "max_queue=", 10) == 0) {
+        ఒకవేళ (ngx_strncmp(విలువ[i].దత్తాంశం, "max_queue=", 10) == 0) {
 
-            tp->max_queue = ngx_atoi(value[i].data + 10, value[i].len - 10);
+            tp->max_వరుస = ngx_atoi(విలువ[i].దత్తాంశం + 10, విలువ[i].len - 10);
 
-            if (tp->max_queue == NGX_ERROR) {
+            ఒకవేళ (tp->max_వరుస == NGX_ERROR) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                                   "invalid max_queue value \"%V\"", &value[i]);
-                return NGX_CONF_ERROR;
+                                   "invalid max_queue value \"%V\"", &విలువ[i]);
+                తిరిగి NGX_CONF_ERROR;
             }
 
-            continue;
+            కొనసాగు;
         }
     }
 
-    if (tp->threads == 0) {
+    ఒకవేళ (tp->దారాలు == 0) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "\"%V\" must have \"threads\" parameter",
                            &cmd->name);
-        return NGX_CONF_ERROR;
+        తిరిగి NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    తిరిగి NGX_CONF_OK;
 }
 
 
 ngx_thread_pool_t *
-ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name)
+ngx_thread_pool_కూడు(ngx_conf_t *cf, ngx_str_t *name)
 {
     ngx_thread_pool_t       *tp, **tpp;
     ngx_thread_pool_conf_t  *tcf;
 
-    if (name == NULL) {
+    ఒకవేళ (name == ఖాళీ) {
         name = &ngx_thread_pool_default;
     }
 
-    tp = ngx_thread_pool_get(cf->cycle, name);
+    tp = ngx_thread_pool_get(cf->చక్రం, name);
 
-    if (tp) {
-        return tp;
+    ఒకవేళ (tp) {
+        తిరిగి tp;
     }
 
-    tp = ngx_pcalloc(cf->pool, sizeof(ngx_thread_pool_t));
-    if (tp == NULL) {
-        return NULL;
+    tp = ngx_pcalloc(cf->pool, పరిమాణం(ngx_thread_pool_t));
+    ఒకవేళ (tp == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
     tp->name = *name;
-    tp->file = cf->conf_file->file.name.data;
-    tp->line = cf->conf_file->line;
+    tp->file = cf->conf_file->file.name.దత్తాంశం;
+    tp->పంక్తి = cf->conf_file->పంక్తి;
 
-    tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cf->cycle->conf_ctx,
+    tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cf->చక్రం->conf_ctx,
                                                   ngx_thread_pool_module);
 
-    tpp = ngx_array_push(&tcf->pools);
-    if (tpp == NULL) {
-        return NULL;
+    tpp = ngx_array_నెట్టు(&tcf->pools);
+    ఒకవేళ (tpp == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
     *tpp = tp;
 
-    return tp;
+    తిరిగి tp;
 }
 
 
 ngx_thread_pool_t *
-ngx_thread_pool_get(ngx_cycle_t *cycle, ngx_str_t *name)
+ngx_thread_pool_get(ngx_చక్రం_t *చక్రం, ngx_str_t *name)
 {
     ngx_uint_t                i;
     ngx_thread_pool_t       **tpp;
     ngx_thread_pool_conf_t   *tcf;
 
-    tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cycle->conf_ctx,
+    tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(చక్రం->conf_ctx,
                                                   ngx_thread_pool_module);
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    కొరకు (i = 0; i < tcf->pools.nelts; i++) {
 
-        if (tpp[i]->name.len == name->len
-            && ngx_strncmp(tpp[i]->name.data, name->data, name->len) == 0)
+        ఒకవేళ (tpp[i]->name.len == name->len
+            && ngx_strncmp(tpp[i]->name.దత్తాంశం, name->దత్తాంశం, name->len) == 0)
         {
-            return tpp[i];
+            తిరిగి tpp[i];
         }
     }
 
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
 
-static ngx_int_t
-ngx_thread_pool_init_worker(ngx_cycle_t *cycle)
+స్థిర ngx_int_t
+ngx_thread_pool_init_కార్మికుడు(ngx_చక్రం_t *చక్రం)
 {
     ngx_uint_t                i;
     ngx_thread_pool_t       **tpp;
     ngx_thread_pool_conf_t   *tcf;
 
-    if (ngx_process != NGX_PROCESS_WORKER
+    ఒకవేళ (ngx_process != NGX_PROCESS_కార్మికుడు
         && ngx_process != NGX_PROCESS_SINGLE)
     {
-        return NGX_OK;
+        తిరిగి NGX_OK;
     }
 
-    tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cycle->conf_ctx,
+    tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(చక్రం->conf_ctx,
                                                   ngx_thread_pool_module);
 
-    if (tcf == NULL) {
-        return NGX_OK;
+    ఒకవేళ (tcf == ఖాళీ) {
+        తిరిగి NGX_OK;
     }
 
-    ngx_thread_pool_queue_init(&ngx_thread_pool_done);
+    ngx_thread_pool_వరుస_init(&ngx_thread_pool_పూర్తి);
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
-        if (ngx_thread_pool_init(tpp[i], cycle->log, cycle->pool) != NGX_OK) {
-            return NGX_ERROR;
+    కొరకు (i = 0; i < tcf->pools.nelts; i++) {
+        ఒకవేళ (ngx_thread_pool_init(tpp[i], చక్రం->సంవర్గమానం, చక్రం->pool) != NGX_OK) {
+            తిరిగి NGX_ERROR;
         }
     }
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
-static void
-ngx_thread_pool_exit_worker(ngx_cycle_t *cycle)
+స్థిర శూన్య
+ngx_thread_pool_exit_కార్మికుడు(ngx_చక్రం_t *చక్రం)
 {
     ngx_uint_t                i;
     ngx_thread_pool_t       **tpp;
     ngx_thread_pool_conf_t   *tcf;
 
-    if (ngx_process != NGX_PROCESS_WORKER
+    ఒకవేళ (ngx_process != NGX_PROCESS_కార్మికుడు
         && ngx_process != NGX_PROCESS_SINGLE)
     {
-        return;
+        తిరిగి;
     }
 
-    tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cycle->conf_ctx,
+    tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(చక్రం->conf_ctx,
                                                   ngx_thread_pool_module);
 
-    if (tcf == NULL) {
-        return;
+    ఒకవేళ (tcf == ఖాళీ) {
+        తిరిగి;
     }
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    కొరకు (i = 0; i < tcf->pools.nelts; i++) {
         ngx_thread_pool_destroy(tpp[i]);
     }
 }

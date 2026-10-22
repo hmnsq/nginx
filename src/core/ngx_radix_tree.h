@@ -5,51 +5,51 @@
  */
 
 
-#ifndef _NGX_RADIX_TREE_H_INCLUDED_
-#define _NGX_RADIX_TREE_H_INCLUDED_
+#నిర్వచితం_కాకపోతే NGX_RADIX_వృక్షం_H_INCLUDED
+#నిర్వచించు NGX_RADIX_వృక్షం_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-#define NGX_RADIX_NO_VALUE   (uintptr_t) -1
+#నిర్వచించు NGX_RADIX_NO_విలువ   (uintptr_t) -1
 
-typedef struct ngx_radix_node_s  ngx_radix_node_t;
+రకనిర్వచనం నిర్మాణం ngx_radix_కణుపు_s  ngx_radix_కణుపు_t;
 
-struct ngx_radix_node_s {
-    ngx_radix_node_t  *right;
-    ngx_radix_node_t  *left;
-    ngx_radix_node_t  *parent;
-    uintptr_t          value;
+నిర్మాణం ngx_radix_కణుపు_s {
+    ngx_radix_కణుపు_t  *కుడి;
+    ngx_radix_కణుపు_t  *ఎడమ;
+    ngx_radix_కణుపు_t  *మాతృ;
+    uintptr_t          విలువ;
 };
 
 
-typedef struct {
-    ngx_radix_node_t  *root;
+రకనిర్వచనం నిర్మాణం {
+    ngx_radix_కణుపు_t  *మూలం;
     ngx_pool_t        *pool;
-    ngx_radix_node_t  *free;
-    char              *start;
-    size_t             size;
-} ngx_radix_tree_t;
+    ngx_radix_కణుపు_t  *విడుదల;
+    అక్షరం              *ప్రారంభం;
+    కొలత_t             కొలత;
+} ngx_radix_వృక్షం_t;
 
 
-ngx_radix_tree_t *ngx_radix_tree_create(ngx_pool_t *pool,
+ngx_radix_వృక్షం_t *ngx_radix_వృక్షం_create(ngx_pool_t *pool,
     ngx_int_t preallocate);
 
-ngx_int_t ngx_radix32tree_insert(ngx_radix_tree_t *tree,
-    uint32_t key, uint32_t mask, uintptr_t value);
-ngx_int_t ngx_radix32tree_delete(ngx_radix_tree_t *tree,
-    uint32_t key, uint32_t mask);
-uintptr_t ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key);
+ngx_int_t ngx_radix32tree_చొప్పించు(ngx_radix_వృక్షం_t *వృక్షం,
+    uint32_t కీలకం, uint32_t ముసుగు, uintptr_t విలువ);
+ngx_int_t ngx_radix32tree_delete(ngx_radix_వృక్షం_t *వృక్షం,
+    uint32_t కీలకం, uint32_t ముసుగు);
+uintptr_t ngx_radix32tree_కనుగొను(ngx_radix_వృక్షం_t *వృక్షం, uint32_t కీలకం);
 
-#if (NGX_HAVE_INET6)
-ngx_int_t ngx_radix128tree_insert(ngx_radix_tree_t *tree,
-    u_char *key, u_char *mask, uintptr_t value);
-ngx_int_t ngx_radix128tree_delete(ngx_radix_tree_t *tree,
-    u_char *key, u_char *mask);
-uintptr_t ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key);
-#endif
+#ఒకవేళ (NGX_HAVE_INET6)
+ngx_int_t ngx_radix128tree_చొప్పించు(ngx_radix_వృక్షం_t *వృక్షం,
+    u_char *కీలకం, u_char *ముసుగు, uintptr_t విలువ);
+ngx_int_t ngx_radix128tree_delete(ngx_radix_వృక్షం_t *వృక్షం,
+    u_char *కీలకం, u_char *ముసుగు);
+uintptr_t ngx_radix128tree_కనుగొను(ngx_radix_వృక్షం_t *వృక్షం, u_char *కీలకం);
+#అయితే_ముగింపు
 
 
-#endif /* _NGX_RADIX_TREE_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_RADIX_TREE_H_INCLUDED_ */

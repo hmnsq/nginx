@@ -4,22 +4,22 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
 uint32_t
-ngx_murmur_hash2(u_char *data, size_t len)
+ngx_murmur_hash2(u_char *దత్తాంశం, కొలత_t len)
 {
     uint32_t  h, k;
 
     h = 0 ^ len;
 
-    while (len >= 4) {
-        k  = data[0];
-        k |= data[1] << 8;
-        k |= data[2] << 16;
-        k |= data[3] << 24;
+    అయితే (len >= 4) {
+        k  = దత్తాంశం[0];
+        k |= దత్తాంశం[1] << 8;
+        k |= దత్తాంశం[2] << 16;
+        k |= దత్తాంశం[3] << 24;
 
         k *= 0x5bd1e995;
         k ^= k >> 24;
@@ -28,19 +28,19 @@ ngx_murmur_hash2(u_char *data, size_t len)
         h *= 0x5bd1e995;
         h ^= k;
 
-        data += 4;
+        దత్తాంశం += 4;
         len -= 4;
     }
 
-    switch (len) {
-    case 3:
-        h ^= data[2] << 16;
+    ఎంపిక (len) {
+    స్థితి 3:
+        h ^= దత్తాంశం[2] << 16;
         /* fall through */
-    case 2:
-        h ^= data[1] << 8;
+    స్థితి 2:
+        h ^= దత్తాంశం[1] << 8;
         /* fall through */
-    case 1:
-        h ^= data[0];
+    స్థితి 1:
+        h ^= దత్తాంశం[0];
         h *= 0x5bd1e995;
     }
 
@@ -48,5 +48,5 @@ ngx_murmur_hash2(u_char *data, size_t len)
     h *= 0x5bd1e995;
     h ^= h >> 15;
 
-    return h;
+    తిరిగి h;
 }

@@ -5,35 +5,35 @@
  */
 
 
-#ifndef _NGX_CRC_H_INCLUDED_
-#define _NGX_CRC_H_INCLUDED_
+#నిర్వచితం_కాకపోతే NGX_చక్రీయ_తనిఖీ_H_INCLUDED
+#నిర్వచించు NGX_చక్రీయ_తనిఖీ_H_INCLUDED
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
 /* 32-bit crc16 */
 
-static ngx_inline uint32_t
-ngx_crc(u_char *data, size_t len)
+స్థిర ngx_inline uint32_t
+ngx_చక్రీయ_తనిఖీ(u_char *దత్తాంశం, కొలత_t len)
 {
-    uint32_t  sum;
+    uint32_t  కూడిక;
 
-    for (sum = 0; len; len--) {
+    కొరకు (కూడిక = 0; len; len--) {
 
         /*
          * gcc 2.95.2 x86 and icc 7.1.006 compile
          * that operator into the single "rol" opcode,
          * msvc 6.0sp2 compiles it into four opcodes.
          */
-        sum = sum >> 1 | sum << 31;
+        కూడిక = కూడిక >> 1 | కూడిక << 31;
 
-        sum += *data++;
+        కూడిక += *దత్తాంశం++;
     }
 
-    return sum;
+    తిరిగి కూడిక;
 }
 
 
-#endif /* _NGX_CRC_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_CRC_H_INCLUDED_ */

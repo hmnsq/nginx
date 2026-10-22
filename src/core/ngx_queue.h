@@ -5,111 +5,111 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-#ifndef _NGX_QUEUE_H_INCLUDED_
-#define _NGX_QUEUE_H_INCLUDED_
+#నిర్వచితం_కాకపోతే NGX_వరుస_H_INCLUDED
+#నిర్వచించు NGX_వరుస_H_INCLUDED
 
 
-typedef struct ngx_queue_s  ngx_queue_t;
+రకనిర్వచనం నిర్మాణం ngx_వరుస_s  ngx_వరుస_t;
 
-struct ngx_queue_s {
-    ngx_queue_t  *prev;
-    ngx_queue_t  *next;
+నిర్మాణం ngx_వరుస_s {
+    ngx_వరుస_t  *prev;
+    ngx_వరుస_t  *తదుపరి;
 };
 
 
-#define ngx_queue_init(q)                                                     \
+#నిర్వచించు ngx_వరుస_init(q)                                                     \
     (q)->prev = q;                                                            \
-    (q)->next = q
+    (q)->తదుపరి = q
 
 
-#define ngx_queue_empty(h)                                                    \
+#నిర్వచించు ngx_వరుస_ఖాళీలు(h)                                                    \
     (h == (h)->prev)
 
 
-#define ngx_queue_insert_head(h, x)                                           \
-    (x)->next = (h)->next;                                                    \
-    (x)->next->prev = x;                                                      \
+#నిర్వచించు ngx_వరుస_చొప్పించు_తల(h, x)                                           \
+    (x)->తదుపరి = (h)->తదుపరి;                                                    \
+    (x)->తదుపరి->prev = x;                                                      \
     (x)->prev = h;                                                            \
-    (h)->next = x
+    (h)->తదుపరి = x
 
 
-#define ngx_queue_insert_after   ngx_queue_insert_head
+#నిర్వచించు ngx_వరుస_చొప్పించు_after   ngx_వరుస_చొప్పించు_తల
 
 
-#define ngx_queue_insert_tail(h, x)                                           \
+#నిర్వచించు ngx_వరుస_చొప్పించు_తోక(h, x)                                           \
     (x)->prev = (h)->prev;                                                    \
-    (x)->prev->next = x;                                                      \
-    (x)->next = h;                                                            \
+    (x)->prev->తదుపరి = x;                                                      \
+    (x)->తదుపరి = h;                                                            \
     (h)->prev = x
 
 
-#define ngx_queue_insert_before   ngx_queue_insert_tail
+#నిర్వచించు ngx_వరుస_చొప్పించు_before   ngx_వరుస_చొప్పించు_తోక
 
 
-#define ngx_queue_head(h)                                                     \
-    (h)->next
+#నిర్వచించు ngx_వరుస_తల(h)                                                     \
+    (h)->తదుపరి
 
 
-#define ngx_queue_last(h)                                                     \
+#నిర్వచించు ngx_వరుస_చివరి(h)                                                     \
     (h)->prev
 
 
-#define ngx_queue_sentinel(h)                                                 \
+#నిర్వచించు ngx_వరుస_sentinel(h)                                                 \
     (h)
 
 
-#define ngx_queue_next(q)                                                     \
-    (q)->next
+#నిర్వచించు ngx_వరుస_తదుపరి(q)                                                     \
+    (q)->తదుపరి
 
 
-#define ngx_queue_prev(q)                                                     \
+#నిర్వచించు ngx_వరుస_prev(q)                                                     \
     (q)->prev
 
 
-#if (NGX_DEBUG)
+#ఒకవేళ (NGX_DEBUG)
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next;                                              \
-    (x)->prev = NULL;                                                         \
-    (x)->next = NULL
+#నిర్వచించు ngx_వరుస_remove(x)                                                   \
+    (x)->తదుపరి->prev = (x)->prev;                                              \
+    (x)->prev->తదుపరి = (x)->తదుపరి;                                              \
+    (x)->prev = ఖాళీ;                                                         \
+    (x)->తదుపరి = ఖాళీ
 
-#else
+#లేకపోతే
 
-#define ngx_queue_remove(x)                                                   \
-    (x)->next->prev = (x)->prev;                                              \
-    (x)->prev->next = (x)->next
+#నిర్వచించు ngx_వరుస_remove(x)                                                   \
+    (x)->తదుపరి->prev = (x)->prev;                                              \
+    (x)->prev->తదుపరి = (x)->తదుపరి
 
-#endif
+#అయితే_ముగింపు
 
 
-#define ngx_queue_split(h, q, n)                                              \
+#నిర్వచించు ngx_వరుస_విభజించు(h, q, n)                                              \
     (n)->prev = (h)->prev;                                                    \
-    (n)->prev->next = n;                                                      \
-    (n)->next = q;                                                            \
+    (n)->prev->తదుపరి = n;                                                      \
+    (n)->తదుపరి = q;                                                            \
     (h)->prev = (q)->prev;                                                    \
-    (h)->prev->next = h;                                                      \
+    (h)->prev->తదుపరి = h;                                                      \
     (q)->prev = n;
 
 
-#define ngx_queue_add(h, n)                                                   \
-    (h)->prev->next = (n)->next;                                              \
-    (n)->next->prev = (h)->prev;                                              \
+#నిర్వచించు ngx_వరుస_కూడు(h, n)                                                   \
+    (h)->prev->తదుపరి = (n)->తదుపరి;                                              \
+    (n)->తదుపరి->prev = (h)->prev;                                              \
     (h)->prev = (n)->prev;                                                    \
-    (h)->prev->next = h;
+    (h)->prev->తదుపరి = h;
 
 
-#define ngx_queue_data(q, type, link)                                         \
+#నిర్వచించు ngx_వరుస_దత్తాంశం(q, type, link)                                         \
     (type *) ((u_char *) q - offsetof(type, link))
 
 
-ngx_queue_t *ngx_queue_middle(ngx_queue_t *queue);
-void ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+ngx_వరుస_t *ngx_వరుస_మధ్య(ngx_వరుస_t *వరుస);
+శూన్య ngx_వరుస_క్రమీకరించు(ngx_వరుస_t *వరుస,
+    ngx_int_t (*cmp)(స్థిరరాశి ngx_వరుస_t *, స్థిరరాశి ngx_వరుస_t *));
 
 
-#endif /* _NGX_QUEUE_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_QUEUE_H_INCLUDED_ */

@@ -5,49 +5,49 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-static char *ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static char *ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log);
-static void ngx_log_insert(ngx_log_t *log, ngx_log_t *new_log);
+స్థిర అక్షరం *ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, శూన్య *conf);
+స్థిర అక్షరం *ngx_log_సమితి_స్థాయిలు(ngx_conf_t *cf, ngx_log_t *సంవర్గమానం);
+స్థిర శూన్య ngx_log_చొప్పించు(ngx_log_t *సంవర్గమానం, ngx_log_t *new_log);
 
 
-#if (NGX_DEBUG)
+#ఒకవేళ (NGX_DEBUG)
 
-static void ngx_log_memory_writer(ngx_log_t *log, ngx_uint_t level,
-    u_char *buf, size_t len);
-static void ngx_log_memory_cleanup(void *data);
+స్థిర శూన్య ngx_log_జ్ఞాపకం_writer(ngx_log_t *సంవర్గమానం, ngx_uint_t level,
+    u_char *buf, కొలత_t len);
+స్థిర శూన్య ngx_log_జ్ఞాపకం_cleanup(శూన్య *దత్తాంశం);
 
 
-typedef struct {
-    u_char        *start;
-    u_char        *end;
+రకనిర్వచనం నిర్మాణం {
+    u_char        *ప్రారంభం;
+    u_char        *చివర;
     u_char        *pos;
     ngx_atomic_t   written;
-} ngx_log_memory_buf_t;
+} ngx_log_జ్ఞాపకం_buf_t;
 
-#endif
+#అయితే_ముగింపు
 
 
-static ngx_command_t  ngx_errlog_commands[] = {
+స్థిర ngx_command_t  ngx_errlog_commands[] = {
 
     { ngx_string("error_log"),
-      NGX_MAIN_CONF|NGX_CONF_1MORE,
+      NGX_MAIN_CONF|NGX_CONF_1_మరిన్ని,
       ngx_error_log,
       0,
       0,
-      NULL },
+      ఖాళీ },
 
       ngx_null_command
 };
 
 
-static ngx_core_module_t  ngx_errlog_module_ctx = {
+స్థిర ngx_core_module_t  ngx_errlog_module_ctx = {
     ngx_string("errlog"),
-    NULL,
-    NULL
+    ఖాళీ,
+    ఖాళీ
 };
 
 
@@ -56,23 +56,23 @@ ngx_module_t  ngx_errlog_module = {
     &ngx_errlog_module_ctx,                /* module context */
     ngx_errlog_commands,                   /* module directives */
     NGX_CORE_MODULE,                       /* module type */
-    NULL,                                  /* init master */
-    NULL,                                  /* init module */
-    NULL,                                  /* init process */
-    NULL,                                  /* init thread */
-    NULL,                                  /* exit thread */
-    NULL,                                  /* exit process */
-    NULL,                                  /* exit master */
+    ఖాళీ,                                  /* init master */
+    ఖాళీ,                                  /* init module */
+    ఖాళీ,                                  /* init process */
+    ఖాళీ,                                  /* init thread */
+    ఖాళీ,                                  /* exit thread */
+    ఖాళీ,                                  /* exit process */
+    ఖాళీ,                                  /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
 
-static ngx_log_t        ngx_log;
-static ngx_open_file_t  ngx_log_file;
+స్థిర ngx_log_t        ngx_log;
+స్థిర ngx_open_file_t  ngx_log_file;
 ngx_uint_t              ngx_use_stderr = 1;
 
 
-static ngx_str_t err_levels[] = {
+స్థిర ngx_str_t err_స్థాయిలు[] = {
     ngx_null_string,
     ngx_string("emerg"),
     ngx_string("alert"),
@@ -84,92 +84,92 @@ static ngx_str_t err_levels[] = {
     ngx_string("debug")
 };
 
-static const char *debug_levels[] = {
+స్థిర స్థిరరాశి అక్షరం *debug_స్థాయిలు[] = {
     "debug_core", "debug_alloc", "debug_mutex", "debug_event",
     "debug_http", "debug_mail", "debug_stream"
 };
 
 
-#if (NGX_HAVE_VARIADIC_MACROS)
+#ఒకవేళ (NGX_HAVE_VARIADIC_MACROS)
 
-void
-ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, ...)
+శూన్య
+ngx_log_error_core(ngx_uint_t level, ngx_log_t *సంవర్గమానం, ngx_err_t err,
+    స్థిరరాశి అక్షరం *fmt, ...)
 
-#else
+#లేకపోతే
 
-void
-ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, va_list args)
+శూన్య
+ngx_log_error_core(ngx_uint_t level, ngx_log_t *సంవర్గమానం, ngx_err_t err,
+    స్థిరరాశి అక్షరం *fmt, va_list వాదనలు)
 
-#endif
+#అయితే_ముగింపు
 {
-#if (NGX_HAVE_VARIADIC_MACROS)
-    va_list      args;
-#endif
-    u_char      *p, *last, *msg;
+#ఒకవేళ (NGX_HAVE_VARIADIC_MACROS)
+    va_list      వాదనలు;
+#అయితే_ముగింపు
+    u_char      *p, *చివరి, *సందేశం;
     ssize_t      n;
     ngx_uint_t   wrote_stderr, debug_connection;
     u_char       errstr[NGX_MAX_ERROR_STR];
 
-    last = errstr + NGX_MAX_ERROR_STR;
+    చివరి = errstr + NGX_MAX_ERROR_STR;
 
-    p = ngx_cpymem(errstr, ngx_cached_err_log_time.data,
-                   ngx_cached_err_log_time.len);
+    p = ngx_cpymem(errstr, ngx_cached_err_log_సమయం.దత్తాంశం,
+                   ngx_cached_err_log_సమయం.len);
 
-    p = ngx_slprintf(p, last, " [%V] ", &err_levels[level]);
+    p = ngx_slprintf(p, చివరి, " [%V] ", &err_స్థాయిలు[level]);
 
     /* pid#tid */
-    p = ngx_slprintf(p, last, "%P#" NGX_TID_T_FMT ": ",
+    p = ngx_slprintf(p, చివరి, "%P#" NGX_TID_T_FMT ": ",
                     ngx_log_pid, ngx_log_tid);
 
-    if (log->connection) {
-        p = ngx_slprintf(p, last, "*%uA ", log->connection);
+    ఒకవేళ (సంవర్గమానం->connection) {
+        p = ngx_slprintf(p, చివరి, "*%uA ", సంవర్గమానం->connection);
     }
 
-    msg = p;
+    సందేశం = p;
 
-#if (NGX_HAVE_VARIADIC_MACROS)
+#ఒకవేళ (NGX_HAVE_VARIADIC_MACROS)
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(p, last, fmt, args);
-    va_end(args);
+    va_ప్రారంభం(వాదనలు, fmt);
+    p = ngx_vslprintf(p, చివరి, fmt, వాదనలు);
+    va_చివర(వాదనలు);
 
-#else
+#లేకపోతే
 
-    p = ngx_vslprintf(p, last, fmt, args);
+    p = ngx_vslprintf(p, చివరి, fmt, వాదనలు);
 
-#endif
+#అయితే_ముగింపు
 
-    if (err) {
-        p = ngx_log_errno(p, last, err);
+    ఒకవేళ (err) {
+        p = ngx_log_errno(p, చివరి, err);
     }
 
-    if (level != NGX_LOG_DEBUG && log->handler) {
-        p = log->handler(log, p, last - p);
+    ఒకవేళ (level != NGX_LOG_DEBUG && సంవర్గమానం->handler) {
+        p = సంవర్గమానం->handler(సంవర్గమానం, p, చివరి - p);
     }
 
-    if (p > last - NGX_LINEFEED_SIZE) {
-        p = last - NGX_LINEFEED_SIZE;
+    ఒకవేళ (p > చివరి - NGX_LINEFEED_కొలత) {
+        p = చివరి - NGX_LINEFEED_కొలత;
     }
 
     ngx_linefeed(p);
 
     wrote_stderr = 0;
-    debug_connection = (log->log_level & NGX_LOG_DEBUG_CONNECTION) != 0;
+    debug_connection = (సంవర్గమానం->log_level & NGX_LOG_DEBUG_CONNECTION) != 0;
 
-    while (log) {
+    అయితే (సంవర్గమానం) {
 
-        if (log->log_level < level && !debug_connection) {
-            break;
+        ఒకవేళ (సంవర్గమానం->log_level < level && !debug_connection) {
+            ఆపు;
         }
 
-        if (log->writer) {
-            log->writer(log, level, errstr, p - errstr);
-            goto next;
+        ఒకవేళ (సంవర్గమానం->writer) {
+            సంవర్గమానం->writer(సంవర్గమానం, level, errstr, p - errstr);
+            వెళ్ళు తదుపరి;
         }
 
-        if (ngx_time() == log->disk_full_time) {
+        ఒకవేళ (ngx_సమయం() == సంవర్గమానం->disk_నిండిన_సమయం) {
 
             /*
              * on FreeBSD writing to a full filesystem with enabled softupdates
@@ -177,193 +177,193 @@ ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
              * filesystem, so we skip writing to a log for one second
              */
 
-            goto next;
+            వెళ్ళు తదుపరి;
         }
 
-        n = ngx_write_fd(log->file->fd, errstr, p - errstr);
+        n = ngx_write_fd(సంవర్గమానం->file->fd, errstr, p - errstr);
 
-        if (n == -1 && ngx_errno == NGX_ENOSPC) {
-            log->disk_full_time = ngx_time();
+        ఒకవేళ (n == -1 && ngx_errno == NGX_ENOSPC) {
+            సంవర్గమానం->disk_నిండిన_సమయం = ngx_సమయం();
         }
 
-        if (log->file->fd == ngx_stderr) {
+        ఒకవేళ (సంవర్గమానం->file->fd == ngx_stderr) {
             wrote_stderr = 1;
         }
 
-    next:
+    తదుపరి:
 
-        log = log->next;
+        సంవర్గమానం = సంవర్గమానం->తదుపరి;
     }
 
-    if (!ngx_use_stderr
+    ఒకవేళ (!ngx_use_stderr
         || level > NGX_LOG_WARN
         || wrote_stderr)
     {
-        return;
+        తిరిగి;
     }
 
-    msg -= (7 + err_levels[level].len + 3);
+    సందేశం -= (7 + err_స్థాయిలు[level].len + 3);
 
-    (void) ngx_sprintf(msg, "nginx: [%V] ", &err_levels[level]);
+    (శూన్య) ngx_sprintf(సందేశం, "nginx: [%V] ", &err_స్థాయిలు[level]);
 
-    (void) ngx_write_console(ngx_stderr, msg, p - msg);
+    (శూన్య) ngx_write_console(ngx_stderr, సందేశం, p - సందేశం);
 }
 
 
-#if !(NGX_HAVE_VARIADIC_MACROS)
+#ఒకవేళ !(NGX_HAVE_VARIADIC_MACROS)
 
-void ngx_cdecl
-ngx_log_error(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, ...)
+శూన్య ngx_cdecl
+ngx_log_error(ngx_uint_t level, ngx_log_t *సంవర్గమానం, ngx_err_t err,
+    స్థిరరాశి అక్షరం *fmt, ...)
 {
-    va_list  args;
+    va_list  వాదనలు;
 
-    if (log->log_level >= level) {
-        va_start(args, fmt);
-        ngx_log_error_core(level, log, err, fmt, args);
-        va_end(args);
+    ఒకవేళ (సంవర్గమానం->log_level >= level) {
+        va_ప్రారంభం(వాదనలు, fmt);
+        ngx_log_error_core(level, సంవర్గమానం, err, fmt, వాదనలు);
+        va_చివర(వాదనలు);
     }
 }
 
 
-void ngx_cdecl
-ngx_log_debug_core(ngx_log_t *log, ngx_err_t err, const char *fmt, ...)
+శూన్య ngx_cdecl
+ngx_log_debug_core(ngx_log_t *సంవర్గమానం, ngx_err_t err, స్థిరరాశి అక్షరం *fmt, ...)
 {
-    va_list  args;
+    va_list  వాదనలు;
 
-    va_start(args, fmt);
-    ngx_log_error_core(NGX_LOG_DEBUG, log, err, fmt, args);
-    va_end(args);
+    va_ప్రారంభం(వాదనలు, fmt);
+    ngx_log_error_core(NGX_LOG_DEBUG, సంవర్గమానం, err, fmt, వాదనలు);
+    va_చివర(వాదనలు);
 }
 
-#endif
+#అయితే_ముగింపు
 
 
-void ngx_cdecl
-ngx_log_abort(ngx_err_t err, const char *fmt, ...)
+శూన్య ngx_cdecl
+ngx_log_abort(ngx_err_t err, స్థిరరాశి అక్షరం *fmt, ...)
 {
     u_char   *p;
-    va_list   args;
+    va_list   వాదనలు;
     u_char    errstr[NGX_MAX_CONF_ERRSTR];
 
-    va_start(args, fmt);
-    p = ngx_vsnprintf(errstr, sizeof(errstr) - 1, fmt, args);
-    va_end(args);
+    va_ప్రారంభం(వాదనలు, fmt);
+    p = ngx_vsnprintf(errstr, పరిమాణం(errstr) - 1, fmt, వాదనలు);
+    va_చివర(వాదనలు);
 
-    ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, err,
+    ngx_log_error(NGX_LOG_ALERT, ngx_చక్రం->సంవర్గమానం, err,
                   "%*s", p - errstr, errstr);
 }
 
 
-void ngx_cdecl
-ngx_log_stderr(ngx_err_t err, const char *fmt, ...)
+శూన్య ngx_cdecl
+ngx_log_stderr(ngx_err_t err, స్థిరరాశి అక్షరం *fmt, ...)
 {
-    u_char   *p, *last;
-    va_list   args;
+    u_char   *p, *చివరి;
+    va_list   వాదనలు;
     u_char    errstr[NGX_MAX_ERROR_STR];
 
-    last = errstr + NGX_MAX_ERROR_STR;
+    చివరి = errstr + NGX_MAX_ERROR_STR;
 
     p = ngx_cpymem(errstr, "nginx: ", 7);
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(p, last, fmt, args);
-    va_end(args);
+    va_ప్రారంభం(వాదనలు, fmt);
+    p = ngx_vslprintf(p, చివరి, fmt, వాదనలు);
+    va_చివర(వాదనలు);
 
-    if (err) {
-        p = ngx_log_errno(p, last, err);
+    ఒకవేళ (err) {
+        p = ngx_log_errno(p, చివరి, err);
     }
 
-    if (p > last - NGX_LINEFEED_SIZE) {
-        p = last - NGX_LINEFEED_SIZE;
+    ఒకవేళ (p > చివరి - NGX_LINEFEED_కొలత) {
+        p = చివరి - NGX_LINEFEED_కొలత;
     }
 
     ngx_linefeed(p);
 
-    (void) ngx_write_console(ngx_stderr, errstr, p - errstr);
+    (శూన్య) ngx_write_console(ngx_stderr, errstr, p - errstr);
 }
 
 
 u_char *
-ngx_log_errno(u_char *buf, u_char *last, ngx_err_t err)
+ngx_log_errno(u_char *buf, u_char *చివరి, ngx_err_t err)
 {
-    if (buf > last - 50) {
+    ఒకవేళ (buf > చివరి - 50) {
 
         /* leave a space for an error code */
 
-        buf = last - 50;
+        buf = చివరి - 50;
         *buf++ = '.';
         *buf++ = '.';
         *buf++ = '.';
     }
 
-#if (NGX_WIN32)
-    buf = ngx_slprintf(buf, last, ((unsigned) err < 0x80000000)
+#ఒకవేళ (NGX_WIN32)
+    buf = ngx_slprintf(buf, చివరి, ((గుర్తులేని) err < 0x80000000)
                                        ? " (%d: " : " (%Xd: ", err);
-#else
-    buf = ngx_slprintf(buf, last, " (%d: ", err);
-#endif
+#లేకపోతే
+    buf = ngx_slprintf(buf, చివరి, " (%d: ", err);
+#అయితే_ముగింపు
 
-    buf = ngx_strerror(err, buf, last - buf);
+    buf = ngx_strerror(err, buf, చివరి - buf);
 
-    if (buf < last) {
+    ఒకవేళ (buf < చివరి) {
         *buf++ = ')';
     }
 
-    return buf;
+    తిరిగి buf;
 }
 
 
 ngx_log_t *
-ngx_log_init(u_char *prefix, u_char *error_log)
+ngx_log_init(u_char *ఉపసర్గ, u_char *error_log)
 {
     u_char  *p, *name;
-    size_t   nlen, plen;
+    కొలత_t   nlen, plen;
 
     ngx_log.file = &ngx_log_file;
     ngx_log.log_level = NGX_LOG_NOTICE;
 
-    if (error_log == NULL) {
-        error_log = (u_char *) NGX_ERROR_LOG_PATH;
+    ఒకవేళ (error_log == ఖాళీ) {
+        error_log = (u_char *) NGX_ERROR_LOG_మార్గం;
     }
 
     name = error_log;
     nlen = ngx_strlen(name);
 
-    if (nlen == 0) {
+    ఒకవేళ (nlen == 0) {
         ngx_log_file.fd = ngx_stderr;
-        return &ngx_log;
+        తిరిగి &ngx_log;
     }
 
-    p = NULL;
+    p = ఖాళీ;
 
-#if (NGX_WIN32)
-    if (name[1] != ':') {
-#else
-    if (name[0] != '/') {
-#endif
+#ఒకవేళ (NGX_WIN32)
+    ఒకవేళ (name[1] != ':') {
+#లేకపోతే
+    ఒకవేళ (name[0] != '/') {
+#అయితే_ముగింపు
 
-        if (prefix) {
-            plen = ngx_strlen(prefix);
+        ఒకవేళ (ఉపసర్గ) {
+            plen = ngx_strlen(ఉపసర్గ);
 
-        } else {
-#ifdef NGX_PREFIX
-            prefix = (u_char *) NGX_PREFIX;
-            plen = ngx_strlen(prefix);
-#else
+        } లేకపోతే {
+#నిర్వచితమైతే NGX_ఉపసర్గ
+            ఉపసర్గ = (u_char *) NGX_ఉపసర్గ;
+            plen = ngx_strlen(ఉపసర్గ);
+#లేకపోతే
             plen = 0;
-#endif
+#అయితే_ముగింపు
         }
 
-        if (plen) {
-            name = malloc(plen + nlen + 2);
-            if (name == NULL) {
-                return NULL;
+        ఒకవేళ (plen) {
+            name = జ్ఞాపకం_ఇవ్వు(plen + nlen + 2);
+            ఒకవేళ (name == ఖాళీ) {
+                తిరిగి ఖాళీ;
             }
 
-            p = ngx_cpymem(name, prefix, plen);
+            p = ngx_cpymem(name, ఉపసర్గ, plen);
 
-            if (!ngx_path_separator(*(p - 1))) {
+            ఒకవేళ (!ngx_మార్గం_separator(*(p - 1))) {
                 *p++ = '/';
             }
 
@@ -377,376 +377,376 @@ ngx_log_init(u_char *prefix, u_char *error_log)
                                     NGX_FILE_CREATE_OR_OPEN,
                                     NGX_FILE_DEFAULT_ACCESS);
 
-    if (ngx_log_file.fd == NGX_INVALID_FILE) {
+    ఒకవేళ (ngx_log_file.fd == NGX_INVALID_FILE) {
         ngx_log_stderr(ngx_errno,
                        "[alert] could not open error log file: "
                        ngx_open_file_n " \"%s\" failed", name);
-#if (NGX_WIN32)
+#ఒకవేళ (NGX_WIN32)
         ngx_event_log(ngx_errno,
                        "could not open error log file: "
                        ngx_open_file_n " \"%s\" failed", name);
-#endif
+#అయితే_ముగింపు
 
         ngx_log_file.fd = ngx_stderr;
     }
 
-    if (p) {
+    ఒకవేళ (p) {
         ngx_free(p);
     }
 
-    return &ngx_log;
+    తిరిగి &ngx_log;
 }
 
 
 ngx_int_t
-ngx_log_open_default(ngx_cycle_t *cycle)
+ngx_log_open_default(ngx_చక్రం_t *చక్రం)
 {
-    ngx_log_t  *log;
+    ngx_log_t  *సంవర్గమానం;
 
-    if (ngx_log_get_file_log(&cycle->new_log) != NULL) {
-        return NGX_OK;
+    ఒకవేళ (ngx_log_get_file_log(&చక్రం->new_log) != ఖాళీ) {
+        తిరిగి NGX_OK;
     }
 
-    if (cycle->new_log.log_level != 0) {
+    ఒకవేళ (చక్రం->new_log.log_level != 0) {
         /* there are some error logs, but no files */
 
-        log = ngx_pcalloc(cycle->pool, sizeof(ngx_log_t));
-        if (log == NULL) {
-            return NGX_ERROR;
+        సంవర్గమానం = ngx_pcalloc(చక్రం->pool, పరిమాణం(ngx_log_t));
+        ఒకవేళ (సంవర్గమానం == ఖాళీ) {
+            తిరిగి NGX_ERROR;
         }
 
-    } else {
+    } లేకపోతే {
         /* no error logs at all */
-        log = &cycle->new_log;
+        సంవర్గమానం = &చక్రం->new_log;
     }
 
-    log->log_level = NGX_LOG_ERR;
+    సంవర్గమానం->log_level = NGX_LOG_ERR;
 
-    log->file = ngx_conf_open_file(cycle, &cycle->error_log);
-    if (log->file == NULL) {
-        return NGX_ERROR;
+    సంవర్గమానం->file = ngx_conf_open_file(చక్రం, &చక్రం->error_log);
+    ఒకవేళ (సంవర్గమానం->file == ఖాళీ) {
+        తిరిగి NGX_ERROR;
     }
 
-    if (log != &cycle->new_log) {
-        ngx_log_insert(&cycle->new_log, log);
+    ఒకవేళ (సంవర్గమానం != &చక్రం->new_log) {
+        ngx_log_చొప్పించు(&చక్రం->new_log, సంవర్గమానం);
     }
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
 ngx_int_t
-ngx_log_redirect_stderr(ngx_cycle_t *cycle)
+ngx_log_redirect_stderr(ngx_చక్రం_t *చక్రం)
 {
     ngx_fd_t  fd;
 
-    if (cycle->log_use_stderr) {
-        return NGX_OK;
+    ఒకవేళ (చక్రం->log_use_stderr) {
+        తిరిగి NGX_OK;
     }
 
     /* file log always exists when we are called */
-    fd = ngx_log_get_file_log(cycle->log)->file->fd;
+    fd = ngx_log_get_file_log(చక్రం->సంవర్గమానం)->file->fd;
 
-    if (fd != ngx_stderr) {
-        if (ngx_set_stderr(fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
-                          ngx_set_stderr_n " failed");
+    ఒకవేళ (fd != ngx_stderr) {
+        ఒకవేళ (ngx_సమితి_stderr(fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, చక్రం->సంవర్గమానం, ngx_errno,
+                          ngx_సమితి_stderr_n " failed");
 
-            return NGX_ERROR;
+            తిరిగి NGX_ERROR;
         }
     }
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
 ngx_log_t *
-ngx_log_get_file_log(ngx_log_t *head)
+ngx_log_get_file_log(ngx_log_t *తల)
 {
-    ngx_log_t  *log;
+    ngx_log_t  *సంవర్గమానం;
 
-    for (log = head; log; log = log->next) {
-        if (log->file != NULL) {
-            return log;
+    కొరకు (సంవర్గమానం = తల; సంవర్గమానం; సంవర్గమానం = సంవర్గమానం->తదుపరి) {
+        ఒకవేళ (సంవర్గమానం->file != ఖాళీ) {
+            తిరిగి సంవర్గమానం;
         }
     }
 
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
 
-static char *
-ngx_log_set_levels(ngx_conf_t *cf, ngx_log_t *log)
+స్థిర అక్షరం *
+ngx_log_సమితి_స్థాయిలు(ngx_conf_t *cf, ngx_log_t *సంవర్గమానం)
 {
-    ngx_uint_t   i, n, d, found;
-    ngx_str_t   *value;
+    ngx_uint_t   i, n, d, దొరికింది;
+    ngx_str_t   *విలువ;
 
-    if (cf->args->nelts == 2) {
-        log->log_level = NGX_LOG_ERR;
-        return NGX_CONF_OK;
+    ఒకవేళ (cf->వాదనలు->nelts == 2) {
+        సంవర్గమానం->log_level = NGX_LOG_ERR;
+        తిరిగి NGX_CONF_OK;
     }
 
-    value = cf->args->elts;
+    విలువ = cf->వాదనలు->elts;
 
-    for (i = 2; i < cf->args->nelts; i++) {
-        found = 0;
+    కొరకు (i = 2; i < cf->వాదనలు->nelts; i++) {
+        దొరికింది = 0;
 
-        for (n = 1; n <= NGX_LOG_DEBUG; n++) {
-            if (ngx_strcmp(value[i].data, err_levels[n].data) == 0) {
+        కొరకు (n = 1; n <= NGX_LOG_DEBUG; n++) {
+            ఒకవేళ (ngx_strcmp(విలువ[i].దత్తాంశం, err_స్థాయిలు[n].దత్తాంశం) == 0) {
 
-                if (log->log_level != 0) {
+                ఒకవేళ (సంవర్గమానం->log_level != 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "duplicate log level \"%V\"",
-                                       &value[i]);
-                    return NGX_CONF_ERROR;
+                                       &విలువ[i]);
+                    తిరిగి NGX_CONF_ERROR;
                 }
 
-                log->log_level = n;
-                found = 1;
-                break;
+                సంవర్గమానం->log_level = n;
+                దొరికింది = 1;
+                ఆపు;
             }
         }
 
-        for (n = 0, d = NGX_LOG_DEBUG_FIRST; d <= NGX_LOG_DEBUG_LAST; d <<= 1) {
-            if (ngx_strcmp(value[i].data, debug_levels[n++]) == 0) {
-                if (log->log_level & ~NGX_LOG_DEBUG_ALL) {
+        కొరకు (n = 0, d = NGX_LOG_DEBUG_మొదటి; d <= NGX_LOG_DEBUG_చివరి; d <<= 1) {
+            ఒకవేళ (ngx_strcmp(విలువ[i].దత్తాంశం, debug_స్థాయిలు[n++]) == 0) {
+                ఒకవేళ (సంవర్గమానం->log_level & ~NGX_LOG_DEBUG_ALL) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "invalid log level \"%V\"",
-                                       &value[i]);
-                    return NGX_CONF_ERROR;
+                                       &విలువ[i]);
+                    తిరిగి NGX_CONF_ERROR;
                 }
 
-                log->log_level |= d;
-                found = 1;
-                break;
+                సంవర్గమానం->log_level |= d;
+                దొరికింది = 1;
+                ఆపు;
             }
         }
 
 
-        if (!found) {
+        ఒకవేళ (!దొరికింది) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                               "invalid log level \"%V\"", &value[i]);
-            return NGX_CONF_ERROR;
+                               "invalid log level \"%V\"", &విలువ[i]);
+            తిరిగి NGX_CONF_ERROR;
         }
     }
 
-    if (log->log_level == NGX_LOG_DEBUG) {
-        log->log_level = NGX_LOG_DEBUG_ALL;
+    ఒకవేళ (సంవర్గమానం->log_level == NGX_LOG_DEBUG) {
+        సంవర్గమానం->log_level = NGX_LOG_DEBUG_ALL;
     }
 
-    return NGX_CONF_OK;
+    తిరిగి NGX_CONF_OK;
 }
 
 
-static char *
-ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+స్థిర అక్షరం *
+ngx_error_log(ngx_conf_t *cf, ngx_command_t *cmd, శూన్య *conf)
 {
     ngx_log_t  *dummy;
 
-    dummy = &cf->cycle->new_log;
+    dummy = &cf->చక్రం->new_log;
 
-    return ngx_log_set_log(cf, &dummy);
+    తిరిగి ngx_log_సమితి_log(cf, &dummy);
 }
 
 
-char *
-ngx_log_set_log(ngx_conf_t *cf, ngx_log_t **head)
+అక్షరం *
+ngx_log_సమితి_log(ngx_conf_t *cf, ngx_log_t **తల)
 {
     ngx_log_t          *new_log;
-    ngx_str_t          *value, name;
+    ngx_str_t          *విలువ, name;
     ngx_syslog_peer_t  *peer;
 
-    if (*head != NULL && (*head)->log_level == 0) {
-        new_log = *head;
+    ఒకవేళ (*తల != ఖాళీ && (*తల)->log_level == 0) {
+        new_log = *తల;
 
-    } else {
+    } లేకపోతే {
 
-        new_log = ngx_pcalloc(cf->pool, sizeof(ngx_log_t));
-        if (new_log == NULL) {
-            return NGX_CONF_ERROR;
+        new_log = ngx_pcalloc(cf->pool, పరిమాణం(ngx_log_t));
+        ఒకవేళ (new_log == ఖాళీ) {
+            తిరిగి NGX_CONF_ERROR;
         }
 
-        if (*head == NULL) {
-            *head = new_log;
+        ఒకవేళ (*తల == ఖాళీ) {
+            *తల = new_log;
         }
     }
 
-    value = cf->args->elts;
+    విలువ = cf->వాదనలు->elts;
 
-    if (ngx_strcmp(value[1].data, "stderr") == 0) {
+    ఒకవేళ (ngx_strcmp(విలువ[1].దత్తాంశం, "stderr") == 0) {
         ngx_str_null(&name);
-        cf->cycle->log_use_stderr = 1;
+        cf->చక్రం->log_use_stderr = 1;
 
-        new_log->file = ngx_conf_open_file(cf->cycle, &name);
-        if (new_log->file == NULL) {
-            return NGX_CONF_ERROR;
+        new_log->file = ngx_conf_open_file(cf->చక్రం, &name);
+        ఒకవేళ (new_log->file == ఖాళీ) {
+            తిరిగి NGX_CONF_ERROR;
         }
 
-    } else if (ngx_strncmp(value[1].data, "memory:", 7) == 0) {
+    } లేకపోతే ఒకవేళ (ngx_strncmp(విలువ[1].దత్తాంశం, "memory:", 7) == 0) {
 
-#if (NGX_DEBUG)
-        size_t                 size, needed;
+#ఒకవేళ (NGX_DEBUG)
+        కొలత_t                 కొలత, needed;
         ngx_pool_cleanup_t    *cln;
-        ngx_log_memory_buf_t  *buf;
+        ngx_log_జ్ఞాపకం_buf_t  *buf;
 
-        value[1].len -= 7;
-        value[1].data += 7;
+        విలువ[1].len -= 7;
+        విలువ[1].దత్తాంశం += 7;
 
-        needed = sizeof("MEMLOG  :" NGX_LINEFEED)
+        needed = పరిమాణం("MEMLOG  :" NGX_LINEFEED)
                  + cf->conf_file->file.name.len
-                 + NGX_SIZE_T_LEN
+                 + NGX_కొలత_T_LEN
                  + NGX_INT_T_LEN
                  + NGX_MAX_ERROR_STR;
 
-        size = ngx_parse_size(&value[1]);
+        కొలత = ngx_parse_కొలత(&విలువ[1]);
 
-        if (size == (size_t) NGX_ERROR || size < needed) {
+        ఒకవేళ (కొలత == (కొలత_t) NGX_ERROR || కొలత < needed) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                               "invalid buffer size \"%V\"", &value[1]);
-            return NGX_CONF_ERROR;
+                               "invalid buffer size \"%V\"", &విలువ[1]);
+            తిరిగి NGX_CONF_ERROR;
         }
 
-        buf = ngx_pcalloc(cf->pool, sizeof(ngx_log_memory_buf_t));
-        if (buf == NULL) {
-            return NGX_CONF_ERROR;
+        buf = ngx_pcalloc(cf->pool, పరిమాణం(ngx_log_జ్ఞాపకం_buf_t));
+        ఒకవేళ (buf == ఖాళీ) {
+            తిరిగి NGX_CONF_ERROR;
         }
 
-        buf->start = ngx_pnalloc(cf->pool, size);
-        if (buf->start == NULL) {
-            return NGX_CONF_ERROR;
+        buf->ప్రారంభం = ngx_pnalloc(cf->pool, కొలత);
+        ఒకవేళ (buf->ప్రారంభం == ఖాళీ) {
+            తిరిగి NGX_CONF_ERROR;
         }
 
-        buf->end = buf->start + size;
+        buf->చివర = buf->ప్రారంభం + కొలత;
 
-        buf->pos = ngx_slprintf(buf->start, buf->end, "MEMLOG %uz %V:%ui%N",
-                                size, &cf->conf_file->file.name,
-                                cf->conf_file->line);
+        buf->pos = ngx_slprintf(buf->ప్రారంభం, buf->చివర, "MEMLOG %uz %V:%ui%N",
+                                కొలత, &cf->conf_file->file.name,
+                                cf->conf_file->పంక్తి);
 
-        ngx_memset(buf->pos, ' ', buf->end - buf->pos);
+        ngx_memset(buf->pos, ' ', buf->చివర - buf->pos);
 
-        cln = ngx_pool_cleanup_add(cf->pool, 0);
-        if (cln == NULL) {
-            return NGX_CONF_ERROR;
+        cln = ngx_pool_cleanup_కూడు(cf->pool, 0);
+        ఒకవేళ (cln == ఖాళీ) {
+            తిరిగి NGX_CONF_ERROR;
         }
 
-        cln->data = new_log;
-        cln->handler = ngx_log_memory_cleanup;
+        cln->దత్తాంశం = new_log;
+        cln->handler = ngx_log_జ్ఞాపకం_cleanup;
 
-        new_log->writer = ngx_log_memory_writer;
+        new_log->writer = ngx_log_జ్ఞాపకం_writer;
         new_log->wdata = buf;
 
-#else
+#లేకపోతే
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "nginx was built without debug support");
-        return NGX_CONF_ERROR;
-#endif
+        తిరిగి NGX_CONF_ERROR;
+#అయితే_ముగింపు
 
-    } else if (ngx_strncmp(value[1].data, "syslog:", 7) == 0) {
-        peer = ngx_pcalloc(cf->pool, sizeof(ngx_syslog_peer_t));
-        if (peer == NULL) {
-            return NGX_CONF_ERROR;
+    } లేకపోతే ఒకవేళ (ngx_strncmp(విలువ[1].దత్తాంశం, "syslog:", 7) == 0) {
+        peer = ngx_pcalloc(cf->pool, పరిమాణం(ngx_syslog_peer_t));
+        ఒకవేళ (peer == ఖాళీ) {
+            తిరిగి NGX_CONF_ERROR;
         }
 
-        if (ngx_syslog_process_conf(cf, peer) != NGX_CONF_OK) {
-            return NGX_CONF_ERROR;
+        ఒకవేళ (ngx_syslog_process_conf(cf, peer) != NGX_CONF_OK) {
+            తిరిగి NGX_CONF_ERROR;
         }
 
         new_log->writer = ngx_syslog_writer;
         new_log->wdata = peer;
 
-    } else {
-        new_log->file = ngx_conf_open_file(cf->cycle, &value[1]);
-        if (new_log->file == NULL) {
-            return NGX_CONF_ERROR;
+    } లేకపోతే {
+        new_log->file = ngx_conf_open_file(cf->చక్రం, &విలువ[1]);
+        ఒకవేళ (new_log->file == ఖాళీ) {
+            తిరిగి NGX_CONF_ERROR;
         }
     }
 
-    if (ngx_log_set_levels(cf, new_log) != NGX_CONF_OK) {
-        return NGX_CONF_ERROR;
+    ఒకవేళ (ngx_log_సమితి_స్థాయిలు(cf, new_log) != NGX_CONF_OK) {
+        తిరిగి NGX_CONF_ERROR;
     }
 
-    if (*head != new_log) {
-        ngx_log_insert(*head, new_log);
+    ఒకవేళ (*తల != new_log) {
+        ngx_log_చొప్పించు(*తల, new_log);
     }
 
-    return NGX_CONF_OK;
+    తిరిగి NGX_CONF_OK;
 }
 
 
-static void
-ngx_log_insert(ngx_log_t *log, ngx_log_t *new_log)
+స్థిర శూన్య
+ngx_log_చొప్పించు(ngx_log_t *సంవర్గమానం, ngx_log_t *new_log)
 {
     ngx_log_t  tmp;
 
-    if (new_log->log_level > log->log_level) {
+    ఒకవేళ (new_log->log_level > సంవర్గమానం->log_level) {
 
         /*
          * list head address is permanent, insert new log after
          * head and swap its contents with head
          */
 
-        tmp = *log;
-        *log = *new_log;
+        tmp = *సంవర్గమానం;
+        *సంవర్గమానం = *new_log;
         *new_log = tmp;
 
-        log->next = new_log;
-        return;
+        సంవర్గమానం->తదుపరి = new_log;
+        తిరిగి;
     }
 
-    while (log->next) {
-        if (new_log->log_level > log->next->log_level) {
-            new_log->next = log->next;
-            log->next = new_log;
-            return;
+    అయితే (సంవర్గమానం->తదుపరి) {
+        ఒకవేళ (new_log->log_level > సంవర్గమానం->తదుపరి->log_level) {
+            new_log->తదుపరి = సంవర్గమానం->తదుపరి;
+            సంవర్గమానం->తదుపరి = new_log;
+            తిరిగి;
         }
 
-        log = log->next;
+        సంవర్గమానం = సంవర్గమానం->తదుపరి;
     }
 
-    log->next = new_log;
+    సంవర్గమానం->తదుపరి = new_log;
 }
 
 
-#if (NGX_DEBUG)
+#ఒకవేళ (NGX_DEBUG)
 
-static void
-ngx_log_memory_writer(ngx_log_t *log, ngx_uint_t level, u_char *buf,
-    size_t len)
+స్థిర శూన్య
+ngx_log_జ్ఞాపకం_writer(ngx_log_t *సంవర్గమానం, ngx_uint_t level, u_char *buf,
+    కొలత_t len)
 {
     u_char                *p;
-    size_t                 avail, written;
-    ngx_log_memory_buf_t  *mem;
+    కొలత_t                 avail, written;
+    ngx_log_జ్ఞాపకం_buf_t  *mem;
 
-    mem = log->wdata;
+    mem = సంవర్గమానం->wdata;
 
-    if (mem == NULL) {
-        return;
+    ఒకవేళ (mem == ఖాళీ) {
+        తిరిగి;
     }
 
-    written = ngx_atomic_fetch_add(&mem->written, len);
+    written = ngx_atomic_fetch_కూడు(&mem->written, len);
 
-    p = mem->pos + written % (mem->end - mem->pos);
+    p = mem->pos + written % (mem->చివర - mem->pos);
 
-    avail = mem->end - p;
+    avail = mem->చివర - p;
 
-    if (avail >= len) {
+    ఒకవేళ (avail >= len) {
         ngx_memcpy(p, buf, len);
 
-    } else {
+    } లేకపోతే {
         ngx_memcpy(p, buf, avail);
         ngx_memcpy(mem->pos, buf + avail, len - avail);
     }
 }
 
 
-static void
-ngx_log_memory_cleanup(void *data)
+స్థిర శూన్య
+ngx_log_జ్ఞాపకం_cleanup(శూన్య *దత్తాంశం)
 {
-    ngx_log_t *log = data;
+    ngx_log_t *సంవర్గమానం = దత్తాంశం;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, log, 0, "destroy memory log buffer");
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, సంవర్గమానం, 0, "destroy memory log buffer");
 
-    log->wdata = NULL;
+    సంవర్గమానం->wdata = ఖాళీ;
 }
 
-#endif
+#అయితే_ముగింపు

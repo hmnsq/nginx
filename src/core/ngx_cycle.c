@@ -5,54 +5,54 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
+#అన్తర్భావ <ngx_event.h>
 
 
-static void ngx_destroy_cycle_pools(ngx_conf_t *conf);
-static ngx_int_t ngx_init_zone_pool(ngx_cycle_t *cycle,
+స్థిర శూన్య ngx_destroy_చక్రం_pools(ngx_conf_t *conf);
+స్థిర ngx_int_t ngx_init_zone_pool(ngx_చక్రం_t *చక్రం,
     ngx_shm_zone_t *shm_zone);
-static ngx_int_t ngx_test_lockfile(u_char *file, ngx_log_t *log);
-static void ngx_clean_old_cycles(ngx_event_t *ev);
-static void ngx_shutdown_timer_handler(ngx_event_t *ev);
+స్థిర ngx_int_t ngx_test_lockfile(u_char *file, ngx_log_t *సంవర్గమానం);
+స్థిర శూన్య ngx_clean_old_చక్రాలు(ngx_event_t *ev);
+స్థిర శూన్య ngx_shutdown_timer_handler(ngx_event_t *ev);
 
 
-volatile ngx_cycle_t  *ngx_cycle;
-ngx_array_t            ngx_old_cycles;
+అస్థిర ngx_చక్రం_t  *ngx_చక్రం;
+ngx_array_t            ngx_old_చక్రాలు;
 
-static ngx_pool_t     *ngx_temp_pool;
-static ngx_event_t     ngx_cleaner_event;
-static ngx_event_t     ngx_shutdown_event;
+స్థిర ngx_pool_t     *ngx_తాత్కాలిక_pool;
+స్థిర ngx_event_t     ngx_cleaner_event;
+స్థిర ngx_event_t     ngx_shutdown_event;
 
 ngx_uint_t             ngx_test_config;
 ngx_uint_t             ngx_dump_config;
-ngx_uint_t             ngx_quiet_mode;
+ngx_uint_t             ngx_quiet_బహుళకం;
 
 
 /* STUB NAME */
-static ngx_connection_t  dumb;
+స్థిర ngx_connection_t  dumb;
 /* STUB */
 
 
-ngx_cycle_t *
-ngx_init_cycle(ngx_cycle_t *old_cycle)
+ngx_చక్రం_t *
+ngx_init_చక్రం(ngx_చక్రం_t *old_చక్రం)
 {
-    void                *rv, *data;
-    char               **senv;
+    శూన్య                *rv, *దత్తాంశం;
+    అక్షరం               **senv;
     ngx_uint_t           i, n;
-    ngx_log_t           *log;
-    ngx_time_t          *tp;
+    ngx_log_t           *సంవర్గమానం;
+    ngx_సమయం_t          *tp;
     ngx_conf_t           conf;
     ngx_pool_t          *pool;
-    ngx_cycle_t         *cycle, **old;
+    ngx_చక్రం_t         *చక్రం, **old;
     ngx_shm_zone_t      *shm_zone, *oshm_zone;
     ngx_list_part_t     *part, *opart;
     ngx_open_file_t     *file;
     ngx_listening_t     *ls, *nls;
     ngx_core_conf_t     *ccf, *old_ccf;
     ngx_core_module_t   *module;
-    char                 hostname[NGX_MAXHOSTNAMELEN];
+    అక్షరం                 hostname[NGX_MAXHOSTNAMELEN];
 
     ngx_timezone_update();
 
@@ -61,189 +61,189 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
     tp = ngx_timeofday();
     tp->sec = 0;
 
-    ngx_time_update();
+    ngx_సమయం_update();
 
 
-    log = old_cycle->log;
+    సంవర్గమానం = old_చక్రం->సంవర్గమానం;
 
-    pool = ngx_create_pool(NGX_CYCLE_POOL_SIZE, log);
-    if (pool == NULL) {
-        return NULL;
+    pool = ngx_create_pool(NGX_చక్రం_POOL_కొలత, సంవర్గమానం);
+    ఒకవేళ (pool == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
-    pool->log = log;
+    pool->సంవర్గమానం = సంవర్గమానం;
 
-    cycle = ngx_pcalloc(pool, sizeof(ngx_cycle_t));
-    if (cycle == NULL) {
+    చక్రం = ngx_pcalloc(pool, పరిమాణం(ngx_చక్రం_t));
+    ఒకవేళ (చక్రం == ఖాళీ) {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    cycle->pool = pool;
-    cycle->log = log;
-    cycle->old_cycle = old_cycle;
+    చక్రం->pool = pool;
+    చక్రం->సంవర్గమానం = సంవర్గమానం;
+    చక్రం->old_చక్రం = old_చక్రం;
 
-    cycle->conf_prefix.len = old_cycle->conf_prefix.len;
-    cycle->conf_prefix.data = ngx_pstrdup(pool, &old_cycle->conf_prefix);
-    if (cycle->conf_prefix.data == NULL) {
+    చక్రం->conf_ఉపసర్గ.len = old_చక్రం->conf_ఉపసర్గ.len;
+    చక్రం->conf_ఉపసర్గ.దత్తాంశం = ngx_pstrdup(pool, &old_చక్రం->conf_ఉపసర్గ);
+    ఒకవేళ (చక్రం->conf_ఉపసర్గ.దత్తాంశం == ఖాళీ) {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    cycle->prefix.len = old_cycle->prefix.len;
-    cycle->prefix.data = ngx_pstrdup(pool, &old_cycle->prefix);
-    if (cycle->prefix.data == NULL) {
+    చక్రం->ఉపసర్గ.len = old_చక్రం->ఉపసర్గ.len;
+    చక్రం->ఉపసర్గ.దత్తాంశం = ngx_pstrdup(pool, &old_చక్రం->ఉపసర్గ);
+    ఒకవేళ (చక్రం->ఉపసర్గ.దత్తాంశం == ఖాళీ) {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    cycle->error_log.len = old_cycle->error_log.len;
-    cycle->error_log.data = ngx_pnalloc(pool, old_cycle->error_log.len + 1);
-    if (cycle->error_log.data == NULL) {
+    చక్రం->error_log.len = old_చక్రం->error_log.len;
+    చక్రం->error_log.దత్తాంశం = ngx_pnalloc(pool, old_చక్రం->error_log.len + 1);
+    ఒకవేళ (చక్రం->error_log.దత్తాంశం == ఖాళీ) {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
-    ngx_cpystrn(cycle->error_log.data, old_cycle->error_log.data,
-                old_cycle->error_log.len + 1);
+    ngx_cpystrn(చక్రం->error_log.దత్తాంశం, old_చక్రం->error_log.దత్తాంశం,
+                old_చక్రం->error_log.len + 1);
 
-    cycle->conf_file.len = old_cycle->conf_file.len;
-    cycle->conf_file.data = ngx_pnalloc(pool, old_cycle->conf_file.len + 1);
-    if (cycle->conf_file.data == NULL) {
+    చక్రం->conf_file.len = old_చక్రం->conf_file.len;
+    చక్రం->conf_file.దత్తాంశం = ngx_pnalloc(pool, old_చక్రం->conf_file.len + 1);
+    ఒకవేళ (చక్రం->conf_file.దత్తాంశం == ఖాళీ) {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
-    ngx_cpystrn(cycle->conf_file.data, old_cycle->conf_file.data,
-                old_cycle->conf_file.len + 1);
+    ngx_cpystrn(చక్రం->conf_file.దత్తాంశం, old_చక్రం->conf_file.దత్తాంశం,
+                old_చక్రం->conf_file.len + 1);
 
-    if (old_cycle->conf_param.len) {
-        cycle->conf_param.len = old_cycle->conf_param.len;
-        cycle->conf_param.data = ngx_pstrdup(pool, &old_cycle->conf_param);
-        if (cycle->conf_param.data == NULL) {
+    ఒకవేళ (old_చక్రం->conf_param.len) {
+        చక్రం->conf_param.len = old_చక్రం->conf_param.len;
+        చక్రం->conf_param.దత్తాంశం = ngx_pstrdup(pool, &old_చక్రం->conf_param);
+        ఒకవేళ (చక్రం->conf_param.దత్తాంశం == ఖాళీ) {
             ngx_destroy_pool(pool);
-            return NULL;
+            తిరిగి ఖాళీ;
         }
     }
 
 
-    n = old_cycle->paths.nelts ? old_cycle->paths.nelts : 10;
+    n = old_చక్రం->paths.nelts ? old_చక్రం->paths.nelts : 10;
 
-    if (ngx_array_init(&cycle->paths, pool, n, sizeof(ngx_path_t *))
+    ఒకవేళ (ngx_array_init(&చక్రం->paths, pool, n, పరిమాణం(ngx_మార్గం_t *))
         != NGX_OK)
     {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    ngx_memzero(cycle->paths.elts, n * sizeof(ngx_path_t *));
+    ngx_memzero(చక్రం->paths.elts, n * పరిమాణం(ngx_మార్గం_t *));
 
 
-    if (ngx_array_init(&cycle->config_dump, pool, 1, sizeof(ngx_conf_dump_t))
+    ఒకవేళ (ngx_array_init(&చక్రం->config_dump, pool, 1, పరిమాణం(ngx_conf_dump_t))
         != NGX_OK)
     {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    ngx_rbtree_init(&cycle->config_dump_rbtree, &cycle->config_dump_sentinel,
-                    ngx_str_rbtree_insert_value);
+    ngx_rbtree_init(&చక్రం->config_dump_rbtree, &చక్రం->config_dump_sentinel,
+                    ngx_str_rbtree_చొప్పించు_విలువ);
 
-    if (old_cycle->open_files.part.nelts) {
-        n = old_cycle->open_files.part.nelts;
-        for (part = old_cycle->open_files.part.next; part; part = part->next) {
+    ఒకవేళ (old_చక్రం->open_files.part.nelts) {
+        n = old_చక్రం->open_files.part.nelts;
+        కొరకు (part = old_చక్రం->open_files.part.తదుపరి; part; part = part->తదుపరి) {
             n += part->nelts;
         }
 
-    } else {
+    } లేకపోతే {
         n = 20;
     }
 
-    if (ngx_list_init(&cycle->open_files, pool, n, sizeof(ngx_open_file_t))
+    ఒకవేళ (ngx_list_init(&చక్రం->open_files, pool, n, పరిమాణం(ngx_open_file_t))
         != NGX_OK)
     {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
 
-    if (old_cycle->shared_memory.part.nelts) {
-        n = old_cycle->shared_memory.part.nelts;
-        for (part = old_cycle->shared_memory.part.next; part; part = part->next)
+    ఒకవేళ (old_చక్రం->shared_జ్ఞాపకం.part.nelts) {
+        n = old_చక్రం->shared_జ్ఞాపకం.part.nelts;
+        కొరకు (part = old_చక్రం->shared_జ్ఞాపకం.part.తదుపరి; part; part = part->తదుపరి)
         {
             n += part->nelts;
         }
 
-    } else {
+    } లేకపోతే {
         n = 1;
     }
 
-    if (ngx_list_init(&cycle->shared_memory, pool, n, sizeof(ngx_shm_zone_t))
+    ఒకవేళ (ngx_list_init(&చక్రం->shared_జ్ఞాపకం, pool, n, పరిమాణం(ngx_shm_zone_t))
         != NGX_OK)
     {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    n = old_cycle->listening.nelts ? old_cycle->listening.nelts : 10;
+    n = old_చక్రం->listening.nelts ? old_చక్రం->listening.nelts : 10;
 
-    if (ngx_array_init(&cycle->listening, pool, n, sizeof(ngx_listening_t))
+    ఒకవేళ (ngx_array_init(&చక్రం->listening, pool, n, పరిమాణం(ngx_listening_t))
         != NGX_OK)
     {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    ngx_memzero(cycle->listening.elts, n * sizeof(ngx_listening_t));
+    ngx_memzero(చక్రం->listening.elts, n * పరిమాణం(ngx_listening_t));
 
 
-    ngx_queue_init(&cycle->reusable_connections_queue);
+    ngx_వరుస_init(&చక్రం->reusable_connections_వరుస);
 
 
-    cycle->conf_ctx = ngx_pcalloc(pool, ngx_max_module * sizeof(void *));
-    if (cycle->conf_ctx == NULL) {
+    చక్రం->conf_ctx = ngx_pcalloc(pool, ngx_max_module * పరిమాణం(శూన్య *));
+    ఒకవేళ (చక్రం->conf_ctx == ఖాళీ) {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
 
-    if (gethostname(hostname, NGX_MAXHOSTNAMELEN) == -1) {
-        ngx_log_error(NGX_LOG_EMERG, log, ngx_errno, "gethostname() failed");
+    ఒకవేళ (gethostname(hostname, NGX_MAXHOSTNAMELEN) == -1) {
+        ngx_log_error(NGX_LOG_EMERG, సంవర్గమానం, ngx_errno, "gethostname() failed");
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
     /* on Linux gethostname() silently truncates name that does not fit */
 
     hostname[NGX_MAXHOSTNAMELEN - 1] = '\0';
-    cycle->hostname.len = ngx_strlen(hostname);
+    చక్రం->hostname.len = ngx_strlen(hostname);
 
-    cycle->hostname.data = ngx_pnalloc(pool, cycle->hostname.len);
-    if (cycle->hostname.data == NULL) {
+    చక్రం->hostname.దత్తాంశం = ngx_pnalloc(pool, చక్రం->hostname.len);
+    ఒకవేళ (చక్రం->hostname.దత్తాంశం == ఖాళీ) {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    ngx_strlow(cycle->hostname.data, (u_char *) hostname, cycle->hostname.len);
+    ngx_strlow(చక్రం->hostname.దత్తాంశం, (u_char *) hostname, చక్రం->hostname.len);
 
 
-    if (ngx_cycle_modules(cycle) != NGX_OK) {
+    ఒకవేళ (ngx_చక్రం_modules(చక్రం) != NGX_OK) {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
 
-    for (i = 0; cycle->modules[i]; i++) {
-        if (cycle->modules[i]->type != NGX_CORE_MODULE) {
-            continue;
+    కొరకు (i = 0; చక్రం->modules[i]; i++) {
+        ఒకవేళ (చక్రం->modules[i]->type != NGX_CORE_MODULE) {
+            కొనసాగు;
         }
 
-        module = cycle->modules[i]->ctx;
+        module = చక్రం->modules[i]->ctx;
 
-        if (module->create_conf) {
-            rv = module->create_conf(cycle);
-            if (rv == NULL) {
+        ఒకవేళ (module->create_conf) {
+            rv = module->create_conf(చక్రం);
+            ఒకవేళ (rv == ఖాళీ) {
                 ngx_destroy_pool(pool);
-                return NULL;
+                తిరిగి ఖాళీ;
             }
-            cycle->conf_ctx[cycle->modules[i]->index] = rv;
+            చక్రం->conf_ctx[చక్రం->modules[i]->సూచీ] = rv;
         }
     }
 
@@ -251,307 +251,307 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
     senv = environ;
 
 
-    ngx_memzero(&conf, sizeof(ngx_conf_t));
+    ngx_memzero(&conf, పరిమాణం(ngx_conf_t));
     /* STUB: init array ? */
-    conf.args = ngx_array_create(pool, 10, sizeof(ngx_str_t));
-    if (conf.args == NULL) {
+    conf.వాదనలు = ngx_array_create(pool, 10, పరిమాణం(ngx_str_t));
+    ఒకవేళ (conf.వాదనలు == ఖాళీ) {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    conf.temp_pool = ngx_create_pool(NGX_CYCLE_POOL_SIZE, log);
-    if (conf.temp_pool == NULL) {
+    conf.తాత్కాలిక_pool = ngx_create_pool(NGX_చక్రం_POOL_కొలత, సంవర్గమానం);
+    ఒకవేళ (conf.తాత్కాలిక_pool == ఖాళీ) {
         ngx_destroy_pool(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
 
-    conf.ctx = cycle->conf_ctx;
-    conf.cycle = cycle;
+    conf.ctx = చక్రం->conf_ctx;
+    conf.చక్రం = చక్రం;
     conf.pool = pool;
-    conf.log = log;
+    conf.సంవర్గమానం = సంవర్గమానం;
     conf.module_type = NGX_CORE_MODULE;
     conf.cmd_type = NGX_MAIN_CONF;
 
-#if 0
-    log->log_level = NGX_LOG_DEBUG_ALL;
-#endif
+#ఒకవేళ 0
+    సంవర్గమానం->log_level = NGX_LOG_DEBUG_ALL;
+#అయితే_ముగింపు
 
-    if (ngx_conf_param(&conf) != NGX_CONF_OK) {
+    ఒకవేళ (ngx_conf_param(&conf) != NGX_CONF_OK) {
         environ = senv;
-        ngx_destroy_cycle_pools(&conf);
-        return NULL;
+        ngx_destroy_చక్రం_pools(&conf);
+        తిరిగి ఖాళీ;
     }
 
-    if (ngx_conf_parse(&conf, &cycle->conf_file) != NGX_CONF_OK) {
+    ఒకవేళ (ngx_conf_parse(&conf, &చక్రం->conf_file) != NGX_CONF_OK) {
         environ = senv;
-        ngx_destroy_cycle_pools(&conf);
-        return NULL;
+        ngx_destroy_చక్రం_pools(&conf);
+        తిరిగి ఖాళీ;
     }
 
-    if (ngx_test_config && !ngx_quiet_mode) {
+    ఒకవేళ (ngx_test_config && !ngx_quiet_బహుళకం) {
         ngx_log_stderr(0, "the configuration file %s syntax is ok",
-                       cycle->conf_file.data);
+                       చక్రం->conf_file.దత్తాంశం);
     }
 
-    for (i = 0; cycle->modules[i]; i++) {
-        if (cycle->modules[i]->type != NGX_CORE_MODULE) {
-            continue;
+    కొరకు (i = 0; చక్రం->modules[i]; i++) {
+        ఒకవేళ (చక్రం->modules[i]->type != NGX_CORE_MODULE) {
+            కొనసాగు;
         }
 
-        module = cycle->modules[i]->ctx;
+        module = చక్రం->modules[i]->ctx;
 
-        if (module->init_conf) {
-            if (module->init_conf(cycle,
-                                  cycle->conf_ctx[cycle->modules[i]->index])
+        ఒకవేళ (module->init_conf) {
+            ఒకవేళ (module->init_conf(చక్రం,
+                                  చక్రం->conf_ctx[చక్రం->modules[i]->సూచీ])
                 == NGX_CONF_ERROR)
             {
                 environ = senv;
-                ngx_destroy_cycle_pools(&conf);
-                return NULL;
+                ngx_destroy_చక్రం_pools(&conf);
+                తిరిగి ఖాళీ;
             }
         }
     }
 
-    if (ngx_process == NGX_PROCESS_SIGNALLER) {
-        return cycle;
+    ఒకవేళ (ngx_process == NGX_PROCESS_SIGNALLER) {
+        తిరిగి చక్రం;
     }
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(చక్రం->conf_ctx, ngx_core_module);
 
-    if (ngx_test_config) {
+    ఒకవేళ (ngx_test_config) {
 
-        if (ngx_create_pidfile(&ccf->pid, log) != NGX_OK) {
-            goto failed;
+        ఒకవేళ (ngx_create_pidfile(&ccf->pid, సంవర్గమానం) != NGX_OK) {
+            వెళ్ళు failed;
         }
 
-    } else if (!ngx_is_init_cycle(old_cycle)) {
+    } లేకపోతే ఒకవేళ (!ngx_is_init_చక్రం(old_చక్రం)) {
 
         /*
          * we do not create the pid file in the first ngx_init_cycle() call
          * because we need to write the demonized process pid
          */
 
-        old_ccf = (ngx_core_conf_t *) ngx_get_conf(old_cycle->conf_ctx,
+        old_ccf = (ngx_core_conf_t *) ngx_get_conf(old_చక్రం->conf_ctx,
                                                    ngx_core_module);
-        if (ccf->pid.len != old_ccf->pid.len
-            || ngx_strcmp(ccf->pid.data, old_ccf->pid.data) != 0)
+        ఒకవేళ (ccf->pid.len != old_ccf->pid.len
+            || ngx_strcmp(ccf->pid.దత్తాంశం, old_ccf->pid.దత్తాంశం) != 0)
         {
             /* new pid file name */
 
-            if (ngx_create_pidfile(&ccf->pid, log) != NGX_OK) {
-                goto failed;
+            ఒకవేళ (ngx_create_pidfile(&ccf->pid, సంవర్గమానం) != NGX_OK) {
+                వెళ్ళు failed;
             }
 
-            ngx_delete_pidfile(old_cycle);
+            ngx_delete_pidfile(old_చక్రం);
         }
     }
 
 
-    if (ngx_test_lockfile(cycle->lock_file.data, log) != NGX_OK) {
-        goto failed;
+    ఒకవేళ (ngx_test_lockfile(చక్రం->తాళం_file.దత్తాంశం, సంవర్గమానం) != NGX_OK) {
+        వెళ్ళు failed;
     }
 
 
-    if (ngx_create_paths(cycle, ccf->user) != NGX_OK) {
-        goto failed;
+    ఒకవేళ (ngx_create_paths(చక్రం, ccf->user) != NGX_OK) {
+        వెళ్ళు failed;
     }
 
 
-    if (ngx_log_open_default(cycle) != NGX_OK) {
-        goto failed;
+    ఒకవేళ (ngx_log_open_default(చక్రం) != NGX_OK) {
+        వెళ్ళు failed;
     }
 
     /* open the new files */
 
-    part = &cycle->open_files.part;
+    part = &చక్రం->open_files.part;
     file = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    కొరకు (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        ఒకవేళ (i >= part->nelts) {
+            ఒకవేళ (part->తదుపరి == ఖాళీ) {
+                ఆపు;
             }
-            part = part->next;
+            part = part->తదుపరి;
             file = part->elts;
             i = 0;
         }
 
-        if (file[i].name.len == 0) {
-            continue;
+        ఒకవేళ (file[i].name.len == 0) {
+            కొనసాగు;
         }
 
-        file[i].fd = ngx_open_file(file[i].name.data,
+        file[i].fd = ngx_open_file(file[i].name.దత్తాంశం,
                                    NGX_FILE_APPEND,
                                    NGX_FILE_CREATE_OR_OPEN,
                                    NGX_FILE_DEFAULT_ACCESS);
 
-        ngx_log_debug3(NGX_LOG_DEBUG_CORE, log, 0,
+        ngx_log_debug3(NGX_LOG_DEBUG_CORE, సంవర్గమానం, 0,
                        "log: %p %d \"%s\"",
-                       &file[i], file[i].fd, file[i].name.data);
+                       &file[i], file[i].fd, file[i].name.దత్తాంశం);
 
-        if (file[i].fd == NGX_INVALID_FILE) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
+        ఒకవేళ (file[i].fd == NGX_INVALID_FILE) {
+            ngx_log_error(NGX_LOG_EMERG, సంవర్గమానం, ngx_errno,
                           ngx_open_file_n " \"%s\" failed",
-                          file[i].name.data);
-            goto failed;
+                          file[i].name.దత్తాంశం);
+            వెళ్ళు failed;
         }
 
-#if !(NGX_WIN32)
-        if (fcntl(file[i].fd, F_SETFD, FD_CLOEXEC) == -1) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
+#ఒకవేళ !(NGX_WIN32)
+        ఒకవేళ (fcntl(file[i].fd, F_SETFD, FD_CLOEXEC) == -1) {
+            ngx_log_error(NGX_LOG_EMERG, సంవర్గమానం, ngx_errno,
                           "fcntl(FD_CLOEXEC) \"%s\" failed",
-                          file[i].name.data);
-            goto failed;
+                          file[i].name.దత్తాంశం);
+            వెళ్ళు failed;
         }
-#endif
+#అయితే_ముగింపు
     }
 
-    cycle->log = &cycle->new_log;
-    pool->log = &cycle->new_log;
+    చక్రం->సంవర్గమానం = &చక్రం->new_log;
+    pool->సంవర్గమానం = &చక్రం->new_log;
 
 
     /* create shared memory */
 
-    part = &cycle->shared_memory.part;
+    part = &చక్రం->shared_జ్ఞాపకం.part;
     shm_zone = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    కొరకు (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        ఒకవేళ (i >= part->nelts) {
+            ఒకవేళ (part->తదుపరి == ఖాళీ) {
+                ఆపు;
             }
-            part = part->next;
+            part = part->తదుపరి;
             shm_zone = part->elts;
             i = 0;
         }
 
-        if (shm_zone[i].shm.size == 0) {
-            ngx_log_error(NGX_LOG_EMERG, log, 0,
+        ఒకవేళ (shm_zone[i].shm.కొలత == 0) {
+            ngx_log_error(NGX_LOG_EMERG, సంవర్గమానం, 0,
                           "zero size shared memory zone \"%V\"",
                           &shm_zone[i].shm.name);
-            goto failed;
+            వెళ్ళు failed;
         }
 
-        shm_zone[i].shm.log = cycle->log;
+        shm_zone[i].shm.సంవర్గమానం = చక్రం->సంవర్గమానం;
 
-        opart = &old_cycle->shared_memory.part;
+        opart = &old_చక్రం->shared_జ్ఞాపకం.part;
         oshm_zone = opart->elts;
 
-        data = NULL;
+        దత్తాంశం = ఖాళీ;
 
-        for (n = 0; /* void */ ; n++) {
+        కొరకు (n = 0; /* void */ ; n++) {
 
-            if (n >= opart->nelts) {
-                if (opart->next == NULL) {
-                    break;
+            ఒకవేళ (n >= opart->nelts) {
+                ఒకవేళ (opart->తదుపరి == ఖాళీ) {
+                    ఆపు;
                 }
-                opart = opart->next;
+                opart = opart->తదుపరి;
                 oshm_zone = opart->elts;
                 n = 0;
             }
 
-            if (shm_zone[i].shm.name.len != oshm_zone[n].shm.name.len) {
-                continue;
+            ఒకవేళ (shm_zone[i].shm.name.len != oshm_zone[n].shm.name.len) {
+                కొనసాగు;
             }
 
-            if (ngx_strncmp(shm_zone[i].shm.name.data,
-                            oshm_zone[n].shm.name.data,
+            ఒకవేళ (ngx_strncmp(shm_zone[i].shm.name.దత్తాంశం,
+                            oshm_zone[n].shm.name.దత్తాంశం,
                             shm_zone[i].shm.name.len)
                 != 0)
             {
-                continue;
+                కొనసాగు;
             }
 
-            if (shm_zone[i].tag == oshm_zone[n].tag && shm_zone[i].noreuse) {
-                data = oshm_zone[n].data;
-                break;
+            ఒకవేళ (shm_zone[i].ట్యాగ్ == oshm_zone[n].ట్యాగ్ && shm_zone[i].noreuse) {
+                దత్తాంశం = oshm_zone[n].దత్తాంశం;
+                ఆపు;
             }
 
-            if (shm_zone[i].tag == oshm_zone[n].tag
-                && shm_zone[i].shm.size == oshm_zone[n].shm.size)
+            ఒకవేళ (shm_zone[i].ట్యాగ్ == oshm_zone[n].ట్యాగ్
+                && shm_zone[i].shm.కొలత == oshm_zone[n].shm.కొలత)
             {
                 shm_zone[i].shm.addr = oshm_zone[n].shm.addr;
-#if (NGX_WIN32)
+#ఒకవేళ (NGX_WIN32)
                 shm_zone[i].shm.handle = oshm_zone[n].shm.handle;
-#endif
+#అయితే_ముగింపు
 
-                if (shm_zone[i].init(&shm_zone[i], oshm_zone[n].data)
+                ఒకవేళ (shm_zone[i].init(&shm_zone[i], oshm_zone[n].దత్తాంశం)
                     != NGX_OK)
                 {
-                    goto failed;
+                    వెళ్ళు failed;
                 }
 
-                goto shm_zone_found;
+                వెళ్ళు shm_zone_దొరికింది;
             }
 
-            break;
+            ఆపు;
         }
 
-        if (ngx_shm_alloc(&shm_zone[i].shm) != NGX_OK) {
-            goto failed;
+        ఒకవేళ (ngx_shm_alloc(&shm_zone[i].shm) != NGX_OK) {
+            వెళ్ళు failed;
         }
 
-        if (ngx_init_zone_pool(cycle, &shm_zone[i]) != NGX_OK) {
-            goto failed;
+        ఒకవేళ (ngx_init_zone_pool(చక్రం, &shm_zone[i]) != NGX_OK) {
+            వెళ్ళు failed;
         }
 
-        if (shm_zone[i].init(&shm_zone[i], data) != NGX_OK) {
-            goto failed;
+        ఒకవేళ (shm_zone[i].init(&shm_zone[i], దత్తాంశం) != NGX_OK) {
+            వెళ్ళు failed;
         }
 
-    shm_zone_found:
+    shm_zone_దొరికింది:
 
-        continue;
+        కొనసాగు;
     }
 
 
     /* handle the listening sockets */
 
-    if (old_cycle->listening.nelts) {
-        ls = old_cycle->listening.elts;
-        for (i = 0; i < old_cycle->listening.nelts; i++) {
+    ఒకవేళ (old_చక్రం->listening.nelts) {
+        ls = old_చక్రం->listening.elts;
+        కొరకు (i = 0; i < old_చక్రం->listening.nelts; i++) {
             ls[i].remain = 0;
         }
 
-        nls = cycle->listening.elts;
-        for (n = 0; n < cycle->listening.nelts; n++) {
+        nls = చక్రం->listening.elts;
+        కొరకు (n = 0; n < చక్రం->listening.nelts; n++) {
 
-            for (i = 0; i < old_cycle->listening.nelts; i++) {
-                if (ls[i].ignore) {
-                    continue;
+            కొరకు (i = 0; i < old_చక్రం->listening.nelts; i++) {
+                ఒకవేళ (ls[i].ignore) {
+                    కొనసాగు;
                 }
 
-                if (ls[i].remain) {
-                    continue;
+                ఒకవేళ (ls[i].remain) {
+                    కొనసాగు;
                 }
 
-                if (ls[i].type != nls[n].type) {
-                    continue;
+                ఒకవేళ (ls[i].type != nls[n].type) {
+                    కొనసాగు;
                 }
 
-                if (ngx_cmp_sockaddr(nls[n].sockaddr, nls[n].socklen,
+                ఒకవేళ (ngx_cmp_sockaddr(nls[n].sockaddr, nls[n].socklen,
                                      ls[i].sockaddr, ls[i].socklen, 1)
                     == NGX_OK)
                 {
                     nls[n].fd = ls[i].fd;
-                    nls[n].previous = &ls[i];
+                    nls[n].మునుపటి = &ls[i];
 
-                    if (ls[i].protocol != nls[n].protocol) {
+                    ఒకవేళ (ls[i].protocol != nls[n].protocol) {
                         nls[n].change_protocol = 1;
 
-                    } else {
+                    } లేకపోతే {
                         nls[n].inherited = ls[i].inherited;
                         ls[i].remain = 1;
                     }
 
-                    if (ls[i].backlog != nls[n].backlog) {
+                    ఒకవేళ (ls[i].backlog != nls[n].backlog) {
                         nls[n].listen = 1;
                     }
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+#ఒకవేళ (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
 
                     /*
                      * FreeBSD, except the most recent versions,
@@ -559,96 +559,96 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
                      */
                     nls[n].deferred_accept = ls[i].deferred_accept;
 
-                    if (ls[i].accept_filter && nls[n].accept_filter) {
-                        if (ngx_strcmp(ls[i].accept_filter,
+                    ఒకవేళ (ls[i].accept_filter && nls[n].accept_filter) {
+                        ఒకవేళ (ngx_strcmp(ls[i].accept_filter,
                                        nls[n].accept_filter)
                             != 0)
                         {
                             nls[n].delete_deferred = 1;
-                            nls[n].add_deferred = 1;
+                            nls[n].కూడు_deferred = 1;
                         }
 
-                    } else if (ls[i].accept_filter) {
+                    } లేకపోతే ఒకవేళ (ls[i].accept_filter) {
                         nls[n].delete_deferred = 1;
 
-                    } else if (nls[n].accept_filter) {
-                        nls[n].add_deferred = 1;
+                    } లేకపోతే ఒకవేళ (nls[n].accept_filter) {
+                        nls[n].కూడు_deferred = 1;
                     }
-#endif
+#అయితే_ముగింపు
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
+#ఒకవేళ (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
 
-                    if (ls[i].deferred_accept && !nls[n].deferred_accept) {
+                    ఒకవేళ (ls[i].deferred_accept && !nls[n].deferred_accept) {
                         nls[n].delete_deferred = 1;
 
-                    } else if (ls[i].deferred_accept != nls[n].deferred_accept)
+                    } లేకపోతే ఒకవేళ (ls[i].deferred_accept != nls[n].deferred_accept)
                     {
-                        nls[n].add_deferred = 1;
+                        nls[n].కూడు_deferred = 1;
                     }
-#endif
+#అయితే_ముగింపు
 
-#if (NGX_HAVE_REUSEPORT)
-                    if (nls[n].reuseport && !ls[i].reuseport) {
-                        nls[n].add_reuseport = 1;
+#ఒకవేళ (NGX_HAVE_REUSEPORT)
+                    ఒకవేళ (nls[n].reuseport && !ls[i].reuseport) {
+                        nls[n].కూడు_reuseport = 1;
                     }
-#endif
+#అయితే_ముగింపు
 
-                    break;
+                    ఆపు;
                 }
             }
 
-            if (nls[n].fd == (ngx_socket_t) -1) {
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
-                if (nls[n].accept_filter) {
-                    nls[n].add_deferred = 1;
+            ఒకవేళ (nls[n].fd == (ngx_socket_t) -1) {
+#ఒకవేళ (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+                ఒకవేళ (nls[n].accept_filter) {
+                    nls[n].కూడు_deferred = 1;
                 }
-#endif
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
-                if (nls[n].deferred_accept) {
-                    nls[n].add_deferred = 1;
+#అయితే_ముగింపు
+#ఒకవేళ (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
+                ఒకవేళ (nls[n].deferred_accept) {
+                    nls[n].కూడు_deferred = 1;
                 }
-#endif
+#అయితే_ముగింపు
             }
         }
 
-    } else {
-#if (NGX_HAVE_DEFERRED_ACCEPT)
-        ls = cycle->listening.elts;
-        for (i = 0; i < cycle->listening.nelts; i++) {
-#ifdef SO_ACCEPTFILTER
-            if (ls[i].accept_filter) {
-                ls[i].add_deferred = 1;
+    } లేకపోతే {
+#ఒకవేళ (NGX_HAVE_DEFERRED_ACCEPT)
+        ls = చక్రం->listening.elts;
+        కొరకు (i = 0; i < చక్రం->listening.nelts; i++) {
+#నిర్వచితమైతే SO_ACCEPTFILTER
+            ఒకవేళ (ls[i].accept_filter) {
+                ls[i].కూడు_deferred = 1;
             }
-#endif
-#ifdef TCP_DEFER_ACCEPT
-            if (ls[i].deferred_accept) {
-                ls[i].add_deferred = 1;
+#అయితే_ముగింపు
+#నిర్వచితమైతే TCP_DEFER_ACCEPT
+            ఒకవేళ (ls[i].deferred_accept) {
+                ls[i].కూడు_deferred = 1;
             }
-#endif
+#అయితే_ముగింపు
         }
-#endif
+#అయితే_ముగింపు
     }
 
-    if (ngx_open_listening_sockets(cycle) != NGX_OK) {
-        goto failed;
+    ఒకవేళ (ngx_open_listening_sockets(చక్రం) != NGX_OK) {
+        వెళ్ళు failed;
     }
 
-    if (!ngx_test_config) {
-        ngx_configure_listening_sockets(cycle);
+    ఒకవేళ (!ngx_test_config) {
+        ngx_configure_listening_sockets(చక్రం);
     }
 
 
     /* commit the new cycle configuration */
 
-    if (!ngx_use_stderr) {
-        (void) ngx_log_redirect_stderr(cycle);
+    ఒకవేళ (!ngx_use_stderr) {
+        (శూన్య) ngx_log_redirect_stderr(చక్రం);
     }
 
-    pool->log = cycle->log;
+    pool->సంవర్గమానం = చక్రం->సంవర్గమానం;
 
-    if (ngx_init_modules(cycle) != NGX_OK) {
+    ఒకవేళ (ngx_init_modules(చక్రం) != NGX_OK) {
         /* fatal */
-        exit(1);
+        నిష్క్రమించు(1);
     }
 
 
@@ -656,445 +656,445 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
 
     /* free the unnecessary shared memory */
 
-    opart = &old_cycle->shared_memory.part;
+    opart = &old_చక్రం->shared_జ్ఞాపకం.part;
     oshm_zone = opart->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    కొరకు (i = 0; /* void */ ; i++) {
 
-        if (i >= opart->nelts) {
-            if (opart->next == NULL) {
-                goto old_shm_zone_done;
+        ఒకవేళ (i >= opart->nelts) {
+            ఒకవేళ (opart->తదుపరి == ఖాళీ) {
+                వెళ్ళు old_shm_zone_పూర్తి;
             }
-            opart = opart->next;
+            opart = opart->తదుపరి;
             oshm_zone = opart->elts;
             i = 0;
         }
 
-        part = &cycle->shared_memory.part;
+        part = &చక్రం->shared_జ్ఞాపకం.part;
         shm_zone = part->elts;
 
-        for (n = 0; /* void */ ; n++) {
+        కొరకు (n = 0; /* void */ ; n++) {
 
-            if (n >= part->nelts) {
-                if (part->next == NULL) {
-                    break;
+            ఒకవేళ (n >= part->nelts) {
+                ఒకవేళ (part->తదుపరి == ఖాళీ) {
+                    ఆపు;
                 }
-                part = part->next;
+                part = part->తదుపరి;
                 shm_zone = part->elts;
                 n = 0;
             }
 
-            if (oshm_zone[i].shm.name.len != shm_zone[n].shm.name.len) {
-                continue;
+            ఒకవేళ (oshm_zone[i].shm.name.len != shm_zone[n].shm.name.len) {
+                కొనసాగు;
             }
 
-            if (ngx_strncmp(oshm_zone[i].shm.name.data,
-                            shm_zone[n].shm.name.data,
+            ఒకవేళ (ngx_strncmp(oshm_zone[i].shm.name.దత్తాంశం,
+                            shm_zone[n].shm.name.దత్తాంశం,
                             oshm_zone[i].shm.name.len)
                 != 0)
             {
-                continue;
+                కొనసాగు;
             }
 
-            if (oshm_zone[i].tag == shm_zone[n].tag
-                && oshm_zone[i].shm.size == shm_zone[n].shm.size
+            ఒకవేళ (oshm_zone[i].ట్యాగ్ == shm_zone[n].ట్యాగ్
+                && oshm_zone[i].shm.కొలత == shm_zone[n].shm.కొలత
                 && !oshm_zone[i].noreuse)
             {
-                goto live_shm_zone;
+                వెళ్ళు సజీవ_shm_zone;
             }
 
-            break;
+            ఆపు;
         }
 
         ngx_shm_free(&oshm_zone[i].shm);
 
-    live_shm_zone:
+    సజీవ_shm_zone:
 
-        continue;
+        కొనసాగు;
     }
 
-old_shm_zone_done:
+old_shm_zone_పూర్తి:
 
 
     /* close the unnecessary listening sockets */
 
-    ls = old_cycle->listening.elts;
-    for (i = 0; i < old_cycle->listening.nelts; i++) {
+    ls = old_చక్రం->listening.elts;
+    కొరకు (i = 0; i < old_చక్రం->listening.nelts; i++) {
 
-        if (ls[i].remain || ls[i].fd == (ngx_socket_t) -1) {
-            continue;
+        ఒకవేళ (ls[i].remain || ls[i].fd == (ngx_socket_t) -1) {
+            కొనసాగు;
         }
 
-        if (ngx_close_socket(ls[i].fd) == -1) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+        ఒకవేళ (ngx_close_socket(ls[i].fd) == -1) {
+            ngx_log_error(NGX_LOG_EMERG, సంవర్గమానం, ngx_socket_errno,
                           ngx_close_socket_n " listening socket on %V failed",
-                          &ls[i].addr_text);
+                          &ls[i].addr_పాఠ్యం);
         }
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#ఒకవేళ (NGX_HAVE_UNIX_DOMAIN)
 
-        if (ls[i].sockaddr->sa_family == AF_UNIX) {
+        ఒకవేళ (ls[i].sockaddr->sa_family == AF_UNIX) {
             u_char  *name;
 
-            name = ls[i].addr_text.data + sizeof("unix:") - 1;
+            name = ls[i].addr_పాఠ్యం.దత్తాంశం + పరిమాణం("unix:") - 1;
 
-            ngx_log_error(NGX_LOG_WARN, cycle->log, 0,
+            ngx_log_error(NGX_LOG_WARN, చక్రం->సంవర్గమానం, 0,
                           "deleting socket %s", name);
 
-            if (ngx_delete_file(name) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_socket_errno,
+            ఒకవేళ (ngx_delete_file(name) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, ngx_socket_errno,
                               ngx_delete_file_n " %s failed", name);
             }
         }
 
-#endif
+#అయితే_ముగింపు
     }
 
 
     /* close the unnecessary open files */
 
-    part = &old_cycle->open_files.part;
+    part = &old_చక్రం->open_files.part;
     file = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    కొరకు (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        ఒకవేళ (i >= part->nelts) {
+            ఒకవేళ (part->తదుపరి == ఖాళీ) {
+                ఆపు;
             }
-            part = part->next;
+            part = part->తదుపరి;
             file = part->elts;
             i = 0;
         }
 
-        if (file[i].fd == NGX_INVALID_FILE || file[i].fd == ngx_stderr) {
-            continue;
+        ఒకవేళ (file[i].fd == NGX_INVALID_FILE || file[i].fd == ngx_stderr) {
+            కొనసాగు;
         }
 
-        if (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
+        ఒకవేళ (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_EMERG, సంవర్గమానం, ngx_errno,
                           ngx_close_file_n " \"%s\" failed",
-                          file[i].name.data);
+                          file[i].name.దత్తాంశం);
         }
     }
 
-    ngx_destroy_pool(conf.temp_pool);
+    ngx_destroy_pool(conf.తాత్కాలిక_pool);
 
-    if (ngx_process == NGX_PROCESS_MASTER || ngx_is_init_cycle(old_cycle)) {
+    ఒకవేళ (ngx_process == NGX_PROCESS_MASTER || ngx_is_init_చక్రం(old_చక్రం)) {
 
-        ngx_destroy_pool(old_cycle->pool);
-        cycle->old_cycle = NULL;
+        ngx_destroy_pool(old_చక్రం->pool);
+        చక్రం->old_చక్రం = ఖాళీ;
 
-        return cycle;
+        తిరిగి చక్రం;
     }
 
 
-    if (ngx_temp_pool == NULL) {
-        ngx_temp_pool = ngx_create_pool(128, cycle->log);
-        if (ngx_temp_pool == NULL) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
+    ఒకవేళ (ngx_తాత్కాలిక_pool == ఖాళీ) {
+        ngx_తాత్కాలిక_pool = ngx_create_pool(128, చక్రం->సంవర్గమానం);
+        ఒకవేళ (ngx_తాత్కాలిక_pool == ఖాళీ) {
+            ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, 0,
                           "could not create ngx_temp_pool");
-            exit(1);
+            నిష్క్రమించు(1);
         }
 
         n = 10;
 
-        if (ngx_array_init(&ngx_old_cycles, ngx_temp_pool, n,
-                           sizeof(ngx_cycle_t *))
+        ఒకవేళ (ngx_array_init(&ngx_old_చక్రాలు, ngx_తాత్కాలిక_pool, n,
+                           పరిమాణం(ngx_చక్రం_t *))
             != NGX_OK)
         {
-            exit(1);
+            నిష్క్రమించు(1);
         }
 
-        ngx_memzero(ngx_old_cycles.elts, n * sizeof(ngx_cycle_t *));
+        ngx_memzero(ngx_old_చక్రాలు.elts, n * పరిమాణం(ngx_చక్రం_t *));
 
-        ngx_cleaner_event.handler = ngx_clean_old_cycles;
-        ngx_cleaner_event.log = cycle->log;
-        ngx_cleaner_event.data = &dumb;
+        ngx_cleaner_event.handler = ngx_clean_old_చక్రాలు;
+        ngx_cleaner_event.సంవర్గమానం = చక్రం->సంవర్గమానం;
+        ngx_cleaner_event.దత్తాంశం = &dumb;
         dumb.fd = (ngx_socket_t) -1;
     }
 
-    ngx_temp_pool->log = cycle->log;
+    ngx_తాత్కాలిక_pool->సంవర్గమానం = చక్రం->సంవర్గమానం;
 
-    old = ngx_array_push(&ngx_old_cycles);
-    if (old == NULL) {
-        exit(1);
+    old = ngx_array_నెట్టు(&ngx_old_చక్రాలు);
+    ఒకవేళ (old == ఖాళీ) {
+        నిష్క్రమించు(1);
     }
-    *old = old_cycle;
+    *old = old_చక్రం;
 
-    if (!ngx_cleaner_event.timer_set) {
-        ngx_add_timer(&ngx_cleaner_event, 30000);
-        ngx_cleaner_event.timer_set = 1;
+    ఒకవేళ (!ngx_cleaner_event.timer_సమితి) {
+        ngx_కూడు_timer(&ngx_cleaner_event, 30000);
+        ngx_cleaner_event.timer_సమితి = 1;
     }
 
-    return cycle;
+    తిరిగి చక్రం;
 
 
 failed:
 
-    if (!ngx_is_init_cycle(old_cycle)) {
-        old_ccf = (ngx_core_conf_t *) ngx_get_conf(old_cycle->conf_ctx,
+    ఒకవేళ (!ngx_is_init_చక్రం(old_చక్రం)) {
+        old_ccf = (ngx_core_conf_t *) ngx_get_conf(old_చక్రం->conf_ctx,
                                                    ngx_core_module);
-        if (old_ccf->environment) {
+        ఒకవేళ (old_ccf->environment) {
             environ = old_ccf->environment;
         }
     }
 
     /* rollback the new cycle configuration */
 
-    part = &cycle->open_files.part;
+    part = &చక్రం->open_files.part;
     file = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    కొరకు (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        ఒకవేళ (i >= part->nelts) {
+            ఒకవేళ (part->తదుపరి == ఖాళీ) {
+                ఆపు;
             }
-            part = part->next;
+            part = part->తదుపరి;
             file = part->elts;
             i = 0;
         }
 
-        if (file[i].fd == NGX_INVALID_FILE || file[i].fd == ngx_stderr) {
-            continue;
+        ఒకవేళ (file[i].fd == NGX_INVALID_FILE || file[i].fd == ngx_stderr) {
+            కొనసాగు;
         }
 
-        if (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
+        ఒకవేళ (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_EMERG, సంవర్గమానం, ngx_errno,
                           ngx_close_file_n " \"%s\" failed",
-                          file[i].name.data);
+                          file[i].name.దత్తాంశం);
         }
     }
 
     /* free the newly created shared memory */
 
-    part = &cycle->shared_memory.part;
+    part = &చక్రం->shared_జ్ఞాపకం.part;
     shm_zone = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    కొరకు (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        ఒకవేళ (i >= part->nelts) {
+            ఒకవేళ (part->తదుపరి == ఖాళీ) {
+                ఆపు;
             }
-            part = part->next;
+            part = part->తదుపరి;
             shm_zone = part->elts;
             i = 0;
         }
 
-        if (shm_zone[i].shm.addr == NULL) {
-            continue;
+        ఒకవేళ (shm_zone[i].shm.addr == ఖాళీ) {
+            కొనసాగు;
         }
 
-        opart = &old_cycle->shared_memory.part;
+        opart = &old_చక్రం->shared_జ్ఞాపకం.part;
         oshm_zone = opart->elts;
 
-        for (n = 0; /* void */ ; n++) {
+        కొరకు (n = 0; /* void */ ; n++) {
 
-            if (n >= opart->nelts) {
-                if (opart->next == NULL) {
-                    break;
+            ఒకవేళ (n >= opart->nelts) {
+                ఒకవేళ (opart->తదుపరి == ఖాళీ) {
+                    ఆపు;
                 }
-                opart = opart->next;
+                opart = opart->తదుపరి;
                 oshm_zone = opart->elts;
                 n = 0;
             }
 
-            if (shm_zone[i].shm.name.len != oshm_zone[n].shm.name.len) {
-                continue;
+            ఒకవేళ (shm_zone[i].shm.name.len != oshm_zone[n].shm.name.len) {
+                కొనసాగు;
             }
 
-            if (ngx_strncmp(shm_zone[i].shm.name.data,
-                            oshm_zone[n].shm.name.data,
+            ఒకవేళ (ngx_strncmp(shm_zone[i].shm.name.దత్తాంశం,
+                            oshm_zone[n].shm.name.దత్తాంశం,
                             shm_zone[i].shm.name.len)
                 != 0)
             {
-                continue;
+                కొనసాగు;
             }
 
-            if (shm_zone[i].tag == oshm_zone[n].tag
-                && shm_zone[i].shm.size == oshm_zone[n].shm.size
+            ఒకవేళ (shm_zone[i].ట్యాగ్ == oshm_zone[n].ట్యాగ్
+                && shm_zone[i].shm.కొలత == oshm_zone[n].shm.కొలత
                 && !shm_zone[i].noreuse)
             {
-                goto old_shm_zone_found;
+                వెళ్ళు old_shm_zone_దొరికింది;
             }
 
-            break;
+            ఆపు;
         }
 
         ngx_shm_free(&shm_zone[i].shm);
 
-    old_shm_zone_found:
+    old_shm_zone_దొరికింది:
 
-        continue;
+        కొనసాగు;
     }
 
-    if (ngx_test_config) {
-        ngx_destroy_cycle_pools(&conf);
-        return NULL;
+    ఒకవేళ (ngx_test_config) {
+        ngx_destroy_చక్రం_pools(&conf);
+        తిరిగి ఖాళీ;
     }
 
-    ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
-        if (ls[i].fd == (ngx_socket_t) -1 || !ls[i].open) {
-            continue;
+    ls = చక్రం->listening.elts;
+    కొరకు (i = 0; i < చక్రం->listening.nelts; i++) {
+        ఒకవేళ (ls[i].fd == (ngx_socket_t) -1 || !ls[i].open) {
+            కొనసాగు;
         }
 
-        if (ngx_close_socket(ls[i].fd) == -1) {
-            ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
+        ఒకవేళ (ngx_close_socket(ls[i].fd) == -1) {
+            ngx_log_error(NGX_LOG_EMERG, సంవర్గమానం, ngx_socket_errno,
                           ngx_close_socket_n " %V failed",
-                          &ls[i].addr_text);
+                          &ls[i].addr_పాఠ్యం);
         }
     }
 
-    ngx_destroy_cycle_pools(&conf);
+    ngx_destroy_చక్రం_pools(&conf);
 
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
 
-static void
-ngx_destroy_cycle_pools(ngx_conf_t *conf)
+స్థిర శూన్య
+ngx_destroy_చక్రం_pools(ngx_conf_t *conf)
 {
-    ngx_destroy_pool(conf->temp_pool);
+    ngx_destroy_pool(conf->తాత్కాలిక_pool);
     ngx_destroy_pool(conf->pool);
 }
 
 
-static ngx_int_t
-ngx_init_zone_pool(ngx_cycle_t *cycle, ngx_shm_zone_t *zn)
+స్థిర ngx_int_t
+ngx_init_zone_pool(ngx_చక్రం_t *చక్రం, ngx_shm_zone_t *zn)
 {
     u_char           *file;
     ngx_slab_pool_t  *sp;
 
     sp = (ngx_slab_pool_t *) zn->shm.addr;
 
-    if (zn->shm.exists) {
+    ఒకవేళ (zn->shm.exists) {
 
-        if (sp == sp->addr) {
-            return NGX_OK;
+        ఒకవేళ (sp == sp->addr) {
+            తిరిగి NGX_OK;
         }
 
-#if (NGX_WIN32)
+#ఒకవేళ (NGX_WIN32)
 
         /* remap at the required address */
 
-        if (ngx_shm_remap(&zn->shm, sp->addr) != NGX_OK) {
-            return NGX_ERROR;
+        ఒకవేళ (ngx_shm_remap(&zn->shm, sp->addr) != NGX_OK) {
+            తిరిగి NGX_ERROR;
         }
 
         sp = (ngx_slab_pool_t *) zn->shm.addr;
 
-        if (sp == sp->addr) {
-            return NGX_OK;
+        ఒకవేళ (sp == sp->addr) {
+            తిరిగి NGX_OK;
         }
 
-#endif
+#అయితే_ముగింపు
 
-        ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
+        ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, 0,
                       "shared zone \"%V\" has no equal addresses: %p vs %p",
                       &zn->shm.name, sp->addr, sp);
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
-    sp->end = zn->shm.addr + zn->shm.size;
-    sp->min_shift = 3;
+    sp->చివర = zn->shm.addr + zn->shm.కొలత;
+    sp->min_జరుపు = 3;
     sp->addr = zn->shm.addr;
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#ఒకవేళ (NGX_HAVE_ATOMIC_OPS)
 
-    file = NULL;
+    file = ఖాళీ;
 
-#else
+#లేకపోతే
 
-    file = ngx_pnalloc(cycle->pool,
-                       cycle->lock_file.len + zn->shm.name.len + 1);
-    if (file == NULL) {
-        return NGX_ERROR;
+    file = ngx_pnalloc(చక్రం->pool,
+                       చక్రం->తాళం_file.len + zn->shm.name.len + 1);
+    ఒకవేళ (file == ఖాళీ) {
+        తిరిగి NGX_ERROR;
     }
 
-    (void) ngx_sprintf(file, "%V%V%Z", &cycle->lock_file, &zn->shm.name);
+    (శూన్య) ngx_sprintf(file, "%V%V%Z", &చక్రం->తాళం_file, &zn->shm.name);
 
-#endif
+#అయితే_ముగింపు
 
-    if (ngx_shmtx_create(&sp->mutex, &sp->lock, file) != NGX_OK) {
-        return NGX_ERROR;
+    ఒకవేళ (ngx_shmtx_create(&sp->mutex, &sp->తాళం, file) != NGX_OK) {
+        తిరిగి NGX_ERROR;
     }
 
     ngx_slab_init(sp);
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
 ngx_int_t
-ngx_create_pidfile(ngx_str_t *name, ngx_log_t *log)
+ngx_create_pidfile(ngx_str_t *name, ngx_log_t *సంవర్గమానం)
 {
-    size_t      len;
+    కొలత_t      len;
     ngx_int_t   rc;
     ngx_uint_t  create;
     ngx_file_t  file;
     u_char      pid[NGX_INT64_LEN + 2];
 
-    if (ngx_process > NGX_PROCESS_MASTER) {
-        return NGX_OK;
+    ఒకవేళ (ngx_process > NGX_PROCESS_MASTER) {
+        తిరిగి NGX_OK;
     }
 
-    ngx_memzero(&file, sizeof(ngx_file_t));
+    ngx_memzero(&file, పరిమాణం(ngx_file_t));
 
     file.name = *name;
-    file.log = log;
+    file.సంవర్గమానం = సంవర్గమానం;
 
     create = ngx_test_config ? NGX_FILE_CREATE_OR_OPEN : NGX_FILE_TRUNCATE;
 
-    file.fd = ngx_open_file(file.name.data, NGX_FILE_RDWR,
+    file.fd = ngx_open_file(file.name.దత్తాంశం, NGX_FILE_RDWR,
                             create, NGX_FILE_DEFAULT_ACCESS);
 
-    if (file.fd == NGX_INVALID_FILE) {
-        ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
-                      ngx_open_file_n " \"%s\" failed", file.name.data);
-        return NGX_ERROR;
+    ఒకవేళ (file.fd == NGX_INVALID_FILE) {
+        ngx_log_error(NGX_LOG_EMERG, సంవర్గమానం, ngx_errno,
+                      ngx_open_file_n " \"%s\" failed", file.name.దత్తాంశం);
+        తిరిగి NGX_ERROR;
     }
 
     rc = NGX_OK;
 
-    if (!ngx_test_config) {
+    ఒకవేళ (!ngx_test_config) {
         len = ngx_snprintf(pid, NGX_INT64_LEN + 2, "%P%N", ngx_pid) - pid;
 
-        if (ngx_write_file(&file, pid, len, 0) == NGX_ERROR) {
+        ఒకవేళ (ngx_write_file(&file, pid, len, 0) == NGX_ERROR) {
             rc = NGX_ERROR;
         }
     }
 
-    if (ngx_close_file(file.fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
-                      ngx_close_file_n " \"%s\" failed", file.name.data);
+    ఒకవేళ (ngx_close_file(file.fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
+                      ngx_close_file_n " \"%s\" failed", file.name.దత్తాంశం);
     }
 
-    return rc;
+    తిరిగి rc;
 }
 
 
-void
-ngx_delete_pidfile(ngx_cycle_t *cycle)
+శూన్య
+ngx_delete_pidfile(ngx_చక్రం_t *చక్రం)
 {
     u_char           *name;
     ngx_core_conf_t  *ccf;
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(చక్రం->conf_ctx, ngx_core_module);
 
-    name = ngx_new_binary ? ccf->oldpid.data : ccf->pid.data;
+    name = ngx_new_ద్విమాన ? ccf->oldpid.దత్తాంశం : ccf->pid.దత్తాంశం;
 
-    if (ngx_delete_file(name) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
+    ఒకవేళ (ngx_delete_file(name) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, చక్రం->సంవర్గమానం, ngx_errno,
                       ngx_delete_file_n " \"%s\" failed", name);
     }
 }
 
 
 ngx_int_t
-ngx_signal_process(ngx_cycle_t *cycle, char *sig)
+ngx_signal_process(ngx_చక్రం_t *చక్రం, అక్షరం *sig)
 {
     ssize_t           n;
     ngx_pid_t         pid;
@@ -1102,383 +1102,383 @@ ngx_signal_process(ngx_cycle_t *cycle, char *sig)
     ngx_core_conf_t  *ccf;
     u_char            buf[NGX_INT64_LEN + 2];
 
-    ngx_log_error(NGX_LOG_NOTICE, cycle->log, 0, "signal process started");
+    ngx_log_error(NGX_LOG_NOTICE, చక్రం->సంవర్గమానం, 0, "signal process started");
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(చక్రం->conf_ctx, ngx_core_module);
 
-    ngx_memzero(&file, sizeof(ngx_file_t));
+    ngx_memzero(&file, పరిమాణం(ngx_file_t));
 
     file.name = ccf->pid;
-    file.log = cycle->log;
+    file.సంవర్గమానం = చక్రం->సంవర్గమానం;
 
-    file.fd = ngx_open_file(file.name.data, NGX_FILE_RDONLY,
+    file.fd = ngx_open_file(file.name.దత్తాంశం, NGX_FILE_RDONLY,
                             NGX_FILE_OPEN, NGX_FILE_DEFAULT_ACCESS);
 
-    if (file.fd == NGX_INVALID_FILE) {
-        ngx_log_error(NGX_LOG_ERR, cycle->log, ngx_errno,
-                      ngx_open_file_n " \"%s\" failed", file.name.data);
-        return 1;
+    ఒకవేళ (file.fd == NGX_INVALID_FILE) {
+        ngx_log_error(NGX_LOG_ERR, చక్రం->సంవర్గమానం, ngx_errno,
+                      ngx_open_file_n " \"%s\" failed", file.name.దత్తాంశం);
+        తిరిగి 1;
     }
 
     n = ngx_read_file(&file, buf, NGX_INT64_LEN + 2, 0);
 
-    if (ngx_close_file(file.fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
-                      ngx_close_file_n " \"%s\" failed", file.name.data);
+    ఒకవేళ (ngx_close_file(file.fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, చక్రం->సంవర్గమానం, ngx_errno,
+                      ngx_close_file_n " \"%s\" failed", file.name.దత్తాంశం);
     }
 
-    if (n == NGX_ERROR) {
-        return 1;
+    ఒకవేళ (n == NGX_ERROR) {
+        తిరిగి 1;
     }
 
-    while (n-- && (buf[n] == CR || buf[n] == LF)) { /* void */ }
+    అయితే (n-- && (buf[n] == CR || buf[n] == LF)) { /* void */ }
 
     pid = ngx_atoi(buf, ++n);
 
-    if (pid == (ngx_pid_t) NGX_ERROR) {
-        ngx_log_error(NGX_LOG_ERR, cycle->log, 0,
+    ఒకవేళ (pid == (ngx_pid_t) NGX_ERROR) {
+        ngx_log_error(NGX_LOG_ERR, చక్రం->సంవర్గమానం, 0,
                       "invalid PID number \"%*s\" in \"%s\"",
-                      n, buf, file.name.data);
-        return 1;
+                      n, buf, file.name.దత్తాంశం);
+        తిరిగి 1;
     }
 
-    return ngx_os_signal_process(cycle, sig, pid);
+    తిరిగి ngx_os_signal_process(చక్రం, sig, pid);
 
 }
 
 
-static ngx_int_t
-ngx_test_lockfile(u_char *file, ngx_log_t *log)
+స్థిర ngx_int_t
+ngx_test_lockfile(u_char *file, ngx_log_t *సంవర్గమానం)
 {
-#if !(NGX_HAVE_ATOMIC_OPS)
+#ఒకవేళ !(NGX_HAVE_ATOMIC_OPS)
     ngx_fd_t  fd;
 
     fd = ngx_open_file(file, NGX_FILE_RDWR, NGX_FILE_CREATE_OR_OPEN,
                        NGX_FILE_DEFAULT_ACCESS);
 
-    if (fd == NGX_INVALID_FILE) {
-        ngx_log_error(NGX_LOG_EMERG, log, ngx_errno,
+    ఒకవేళ (fd == NGX_INVALID_FILE) {
+        ngx_log_error(NGX_LOG_EMERG, సంవర్గమానం, ngx_errno,
                       ngx_open_file_n " \"%s\" failed", file);
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
-    if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    ఒకవేళ (ngx_close_file(fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", file);
     }
 
-    if (ngx_delete_file(file) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    ఒకవేళ (ngx_delete_file(file) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                       ngx_delete_file_n " \"%s\" failed", file);
     }
 
-#endif
+#అయితే_ముగింపు
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
-void
-ngx_reopen_files(ngx_cycle_t *cycle, ngx_uid_t user)
+శూన్య
+ngx_reopen_files(ngx_చక్రం_t *చక్రం, ngx_uid_t user)
 {
     ngx_fd_t          fd;
     ngx_uint_t        i;
     ngx_list_part_t  *part;
     ngx_open_file_t  *file;
 
-    part = &cycle->open_files.part;
+    part = &చక్రం->open_files.part;
     file = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    కొరకు (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        ఒకవేళ (i >= part->nelts) {
+            ఒకవేళ (part->తదుపరి == ఖాళీ) {
+                ఆపు;
             }
-            part = part->next;
+            part = part->తదుపరి;
             file = part->elts;
             i = 0;
         }
 
-        if (file[i].name.len == 0) {
-            continue;
+        ఒకవేళ (file[i].name.len == 0) {
+            కొనసాగు;
         }
 
-        if (file[i].flush) {
-            file[i].flush(&file[i], cycle->log);
+        ఒకవేళ (file[i].flush) {
+            file[i].flush(&file[i], చక్రం->సంవర్గమానం);
         }
 
-        fd = ngx_open_file(file[i].name.data, NGX_FILE_APPEND,
+        fd = ngx_open_file(file[i].name.దత్తాంశం, NGX_FILE_APPEND,
                            NGX_FILE_CREATE_OR_OPEN, NGX_FILE_DEFAULT_ACCESS);
 
-        ngx_log_debug3(NGX_LOG_DEBUG_EVENT, cycle->log, 0,
+        ngx_log_debug3(NGX_LOG_DEBUG_EVENT, చక్రం->సంవర్గమానం, 0,
                        "reopen file \"%s\", old:%d new:%d",
-                       file[i].name.data, file[i].fd, fd);
+                       file[i].name.దత్తాంశం, file[i].fd, fd);
 
-        if (fd == NGX_INVALID_FILE) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
-                          ngx_open_file_n " \"%s\" failed", file[i].name.data);
-            continue;
+        ఒకవేళ (fd == NGX_INVALID_FILE) {
+            ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, ngx_errno,
+                          ngx_open_file_n " \"%s\" failed", file[i].name.దత్తాంశం);
+            కొనసాగు;
         }
 
-#if !(NGX_WIN32)
-        if (user != (ngx_uid_t) NGX_CONF_UNSET_UINT) {
+#ఒకవేళ !(NGX_WIN32)
+        ఒకవేళ (user != (ngx_uid_t) NGX_CONF_UNSET_UINT) {
             ngx_file_info_t  fi;
 
-            if (ngx_file_info(file[i].name.data, &fi) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+            ఒకవేళ (ngx_file_info(file[i].name.దత్తాంశం, &fi) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, ngx_errno,
                               ngx_file_info_n " \"%s\" failed",
-                              file[i].name.data);
+                              file[i].name.దత్తాంశం);
 
-                if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-                    ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+                ఒకవేళ (ngx_close_file(fd) == NGX_FILE_ERROR) {
+                    ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, ngx_errno,
                                   ngx_close_file_n " \"%s\" failed",
-                                  file[i].name.data);
+                                  file[i].name.దత్తాంశం);
                 }
 
-                continue;
+                కొనసాగు;
             }
 
-            if (fi.st_uid != user) {
-                if (chown((const char *) file[i].name.data, user, -1) == -1) {
-                    ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+            ఒకవేళ (fi.st_uid != user) {
+                ఒకవేళ (chown((స్థిరరాశి అక్షరం *) file[i].name.దత్తాంశం, user, -1) == -1) {
+                    ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, ngx_errno,
                                   "chown(\"%s\", %d) failed",
-                                  file[i].name.data, user);
+                                  file[i].name.దత్తాంశం, user);
 
-                    if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-                        ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+                    ఒకవేళ (ngx_close_file(fd) == NGX_FILE_ERROR) {
+                        ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, ngx_errno,
                                       ngx_close_file_n " \"%s\" failed",
-                                      file[i].name.data);
+                                      file[i].name.దత్తాంశం);
                     }
 
-                    continue;
+                    కొనసాగు;
                 }
             }
 
-            if ((fi.st_mode & (S_IRUSR|S_IWUSR)) != (S_IRUSR|S_IWUSR)) {
+            ఒకవేళ ((fi.st_బహుళకం & (S_IRUSR|S_IWUSR)) != (S_IRUSR|S_IWUSR)) {
 
-                fi.st_mode |= (S_IRUSR|S_IWUSR);
+                fi.st_బహుళకం |= (S_IRUSR|S_IWUSR);
 
-                if (chmod((const char *) file[i].name.data, fi.st_mode) == -1) {
-                    ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
-                                  "chmod() \"%s\" failed", file[i].name.data);
+                ఒకవేళ (chmod((స్థిరరాశి అక్షరం *) file[i].name.దత్తాంశం, fi.st_బహుళకం) == -1) {
+                    ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, ngx_errno,
+                                  "chmod() \"%s\" failed", file[i].name.దత్తాంశం);
 
-                    if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-                        ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+                    ఒకవేళ (ngx_close_file(fd) == NGX_FILE_ERROR) {
+                        ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, ngx_errno,
                                       ngx_close_file_n " \"%s\" failed",
-                                      file[i].name.data);
+                                      file[i].name.దత్తాంశం);
                     }
 
-                    continue;
+                    కొనసాగు;
                 }
             }
         }
 
-        if (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+        ఒకవేళ (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1) {
+            ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, ngx_errno,
                           "fcntl(FD_CLOEXEC) \"%s\" failed",
-                          file[i].name.data);
+                          file[i].name.దత్తాంశం);
 
-            if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+            ఒకవేళ (ngx_close_file(fd) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, ngx_errno,
                               ngx_close_file_n " \"%s\" failed",
-                              file[i].name.data);
+                              file[i].name.దత్తాంశం);
             }
 
-            continue;
+            కొనసాగు;
         }
-#endif
+#అయితే_ముగింపు
 
-        if (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+        ఒకవేళ (ngx_close_file(file[i].fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_EMERG, చక్రం->సంవర్గమానం, ngx_errno,
                           ngx_close_file_n " \"%s\" failed",
-                          file[i].name.data);
+                          file[i].name.దత్తాంశం);
         }
 
         file[i].fd = fd;
     }
 
-    (void) ngx_log_redirect_stderr(cycle);
+    (శూన్య) ngx_log_redirect_stderr(చక్రం);
 }
 
 
 ngx_shm_zone_t *
-ngx_shared_memory_add(ngx_conf_t *cf, ngx_str_t *name, size_t size, void *tag)
+ngx_shared_జ్ఞాపకం_కూడు(ngx_conf_t *cf, ngx_str_t *name, కొలత_t కొలత, శూన్య *ట్యాగ్)
 {
     ngx_uint_t        i;
     ngx_shm_zone_t   *shm_zone;
     ngx_list_part_t  *part;
 
-    part = &cf->cycle->shared_memory.part;
+    part = &cf->చక్రం->shared_జ్ఞాపకం.part;
     shm_zone = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    కొరకు (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
-                break;
+        ఒకవేళ (i >= part->nelts) {
+            ఒకవేళ (part->తదుపరి == ఖాళీ) {
+                ఆపు;
             }
-            part = part->next;
+            part = part->తదుపరి;
             shm_zone = part->elts;
             i = 0;
         }
 
-        if (name->len != shm_zone[i].shm.name.len) {
-            continue;
+        ఒకవేళ (name->len != shm_zone[i].shm.name.len) {
+            కొనసాగు;
         }
 
-        if (ngx_strncmp(name->data, shm_zone[i].shm.name.data, name->len)
+        ఒకవేళ (ngx_strncmp(name->దత్తాంశం, shm_zone[i].shm.name.దత్తాంశం, name->len)
             != 0)
         {
-            continue;
+            కొనసాగు;
         }
 
-        if (tag != shm_zone[i].tag) {
+        ఒకవేళ (ట్యాగ్ != shm_zone[i].ట్యాగ్) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                             "the shared memory zone \"%V\" is "
                             "already declared for a different use",
                             &shm_zone[i].shm.name);
-            return NULL;
+            తిరిగి ఖాళీ;
         }
 
-        if (shm_zone[i].shm.size == 0) {
-            shm_zone[i].shm.size = size;
+        ఒకవేళ (shm_zone[i].shm.కొలత == 0) {
+            shm_zone[i].shm.కొలత = కొలత;
         }
 
-        if (size && size != shm_zone[i].shm.size) {
+        ఒకవేళ (కొలత && కొలత != shm_zone[i].shm.కొలత) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                             "the size %uz of shared memory zone \"%V\" "
                             "conflicts with already declared size %uz",
-                            size, &shm_zone[i].shm.name, shm_zone[i].shm.size);
-            return NULL;
+                            కొలత, &shm_zone[i].shm.name, shm_zone[i].shm.కొలత);
+            తిరిగి ఖాళీ;
         }
 
-        return &shm_zone[i];
+        తిరిగి &shm_zone[i];
     }
 
-    shm_zone = ngx_list_push(&cf->cycle->shared_memory);
+    shm_zone = ngx_list_నెట్టు(&cf->చక్రం->shared_జ్ఞాపకం);
 
-    if (shm_zone == NULL) {
-        return NULL;
+    ఒకవేళ (shm_zone == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
-    shm_zone->data = NULL;
-    shm_zone->shm.log = cf->cycle->log;
-    shm_zone->shm.addr = NULL;
-    shm_zone->shm.size = size;
+    shm_zone->దత్తాంశం = ఖాళీ;
+    shm_zone->shm.సంవర్గమానం = cf->చక్రం->సంవర్గమానం;
+    shm_zone->shm.addr = ఖాళీ;
+    shm_zone->shm.కొలత = కొలత;
     shm_zone->shm.name = *name;
     shm_zone->shm.exists = 0;
-    shm_zone->init = NULL;
-    shm_zone->tag = tag;
+    shm_zone->init = ఖాళీ;
+    shm_zone->ట్యాగ్ = ట్యాగ్;
     shm_zone->noreuse = 0;
 
-    return shm_zone;
+    తిరిగి shm_zone;
 }
 
 
-static void
-ngx_clean_old_cycles(ngx_event_t *ev)
+స్థిర శూన్య
+ngx_clean_old_చక్రాలు(ngx_event_t *ev)
 {
-    ngx_uint_t     i, n, found, live;
-    ngx_log_t     *log;
-    ngx_cycle_t  **cycle;
+    ngx_uint_t     i, n, దొరికింది, సజీవ;
+    ngx_log_t     *సంవర్గమానం;
+    ngx_చక్రం_t  **చక్రం;
 
-    log = ngx_cycle->log;
-    ngx_temp_pool->log = log;
+    సంవర్గమానం = ngx_చక్రం->సంవర్గమానం;
+    ngx_తాత్కాలిక_pool->సంవర్గమానం = సంవర్గమానం;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, log, 0, "clean old cycles");
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, సంవర్గమానం, 0, "clean old cycles");
 
-    live = 0;
+    సజీవ = 0;
 
-    cycle = ngx_old_cycles.elts;
-    for (i = 0; i < ngx_old_cycles.nelts; i++) {
+    చక్రం = ngx_old_చక్రాలు.elts;
+    కొరకు (i = 0; i < ngx_old_చక్రాలు.nelts; i++) {
 
-        if (cycle[i] == NULL) {
-            continue;
+        ఒకవేళ (చక్రం[i] == ఖాళీ) {
+            కొనసాగు;
         }
 
-        found = 0;
+        దొరికింది = 0;
 
-        for (n = 0; n < cycle[i]->connection_n; n++) {
-            if (cycle[i]->connections[n].fd != (ngx_socket_t) -1) {
-                found = 1;
+        కొరకు (n = 0; n < చక్రం[i]->connection_n; n++) {
+            ఒకవేళ (చక్రం[i]->connections[n].fd != (ngx_socket_t) -1) {
+                దొరికింది = 1;
 
-                ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0, "live fd:%ui", n);
+                ngx_log_debug1(NGX_LOG_DEBUG_CORE, సంవర్గమానం, 0, "live fd:%ui", n);
 
-                break;
+                ఆపు;
             }
         }
 
-        if (found) {
-            live = 1;
-            continue;
+        ఒకవేళ (దొరికింది) {
+            సజీవ = 1;
+            కొనసాగు;
         }
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0, "clean old cycle: %ui", i);
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, సంవర్గమానం, 0, "clean old cycle: %ui", i);
 
-        ngx_destroy_pool(cycle[i]->pool);
-        cycle[i] = NULL;
+        ngx_destroy_pool(చక్రం[i]->pool);
+        చక్రం[i] = ఖాళీ;
     }
 
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0, "old cycles status: %ui", live);
+    ngx_log_debug1(NGX_LOG_DEBUG_CORE, సంవర్గమానం, 0, "old cycles status: %ui", సజీవ);
 
-    if (live) {
-        ngx_add_timer(ev, 30000);
+    ఒకవేళ (సజీవ) {
+        ngx_కూడు_timer(ev, 30000);
 
-    } else {
-        ngx_destroy_pool(ngx_temp_pool);
-        ngx_temp_pool = NULL;
-        ngx_old_cycles.nelts = 0;
+    } లేకపోతే {
+        ngx_destroy_pool(ngx_తాత్కాలిక_pool);
+        ngx_తాత్కాలిక_pool = ఖాళీ;
+        ngx_old_చక్రాలు.nelts = 0;
     }
 }
 
 
-void
-ngx_set_shutdown_timer(ngx_cycle_t *cycle)
+శూన్య
+ngx_సమితి_shutdown_timer(ngx_చక్రం_t *చక్రం)
 {
     ngx_core_conf_t  *ccf;
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+    ccf = (ngx_core_conf_t *) ngx_get_conf(చక్రం->conf_ctx, ngx_core_module);
 
-    if (ccf->shutdown_timeout) {
+    ఒకవేళ (ccf->shutdown_timeout) {
         ngx_shutdown_event.handler = ngx_shutdown_timer_handler;
-        ngx_shutdown_event.data = cycle;
-        ngx_shutdown_event.log = cycle->log;
+        ngx_shutdown_event.దత్తాంశం = చక్రం;
+        ngx_shutdown_event.సంవర్గమానం = చక్రం->సంవర్గమానం;
         ngx_shutdown_event.cancelable = 1;
 
-        ngx_add_timer(&ngx_shutdown_event, ccf->shutdown_timeout);
+        ngx_కూడు_timer(&ngx_shutdown_event, ccf->shutdown_timeout);
     }
 }
 
 
-static void
+స్థిర శూన్య
 ngx_shutdown_timer_handler(ngx_event_t *ev)
 {
     ngx_uint_t         i;
-    ngx_cycle_t       *cycle;
+    ngx_చక్రం_t       *చక్రం;
     ngx_connection_t  *c;
 
-    cycle = ev->data;
+    చక్రం = ev->దత్తాంశం;
 
-    c = cycle->connections;
+    c = చక్రం->connections;
 
-    for (i = 0; i < cycle->connection_n; i++) {
+    కొరకు (i = 0; i < చక్రం->connection_n; i++) {
 
-        if (c[i].fd == (ngx_socket_t) -1
-            || c[i].read == NULL
-            || c[i].read->accept
-            || c[i].read->channel
-            || c[i].read->resolver)
+        ఒకవేళ (c[i].fd == (ngx_socket_t) -1
+            || c[i].పఠ == ఖాళీ
+            || c[i].పఠ->accept
+            || c[i].పఠ->channel
+            || c[i].పఠ->resolver)
         {
-            continue;
+            కొనసాగు;
         }
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ev->log, 0,
-                       "*%uA shutdown timeout", c[i].number);
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ev->సంవర్గమానం, 0,
+                       "*%uA shutdown timeout", c[i].సంఖ్య);
 
         c[i].close = 1;
         c[i].error = 1;
 
-        c[i].read->handler(c[i].read);
+        c[i].పఠ->handler(c[i].పఠ);
     }
 }

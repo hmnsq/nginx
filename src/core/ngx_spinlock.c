@@ -5,34 +5,34 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-void
-ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
+శూన్య
+ngx_spinlock(ngx_atomic_t *తాళం, ngx_atomic_int_t విలువ, ngx_uint_t spin)
 {
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#ఒకవేళ (NGX_HAVE_ATOMIC_OPS)
 
     ngx_uint_t  i, n;
 
-    for ( ;; ) {
+    కొరకు ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-            return;
+        ఒకవేళ (*తాళం == 0 && ngx_atomic_cmp_సమితి(తాళం, 0, విలువ)) {
+            తిరిగి;
         }
 
-        if (ngx_ncpu > 1) {
+        ఒకవేళ (ngx_ncpu > 1) {
 
-            for (n = 1; n < spin; n <<= 1) {
+            కొరకు (n = 1; n < spin; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                కొరకు (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-                    return;
+                ఒకవేళ (*తాళం == 0 && ngx_atomic_cmp_సమితి(తాళం, 0, విలువ)) {
+                    తిరిగి;
                 }
             }
         }
@@ -40,14 +40,14 @@ ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
         ngx_sched_yield();
     }
 
-#else
+#లేకపోతే
 
-#if (NGX_THREADS)
+#ఒకవేళ (NGX_దారాలు)
 
-#error ngx_spinlock() or ngx_atomic_cmp_set() are not defined !
+#దోషం ngx_spinlock() or ngx_atomic_cmp_సమితి() are not defined !
 
-#endif
+#అయితే_ముగింపు
 
-#endif
+#అయితే_ముగింపు
 
 }

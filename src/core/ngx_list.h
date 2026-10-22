@@ -5,50 +5,50 @@
  */
 
 
-#ifndef _NGX_LIST_H_INCLUDED_
-#define _NGX_LIST_H_INCLUDED_
+#నిర్వచితం_కాకపోతే _NGX_LIST_H_INCLUDED_
+#నిర్వచించు _NGX_LIST_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-typedef struct ngx_list_part_s  ngx_list_part_t;
+రకనిర్వచనం నిర్మాణం ngx_list_part_s  ngx_list_part_t;
 
-struct ngx_list_part_s {
-    void             *elts;
+నిర్మాణం ngx_list_part_s {
+    శూన్య             *elts;
     ngx_uint_t        nelts;
-    ngx_list_part_t  *next;
+    ngx_list_part_t  *తదుపరి;
 };
 
 
-typedef struct {
-    ngx_list_part_t  *last;
+రకనిర్వచనం నిర్మాణం {
+    ngx_list_part_t  *చివరి;
     ngx_list_part_t   part;
-    size_t            size;
+    కొలత_t            కొలత;
     ngx_uint_t        nalloc;
     ngx_pool_t       *pool;
 } ngx_list_t;
 
 
-ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size);
+ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, కొలత_t కొలత);
 
-static ngx_inline ngx_int_t
-ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
+స్థిర ngx_inline ngx_int_t
+ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, కొలత_t కొలత)
 {
-    list->part.elts = ngx_palloc(pool, n * size);
-    if (list->part.elts == NULL) {
-        return NGX_ERROR;
+    list->part.elts = ngx_palloc(pool, n * కొలత);
+    ఒకవేళ (list->part.elts == ఖాళీ) {
+        తిరిగి NGX_ERROR;
     }
 
     list->part.nelts = 0;
-    list->part.next = NULL;
-    list->last = &list->part;
-    list->size = size;
+    list->part.తదుపరి = ఖాళీ;
+    list->చివరి = &list->part;
+    list->కొలత = కొలత;
     list->nalloc = n;
     list->pool = pool;
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
@@ -77,7 +77,7 @@ ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
  */
 
 
-void *ngx_list_push(ngx_list_t *list);
+శూన్య *ngx_list_నెట్టు(ngx_list_t *list);
 
 
-#endif /* _NGX_LIST_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_LIST_H_INCLUDED_ */

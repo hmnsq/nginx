@@ -5,118 +5,118 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
 ssize_t
-ngx_parse_size(ngx_str_t *line)
+ngx_parse_కొలత(ngx_str_t *పంక్తి)
 {
     u_char   unit;
-    size_t   len;
-    ssize_t  size, scale, max;
+    కొలత_t   len;
+    ssize_t  కొలత, scale, max;
 
-    len = line->len;
+    len = పంక్తి->len;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    ఒకవేళ (len == 0) {
+        తిరిగి NGX_ERROR;
     }
 
-    unit = line->data[len - 1];
+    unit = పంక్తి->దత్తాంశం[len - 1];
 
-    switch (unit) {
-    case 'K':
-    case 'k':
+    ఎంపిక (unit) {
+    స్థితి 'K':
+    స్థితి 'k':
         len--;
-        max = NGX_MAX_SIZE_T_VALUE / 1024;
+        max = NGX_MAX_కొలత_T_విలువ / 1024;
         scale = 1024;
-        break;
+        ఆపు;
 
-    case 'M':
-    case 'm':
+    స్థితి 'M':
+    స్థితి 'm':
         len--;
-        max = NGX_MAX_SIZE_T_VALUE / (1024 * 1024);
+        max = NGX_MAX_కొలత_T_విలువ / (1024 * 1024);
         scale = 1024 * 1024;
-        break;
+        ఆపు;
 
-    default:
-        max = NGX_MAX_SIZE_T_VALUE;
+    అప్రమేయ:
+        max = NGX_MAX_కొలత_T_విలువ;
         scale = 1;
     }
 
-    size = ngx_atosz(line->data, len);
-    if (size == NGX_ERROR || size > max) {
-        return NGX_ERROR;
+    కొలత = ngx_atosz(పంక్తి->దత్తాంశం, len);
+    ఒకవేళ (కొలత == NGX_ERROR || కొలత > max) {
+        తిరిగి NGX_ERROR;
     }
 
-    size *= scale;
+    కొలత *= scale;
 
-    return size;
+    తిరిగి కొలత;
 }
 
 
 off_t
-ngx_parse_offset(ngx_str_t *line)
+ngx_parse_స్థానభ్రంశం(ngx_str_t *పంక్తి)
 {
     u_char  unit;
-    off_t   offset, scale, max;
-    size_t  len;
+    off_t   స్థానభ్రంశం, scale, max;
+    కొలత_t  len;
 
-    len = line->len;
+    len = పంక్తి->len;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    ఒకవేళ (len == 0) {
+        తిరిగి NGX_ERROR;
     }
 
-    unit = line->data[len - 1];
+    unit = పంక్తి->దత్తాంశం[len - 1];
 
-    switch (unit) {
-    case 'K':
-    case 'k':
+    ఎంపిక (unit) {
+    స్థితి 'K':
+    స్థితి 'k':
         len--;
-        max = NGX_MAX_OFF_T_VALUE / 1024;
+        max = NGX_MAX_OFF_T_విలువ / 1024;
         scale = 1024;
-        break;
+        ఆపు;
 
-    case 'M':
-    case 'm':
+    స్థితి 'M':
+    స్థితి 'm':
         len--;
-        max = NGX_MAX_OFF_T_VALUE / (1024 * 1024);
+        max = NGX_MAX_OFF_T_విలువ / (1024 * 1024);
         scale = 1024 * 1024;
-        break;
+        ఆపు;
 
-    case 'G':
-    case 'g':
+    స్థితి 'G':
+    స్థితి 'g':
         len--;
-        max = NGX_MAX_OFF_T_VALUE / (1024 * 1024 * 1024);
+        max = NGX_MAX_OFF_T_విలువ / (1024 * 1024 * 1024);
         scale = 1024 * 1024 * 1024;
-        break;
+        ఆపు;
 
-    default:
-        max = NGX_MAX_OFF_T_VALUE;
+    అప్రమేయ:
+        max = NGX_MAX_OFF_T_విలువ;
         scale = 1;
     }
 
-    offset = ngx_atoof(line->data, len);
-    if (offset == NGX_ERROR || offset > max) {
-        return NGX_ERROR;
+    స్థానభ్రంశం = ngx_atoof(పంక్తి->దత్తాంశం, len);
+    ఒకవేళ (స్థానభ్రంశం == NGX_ERROR || స్థానభ్రంశం > max) {
+        తిరిగి NGX_ERROR;
     }
 
-    offset *= scale;
+    స్థానభ్రంశం *= scale;
 
-    return offset;
+    తిరిగి స్థానభ్రంశం;
 }
 
 
 ngx_int_t
-ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
+ngx_parse_సమయం(ngx_str_t *పంక్తి, ngx_uint_t is_sec)
 {
-    u_char      *p, *last;
-    ngx_int_t    value, total, scale;
+    u_char      *p, *చివరి;
+    ngx_int_t    విలువ, మొత్తం, scale;
     ngx_int_t    max, cutoff, cutlim;
     ngx_uint_t   valid;
-    enum {
-        st_start = 0,
+    గణన {
+        st_ప్రారంభం = 0,
         st_year,
         st_month,
         st_week,
@@ -125,159 +125,159 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
         st_min,
         st_sec,
         st_msec,
-        st_last
-    } step;
+        st_చివరి
+    } అడుగు_2;
 
     valid = 0;
-    value = 0;
-    total = 0;
-    cutoff = NGX_MAX_INT_T_VALUE / 10;
-    cutlim = NGX_MAX_INT_T_VALUE % 10;
-    step = is_sec ? st_start : st_month;
+    విలువ = 0;
+    మొత్తం = 0;
+    cutoff = NGX_MAX_INT_T_విలువ / 10;
+    cutlim = NGX_MAX_INT_T_విలువ % 10;
+    అడుగు_2 = is_sec ? st_ప్రారంభం : st_month;
 
-    p = line->data;
-    last = p + line->len;
+    p = పంక్తి->దత్తాంశం;
+    చివరి = p + పంక్తి->len;
 
-    while (p < last) {
+    అయితే (p < చివరి) {
 
-        if (*p >= '0' && *p <= '9') {
-            if (value >= cutoff && (value > cutoff || *p - '0' > cutlim)) {
-                return NGX_ERROR;
+        ఒకవేళ (*p >= '0' && *p <= '9') {
+            ఒకవేళ (విలువ >= cutoff && (విలువ > cutoff || *p - '0' > cutlim)) {
+                తిరిగి NGX_ERROR;
             }
 
-            value = value * 10 + (*p++ - '0');
+            విలువ = విలువ * 10 + (*p++ - '0');
             valid = 1;
-            continue;
+            కొనసాగు;
         }
 
-        switch (*p++) {
+        ఎంపిక (*p++) {
 
-        case 'y':
-            if (step > st_start) {
-                return NGX_ERROR;
+        స్థితి 'y':
+            ఒకవేళ (అడుగు_2 > st_ప్రారంభం) {
+                తిరిగి NGX_ERROR;
             }
-            step = st_year;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 365);
+            అడుగు_2 = st_year;
+            max = NGX_MAX_INT_T_విలువ / (60 * 60 * 24 * 365);
             scale = 60 * 60 * 24 * 365;
-            break;
+            ఆపు;
 
-        case 'M':
-            if (step >= st_month) {
-                return NGX_ERROR;
+        స్థితి 'M':
+            ఒకవేళ (అడుగు_2 >= st_month) {
+                తిరిగి NGX_ERROR;
             }
-            step = st_month;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 30);
+            అడుగు_2 = st_month;
+            max = NGX_MAX_INT_T_విలువ / (60 * 60 * 24 * 30);
             scale = 60 * 60 * 24 * 30;
-            break;
+            ఆపు;
 
-        case 'w':
-            if (step >= st_week) {
-                return NGX_ERROR;
+        స్థితి 'w':
+            ఒకవేళ (అడుగు_2 >= st_week) {
+                తిరిగి NGX_ERROR;
             }
-            step = st_week;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 7);
+            అడుగు_2 = st_week;
+            max = NGX_MAX_INT_T_విలువ / (60 * 60 * 24 * 7);
             scale = 60 * 60 * 24 * 7;
-            break;
+            ఆపు;
 
-        case 'd':
-            if (step >= st_day) {
-                return NGX_ERROR;
+        స్థితి 'd':
+            ఒకవేళ (అడుగు_2 >= st_day) {
+                తిరిగి NGX_ERROR;
             }
-            step = st_day;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24);
+            అడుగు_2 = st_day;
+            max = NGX_MAX_INT_T_విలువ / (60 * 60 * 24);
             scale = 60 * 60 * 24;
-            break;
+            ఆపు;
 
-        case 'h':
-            if (step >= st_hour) {
-                return NGX_ERROR;
+        స్థితి 'h':
+            ఒకవేళ (అడుగు_2 >= st_hour) {
+                తిరిగి NGX_ERROR;
             }
-            step = st_hour;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60);
+            అడుగు_2 = st_hour;
+            max = NGX_MAX_INT_T_విలువ / (60 * 60);
             scale = 60 * 60;
-            break;
+            ఆపు;
 
-        case 'm':
-            if (p < last && *p == 's') {
-                if (is_sec || step >= st_msec) {
-                    return NGX_ERROR;
+        స్థితి 'm':
+            ఒకవేళ (p < చివరి && *p == 's') {
+                ఒకవేళ (is_sec || అడుగు_2 >= st_msec) {
+                    తిరిగి NGX_ERROR;
                 }
                 p++;
-                step = st_msec;
-                max = NGX_MAX_INT_T_VALUE;
+                అడుగు_2 = st_msec;
+                max = NGX_MAX_INT_T_విలువ;
                 scale = 1;
-                break;
+                ఆపు;
             }
 
-            if (step >= st_min) {
-                return NGX_ERROR;
+            ఒకవేళ (అడుగు_2 >= st_min) {
+                తిరిగి NGX_ERROR;
             }
-            step = st_min;
-            max = NGX_MAX_INT_T_VALUE / 60;
+            అడుగు_2 = st_min;
+            max = NGX_MAX_INT_T_విలువ / 60;
             scale = 60;
-            break;
+            ఆపు;
 
-        case 's':
-            if (step >= st_sec) {
-                return NGX_ERROR;
+        స్థితి 's':
+            ఒకవేళ (అడుగు_2 >= st_sec) {
+                తిరిగి NGX_ERROR;
             }
-            step = st_sec;
-            max = NGX_MAX_INT_T_VALUE;
+            అడుగు_2 = st_sec;
+            max = NGX_MAX_INT_T_విలువ;
             scale = 1;
-            break;
+            ఆపు;
 
-        case ' ':
-            if (step >= st_sec) {
-                return NGX_ERROR;
+        స్థితి ' ':
+            ఒకవేళ (అడుగు_2 >= st_sec) {
+                తిరిగి NGX_ERROR;
             }
-            step = st_last;
-            max = NGX_MAX_INT_T_VALUE;
+            అడుగు_2 = st_చివరి;
+            max = NGX_MAX_INT_T_విలువ;
             scale = 1;
-            break;
+            ఆపు;
 
-        default:
-            return NGX_ERROR;
+        అప్రమేయ:
+            తిరిగి NGX_ERROR;
         }
 
-        if (step != st_msec && !is_sec) {
+        ఒకవేళ (అడుగు_2 != st_msec && !is_sec) {
             scale *= 1000;
             max /= 1000;
         }
 
-        if (value > max) {
-            return NGX_ERROR;
+        ఒకవేళ (విలువ > max) {
+            తిరిగి NGX_ERROR;
         }
 
-        value *= scale;
+        విలువ *= scale;
 
-        if (total > NGX_MAX_INT_T_VALUE - value) {
-            return NGX_ERROR;
+        ఒకవేళ (మొత్తం > NGX_MAX_INT_T_విలువ - విలువ) {
+            తిరిగి NGX_ERROR;
         }
 
-        total += value;
+        మొత్తం += విలువ;
 
-        value = 0;
+        విలువ = 0;
 
-        while (p < last && *p == ' ') {
+        అయితే (p < చివరి && *p == ' ') {
             p++;
         }
     }
 
-    if (!valid) {
-        return NGX_ERROR;
+    ఒకవేళ (!valid) {
+        తిరిగి NGX_ERROR;
     }
 
-    if (!is_sec) {
-        if (value > NGX_MAX_INT_T_VALUE / 1000) {
-            return NGX_ERROR;
+    ఒకవేళ (!is_sec) {
+        ఒకవేళ (విలువ > NGX_MAX_INT_T_విలువ / 1000) {
+            తిరిగి NGX_ERROR;
         }
 
-        value *= 1000;
+        విలువ *= 1000;
     }
 
-    if (total > NGX_MAX_INT_T_VALUE - value) {
-        return NGX_ERROR;
+    ఒకవేళ (మొత్తం > NGX_MAX_INT_T_విలువ - విలువ) {
+        తిరిగి NGX_ERROR;
     }
 
-    return total + value;
+    తిరిగి మొత్తం + విలువ;
 }

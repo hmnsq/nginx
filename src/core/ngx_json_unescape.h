@@ -4,12 +4,12 @@
  */
 
 
-#ifndef _NGX_JSON_UNESCAPE_H_INCLUDED_
-#define _NGX_JSON_UNESCAPE_H_INCLUDED_
+#నిర్వచితం_కాకపోతే _NGX_JSON_UNESCAPE_H_INCLUDED_
+#నిర్వచించు _NGX_JSON_UNESCAPE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
 /*
@@ -27,4 +27,4 @@ ngx_int_t ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src);
 ngx_int_t ngx_json_hex_digit(u_char ch);
 
 
-#endif /* _NGX_JSON_UNESCAPE_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_JSON_UNESCAPE_H_INCLUDED_ */

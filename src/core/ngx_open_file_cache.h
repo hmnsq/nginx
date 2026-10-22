@@ -5,114 +5,114 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-#ifndef _NGX_OPEN_FILE_CACHE_H_INCLUDED_
-#define _NGX_OPEN_FILE_CACHE_H_INCLUDED_
+#నిర్వచితం_కాకపోతే _NGX_OPEN_FILE_CACHE_H_INCLUDED_
+#నిర్వచించు _NGX_OPEN_FILE_CACHE_H_INCLUDED_
 
 
-#define NGX_OPEN_FILE_DIRECTIO_OFF  NGX_MAX_OFF_T_VALUE
+#నిర్వచించు NGX_OPEN_FILE_DIRECTIO_OFF  NGX_MAX_OFF_T_విలువ
 
 
-typedef struct {
+రకనిర్వచనం నిర్మాణం {
     ngx_fd_t                 fd;
     ngx_file_uniq_t          uniq;
-    time_t                   mtime;
-    off_t                    size;
-    off_t                    fs_size;
+    సమయం_t                   mtime;
+    off_t                    కొలత;
+    off_t                    fs_కొలత;
     off_t                    directio;
-    size_t                   read_ahead;
+    కొలత_t                   read_ahead;
 
     ngx_err_t                err;
-    char                    *failed;
+    అక్షరం                    *failed;
 
-    time_t                   valid;
+    సమయం_t                   valid;
 
-    ngx_uint_t               min_uses;
+    ngx_uint_t               min_ఉపయోగిస్తుంది;
 
-#if (NGX_HAVE_OPENAT)
-    size_t                   disable_symlinks_from;
-    unsigned                 disable_symlinks:2;
-#endif
+#ఒకవేళ (NGX_HAVE_OPENAT)
+    కొలత_t                   disable_symlinks_from;
+    గుర్తులేని                 disable_symlinks:2;
+#అయితే_ముగింపు
 
-    unsigned                 test_dir:1;
-    unsigned                 test_only:1;
-    unsigned                 log:1;
-    unsigned                 errors:1;
-    unsigned                 events:1;
+    గుర్తులేని                 test_dir:1;
+    గుర్తులేని                 test_only:1;
+    గుర్తులేని                 సంవర్గమానం:1;
+    గుర్తులేని                 errors:1;
+    గుర్తులేని                 events:1;
 
-    unsigned                 is_dir:1;
-    unsigned                 is_file:1;
-    unsigned                 is_link:1;
-    unsigned                 is_exec:1;
-    unsigned                 is_directio:1;
+    గుర్తులేని                 is_dir:1;
+    గుర్తులేని                 is_file:1;
+    గుర్తులేని                 is_link:1;
+    గుర్తులేని                 is_exec:1;
+    గుర్తులేని                 is_directio:1;
 } ngx_open_file_info_t;
 
 
-typedef struct ngx_cached_open_file_s  ngx_cached_open_file_t;
+రకనిర్వచనం నిర్మాణం ngx_cached_open_file_s  ngx_cached_open_file_t;
 
-struct ngx_cached_open_file_s {
-    ngx_rbtree_node_t        node;
-    ngx_queue_t              queue;
+నిర్మాణం ngx_cached_open_file_s {
+    ngx_rbtree_కణుపు_t        కణుపు;
+    ngx_వరుస_t              వరుస;
 
     u_char                  *name;
-    time_t                   created;
-    time_t                   accessed;
+    సమయం_t                   created;
+    సమయం_t                   accessed;
 
     ngx_fd_t                 fd;
     ngx_file_uniq_t          uniq;
-    time_t                   mtime;
-    off_t                    size;
+    సమయం_t                   mtime;
+    off_t                    కొలత;
     ngx_err_t                err;
 
-    uint32_t                 uses;
+    uint32_t                 ఉపయోగిస్తుంది;
 
-#if (NGX_HAVE_OPENAT)
-    size_t                   disable_symlinks_from;
-    unsigned                 disable_symlinks:2;
-#endif
+#ఒకవేళ (NGX_HAVE_OPENAT)
+    కొలత_t                   disable_symlinks_from;
+    గుర్తులేని                 disable_symlinks:2;
+#అయితే_ముగింపు
 
-    unsigned                 count:24;
-    unsigned                 close:1;
-    unsigned                 use_event:1;
+    గుర్తులేని                 లెక్క:24;
+    గుర్తులేని                 close:1;
+    గుర్తులేని                 use_event:1;
 
-    unsigned                 is_dir:1;
-    unsigned                 is_file:1;
-    unsigned                 is_link:1;
-    unsigned                 is_exec:1;
-    unsigned                 is_directio:1;
+    గుర్తులేని                 is_dir:1;
+    గుర్తులేని                 is_file:1;
+    గుర్తులేని                 is_link:1;
+    గుర్తులేని                 is_exec:1;
+    గుర్తులేని                 is_directio:1;
 
     ngx_event_t             *event;
 };
 
 
-typedef struct {
+రకనిర్వచనం నిర్మాణం {
     ngx_rbtree_t             rbtree;
-    ngx_rbtree_node_t        sentinel;
-    ngx_queue_t              expire_queue;
+    ngx_rbtree_కణుపు_t        sentinel;
+    ngx_వరుస_t              expire_వరుస;
 
     ngx_uint_t               current;
     ngx_uint_t               max;
-    time_t                   inactive;
+    సమయం_t                   inactive;
 } ngx_open_file_cache_t;
 
 
-typedef struct {
+రకనిర్వచనం నిర్మాణం {
     ngx_open_file_cache_t   *cache;
     ngx_cached_open_file_t  *file;
-    ngx_uint_t               min_uses;
-    ngx_log_t               *log;
+    ngx_uint_t               min_ఉపయోగిస్తుంది;
+    ngx_log_t               *సంవర్గమానం;
 } ngx_open_file_cache_cleanup_t;
 
 
-typedef struct {
+రకనిర్వచనం నిర్మాణం {
 
     /* ngx_connection_t stub to allow use c->fd as event ident */
-    void                    *data;
-    ngx_event_t             *read;
-    ngx_event_t             *write;
+    శూన్య                    *దత్తాంశం;
+    ngx_event_t             *పఠ;
+    ngx_event_t             *లిఖ;
     ngx_fd_t                 fd;
 
     ngx_cached_open_file_t  *file;
@@ -121,9 +121,9 @@ typedef struct {
 
 
 ngx_open_file_cache_t *ngx_open_file_cache_init(ngx_pool_t *pool,
-    ngx_uint_t max, time_t inactive);
+    ngx_uint_t max, సమయం_t inactive);
 ngx_int_t ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
-    ngx_open_file_info_t *of, ngx_pool_t *pool);
+    ngx_open_file_info_t *యొక్క, ngx_pool_t *pool);
 
 
-#endif /* _NGX_OPEN_FILE_CACHE_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_OPEN_FILE_CACHE_H_INCLUDED_ */

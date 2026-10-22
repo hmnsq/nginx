@@ -5,41 +5,41 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-static ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
+స్థిర ngx_radix_కణుపు_t *ngx_radix_alloc(ngx_radix_వృక్షం_t *వృక్షం);
 
 
-ngx_radix_tree_t *
-ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
+ngx_radix_వృక్షం_t *
+ngx_radix_వృక్షం_create(ngx_pool_t *pool, ngx_int_t preallocate)
 {
-    uint32_t           key, mask, inc;
-    ngx_radix_tree_t  *tree;
+    uint32_t           కీలకం, ముసుగు, inc;
+    ngx_radix_వృక్షం_t  *వృక్షం;
 
-    tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
-        return NULL;
+    వృక్షం = ngx_palloc(pool, పరిమాణం(ngx_radix_వృక్షం_t));
+    ఒకవేళ (వృక్షం == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
-    tree->pool = pool;
-    tree->free = NULL;
-    tree->start = NULL;
-    tree->size = 0;
+    వృక్షం->pool = pool;
+    వృక్షం->విడుదల = ఖాళీ;
+    వృక్షం->ప్రారంభం = ఖాళీ;
+    వృక్షం->కొలత = 0;
 
-    tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
-        return NULL;
+    వృక్షం->మూలం = ngx_radix_alloc(వృక్షం);
+    ఒకవేళ (వృక్షం->మూలం == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
-    tree->root->right = NULL;
-    tree->root->left = NULL;
-    tree->root->parent = NULL;
-    tree->root->value = NGX_RADIX_NO_VALUE;
+    వృక్షం->మూలం->కుడి = ఖాళీ;
+    వృక్షం->మూలం->ఎడమ = ఖాళీ;
+    వృక్షం->మూలం->మాతృ = ఖాళీ;
+    వృక్షం->మూలం->విలువ = NGX_RADIX_NO_విలువ;
 
-    if (preallocate == 0) {
-        return tree;
+    ఒకవేళ (preallocate == 0) {
+        తిరిగి వృక్షం;
     }
 
     /*
@@ -59,430 +59,430 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      *     8 bits on sparc64 in 32-bit mode (8K pages)
      */
 
-    if (preallocate == -1) {
-        switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
+    ఒకవేళ (preallocate == -1) {
+        ఎంపిక (ngx_pagesize / పరిమాణం(ngx_radix_కణుపు_t)) {
 
         /* amd64 */
-        case 128:
+        స్థితి 128:
             preallocate = 6;
-            break;
+            ఆపు;
 
         /* i386, sparc64 */
-        case 256:
+        స్థితి 256:
             preallocate = 7;
-            break;
+            ఆపు;
 
         /* sparc64 in 32-bit mode */
-        default:
+        అప్రమేయ:
             preallocate = 8;
         }
     }
 
-    mask = 0;
+    ముసుగు = 0;
     inc = 0x80000000;
 
-    while (preallocate--) {
+    అయితే (preallocate--) {
 
-        key = 0;
-        mask >>= 1;
-        mask |= 0x80000000;
+        కీలకం = 0;
+        ముసుగు >>= 1;
+        ముసుగు |= 0x80000000;
 
-        do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+        చేయి {
+            ఒకవేళ (ngx_radix32tree_చొప్పించు(వృక్షం, కీలకం, ముసుగు, NGX_RADIX_NO_విలువ)
                 != NGX_OK)
             {
-                return NULL;
+                తిరిగి ఖాళీ;
             }
 
-            key += inc;
+            కీలకం += inc;
 
-        } while (key);
+        } అయితే (కీలకం);
 
         inc >>= 1;
     }
 
-    return tree;
+    తిరిగి వృక్షం;
 }
 
 
 ngx_int_t
-ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
-    uintptr_t value)
+ngx_radix32tree_చొప్పించు(ngx_radix_వృక్షం_t *వృక్షం, uint32_t కీలకం, uint32_t ముసుగు,
+    uintptr_t విలువ)
 {
-    uint32_t           bit;
-    ngx_radix_node_t  *node, *next;
+    uint32_t           బిట్టు;
+    ngx_radix_కణుపు_t  *కణుపు, *తదుపరి;
 
-    bit = 0x80000000;
+    బిట్టు = 0x80000000;
 
-    node = tree->root;
-    next = tree->root;
+    కణుపు = వృక్షం->మూలం;
+    తదుపరి = వృక్షం->మూలం;
 
-    while (bit & mask) {
-        if (key & bit) {
-            next = node->right;
+    అయితే (బిట్టు & ముసుగు) {
+        ఒకవేళ (కీలకం & బిట్టు) {
+            తదుపరి = కణుపు->కుడి;
 
-        } else {
-            next = node->left;
+        } లేకపోతే {
+            తదుపరి = కణుపు->ఎడమ;
         }
 
-        if (next == NULL) {
-            break;
+        ఒకవేళ (తదుపరి == ఖాళీ) {
+            ఆపు;
         }
 
-        bit >>= 1;
-        node = next;
+        బిట్టు >>= 1;
+        కణుపు = తదుపరి;
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    ఒకవేళ (తదుపరి) {
+        ఒకవేళ (కణుపు->విలువ != NGX_RADIX_NO_విలువ) {
+            తిరిగి NGX_BUSY;
         }
 
-        node->value = value;
-        return NGX_OK;
+        కణుపు->విలువ = విలువ;
+        తిరిగి NGX_OK;
     }
 
-    while (bit & mask) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+    అయితే (బిట్టు & ముసుగు) {
+        తదుపరి = ngx_radix_alloc(వృక్షం);
+        ఒకవేళ (తదుపరి == ఖాళీ) {
+            తిరిగి NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
+        తదుపరి->కుడి = ఖాళీ;
+        తదుపరి->ఎడమ = ఖాళీ;
+        తదుపరి->మాతృ = కణుపు;
+        తదుపరి->విలువ = NGX_RADIX_NO_విలువ;
 
-        if (key & bit) {
-            node->right = next;
+        ఒకవేళ (కీలకం & బిట్టు) {
+            కణుపు->కుడి = తదుపరి;
 
-        } else {
-            node->left = next;
+        } లేకపోతే {
+            కణుపు->ఎడమ = తదుపరి;
         }
 
-        bit >>= 1;
-        node = next;
+        బిట్టు >>= 1;
+        కణుపు = తదుపరి;
     }
 
-    node->value = value;
+    కణుపు->విలువ = విలువ;
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
+ngx_radix32tree_delete(ngx_radix_వృక్షం_t *వృక్షం, uint32_t కీలకం, uint32_t ముసుగు)
 {
-    uint32_t           bit;
-    ngx_radix_node_t  *node;
+    uint32_t           బిట్టు;
+    ngx_radix_కణుపు_t  *కణుపు;
 
-    bit = 0x80000000;
-    node = tree->root;
+    బిట్టు = 0x80000000;
+    కణుపు = వృక్షం->మూలం;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
-            node = node->right;
+    అయితే (కణుపు && (బిట్టు & ముసుగు)) {
+        ఒకవేళ (కీలకం & బిట్టు) {
+            కణుపు = కణుపు->కుడి;
 
-        } else {
-            node = node->left;
+        } లేకపోతే {
+            కణుపు = కణుపు->ఎడమ;
         }
 
-        bit >>= 1;
+        బిట్టు >>= 1;
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    ఒకవేళ (కణుపు == ఖాళీ) {
+        తిరిగి NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    ఒకవేళ (కణుపు->కుడి || కణుపు->ఎడమ) {
+        ఒకవేళ (కణుపు->విలువ != NGX_RADIX_NO_విలువ) {
+            కణుపు->విలువ = NGX_RADIX_NO_విలువ;
+            తిరిగి NGX_OK;
         }
 
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    కొరకు ( ;; ) {
+        ఒకవేళ (కణుపు->మాతృ->కుడి == కణుపు) {
+            కణుపు->మాతృ->కుడి = ఖాళీ;
 
-        } else {
-            node->parent->left = NULL;
+        } లేకపోతే {
+            కణుపు->మాతృ->ఎడమ = ఖాళీ;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        కణుపు->కుడి = వృక్షం->విడుదల;
+        వృక్షం->విడుదల = కణుపు;
 
-        node = node->parent;
+        కణుపు = కణుపు->మాతృ;
 
-        if (node->right || node->left) {
-            break;
+        ఒకవేళ (కణుపు->కుడి || కణుపు->ఎడమ) {
+            ఆపు;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        ఒకవేళ (కణుపు->విలువ != NGX_RADIX_NO_విలువ) {
+            ఆపు;
         }
 
-        if (node->parent == NULL) {
-            break;
+        ఒకవేళ (కణుపు->మాతృ == ఖాళీ) {
+            ఆపు;
         }
     }
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
+ngx_radix32tree_కనుగొను(ngx_radix_వృక్షం_t *వృక్షం, uint32_t కీలకం)
 {
-    uint32_t           bit;
-    uintptr_t          value;
-    ngx_radix_node_t  *node;
+    uint32_t           బిట్టు;
+    uintptr_t          విలువ;
+    ngx_radix_కణుపు_t  *కణుపు;
 
-    bit = 0x80000000;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    బిట్టు = 0x80000000;
+    విలువ = NGX_RADIX_NO_విలువ;
+    కణుపు = వృక్షం->మూలం;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    అయితే (కణుపు) {
+        ఒకవేళ (కణుపు->విలువ != NGX_RADIX_NO_విలువ) {
+            విలువ = కణుపు->విలువ;
         }
 
-        if (key & bit) {
-            node = node->right;
+        ఒకవేళ (కీలకం & బిట్టు) {
+            కణుపు = కణుపు->కుడి;
 
-        } else {
-            node = node->left;
+        } లేకపోతే {
+            కణుపు = కణుపు->ఎడమ;
         }
 
-        bit >>= 1;
+        బిట్టు >>= 1;
     }
 
-    return value;
+    తిరిగి విలువ;
 }
 
 
-#if (NGX_HAVE_INET6)
+#ఒకవేళ (NGX_HAVE_INET6)
 
 ngx_int_t
-ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
-    uintptr_t value)
+ngx_radix128tree_చొప్పించు(ngx_radix_వృక్షం_t *వృక్షం, u_char *కీలకం, u_char *ముసుగు,
+    uintptr_t విలువ)
 {
-    u_char             bit;
+    u_char             బిట్టు;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_కణుపు_t  *కణుపు, *తదుపరి;
 
     i = 0;
-    bit = 0x80;
+    బిట్టు = 0x80;
 
-    node = tree->root;
-    next = tree->root;
+    కణుపు = వృక్షం->మూలం;
+    తదుపరి = వృక్షం->మూలం;
 
-    while (bit & mask[i]) {
-        if (key[i] & bit) {
-            next = node->right;
+    అయితే (బిట్టు & ముసుగు[i]) {
+        ఒకవేళ (కీలకం[i] & బిట్టు) {
+            తదుపరి = కణుపు->కుడి;
 
-        } else {
-            next = node->left;
+        } లేకపోతే {
+            తదుపరి = కణుపు->ఎడమ;
         }
 
-        if (next == NULL) {
-            break;
+        ఒకవేళ (తదుపరి == ఖాళీ) {
+            ఆపు;
         }
 
-        bit >>= 1;
-        node = next;
+        బిట్టు >>= 1;
+        కణుపు = తదుపరి;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        ఒకవేళ (బిట్టు == 0) {
+            ఒకవేళ (++i == 16) {
+                ఆపు;
             }
 
-            bit = 0x80;
+            బిట్టు = 0x80;
         }
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    ఒకవేళ (తదుపరి) {
+        ఒకవేళ (కణుపు->విలువ != NGX_RADIX_NO_విలువ) {
+            తిరిగి NGX_BUSY;
         }
 
-        node->value = value;
-        return NGX_OK;
+        కణుపు->విలువ = విలువ;
+        తిరిగి NGX_OK;
     }
 
-    while (bit & mask[i]) {
-        next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+    అయితే (బిట్టు & ముసుగు[i]) {
+        తదుపరి = ngx_radix_alloc(వృక్షం);
+        ఒకవేళ (తదుపరి == ఖాళీ) {
+            తిరిగి NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
+        తదుపరి->కుడి = ఖాళీ;
+        తదుపరి->ఎడమ = ఖాళీ;
+        తదుపరి->మాతృ = కణుపు;
+        తదుపరి->విలువ = NGX_RADIX_NO_విలువ;
 
-        if (key[i] & bit) {
-            node->right = next;
+        ఒకవేళ (కీలకం[i] & బిట్టు) {
+            కణుపు->కుడి = తదుపరి;
 
-        } else {
-            node->left = next;
+        } లేకపోతే {
+            కణుపు->ఎడమ = తదుపరి;
         }
 
-        bit >>= 1;
-        node = next;
+        బిట్టు >>= 1;
+        కణుపు = తదుపరి;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        ఒకవేళ (బిట్టు == 0) {
+            ఒకవేళ (++i == 16) {
+                ఆపు;
             }
 
-            bit = 0x80;
+            బిట్టు = 0x80;
         }
     }
 
-    node->value = value;
+    కణుపు->విలువ = విలువ;
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
+ngx_radix128tree_delete(ngx_radix_వృక్షం_t *వృక్షం, u_char *కీలకం, u_char *ముసుగు)
 {
-    u_char             bit;
+    u_char             బిట్టు;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_కణుపు_t  *కణుపు;
 
     i = 0;
-    bit = 0x80;
-    node = tree->root;
+    బిట్టు = 0x80;
+    కణుపు = వృక్షం->మూలం;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
-            node = node->right;
+    అయితే (కణుపు && (బిట్టు & ముసుగు[i])) {
+        ఒకవేళ (కీలకం[i] & బిట్టు) {
+            కణుపు = కణుపు->కుడి;
 
-        } else {
-            node = node->left;
+        } లేకపోతే {
+            కణుపు = కణుపు->ఎడమ;
         }
 
-        bit >>= 1;
+        బిట్టు >>= 1;
 
-        if (bit == 0) {
-            if (++i == 16) {
-                break;
+        ఒకవేళ (బిట్టు == 0) {
+            ఒకవేళ (++i == 16) {
+                ఆపు;
             }
 
-            bit = 0x80;
+            బిట్టు = 0x80;
         }
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    ఒకవేళ (కణుపు == ఖాళీ) {
+        తిరిగి NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+    ఒకవేళ (కణుపు->కుడి || కణుపు->ఎడమ) {
+        ఒకవేళ (కణుపు->విలువ != NGX_RADIX_NO_విలువ) {
+            కణుపు->విలువ = NGX_RADIX_NO_విలువ;
+            తిరిగి NGX_OK;
         }
 
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+    కొరకు ( ;; ) {
+        ఒకవేళ (కణుపు->మాతృ->కుడి == కణుపు) {
+            కణుపు->మాతృ->కుడి = ఖాళీ;
 
-        } else {
-            node->parent->left = NULL;
+        } లేకపోతే {
+            కణుపు->మాతృ->ఎడమ = ఖాళీ;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        కణుపు->కుడి = వృక్షం->విడుదల;
+        వృక్షం->విడుదల = కణుపు;
 
-        node = node->parent;
+        కణుపు = కణుపు->మాతృ;
 
-        if (node->right || node->left) {
-            break;
+        ఒకవేళ (కణుపు->కుడి || కణుపు->ఎడమ) {
+            ఆపు;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            break;
+        ఒకవేళ (కణుపు->విలువ != NGX_RADIX_NO_విలువ) {
+            ఆపు;
         }
 
-        if (node->parent == NULL) {
-            break;
+        ఒకవేళ (కణుపు->మాతృ == ఖాళీ) {
+            ఆపు;
         }
     }
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
 uintptr_t
-ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
+ngx_radix128tree_కనుగొను(ngx_radix_వృక్షం_t *వృక్షం, u_char *కీలకం)
 {
-    u_char             bit;
-    uintptr_t          value;
+    u_char             బిట్టు;
+    uintptr_t          విలువ;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_కణుపు_t  *కణుపు;
 
     i = 0;
-    bit = 0x80;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    బిట్టు = 0x80;
+    విలువ = NGX_RADIX_NO_విలువ;
+    కణుపు = వృక్షం->మూలం;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    అయితే (కణుపు) {
+        ఒకవేళ (కణుపు->విలువ != NGX_RADIX_NO_విలువ) {
+            విలువ = కణుపు->విలువ;
         }
 
-        if (key[i] & bit) {
-            node = node->right;
+        ఒకవేళ (కీలకం[i] & బిట్టు) {
+            కణుపు = కణుపు->కుడి;
 
-        } else {
-            node = node->left;
+        } లేకపోతే {
+            కణుపు = కణుపు->ఎడమ;
         }
 
-        bit >>= 1;
+        బిట్టు >>= 1;
 
-        if (bit == 0) {
+        ఒకవేళ (బిట్టు == 0) {
             i++;
-            bit = 0x80;
+            బిట్టు = 0x80;
         }
     }
 
-    return value;
+    తిరిగి విలువ;
 }
 
-#endif
+#అయితే_ముగింపు
 
 
-static ngx_radix_node_t *
-ngx_radix_alloc(ngx_radix_tree_t *tree)
+స్థిర ngx_radix_కణుపు_t *
+ngx_radix_alloc(ngx_radix_వృక్షం_t *వృక్షం)
 {
-    ngx_radix_node_t  *p;
+    ngx_radix_కణుపు_t  *p;
 
-    if (tree->free) {
-        p = tree->free;
-        tree->free = tree->free->right;
-        return p;
+    ఒకవేళ (వృక్షం->విడుదల) {
+        p = వృక్షం->విడుదల;
+        వృక్షం->విడుదల = వృక్షం->విడుదల->కుడి;
+        తిరిగి p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
-        tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
-            return NULL;
+    ఒకవేళ (వృక్షం->కొలత < పరిమాణం(ngx_radix_కణుపు_t)) {
+        వృక్షం->ప్రారంభం = ngx_pmemalign(వృక్షం->pool, ngx_pagesize, ngx_pagesize);
+        ఒకవేళ (వృక్షం->ప్రారంభం == ఖాళీ) {
+            తిరిగి ఖాళీ;
         }
 
-        tree->size = ngx_pagesize;
+        వృక్షం->కొలత = ngx_pagesize;
     }
 
-    p = (ngx_radix_node_t *) tree->start;
-    tree->start += sizeof(ngx_radix_node_t);
-    tree->size -= sizeof(ngx_radix_node_t);
+    p = (ngx_radix_కణుపు_t *) వృక్షం->ప్రారంభం;
+    వృక్షం->ప్రారంభం += పరిమాణం(ngx_radix_కణుపు_t);
+    వృక్షం->కొలత -= పరిమాణం(ngx_radix_కణుపు_t);
 
-    return p;
+    తిరిగి p;
 }

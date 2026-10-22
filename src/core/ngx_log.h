@@ -5,61 +5,61 @@
  */
 
 
-#ifndef _NGX_LOG_H_INCLUDED_
-#define _NGX_LOG_H_INCLUDED_
+#నిర్వచితం_కాకపోతే _NGX_LOG_H_INCLUDED_
+#నిర్వచించు _NGX_LOG_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-#define NGX_LOG_STDERR            0
-#define NGX_LOG_EMERG             1
-#define NGX_LOG_ALERT             2
-#define NGX_LOG_CRIT              3
-#define NGX_LOG_ERR               4
-#define NGX_LOG_WARN              5
-#define NGX_LOG_NOTICE            6
-#define NGX_LOG_INFO              7
-#define NGX_LOG_DEBUG             8
+#నిర్వచించు NGX_LOG_STDERR            0
+#నిర్వచించు NGX_LOG_EMERG             1
+#నిర్వచించు NGX_LOG_ALERT             2
+#నిర్వచించు NGX_LOG_CRIT              3
+#నిర్వచించు NGX_LOG_ERR               4
+#నిర్వచించు NGX_LOG_WARN              5
+#నిర్వచించు NGX_LOG_NOTICE            6
+#నిర్వచించు NGX_LOG_INFO              7
+#నిర్వచించు NGX_LOG_DEBUG             8
 
-#define NGX_LOG_DEBUG_CORE        0x010
-#define NGX_LOG_DEBUG_ALLOC       0x020
-#define NGX_LOG_DEBUG_MUTEX       0x040
-#define NGX_LOG_DEBUG_EVENT       0x080
-#define NGX_LOG_DEBUG_HTTP        0x100
-#define NGX_LOG_DEBUG_MAIL        0x200
-#define NGX_LOG_DEBUG_STREAM      0x400
+#నిర్వచించు NGX_LOG_DEBUG_CORE        0x010
+#నిర్వచించు NGX_LOG_DEBUG_ALLOC       0x020
+#నిర్వచించు NGX_LOG_DEBUG_MUTEX       0x040
+#నిర్వచించు NGX_LOG_DEBUG_EVENT       0x080
+#నిర్వచించు NGX_LOG_DEBUG_HTTP        0x100
+#నిర్వచించు NGX_LOG_DEBUG_MAIL        0x200
+#నిర్వచించు NGX_LOG_DEBUG_ప్రవాహం      0x400
 
 /*
  * do not forget to update debug_levels[] in src/core/ngx_log.c
  * after the adding a new debug level
  */
 
-#define NGX_LOG_DEBUG_FIRST       NGX_LOG_DEBUG_CORE
-#define NGX_LOG_DEBUG_LAST        NGX_LOG_DEBUG_STREAM
-#define NGX_LOG_DEBUG_CONNECTION  0x80000000
-#define NGX_LOG_DEBUG_ALL         0x7ffffff0
+#నిర్వచించు NGX_LOG_DEBUG_మొదటి       NGX_LOG_DEBUG_CORE
+#నిర్వచించు NGX_LOG_DEBUG_చివరి        NGX_LOG_DEBUG_ప్రవాహం
+#నిర్వచించు NGX_LOG_DEBUG_CONNECTION  0x80000000
+#నిర్వచించు NGX_LOG_DEBUG_ALL         0x7ffffff0
 
 
-typedef u_char *(*ngx_log_handler_pt) (ngx_log_t *log, u_char *buf, size_t len);
-typedef void (*ngx_log_writer_pt) (ngx_log_t *log, ngx_uint_t level,
-    u_char *buf, size_t len);
+రకనిర్వచనం u_char *(*ngx_log_handler_pt) (ngx_log_t *సంవర్గమానం, u_char *buf, కొలత_t len);
+రకనిర్వచనం శూన్య (*ngx_log_writer_pt) (ngx_log_t *సంవర్గమానం, ngx_uint_t level,
+    u_char *buf, కొలత_t len);
 
 
-struct ngx_log_s {
+నిర్మాణం ngx_log_s {
     ngx_uint_t           log_level;
     ngx_open_file_t     *file;
 
     ngx_atomic_uint_t    connection;
 
-    time_t               disk_full_time;
+    సమయం_t               disk_నిండిన_సమయం;
 
     ngx_log_handler_pt   handler;
-    void                *data;
+    శూన్య                *దత్తాంశం;
 
     ngx_log_writer_pt    writer;
-    void                *wdata;
+    శూన్య                *wdata;
 
     /*
      * we declare "action" as "char *" because the actions are usually
@@ -67,178 +67,178 @@ struct ngx_log_s {
      * their types all the time
      */
 
-    char                *action;
+    అక్షరం                *action;
 
-    ngx_log_t           *next;
+    ngx_log_t           *తదుపరి;
 
     NGX_COMPAT_BEGIN(5)
-    NGX_COMPAT_END
+    NGX_COMPAT_చివర
 };
 
 
-#define NGX_MAX_ERROR_STR   2048
+#నిర్వచించు NGX_MAX_ERROR_STR   2048
 
 
 /*********************************/
 
-#if (NGX_HAVE_C99_VARIADIC_MACROS)
+#ఒకవేళ (NGX_HAVE_C99_VARIADIC_MACROS)
 
-#define NGX_HAVE_VARIADIC_MACROS  1
+#నిర్వచించు NGX_HAVE_VARIADIC_MACROS  1
 
-#define ngx_log_error(level, log, ...)                                        \
-    if ((log)->log_level >= level) ngx_log_error_core(level, log, __VA_ARGS__)
+#నిర్వచించు ngx_log_error(level, సంవర్గమానం, ...)                                        \
+    ఒకవేళ ((సంవర్గమానం)->log_level >= level) ngx_log_error_core(level, సంవర్గమానం, __VA_ARGS__)
 
-void ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, ...);
+శూన్య ngx_log_error_core(ngx_uint_t level, ngx_log_t *సంవర్గమానం, ngx_err_t err,
+    స్థిరరాశి అక్షరం *fmt, ...);
 
-#define ngx_log_debug(level, log, ...)                                        \
-    if ((log)->log_level & level)                                             \
-        ngx_log_error_core(NGX_LOG_DEBUG, log, __VA_ARGS__)
-
-/*********************************/
-
-#elif (NGX_HAVE_GCC_VARIADIC_MACROS)
-
-#define NGX_HAVE_VARIADIC_MACROS  1
-
-#define ngx_log_error(level, log, args...)                                    \
-    if ((log)->log_level >= level) ngx_log_error_core(level, log, args)
-
-void ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, ...);
-
-#define ngx_log_debug(level, log, args...)                                    \
-    if ((log)->log_level & level)                                             \
-        ngx_log_error_core(NGX_LOG_DEBUG, log, args)
+#నిర్వచించు ngx_log_debug(level, సంవర్గమానం, ...)                                        \
+    ఒకవేళ ((సంవర్గమానం)->log_level & level)                                             \
+        ngx_log_error_core(NGX_LOG_DEBUG, సంవర్గమానం, __VA_ARGS__)
 
 /*********************************/
 
-#else /* no variadic macros */
+#లేదావేళ (NGX_HAVE_GCC_VARIADIC_MACROS)
 
-#define NGX_HAVE_VARIADIC_MACROS  0
+#నిర్వచించు NGX_HAVE_VARIADIC_MACROS  1
 
-void ngx_cdecl ngx_log_error(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, ...);
-void ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, va_list args);
-void ngx_cdecl ngx_log_debug_core(ngx_log_t *log, ngx_err_t err,
-    const char *fmt, ...);
+#నిర్వచించు ngx_log_error(level, సంవర్గమానం, వాదనలు...)                                    \
+    ఒకవేళ ((సంవర్గమానం)->log_level >= level) ngx_log_error_core(level, సంవర్గమానం, వాదనలు)
+
+శూన్య ngx_log_error_core(ngx_uint_t level, ngx_log_t *సంవర్గమానం, ngx_err_t err,
+    స్థిరరాశి అక్షరం *fmt, ...);
+
+#నిర్వచించు ngx_log_debug(level, సంవర్గమానం, వాదనలు...)                                    \
+    ఒకవేళ ((సంవర్గమానం)->log_level & level)                                             \
+        ngx_log_error_core(NGX_LOG_DEBUG, సంవర్గమానం, వాదనలు)
+
+/*********************************/
+
+#లేకపోతే /* no variadic macros */
+
+#నిర్వచించు NGX_HAVE_VARIADIC_MACROS  0
+
+శూన్య ngx_cdecl ngx_log_error(ngx_uint_t level, ngx_log_t *సంవర్గమానం, ngx_err_t err,
+    స్థిరరాశి అక్షరం *fmt, ...);
+శూన్య ngx_log_error_core(ngx_uint_t level, ngx_log_t *సంవర్గమానం, ngx_err_t err,
+    స్థిరరాశి అక్షరం *fmt, va_list వాదనలు);
+శూన్య ngx_cdecl ngx_log_debug_core(ngx_log_t *సంవర్గమానం, ngx_err_t err,
+    స్థిరరాశి అక్షరం *fmt, ...);
 
 
-#endif /* variadic macros */
+#అయితే_ముగింపు /* variadic macros */
 
 
 /*********************************/
 
-#if (NGX_DEBUG)
+#ఒకవేళ (NGX_DEBUG)
 
-#if (NGX_HAVE_VARIADIC_MACROS)
+#ఒకవేళ (NGX_HAVE_VARIADIC_MACROS)
 
-#define ngx_log_debug0(level, log, err, fmt)                                  \
-        ngx_log_debug(level, log, err, fmt)
+#నిర్వచించు ngx_log_debug0(level, సంవర్గమానం, err, fmt)                                  \
+        ngx_log_debug(level, సంవర్గమానం, err, fmt)
 
-#define ngx_log_debug1(level, log, err, fmt, arg1)                            \
-        ngx_log_debug(level, log, err, fmt, arg1)
+#నిర్వచించు ngx_log_debug1(level, సంవర్గమానం, err, fmt, arg1)                            \
+        ngx_log_debug(level, సంవర్గమానం, err, fmt, arg1)
 
-#define ngx_log_debug2(level, log, err, fmt, arg1, arg2)                      \
-        ngx_log_debug(level, log, err, fmt, arg1, arg2)
+#నిర్వచించు ngx_log_debug2(level, సంవర్గమానం, err, fmt, arg1, arg2)                      \
+        ngx_log_debug(level, సంవర్గమానం, err, fmt, arg1, arg2)
 
-#define ngx_log_debug3(level, log, err, fmt, arg1, arg2, arg3)                \
-        ngx_log_debug(level, log, err, fmt, arg1, arg2, arg3)
+#నిర్వచించు ngx_log_debug3(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3)                \
+        ngx_log_debug(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3)
 
-#define ngx_log_debug4(level, log, err, fmt, arg1, arg2, arg3, arg4)          \
-        ngx_log_debug(level, log, err, fmt, arg1, arg2, arg3, arg4)
+#నిర్వచించు ngx_log_debug4(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4)          \
+        ngx_log_debug(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4)
 
-#define ngx_log_debug5(level, log, err, fmt, arg1, arg2, arg3, arg4, arg5)    \
-        ngx_log_debug(level, log, err, fmt, arg1, arg2, arg3, arg4, arg5)
+#నిర్వచించు ngx_log_debug5(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4, arg5)    \
+        ngx_log_debug(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4, arg5)
 
-#define ngx_log_debug6(level, log, err, fmt,                                  \
+#నిర్వచించు ngx_log_debug6(level, సంవర్గమానం, err, fmt,                                  \
                        arg1, arg2, arg3, arg4, arg5, arg6)                    \
-        ngx_log_debug(level, log, err, fmt,                                   \
+        ngx_log_debug(level, సంవర్గమానం, err, fmt,                                   \
                        arg1, arg2, arg3, arg4, arg5, arg6)
 
-#define ngx_log_debug7(level, log, err, fmt,                                  \
+#నిర్వచించు ngx_log_debug7(level, సంవర్గమానం, err, fmt,                                  \
                        arg1, arg2, arg3, arg4, arg5, arg6, arg7)              \
-        ngx_log_debug(level, log, err, fmt,                                   \
+        ngx_log_debug(level, సంవర్గమానం, err, fmt,                                   \
                        arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 
-#define ngx_log_debug8(level, log, err, fmt,                                  \
+#నిర్వచించు ngx_log_debug8(level, సంవర్గమానం, err, fmt,                                  \
                        arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)        \
-        ngx_log_debug(level, log, err, fmt,                                   \
+        ngx_log_debug(level, సంవర్గమానం, err, fmt,                                   \
                        arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
 
 
-#else /* no variadic macros */
+#లేకపోతే /* no variadic macros */
 
-#define ngx_log_debug0(level, log, err, fmt)                                  \
-    if ((log)->log_level & level)                                             \
-        ngx_log_debug_core(log, err, fmt)
+#నిర్వచించు ngx_log_debug0(level, సంవర్గమానం, err, fmt)                                  \
+    ఒకవేళ ((సంవర్గమానం)->log_level & level)                                             \
+        ngx_log_debug_core(సంవర్గమానం, err, fmt)
 
-#define ngx_log_debug1(level, log, err, fmt, arg1)                            \
-    if ((log)->log_level & level)                                             \
-        ngx_log_debug_core(log, err, fmt, arg1)
+#నిర్వచించు ngx_log_debug1(level, సంవర్గమానం, err, fmt, arg1)                            \
+    ఒకవేళ ((సంవర్గమానం)->log_level & level)                                             \
+        ngx_log_debug_core(సంవర్గమానం, err, fmt, arg1)
 
-#define ngx_log_debug2(level, log, err, fmt, arg1, arg2)                      \
-    if ((log)->log_level & level)                                             \
-        ngx_log_debug_core(log, err, fmt, arg1, arg2)
+#నిర్వచించు ngx_log_debug2(level, సంవర్గమానం, err, fmt, arg1, arg2)                      \
+    ఒకవేళ ((సంవర్గమానం)->log_level & level)                                             \
+        ngx_log_debug_core(సంవర్గమానం, err, fmt, arg1, arg2)
 
-#define ngx_log_debug3(level, log, err, fmt, arg1, arg2, arg3)                \
-    if ((log)->log_level & level)                                             \
-        ngx_log_debug_core(log, err, fmt, arg1, arg2, arg3)
+#నిర్వచించు ngx_log_debug3(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3)                \
+    ఒకవేళ ((సంవర్గమానం)->log_level & level)                                             \
+        ngx_log_debug_core(సంవర్గమానం, err, fmt, arg1, arg2, arg3)
 
-#define ngx_log_debug4(level, log, err, fmt, arg1, arg2, arg3, arg4)          \
-    if ((log)->log_level & level)                                             \
-        ngx_log_debug_core(log, err, fmt, arg1, arg2, arg3, arg4)
+#నిర్వచించు ngx_log_debug4(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4)          \
+    ఒకవేళ ((సంవర్గమానం)->log_level & level)                                             \
+        ngx_log_debug_core(సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4)
 
-#define ngx_log_debug5(level, log, err, fmt, arg1, arg2, arg3, arg4, arg5)    \
-    if ((log)->log_level & level)                                             \
-        ngx_log_debug_core(log, err, fmt, arg1, arg2, arg3, arg4, arg5)
+#నిర్వచించు ngx_log_debug5(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4, arg5)    \
+    ఒకవేళ ((సంవర్గమానం)->log_level & level)                                             \
+        ngx_log_debug_core(సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4, arg5)
 
-#define ngx_log_debug6(level, log, err, fmt,                                  \
+#నిర్వచించు ngx_log_debug6(level, సంవర్గమానం, err, fmt,                                  \
                        arg1, arg2, arg3, arg4, arg5, arg6)                    \
-    if ((log)->log_level & level)                                             \
-        ngx_log_debug_core(log, err, fmt, arg1, arg2, arg3, arg4, arg5, arg6)
+    ఒకవేళ ((సంవర్గమానం)->log_level & level)                                             \
+        ngx_log_debug_core(సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4, arg5, arg6)
 
-#define ngx_log_debug7(level, log, err, fmt,                                  \
+#నిర్వచించు ngx_log_debug7(level, సంవర్గమానం, err, fmt,                                  \
                        arg1, arg2, arg3, arg4, arg5, arg6, arg7)              \
-    if ((log)->log_level & level)                                             \
-        ngx_log_debug_core(log, err, fmt,                                     \
+    ఒకవేళ ((సంవర్గమానం)->log_level & level)                                             \
+        ngx_log_debug_core(సంవర్గమానం, err, fmt,                                     \
                        arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 
-#define ngx_log_debug8(level, log, err, fmt,                                  \
+#నిర్వచించు ngx_log_debug8(level, సంవర్గమానం, err, fmt,                                  \
                        arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)        \
-    if ((log)->log_level & level)                                             \
-        ngx_log_debug_core(log, err, fmt,                                     \
+    ఒకవేళ ((సంవర్గమానం)->log_level & level)                                             \
+        ngx_log_debug_core(సంవర్గమానం, err, fmt,                                     \
                        arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
 
-#endif
+#అయితే_ముగింపు
 
-#else /* !NGX_DEBUG */
+#లేకపోతే /* !NGX_DEBUG */
 
-#define ngx_log_debug0(level, log, err, fmt)
-#define ngx_log_debug1(level, log, err, fmt, arg1)
-#define ngx_log_debug2(level, log, err, fmt, arg1, arg2)
-#define ngx_log_debug3(level, log, err, fmt, arg1, arg2, arg3)
-#define ngx_log_debug4(level, log, err, fmt, arg1, arg2, arg3, arg4)
-#define ngx_log_debug5(level, log, err, fmt, arg1, arg2, arg3, arg4, arg5)
-#define ngx_log_debug6(level, log, err, fmt, arg1, arg2, arg3, arg4, arg5, arg6)
-#define ngx_log_debug7(level, log, err, fmt, arg1, arg2, arg3, arg4, arg5,    \
+#నిర్వచించు ngx_log_debug0(level, సంవర్గమానం, err, fmt)
+#నిర్వచించు ngx_log_debug1(level, సంవర్గమానం, err, fmt, arg1)
+#నిర్వచించు ngx_log_debug2(level, సంవర్గమానం, err, fmt, arg1, arg2)
+#నిర్వచించు ngx_log_debug3(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3)
+#నిర్వచించు ngx_log_debug4(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4)
+#నిర్వచించు ngx_log_debug5(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4, arg5)
+#నిర్వచించు ngx_log_debug6(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4, arg5, arg6)
+#నిర్వచించు ngx_log_debug7(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4, arg5,    \
                        arg6, arg7)
-#define ngx_log_debug8(level, log, err, fmt, arg1, arg2, arg3, arg4, arg5,    \
+#నిర్వచించు ngx_log_debug8(level, సంవర్గమానం, err, fmt, arg1, arg2, arg3, arg4, arg5,    \
                        arg6, arg7, arg8)
 
-#endif
+#అయితే_ముగింపు
 
 /*********************************/
 
-ngx_log_t *ngx_log_init(u_char *prefix, u_char *error_log);
-void ngx_cdecl ngx_log_abort(ngx_err_t err, const char *fmt, ...);
-void ngx_cdecl ngx_log_stderr(ngx_err_t err, const char *fmt, ...);
-u_char *ngx_log_errno(u_char *buf, u_char *last, ngx_err_t err);
-ngx_int_t ngx_log_open_default(ngx_cycle_t *cycle);
-ngx_int_t ngx_log_redirect_stderr(ngx_cycle_t *cycle);
-ngx_log_t *ngx_log_get_file_log(ngx_log_t *head);
-char *ngx_log_set_log(ngx_conf_t *cf, ngx_log_t **head);
+ngx_log_t *ngx_log_init(u_char *ఉపసర్గ, u_char *error_log);
+శూన్య ngx_cdecl ngx_log_abort(ngx_err_t err, స్థిరరాశి అక్షరం *fmt, ...);
+శూన్య ngx_cdecl ngx_log_stderr(ngx_err_t err, స్థిరరాశి అక్షరం *fmt, ...);
+u_char *ngx_log_errno(u_char *buf, u_char *చివరి, ngx_err_t err);
+ngx_int_t ngx_log_open_default(ngx_చక్రం_t *చక్రం);
+ngx_int_t ngx_log_redirect_stderr(ngx_చక్రం_t *చక్రం);
+ngx_log_t *ngx_log_get_file_log(ngx_log_t *తల);
+అక్షరం *ngx_log_సమితి_log(ngx_conf_t *cf, ngx_log_t **తల);
 
 
 /*
@@ -250,22 +250,22 @@ char *ngx_log_set_log(ngx_conf_t *cf, ngx_log_t **head);
  * read only buffer as destination and CharToOemBuff() is not needed
  * for ngx_write_stderr() anyway.
  */
-static ngx_inline void
-ngx_write_stderr(char *text)
+స్థిర ngx_inline శూన్య
+ngx_write_stderr(అక్షరం *పాఠ్యం)
 {
-    (void) ngx_write_fd(ngx_stderr, text, ngx_strlen(text));
+    (శూన్య) ngx_write_fd(ngx_stderr, పాఠ్యం, ngx_strlen(పాఠ్యం));
 }
 
 
-static ngx_inline void
-ngx_write_stdout(char *text)
+స్థిర ngx_inline శూన్య
+ngx_write_stdout(అక్షరం *పాఠ్యం)
 {
-    (void) ngx_write_fd(ngx_stdout, text, ngx_strlen(text));
+    (శూన్య) ngx_write_fd(ngx_stdout, పాఠ్యం, ngx_strlen(పాఠ్యం));
 }
 
 
-extern ngx_module_t  ngx_errlog_module;
-extern ngx_uint_t    ngx_use_stderr;
+బాహ్య ngx_module_t  ngx_errlog_module;
+బాహ్య ngx_uint_t    ngx_use_stderr;
 
 
-#endif /* _NGX_LOG_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_LOG_H_INCLUDED_ */

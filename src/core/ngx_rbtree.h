@@ -5,83 +5,83 @@
  */
 
 
-#ifndef _NGX_RBTREE_H_INCLUDED_
-#define _NGX_RBTREE_H_INCLUDED_
+#నిర్వచితం_కాకపోతే _NGX_RBTREE_H_INCLUDED_
+#నిర్వచించు _NGX_RBTREE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-typedef ngx_uint_t  ngx_rbtree_key_t;
-typedef ngx_int_t   ngx_rbtree_key_int_t;
+రకనిర్వచనం ngx_uint_t  ngx_rbtree_కీలకం_t;
+రకనిర్వచనం ngx_int_t   ngx_rbtree_కీలకం_int_t;
 
 
-typedef struct ngx_rbtree_node_s  ngx_rbtree_node_t;
+రకనిర్వచనం నిర్మాణం ngx_rbtree_కణుపు_s  ngx_rbtree_కణుపు_t;
 
-struct ngx_rbtree_node_s {
-    ngx_rbtree_key_t       key;
-    ngx_rbtree_node_t     *left;
-    ngx_rbtree_node_t     *right;
-    ngx_rbtree_node_t     *parent;
+నిర్మాణం ngx_rbtree_కణుపు_s {
+    ngx_rbtree_కీలకం_t       కీలకం;
+    ngx_rbtree_కణుపు_t     *ఎడమ;
+    ngx_rbtree_కణుపు_t     *కుడి;
+    ngx_rbtree_కణుపు_t     *మాతృ;
     u_char                 color;
-    u_char                 data;
+    u_char                 దత్తాంశం;
 };
 
 
-typedef struct ngx_rbtree_s  ngx_rbtree_t;
+రకనిర్వచనం నిర్మాణం ngx_rbtree_s  ngx_rbtree_t;
 
-typedef void (*ngx_rbtree_insert_pt) (ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
+రకనిర్వచనం శూన్య (*ngx_rbtree_చొప్పించు_pt) (ngx_rbtree_కణుపు_t *మూలం,
+    ngx_rbtree_కణుపు_t *కణుపు, ngx_rbtree_కణుపు_t *sentinel);
 
-struct ngx_rbtree_s {
-    ngx_rbtree_node_t     *root;
-    ngx_rbtree_node_t     *sentinel;
-    ngx_rbtree_insert_pt   insert;
+నిర్మాణం ngx_rbtree_s {
+    ngx_rbtree_కణుపు_t     *మూలం;
+    ngx_rbtree_కణుపు_t     *sentinel;
+    ngx_rbtree_చొప్పించు_pt   చొప్పించు;
 };
 
 
-#define ngx_rbtree_init(tree, s, i)                                           \
+#నిర్వచించు ngx_rbtree_init(వృక్షం, s, i)                                           \
     ngx_rbtree_sentinel_init(s);                                              \
-    (tree)->root = s;                                                         \
-    (tree)->sentinel = s;                                                     \
-    (tree)->insert = i
+    (వృక్షం)->మూలం = s;                                                         \
+    (వృక్షం)->sentinel = s;                                                     \
+    (వృక్షం)->చొప్పించు = i
 
-#define ngx_rbtree_data(node, type, link)                                     \
-    (type *) ((u_char *) (node) - offsetof(type, link))
-
-
-void ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_insert_value(ngx_rbtree_node_t *root, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel);
-void ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-ngx_rbtree_node_t *ngx_rbtree_next(ngx_rbtree_t *tree,
-    ngx_rbtree_node_t *node);
+#నిర్వచించు ngx_rbtree_దత్తాంశం(కణుపు, type, link)                                     \
+    (type *) ((u_char *) (కణుపు) - offsetof(type, link))
 
 
-#define ngx_rbt_red(node)               ((node)->color = 1)
-#define ngx_rbt_black(node)             ((node)->color = 0)
-#define ngx_rbt_is_red(node)            ((node)->color)
-#define ngx_rbt_is_black(node)          (!ngx_rbt_is_red(node))
-#define ngx_rbt_copy_color(n1, n2)      (n1->color = n2->color)
+శూన్య ngx_rbtree_చొప్పించు(ngx_rbtree_t *వృక్షం, ngx_rbtree_కణుపు_t *కణుపు);
+శూన్య ngx_rbtree_delete(ngx_rbtree_t *వృక్షం, ngx_rbtree_కణుపు_t *కణుపు);
+శూన్య ngx_rbtree_చొప్పించు_విలువ(ngx_rbtree_కణుపు_t *మూలం, ngx_rbtree_కణుపు_t *కణుపు,
+    ngx_rbtree_కణుపు_t *sentinel);
+శూన్య ngx_rbtree_చొప్పించు_timer_విలువ(ngx_rbtree_కణుపు_t *మూలం,
+    ngx_rbtree_కణుపు_t *కణుపు, ngx_rbtree_కణుపు_t *sentinel);
+ngx_rbtree_కణుపు_t *ngx_rbtree_తదుపరి(ngx_rbtree_t *వృక్షం,
+    ngx_rbtree_కణుపు_t *కణుపు);
+
+
+#నిర్వచించు ngx_rbt_red(కణుపు)               ((కణుపు)->color = 1)
+#నిర్వచించు ngx_rbt_black(కణుపు)             ((కణుపు)->color = 0)
+#నిర్వచించు ngx_rbt_is_red(కణుపు)            ((కణుపు)->color)
+#నిర్వచించు ngx_rbt_is_black(కణుపు)          (!ngx_rbt_is_red(కణుపు))
+#నిర్వచించు ngx_rbt_copy_color(n1, n2)      (n1->color = n2->color)
 
 
 /* a sentinel must be black */
 
-#define ngx_rbtree_sentinel_init(node)  ngx_rbt_black(node)
+#నిర్వచించు ngx_rbtree_sentinel_init(కణుపు)  ngx_rbt_black(కణుపు)
 
 
-static ngx_inline ngx_rbtree_node_t *
-ngx_rbtree_min(ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+స్థిర ngx_inline ngx_rbtree_కణుపు_t *
+ngx_rbtree_min(ngx_rbtree_కణుపు_t *కణుపు, ngx_rbtree_కణుపు_t *sentinel)
 {
-    while (node->left != sentinel) {
-        node = node->left;
+    అయితే (కణుపు->ఎడమ != sentinel) {
+        కణుపు = కణుపు->ఎడమ;
     }
 
-    return node;
+    తిరిగి కణుపు;
 }
 
 
-#endif /* _NGX_RBTREE_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_RBTREE_H_INCLUDED_ */

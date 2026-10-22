@@ -4,173 +4,173 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-typedef ssize_t   (*ngx_json_length_pt)(ngx_data_item_t *item);
-typedef u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_data_item_t *item);
+రకనిర్వచనం ssize_t   (*ngx_json_నిడివి_pt)(ngx_దత్తాంశం_అంశం_t *అంశం);
+రకనిర్వచనం u_char   *(*ngx_json_encode_pt)(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం);
 
 
-typedef struct {
-    ngx_json_length_pt        length;
+రకనిర్వచనం నిర్మాణం {
+    ngx_json_నిడివి_pt        నిడివి;
     ngx_json_encode_pt        encode;
 } ngx_json_encode_t;
 
 
-static ssize_t ngx_json_obj_length(ngx_data_item_t *item);
-static ssize_t ngx_json_list_length(ngx_data_item_t *item);
-static ssize_t ngx_json_string_length(ngx_data_item_t *item);
-static ssize_t ngx_json_integer_length(ngx_data_item_t *item);
-static ssize_t ngx_json_boolean_length(ngx_data_item_t *item);
-static ssize_t ngx_json_null_length(ngx_data_item_t *item);
+స్థిర ssize_t ngx_json_obj_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం);
+స్థిర ssize_t ngx_json_list_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం);
+స్థిర ssize_t ngx_json_string_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం);
+స్థిర ssize_t ngx_json_integer_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం);
+స్థిర ssize_t ngx_json_boolean_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం);
+స్థిర ssize_t ngx_json_null_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం);
 
-static u_char *ngx_json_obj_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_list_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_string_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_integer_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item);
-static u_char *ngx_json_null_encode(u_char *p, ngx_data_item_t *item);
+స్థిర u_char *ngx_json_obj_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం);
+స్థిర u_char *ngx_json_list_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం);
+స్థిర u_char *ngx_json_string_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం);
+స్థిర u_char *ngx_json_integer_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం);
+స్థిర u_char *ngx_json_boolean_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం);
+స్థిర u_char *ngx_json_null_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం);
 
 
-static ngx_json_encode_t  ngx_json_encode[] = {
+స్థిర ngx_json_encode_t  ngx_json_encode[] = {
 
     /* NGX_DATA_OBJECT_TYPE */
-    { ngx_json_obj_length,
+    { ngx_json_obj_నిడివి,
       ngx_json_obj_encode },
 
     /* NGX_DATA_LIST_TYPE */
-    { ngx_json_list_length,
+    { ngx_json_list_నిడివి,
       ngx_json_list_encode },
 
     /* NGX_DATA_STRING_TYPE */
-    { ngx_json_string_length,
+    { ngx_json_string_నిడివి,
       ngx_json_string_encode },
 
     /* NGX_DATA_INTEGER_TYPE */
-    { ngx_json_integer_length,
+    { ngx_json_integer_నిడివి,
       ngx_json_integer_encode },
 
     /* NGX_DATA_BOOLEAN_TYPE */
-    { ngx_json_boolean_length,
+    { ngx_json_boolean_నిడివి,
       ngx_json_boolean_encode },
 
     /* NGX_DATA_NULL_TYPE */
-    { ngx_json_null_length,
+    { ngx_json_null_నిడివి,
       ngx_json_null_encode },
 };
 
 
 ngx_buf_t *
-ngx_json_render(ngx_pool_t *pool, ngx_data_item_t *item)
+ngx_json_render(ngx_pool_t *pool, ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    size_t      length;
+    కొలత_t      నిడివి;
     ngx_buf_t  *buf;
 
-    length = ngx_json_encode[item->type].length(item);
-    if (length == (size_t) NGX_ERROR) {
-        return NULL;
+    నిడివి = ngx_json_encode[అంశం->type].నిడివి(అంశం);
+    ఒకవేళ (నిడివి == (కొలత_t) NGX_ERROR) {
+        తిరిగి ఖాళీ;
     }
 
-    buf = ngx_create_temp_buf(pool, length);
-    if (buf == NULL) {
-        return NULL;
+    buf = ngx_create_తాత్కాలిక_buf(pool, నిడివి);
+    ఒకవేళ (buf == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
-    buf->last = ngx_json_encode[item->type].encode(buf->last, item);
+    buf->చివరి = ngx_json_encode[అంశం->type].encode(buf->చివరి, అంశం);
 
-    return buf;
+    తిరిగి buf;
 }
 
 
-static ssize_t
-ngx_json_obj_length(ngx_data_item_t *item)
+స్థిర ssize_t
+ngx_json_obj_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    కొలత_t            len, మొత్తం;
+    ngx_దత్తాంశం_obj_t   *obj;
+    ngx_దత్తాంశం_అంశం_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("{}") - 1;
-    i = obj->item;
+    obj = &అంశం->దత్తాంశం.object;
+    మొత్తం = పరిమాణం("{}") - 1;
+    i = obj->అంశం;
 
-    if (i) {
-        for ( ;; ) {
-            if (i->name.len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\":") - 1)) {
-                return NGX_ERROR;
+    ఒకవేళ (i) {
+        కొరకు ( ;; ) {
+            ఒకవేళ (i->name.len > NGX_MAX_కొలత_T_విలువ - (పరిమాణం("\"\":") - 1)) {
+                తిరిగి NGX_ERROR;
             }
 
-            len = sizeof("\"\":") - 1 + i->name.len;
+            len = పరిమాణం("\"\":") - 1 + i->name.len;
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ఒకవేళ (len > NGX_MAX_కొలత_T_విలువ - మొత్తం) {
+                తిరిగి NGX_ERROR;
             }
 
-            total += len;
+            మొత్తం += len;
 
-            len = ngx_escape_json(NULL, i->name.data, i->name.len);
+            len = ngx_escape_json(ఖాళీ, i->name.దత్తాంశం, i->name.len);
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ఒకవేళ (len > NGX_MAX_కొలత_T_విలువ - మొత్తం) {
+                తిరిగి NGX_ERROR;
             }
 
-            total += len;
+            మొత్తం += len;
 
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+            len = ngx_json_encode[i->type].నిడివి(i);
+            ఒకవేళ (len == (కొలత_t) NGX_ERROR) {
+                తిరిగి NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ఒకవేళ (len > NGX_MAX_కొలత_T_విలువ - మొత్తం) {
+                తిరిగి NGX_ERROR;
             }
 
-            total += len;
+            మొత్తం += len;
 
-            i = i->next;
+            i = i->తదుపరి;
 
-            if (i == NULL) {
-                break;
+            ఒకవేళ (i == ఖాళీ) {
+                ఆపు;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            ఒకవేళ (మొత్తం > NGX_MAX_కొలత_T_విలువ - (పరిమాణం(",") - 1)) {
+                తిరిగి NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            మొత్తం += పరిమాణం(",") - 1;
         }
     }
 
-    return total;
+    తిరిగి మొత్తం;
 }
 
 
-static u_char *
-ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
+స్థిర u_char *
+ngx_json_obj_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_దత్తాంశం_obj_t   *obj;
+    ngx_దత్తాంశం_అంశం_t  *i;
 
-    obj = &item->data.object;
-    i = obj->item;
+    obj = &అంశం->దత్తాంశం.object;
+    i = obj->అంశం;
 
     *p++ = '{';
 
-    if (i) {
-        for ( ;; ) {
+    ఒకవేళ (i) {
+        కొరకు ( ;; ) {
             *p++ = '"';
 
-            p = (u_char *) ngx_escape_json(p, i->name.data, i->name.len);
+            p = (u_char *) ngx_escape_json(p, i->name.దత్తాంశం, i->name.len);
 
             *p++ = '"';
             *p++ = ':';
 
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->తదుపరి;
 
-            if (i == NULL) {
-                break;
+            ఒకవేళ (i == ఖాళీ) {
+                ఆపు;
             }
 
             *p++ = ',';
@@ -179,71 +179,71 @@ ngx_json_obj_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = '}';
 
-    return p;
+    తిరిగి p;
 }
 
 
-static ssize_t
-ngx_json_list_length(ngx_data_item_t *item)
+స్థిర ssize_t
+ngx_json_list_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    size_t            len, total;
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    కొలత_t            len, మొత్తం;
+    ngx_దత్తాంశం_obj_t   *obj;
+    ngx_దత్తాంశం_అంశం_t  *i;
 
-    obj = &item->data.object;
-    total = sizeof("[]") - 1;
-    i = obj->item;
+    obj = &అంశం->దత్తాంశం.object;
+    మొత్తం = పరిమాణం("[]") - 1;
+    i = obj->అంశం;
 
-    if (i) {
-        for ( ;; ) {
-            len = ngx_json_encode[i->type].length(i);
-            if (len == (size_t) NGX_ERROR) {
-                return NGX_ERROR;
+    ఒకవేళ (i) {
+        కొరకు ( ;; ) {
+            len = ngx_json_encode[i->type].నిడివి(i);
+            ఒకవేళ (len == (కొలత_t) NGX_ERROR) {
+                తిరిగి NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
-                return NGX_ERROR;
+            ఒకవేళ (len > NGX_MAX_కొలత_T_విలువ - మొత్తం) {
+                తిరిగి NGX_ERROR;
             }
 
-            total += len;
+            మొత్తం += len;
 
-            i = i->next;
+            i = i->తదుపరి;
 
-            if (i == NULL) {
-                break;
+            ఒకవేళ (i == ఖాళీ) {
+                ఆపు;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
-                return NGX_ERROR;
+            ఒకవేళ (మొత్తం > NGX_MAX_కొలత_T_విలువ - (పరిమాణం(",") - 1)) {
+                తిరిగి NGX_ERROR;
             }
 
-            total += sizeof(",") - 1;
+            మొత్తం += పరిమాణం(",") - 1;
         }
     }
 
-    return total;
+    తిరిగి మొత్తం;
 }
 
 
-static u_char *
-ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
+స్థిర u_char *
+ngx_json_list_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    ngx_data_obj_t   *obj;
-    ngx_data_item_t  *i;
+    ngx_దత్తాంశం_obj_t   *obj;
+    ngx_దత్తాంశం_అంశం_t  *i;
 
-    obj = &item->data.object;
-    i = obj->item;
+    obj = &అంశం->దత్తాంశం.object;
+    i = obj->అంశం;
 
     *p++ = '[';
 
-    if (i) {
-        for ( ;; ) {
+    ఒకవేళ (i) {
+        కొరకు ( ;; ) {
             p = ngx_json_encode[i->type].encode(p, i);
 
-            i = i->next;
+            i = i->తదుపరి;
 
-            if (i == NULL) {
-                break;
+            ఒకవేళ (i == ఖాళీ) {
+                ఆపు;
             }
 
             *p++ = ',';
@@ -252,89 +252,89 @@ ngx_json_list_encode(u_char *p, ngx_data_item_t *item)
 
     *p++ = ']';
 
-    return p;
+    తిరిగి p;
 }
 
 
-static ssize_t
-ngx_json_string_length(ngx_data_item_t *item)
+స్థిర ssize_t
+ngx_json_string_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    size_t      len, total;
+    కొలత_t      len, మొత్తం;
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &అంశం->దత్తాంశం.string;
 
-    if (str->len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\"") - 1)) {
-        return NGX_ERROR;
+    ఒకవేళ (str->len > NGX_MAX_కొలత_T_విలువ - (పరిమాణం("\"\"") - 1)) {
+        తిరిగి NGX_ERROR;
     }
 
-    total = sizeof("\"\"") - 1 + str->len;
+    మొత్తం = పరిమాణం("\"\"") - 1 + str->len;
 
-    len = ngx_escape_json(NULL, str->data, str->len);
+    len = ngx_escape_json(ఖాళీ, str->దత్తాంశం, str->len);
 
-    if (len > NGX_MAX_SIZE_T_VALUE - total) {
-        return NGX_ERROR;
+    ఒకవేళ (len > NGX_MAX_కొలత_T_విలువ - మొత్తం) {
+        తిరిగి NGX_ERROR;
     }
 
-    return total + len;
+    తిరిగి మొత్తం + len;
 }
 
 
-static u_char *
-ngx_json_string_encode(u_char *p, ngx_data_item_t *item)
+స్థిర u_char *
+ngx_json_string_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం)
 {
     ngx_str_t  *str;
 
-    str = &item->data.string;
+    str = &అంశం->దత్తాంశం.string;
 
     *p++ = '"';
 
-    p = (u_char *) ngx_escape_json(p, str->data, str->len);
+    p = (u_char *) ngx_escape_json(p, str->దత్తాంశం, str->len);
 
     *p++ = '"';
 
-    return p;
+    తిరిగి p;
 }
 
 
-static ssize_t
-ngx_json_integer_length(ngx_data_item_t *item)
+స్థిర ssize_t
+ngx_json_integer_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    return NGX_INT64_LEN;
+    తిరిగి NGX_INT64_LEN;
 }
 
 
-static u_char *
-ngx_json_integer_encode(u_char *p, ngx_data_item_t *item)
+స్థిర u_char *
+ngx_json_integer_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    return ngx_sprintf(p, "%L", item->data.integer);
+    తిరిగి ngx_sprintf(p, "%L", అంశం->దత్తాంశం.integer);
 }
 
 
-static ssize_t
-ngx_json_boolean_length(ngx_data_item_t *item)
+స్థిర ssize_t
+ngx_json_boolean_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    return sizeof("false") - 1;
+    తిరిగి పరిమాణం("false") - 1;
 }
 
 
-static u_char *
-ngx_json_boolean_encode(u_char *p, ngx_data_item_t *item)
+స్థిర u_char *
+ngx_json_boolean_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    return item->data.boolean ? ngx_cpymem(p, "true", 4)
+    తిరిగి అంశం->దత్తాంశం.boolean ? ngx_cpymem(p, "true", 4)
                               : ngx_cpymem(p, "false", 5);
 }
 
 
-static ssize_t
-ngx_json_null_length(ngx_data_item_t *item)
+స్థిర ssize_t
+ngx_json_null_నిడివి(ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    return sizeof("null") - 1;
+    తిరిగి పరిమాణం("null") - 1;
 }
 
 
-static u_char *
-ngx_json_null_encode(u_char *p, ngx_data_item_t *item)
+స్థిర u_char *
+ngx_json_null_encode(u_char *p, ngx_దత్తాంశం_అంశం_t *అంశం)
 {
-    return ngx_cpymem(p, "null", 4);
+    తిరిగి ngx_cpymem(p, "null", 4);
 }

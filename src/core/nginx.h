@@ -5,22 +5,22 @@
  */
 
 
-#ifndef _NGINX_H_INCLUDED_
-#define _NGINX_H_INCLUDED_
+#నిర్వచితం_కాకపోతే _NGINX_H_INCLUDED_
+#నిర్వచించు _NGINX_H_INCLUDED_
 
 
-#define nginx_version      1031009
-#define NGINX_VERSION      "1.31.9"
-#define NGINX_VER          "nginx/" NGINX_VERSION
+#నిర్వచించు nginx_సంస్కరణ      1031009
+#నిర్వచించు NGINX_సంస్కరణ      "1.31.9"
+#నిర్వచించు NGINX_VER          "nginx/" NGINX_సంస్కరణ
 
-#ifdef NGX_BUILD
-#define NGINX_VER_BUILD    NGINX_VER " (" NGX_BUILD ")"
-#else
-#define NGINX_VER_BUILD    NGINX_VER
-#endif
+#నిర్వచితమైతే NGX_BUILD
+#నిర్వచించు NGINX_VER_BUILD    NGINX_VER " (" NGX_BUILD ")"
+#లేకపోతే
+#నిర్వచించు NGINX_VER_BUILD    NGINX_VER
+#అయితే_ముగింపు
 
-#define NGINX_VAR          "NGINX"
-#define NGX_OLDPID_EXT     ".oldbin"
+#నిర్వచించు NGINX_VAR          "NGINX"
+#నిర్వచించు NGX_OLDPID_EXT     ".oldbin"
 
 
-#endif /* _NGINX_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGINX_H_INCLUDED_ */

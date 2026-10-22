@@ -5,9 +5,9 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_event.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
+#అన్తర్భావ <ngx_event.h>
 
 
 /*
@@ -18,122 +18,122 @@
  */
 
 
-#define NGX_MIN_READ_AHEAD  (128 * 1024)
+#నిర్వచించు NGX_MIN_READ_AHEAD  (128 * 1024)
 
 
-static void ngx_open_file_cache_cleanup(void *data);
-#if (NGX_HAVE_OPENAT)
-static ngx_fd_t ngx_openat_file_owner(ngx_fd_t at_fd, const u_char *name,
-    ngx_int_t mode, ngx_int_t create, ngx_int_t access, ngx_log_t *log);
-#if (NGX_HAVE_O_PATH)
-static ngx_int_t ngx_file_o_path_info(ngx_fd_t fd, ngx_file_info_t *fi,
-    ngx_log_t *log);
-#endif
-#endif
-static ngx_fd_t ngx_open_file_wrapper(ngx_str_t *name,
-    ngx_open_file_info_t *of, ngx_int_t mode, ngx_int_t create,
-    ngx_int_t access, ngx_log_t *log);
-static ngx_int_t ngx_file_info_wrapper(ngx_str_t *name,
-    ngx_open_file_info_t *of, ngx_file_info_t *fi, ngx_log_t *log);
-static ngx_int_t ngx_open_and_stat_file(ngx_str_t *name,
-    ngx_open_file_info_t *of, ngx_log_t *log);
-static void ngx_open_file_add_event(ngx_open_file_cache_t *cache,
-    ngx_cached_open_file_t *file, ngx_open_file_info_t *of, ngx_log_t *log);
-static void ngx_open_file_cleanup(void *data);
-static void ngx_close_cached_file(ngx_open_file_cache_t *cache,
-    ngx_cached_open_file_t *file, ngx_uint_t min_uses, ngx_log_t *log);
-static void ngx_open_file_del_event(ngx_cached_open_file_t *file);
-static void ngx_expire_old_cached_files(ngx_open_file_cache_t *cache,
-    ngx_uint_t n, ngx_log_t *log);
-static void ngx_open_file_cache_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-static ngx_cached_open_file_t *
+స్థిర శూన్య ngx_open_file_cache_cleanup(శూన్య *దత్తాంశం);
+#ఒకవేళ (NGX_HAVE_OPENAT)
+స్థిర ngx_fd_t ngx_openat_file_owner(ngx_fd_t at_fd, స్థిరరాశి u_char *name,
+    ngx_int_t బహుళకం, ngx_int_t create, ngx_int_t access, ngx_log_t *సంవర్గమానం);
+#ఒకవేళ (NGX_HAVE_O_మార్గం)
+స్థిర ngx_int_t ngx_file_o_మార్గం_info(ngx_fd_t fd, ngx_file_info_t *fi,
+    ngx_log_t *సంవర్గమానం);
+#అయితే_ముగింపు
+#అయితే_ముగింపు
+స్థిర ngx_fd_t ngx_open_file_wrapper(ngx_str_t *name,
+    ngx_open_file_info_t *యొక్క, ngx_int_t బహుళకం, ngx_int_t create,
+    ngx_int_t access, ngx_log_t *సంవర్గమానం);
+స్థిర ngx_int_t ngx_file_info_wrapper(ngx_str_t *name,
+    ngx_open_file_info_t *యొక్క, ngx_file_info_t *fi, ngx_log_t *సంవర్గమానం);
+స్థిర ngx_int_t ngx_open_and_stat_file(ngx_str_t *name,
+    ngx_open_file_info_t *యొక్క, ngx_log_t *సంవర్గమానం);
+స్థిర శూన్య ngx_open_file_కూడు_event(ngx_open_file_cache_t *cache,
+    ngx_cached_open_file_t *file, ngx_open_file_info_t *యొక్క, ngx_log_t *సంవర్గమానం);
+స్థిర శూన్య ngx_open_file_cleanup(శూన్య *దత్తాంశం);
+స్థిర శూన్య ngx_close_cached_file(ngx_open_file_cache_t *cache,
+    ngx_cached_open_file_t *file, ngx_uint_t min_ఉపయోగిస్తుంది, ngx_log_t *సంవర్గమానం);
+స్థిర శూన్య ngx_open_file_del_event(ngx_cached_open_file_t *file);
+స్థిర శూన్య ngx_expire_old_cached_files(ngx_open_file_cache_t *cache,
+    ngx_uint_t n, ngx_log_t *సంవర్గమానం);
+స్థిర శూన్య ngx_open_file_cache_rbtree_చొప్పించు_విలువ(ngx_rbtree_కణుపు_t *తాత్కాలిక,
+    ngx_rbtree_కణుపు_t *కణుపు, ngx_rbtree_కణుపు_t *sentinel);
+స్థిర ngx_cached_open_file_t *
     ngx_open_file_lookup(ngx_open_file_cache_t *cache, ngx_str_t *name,
     uint32_t hash);
-static void ngx_open_file_cache_remove(ngx_event_t *ev);
+స్థిర శూన్య ngx_open_file_cache_remove(ngx_event_t *ev);
 
 
 ngx_open_file_cache_t *
-ngx_open_file_cache_init(ngx_pool_t *pool, ngx_uint_t max, time_t inactive)
+ngx_open_file_cache_init(ngx_pool_t *pool, ngx_uint_t max, సమయం_t inactive)
 {
     ngx_pool_cleanup_t     *cln;
     ngx_open_file_cache_t  *cache;
 
-    cache = ngx_palloc(pool, sizeof(ngx_open_file_cache_t));
-    if (cache == NULL) {
-        return NULL;
+    cache = ngx_palloc(pool, పరిమాణం(ngx_open_file_cache_t));
+    ఒకవేళ (cache == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
     ngx_rbtree_init(&cache->rbtree, &cache->sentinel,
-                    ngx_open_file_cache_rbtree_insert_value);
+                    ngx_open_file_cache_rbtree_చొప్పించు_విలువ);
 
-    ngx_queue_init(&cache->expire_queue);
+    ngx_వరుస_init(&cache->expire_వరుస);
 
     cache->current = 0;
     cache->max = max;
     cache->inactive = inactive;
 
-    cln = ngx_pool_cleanup_add(pool, 0);
-    if (cln == NULL) {
-        return NULL;
+    cln = ngx_pool_cleanup_కూడు(pool, 0);
+    ఒకవేళ (cln == ఖాళీ) {
+        తిరిగి ఖాళీ;
     }
 
     cln->handler = ngx_open_file_cache_cleanup;
-    cln->data = cache;
+    cln->దత్తాంశం = cache;
 
-    return cache;
+    తిరిగి cache;
 }
 
 
-static void
-ngx_open_file_cache_cleanup(void *data)
+స్థిర శూన్య
+ngx_open_file_cache_cleanup(శూన్య *దత్తాంశం)
 {
-    ngx_open_file_cache_t  *cache = data;
+    ngx_open_file_cache_t  *cache = దత్తాంశం;
 
-    ngx_queue_t             *q;
+    ngx_వరుస_t             *q;
     ngx_cached_open_file_t  *file;
 
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, ngx_cycle->log, 0,
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, ngx_చక్రం->సంవర్గమానం, 0,
                    "open file cache cleanup");
 
-    for ( ;; ) {
+    కొరకు ( ;; ) {
 
-        if (ngx_queue_empty(&cache->expire_queue)) {
-            break;
+        ఒకవేళ (ngx_వరుస_ఖాళీలు(&cache->expire_వరుస)) {
+            ఆపు;
         }
 
-        q = ngx_queue_last(&cache->expire_queue);
+        q = ngx_వరుస_చివరి(&cache->expire_వరుస);
 
-        file = ngx_queue_data(q, ngx_cached_open_file_t, queue);
+        file = ngx_వరుస_దత్తాంశం(q, ngx_cached_open_file_t, వరుస);
 
-        ngx_queue_remove(q);
+        ngx_వరుస_remove(q);
 
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+        ngx_rbtree_delete(&cache->rbtree, &file->కణుపు);
 
         cache->current--;
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ngx_cycle->log, 0,
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, ngx_చక్రం->సంవర్గమానం, 0,
                        "delete cached open file: %s", file->name);
 
-        if (!file->err && !file->is_dir) {
+        ఒకవేళ (!file->err && !file->is_dir) {
             file->close = 1;
-            file->count = 0;
-            ngx_close_cached_file(cache, file, 0, ngx_cycle->log);
+            file->లెక్క = 0;
+            ngx_close_cached_file(cache, file, 0, ngx_చక్రం->సంవర్గమానం);
 
-        } else {
+        } లేకపోతే {
             ngx_free(file->name);
             ngx_free(file);
         }
     }
 
-    if (cache->current) {
-        ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0,
+    ఒకవేళ (cache->current) {
+        ngx_log_error(NGX_LOG_ALERT, ngx_చక్రం->సంవర్గమానం, 0,
                       "%ui items still left in open file cache",
                       cache->current);
     }
 
-    if (cache->rbtree.root != cache->rbtree.sentinel) {
-        ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0,
+    ఒకవేళ (cache->rbtree.మూలం != cache->rbtree.sentinel) {
+        ngx_log_error(NGX_LOG_ALERT, ngx_చక్రం->సంవర్గమానం, 0,
                       "rbtree still is not empty in open file cache");
 
     }
@@ -142,9 +142,9 @@ ngx_open_file_cache_cleanup(void *data)
 
 ngx_int_t
 ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
-    ngx_open_file_info_t *of, ngx_pool_t *pool)
+    ngx_open_file_info_t *యొక్క, ngx_pool_t *pool)
 {
-    time_t                          now;
+    సమయం_t                          now;
     uint32_t                        hash;
     ngx_int_t                       rc;
     ngx_file_info_t                 fi;
@@ -153,126 +153,126 @@ ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
     ngx_pool_cleanup_file_t        *clnf;
     ngx_open_file_cache_cleanup_t  *ofcln;
 
-    of->fd = NGX_INVALID_FILE;
-    of->err = 0;
+    యొక్క->fd = NGX_INVALID_FILE;
+    యొక్క->err = 0;
 
-    if (cache == NULL) {
+    ఒకవేళ (cache == ఖాళీ) {
 
-        if (of->test_only) {
+        ఒకవేళ (యొక్క->test_only) {
 
-            if (ngx_file_info_wrapper(name, of, &fi, pool->log)
+            ఒకవేళ (ngx_file_info_wrapper(name, యొక్క, &fi, pool->సంవర్గమానం)
                 == NGX_FILE_ERROR)
             {
-                return NGX_ERROR;
+                తిరిగి NGX_ERROR;
             }
 
-            of->uniq = ngx_file_uniq(&fi);
-            of->mtime = ngx_file_mtime(&fi);
-            of->size = ngx_file_size(&fi);
-            of->fs_size = ngx_file_fs_size(&fi);
-            of->is_dir = ngx_is_dir(&fi);
-            of->is_file = ngx_is_file(&fi);
-            of->is_link = ngx_is_link(&fi);
-            of->is_exec = ngx_is_exec(&fi);
+            యొక్క->uniq = ngx_file_uniq(&fi);
+            యొక్క->mtime = ngx_file_mtime(&fi);
+            యొక్క->కొలత = ngx_file_కొలత(&fi);
+            యొక్క->fs_కొలత = ngx_file_fs_కొలత(&fi);
+            యొక్క->is_dir = ngx_is_dir(&fi);
+            యొక్క->is_file = ngx_is_file(&fi);
+            యొక్క->is_link = ngx_is_link(&fi);
+            యొక్క->is_exec = ngx_is_exec(&fi);
 
-            return NGX_OK;
+            తిరిగి NGX_OK;
         }
 
-        cln = ngx_pool_cleanup_add(pool, sizeof(ngx_pool_cleanup_file_t));
-        if (cln == NULL) {
-            return NGX_ERROR;
+        cln = ngx_pool_cleanup_కూడు(pool, పరిమాణం(ngx_pool_cleanup_file_t));
+        ఒకవేళ (cln == ఖాళీ) {
+            తిరిగి NGX_ERROR;
         }
 
-        rc = ngx_open_and_stat_file(name, of, pool->log);
+        rc = ngx_open_and_stat_file(name, యొక్క, pool->సంవర్గమానం);
 
-        if (rc == NGX_OK && !of->is_dir) {
+        ఒకవేళ (rc == NGX_OK && !యొక్క->is_dir) {
             cln->handler = ngx_pool_cleanup_file;
-            clnf = cln->data;
+            clnf = cln->దత్తాంశం;
 
-            clnf->fd = of->fd;
-            clnf->name = name->data;
-            clnf->log = pool->log;
+            clnf->fd = యొక్క->fd;
+            clnf->name = name->దత్తాంశం;
+            clnf->సంవర్గమానం = pool->సంవర్గమానం;
         }
 
-        return rc;
+        తిరిగి rc;
     }
 
-    cln = ngx_pool_cleanup_add(pool, sizeof(ngx_open_file_cache_cleanup_t));
-    if (cln == NULL) {
-        return NGX_ERROR;
+    cln = ngx_pool_cleanup_కూడు(pool, పరిమాణం(ngx_open_file_cache_cleanup_t));
+    ఒకవేళ (cln == ఖాళీ) {
+        తిరిగి NGX_ERROR;
     }
 
-    now = ngx_time();
+    now = ngx_సమయం();
 
-    hash = ngx_crc32_long(name->data, name->len);
+    hash = ngx_చక్రీయ_తనిఖీ_32_long(name->దత్తాంశం, name->len);
 
     file = ngx_open_file_lookup(cache, name, hash);
 
-    if (file) {
+    ఒకవేళ (file) {
 
-        file->uses++;
+        file->ఉపయోగిస్తుంది++;
 
-        ngx_queue_remove(&file->queue);
+        ngx_వరుస_remove(&file->వరుస);
 
-        if (file->fd == NGX_INVALID_FILE && file->err == 0 && !file->is_dir) {
+        ఒకవేళ (file->fd == NGX_INVALID_FILE && file->err == 0 && !file->is_dir) {
 
             /* file was not used often enough to keep open */
 
-            rc = ngx_open_and_stat_file(name, of, pool->log);
+            rc = ngx_open_and_stat_file(name, యొక్క, pool->సంవర్గమానం);
 
-            if (rc != NGX_OK && (of->err == 0 || !of->errors)) {
-                goto failed;
+            ఒకవేళ (rc != NGX_OK && (యొక్క->err == 0 || !యొక్క->errors)) {
+                వెళ్ళు failed;
             }
 
-            goto add_event;
+            వెళ్ళు కూడు_event;
         }
 
-        if (file->use_event
-            || (file->event == NULL
-                && (of->uniq == 0 || of->uniq == file->uniq)
-                && now - file->created < of->valid
-#if (NGX_HAVE_OPENAT)
-                && of->disable_symlinks == file->disable_symlinks
-                && of->disable_symlinks_from == file->disable_symlinks_from
-#endif
+        ఒకవేళ (file->use_event
+            || (file->event == ఖాళీ
+                && (యొక్క->uniq == 0 || యొక్క->uniq == file->uniq)
+                && now - file->created < యొక్క->valid
+#ఒకవేళ (NGX_HAVE_OPENAT)
+                && యొక్క->disable_symlinks == file->disable_symlinks
+                && యొక్క->disable_symlinks_from == file->disable_symlinks_from
+#అయితే_ముగింపు
             ))
         {
-            if (file->err == 0) {
+            ఒకవేళ (file->err == 0) {
 
-                of->fd = file->fd;
-                of->uniq = file->uniq;
-                of->mtime = file->mtime;
-                of->size = file->size;
+                యొక్క->fd = file->fd;
+                యొక్క->uniq = file->uniq;
+                యొక్క->mtime = file->mtime;
+                యొక్క->కొలత = file->కొలత;
 
-                of->is_dir = file->is_dir;
-                of->is_file = file->is_file;
-                of->is_link = file->is_link;
-                of->is_exec = file->is_exec;
-                of->is_directio = file->is_directio;
+                యొక్క->is_dir = file->is_dir;
+                యొక్క->is_file = file->is_file;
+                యొక్క->is_link = file->is_link;
+                యొక్క->is_exec = file->is_exec;
+                యొక్క->is_directio = file->is_directio;
 
-                if (!file->is_dir) {
-                    file->count++;
-                    ngx_open_file_add_event(cache, file, of, pool->log);
+                ఒకవేళ (!file->is_dir) {
+                    file->లెక్క++;
+                    ngx_open_file_కూడు_event(cache, file, యొక్క, pool->సంవర్గమానం);
                 }
 
-            } else {
-                of->err = file->err;
-#if (NGX_HAVE_OPENAT)
-                of->failed = file->disable_symlinks ? ngx_openat_file_n
+            } లేకపోతే {
+                యొక్క->err = file->err;
+#ఒకవేళ (NGX_HAVE_OPENAT)
+                యొక్క->failed = file->disable_symlinks ? ngx_openat_file_n
                                                     : ngx_open_file_n;
-#else
-                of->failed = ngx_open_file_n;
-#endif
+#లేకపోతే
+                యొక్క->failed = ngx_open_file_n;
+#అయితే_ముగింపు
             }
 
-            goto found;
+            వెళ్ళు దొరికింది;
         }
 
-        ngx_log_debug4(NGX_LOG_DEBUG_CORE, pool->log, 0,
+        ngx_log_debug4(NGX_LOG_DEBUG_CORE, pool->సంవర్గమానం, 0,
                        "retest open file: %s, fd:%d, c:%d, e:%d",
-                       file->name, file->fd, file->count, file->err);
+                       file->name, file->fd, file->లెక్క, file->err);
 
-        if (file->is_dir) {
+        ఒకవేళ (file->is_dir) {
 
             /*
              * chances that directory became file are very small
@@ -280,188 +280,188 @@ ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
              * in ngx_file_info() instead of three syscalls
              */
 
-            of->test_dir = 1;
+            యొక్క->test_dir = 1;
         }
 
-        of->fd = file->fd;
-        of->uniq = file->uniq;
+        యొక్క->fd = file->fd;
+        యొక్క->uniq = file->uniq;
 
-        rc = ngx_open_and_stat_file(name, of, pool->log);
+        rc = ngx_open_and_stat_file(name, యొక్క, pool->సంవర్గమానం);
 
-        if (rc != NGX_OK && (of->err == 0 || !of->errors)) {
-            goto failed;
+        ఒకవేళ (rc != NGX_OK && (యొక్క->err == 0 || !యొక్క->errors)) {
+            వెళ్ళు failed;
         }
 
-        if (of->is_dir) {
+        ఒకవేళ (యొక్క->is_dir) {
 
-            if (file->is_dir || file->err) {
-                goto update;
+            ఒకవేళ (file->is_dir || file->err) {
+                వెళ్ళు update;
             }
 
             /* file became directory */
 
-        } else if (of->err == 0) {  /* file */
+        } లేకపోతే ఒకవేళ (యొక్క->err == 0) {  /* file */
 
-            if (file->is_dir || file->err) {
-                goto add_event;
+            ఒకవేళ (file->is_dir || file->err) {
+                వెళ్ళు కూడు_event;
             }
 
-            if (of->uniq == file->uniq) {
+            ఒకవేళ (యొక్క->uniq == file->uniq) {
 
-                if (file->event) {
+                ఒకవేళ (file->event) {
                     file->use_event = 1;
                 }
 
-                of->is_directio = file->is_directio;
+                యొక్క->is_directio = file->is_directio;
 
-                goto update;
+                వెళ్ళు update;
             }
 
             /* file was changed */
 
-        } else { /* error to cache */
+        } లేకపోతే { /* error to cache */
 
-            if (file->err || file->is_dir) {
-                goto update;
+            ఒకవేళ (file->err || file->is_dir) {
+                వెళ్ళు update;
             }
 
             /* file was removed, etc. */
         }
 
-        if (file->count == 0) {
+        ఒకవేళ (file->లెక్క == 0) {
 
             ngx_open_file_del_event(file);
 
-            if (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_ALERT, pool->log, ngx_errno,
+            ఒకవేళ (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_ALERT, pool->సంవర్గమానం, ngx_errno,
                               ngx_close_file_n " \"%V\" failed", name);
             }
 
-            goto add_event;
+            వెళ్ళు కూడు_event;
         }
 
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+        ngx_rbtree_delete(&cache->rbtree, &file->కణుపు);
 
         cache->current--;
 
         file->close = 1;
 
-        goto create;
+        వెళ్ళు create;
     }
 
     /* not found */
 
-    rc = ngx_open_and_stat_file(name, of, pool->log);
+    rc = ngx_open_and_stat_file(name, యొక్క, pool->సంవర్గమానం);
 
-    if (rc != NGX_OK && (of->err == 0 || !of->errors)) {
-        goto failed;
+    ఒకవేళ (rc != NGX_OK && (యొక్క->err == 0 || !యొక్క->errors)) {
+        వెళ్ళు failed;
     }
 
 create:
 
-    if (cache->current >= cache->max) {
-        ngx_expire_old_cached_files(cache, 0, pool->log);
+    ఒకవేళ (cache->current >= cache->max) {
+        ngx_expire_old_cached_files(cache, 0, pool->సంవర్గమానం);
     }
 
-    file = ngx_alloc(sizeof(ngx_cached_open_file_t), pool->log);
+    file = ngx_alloc(పరిమాణం(ngx_cached_open_file_t), pool->సంవర్గమానం);
 
-    if (file == NULL) {
-        goto failed;
+    ఒకవేళ (file == ఖాళీ) {
+        వెళ్ళు failed;
     }
 
-    file->name = ngx_alloc(name->len + 1, pool->log);
+    file->name = ngx_alloc(name->len + 1, pool->సంవర్గమానం);
 
-    if (file->name == NULL) {
+    ఒకవేళ (file->name == ఖాళీ) {
         ngx_free(file);
-        file = NULL;
-        goto failed;
+        file = ఖాళీ;
+        వెళ్ళు failed;
     }
 
-    ngx_cpystrn(file->name, name->data, name->len + 1);
+    ngx_cpystrn(file->name, name->దత్తాంశం, name->len + 1);
 
-    file->node.key = hash;
+    file->కణుపు.కీలకం = hash;
 
-    ngx_rbtree_insert(&cache->rbtree, &file->node);
+    ngx_rbtree_చొప్పించు(&cache->rbtree, &file->కణుపు);
 
     cache->current++;
 
-    file->uses = 1;
-    file->count = 0;
+    file->ఉపయోగిస్తుంది = 1;
+    file->లెక్క = 0;
     file->use_event = 0;
-    file->event = NULL;
+    file->event = ఖాళీ;
 
-add_event:
+కూడు_event:
 
-    ngx_open_file_add_event(cache, file, of, pool->log);
+    ngx_open_file_కూడు_event(cache, file, యొక్క, pool->సంవర్గమానం);
 
 update:
 
-    file->fd = of->fd;
-    file->err = of->err;
-#if (NGX_HAVE_OPENAT)
-    file->disable_symlinks = of->disable_symlinks;
-    file->disable_symlinks_from = of->disable_symlinks_from;
-#endif
+    file->fd = యొక్క->fd;
+    file->err = యొక్క->err;
+#ఒకవేళ (NGX_HAVE_OPENAT)
+    file->disable_symlinks = యొక్క->disable_symlinks;
+    file->disable_symlinks_from = యొక్క->disable_symlinks_from;
+#అయితే_ముగింపు
 
-    if (of->err == 0) {
-        file->uniq = of->uniq;
-        file->mtime = of->mtime;
-        file->size = of->size;
+    ఒకవేళ (యొక్క->err == 0) {
+        file->uniq = యొక్క->uniq;
+        file->mtime = యొక్క->mtime;
+        file->కొలత = యొక్క->కొలత;
 
         file->close = 0;
 
-        file->is_dir = of->is_dir;
-        file->is_file = of->is_file;
-        file->is_link = of->is_link;
-        file->is_exec = of->is_exec;
-        file->is_directio = of->is_directio;
+        file->is_dir = యొక్క->is_dir;
+        file->is_file = యొక్క->is_file;
+        file->is_link = యొక్క->is_link;
+        file->is_exec = యొక్క->is_exec;
+        file->is_directio = యొక్క->is_directio;
 
-        if (!of->is_dir) {
-            file->count++;
+        ఒకవేళ (!యొక్క->is_dir) {
+            file->లెక్క++;
         }
     }
 
     file->created = now;
 
-found:
+దొరికింది:
 
     file->accessed = now;
 
-    ngx_queue_insert_head(&cache->expire_queue, &file->queue);
+    ngx_వరుస_చొప్పించు_తల(&cache->expire_వరుస, &file->వరుస);
 
-    ngx_log_debug5(NGX_LOG_DEBUG_CORE, pool->log, 0,
+    ngx_log_debug5(NGX_LOG_DEBUG_CORE, pool->సంవర్గమానం, 0,
                    "cached open file: %s, fd:%d, c:%d, e:%d, u:%d",
-                   file->name, file->fd, file->count, file->err, file->uses);
+                   file->name, file->fd, file->లెక్క, file->err, file->ఉపయోగిస్తుంది);
 
-    if (of->err == 0) {
+    ఒకవేళ (యొక్క->err == 0) {
 
-        if (!of->is_dir) {
+        ఒకవేళ (!యొక్క->is_dir) {
             cln->handler = ngx_open_file_cleanup;
-            ofcln = cln->data;
+            ofcln = cln->దత్తాంశం;
 
             ofcln->cache = cache;
             ofcln->file = file;
-            ofcln->min_uses = of->min_uses;
-            ofcln->log = pool->log;
+            ofcln->min_ఉపయోగిస్తుంది = యొక్క->min_ఉపయోగిస్తుంది;
+            ofcln->సంవర్గమానం = pool->సంవర్గమానం;
         }
 
-        return NGX_OK;
+        తిరిగి NGX_OK;
     }
 
-    return NGX_ERROR;
+    తిరిగి NGX_ERROR;
 
 failed:
 
-    if (file) {
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+    ఒకవేళ (file) {
+        ngx_rbtree_delete(&cache->rbtree, &file->కణుపు);
 
         cache->current--;
 
-        if (file->count == 0) {
+        ఒకవేళ (file->లెక్క == 0) {
 
-            if (file->fd != NGX_INVALID_FILE) {
-                if (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
-                    ngx_log_error(NGX_LOG_ALERT, pool->log, ngx_errno,
+            ఒకవేళ (file->fd != NGX_INVALID_FILE) {
+                ఒకవేళ (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
+                    ngx_log_error(NGX_LOG_ALERT, pool->సంవర్గమానం, ngx_errno,
                                   ngx_close_file_n " \"%s\" failed",
                                   file->name);
                 }
@@ -470,27 +470,27 @@ failed:
             ngx_free(file->name);
             ngx_free(file);
 
-        } else {
+        } లేకపోతే {
             file->close = 1;
         }
     }
 
-    if (of->fd != NGX_INVALID_FILE) {
-        if (ngx_close_file(of->fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, pool->log, ngx_errno,
+    ఒకవేళ (యొక్క->fd != NGX_INVALID_FILE) {
+        ఒకవేళ (ngx_close_file(యొక్క->fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, pool->సంవర్గమానం, ngx_errno,
                           ngx_close_file_n " \"%V\" failed", name);
         }
     }
 
-    return NGX_ERROR;
+    తిరిగి NGX_ERROR;
 }
 
 
-#if (NGX_HAVE_OPENAT)
+#ఒకవేళ (NGX_HAVE_OPENAT)
 
-static ngx_fd_t
-ngx_openat_file_owner(ngx_fd_t at_fd, const u_char *name,
-    ngx_int_t mode, ngx_int_t create, ngx_int_t access, ngx_log_t *log)
+స్థిర ngx_fd_t
+ngx_openat_file_owner(ngx_fd_t at_fd, స్థిరరాశి u_char *name,
+    ngx_int_t బహుళకం, ngx_int_t create, ngx_int_t access, ngx_log_t *సంవర్గమానం)
 {
     ngx_fd_t         fd;
     ngx_err_t        err;
@@ -508,57 +508,57 @@ ngx_openat_file_owner(ngx_fd_t at_fd, const u_char *name,
      * symlink during openat() or not).
      */
 
-    fd = ngx_openat_file(at_fd, name, mode, create, access);
+    fd = ngx_openat_file(at_fd, name, బహుళకం, create, access);
 
-    if (fd == NGX_INVALID_FILE) {
-        return NGX_INVALID_FILE;
+    ఒకవేళ (fd == NGX_INVALID_FILE) {
+        తిరిగి NGX_INVALID_FILE;
     }
 
-    if (ngx_file_at_info(at_fd, name, &atfi, AT_SYMLINK_NOFOLLOW)
+    ఒకవేళ (ngx_file_at_info(at_fd, name, &atfi, AT_SYMLINK_NOFOLLOW)
         == NGX_FILE_ERROR)
     {
         err = ngx_errno;
-        goto failed;
+        వెళ్ళు failed;
     }
 
-#if (NGX_HAVE_O_PATH)
-    if (ngx_file_o_path_info(fd, &fi, log) == NGX_ERROR) {
+#ఒకవేళ (NGX_HAVE_O_మార్గం)
+    ఒకవేళ (ngx_file_o_మార్గం_info(fd, &fi, సంవర్గమానం) == NGX_ERROR) {
         err = ngx_errno;
-        goto failed;
+        వెళ్ళు failed;
     }
-#else
-    if (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
+#లేకపోతే
+    ఒకవేళ (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
         err = ngx_errno;
-        goto failed;
+        వెళ్ళు failed;
     }
-#endif
+#అయితే_ముగింపు
 
-    if (fi.st_uid != atfi.st_uid) {
+    ఒకవేళ (fi.st_uid != atfi.st_uid) {
         err = NGX_ELOOP;
-        goto failed;
+        వెళ్ళు failed;
     }
 
-    return fd;
+    తిరిగి fd;
 
 failed:
 
-    if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    ఒకవేళ (ngx_close_file(fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", name);
     }
 
-    ngx_set_errno(err);
+    ngx_సమితి_errno(err);
 
-    return NGX_INVALID_FILE;
+    తిరిగి NGX_INVALID_FILE;
 }
 
 
-#if (NGX_HAVE_O_PATH)
+#ఒకవేళ (NGX_HAVE_O_మార్గం)
 
-static ngx_int_t
-ngx_file_o_path_info(ngx_fd_t fd, ngx_file_info_t *fi, ngx_log_t *log)
+స్థిర ngx_int_t
+ngx_file_o_మార్గం_info(ngx_fd_t fd, ngx_file_info_t *fi, ngx_log_t *సంవర్గమానం)
 {
-    static ngx_uint_t  use_fstat = 1;
+    స్థిర ngx_uint_t  use_fstat = 1;
 
     /*
      * In Linux 2.6.39 the O_PATH flag was introduced that allows to obtain
@@ -582,157 +582,157 @@ ngx_file_o_path_info(ngx_fd_t fd, ngx_file_info_t *fi, ngx_log_t *log)
      *    actually used.  In this case fstat() just works.
      */
 
-    if (use_fstat) {
-        if (ngx_fd_info(fd, fi) != NGX_FILE_ERROR) {
-            return NGX_OK;
+    ఒకవేళ (use_fstat) {
+        ఒకవేళ (ngx_fd_info(fd, fi) != NGX_FILE_ERROR) {
+            తిరిగి NGX_OK;
         }
 
-        if (ngx_errno != NGX_EBADF) {
-            return NGX_ERROR;
+        ఒకవేళ (ngx_errno != NGX_EBADF) {
+            తిరిగి NGX_ERROR;
         }
 
-        ngx_log_error(NGX_LOG_NOTICE, log, 0,
+        ngx_log_error(NGX_LOG_NOTICE, సంవర్గమానం, 0,
                       "fstat(O_PATH) failed with EBADF, "
                       "switching to fstatat(AT_EMPTY_PATH)");
 
         use_fstat = 0;
     }
 
-    if (ngx_file_at_info(fd, "", fi, AT_EMPTY_PATH) != NGX_FILE_ERROR) {
-        return NGX_OK;
+    ఒకవేళ (ngx_file_at_info(fd, "", fi, AT_ఖాళీలు_మార్గం) != NGX_FILE_ERROR) {
+        తిరిగి NGX_OK;
     }
 
-    return NGX_ERROR;
+    తిరిగి NGX_ERROR;
 }
 
-#endif
+#అయితే_ముగింపు
 
-#endif /* NGX_HAVE_OPENAT */
+#అయితే_ముగింపు /* NGX_HAVE_OPENAT */
 
 
-static ngx_fd_t
-ngx_open_file_wrapper(ngx_str_t *name, ngx_open_file_info_t *of,
-    ngx_int_t mode, ngx_int_t create, ngx_int_t access, ngx_log_t *log)
+స్థిర ngx_fd_t
+ngx_open_file_wrapper(ngx_str_t *name, ngx_open_file_info_t *యొక్క,
+    ngx_int_t బహుళకం, ngx_int_t create, ngx_int_t access, ngx_log_t *సంవర్గమానం)
 {
     ngx_fd_t  fd;
 
-#if !(NGX_HAVE_OPENAT)
+#ఒకవేళ !(NGX_HAVE_OPENAT)
 
-    fd = ngx_open_file(name->data, mode, create, access);
+    fd = ngx_open_file(name->దత్తాంశం, బహుళకం, create, access);
 
-    if (fd == NGX_INVALID_FILE) {
-        of->err = ngx_errno;
-        of->failed = ngx_open_file_n;
-        return NGX_INVALID_FILE;
+    ఒకవేళ (fd == NGX_INVALID_FILE) {
+        యొక్క->err = ngx_errno;
+        యొక్క->failed = ngx_open_file_n;
+        తిరిగి NGX_INVALID_FILE;
     }
 
-    return fd;
+    తిరిగి fd;
 
-#else
+#లేకపోతే
 
-    u_char           *p, *cp, *end;
+    u_char           *p, *cp, *చివర;
     ngx_fd_t          at_fd;
     ngx_str_t         at_name;
 
-    if (of->disable_symlinks == NGX_DISABLE_SYMLINKS_OFF) {
-        fd = ngx_open_file(name->data, mode, create, access);
+    ఒకవేళ (యొక్క->disable_symlinks == NGX_DISABLE_SYMLINKS_OFF) {
+        fd = ngx_open_file(name->దత్తాంశం, బహుళకం, create, access);
 
-        if (fd == NGX_INVALID_FILE) {
-            of->err = ngx_errno;
-            of->failed = ngx_open_file_n;
-            return NGX_INVALID_FILE;
+        ఒకవేళ (fd == NGX_INVALID_FILE) {
+            యొక్క->err = ngx_errno;
+            యొక్క->failed = ngx_open_file_n;
+            తిరిగి NGX_INVALID_FILE;
         }
 
-        return fd;
+        తిరిగి fd;
     }
 
-    p = name->data;
-    end = p + name->len;
+    p = name->దత్తాంశం;
+    చివర = p + name->len;
 
     at_name = *name;
 
-    if (of->disable_symlinks_from) {
+    ఒకవేళ (యొక్క->disable_symlinks_from) {
 
-        cp = p + of->disable_symlinks_from;
+        cp = p + యొక్క->disable_symlinks_from;
 
         *cp = '\0';
 
-        at_fd = ngx_open_file(p, NGX_FILE_SEARCH|NGX_FILE_NONBLOCK,
+        at_fd = ngx_open_file(p, NGX_FILE_శోధన|NGX_FILE_NONBLOCK,
                               NGX_FILE_OPEN, 0);
 
         *cp = '/';
 
-        if (at_fd == NGX_INVALID_FILE) {
-            of->err = ngx_errno;
-            of->failed = ngx_open_file_n;
-            return NGX_INVALID_FILE;
+        ఒకవేళ (at_fd == NGX_INVALID_FILE) {
+            యొక్క->err = ngx_errno;
+            యొక్క->failed = ngx_open_file_n;
+            తిరిగి NGX_INVALID_FILE;
         }
 
-        at_name.len = of->disable_symlinks_from;
+        at_name.len = యొక్క->disable_symlinks_from;
         p = cp + 1;
 
-    } else if (*p == '/') {
+    } లేకపోతే ఒకవేళ (*p == '/') {
 
         at_fd = ngx_open_file("/",
-                              NGX_FILE_SEARCH|NGX_FILE_NONBLOCK,
+                              NGX_FILE_శోధన|NGX_FILE_NONBLOCK,
                               NGX_FILE_OPEN, 0);
 
-        if (at_fd == NGX_INVALID_FILE) {
-            of->err = ngx_errno;
-            of->failed = ngx_openat_file_n;
-            return NGX_INVALID_FILE;
+        ఒకవేళ (at_fd == NGX_INVALID_FILE) {
+            యొక్క->err = ngx_errno;
+            యొక్క->failed = ngx_openat_file_n;
+            తిరిగి NGX_INVALID_FILE;
         }
 
         at_name.len = 1;
         p++;
 
-    } else {
+    } లేకపోతే {
         at_fd = NGX_AT_FDCWD;
     }
 
-    for ( ;; ) {
-        cp = ngx_strlchr(p, end, '/');
-        if (cp == NULL) {
-            break;
+    కొరకు ( ;; ) {
+        cp = ngx_strlchr(p, చివర, '/');
+        ఒకవేళ (cp == ఖాళీ) {
+            ఆపు;
         }
 
-        if (cp == p) {
+        ఒకవేళ (cp == p) {
             p++;
-            continue;
+            కొనసాగు;
         }
 
         *cp = '\0';
 
-        if (of->disable_symlinks == NGX_DISABLE_SYMLINKS_NOTOWNER) {
+        ఒకవేళ (యొక్క->disable_symlinks == NGX_DISABLE_SYMLINKS_NOTOWNER) {
             fd = ngx_openat_file_owner(at_fd, p,
-                                       NGX_FILE_SEARCH|NGX_FILE_NONBLOCK,
-                                       NGX_FILE_OPEN, 0, log);
+                                       NGX_FILE_శోధన|NGX_FILE_NONBLOCK,
+                                       NGX_FILE_OPEN, 0, సంవర్గమానం);
 
-        } else {
+        } లేకపోతే {
             fd = ngx_openat_file(at_fd, p,
-                           NGX_FILE_SEARCH|NGX_FILE_NONBLOCK|NGX_FILE_NOFOLLOW,
+                           NGX_FILE_శోధన|NGX_FILE_NONBLOCK|NGX_FILE_NOFOLLOW,
                            NGX_FILE_OPEN, 0);
         }
 
         *cp = '/';
 
-        if (fd == NGX_INVALID_FILE) {
-            of->err = ngx_errno;
-            of->failed = ngx_openat_file_n;
-            goto failed;
+        ఒకవేళ (fd == NGX_INVALID_FILE) {
+            యొక్క->err = ngx_errno;
+            యొక్క->failed = ngx_openat_file_n;
+            వెళ్ళు failed;
         }
 
-        if (at_fd != NGX_AT_FDCWD && ngx_close_file(at_fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+        ఒకవేళ (at_fd != NGX_AT_FDCWD && ngx_close_file(at_fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                           ngx_close_file_n " \"%V\" failed", &at_name);
         }
 
         p = cp + 1;
         at_fd = fd;
-        at_name.len = cp - at_name.data;
+        at_name.len = cp - at_name.దత్తాంశం;
     }
 
-    if (p == end) {
+    ఒకవేళ (p == చివర) {
 
         /*
          * If pathname ends with a trailing slash, assume the last path
@@ -745,203 +745,203 @@ ngx_open_file_wrapper(ngx_str_t *name, ngx_open_file_info_t *of,
          * reopening a directory, we don't depend on it at all.
          */
 
-        fd = ngx_openat_file(at_fd, ".", mode, create, access);
-        goto done;
+        fd = ngx_openat_file(at_fd, ".", బహుళకం, create, access);
+        వెళ్ళు పూర్తి;
     }
 
-    if (of->disable_symlinks == NGX_DISABLE_SYMLINKS_NOTOWNER
+    ఒకవేళ (యొక్క->disable_symlinks == NGX_DISABLE_SYMLINKS_NOTOWNER
         && !(create & (NGX_FILE_CREATE_OR_OPEN|NGX_FILE_TRUNCATE)))
     {
-        fd = ngx_openat_file_owner(at_fd, p, mode, create, access, log);
+        fd = ngx_openat_file_owner(at_fd, p, బహుళకం, create, access, సంవర్గమానం);
 
-    } else {
-        fd = ngx_openat_file(at_fd, p, mode|NGX_FILE_NOFOLLOW, create, access);
+    } లేకపోతే {
+        fd = ngx_openat_file(at_fd, p, బహుళకం|NGX_FILE_NOFOLLOW, create, access);
     }
 
-done:
+పూర్తి:
 
-    if (fd == NGX_INVALID_FILE) {
-        of->err = ngx_errno;
-        of->failed = ngx_openat_file_n;
+    ఒకవేళ (fd == NGX_INVALID_FILE) {
+        యొక్క->err = ngx_errno;
+        యొక్క->failed = ngx_openat_file_n;
     }
 
 failed:
 
-    if (at_fd != NGX_AT_FDCWD && ngx_close_file(at_fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    ఒకవేళ (at_fd != NGX_AT_FDCWD && ngx_close_file(at_fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                       ngx_close_file_n " \"%V\" failed", &at_name);
     }
 
-    return fd;
-#endif
+    తిరిగి fd;
+#అయితే_ముగింపు
 }
 
 
-static ngx_int_t
-ngx_file_info_wrapper(ngx_str_t *name, ngx_open_file_info_t *of,
-    ngx_file_info_t *fi, ngx_log_t *log)
+స్థిర ngx_int_t
+ngx_file_info_wrapper(ngx_str_t *name, ngx_open_file_info_t *యొక్క,
+    ngx_file_info_t *fi, ngx_log_t *సంవర్గమానం)
 {
     ngx_int_t  rc;
 
-#if !(NGX_HAVE_OPENAT)
+#ఒకవేళ !(NGX_HAVE_OPENAT)
 
-    rc = ngx_file_info(name->data, fi);
+    rc = ngx_file_info(name->దత్తాంశం, fi);
 
-    if (rc == NGX_FILE_ERROR) {
-        of->err = ngx_errno;
-        of->failed = ngx_file_info_n;
-        return NGX_FILE_ERROR;
+    ఒకవేళ (rc == NGX_FILE_ERROR) {
+        యొక్క->err = ngx_errno;
+        యొక్క->failed = ngx_file_info_n;
+        తిరిగి NGX_FILE_ERROR;
     }
 
-    return rc;
+    తిరిగి rc;
 
-#else
+#లేకపోతే
 
     ngx_fd_t  fd;
 
-    if (of->disable_symlinks == NGX_DISABLE_SYMLINKS_OFF) {
+    ఒకవేళ (యొక్క->disable_symlinks == NGX_DISABLE_SYMLINKS_OFF) {
 
-        rc = ngx_file_info(name->data, fi);
+        rc = ngx_file_info(name->దత్తాంశం, fi);
 
-        if (rc == NGX_FILE_ERROR) {
-            of->err = ngx_errno;
-            of->failed = ngx_file_info_n;
-            return NGX_FILE_ERROR;
+        ఒకవేళ (rc == NGX_FILE_ERROR) {
+            యొక్క->err = ngx_errno;
+            యొక్క->failed = ngx_file_info_n;
+            తిరిగి NGX_FILE_ERROR;
         }
 
-        return rc;
+        తిరిగి rc;
     }
 
-    fd = ngx_open_file_wrapper(name, of, NGX_FILE_RDONLY|NGX_FILE_NONBLOCK,
-                               NGX_FILE_OPEN, 0, log);
+    fd = ngx_open_file_wrapper(name, యొక్క, NGX_FILE_RDONLY|NGX_FILE_NONBLOCK,
+                               NGX_FILE_OPEN, 0, సంవర్గమానం);
 
-    if (fd == NGX_INVALID_FILE) {
-        return NGX_FILE_ERROR;
+    ఒకవేళ (fd == NGX_INVALID_FILE) {
+        తిరిగి NGX_FILE_ERROR;
     }
 
     rc = ngx_fd_info(fd, fi);
 
-    if (rc == NGX_FILE_ERROR) {
-        of->err = ngx_errno;
-        of->failed = ngx_fd_info_n;
+    ఒకవేళ (rc == NGX_FILE_ERROR) {
+        యొక్క->err = ngx_errno;
+        యొక్క->failed = ngx_fd_info_n;
     }
 
-    if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    ఒకవేళ (ngx_close_file(fd) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                       ngx_close_file_n " \"%V\" failed", name);
     }
 
-    return rc;
-#endif
+    తిరిగి rc;
+#అయితే_ముగింపు
 }
 
 
-static ngx_int_t
-ngx_open_and_stat_file(ngx_str_t *name, ngx_open_file_info_t *of,
-    ngx_log_t *log)
+స్థిర ngx_int_t
+ngx_open_and_stat_file(ngx_str_t *name, ngx_open_file_info_t *యొక్క,
+    ngx_log_t *సంవర్గమానం)
 {
     ngx_fd_t         fd;
     ngx_file_info_t  fi;
 
-    if (of->fd != NGX_INVALID_FILE) {
+    ఒకవేళ (యొక్క->fd != NGX_INVALID_FILE) {
 
-        if (ngx_file_info_wrapper(name, of, &fi, log) == NGX_FILE_ERROR) {
-            of->fd = NGX_INVALID_FILE;
-            return NGX_ERROR;
+        ఒకవేళ (ngx_file_info_wrapper(name, యొక్క, &fi, సంవర్గమానం) == NGX_FILE_ERROR) {
+            యొక్క->fd = NGX_INVALID_FILE;
+            తిరిగి NGX_ERROR;
         }
 
-        if (of->uniq == ngx_file_uniq(&fi)) {
-            goto done;
+        ఒకవేళ (యొక్క->uniq == ngx_file_uniq(&fi)) {
+            వెళ్ళు పూర్తి;
         }
 
-    } else if (of->test_dir) {
+    } లేకపోతే ఒకవేళ (యొక్క->test_dir) {
 
-        if (ngx_file_info_wrapper(name, of, &fi, log) == NGX_FILE_ERROR) {
-            of->fd = NGX_INVALID_FILE;
-            return NGX_ERROR;
+        ఒకవేళ (ngx_file_info_wrapper(name, యొక్క, &fi, సంవర్గమానం) == NGX_FILE_ERROR) {
+            యొక్క->fd = NGX_INVALID_FILE;
+            తిరిగి NGX_ERROR;
         }
 
-        if (ngx_is_dir(&fi)) {
-            goto done;
+        ఒకవేళ (ngx_is_dir(&fi)) {
+            వెళ్ళు పూర్తి;
         }
     }
 
-    if (!of->log) {
+    ఒకవేళ (!యొక్క->సంవర్గమానం) {
 
         /*
          * Use non-blocking open() not to hang on FIFO files, etc.
          * This flag has no effect on a regular files.
          */
 
-        fd = ngx_open_file_wrapper(name, of, NGX_FILE_RDONLY|NGX_FILE_NONBLOCK,
-                                   NGX_FILE_OPEN, 0, log);
+        fd = ngx_open_file_wrapper(name, యొక్క, NGX_FILE_RDONLY|NGX_FILE_NONBLOCK,
+                                   NGX_FILE_OPEN, 0, సంవర్గమానం);
 
-    } else {
-        fd = ngx_open_file_wrapper(name, of, NGX_FILE_APPEND,
+    } లేకపోతే {
+        fd = ngx_open_file_wrapper(name, యొక్క, NGX_FILE_APPEND,
                                    NGX_FILE_CREATE_OR_OPEN,
-                                   NGX_FILE_DEFAULT_ACCESS, log);
+                                   NGX_FILE_DEFAULT_ACCESS, సంవర్గమానం);
     }
 
-    if (fd == NGX_INVALID_FILE) {
-        of->fd = NGX_INVALID_FILE;
-        return NGX_ERROR;
+    ఒకవేళ (fd == NGX_INVALID_FILE) {
+        యొక్క->fd = NGX_INVALID_FILE;
+        తిరిగి NGX_ERROR;
     }
 
-    if (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_CRIT, log, ngx_errno,
+    ఒకవేళ (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
+        ngx_log_error(NGX_LOG_CRIT, సంవర్గమానం, ngx_errno,
                       ngx_fd_info_n " \"%V\" failed", name);
 
-        if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+        ఒకవేళ (ngx_close_file(fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                           ngx_close_file_n " \"%V\" failed", name);
         }
 
-        of->fd = NGX_INVALID_FILE;
+        యొక్క->fd = NGX_INVALID_FILE;
 
-        return NGX_ERROR;
+        తిరిగి NGX_ERROR;
     }
 
-    if (ngx_is_dir(&fi)) {
-        if (ngx_close_file(fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+    ఒకవేళ (ngx_is_dir(&fi)) {
+        ఒకవేళ (ngx_close_file(fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                           ngx_close_file_n " \"%V\" failed", name);
         }
 
-        of->fd = NGX_INVALID_FILE;
+        యొక్క->fd = NGX_INVALID_FILE;
 
-    } else {
-        of->fd = fd;
+    } లేకపోతే {
+        యొక్క->fd = fd;
 
-        if (of->read_ahead && ngx_file_size(&fi) > NGX_MIN_READ_AHEAD) {
-            if (ngx_read_ahead(fd, of->read_ahead) == NGX_ERROR) {
-                ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+        ఒకవేళ (యొక్క->read_ahead && ngx_file_కొలత(&fi) > NGX_MIN_READ_AHEAD) {
+            ఒకవేళ (ngx_read_ahead(fd, యొక్క->read_ahead) == NGX_ERROR) {
+                ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                               ngx_read_ahead_n " \"%V\" failed", name);
             }
         }
 
-        if (of->directio <= ngx_file_size(&fi)) {
-            if (ngx_directio_on(fd) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+        ఒకవేళ (యొక్క->directio <= ngx_file_కొలత(&fi)) {
+            ఒకవేళ (ngx_directio_on(fd) == NGX_FILE_ERROR) {
+                ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                               ngx_directio_on_n " \"%V\" failed", name);
 
-            } else {
-                of->is_directio = 1;
+            } లేకపోతే {
+                యొక్క->is_directio = 1;
             }
         }
     }
 
-done:
+పూర్తి:
 
-    of->uniq = ngx_file_uniq(&fi);
-    of->mtime = ngx_file_mtime(&fi);
-    of->size = ngx_file_size(&fi);
-    of->fs_size = ngx_file_fs_size(&fi);
-    of->is_dir = ngx_is_dir(&fi);
-    of->is_file = ngx_is_file(&fi);
-    of->is_link = ngx_is_link(&fi);
-    of->is_exec = ngx_is_exec(&fi);
+    యొక్క->uniq = ngx_file_uniq(&fi);
+    యొక్క->mtime = ngx_file_mtime(&fi);
+    యొక్క->కొలత = ngx_file_కొలత(&fi);
+    యొక్క->fs_కొలత = ngx_file_fs_కొలత(&fi);
+    యొక్క->is_dir = ngx_is_dir(&fi);
+    యొక్క->is_file = ngx_is_file(&fi);
+    యొక్క->is_link = ngx_is_link(&fi);
+    యొక్క->is_exec = ngx_is_exec(&fi);
 
-    return NGX_OK;
+    తిరిగి NGX_OK;
 }
 
 
@@ -950,41 +950,41 @@ done:
  * fallback to usual periodic file retests
  */
 
-static void
-ngx_open_file_add_event(ngx_open_file_cache_t *cache,
-    ngx_cached_open_file_t *file, ngx_open_file_info_t *of, ngx_log_t *log)
+స్థిర శూన్య
+ngx_open_file_కూడు_event(ngx_open_file_cache_t *cache,
+    ngx_cached_open_file_t *file, ngx_open_file_info_t *యొక్క, ngx_log_t *సంవర్గమానం)
 {
     ngx_open_file_cache_event_t  *fev;
 
-    if (!(ngx_event_flags & NGX_USE_VNODE_EVENT)
-        || !of->events
+    ఒకవేళ (!(ngx_event_flags & NGX_USE_VNODE_EVENT)
+        || !యొక్క->events
         || file->event
-        || of->fd == NGX_INVALID_FILE
-        || file->uses < of->min_uses)
+        || యొక్క->fd == NGX_INVALID_FILE
+        || file->ఉపయోగిస్తుంది < యొక్క->min_ఉపయోగిస్తుంది)
     {
-        return;
+        తిరిగి;
     }
 
     file->use_event = 0;
 
-    file->event = ngx_calloc(sizeof(ngx_event_t), log);
-    if (file->event== NULL) {
-        return;
+    file->event = ngx_calloc(పరిమాణం(ngx_event_t), సంవర్గమానం);
+    ఒకవేళ (file->event== ఖాళీ) {
+        తిరిగి;
     }
 
-    fev = ngx_alloc(sizeof(ngx_open_file_cache_event_t), log);
-    if (fev == NULL) {
+    fev = ngx_alloc(పరిమాణం(ngx_open_file_cache_event_t), సంవర్గమానం);
+    ఒకవేళ (fev == ఖాళీ) {
         ngx_free(file->event);
-        file->event = NULL;
-        return;
+        file->event = ఖాళీ;
+        తిరిగి;
     }
 
-    fev->fd = of->fd;
+    fev->fd = యొక్క->fd;
     fev->file = file;
     fev->cache = cache;
 
     file->event->handler = ngx_open_file_cache_remove;
-    file->event->data = fev;
+    file->event->దత్తాంశం = fev;
 
     /*
      * although vnode event may be called while ngx_cycle->poll
@@ -992,15 +992,15 @@ ngx_open_file_add_event(ngx_open_file_cache_t *cache,
      * memory freeing and events will be canceled.
      */
 
-    file->event->log = ngx_cycle->log;
+    file->event->సంవర్గమానం = ngx_చక్రం->సంవర్గమానం;
 
-    if (ngx_add_event(file->event, NGX_VNODE_EVENT, NGX_ONESHOT_EVENT)
+    ఒకవేళ (ngx_కూడు_event(file->event, NGX_VNODE_EVENT, NGX_ONESHOT_EVENT)
         != NGX_OK)
     {
-        ngx_free(file->event->data);
+        ngx_free(file->event->దత్తాంశం);
         ngx_free(file->event);
-        file->event = NULL;
-        return;
+        file->event = ఖాళీ;
+        తిరిగి;
     }
 
     /*
@@ -1010,63 +1010,63 @@ ngx_open_file_add_event(ngx_open_file_cache_t *cache,
      * one file revalidation on next file access
      */
 
-    return;
+    తిరిగి;
 }
 
 
-static void
-ngx_open_file_cleanup(void *data)
+స్థిర శూన్య
+ngx_open_file_cleanup(శూన్య *దత్తాంశం)
 {
-    ngx_open_file_cache_cleanup_t  *c = data;
+    ngx_open_file_cache_cleanup_t  *c = దత్తాంశం;
 
-    c->file->count--;
+    c->file->లెక్క--;
 
-    ngx_close_cached_file(c->cache, c->file, c->min_uses, c->log);
+    ngx_close_cached_file(c->cache, c->file, c->min_ఉపయోగిస్తుంది, c->సంవర్గమానం);
 
     /* drop one or two expired open files */
-    ngx_expire_old_cached_files(c->cache, 1, c->log);
+    ngx_expire_old_cached_files(c->cache, 1, c->సంవర్గమానం);
 }
 
 
-static void
+స్థిర శూన్య
 ngx_close_cached_file(ngx_open_file_cache_t *cache,
-    ngx_cached_open_file_t *file, ngx_uint_t min_uses, ngx_log_t *log)
+    ngx_cached_open_file_t *file, ngx_uint_t min_ఉపయోగిస్తుంది, ngx_log_t *సంవర్గమానం)
 {
-    ngx_log_debug5(NGX_LOG_DEBUG_CORE, log, 0,
+    ngx_log_debug5(NGX_LOG_DEBUG_CORE, సంవర్గమానం, 0,
                    "close cached open file: %s, fd:%d, c:%d, u:%d, %d",
-                   file->name, file->fd, file->count, file->uses, file->close);
+                   file->name, file->fd, file->లెక్క, file->ఉపయోగిస్తుంది, file->close);
 
-    if (!file->close) {
+    ఒకవేళ (!file->close) {
 
-        file->accessed = ngx_time();
+        file->accessed = ngx_సమయం();
 
-        ngx_queue_remove(&file->queue);
+        ngx_వరుస_remove(&file->వరుస);
 
-        ngx_queue_insert_head(&cache->expire_queue, &file->queue);
+        ngx_వరుస_చొప్పించు_తల(&cache->expire_వరుస, &file->వరుస);
 
-        if (file->uses >= min_uses || file->count) {
-            return;
+        ఒకవేళ (file->ఉపయోగిస్తుంది >= min_ఉపయోగిస్తుంది || file->లెక్క) {
+            తిరిగి;
         }
     }
 
     ngx_open_file_del_event(file);
 
-    if (file->count) {
-        return;
+    ఒకవేళ (file->లెక్క) {
+        తిరిగి;
     }
 
-    if (file->fd != NGX_INVALID_FILE) {
+    ఒకవేళ (file->fd != NGX_INVALID_FILE) {
 
-        if (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
-            ngx_log_error(NGX_LOG_ALERT, log, ngx_errno,
+        ఒకవేళ (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ALERT, సంవర్గమానం, ngx_errno,
                           ngx_close_file_n " \"%s\" failed", file->name);
         }
 
         file->fd = NGX_INVALID_FILE;
     }
 
-    if (!file->close) {
-        return;
+    ఒకవేళ (!file->close) {
+        తిరిగి;
     }
 
     ngx_free(file->name);
@@ -1074,32 +1074,32 @@ ngx_close_cached_file(ngx_open_file_cache_t *cache,
 }
 
 
-static void
+స్థిర శూన్య
 ngx_open_file_del_event(ngx_cached_open_file_t *file)
 {
-    if (file->event == NULL) {
-        return;
+    ఒకవేళ (file->event == ఖాళీ) {
+        తిరిగి;
     }
 
-    (void) ngx_del_event(file->event, NGX_VNODE_EVENT,
-                         file->count ? NGX_FLUSH_EVENT : NGX_CLOSE_EVENT);
+    (శూన్య) ngx_del_event(file->event, NGX_VNODE_EVENT,
+                         file->లెక్క ? NGX_FLUSH_EVENT : NGX_CLOSE_EVENT);
 
-    ngx_free(file->event->data);
+    ngx_free(file->event->దత్తాంశం);
     ngx_free(file->event);
-    file->event = NULL;
+    file->event = ఖాళీ;
     file->use_event = 0;
 }
 
 
-static void
+స్థిర శూన్య
 ngx_expire_old_cached_files(ngx_open_file_cache_t *cache, ngx_uint_t n,
-    ngx_log_t *log)
+    ngx_log_t *సంవర్గమానం)
 {
-    time_t                   now;
-    ngx_queue_t             *q;
+    సమయం_t                   now;
+    ngx_వరుస_t             *q;
     ngx_cached_open_file_t  *file;
 
-    now = ngx_time();
+    now = ngx_సమయం();
 
     /*
      * n == 1 deletes one or two inactive files
@@ -1107,34 +1107,34 @@ ngx_expire_old_cached_files(ngx_open_file_cache_t *cache, ngx_uint_t n,
      *        and one or two inactive files
      */
 
-    while (n < 3) {
+    అయితే (n < 3) {
 
-        if (ngx_queue_empty(&cache->expire_queue)) {
-            return;
+        ఒకవేళ (ngx_వరుస_ఖాళీలు(&cache->expire_వరుస)) {
+            తిరిగి;
         }
 
-        q = ngx_queue_last(&cache->expire_queue);
+        q = ngx_వరుస_చివరి(&cache->expire_వరుస);
 
-        file = ngx_queue_data(q, ngx_cached_open_file_t, queue);
+        file = ngx_వరుస_దత్తాంశం(q, ngx_cached_open_file_t, వరుస);
 
-        if (n++ != 0 && now - file->accessed <= cache->inactive) {
-            return;
+        ఒకవేళ (n++ != 0 && now - file->accessed <= cache->inactive) {
+            తిరిగి;
         }
 
-        ngx_queue_remove(q);
+        ngx_వరుస_remove(q);
 
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+        ngx_rbtree_delete(&cache->rbtree, &file->కణుపు);
 
         cache->current--;
 
-        ngx_log_debug1(NGX_LOG_DEBUG_CORE, log, 0,
+        ngx_log_debug1(NGX_LOG_DEBUG_CORE, సంవర్గమానం, 0,
                        "expire cached open file: %s", file->name);
 
-        if (!file->err && !file->is_dir) {
+        ఒకవేళ (!file->err && !file->is_dir) {
             file->close = 1;
-            ngx_close_cached_file(cache, file, 0, log);
+            ngx_close_cached_file(cache, file, 0, సంవర్గమానం);
 
-        } else {
+        } లేకపోతే {
             ngx_free(file->name);
             ngx_free(file);
         }
@@ -1142,112 +1142,112 @@ ngx_expire_old_cached_files(ngx_open_file_cache_t *cache, ngx_uint_t n,
 }
 
 
-static void
-ngx_open_file_cache_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+స్థిర శూన్య
+ngx_open_file_cache_rbtree_చొప్పించు_విలువ(ngx_rbtree_కణుపు_t *తాత్కాలిక,
+    ngx_rbtree_కణుపు_t *కణుపు, ngx_rbtree_కణుపు_t *sentinel)
 {
-    ngx_rbtree_node_t       **p;
-    ngx_cached_open_file_t    *file, *file_temp;
+    ngx_rbtree_కణుపు_t       **p;
+    ngx_cached_open_file_t    *file, *file_తాత్కాలిక;
 
-    for ( ;; ) {
+    కొరకు ( ;; ) {
 
-        if (node->key < temp->key) {
+        ఒకవేళ (కణుపు->కీలకం < తాత్కాలిక->కీలకం) {
 
-            p = &temp->left;
+            p = &తాత్కాలిక->ఎడమ;
 
-        } else if (node->key > temp->key) {
+        } లేకపోతే ఒకవేళ (కణుపు->కీలకం > తాత్కాలిక->కీలకం) {
 
-            p = &temp->right;
+            p = &తాత్కాలిక->కుడి;
 
-        } else { /* node->key == temp->key */
+        } లేకపోతే { /* node->key == temp->key */
 
-            file = (ngx_cached_open_file_t *) node;
-            file_temp = (ngx_cached_open_file_t *) temp;
+            file = (ngx_cached_open_file_t *) కణుపు;
+            file_తాత్కాలిక = (ngx_cached_open_file_t *) తాత్కాలిక;
 
-            p = (ngx_strcmp(file->name, file_temp->name) < 0)
-                    ? &temp->left : &temp->right;
+            p = (ngx_strcmp(file->name, file_తాత్కాలిక->name) < 0)
+                    ? &తాత్కాలిక->ఎడమ : &తాత్కాలిక->కుడి;
         }
 
-        if (*p == sentinel) {
-            break;
+        ఒకవేళ (*p == sentinel) {
+            ఆపు;
         }
 
-        temp = *p;
+        తాత్కాలిక = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = కణుపు;
+    కణుపు->మాతృ = తాత్కాలిక;
+    కణుపు->ఎడమ = sentinel;
+    కణుపు->కుడి = sentinel;
+    ngx_rbt_red(కణుపు);
 }
 
 
-static ngx_cached_open_file_t *
+స్థిర ngx_cached_open_file_t *
 ngx_open_file_lookup(ngx_open_file_cache_t *cache, ngx_str_t *name,
     uint32_t hash)
 {
     ngx_int_t                rc;
-    ngx_rbtree_node_t       *node, *sentinel;
+    ngx_rbtree_కణుపు_t       *కణుపు, *sentinel;
     ngx_cached_open_file_t  *file;
 
-    node = cache->rbtree.root;
+    కణుపు = cache->rbtree.మూలం;
     sentinel = cache->rbtree.sentinel;
 
-    while (node != sentinel) {
+    అయితే (కణుపు != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
-            continue;
+        ఒకవేళ (hash < కణుపు->కీలకం) {
+            కణుపు = కణుపు->ఎడమ;
+            కొనసాగు;
         }
 
-        if (hash > node->key) {
-            node = node->right;
-            continue;
+        ఒకవేళ (hash > కణుపు->కీలకం) {
+            కణుపు = కణుపు->కుడి;
+            కొనసాగు;
         }
 
         /* hash == node->key */
 
-        file = (ngx_cached_open_file_t *) node;
+        file = (ngx_cached_open_file_t *) కణుపు;
 
-        rc = ngx_strcmp(name->data, file->name);
+        rc = ngx_strcmp(name->దత్తాంశం, file->name);
 
-        if (rc == 0) {
-            return file;
+        ఒకవేళ (rc == 0) {
+            తిరిగి file;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        కణుపు = (rc < 0) ? కణుపు->ఎడమ : కణుపు->కుడి;
     }
 
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
 
-static void
+స్థిర శూన్య
 ngx_open_file_cache_remove(ngx_event_t *ev)
 {
     ngx_cached_open_file_t       *file;
     ngx_open_file_cache_event_t  *fev;
 
-    fev = ev->data;
+    fev = ev->దత్తాంశం;
     file = fev->file;
 
-    ngx_queue_remove(&file->queue);
+    ngx_వరుస_remove(&file->వరుస);
 
-    ngx_rbtree_delete(&fev->cache->rbtree, &file->node);
+    ngx_rbtree_delete(&fev->cache->rbtree, &file->కణుపు);
 
     fev->cache->current--;
 
     /* NGX_ONESHOT_EVENT was already deleted */
-    file->event = NULL;
+    file->event = ఖాళీ;
     file->use_event = 0;
 
     file->close = 1;
 
-    ngx_close_cached_file(fev->cache, file, 0, ev->log);
+    ngx_close_cached_file(fev->cache, file, 0, ev->సంవర్గమానం);
 
     /* free memory only when fev->cache and fev->file are already not needed */
 
-    ngx_free(ev->data);
+    ngx_free(ev->దత్తాంశం);
     ngx_free(ev);
 }

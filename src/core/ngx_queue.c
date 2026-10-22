@@ -5,12 +5,12 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+స్థిర శూన్య ngx_వరుస_విలీనం(ngx_వరుస_t *వరుస, ngx_వరుస_t *తోక,
+    ngx_int_t (*cmp)(స్థిరరాశి ngx_వరుస_t *, స్థిరరాశి ngx_వరుస_t *));
 
 
 /*
@@ -18,32 +18,32 @@ static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
  * or the first element of the queue's second part otherwise
  */
 
-ngx_queue_t *
-ngx_queue_middle(ngx_queue_t *queue)
+ngx_వరుస_t *
+ngx_వరుస_మధ్య(ngx_వరుస_t *వరుస)
 {
-    ngx_queue_t  *middle, *next;
+    ngx_వరుస_t  *మధ్య, *తదుపరి;
 
-    middle = ngx_queue_head(queue);
+    మధ్య = ngx_వరుస_తల(వరుస);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    ఒకవేళ (మధ్య == ngx_వరుస_చివరి(వరుస)) {
+        తిరిగి మధ్య;
     }
 
-    next = ngx_queue_head(queue);
+    తదుపరి = ngx_వరుస_తల(వరుస);
 
-    for ( ;; ) {
-        middle = ngx_queue_next(middle);
+    కొరకు ( ;; ) {
+        మధ్య = ngx_వరుస_తదుపరి(మధ్య);
 
-        next = ngx_queue_next(next);
+        తదుపరి = ngx_వరుస_తదుపరి(తదుపరి);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ఒకవేళ (తదుపరి == ngx_వరుస_చివరి(వరుస)) {
+            తిరిగి మధ్య;
         }
 
-        next = ngx_queue_next(next);
+        తదుపరి = ngx_వరుస_తదుపరి(తదుపరి);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ఒకవేళ (తదుపరి == ngx_వరుస_చివరి(వరుస)) {
+            తిరిగి మధ్య;
         }
     }
 }
@@ -51,56 +51,56 @@ ngx_queue_middle(ngx_queue_t *queue)
 
 /* the stable merge sort */
 
-void
-ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+శూన్య
+ngx_వరుస_క్రమీకరించు(ngx_వరుస_t *వరుస,
+    ngx_int_t (*cmp)(స్థిరరాశి ngx_వరుస_t *, స్థిరరాశి ngx_వరుస_t *))
 {
-    ngx_queue_t  *q, tail;
+    ngx_వరుస_t  *q, తోక;
 
-    q = ngx_queue_head(queue);
+    q = ngx_వరుస_తల(వరుస);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    ఒకవేళ (q == ngx_వరుస_చివరి(వరుస)) {
+        తిరిగి;
     }
 
-    q = ngx_queue_middle(queue);
+    q = ngx_వరుస_మధ్య(వరుస);
 
-    ngx_queue_split(queue, q, &tail);
+    ngx_వరుస_విభజించు(వరుస, q, &తోక);
 
-    ngx_queue_sort(queue, cmp);
-    ngx_queue_sort(&tail, cmp);
+    ngx_వరుస_క్రమీకరించు(వరుస, cmp);
+    ngx_వరుస_క్రమీకరించు(&తోక, cmp);
 
-    ngx_queue_merge(queue, &tail, cmp);
+    ngx_వరుస_విలీనం(వరుస, &తోక, cmp);
 }
 
 
-static void
-ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *))
+స్థిర శూన్య
+ngx_వరుస_విలీనం(ngx_వరుస_t *వరుస, ngx_వరుస_t *తోక,
+    ngx_int_t (*cmp)(స్థిరరాశి ngx_వరుస_t *, స్థిరరాశి ngx_వరుస_t *))
 {
-    ngx_queue_t  *q1, *q2;
+    ngx_వరుస_t  *q1, *q2;
 
-    q1 = ngx_queue_head(queue);
-    q2 = ngx_queue_head(tail);
+    q1 = ngx_వరుస_తల(వరుస);
+    q2 = ngx_వరుస_తల(తోక);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
-            ngx_queue_add(queue, tail);
-            break;
+    కొరకు ( ;; ) {
+        ఒకవేళ (q1 == ngx_వరుస_sentinel(వరుస)) {
+            ngx_వరుస_కూడు(వరుస, తోక);
+            ఆపు;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        ఒకవేళ (q2 == ngx_వరుస_sentinel(తోక)) {
+            ఆపు;
         }
 
-        if (cmp(q1, q2) <= 0) {
-            q1 = ngx_queue_next(q1);
-            continue;
+        ఒకవేళ (cmp(q1, q2) <= 0) {
+            q1 = ngx_వరుస_తదుపరి(q1);
+            కొనసాగు;
         }
 
-        ngx_queue_remove(q2);
-        ngx_queue_insert_before(q1, q2);
+        ngx_వరుస_remove(q2);
+        ngx_వరుస_చొప్పించు_before(q1, q2);
 
-        q2 = ngx_queue_head(tail);
+        q2 = ngx_వరుస_తల(తోక);
     }
 }

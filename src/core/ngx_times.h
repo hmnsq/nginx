@@ -5,48 +5,48 @@
  */
 
 
-#ifndef _NGX_TIMES_H_INCLUDED_
-#define _NGX_TIMES_H_INCLUDED_
+#నిర్వచితం_కాకపోతే _NGX_TIMES_H_INCLUDED_
+#నిర్వచించు _NGX_TIMES_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-typedef struct {
-    time_t      sec;
+రకనిర్వచనం నిర్మాణం {
+    సమయం_t      sec;
     ngx_uint_t  msec;
     ngx_int_t   gmtoff;
-} ngx_time_t;
+} ngx_సమయం_t;
 
 
-void ngx_time_init(void);
-void ngx_time_update(void);
-void ngx_time_sigsafe_update(void);
-u_char *ngx_http_time(u_char *buf, time_t t);
-u_char *ngx_http_cookie_time(u_char *buf, time_t t);
-void ngx_gmtime(time_t t, ngx_tm_t *tp);
+శూన్య ngx_సమయం_init(శూన్య);
+శూన్య ngx_సమయం_update(శూన్య);
+శూన్య ngx_సమయం_sigsafe_update(శూన్య);
+u_char *ngx_http_సమయం(u_char *buf, సమయం_t t);
+u_char *ngx_http_cookie_సమయం(u_char *buf, సమయం_t t);
+శూన్య ngx_gmtime(సమయం_t t, ngx_tm_t *tp);
 
-time_t ngx_next_time(time_t when);
-#define ngx_next_time_n      "mktime()"
+సమయం_t ngx_తదుపరి_సమయం(సమయం_t when);
+#నిర్వచించు ngx_తదుపరి_సమయం_n      "mktime()"
 
 
-extern volatile ngx_time_t  *ngx_cached_time;
+బాహ్య అస్థిర ngx_సమయం_t  *ngx_cached_సమయం;
 
-#define ngx_time()           ngx_cached_time->sec
-#define ngx_timeofday()      (ngx_time_t *) ngx_cached_time
+#నిర్వచించు ngx_సమయం()           ngx_cached_సమయం->sec
+#నిర్వచించు ngx_timeofday()      (ngx_సమయం_t *) ngx_cached_సమయం
 
-extern volatile ngx_str_t    ngx_cached_err_log_time;
-extern volatile ngx_str_t    ngx_cached_http_time;
-extern volatile ngx_str_t    ngx_cached_http_log_time;
-extern volatile ngx_str_t    ngx_cached_http_log_iso8601;
-extern volatile ngx_str_t    ngx_cached_syslog_time;
+బాహ్య అస్థిర ngx_str_t    ngx_cached_err_log_సమయం;
+బాహ్య అస్థిర ngx_str_t    ngx_cached_http_సమయం;
+బాహ్య అస్థిర ngx_str_t    ngx_cached_http_log_సమయం;
+బాహ్య అస్థిర ngx_str_t    ngx_cached_http_log_iso8601;
+బాహ్య అస్థిర ngx_str_t    ngx_cached_syslog_సమయం;
 
 /*
  * milliseconds elapsed since some unspecified point in the past
  * and truncated to ngx_msec_t, used in event timers
  */
-extern volatile ngx_msec_t  ngx_current_msec;
+బాహ్య అస్థిర ngx_msec_t  ngx_current_msec;
 
 
-#endif /* _NGX_TIMES_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_TIMES_H_INCLUDED_ */

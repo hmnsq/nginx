@@ -4,160 +4,160 @@
  * Copyright (C) Nginx, Inc.
  */
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-#define NGX_SLAB_PAGE_MASK   3
-#define NGX_SLAB_PAGE        0
-#define NGX_SLAB_BIG         1
-#define NGX_SLAB_EXACT       2
-#define NGX_SLAB_SMALL       3
+#నిర్వచించు NGX_SLAB_పుట_ముసుగు   3
+#నిర్వచించు NGX_SLAB_పుట        0
+#నిర్వచించు NGX_SLAB_BIG         1
+#నిర్వచించు NGX_SLAB_EXACT       2
+#నిర్వచించు NGX_SLAB_SMALL       3
 
-#if (NGX_PTR_SIZE == 4)
+#ఒకవేళ (NGX_PTR_కొలత == 4)
 
-#define NGX_SLAB_PAGE_FREE   0
-#define NGX_SLAB_PAGE_BUSY   0xffffffff
-#define NGX_SLAB_PAGE_START  0x80000000
+#నిర్వచించు NGX_SLAB_పుట_FREE   0
+#నిర్వచించు NGX_SLAB_పుట_BUSY   0xffffffff
+#నిర్వచించు NGX_SLAB_పుట_ప్రారంభం  0x80000000
 
-#define NGX_SLAB_SHIFT_MASK  0x0000000f
-#define NGX_SLAB_MAP_MASK    0xffff0000
-#define NGX_SLAB_MAP_SHIFT   16
+#నిర్వచించు NGX_SLAB_జరుపు_ముసుగు  0x0000000f
+#నిర్వచించు NGX_SLAB_MAP_ముసుగు    0xffff0000
+#నిర్వచించు NGX_SLAB_MAP_జరుపు   16
 
-#define NGX_SLAB_BUSY        0xffffffff
+#నిర్వచించు NGX_SLAB_BUSY        0xffffffff
 
-#else /* (NGX_PTR_SIZE == 8) */
+#లేకపోతే /* (NGX_PTR_SIZE == 8) */
 
-#define NGX_SLAB_PAGE_FREE   0
-#define NGX_SLAB_PAGE_BUSY   0xffffffffffffffff
-#define NGX_SLAB_PAGE_START  0x8000000000000000
+#నిర్వచించు NGX_SLAB_పుట_FREE   0
+#నిర్వచించు NGX_SLAB_పుట_BUSY   0xffffffffffffffff
+#నిర్వచించు NGX_SLAB_పుట_ప్రారంభం  0x8000000000000000
 
-#define NGX_SLAB_SHIFT_MASK  0x000000000000000f
-#define NGX_SLAB_MAP_MASK    0xffffffff00000000
-#define NGX_SLAB_MAP_SHIFT   32
+#నిర్వచించు NGX_SLAB_జరుపు_ముసుగు  0x000000000000000f
+#నిర్వచించు NGX_SLAB_MAP_ముసుగు    0xffffffff00000000
+#నిర్వచించు NGX_SLAB_MAP_జరుపు   32
 
-#define NGX_SLAB_BUSY        0xffffffffffffffff
+#నిర్వచించు NGX_SLAB_BUSY        0xffffffffffffffff
 
-#endif
-
-
-#define ngx_slab_slots(pool)                                                  \
-    (ngx_slab_page_t *) ((u_char *) (pool) + sizeof(ngx_slab_pool_t))
-
-#define ngx_slab_page_type(page)   ((page)->prev & NGX_SLAB_PAGE_MASK)
-
-#define ngx_slab_page_prev(page)                                              \
-    (ngx_slab_page_t *) ((page)->prev & ~NGX_SLAB_PAGE_MASK)
-
-#define ngx_slab_page_addr(pool, page)                                        \
-    ((((page) - (pool)->pages) << ngx_pagesize_shift)                         \
-     + (uintptr_t) (pool)->start)
+#అయితే_ముగింపు
 
 
-#if (NGX_DEBUG_MALLOC)
+#నిర్వచించు ngx_slab_slots(pool)                                                  \
+    (ngx_slab_పుట_t *) ((u_char *) (pool) + పరిమాణం(ngx_slab_pool_t))
 
-#define ngx_slab_junk(p, size)     ngx_memset(p, 0xA5, size)
+#నిర్వచించు ngx_slab_పుట_type(పుట)   ((పుట)->prev & NGX_SLAB_పుట_ముసుగు)
 
-#elif (NGX_HAVE_DEBUG_MALLOC)
+#నిర్వచించు ngx_slab_పుట_prev(పుట)                                              \
+    (ngx_slab_పుట_t *) ((పుట)->prev & ~NGX_SLAB_పుట_ముసుగు)
 
-#define ngx_slab_junk(p, size)                                                \
-    if (ngx_debug_malloc)          ngx_memset(p, 0xA5, size)
-
-#else
-
-#define ngx_slab_junk(p, size)
-
-#endif
-
-static ngx_slab_page_t *ngx_slab_alloc_pages(ngx_slab_pool_t *pool,
-    ngx_uint_t pages);
-static void ngx_slab_free_pages(ngx_slab_pool_t *pool, ngx_slab_page_t *page,
-    ngx_uint_t pages);
-static void ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level,
-    char *text);
+#నిర్వచించు ngx_slab_పుట_addr(pool, పుట)                                        \
+    ((((పుట) - (pool)->పుటలు) << ngx_pagesize_జరుపు)                         \
+     + (uintptr_t) (pool)->ప్రారంభం)
 
 
-static ngx_uint_t  ngx_slab_max_size;
-static ngx_uint_t  ngx_slab_exact_size;
-static ngx_uint_t  ngx_slab_exact_shift;
+#ఒకవేళ (NGX_DEBUG_MALLOC)
+
+#నిర్వచించు ngx_slab_junk(p, కొలత)     ngx_memset(p, 0xA5, కొలత)
+
+#లేదావేళ (NGX_HAVE_DEBUG_MALLOC)
+
+#నిర్వచించు ngx_slab_junk(p, కొలత)                                                \
+    ఒకవేళ (ngx_debug_malloc)          ngx_memset(p, 0xA5, కొలత)
+
+#లేకపోతే
+
+#నిర్వచించు ngx_slab_junk(p, కొలత)
+
+#అయితే_ముగింపు
+
+స్థిర ngx_slab_పుట_t *ngx_slab_alloc_పుటలు(ngx_slab_pool_t *pool,
+    ngx_uint_t పుటలు);
+స్థిర శూన్య ngx_slab_free_పుటలు(ngx_slab_pool_t *pool, ngx_slab_పుట_t *పుట,
+    ngx_uint_t పుటలు);
+స్థిర శూన్య ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level,
+    అక్షరం *పాఠ్యం);
 
 
-void
-ngx_slab_sizes_init(void)
+స్థిర ngx_uint_t  ngx_slab_max_కొలత;
+స్థిర ngx_uint_t  ngx_slab_exact_కొలత;
+స్థిర ngx_uint_t  ngx_slab_exact_జరుపు;
+
+
+శూన్య
+ngx_slab_sizes_init(శూన్య)
 {
     ngx_uint_t  n;
 
-    ngx_slab_max_size = ngx_pagesize / 2;
-    ngx_slab_exact_size = ngx_pagesize / (8 * sizeof(uintptr_t));
-    for (n = ngx_slab_exact_size; n >>= 1; ngx_slab_exact_shift++) {
+    ngx_slab_max_కొలత = ngx_pagesize / 2;
+    ngx_slab_exact_కొలత = ngx_pagesize / (8 * పరిమాణం(uintptr_t));
+    కొరకు (n = ngx_slab_exact_కొలత; n >>= 1; ngx_slab_exact_జరుపు++) {
         /* void */
     }
 }
 
 
-void
+శూన్య
 ngx_slab_init(ngx_slab_pool_t *pool)
 {
     u_char           *p;
-    size_t            size;
+    కొలత_t            కొలత;
     ngx_int_t         m;
-    ngx_uint_t        i, n, pages;
-    ngx_slab_page_t  *slots, *page;
+    ngx_uint_t        i, n, పుటలు;
+    ngx_slab_పుట_t  *slots, *పుట;
 
-    pool->min_size = (size_t) 1 << pool->min_shift;
+    pool->min_కొలత = (కొలత_t) 1 << pool->min_జరుపు;
 
     slots = ngx_slab_slots(pool);
 
     p = (u_char *) slots;
-    size = pool->end - p;
+    కొలత = pool->చివర - p;
 
-    ngx_slab_junk(p, size);
+    ngx_slab_junk(p, కొలత);
 
-    n = ngx_pagesize_shift - pool->min_shift;
+    n = ngx_pagesize_జరుపు - pool->min_జరుపు;
 
-    for (i = 0; i < n; i++) {
+    కొరకు (i = 0; i < n; i++) {
         /* only "next" is used in list head */
         slots[i].slab = 0;
-        slots[i].next = &slots[i];
+        slots[i].తదుపరి = &slots[i];
         slots[i].prev = 0;
     }
 
-    p += n * sizeof(ngx_slab_page_t);
+    p += n * పరిమాణం(ngx_slab_పుట_t);
 
     pool->stats = (ngx_slab_stat_t *) p;
-    ngx_memzero(pool->stats, n * sizeof(ngx_slab_stat_t));
+    ngx_memzero(pool->stats, n * పరిమాణం(ngx_slab_stat_t));
 
-    p += n * sizeof(ngx_slab_stat_t);
+    p += n * పరిమాణం(ngx_slab_stat_t);
 
-    size -= n * (sizeof(ngx_slab_page_t) + sizeof(ngx_slab_stat_t));
+    కొలత -= n * (పరిమాణం(ngx_slab_పుట_t) + పరిమాణం(ngx_slab_stat_t));
 
-    pages = (ngx_uint_t) (size / (ngx_pagesize + sizeof(ngx_slab_page_t)));
+    పుటలు = (ngx_uint_t) (కొలత / (ngx_pagesize + పరిమాణం(ngx_slab_పుట_t)));
 
-    pool->pages = (ngx_slab_page_t *) p;
-    ngx_memzero(pool->pages, pages * sizeof(ngx_slab_page_t));
+    pool->పుటలు = (ngx_slab_పుట_t *) p;
+    ngx_memzero(pool->పుటలు, పుటలు * పరిమాణం(ngx_slab_పుట_t));
 
-    page = pool->pages;
+    పుట = pool->పుటలు;
 
     /* only "next" is used in list head */
-    pool->free.slab = 0;
-    pool->free.next = page;
-    pool->free.prev = 0;
+    pool->విడుదల.slab = 0;
+    pool->విడుదల.తదుపరి = పుట;
+    pool->విడుదల.prev = 0;
 
-    page->slab = pages;
-    page->next = &pool->free;
-    page->prev = (uintptr_t) &pool->free;
+    పుట->slab = పుటలు;
+    పుట->తదుపరి = &pool->విడుదల;
+    పుట->prev = (uintptr_t) &pool->విడుదల;
 
-    pool->start = ngx_align_ptr(p + pages * sizeof(ngx_slab_page_t),
+    pool->ప్రారంభం = ngx_align_ptr(p + పుటలు * పరిమాణం(ngx_slab_పుట_t),
                                 ngx_pagesize);
 
-    m = pages - (pool->end - pool->start) / ngx_pagesize;
-    if (m > 0) {
-        pages -= m;
-        page->slab = pages;
+    m = పుటలు - (pool->చివర - pool->ప్రారంభం) / ngx_pagesize;
+    ఒకవేళ (m > 0) {
+        పుటలు -= m;
+        పుట->slab = పుటలు;
     }
 
-    pool->last = pool->pages + pages;
-    pool->pfree = pages;
+    pool->చివరి = pool->పుటలు + పుటలు;
+    pool->pfree = పుటలు;
 
     pool->log_nomem = 1;
     pool->log_ctx = &pool->zero;
@@ -165,291 +165,291 @@ ngx_slab_init(ngx_slab_pool_t *pool)
 }
 
 
-void *
-ngx_slab_alloc(ngx_slab_pool_t *pool, size_t size)
+శూన్య *
+ngx_slab_alloc(ngx_slab_pool_t *pool, కొలత_t కొలత)
 {
-    void  *p;
+    శూన్య  *p;
 
-    ngx_shmtx_lock(&pool->mutex);
+    ngx_shmtx_తాళం(&pool->mutex);
 
-    p = ngx_slab_alloc_locked(pool, size);
+    p = ngx_slab_alloc_locked(pool, కొలత);
 
     ngx_shmtx_unlock(&pool->mutex);
 
-    return p;
+    తిరిగి p;
 }
 
 
-void *
-ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
+శూన్య *
+ngx_slab_alloc_locked(ngx_slab_pool_t *pool, కొలత_t కొలత)
 {
-    size_t            s;
-    uintptr_t         p, m, mask, *bitmap;
-    ngx_uint_t        i, n, slot, shift, map;
-    ngx_slab_page_t  *page, *prev, *slots;
+    కొలత_t            s;
+    uintptr_t         p, m, ముసుగు, *bitmap;
+    ngx_uint_t        i, n, స్థానం, జరుపు, map;
+    ngx_slab_పుట_t  *పుట, *prev, *slots;
 
-    if (size > ngx_slab_max_size) {
+    ఒకవేళ (కొలత > ngx_slab_max_కొలత) {
 
-        ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0,
-                       "slab alloc: %uz", size);
+        ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_చక్రం->సంవర్గమానం, 0,
+                       "slab alloc: %uz", కొలత);
 
-        page = ngx_slab_alloc_pages(pool, (size >> ngx_pagesize_shift)
-                                          + ((size % ngx_pagesize) ? 1 : 0));
-        if (page) {
-            p = ngx_slab_page_addr(pool, page);
+        పుట = ngx_slab_alloc_పుటలు(pool, (కొలత >> ngx_pagesize_జరుపు)
+                                          + ((కొలత % ngx_pagesize) ? 1 : 0));
+        ఒకవేళ (పుట) {
+            p = ngx_slab_పుట_addr(pool, పుట);
 
-        } else {
+        } లేకపోతే {
             p = 0;
         }
 
-        goto done;
+        వెళ్ళు పూర్తి;
     }
 
-    if (size > pool->min_size) {
-        shift = 1;
-        for (s = size - 1; s >>= 1; shift++) { /* void */ }
-        slot = shift - pool->min_shift;
+    ఒకవేళ (కొలత > pool->min_కొలత) {
+        జరుపు = 1;
+        కొరకు (s = కొలత - 1; s >>= 1; జరుపు++) { /* void */ }
+        స్థానం = జరుపు - pool->min_జరుపు;
 
-    } else {
-        shift = pool->min_shift;
-        slot = 0;
+    } లేకపోతే {
+        జరుపు = pool->min_జరుపు;
+        స్థానం = 0;
     }
 
-    pool->stats[slot].reqs++;
+    pool->stats[స్థానం].reqs++;
 
-    ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0,
-                   "slab alloc: %uz slot: %ui", size, slot);
+    ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, ngx_చక్రం->సంవర్గమానం, 0,
+                   "slab alloc: %uz slot: %ui", కొలత, స్థానం);
 
     slots = ngx_slab_slots(pool);
-    page = slots[slot].next;
+    పుట = slots[స్థానం].తదుపరి;
 
-    if (page->next != page) {
+    ఒకవేళ (పుట->తదుపరి != పుట) {
 
-        if (shift < ngx_slab_exact_shift) {
+        ఒకవేళ (జరుపు < ngx_slab_exact_జరుపు) {
 
-            bitmap = (uintptr_t *) ngx_slab_page_addr(pool, page);
+            bitmap = (uintptr_t *) ngx_slab_పుట_addr(pool, పుట);
 
-            map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
+            map = (ngx_pagesize >> జరుపు) / (8 * పరిమాణం(uintptr_t));
 
-            for (n = 0; n < map; n++) {
+            కొరకు (n = 0; n < map; n++) {
 
-                if (bitmap[n] != NGX_SLAB_BUSY) {
+                ఒకవేళ (bitmap[n] != NGX_SLAB_BUSY) {
 
-                    for (m = 1, i = 0; m; m <<= 1, i++) {
-                        if (bitmap[n] & m) {
-                            continue;
+                    కొరకు (m = 1, i = 0; m; m <<= 1, i++) {
+                        ఒకవేళ (bitmap[n] & m) {
+                            కొనసాగు;
                         }
 
                         bitmap[n] |= m;
 
-                        i = (n * 8 * sizeof(uintptr_t) + i) << shift;
+                        i = (n * 8 * పరిమాణం(uintptr_t) + i) << జరుపు;
 
                         p = (uintptr_t) bitmap + i;
 
-                        pool->stats[slot].used++;
+                        pool->stats[స్థానం].వాడిన++;
 
-                        if (bitmap[n] == NGX_SLAB_BUSY) {
-                            for (n = n + 1; n < map; n++) {
-                                if (bitmap[n] != NGX_SLAB_BUSY) {
-                                    goto done;
+                        ఒకవేళ (bitmap[n] == NGX_SLAB_BUSY) {
+                            కొరకు (n = n + 1; n < map; n++) {
+                                ఒకవేళ (bitmap[n] != NGX_SLAB_BUSY) {
+                                    వెళ్ళు పూర్తి;
                                 }
                             }
 
-                            prev = ngx_slab_page_prev(page);
-                            prev->next = page->next;
-                            page->next->prev = page->prev;
+                            prev = ngx_slab_పుట_prev(పుట);
+                            prev->తదుపరి = పుట->తదుపరి;
+                            పుట->తదుపరి->prev = పుట->prev;
 
-                            page->next = NULL;
-                            page->prev = NGX_SLAB_SMALL;
+                            పుట->తదుపరి = ఖాళీ;
+                            పుట->prev = NGX_SLAB_SMALL;
                         }
 
-                        goto done;
+                        వెళ్ళు పూర్తి;
                     }
                 }
             }
 
-        } else if (shift == ngx_slab_exact_shift) {
+        } లేకపోతే ఒకవేళ (జరుపు == ngx_slab_exact_జరుపు) {
 
-            for (m = 1, i = 0; m; m <<= 1, i++) {
-                if (page->slab & m) {
-                    continue;
+            కొరకు (m = 1, i = 0; m; m <<= 1, i++) {
+                ఒకవేళ (పుట->slab & m) {
+                    కొనసాగు;
                 }
 
-                page->slab |= m;
+                పుట->slab |= m;
 
-                if (page->slab == NGX_SLAB_BUSY) {
-                    prev = ngx_slab_page_prev(page);
-                    prev->next = page->next;
-                    page->next->prev = page->prev;
+                ఒకవేళ (పుట->slab == NGX_SLAB_BUSY) {
+                    prev = ngx_slab_పుట_prev(పుట);
+                    prev->తదుపరి = పుట->తదుపరి;
+                    పుట->తదుపరి->prev = పుట->prev;
 
-                    page->next = NULL;
-                    page->prev = NGX_SLAB_EXACT;
+                    పుట->తదుపరి = ఖాళీ;
+                    పుట->prev = NGX_SLAB_EXACT;
                 }
 
-                p = ngx_slab_page_addr(pool, page) + (i << shift);
+                p = ngx_slab_పుట_addr(pool, పుట) + (i << జరుపు);
 
-                pool->stats[slot].used++;
+                pool->stats[స్థానం].వాడిన++;
 
-                goto done;
+                వెళ్ళు పూర్తి;
             }
 
-        } else { /* shift > ngx_slab_exact_shift */
+        } లేకపోతే { /* shift > ngx_slab_exact_shift */
 
-            mask = ((uintptr_t) 1 << (ngx_pagesize >> shift)) - 1;
-            mask <<= NGX_SLAB_MAP_SHIFT;
+            ముసుగు = ((uintptr_t) 1 << (ngx_pagesize >> జరుపు)) - 1;
+            ముసుగు <<= NGX_SLAB_MAP_జరుపు;
 
-            for (m = (uintptr_t) 1 << NGX_SLAB_MAP_SHIFT, i = 0;
-                 m & mask;
+            కొరకు (m = (uintptr_t) 1 << NGX_SLAB_MAP_జరుపు, i = 0;
+                 m & ముసుగు;
                  m <<= 1, i++)
             {
-                if (page->slab & m) {
-                    continue;
+                ఒకవేళ (పుట->slab & m) {
+                    కొనసాగు;
                 }
 
-                page->slab |= m;
+                పుట->slab |= m;
 
-                if ((page->slab & NGX_SLAB_MAP_MASK) == mask) {
-                    prev = ngx_slab_page_prev(page);
-                    prev->next = page->next;
-                    page->next->prev = page->prev;
+                ఒకవేళ ((పుట->slab & NGX_SLAB_MAP_ముసుగు) == ముసుగు) {
+                    prev = ngx_slab_పుట_prev(పుట);
+                    prev->తదుపరి = పుట->తదుపరి;
+                    పుట->తదుపరి->prev = పుట->prev;
 
-                    page->next = NULL;
-                    page->prev = NGX_SLAB_BIG;
+                    పుట->తదుపరి = ఖాళీ;
+                    పుట->prev = NGX_SLAB_BIG;
                 }
 
-                p = ngx_slab_page_addr(pool, page) + (i << shift);
+                p = ngx_slab_పుట_addr(pool, పుట) + (i << జరుపు);
 
-                pool->stats[slot].used++;
+                pool->stats[స్థానం].వాడిన++;
 
-                goto done;
+                వెళ్ళు పూర్తి;
             }
         }
 
         ngx_slab_error(pool, NGX_LOG_ALERT, "ngx_slab_alloc(): page is busy");
-        ngx_debug_point();
+        ngx_debug_బిందువు();
     }
 
-    page = ngx_slab_alloc_pages(pool, 1);
+    పుట = ngx_slab_alloc_పుటలు(pool, 1);
 
-    if (page) {
-        if (shift < ngx_slab_exact_shift) {
-            bitmap = (uintptr_t *) ngx_slab_page_addr(pool, page);
+    ఒకవేళ (పుట) {
+        ఒకవేళ (జరుపు < ngx_slab_exact_జరుపు) {
+            bitmap = (uintptr_t *) ngx_slab_పుట_addr(pool, పుట);
 
-            n = (ngx_pagesize >> shift) / ((1 << shift) * 8);
+            n = (ngx_pagesize >> జరుపు) / ((1 << జరుపు) * 8);
 
-            if (n == 0) {
+            ఒకవేళ (n == 0) {
                 n = 1;
             }
 
             /* "n" elements for bitmap, plus one requested */
 
-            for (i = 0; i < (n + 1) / (8 * sizeof(uintptr_t)); i++) {
+            కొరకు (i = 0; i < (n + 1) / (8 * పరిమాణం(uintptr_t)); i++) {
                 bitmap[i] = NGX_SLAB_BUSY;
             }
 
-            m = ((uintptr_t) 1 << ((n + 1) % (8 * sizeof(uintptr_t)))) - 1;
+            m = ((uintptr_t) 1 << ((n + 1) % (8 * పరిమాణం(uintptr_t)))) - 1;
             bitmap[i] = m;
 
-            map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
+            map = (ngx_pagesize >> జరుపు) / (8 * పరిమాణం(uintptr_t));
 
-            for (i = i + 1; i < map; i++) {
+            కొరకు (i = i + 1; i < map; i++) {
                 bitmap[i] = 0;
             }
 
-            page->slab = shift;
-            page->next = &slots[slot];
-            page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_SMALL;
+            పుట->slab = జరుపు;
+            పుట->తదుపరి = &slots[స్థానం];
+            పుట->prev = (uintptr_t) &slots[స్థానం] | NGX_SLAB_SMALL;
 
-            slots[slot].next = page;
+            slots[స్థానం].తదుపరి = పుట;
 
-            pool->stats[slot].total += (ngx_pagesize >> shift) - n;
+            pool->stats[స్థానం].మొత్తం += (ngx_pagesize >> జరుపు) - n;
 
-            p = ngx_slab_page_addr(pool, page) + (n << shift);
+            p = ngx_slab_పుట_addr(pool, పుట) + (n << జరుపు);
 
-            pool->stats[slot].used++;
+            pool->stats[స్థానం].వాడిన++;
 
-            goto done;
+            వెళ్ళు పూర్తి;
 
-        } else if (shift == ngx_slab_exact_shift) {
+        } లేకపోతే ఒకవేళ (జరుపు == ngx_slab_exact_జరుపు) {
 
-            page->slab = 1;
-            page->next = &slots[slot];
-            page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_EXACT;
+            పుట->slab = 1;
+            పుట->తదుపరి = &slots[స్థానం];
+            పుట->prev = (uintptr_t) &slots[స్థానం] | NGX_SLAB_EXACT;
 
-            slots[slot].next = page;
+            slots[స్థానం].తదుపరి = పుట;
 
-            pool->stats[slot].total += 8 * sizeof(uintptr_t);
+            pool->stats[స్థానం].మొత్తం += 8 * పరిమాణం(uintptr_t);
 
-            p = ngx_slab_page_addr(pool, page);
+            p = ngx_slab_పుట_addr(pool, పుట);
 
-            pool->stats[slot].used++;
+            pool->stats[స్థానం].వాడిన++;
 
-            goto done;
+            వెళ్ళు పూర్తి;
 
-        } else { /* shift > ngx_slab_exact_shift */
+        } లేకపోతే { /* shift > ngx_slab_exact_shift */
 
-            page->slab = ((uintptr_t) 1 << NGX_SLAB_MAP_SHIFT) | shift;
-            page->next = &slots[slot];
-            page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_BIG;
+            పుట->slab = ((uintptr_t) 1 << NGX_SLAB_MAP_జరుపు) | జరుపు;
+            పుట->తదుపరి = &slots[స్థానం];
+            పుట->prev = (uintptr_t) &slots[స్థానం] | NGX_SLAB_BIG;
 
-            slots[slot].next = page;
+            slots[స్థానం].తదుపరి = పుట;
 
-            pool->stats[slot].total += ngx_pagesize >> shift;
+            pool->stats[స్థానం].మొత్తం += ngx_pagesize >> జరుపు;
 
-            p = ngx_slab_page_addr(pool, page);
+            p = ngx_slab_పుట_addr(pool, పుట);
 
-            pool->stats[slot].used++;
+            pool->stats[స్థానం].వాడిన++;
 
-            goto done;
+            వెళ్ళు పూర్తి;
         }
     }
 
     p = 0;
 
-    pool->stats[slot].fails++;
+    pool->stats[స్థానం].fails++;
 
-done:
+పూర్తి:
 
-    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0,
-                   "slab alloc: %p", (void *) p);
+    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_చక్రం->సంవర్గమానం, 0,
+                   "slab alloc: %p", (శూన్య *) p);
 
-    return (void *) p;
+    తిరిగి (శూన్య *) p;
 }
 
 
-void *
-ngx_slab_calloc(ngx_slab_pool_t *pool, size_t size)
+శూన్య *
+ngx_slab_calloc(ngx_slab_pool_t *pool, కొలత_t కొలత)
 {
-    void  *p;
+    శూన్య  *p;
 
-    ngx_shmtx_lock(&pool->mutex);
+    ngx_shmtx_తాళం(&pool->mutex);
 
-    p = ngx_slab_calloc_locked(pool, size);
+    p = ngx_slab_calloc_locked(pool, కొలత);
 
     ngx_shmtx_unlock(&pool->mutex);
 
-    return p;
+    తిరిగి p;
 }
 
 
-void *
-ngx_slab_calloc_locked(ngx_slab_pool_t *pool, size_t size)
+శూన్య *
+ngx_slab_calloc_locked(ngx_slab_pool_t *pool, కొలత_t కొలత)
 {
-    void  *p;
+    శూన్య  *p;
 
-    p = ngx_slab_alloc_locked(pool, size);
-    if (p) {
-        ngx_memzero(p, size);
+    p = ngx_slab_alloc_locked(pool, కొలత);
+    ఒకవేళ (p) {
+        ngx_memzero(p, కొలత);
     }
 
-    return p;
+    తిరిగి p;
 }
 
 
-void
-ngx_slab_free(ngx_slab_pool_t *pool, void *p)
+శూన్య
+ngx_slab_free(ngx_slab_pool_t *pool, శూన్య *p)
 {
-    ngx_shmtx_lock(&pool->mutex);
+    ngx_shmtx_తాళం(&pool->mutex);
 
     ngx_slab_free_locked(pool, p);
 
@@ -457,211 +457,211 @@ ngx_slab_free(ngx_slab_pool_t *pool, void *p)
 }
 
 
-void
-ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
+శూన్య
+ngx_slab_free_locked(ngx_slab_pool_t *pool, శూన్య *p)
 {
-    size_t            size;
+    కొలత_t            కొలత;
     uintptr_t         slab, m, *bitmap;
-    ngx_uint_t        i, n, type, slot, shift, map;
-    ngx_slab_page_t  *slots, *page;
+    ngx_uint_t        i, n, type, స్థానం, జరుపు, map;
+    ngx_slab_పుట_t  *slots, *పుట;
 
-    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0, "slab free: %p", p);
+    ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_చక్రం->సంవర్గమానం, 0, "slab free: %p", p);
 
-    if ((u_char *) p < pool->start || (u_char *) p > pool->end) {
+    ఒకవేళ ((u_char *) p < pool->ప్రారంభం || (u_char *) p > pool->చివర) {
         ngx_slab_error(pool, NGX_LOG_ALERT, "ngx_slab_free(): outside of pool");
-        goto fail;
+        వెళ్ళు fail;
     }
 
-    n = ((u_char *) p - pool->start) >> ngx_pagesize_shift;
-    page = &pool->pages[n];
-    slab = page->slab;
-    type = ngx_slab_page_type(page);
+    n = ((u_char *) p - pool->ప్రారంభం) >> ngx_pagesize_జరుపు;
+    పుట = &pool->పుటలు[n];
+    slab = పుట->slab;
+    type = ngx_slab_పుట_type(పుట);
 
-    switch (type) {
+    ఎంపిక (type) {
 
-    case NGX_SLAB_SMALL:
+    స్థితి NGX_SLAB_SMALL:
 
-        shift = slab & NGX_SLAB_SHIFT_MASK;
-        size = (size_t) 1 << shift;
+        జరుపు = slab & NGX_SLAB_జరుపు_ముసుగు;
+        కొలత = (కొలత_t) 1 << జరుపు;
 
-        if ((uintptr_t) p & (size - 1)) {
-            goto wrong_chunk;
+        ఒకవేళ ((uintptr_t) p & (కొలత - 1)) {
+            వెళ్ళు wrong_chunk;
         }
 
-        n = ((uintptr_t) p & (ngx_pagesize - 1)) >> shift;
-        m = (uintptr_t) 1 << (n % (8 * sizeof(uintptr_t)));
-        n /= 8 * sizeof(uintptr_t);
+        n = ((uintptr_t) p & (ngx_pagesize - 1)) >> జరుపు;
+        m = (uintptr_t) 1 << (n % (8 * పరిమాణం(uintptr_t)));
+        n /= 8 * పరిమాణం(uintptr_t);
         bitmap = (uintptr_t *)
                              ((uintptr_t) p & ~((uintptr_t) ngx_pagesize - 1));
 
-        if (bitmap[n] & m) {
-            slot = shift - pool->min_shift;
+        ఒకవేళ (bitmap[n] & m) {
+            స్థానం = జరుపు - pool->min_జరుపు;
 
-            if (page->next == NULL) {
+            ఒకవేళ (పుట->తదుపరి == ఖాళీ) {
                 slots = ngx_slab_slots(pool);
 
-                page->next = slots[slot].next;
-                slots[slot].next = page;
+                పుట->తదుపరి = slots[స్థానం].తదుపరి;
+                slots[స్థానం].తదుపరి = పుట;
 
-                page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_SMALL;
-                page->next->prev = (uintptr_t) page | NGX_SLAB_SMALL;
+                పుట->prev = (uintptr_t) &slots[స్థానం] | NGX_SLAB_SMALL;
+                పుట->తదుపరి->prev = (uintptr_t) పుట | NGX_SLAB_SMALL;
             }
 
             bitmap[n] &= ~m;
 
-            n = (ngx_pagesize >> shift) / ((1 << shift) * 8);
+            n = (ngx_pagesize >> జరుపు) / ((1 << జరుపు) * 8);
 
-            if (n == 0) {
+            ఒకవేళ (n == 0) {
                 n = 1;
             }
 
-            i = n / (8 * sizeof(uintptr_t));
-            m = ((uintptr_t) 1 << (n % (8 * sizeof(uintptr_t)))) - 1;
+            i = n / (8 * పరిమాణం(uintptr_t));
+            m = ((uintptr_t) 1 << (n % (8 * పరిమాణం(uintptr_t)))) - 1;
 
-            if (bitmap[i] & ~m) {
-                goto done;
+            ఒకవేళ (bitmap[i] & ~m) {
+                వెళ్ళు పూర్తి;
             }
 
-            map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
+            map = (ngx_pagesize >> జరుపు) / (8 * పరిమాణం(uintptr_t));
 
-            for (i = i + 1; i < map; i++) {
-                if (bitmap[i]) {
-                    goto done;
+            కొరకు (i = i + 1; i < map; i++) {
+                ఒకవేళ (bitmap[i]) {
+                    వెళ్ళు పూర్తి;
                 }
             }
 
-            ngx_slab_free_pages(pool, page, 1);
+            ngx_slab_free_పుటలు(pool, పుట, 1);
 
-            pool->stats[slot].total -= (ngx_pagesize >> shift) - n;
+            pool->stats[స్థానం].మొత్తం -= (ngx_pagesize >> జరుపు) - n;
 
-            goto done;
+            వెళ్ళు పూర్తి;
         }
 
-        goto chunk_already_free;
+        వెళ్ళు chunk_already_free;
 
-    case NGX_SLAB_EXACT:
+    స్థితి NGX_SLAB_EXACT:
 
         m = (uintptr_t) 1 <<
-                (((uintptr_t) p & (ngx_pagesize - 1)) >> ngx_slab_exact_shift);
-        size = ngx_slab_exact_size;
+                (((uintptr_t) p & (ngx_pagesize - 1)) >> ngx_slab_exact_జరుపు);
+        కొలత = ngx_slab_exact_కొలత;
 
-        if ((uintptr_t) p & (size - 1)) {
-            goto wrong_chunk;
+        ఒకవేళ ((uintptr_t) p & (కొలత - 1)) {
+            వెళ్ళు wrong_chunk;
         }
 
-        if (slab & m) {
-            slot = ngx_slab_exact_shift - pool->min_shift;
+        ఒకవేళ (slab & m) {
+            స్థానం = ngx_slab_exact_జరుపు - pool->min_జరుపు;
 
-            if (slab == NGX_SLAB_BUSY) {
+            ఒకవేళ (slab == NGX_SLAB_BUSY) {
                 slots = ngx_slab_slots(pool);
 
-                page->next = slots[slot].next;
-                slots[slot].next = page;
+                పుట->తదుపరి = slots[స్థానం].తదుపరి;
+                slots[స్థానం].తదుపరి = పుట;
 
-                page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_EXACT;
-                page->next->prev = (uintptr_t) page | NGX_SLAB_EXACT;
+                పుట->prev = (uintptr_t) &slots[స్థానం] | NGX_SLAB_EXACT;
+                పుట->తదుపరి->prev = (uintptr_t) పుట | NGX_SLAB_EXACT;
             }
 
-            page->slab &= ~m;
+            పుట->slab &= ~m;
 
-            if (page->slab) {
-                goto done;
+            ఒకవేళ (పుట->slab) {
+                వెళ్ళు పూర్తి;
             }
 
-            ngx_slab_free_pages(pool, page, 1);
+            ngx_slab_free_పుటలు(pool, పుట, 1);
 
-            pool->stats[slot].total -= 8 * sizeof(uintptr_t);
+            pool->stats[స్థానం].మొత్తం -= 8 * పరిమాణం(uintptr_t);
 
-            goto done;
+            వెళ్ళు పూర్తి;
         }
 
-        goto chunk_already_free;
+        వెళ్ళు chunk_already_free;
 
-    case NGX_SLAB_BIG:
+    స్థితి NGX_SLAB_BIG:
 
-        shift = slab & NGX_SLAB_SHIFT_MASK;
-        size = (size_t) 1 << shift;
+        జరుపు = slab & NGX_SLAB_జరుపు_ముసుగు;
+        కొలత = (కొలత_t) 1 << జరుపు;
 
-        if ((uintptr_t) p & (size - 1)) {
-            goto wrong_chunk;
+        ఒకవేళ ((uintptr_t) p & (కొలత - 1)) {
+            వెళ్ళు wrong_chunk;
         }
 
-        m = (uintptr_t) 1 << ((((uintptr_t) p & (ngx_pagesize - 1)) >> shift)
-                              + NGX_SLAB_MAP_SHIFT);
+        m = (uintptr_t) 1 << ((((uintptr_t) p & (ngx_pagesize - 1)) >> జరుపు)
+                              + NGX_SLAB_MAP_జరుపు);
 
-        if (slab & m) {
-            slot = shift - pool->min_shift;
+        ఒకవేళ (slab & m) {
+            స్థానం = జరుపు - pool->min_జరుపు;
 
-            if (page->next == NULL) {
+            ఒకవేళ (పుట->తదుపరి == ఖాళీ) {
                 slots = ngx_slab_slots(pool);
 
-                page->next = slots[slot].next;
-                slots[slot].next = page;
+                పుట->తదుపరి = slots[స్థానం].తదుపరి;
+                slots[స్థానం].తదుపరి = పుట;
 
-                page->prev = (uintptr_t) &slots[slot] | NGX_SLAB_BIG;
-                page->next->prev = (uintptr_t) page | NGX_SLAB_BIG;
+                పుట->prev = (uintptr_t) &slots[స్థానం] | NGX_SLAB_BIG;
+                పుట->తదుపరి->prev = (uintptr_t) పుట | NGX_SLAB_BIG;
             }
 
-            page->slab &= ~m;
+            పుట->slab &= ~m;
 
-            if (page->slab & NGX_SLAB_MAP_MASK) {
-                goto done;
+            ఒకవేళ (పుట->slab & NGX_SLAB_MAP_ముసుగు) {
+                వెళ్ళు పూర్తి;
             }
 
-            ngx_slab_free_pages(pool, page, 1);
+            ngx_slab_free_పుటలు(pool, పుట, 1);
 
-            pool->stats[slot].total -= ngx_pagesize >> shift;
+            pool->stats[స్థానం].మొత్తం -= ngx_pagesize >> జరుపు;
 
-            goto done;
+            వెళ్ళు పూర్తి;
         }
 
-        goto chunk_already_free;
+        వెళ్ళు chunk_already_free;
 
-    case NGX_SLAB_PAGE:
+    స్థితి NGX_SLAB_పుట:
 
-        if ((uintptr_t) p & (ngx_pagesize - 1)) {
-            goto wrong_chunk;
+        ఒకవేళ ((uintptr_t) p & (ngx_pagesize - 1)) {
+            వెళ్ళు wrong_chunk;
         }
 
-        if (!(slab & NGX_SLAB_PAGE_START)) {
+        ఒకవేళ (!(slab & NGX_SLAB_పుట_ప్రారంభం)) {
             ngx_slab_error(pool, NGX_LOG_ALERT,
                            "ngx_slab_free(): page is already free");
-            goto fail;
+            వెళ్ళు fail;
         }
 
-        if (slab == NGX_SLAB_PAGE_BUSY) {
+        ఒకవేళ (slab == NGX_SLAB_పుట_BUSY) {
             ngx_slab_error(pool, NGX_LOG_ALERT,
                            "ngx_slab_free(): pointer to wrong page");
-            goto fail;
+            వెళ్ళు fail;
         }
 
-        size = slab & ~NGX_SLAB_PAGE_START;
+        కొలత = slab & ~NGX_SLAB_పుట_ప్రారంభం;
 
-        ngx_slab_free_pages(pool, page, size);
+        ngx_slab_free_పుటలు(pool, పుట, కొలత);
 
-        ngx_slab_junk(p, size << ngx_pagesize_shift);
+        ngx_slab_junk(p, కొలత << ngx_pagesize_జరుపు);
 
-        return;
+        తిరిగి;
     }
 
     /* not reached */
 
-    return;
+    తిరిగి;
 
-done:
+పూర్తి:
 
-    pool->stats[slot].used--;
+    pool->stats[స్థానం].వాడిన--;
 
-    ngx_slab_junk(p, size);
+    ngx_slab_junk(p, కొలత);
 
-    return;
+    తిరిగి;
 
 wrong_chunk:
 
     ngx_slab_error(pool, NGX_LOG_ALERT,
                    "ngx_slab_free(): pointer to wrong chunk");
 
-    goto fail;
+    వెళ్ళు fail;
 
 chunk_already_free:
 
@@ -670,148 +670,148 @@ chunk_already_free:
 
 fail:
 
-    return;
+    తిరిగి;
 }
 
 
-static ngx_slab_page_t *
-ngx_slab_alloc_pages(ngx_slab_pool_t *pool, ngx_uint_t pages)
+స్థిర ngx_slab_పుట_t *
+ngx_slab_alloc_పుటలు(ngx_slab_pool_t *pool, ngx_uint_t పుటలు)
 {
-    ngx_slab_page_t  *page, *p;
+    ngx_slab_పుట_t  *పుట, *p;
 
-    for (page = pool->free.next; page != &pool->free; page = page->next) {
+    కొరకు (పుట = pool->విడుదల.తదుపరి; పుట != &pool->విడుదల; పుట = పుట->తదుపరి) {
 
-        if (page->slab >= pages) {
+        ఒకవేళ (పుట->slab >= పుటలు) {
 
-            if (page->slab > pages) {
-                page[page->slab - 1].prev = (uintptr_t) &page[pages];
+            ఒకవేళ (పుట->slab > పుటలు) {
+                పుట[పుట->slab - 1].prev = (uintptr_t) &పుట[పుటలు];
 
-                page[pages].slab = page->slab - pages;
-                page[pages].next = page->next;
-                page[pages].prev = page->prev;
+                పుట[పుటలు].slab = పుట->slab - పుటలు;
+                పుట[పుటలు].తదుపరి = పుట->తదుపరి;
+                పుట[పుటలు].prev = పుట->prev;
 
-                p = (ngx_slab_page_t *) page->prev;
-                p->next = &page[pages];
-                page->next->prev = (uintptr_t) &page[pages];
+                p = (ngx_slab_పుట_t *) పుట->prev;
+                p->తదుపరి = &పుట[పుటలు];
+                పుట->తదుపరి->prev = (uintptr_t) &పుట[పుటలు];
 
-            } else {
-                p = (ngx_slab_page_t *) page->prev;
-                p->next = page->next;
-                page->next->prev = page->prev;
+            } లేకపోతే {
+                p = (ngx_slab_పుట_t *) పుట->prev;
+                p->తదుపరి = పుట->తదుపరి;
+                పుట->తదుపరి->prev = పుట->prev;
             }
 
-            page->slab = pages | NGX_SLAB_PAGE_START;
-            page->next = NULL;
-            page->prev = NGX_SLAB_PAGE;
+            పుట->slab = పుటలు | NGX_SLAB_పుట_ప్రారంభం;
+            పుట->తదుపరి = ఖాళీ;
+            పుట->prev = NGX_SLAB_పుట;
 
-            pool->pfree -= pages;
+            pool->pfree -= పుటలు;
 
-            if (--pages == 0) {
-                return page;
+            ఒకవేళ (--పుటలు == 0) {
+                తిరిగి పుట;
             }
 
-            for (p = page + 1; pages; pages--) {
-                p->slab = NGX_SLAB_PAGE_BUSY;
-                p->next = NULL;
-                p->prev = NGX_SLAB_PAGE;
+            కొరకు (p = పుట + 1; పుటలు; పుటలు--) {
+                p->slab = NGX_SLAB_పుట_BUSY;
+                p->తదుపరి = ఖాళీ;
+                p->prev = NGX_SLAB_పుట;
                 p++;
             }
 
-            return page;
+            తిరిగి పుట;
         }
     }
 
-    if (pool->log_nomem) {
+    ఒకవేళ (pool->log_nomem) {
         ngx_slab_error(pool, NGX_LOG_CRIT,
                        "ngx_slab_alloc() failed: no memory");
     }
 
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
 
-static void
-ngx_slab_free_pages(ngx_slab_pool_t *pool, ngx_slab_page_t *page,
-    ngx_uint_t pages)
+స్థిర శూన్య
+ngx_slab_free_పుటలు(ngx_slab_pool_t *pool, ngx_slab_పుట_t *పుట,
+    ngx_uint_t పుటలు)
 {
-    ngx_slab_page_t  *prev, *join;
+    ngx_slab_పుట_t  *prev, *join;
 
-    pool->pfree += pages;
+    pool->pfree += పుటలు;
 
-    page->slab = pages--;
+    పుట->slab = పుటలు--;
 
-    if (pages) {
-        ngx_memzero(&page[1], pages * sizeof(ngx_slab_page_t));
+    ఒకవేళ (పుటలు) {
+        ngx_memzero(&పుట[1], పుటలు * పరిమాణం(ngx_slab_పుట_t));
     }
 
-    if (page->next) {
-        prev = ngx_slab_page_prev(page);
-        prev->next = page->next;
-        page->next->prev = page->prev;
+    ఒకవేళ (పుట->తదుపరి) {
+        prev = ngx_slab_పుట_prev(పుట);
+        prev->తదుపరి = పుట->తదుపరి;
+        పుట->తదుపరి->prev = పుట->prev;
     }
 
-    join = page + page->slab;
+    join = పుట + పుట->slab;
 
-    if (join < pool->last) {
+    ఒకవేళ (join < pool->చివరి) {
 
-        if (ngx_slab_page_type(join) == NGX_SLAB_PAGE) {
+        ఒకవేళ (ngx_slab_పుట_type(join) == NGX_SLAB_పుట) {
 
-            if (join->next != NULL) {
-                pages += join->slab;
-                page->slab += join->slab;
+            ఒకవేళ (join->తదుపరి != ఖాళీ) {
+                పుటలు += join->slab;
+                పుట->slab += join->slab;
 
-                prev = ngx_slab_page_prev(join);
-                prev->next = join->next;
-                join->next->prev = join->prev;
+                prev = ngx_slab_పుట_prev(join);
+                prev->తదుపరి = join->తదుపరి;
+                join->తదుపరి->prev = join->prev;
 
-                join->slab = NGX_SLAB_PAGE_FREE;
-                join->next = NULL;
-                join->prev = NGX_SLAB_PAGE;
+                join->slab = NGX_SLAB_పుట_FREE;
+                join->తదుపరి = ఖాళీ;
+                join->prev = NGX_SLAB_పుట;
             }
         }
     }
 
-    if (page > pool->pages) {
-        join = page - 1;
+    ఒకవేళ (పుట > pool->పుటలు) {
+        join = పుట - 1;
 
-        if (ngx_slab_page_type(join) == NGX_SLAB_PAGE) {
+        ఒకవేళ (ngx_slab_పుట_type(join) == NGX_SLAB_పుట) {
 
-            if (join->slab == NGX_SLAB_PAGE_FREE) {
-                join = ngx_slab_page_prev(join);
+            ఒకవేళ (join->slab == NGX_SLAB_పుట_FREE) {
+                join = ngx_slab_పుట_prev(join);
             }
 
-            if (join->next != NULL) {
-                pages += join->slab;
-                join->slab += page->slab;
+            ఒకవేళ (join->తదుపరి != ఖాళీ) {
+                పుటలు += join->slab;
+                join->slab += పుట->slab;
 
-                prev = ngx_slab_page_prev(join);
-                prev->next = join->next;
-                join->next->prev = join->prev;
+                prev = ngx_slab_పుట_prev(join);
+                prev->తదుపరి = join->తదుపరి;
+                join->తదుపరి->prev = join->prev;
 
-                page->slab = NGX_SLAB_PAGE_FREE;
-                page->next = NULL;
-                page->prev = NGX_SLAB_PAGE;
+                పుట->slab = NGX_SLAB_పుట_FREE;
+                పుట->తదుపరి = ఖాళీ;
+                పుట->prev = NGX_SLAB_పుట;
 
-                page = join;
+                పుట = join;
             }
         }
     }
 
-    if (pages) {
-        page[pages].prev = (uintptr_t) page;
+    ఒకవేళ (పుటలు) {
+        పుట[పుటలు].prev = (uintptr_t) పుట;
     }
 
-    page->prev = (uintptr_t) &pool->free;
-    page->next = pool->free.next;
+    పుట->prev = (uintptr_t) &pool->విడుదల;
+    పుట->తదుపరి = pool->విడుదల.తదుపరి;
 
-    page->next->prev = (uintptr_t) page;
+    పుట->తదుపరి->prev = (uintptr_t) పుట;
 
-    pool->free.next = page;
+    pool->విడుదల.తదుపరి = పుట;
 }
 
 
-static void
-ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level, char *text)
+స్థిర శూన్య
+ngx_slab_error(ngx_slab_pool_t *pool, ngx_uint_t level, అక్షరం *పాఠ్యం)
 {
-    ngx_log_error(level, ngx_cycle->log, 0, "%s%s", text, pool->log_ctx);
+    ngx_log_error(level, ngx_చక్రం->సంవర్గమానం, 0, "%s%s", పాఠ్యం, pool->log_ctx);
 }

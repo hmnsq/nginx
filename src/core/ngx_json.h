@@ -4,15 +4,15 @@
  */
 
 
-#ifndef _NGX_JSON_H_INCLUDED_
-#define _NGX_JSON_H_INCLUDED_
+#నిర్వచితం_కాకపోతే _NGX_JSON_H_INCLUDED_
+#నిర్వచించు _NGX_JSON_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#అన్తర్భావ <ngx_config.h>
+#అన్తర్భావ <ngx_core.h>
 
 
-ngx_buf_t *ngx_json_render(ngx_pool_t *pool, ngx_data_item_t *item);
+ngx_buf_t *ngx_json_render(ngx_pool_t *pool, ngx_దత్తాంశం_అంశం_t *అంశం);
 
 
-#endif /* _NGX_JSON_H_INCLUDED_ */
+#అయితే_ముగింపు /* _NGX_JSON_H_INCLUDED_ */
