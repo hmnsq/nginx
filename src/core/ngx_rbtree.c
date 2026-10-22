@@ -31,33 +31,33 @@ ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
     root = &tree->root;
     sentinel = tree->sentinel;
 
-    if (*root == sentinel) {
+    ប្រសិនបើ (*root == sentinel) {
         node->parent = NULL;
         node->left = sentinel;
         node->right = sentinel;
         ngx_rbt_black(node);
         *root = node;
 
-        return;
+        ត្រឡប់;
     }
 
     tree->insert(*root, node, sentinel);
 
     /* re-balance tree */
 
-    while (node != *root && ngx_rbt_is_red(node->parent)) {
+    ខណៈពេល (node != *root && ngx_rbt_is_red(node->parent)) {
 
-        if (node->parent == node->parent->parent->left) {
+        ប្រសិនបើ (node->parent == node->parent->parent->left) {
             temp = node->parent->parent->right;
 
-            if (ngx_rbt_is_red(temp)) {
+            ប្រសិនបើ (ngx_rbt_is_red(temp)) {
                 ngx_rbt_black(node->parent);
                 ngx_rbt_black(temp);
                 ngx_rbt_red(node->parent->parent);
                 node = node->parent->parent;
 
-            } else {
-                if (node == node->parent->right) {
+            } បើមិនដូច្នេះ {
+                ប្រសិនបើ (node == node->parent->right) {
                     node = node->parent;
                     ngx_rbtree_left_rotate(root, sentinel, node);
                 }
@@ -67,17 +67,17 @@ ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
                 ngx_rbtree_right_rotate(root, sentinel, node->parent->parent);
             }
 
-        } else {
+        } បើមិនដូច្នេះ {
             temp = node->parent->parent->left;
 
-            if (ngx_rbt_is_red(temp)) {
+            ប្រសិនបើ (ngx_rbt_is_red(temp)) {
                 ngx_rbt_black(node->parent);
                 ngx_rbt_black(temp);
                 ngx_rbt_red(node->parent->parent);
                 node = node->parent->parent;
 
-            } else {
-                if (node == node->parent->left) {
+            } បើមិនដូច្នេះ {
+                ប្រសិនបើ (node == node->parent->left) {
                     node = node->parent;
                     ngx_rbtree_right_rotate(root, sentinel, node);
                 }
@@ -99,12 +99,12 @@ ngx_rbtree_insert_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 {
     ngx_rbtree_node_t  **p;
 
-    for ( ;; ) {
+    សម្រាប់ ( ;; ) {
 
         p = (node->key < temp->key) ? &temp->left : &temp->right;
 
-        if (*p == sentinel) {
-            break;
+        ប្រសិនបើ (*p == sentinel) {
+            bha_nga;
         }
 
         temp = *p;
@@ -124,7 +124,7 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 {
     ngx_rbtree_node_t  **p;
 
-    for ( ;; ) {
+    សម្រាប់ ( ;; ) {
 
         /*
          * Timer values
@@ -138,8 +138,8 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
         p = ((ngx_rbtree_key_int_t) (node->key - temp->key) < 0)
             ? &temp->left : &temp->right;
 
-        if (*p == sentinel) {
-            break;
+        ប្រសិនបើ (*p == sentinel) {
+            bha_nga;
         }
 
         temp = *p;
@@ -164,20 +164,20 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
     root = &tree->root;
     sentinel = tree->sentinel;
 
-    if (node->left == sentinel) {
+    ប្រសិនបើ (node->left == sentinel) {
         temp = node->right;
         subst = node;
 
-    } else if (node->right == sentinel) {
+    } បើមិនដូច្នេះ ប្រសិនបើ (node->right == sentinel) {
         temp = node->left;
         subst = node;
 
-    } else {
+    } បើមិនដូច្នេះ {
         subst = ngx_rbtree_min(node->right, sentinel);
         temp = subst->right;
     }
 
-    if (subst == *root) {
+    ប្រសិនបើ (subst == *root) {
         *root = temp;
         ngx_rbt_black(temp);
 
@@ -187,28 +187,28 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
         node->parent = NULL;
         node->key = 0;
 
-        return;
+        ត្រឡប់;
     }
 
     red = ngx_rbt_is_red(subst);
 
-    if (subst == subst->parent->left) {
+    ប្រសិនបើ (subst == subst->parent->left) {
         subst->parent->left = temp;
 
-    } else {
+    } បើមិនដូច្នេះ {
         subst->parent->right = temp;
     }
 
-    if (subst == node) {
+    ប្រសិនបើ (subst == node) {
 
         temp->parent = subst->parent;
 
-    } else {
+    } បើមិនដូច្នេះ {
 
-        if (subst->parent == node) {
+        ប្រសិនបើ (subst->parent == node) {
             temp->parent = subst;
 
-        } else {
+        } បើមិនដូច្នេះ {
             temp->parent = subst->parent;
         }
 
@@ -217,22 +217,22 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
         subst->parent = node->parent;
         ngx_rbt_copy_color(subst, node);
 
-        if (node == *root) {
+        ប្រសិនបើ (node == *root) {
             *root = subst;
 
-        } else {
-            if (node == node->parent->left) {
+        } បើមិនដូច្នេះ {
+            ប្រសិនបើ (node == node->parent->left) {
                 node->parent->left = subst;
-            } else {
+            } បើមិនដូច្នេះ {
                 node->parent->right = subst;
             }
         }
 
-        if (subst->left != sentinel) {
+        ប្រសិនបើ (subst->left != sentinel) {
             subst->left->parent = subst;
         }
 
-        if (subst->right != sentinel) {
+        ប្រសិនបើ (subst->right != sentinel) {
             subst->right->parent = subst;
         }
     }
@@ -243,30 +243,30 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
     node->parent = NULL;
     node->key = 0;
 
-    if (red) {
-        return;
+    ប្រសិនបើ (red) {
+        ត្រឡប់;
     }
 
     /* a delete fixup */
 
-    while (temp != *root && ngx_rbt_is_black(temp)) {
+    ខណៈពេល (temp != *root && ngx_rbt_is_black(temp)) {
 
-        if (temp == temp->parent->left) {
+        ប្រសិនបើ (temp == temp->parent->left) {
             w = temp->parent->right;
 
-            if (ngx_rbt_is_red(w)) {
+            ប្រសិនបើ (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
                 ngx_rbtree_left_rotate(root, sentinel, temp->parent);
                 w = temp->parent->right;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            ប្រសិនបើ (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->right)) {
+            } បើមិនដូច្នេះ {
+                ប្រសិនបើ (ngx_rbt_is_black(w->right)) {
                     ngx_rbt_black(w->left);
                     ngx_rbt_red(w);
                     ngx_rbtree_right_rotate(root, sentinel, w);
@@ -280,22 +280,22 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
                 temp = *root;
             }
 
-        } else {
+        } បើមិនដូច្នេះ {
             w = temp->parent->left;
 
-            if (ngx_rbt_is_red(w)) {
+            ប្រសិនបើ (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
                 ngx_rbtree_right_rotate(root, sentinel, temp->parent);
                 w = temp->parent->left;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            ប្រសិនបើ (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->left)) {
+            } បើមិនដូច្នេះ {
+                ប្រសិនបើ (ngx_rbt_is_black(w->left)) {
                     ngx_rbt_black(w->right);
                     ngx_rbt_red(w);
                     ngx_rbtree_left_rotate(root, sentinel, w);
@@ -324,19 +324,19 @@ ngx_rbtree_left_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
     temp = node->right;
     node->right = temp->left;
 
-    if (temp->left != sentinel) {
+    ប្រសិនបើ (temp->left != sentinel) {
         temp->left->parent = node;
     }
 
     temp->parent = node->parent;
 
-    if (node == *root) {
+    ប្រសិនបើ (node == *root) {
         *root = temp;
 
-    } else if (node == node->parent->left) {
+    } បើមិនដូច្នេះ ប្រសិនបើ (node == node->parent->left) {
         node->parent->left = temp;
 
-    } else {
+    } បើមិនដូច្នេះ {
         node->parent->right = temp;
     }
 
@@ -354,19 +354,19 @@ ngx_rbtree_right_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
     temp = node->left;
     node->left = temp->right;
 
-    if (temp->right != sentinel) {
+    ប្រសិនបើ (temp->right != sentinel) {
         temp->right->parent = node;
     }
 
     temp->parent = node->parent;
 
-    if (node == *root) {
+    ប្រសិនបើ (node == *root) {
         *root = temp;
 
-    } else if (node == node->parent->right) {
+    } បើមិនដូច្នេះ ប្រសិនបើ (node == node->parent->right) {
         node->parent->right = temp;
 
-    } else {
+    } បើមិនដូច្នេះ {
         node->parent->left = temp;
     }
 
@@ -382,21 +382,21 @@ ngx_rbtree_next(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
 
     sentinel = tree->sentinel;
 
-    if (node->right != sentinel) {
-        return ngx_rbtree_min(node->right, sentinel);
+    ប្រសិនបើ (node->right != sentinel) {
+        ត្រឡប់ ngx_rbtree_min(node->right, sentinel);
     }
 
     root = tree->root;
 
-    for ( ;; ) {
+    សម្រាប់ ( ;; ) {
         parent = node->parent;
 
-        if (node == root) {
-            return NULL;
+        ប្រសិនបើ (node == root) {
+            ត្រឡប់ NULL;
         }
 
-        if (node == parent->left) {
-            return parent;
+        ប្រសិនបើ (node == parent->left) {
+            ត្រឡប់ parent;
         }
 
         node = parent;

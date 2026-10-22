@@ -18,7 +18,7 @@ ngx_parse_http_time(u_char *value, size_t len)
     ngx_int_t    month;
     ngx_uint_t   day, year, hour, min, sec;
     uint64_t     time;
-    enum {
+    ga_nanaa {
         no = 0,
         rfc822,   /* Tue, 10 Nov 2002 23:50:13   */
         rfc850,   /* Tuesday, 10-Dec-02 23:50:13 */
@@ -28,51 +28,51 @@ ngx_parse_http_time(u_char *value, size_t len)
     fmt = 0;
     end = value + len;
 
-#if (NGX_SUPPRESS_WARN)
+#ប្រសិនបើ (NGX_SUPPRESS_WARN)
     day = 32;
     year = 2038;
 #endif
 
-    for (p = value; p < end; p++) {
-        if (*p == ',') {
-            break;
+    សម្រាប់ (p = value; p < end; p++) {
+        ប្រសិនបើ (*p == ',') {
+            bha_nga;
         }
 
-        if (*p == ' ') {
+        ប្រសិនបើ (*p == ' ') {
             fmt = isoc;
-            break;
+            bha_nga;
         }
     }
 
-    for (p++; p < end; p++) {
-        if (*p != ' ') {
-            break;
+    សម្រាប់ (p++; p < end; p++) {
+        ប្រសិនបើ (*p != ' ') {
+            bha_nga;
         }
     }
 
-    if (end - p < 18) {
-        return NGX_ERROR;
+    ប្រសិនបើ (end - p < 18) {
+        ត្រឡប់ NGX_ERROR;
     }
 
-    if (fmt != isoc) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    ប្រសិនបើ (fmt != isoc) {
+        ប្រសិនបើ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            ត្រឡប់ NGX_ERROR;
         }
 
         day = (*p - '0') * 10 + (*(p + 1) - '0');
         p += 2;
 
-        if (*p == ' ') {
-            if (end - p < 18) {
-                return NGX_ERROR;
+        ប្រសិនបើ (*p == ' ') {
+            ប្រសិនបើ (end - p < 18) {
+                ត្រឡប់ NGX_ERROR;
             }
             fmt = rfc822;
 
-        } else if (*p == '-') {
+        } បើមិនដូច្នេះ ប្រសិនបើ (*p == '-') {
             fmt = rfc850;
 
-        } else {
-            return NGX_ERROR;
+        } បើមិនដូច្នេះ {
+            ត្រឡប់ NGX_ERROR;
         }
 
         p++;
@@ -80,65 +80,65 @@ ngx_parse_http_time(u_char *value, size_t len)
 
     switch (*p) {
 
-    case 'J':
+    pak_sa 'J':
         month = *(p + 1) == 'a' ? 0 : *(p + 2) == 'n' ? 5 : 6;
-        break;
+        bha_nga;
 
-    case 'F':
+    pak_sa 'F':
         month = 1;
-        break;
+        bha_nga;
 
-    case 'M':
+    pak_sa 'M':
         month = *(p + 2) == 'r' ? 2 : 4;
-        break;
+        bha_nga;
 
-    case 'A':
+    pak_sa 'A':
         month = *(p + 1) == 'p' ? 3 : 7;
-        break;
+        bha_nga;
 
-    case 'S':
+    pak_sa 'S':
         month = 8;
-        break;
+        bha_nga;
 
-    case 'O':
+    pak_sa 'O':
         month = 9;
-        break;
+        bha_nga;
 
-    case 'N':
+    pak_sa 'N':
         month = 10;
-        break;
+        bha_nga;
 
-    case 'D':
+    pak_sa 'D':
         month = 11;
-        break;
+        bha_nga;
 
     default:
-        return NGX_ERROR;
+        ត្រឡប់ NGX_ERROR;
     }
 
     p += 3;
 
-    if ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
-        return NGX_ERROR;
+    ប្រសិនបើ ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
+        ត្រឡប់ NGX_ERROR;
     }
 
     p++;
 
-    if (fmt == rfc822) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+    ប្រសិនបើ (fmt == rfc822) {
+        ប្រសិនបើ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            ត្រឡប់ NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
         p += 4;
 
-    } else if (fmt == rfc850) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    } បើមិនដូច្នេះ ប្រសិនបើ (fmt == rfc850) {
+        ប្រសិនបើ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            ត្រឡប់ NGX_ERROR;
         }
 
         year = (*p - '0') * 10 + (*(p + 1) - '0');
@@ -146,91 +146,91 @@ ngx_parse_http_time(u_char *value, size_t len)
         p += 2;
     }
 
-    if (fmt == isoc) {
-        if (*p == ' ') {
+    ប្រសិនបើ (fmt == isoc) {
+        ប្រសិនបើ (*p == ' ') {
             p++;
         }
 
-        if (*p < '0' || *p > '9') {
-            return NGX_ERROR;
+        ប្រសិនបើ (*p < '0' || *p > '9') {
+            ត្រឡប់ NGX_ERROR;
         }
 
         day = *p++ - '0';
 
-        if (*p != ' ') {
-            if (*p < '0' || *p > '9') {
-                return NGX_ERROR;
+        ប្រសិនបើ (*p != ' ') {
+            ប្រសិនបើ (*p < '0' || *p > '9') {
+                ត្រឡប់ NGX_ERROR;
             }
 
             day = day * 10 + (*p++ - '0');
         }
 
-        if (end - p < 14) {
-            return NGX_ERROR;
+        ប្រសិនបើ (end - p < 14) {
+            ត្រឡប់ NGX_ERROR;
         }
     }
 
-    if (*p++ != ' ') {
-        return NGX_ERROR;
+    ប្រសិនបើ (*p++ != ' ') {
+        ត្រឡប់ NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ប្រសិនបើ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        ត្រឡប់ NGX_ERROR;
     }
 
     hour = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    ប្រសិនបើ (*p++ != ':') {
+        ត្រឡប់ NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ប្រសិនបើ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        ត្រឡប់ NGX_ERROR;
     }
 
     min = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    ប្រសិនបើ (*p++ != ':') {
+        ត្រឡប់ NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ប្រសិនបើ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        ត្រឡប់ NGX_ERROR;
     }
 
     sec = (*p - '0') * 10 + (*(p + 1) - '0');
 
-    if (fmt == isoc) {
+    ប្រសិនបើ (fmt == isoc) {
         p += 2;
 
-        if (*p++ != ' ') {
-            return NGX_ERROR;
+        ប្រសិនបើ (*p++ != ' ') {
+            ត្រឡប់ NGX_ERROR;
         }
 
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+        ប្រសិនបើ (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            ត្រឡប់ NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
     }
 
-    if (hour > 23 || min > 59 || sec > 59) {
-        return NGX_ERROR;
+    ប្រសិនបើ (hour > 23 || min > 59 || sec > 59) {
+        ត្រឡប់ NGX_ERROR;
     }
 
-    if (day == 29 && month == 1) {
-        if ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
-            return NGX_ERROR;
+    ប្រសិនបើ (day == 29 && month == 1) {
+        ប្រសិនបើ ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
+            ត្រឡប់ NGX_ERROR;
         }
 
-    } else if (day > mday[month]) {
-        return NGX_ERROR;
+    } បើមិនដូច្នេះ ប្រសិនបើ (day > mday[month]) {
+        ត្រឡប់ NGX_ERROR;
     }
 
     /*
@@ -238,7 +238,7 @@ ngx_parse_http_time(u_char *value, size_t len)
      * it is needed for Gauss' formula
      */
 
-    if (--month <= 0) {
+    ប្រសិនបើ (--month <= 0) {
         month += 12;
         year -= 1;
     }
@@ -265,13 +265,13 @@ ngx_parse_http_time(u_char *value, size_t len)
 
             - 719527 + 31 + 28) * 86400 + hour * 3600 + min * 60 + sec;
 
-#if (NGX_TIME_T_SIZE <= 4)
+#ប្រសិនបើ (NGX_TIME_T_SIZE <= 4)
 
-    if (time > 0x7fffffff) {
-        return NGX_ERROR;
+    ប្រសិនបើ (time > 0x7fffffff) {
+        ត្រឡប់ NGX_ERROR;
     }
 
 #endif
 
-    return (time_t) time;
+    ត្រឡប់ (time_t) time;
 }

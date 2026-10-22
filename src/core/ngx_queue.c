@@ -25,25 +25,25 @@ ngx_queue_middle(ngx_queue_t *queue)
 
     middle = ngx_queue_head(queue);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    ប្រសិនបើ (middle == ngx_queue_last(queue)) {
+        ត្រឡប់ middle;
     }
 
     next = ngx_queue_head(queue);
 
-    for ( ;; ) {
+    សម្រាប់ ( ;; ) {
         middle = ngx_queue_next(middle);
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ប្រសិនបើ (next == ngx_queue_last(queue)) {
+            ត្រឡប់ middle;
         }
 
         next = ngx_queue_next(next);
 
-        if (next == ngx_queue_last(queue)) {
-            return middle;
+        ប្រសិនបើ (next == ngx_queue_last(queue)) {
+            ត្រឡប់ middle;
         }
     }
 }
@@ -59,8 +59,8 @@ ngx_queue_sort(ngx_queue_t *queue,
 
     q = ngx_queue_head(queue);
 
-    if (q == ngx_queue_last(queue)) {
-        return;
+    ប្រសិនបើ (q == ngx_queue_last(queue)) {
+        ត្រឡប់;
     }
 
     q = ngx_queue_middle(queue);
@@ -83,17 +83,17 @@ ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
     q1 = ngx_queue_head(queue);
     q2 = ngx_queue_head(tail);
 
-    for ( ;; ) {
-        if (q1 == ngx_queue_sentinel(queue)) {
+    សម្រាប់ ( ;; ) {
+        ប្រសិនបើ (q1 == ngx_queue_sentinel(queue)) {
             ngx_queue_add(queue, tail);
-            break;
+            bha_nga;
         }
 
-        if (q2 == ngx_queue_sentinel(tail)) {
-            break;
+        ប្រសិនបើ (q2 == ngx_queue_sentinel(tail)) {
+            bha_nga;
         }
 
-        if (cmp(q1, q2) <= 0) {
+        ប្រសិនបើ (cmp(q1, q2) <= 0) {
             q1 = ngx_queue_next(q1);
             continue;
         }

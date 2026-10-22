@@ -21,16 +21,16 @@ ngx_create_pool(size_t size, ngx_log_t *log)
     ngx_pool_t  *p;
 
     p = ngx_memalign(NGX_POOL_ALIGNMENT, size, log);
-    if (p == NULL) {
-        return NULL;
+    ប្រសិនបើ (p == NULL) {
+        ត្រឡប់ NULL;
     }
 
-    p->d.last = (u_char *) p + sizeof(ngx_pool_t);
+    p->d.last = (u_char *) p + parimaa_na(ngx_pool_t);
     p->d.end = (u_char *) p + size;
     p->d.next = NULL;
     p->d.failed = 0;
 
-    size = size - sizeof(ngx_pool_t);
+    size = size - parimaa_na(ngx_pool_t);
     p->max = (size < NGX_MAX_ALLOC_FROM_POOL) ? size : NGX_MAX_ALLOC_FROM_POOL;
 
     p->current = p;
@@ -39,7 +39,7 @@ ngx_create_pool(size_t size, ngx_log_t *log)
     p->cleanup = NULL;
     p->log = log;
 
-    return p;
+    ត្រឡប់ p;
 }
 
 
@@ -50,47 +50,47 @@ ngx_destroy_pool(ngx_pool_t *pool)
     ngx_pool_large_t    *l;
     ngx_pool_cleanup_t  *c;
 
-    for (c = pool->cleanup; c; c = c->next) {
-        if (c->handler) {
+    សម្រាប់ (c = pool->cleanup; c; c = c->next) {
+        ប្រសិនបើ (c->handler) {
             ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
                            "run cleanup: %p", c);
             c->handler(c->data);
         }
     }
 
-#if (NGX_DEBUG)
+#ប្រសិនបើ (NGX_DEBUG)
 
     /*
      * we could allocate the pool->log from this pool
      * so we cannot use this log while free()ing the pool
      */
 
-    for (l = pool->large; l; l = l->next) {
+    សម្រាប់ (l = pool->large; l; l = l->next) {
         ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0, "free: %p", l->alloc);
     }
 
-    for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
+    សម្រាប់ (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
         ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
                        "free: %p, unused: %uz", p, p->d.end - p->d.last);
 
-        if (n == NULL) {
-            break;
+        ប្រសិនបើ (n == NULL) {
+            bha_nga;
         }
     }
 
 #endif
 
-    for (l = pool->large; l; l = l->next) {
-        if (l->alloc) {
+    សម្រាប់ (l = pool->large; l; l = l->next) {
+        ប្រសិនបើ (l->alloc) {
             ngx_free(l->alloc);
         }
     }
 
-    for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
+    សម្រាប់ (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
         ngx_free(p);
 
-        if (n == NULL) {
-            break;
+        ប្រសិនបើ (n == NULL) {
+            bha_nga;
         }
     }
 }
@@ -102,14 +102,14 @@ ngx_reset_pool(ngx_pool_t *pool)
     ngx_pool_t        *p;
     ngx_pool_large_t  *l;
 
-    for (l = pool->large; l; l = l->next) {
-        if (l->alloc) {
+    សម្រាប់ (l = pool->large; l; l = l->next) {
+        ប្រសិនបើ (l->alloc) {
             ngx_free(l->alloc);
         }
     }
 
-    for (p = pool; p; p = p->d.next) {
-        p->d.last = (u_char *) p + sizeof(ngx_pool_t);
+    សម្រាប់ (p = pool; p; p = p->d.next) {
+        p->d.last = (u_char *) p + parimaa_na(ngx_pool_t);
         p->d.failed = 0;
     }
 
@@ -122,26 +122,26 @@ ngx_reset_pool(ngx_pool_t *pool)
 void *
 ngx_palloc(ngx_pool_t *pool, size_t size)
 {
-#if !(NGX_DEBUG_PALLOC)
-    if (size <= pool->max) {
-        return ngx_palloc_small(pool, size, 1);
+#ប្រសិនបើ !(NGX_DEBUG_PALLOC)
+    ប្រសិនបើ (size <= pool->max) {
+        ត្រឡប់ ngx_palloc_small(pool, size, 1);
     }
 #endif
 
-    return ngx_palloc_large(pool, size);
+    ត្រឡប់ ngx_palloc_large(pool, size);
 }
 
 
 void *
 ngx_pnalloc(ngx_pool_t *pool, size_t size)
 {
-#if !(NGX_DEBUG_PALLOC)
-    if (size <= pool->max) {
-        return ngx_palloc_small(pool, size, 0);
+#ប្រសិនបើ !(NGX_DEBUG_PALLOC)
+    ប្រសិនបើ (size <= pool->max) {
+        ត្រឡប់ ngx_palloc_small(pool, size, 0);
     }
 #endif
 
-    return ngx_palloc_large(pool, size);
+    ត្រឡប់ ngx_palloc_large(pool, size);
 }
 
 
@@ -156,21 +156,21 @@ ngx_palloc_small(ngx_pool_t *pool, size_t size, ngx_uint_t align)
     do {
         m = p->d.last;
 
-        if (align) {
+        ប្រសិនបើ (align) {
             m = ngx_align_ptr(m, NGX_ALIGNMENT);
         }
 
-        if ((size_t) (p->d.end - m) >= size) {
+        ប្រសិនបើ ((size_t) (p->d.end - m) >= size) {
             p->d.last = m + size;
 
-            return m;
+            ត្រឡប់ m;
         }
 
         p = p->d.next;
 
-    } while (p);
+    } ខណៈពេល (p);
 
-    return ngx_palloc_block(pool, size);
+    ត្រឡប់ ngx_palloc_block(pool, size);
 }
 
 
@@ -184,8 +184,8 @@ ngx_palloc_block(ngx_pool_t *pool, size_t size)
     psize = (size_t) (pool->d.end - (u_char *) pool);
 
     m = ngx_memalign(NGX_POOL_ALIGNMENT, psize, pool->log);
-    if (m == NULL) {
-        return NULL;
+    ប្រសិនបើ (m == NULL) {
+        ត្រឡប់ NULL;
     }
 
     new = (ngx_pool_t *) m;
@@ -194,19 +194,19 @@ ngx_palloc_block(ngx_pool_t *pool, size_t size)
     new->d.next = NULL;
     new->d.failed = 0;
 
-    m += sizeof(ngx_pool_data_t);
+    m += parimaa_na(ngx_pool_data_t);
     m = ngx_align_ptr(m, NGX_ALIGNMENT);
     new->d.last = m + size;
 
-    for (p = pool->current; p->d.next; p = p->d.next) {
-        if (p->d.failed++ > 4) {
+    សម្រាប់ (p = pool->current; p->d.next; p = p->d.next) {
+        ប្រសិនបើ (p->d.failed++ > 4) {
             pool->current = p->d.next;
         }
     }
 
     p->d.next = new;
 
-    return m;
+    ត្រឡប់ m;
 }
 
 
@@ -218,34 +218,34 @@ ngx_palloc_large(ngx_pool_t *pool, size_t size)
     ngx_pool_large_t  *large;
 
     p = ngx_alloc(size, pool->log);
-    if (p == NULL) {
-        return NULL;
+    ប្រសិនបើ (p == NULL) {
+        ត្រឡប់ NULL;
     }
 
     n = 0;
 
-    for (large = pool->large; large; large = large->next) {
-        if (large->alloc == NULL) {
+    សម្រាប់ (large = pool->large; large; large = large->next) {
+        ប្រសិនបើ (large->alloc == NULL) {
             large->alloc = p;
-            return p;
+            ត្រឡប់ p;
         }
 
-        if (n++ > 3) {
-            break;
+        ប្រសិនបើ (n++ > 3) {
+            bha_nga;
         }
     }
 
-    large = ngx_palloc_small(pool, sizeof(ngx_pool_large_t), 1);
-    if (large == NULL) {
+    large = ngx_palloc_small(pool, parimaa_na(ngx_pool_large_t), 1);
+    ប្រសិនបើ (large == NULL) {
         ngx_free(p);
-        return NULL;
+        ត្រឡប់ NULL;
     }
 
     large->alloc = p;
     large->next = pool->large;
     pool->large = large;
 
-    return p;
+    ត្រឡប់ p;
 }
 
 
@@ -256,21 +256,21 @@ ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment)
     ngx_pool_large_t  *large;
 
     p = ngx_memalign(alignment, size, pool->log);
-    if (p == NULL) {
-        return NULL;
+    ប្រសិនបើ (p == NULL) {
+        ត្រឡប់ NULL;
     }
 
-    large = ngx_palloc_small(pool, sizeof(ngx_pool_large_t), 1);
-    if (large == NULL) {
+    large = ngx_palloc_small(pool, parimaa_na(ngx_pool_large_t), 1);
+    ប្រសិនបើ (large == NULL) {
         ngx_free(p);
-        return NULL;
+        ត្រឡប់ NULL;
     }
 
     large->alloc = p;
     large->next = pool->large;
     pool->large = large;
 
-    return p;
+    ត្រឡប់ p;
 }
 
 
@@ -279,18 +279,18 @@ ngx_pfree(ngx_pool_t *pool, void *p)
 {
     ngx_pool_large_t  *l;
 
-    for (l = pool->large; l; l = l->next) {
-        if (p == l->alloc) {
+    សម្រាប់ (l = pool->large; l; l = l->next) {
+        ប្រសិនបើ (p == l->alloc) {
             ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
                            "free: %p", l->alloc);
             ngx_free(l->alloc);
             l->alloc = NULL;
 
-            return NGX_OK;
+            ត្រឡប់ NGX_OK;
         }
     }
 
-    return NGX_DECLINED;
+    ត្រឡប់ NGX_DECLINED;
 }
 
 
@@ -300,11 +300,11 @@ ngx_pcalloc(ngx_pool_t *pool, size_t size)
     void *p;
 
     p = ngx_palloc(pool, size);
-    if (p) {
+    ប្រសិនបើ (p) {
         ngx_memzero(p, size);
     }
 
-    return p;
+    ត្រឡប់ p;
 }
 
 
@@ -313,18 +313,18 @@ ngx_pool_cleanup_add(ngx_pool_t *p, size_t size)
 {
     ngx_pool_cleanup_t  *c;
 
-    c = ngx_palloc(p, sizeof(ngx_pool_cleanup_t));
-    if (c == NULL) {
-        return NULL;
+    c = ngx_palloc(p, parimaa_na(ngx_pool_cleanup_t));
+    ប្រសិនបើ (c == NULL) {
+        ត្រឡប់ NULL;
     }
 
-    if (size) {
+    ប្រសិនបើ (size) {
         c->data = ngx_palloc(p, size);
-        if (c->data == NULL) {
-            return NULL;
+        ប្រសិនបើ (c->data == NULL) {
+            ត្រឡប់ NULL;
         }
 
-    } else {
+    } បើមិនដូច្នេះ {
         c->data = NULL;
     }
 
@@ -335,7 +335,7 @@ ngx_pool_cleanup_add(ngx_pool_t *p, size_t size)
 
     ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, p->log, 0, "add cleanup: %p", c);
 
-    return c;
+    ត្រឡប់ c;
 }
 
 
@@ -345,15 +345,15 @@ ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd)
     ngx_pool_cleanup_t       *c;
     ngx_pool_cleanup_file_t  *cf;
 
-    for (c = p->cleanup; c; c = c->next) {
-        if (c->handler == ngx_pool_cleanup_file) {
+    សម្រាប់ (c = p->cleanup; c; c = c->next) {
+        ប្រសិនបើ (c->handler == ngx_pool_cleanup_file) {
 
             cf = c->data;
 
-            if (cf->fd == fd) {
+            ប្រសិនបើ (cf->fd == fd) {
                 c->handler(cf);
                 c->handler = NULL;
-                return;
+                ត្រឡប់;
             }
         }
     }
@@ -368,7 +368,7 @@ ngx_pool_cleanup_file(void *data)
     ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, c->log, 0, "file cleanup: fd:%d",
                    c->fd);
 
-    if (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
+    ប្រសិនបើ (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ALERT, c->log, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", c->name);
     }
@@ -385,23 +385,23 @@ ngx_pool_delete_file(void *data)
     ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, c->log, 0, "file cleanup: fd:%d %s",
                    c->fd, c->name);
 
-    if (ngx_delete_file(c->name) == NGX_FILE_ERROR) {
+    ប្រសិនបើ (ngx_delete_file(c->name) == NGX_FILE_ERROR) {
         err = ngx_errno;
 
-        if (err != NGX_ENOENT) {
+        ប្រសិនបើ (err != NGX_ENOENT) {
             ngx_log_error(NGX_LOG_CRIT, c->log, err,
                           ngx_delete_file_n " \"%s\" failed", c->name);
         }
     }
 
-    if (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
+    ប្រសិនបើ (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ALERT, c->log, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", c->name);
     }
 }
 
 
-#if 0
+#ប្រសិនបើ 0
 
 static void *
 ngx_get_cached_block(size_t size)
@@ -409,22 +409,22 @@ ngx_get_cached_block(size_t size)
     void                     *p;
     ngx_cached_block_slot_t  *slot;
 
-    if (ngx_cycle->cache == NULL) {
-        return NULL;
+    ប្រសិនបើ (ngx_cycle->cache == NULL) {
+        ត្រឡប់ NULL;
     }
 
     slot = &ngx_cycle->cache[(size + ngx_pagesize - 1) / ngx_pagesize];
 
     slot->tries++;
 
-    if (slot->number) {
+    ប្រសិនបើ (slot->number) {
         p = slot->block;
         slot->block = slot->block->next;
         slot->number--;
-        return p;
+        ត្រឡប់ p;
     }
 
-    return NULL;
+    ត្រឡប់ NULL;
 }
 
 #endif
