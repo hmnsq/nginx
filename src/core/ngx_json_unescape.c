@@ -10,25 +10,25 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_json_unescape.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
+#अन्तर्भाव <ngx_json_unescape.h>
 
 
-static ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
+स्थिर ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
     uint32_t codepoint);
 
 
 ngx_int_t
 ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 {
-    size_t       size;
+    माप_प्रकार       size;
     u_char      *d, *s, ch;
-    uint32_t     codepoint, high_surrogate;
+    uint32_t     codepoint, वरचा_surrogate;
     ngx_int_t    n;
-    ngx_uint_t   hex_left;
+    ngx_uint_t   hex_डावा;
 
-    enum {
+    गणना {
         sw_usual = 0,
         sw_quoted,
         sw_hex,
@@ -62,13 +62,13 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
      * surrounding double quotes).
      */
 
-    if (src->len == 0) {
+    जर (src->len == 0) {
         dst->len = 0;
-        return NGX_OK;
+        परत NGX_OK;
     }
 
-    if (dst->len < src->len) {
-        return NGX_ERROR;
+    जर (dst->len < src->len) {
+        परत NGX_ERROR;
     }
 
     s = src->data;
@@ -78,200 +78,200 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 
     state = sw_usual;
     codepoint = 0;
-    high_surrogate = 0;
-    hex_left = 0;
+    वरचा_surrogate = 0;
+    hex_डावा = 0;
 
-    while (size--) {
+    पर्यंत (size--) {
 
         ch = *s++;
 
-        switch (state) {
-        case sw_usual:
+        निवड (state) {
+        स्थिती sw_usual:
 
-            if (ch == '"') {
-                return NGX_ERROR;
+            जर (ch == '"') {
+                परत NGX_ERROR;
             }
 
-            if (ch == '\\') {
+            जर (ch == '\\') {
                 state = sw_quoted;
-                break;
+                थांबा;
             }
 
-            if (ch < 0x20) {
+            जर (ch < 0x20) {
                 /* RFC 8259: control characters must be escaped */
-                return NGX_ERROR;
+                परत NGX_ERROR;
             }
 
             *d++ = ch;
-            break;
+            थांबा;
 
-        case sw_quoted:
+        स्थिती sw_quoted:
 
-            switch (ch) {
+            निवड (ch) {
 
-            case 'u':
+            स्थिती 'u':
                 codepoint = 0;
-                hex_left = 4;
+                hex_डावा = 4;
                 state = sw_hex;
-                break;
+                थांबा;
 
-            case '"':
-            case '/':
-            case '\\':
+            स्थिती '"':
+            स्थिती '/':
+            स्थिती '\\':
                 *d++ = ch;
                 state = sw_usual;
-                break;
+                थांबा;
 
-            case 'b':
+            स्थिती 'b':
                 *d++ = '\b';
                 state = sw_usual;
-                break;
+                थांबा;
 
-            case 'f':
+            स्थिती 'f':
                 *d++ = '\f';
                 state = sw_usual;
-                break;
+                थांबा;
 
-            case 'n':
+            स्थिती 'n':
                 *d++ = '\n';
                 state = sw_usual;
-                break;
+                थांबा;
 
-            case 'r':
+            स्थिती 'r':
                 *d++ = '\r';
                 state = sw_usual;
-                break;
+                थांबा;
 
-            case 't':
+            स्थिती 't':
                 *d++ = '\t';
                 state = sw_usual;
-                break;
+                थांबा;
 
-            default:
-                return NGX_ERROR;
+            पूर्वनिर्धारित:
+                परत NGX_ERROR;
             }
 
-            break;
+            थांबा;
 
-        case sw_hex:
+        स्थिती sw_hex:
 
             n = ngx_json_hex_digit(ch);
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            जर (n == NGX_ERROR) {
+                परत NGX_ERROR;
             }
 
             codepoint = (codepoint << 4) | (uint32_t) n;
 
-            if (--hex_left > 0) {
-                break;
+            जर (--hex_डावा > 0) {
+                थांबा;
             }
 
-            if (high_surrogate) {
-                if (codepoint < 0xDC00 || codepoint > 0xDFFF) {
-                    return NGX_ERROR;
+            जर (वरचा_surrogate) {
+                जर (codepoint < 0xDC00 || codepoint > 0xDFFF) {
+                    परत NGX_ERROR;
                 }
 
                 codepoint = 0x10000
-                            + ((high_surrogate - 0xD800) << 10)
+                            + ((वरचा_surrogate - 0xD800) << 10)
                             + (codepoint - 0xDC00);
                 d = ngx_json_utf8_encode(d, codepoint);
-                high_surrogate = 0;
+                वरचा_surrogate = 0;
                 state = sw_usual;
-                break;
+                थांबा;
             }
 
-            if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+            जर (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
                 /* high surrogate - wait for the low surrogate */
-                high_surrogate = codepoint;
+                वरचा_surrogate = codepoint;
                 state = sw_surrogate_start;
-                break;
+                थांबा;
             }
 
-            if (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
+            जर (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_ERROR;
+                परत NGX_ERROR;
             }
 
             d = ngx_json_utf8_encode(d, codepoint);
             state = sw_usual;
-            break;
+            थांबा;
 
-        case sw_surrogate_start:
+        स्थिती sw_surrogate_start:
             /*
              * Expect '\' to begin the low-surrogate escape.
              * Lone surrogates are not valid Unicode scalar values
              * (RFC 8259, Section 8.2).
              */
-            if (ch == '\\') {
+            जर (ch == '\\') {
                 state = sw_surrogate_u;
-                break;
+                थांबा;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            परत NGX_ERROR;
 
-        case sw_surrogate_u:
-            if (ch == 'u') {
+        स्थिती sw_surrogate_u:
+            जर (ch == 'u') {
                 codepoint = 0;
-                hex_left = 4;
+                hex_डावा = 4;
                 state = sw_hex;
-                break;
+                थांबा;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            परत NGX_ERROR;
         }
     }
 
-    if (state != sw_usual) {
+    जर (state != sw_usual) {
         /* truncated escape sequence or unpaired high surrogate */
-        return NGX_ERROR;
+        परत NGX_ERROR;
     }
 
     dst->len = d - dst->data;
 
-    return NGX_OK;
+    परत NGX_OK;
 }
 
 
-static ngx_inline u_char *
+स्थिर ngx_inline u_char *
 ngx_json_utf8_encode(u_char *dst, uint32_t codepoint)
 {
-    if (codepoint <= 0x7F) {
+    जर (codepoint <= 0x7F) {
         *dst++ = (u_char) codepoint;
 
-    } else if (codepoint <= 0x7FF) {
+    } अन्यथा जर (codepoint <= 0x7FF) {
         *dst++ = (u_char) (0xC0 | (codepoint >> 6));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else if (codepoint <= 0xFFFF) {
+    } अन्यथा जर (codepoint <= 0xFFFF) {
         *dst++ = (u_char) (0xE0 | (codepoint >> 12));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else {
+    } अन्यथा {
         *dst++ = (u_char) (0xF0 | (codepoint >> 18));
         *dst++ = (u_char) (0x80 | ((codepoint >> 12) & 0x3F));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
     }
 
-    return dst;
+    परत dst;
 }
 
 
 ngx_int_t
 ngx_json_hex_digit(u_char ch)
 {
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0';
+    जर (ch >= '0' && ch <= '9') {
+        परत ch - '0';
     }
 
     ch = (u_char) (ch | 0x20);
 
-    if (ch >= 'a' && ch <= 'f') {
-        return ch - 'a' + 10;
+    जर (ch >= 'a' && ch <= 'f') {
+        परत ch - 'a' + 10;
     }
 
-    return NGX_ERROR;
+    परत NGX_ERROR;
 }

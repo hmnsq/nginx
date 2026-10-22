@@ -5,117 +5,117 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
 ssize_t
-ngx_parse_size(ngx_str_t *line)
+ngx_parse_size(ngx_str_t *ओळ)
 {
     u_char   unit;
-    size_t   len;
+    माप_प्रकार   len;
     ssize_t  size, scale, max;
 
-    len = line->len;
+    len = ओळ->len;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    जर (len == 0) {
+        परत NGX_ERROR;
     }
 
-    unit = line->data[len - 1];
+    unit = ओळ->data[len - 1];
 
-    switch (unit) {
-    case 'K':
-    case 'k':
+    निवड (unit) {
+    स्थिती 'K':
+    स्थिती 'k':
         len--;
-        max = NGX_MAX_SIZE_T_VALUE / 1024;
+        max = NGX_MAX_SIZE_T_मूल्य / 1024;
         scale = 1024;
-        break;
+        थांबा;
 
-    case 'M':
-    case 'm':
+    स्थिती 'M':
+    स्थिती 'm':
         len--;
-        max = NGX_MAX_SIZE_T_VALUE / (1024 * 1024);
+        max = NGX_MAX_SIZE_T_मूल्य / (1024 * 1024);
         scale = 1024 * 1024;
-        break;
+        थांबा;
 
-    default:
-        max = NGX_MAX_SIZE_T_VALUE;
+    पूर्वनिर्धारित:
+        max = NGX_MAX_SIZE_T_मूल्य;
         scale = 1;
     }
 
-    size = ngx_atosz(line->data, len);
-    if (size == NGX_ERROR || size > max) {
-        return NGX_ERROR;
+    size = ngx_atosz(ओळ->data, len);
+    जर (size == NGX_ERROR || size > max) {
+        परत NGX_ERROR;
     }
 
     size *= scale;
 
-    return size;
+    परत size;
 }
 
 
 off_t
-ngx_parse_offset(ngx_str_t *line)
+ngx_parse_offset(ngx_str_t *ओळ)
 {
     u_char  unit;
     off_t   offset, scale, max;
-    size_t  len;
+    माप_प्रकार  len;
 
-    len = line->len;
+    len = ओळ->len;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    जर (len == 0) {
+        परत NGX_ERROR;
     }
 
-    unit = line->data[len - 1];
+    unit = ओळ->data[len - 1];
 
-    switch (unit) {
-    case 'K':
-    case 'k':
+    निवड (unit) {
+    स्थिती 'K':
+    स्थिती 'k':
         len--;
-        max = NGX_MAX_OFF_T_VALUE / 1024;
+        max = NGX_MAX_OFF_T_मूल्य / 1024;
         scale = 1024;
-        break;
+        थांबा;
 
-    case 'M':
-    case 'm':
+    स्थिती 'M':
+    स्थिती 'm':
         len--;
-        max = NGX_MAX_OFF_T_VALUE / (1024 * 1024);
+        max = NGX_MAX_OFF_T_मूल्य / (1024 * 1024);
         scale = 1024 * 1024;
-        break;
+        थांबा;
 
-    case 'G':
-    case 'g':
+    स्थिती 'G':
+    स्थिती 'g':
         len--;
-        max = NGX_MAX_OFF_T_VALUE / (1024 * 1024 * 1024);
+        max = NGX_MAX_OFF_T_मूल्य / (1024 * 1024 * 1024);
         scale = 1024 * 1024 * 1024;
-        break;
+        थांबा;
 
-    default:
-        max = NGX_MAX_OFF_T_VALUE;
+    पूर्वनिर्धारित:
+        max = NGX_MAX_OFF_T_मूल्य;
         scale = 1;
     }
 
-    offset = ngx_atoof(line->data, len);
-    if (offset == NGX_ERROR || offset > max) {
-        return NGX_ERROR;
+    offset = ngx_atoof(ओळ->data, len);
+    जर (offset == NGX_ERROR || offset > max) {
+        परत NGX_ERROR;
     }
 
     offset *= scale;
 
-    return offset;
+    परत offset;
 }
 
 
 ngx_int_t
-ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
+ngx_parse_time(ngx_str_t *ओळ, ngx_uint_t is_sec)
 {
     u_char      *p, *last;
-    ngx_int_t    value, total, scale;
+    ngx_int_t    मूल्य, total, scale;
     ngx_int_t    max, cutoff, cutlim;
     ngx_uint_t   valid;
-    enum {
+    गणना {
         st_start = 0,
         st_year,
         st_month,
@@ -129,155 +129,155 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
     } step;
 
     valid = 0;
-    value = 0;
+    मूल्य = 0;
     total = 0;
-    cutoff = NGX_MAX_INT_T_VALUE / 10;
-    cutlim = NGX_MAX_INT_T_VALUE % 10;
+    cutoff = NGX_MAX_INT_T_मूल्य / 10;
+    cutlim = NGX_MAX_INT_T_मूल्य % 10;
     step = is_sec ? st_start : st_month;
 
-    p = line->data;
-    last = p + line->len;
+    p = ओळ->data;
+    last = p + ओळ->len;
 
-    while (p < last) {
+    पर्यंत (p < last) {
 
-        if (*p >= '0' && *p <= '9') {
-            if (value >= cutoff && (value > cutoff || *p - '0' > cutlim)) {
-                return NGX_ERROR;
+        जर (*p >= '0' && *p <= '9') {
+            जर (मूल्य >= cutoff && (मूल्य > cutoff || *p - '0' > cutlim)) {
+                परत NGX_ERROR;
             }
 
-            value = value * 10 + (*p++ - '0');
+            मूल्य = मूल्य * 10 + (*p++ - '0');
             valid = 1;
-            continue;
+            सुरूठेवा;
         }
 
-        switch (*p++) {
+        निवड (*p++) {
 
-        case 'y':
-            if (step > st_start) {
-                return NGX_ERROR;
+        स्थिती 'y':
+            जर (step > st_start) {
+                परत NGX_ERROR;
             }
             step = st_year;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 365);
+            max = NGX_MAX_INT_T_मूल्य / (60 * 60 * 24 * 365);
             scale = 60 * 60 * 24 * 365;
-            break;
+            थांबा;
 
-        case 'M':
-            if (step >= st_month) {
-                return NGX_ERROR;
+        स्थिती 'M':
+            जर (step >= st_month) {
+                परत NGX_ERROR;
             }
             step = st_month;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 30);
+            max = NGX_MAX_INT_T_मूल्य / (60 * 60 * 24 * 30);
             scale = 60 * 60 * 24 * 30;
-            break;
+            थांबा;
 
-        case 'w':
-            if (step >= st_week) {
-                return NGX_ERROR;
+        स्थिती 'w':
+            जर (step >= st_week) {
+                परत NGX_ERROR;
             }
             step = st_week;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 7);
+            max = NGX_MAX_INT_T_मूल्य / (60 * 60 * 24 * 7);
             scale = 60 * 60 * 24 * 7;
-            break;
+            थांबा;
 
-        case 'd':
-            if (step >= st_day) {
-                return NGX_ERROR;
+        स्थिती 'd':
+            जर (step >= st_day) {
+                परत NGX_ERROR;
             }
             step = st_day;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24);
+            max = NGX_MAX_INT_T_मूल्य / (60 * 60 * 24);
             scale = 60 * 60 * 24;
-            break;
+            थांबा;
 
-        case 'h':
-            if (step >= st_hour) {
-                return NGX_ERROR;
+        स्थिती 'h':
+            जर (step >= st_hour) {
+                परत NGX_ERROR;
             }
             step = st_hour;
-            max = NGX_MAX_INT_T_VALUE / (60 * 60);
+            max = NGX_MAX_INT_T_मूल्य / (60 * 60);
             scale = 60 * 60;
-            break;
+            थांबा;
 
-        case 'm':
-            if (p < last && *p == 's') {
-                if (is_sec || step >= st_msec) {
-                    return NGX_ERROR;
+        स्थिती 'm':
+            जर (p < last && *p == 's') {
+                जर (is_sec || step >= st_msec) {
+                    परत NGX_ERROR;
                 }
                 p++;
                 step = st_msec;
-                max = NGX_MAX_INT_T_VALUE;
+                max = NGX_MAX_INT_T_मूल्य;
                 scale = 1;
-                break;
+                थांबा;
             }
 
-            if (step >= st_min) {
-                return NGX_ERROR;
+            जर (step >= st_min) {
+                परत NGX_ERROR;
             }
             step = st_min;
-            max = NGX_MAX_INT_T_VALUE / 60;
+            max = NGX_MAX_INT_T_मूल्य / 60;
             scale = 60;
-            break;
+            थांबा;
 
-        case 's':
-            if (step >= st_sec) {
-                return NGX_ERROR;
+        स्थिती 's':
+            जर (step >= st_sec) {
+                परत NGX_ERROR;
             }
             step = st_sec;
-            max = NGX_MAX_INT_T_VALUE;
+            max = NGX_MAX_INT_T_मूल्य;
             scale = 1;
-            break;
+            थांबा;
 
-        case ' ':
-            if (step >= st_sec) {
-                return NGX_ERROR;
+        स्थिती ' ':
+            जर (step >= st_sec) {
+                परत NGX_ERROR;
             }
             step = st_last;
-            max = NGX_MAX_INT_T_VALUE;
+            max = NGX_MAX_INT_T_मूल्य;
             scale = 1;
-            break;
+            थांबा;
 
-        default:
-            return NGX_ERROR;
+        पूर्वनिर्धारित:
+            परत NGX_ERROR;
         }
 
-        if (step != st_msec && !is_sec) {
+        जर (step != st_msec && !is_sec) {
             scale *= 1000;
             max /= 1000;
         }
 
-        if (value > max) {
-            return NGX_ERROR;
+        जर (मूल्य > max) {
+            परत NGX_ERROR;
         }
 
-        value *= scale;
+        मूल्य *= scale;
 
-        if (total > NGX_MAX_INT_T_VALUE - value) {
-            return NGX_ERROR;
+        जर (total > NGX_MAX_INT_T_मूल्य - मूल्य) {
+            परत NGX_ERROR;
         }
 
-        total += value;
+        total += मूल्य;
 
-        value = 0;
+        मूल्य = 0;
 
-        while (p < last && *p == ' ') {
+        पर्यंत (p < last && *p == ' ') {
             p++;
         }
     }
 
-    if (!valid) {
-        return NGX_ERROR;
+    जर (!valid) {
+        परत NGX_ERROR;
     }
 
-    if (!is_sec) {
-        if (value > NGX_MAX_INT_T_VALUE / 1000) {
-            return NGX_ERROR;
+    जर (!is_sec) {
+        जर (मूल्य > NGX_MAX_INT_T_मूल्य / 1000) {
+            परत NGX_ERROR;
         }
 
-        value *= 1000;
+        मूल्य *= 1000;
     }
 
-    if (total > NGX_MAX_INT_T_VALUE - value) {
-        return NGX_ERROR;
+    जर (total > NGX_MAX_INT_T_मूल्य - मूल्य) {
+        परत NGX_ERROR;
     }
 
-    return total + value;
+    परत total + मूल्य;
 }

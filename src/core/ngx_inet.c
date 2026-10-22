@@ -5,19 +5,19 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#अन्तर्भाव <ngx_config.h>
+#अन्तर्भाव <ngx_core.h>
 
 
-static ngx_int_t ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u);
-static ngx_int_t ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u);
-static ngx_int_t ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u);
-static ngx_int_t ngx_inet_add_addr(ngx_pool_t *pool, ngx_url_t *u,
-    struct sockaddr *sockaddr, socklen_t socklen, ngx_uint_t total);
+स्थिर ngx_int_t ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u);
+स्थिर ngx_int_t ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u);
+स्थिर ngx_int_t ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u);
+स्थिर ngx_int_t ngx_inet_add_addr(ngx_pool_t *pool, ngx_url_t *u,
+    संरचना sockaddr *sockaddr, socklen_t socklen, ngx_uint_t total);
 
 
 in_addr_t
-ngx_inet_addr(u_char *text, size_t len)
+ngx_inet_addr(u_char *text, माप_प्रकार len)
 {
     u_char      *p, c;
     in_addr_t    addr;
@@ -27,280 +27,280 @@ ngx_inet_addr(u_char *text, size_t len)
     octet = 0;
     n = 0;
 
-    for (p = text; p < text + len; p++) {
+    साठी (p = text; p < text + len; p++) {
         c = *p;
 
-        if (c >= '0' && c <= '9') {
+        जर (c >= '0' && c <= '9') {
             octet = octet * 10 + (c - '0');
 
-            if (octet > 255) {
-                return INADDR_NONE;
+            जर (octet > 255) {
+                परत INADDR_NONE;
             }
 
-            continue;
+            सुरूठेवा;
         }
 
-        if (c == '.') {
+        जर (c == '.') {
             addr = (addr << 8) + octet;
             octet = 0;
             n++;
-            continue;
+            सुरूठेवा;
         }
 
-        return INADDR_NONE;
+        परत INADDR_NONE;
     }
 
-    if (n == 3) {
+    जर (n == 3) {
         addr = (addr << 8) + octet;
-        return htonl(addr);
+        परत htonl(addr);
     }
 
-    return INADDR_NONE;
+    परत INADDR_NONE;
 }
 
 
-#if (NGX_HAVE_INET6)
+#जर (NGX_HAVE_INET6)
 
 ngx_int_t
-ngx_inet6_addr(u_char *p, size_t len, u_char *addr)
+ngx_inet6_addr(u_char *p, माप_प्रकार len, u_char *addr)
 {
     u_char      c, *zero, *digit, *s, *d;
-    size_t      len4;
+    माप_प्रकार      len4;
     ngx_uint_t  n, nibbles, word;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    जर (len == 0) {
+        परत NGX_ERROR;
     }
 
-    zero = NULL;
-    digit = NULL;
+    zero = रिक्त;
+    digit = रिक्त;
     len4 = 0;
     nibbles = 0;
     word = 0;
     n = 8;
 
-    if (p[0] == ':') {
+    जर (p[0] == ':') {
         p++;
         len--;
     }
 
-    for (/* void */; len; len--) {
+    साठी (/* void */; len; len--) {
         c = *p++;
 
-        if (c == ':') {
-            if (nibbles) {
+        जर (c == ':') {
+            जर (nibbles) {
                 digit = p;
                 len4 = len;
                 *addr++ = (u_char) (word >> 8);
                 *addr++ = (u_char) (word & 0xff);
 
-                if (--n) {
+                जर (--n) {
                     nibbles = 0;
                     word = 0;
-                    continue;
+                    सुरूठेवा;
                 }
 
-            } else {
-                if (zero == NULL) {
+            } अन्यथा {
+                जर (zero == रिक्त) {
                     digit = p;
                     len4 = len;
                     zero = addr;
-                    continue;
+                    सुरूठेवा;
                 }
             }
 
-            return NGX_ERROR;
+            परत NGX_ERROR;
         }
 
-        if (c == '.' && nibbles) {
-            if (n < 2 || digit == NULL) {
-                return NGX_ERROR;
+        जर (c == '.' && nibbles) {
+            जर (n < 2 || digit == रिक्त) {
+                परत NGX_ERROR;
             }
 
             word = ngx_inet_addr(digit, len4 - 1);
-            if (word == INADDR_NONE) {
-                return NGX_ERROR;
+            जर (word == INADDR_NONE) {
+                परत NGX_ERROR;
             }
 
             word = ntohl(word);
             *addr++ = (u_char) ((word >> 24) & 0xff);
             *addr++ = (u_char) ((word >> 16) & 0xff);
             n--;
-            break;
+            थांबा;
         }
 
-        if (++nibbles > 4) {
-            return NGX_ERROR;
+        जर (++nibbles > 4) {
+            परत NGX_ERROR;
         }
 
-        if (c >= '0' && c <= '9') {
+        जर (c >= '0' && c <= '9') {
             word = word * 16 + (c - '0');
-            continue;
+            सुरूठेवा;
         }
 
         c |= 0x20;
 
-        if (c >= 'a' && c <= 'f') {
+        जर (c >= 'a' && c <= 'f') {
             word = word * 16 + (c - 'a') + 10;
-            continue;
+            सुरूठेवा;
         }
 
-        return NGX_ERROR;
+        परत NGX_ERROR;
     }
 
-    if (nibbles == 0 && zero == NULL) {
-        return NGX_ERROR;
+    जर (nibbles == 0 && zero == रिक्त) {
+        परत NGX_ERROR;
     }
 
     *addr++ = (u_char) (word >> 8);
     *addr++ = (u_char) (word & 0xff);
 
-    if (--n) {
-        if (zero) {
+    जर (--n) {
+        जर (zero) {
             n *= 2;
             s = addr - 1;
             d = s + n;
-            while (s >= zero) {
+            पर्यंत (s >= zero) {
                 *d-- = *s--;
             }
             ngx_memzero(zero, n);
-            return NGX_OK;
+            परत NGX_OK;
         }
 
-    } else {
-        if (zero == NULL) {
-            return NGX_OK;
+    } अन्यथा {
+        जर (zero == रिक्त) {
+            परत NGX_OK;
         }
     }
 
-    return NGX_ERROR;
+    परत NGX_ERROR;
 }
 
 #endif
 
 
-size_t
-ngx_sock_ntop(struct sockaddr *sa, socklen_t socklen, u_char *text, size_t len,
+माप_प्रकार
+ngx_sock_ntop(संरचना sockaddr *sa, socklen_t socklen, u_char *text, माप_प्रकार len,
     ngx_uint_t port)
 {
     u_char               *p;
-#if (NGX_HAVE_INET6 || NGX_HAVE_UNIX_DOMAIN)
-    size_t                n;
+#जर (NGX_HAVE_INET6 || NGX_HAVE_UNIX_DOMAIN)
+    माप_प्रकार                n;
 #endif
-    struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
-    struct sockaddr_in6  *sin6;
+    संरचना sockaddr_in   *sin;
+#जर (NGX_HAVE_INET6)
+    संरचना sockaddr_in6  *sin6;
 #endif
-#if (NGX_HAVE_UNIX_DOMAIN)
-    struct sockaddr_un   *saun;
+#जर (NGX_HAVE_UNIX_DOMAIN)
+    संरचना sockaddr_un   *saun;
 #endif
 
-    switch (sa->sa_family) {
+    निवड (sa->sa_family) {
 
-    case AF_INET:
+    स्थिती AF_INET:
 
-        sin = (struct sockaddr_in *) sa;
+        sin = (संरचना sockaddr_in *) sa;
         p = (u_char *) &sin->sin_addr;
 
-        if (port) {
+        जर (port) {
             p = ngx_snprintf(text, len, "%ud.%ud.%ud.%ud:%d",
                              p[0], p[1], p[2], p[3], ntohs(sin->sin_port));
-        } else {
+        } अन्यथा {
             p = ngx_snprintf(text, len, "%ud.%ud.%ud.%ud",
                              p[0], p[1], p[2], p[3]);
         }
 
-        return (p - text);
+        परत (p - text);
 
-#if (NGX_HAVE_INET6)
+#जर (NGX_HAVE_INET6)
 
-    case AF_INET6:
+    स्थिती AF_INET6:
 
-        sin6 = (struct sockaddr_in6 *) sa;
+        sin6 = (संरचना sockaddr_in6 *) sa;
 
         n = 0;
 
-        if (port) {
+        जर (port) {
             text[n++] = '[';
         }
 
         n = ngx_inet6_ntop(sin6->sin6_addr.s6_addr, &text[n], len);
 
-        if (port) {
+        जर (port) {
             n = ngx_sprintf(&text[1 + n], "]:%d",
                             ntohs(sin6->sin6_port)) - text;
         }
 
-        return n;
+        परत n;
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#जर (NGX_HAVE_UNIX_DOMAIN)
 
-    case AF_UNIX:
-        saun = (struct sockaddr_un *) sa;
+    स्थिती AF_UNIX:
+        saun = (संरचना sockaddr_un *) sa;
 
         /* on Linux sockaddr might not include sun_path at all */
 
-        if (socklen <= (socklen_t) offsetof(struct sockaddr_un, sun_path)) {
+        जर (socklen <= (socklen_t) दुरत्व(संरचना sockaddr_un, sun_path)) {
             p = ngx_snprintf(text, len, "unix:%Z");
 
-        } else {
+        } अन्यथा {
             n = ngx_strnlen((u_char *) saun->sun_path,
-                            socklen - offsetof(struct sockaddr_un, sun_path));
+                            socklen - दुरत्व(संरचना sockaddr_un, sun_path));
             p = ngx_snprintf(text, len, "unix:%*s%Z", n, saun->sun_path);
         }
 
         /* we do not include trailing zero in address length */
 
-        return (p - text - 1);
+        परत (p - text - 1);
 
 #endif
 
-    default:
-        return 0;
+    पूर्वनिर्धारित:
+        परत 0;
     }
 }
 
 
-size_t
-ngx_inet_ntop(int family, void *addr, u_char *text, size_t len)
+माप_प्रकार
+ngx_inet_ntop(पूर्णांक family, शून्य *addr, u_char *text, माप_प्रकार len)
 {
     u_char  *p;
 
-    switch (family) {
+    निवड (family) {
 
-    case AF_INET:
+    स्थिती AF_INET:
 
         p = addr;
 
-        return ngx_snprintf(text, len, "%ud.%ud.%ud.%ud",
+        परत ngx_snprintf(text, len, "%ud.%ud.%ud.%ud",
                             p[0], p[1], p[2], p[3])
                - text;
 
-#if (NGX_HAVE_INET6)
+#जर (NGX_HAVE_INET6)
 
-    case AF_INET6:
-        return ngx_inet6_ntop(addr, text, len);
+    स्थिती AF_INET6:
+        परत ngx_inet6_ntop(addr, text, len);
 
 #endif
 
-    default:
-        return 0;
+    पूर्वनिर्धारित:
+        परत 0;
     }
 }
 
 
-#if (NGX_HAVE_INET6)
+#जर (NGX_HAVE_INET6)
 
-size_t
-ngx_inet6_ntop(u_char *p, u_char *text, size_t len)
+माप_प्रकार
+ngx_inet6_ntop(u_char *p, u_char *text, माप_प्रकार len)
 {
     u_char      *dst;
-    size_t       max, n;
+    माप_प्रकार       max, n;
     ngx_uint_t   i, zero, last;
 
-    if (len < NGX_INET6_ADDRSTRLEN) {
-        return 0;
+    जर (len < NGX_INET6_ADDRSTRLEN) {
+        परत 0;
     }
 
     zero = (ngx_uint_t) -1;
@@ -308,25 +308,25 @@ ngx_inet6_ntop(u_char *p, u_char *text, size_t len)
     max = 1;
     n = 0;
 
-    for (i = 0; i < 16; i += 2) {
+    साठी (i = 0; i < 16; i += 2) {
 
-        if (p[i] || p[i + 1]) {
+        जर (p[i] || p[i + 1]) {
 
-            if (max < n) {
+            जर (max < n) {
                 zero = last;
                 max = n;
             }
 
             n = 0;
-            continue;
+            सुरूठेवा;
         }
 
-        if (n++ == 0) {
+        जर (n++ == 0) {
             last = i;
         }
     }
 
-    if (max < n) {
+    जर (max < n) {
         zero = last;
         max = n;
     }
@@ -334,9 +334,9 @@ ngx_inet6_ntop(u_char *p, u_char *text, size_t len)
     dst = text;
     n = 16;
 
-    if (zero == 0) {
+    जर (zero == 0) {
 
-        if ((max == 5 && p[10] == 0xff && p[11] == 0xff)
+        जर ((max == 5 && p[10] == 0xff && p[11] == 0xff)
             || (max == 6)
             || (max == 7 && p[14] != 0 && p[15] != 1))
         {
@@ -346,26 +346,26 @@ ngx_inet6_ntop(u_char *p, u_char *text, size_t len)
         *dst++ = ':';
     }
 
-    for (i = 0; i < n; i += 2) {
+    साठी (i = 0; i < n; i += 2) {
 
-        if (i == zero) {
+        जर (i == zero) {
             *dst++ = ':';
             i += (max - 1) * 2;
-            continue;
+            सुरूठेवा;
         }
 
         dst = ngx_sprintf(dst, "%xd", p[i] * 256 + p[i + 1]);
 
-        if (i < 14) {
+        जर (i < 14) {
             *dst++ = ':';
         }
     }
 
-    if (n == 12) {
+    जर (n == 12) {
         dst = ngx_sprintf(dst, "%ud.%ud.%ud.%ud", p[12], p[13], p[14], p[15]);
     }
 
-    return dst - text;
+    परत dst - text;
 }
 
 #endif
@@ -375,9 +375,9 @@ ngx_int_t
 ngx_ptocidr(ngx_str_t *text, ngx_cidr_t *cidr)
 {
     u_char      *addr, *mask, *last;
-    size_t       len;
+    माप_प्रकार       len;
     ngx_int_t    shift;
-#if (NGX_HAVE_INET6)
+#जर (NGX_HAVE_INET6)
     ngx_int_t    rc;
     ngx_uint_t   s, i;
 #endif
@@ -390,119 +390,119 @@ ngx_ptocidr(ngx_str_t *text, ngx_cidr_t *cidr)
 
     cidr->u.in.addr = ngx_inet_addr(addr, len);
 
-    if (cidr->u.in.addr != INADDR_NONE) {
+    जर (cidr->u.in.addr != INADDR_NONE) {
         cidr->family = AF_INET;
 
-        if (mask == NULL) {
+        जर (mask == रिक्त) {
             cidr->u.in.mask = 0xffffffff;
-            return NGX_OK;
+            परत NGX_OK;
         }
 
-#if (NGX_HAVE_INET6)
-    } else if (ngx_inet6_addr(addr, len, cidr->u.in6.addr.s6_addr) == NGX_OK) {
+#जर (NGX_HAVE_INET6)
+    } अन्यथा जर (ngx_inet6_addr(addr, len, cidr->u.in6.addr.s6_addr) == NGX_OK) {
         cidr->family = AF_INET6;
 
-        if (mask == NULL) {
+        जर (mask == रिक्त) {
             ngx_memset(cidr->u.in6.mask.s6_addr, 0xff, 16);
-            return NGX_OK;
+            परत NGX_OK;
         }
 
 #endif
-    } else {
-        return NGX_ERROR;
+    } अन्यथा {
+        परत NGX_ERROR;
     }
 
     mask++;
 
     shift = ngx_atoi(mask, last - mask);
-    if (shift == NGX_ERROR) {
-        return NGX_ERROR;
+    जर (shift == NGX_ERROR) {
+        परत NGX_ERROR;
     }
 
-    switch (cidr->family) {
+    निवड (cidr->family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        if (shift > 128) {
-            return NGX_ERROR;
+#जर (NGX_HAVE_INET6)
+    स्थिती AF_INET6:
+        जर (shift > 128) {
+            परत NGX_ERROR;
         }
 
         addr = cidr->u.in6.addr.s6_addr;
         mask = cidr->u.in6.mask.s6_addr;
         rc = NGX_OK;
 
-        for (i = 0; i < 16; i++) {
+        साठी (i = 0; i < 16; i++) {
 
             s = (shift > 8) ? 8 : shift;
             shift -= s;
 
             mask[i] = (u_char) (0xffu << (8 - s));
 
-            if (addr[i] != (addr[i] & mask[i])) {
+            जर (addr[i] != (addr[i] & mask[i])) {
                 rc = NGX_DONE;
                 addr[i] &= mask[i];
             }
         }
 
-        return rc;
+        परत rc;
 #endif
 
-    default: /* AF_INET */
-        if (shift > 32) {
-            return NGX_ERROR;
+    पूर्वनिर्धारित: /* AF_INET */
+        जर (shift > 32) {
+            परत NGX_ERROR;
         }
 
-        if (shift) {
+        जर (shift) {
             cidr->u.in.mask = htonl((uint32_t) (0xffffffffu << (32 - shift)));
 
-        } else {
+        } अन्यथा {
             /* x86 compilers use a shl instruction that shifts by modulo 32 */
             cidr->u.in.mask = 0;
         }
 
-        if (cidr->u.in.addr == (cidr->u.in.addr & cidr->u.in.mask)) {
-            return NGX_OK;
+        जर (cidr->u.in.addr == (cidr->u.in.addr & cidr->u.in.mask)) {
+            परत NGX_OK;
         }
 
         cidr->u.in.addr &= cidr->u.in.mask;
 
-        return NGX_DONE;
+        परत NGX_DONE;
     }
 }
 
 
 ngx_int_t
-ngx_cidr_match(struct sockaddr *sa, ngx_array_t *cidrs)
+ngx_cidr_match(संरचना sockaddr *sa, ngx_array_t *cidrs)
 {
-#if (NGX_HAVE_INET6)
+#जर (NGX_HAVE_INET6)
     u_char           *p;
 #endif
     in_addr_t         inaddr;
     ngx_cidr_t       *cidr;
     ngx_uint_t        family, i;
-#if (NGX_HAVE_INET6)
+#जर (NGX_HAVE_INET6)
     ngx_uint_t        n;
-    struct in6_addr  *inaddr6;
+    संरचना in6_addr  *inaddr6;
 #endif
 
-#if (NGX_SUPPRESS_WARN)
+#जर (NGX_SUPPRESS_WARN)
     inaddr = 0;
-#if (NGX_HAVE_INET6)
-    inaddr6 = NULL;
+#जर (NGX_HAVE_INET6)
+    inaddr6 = रिक्त;
 #endif
 #endif
 
     family = sa->sa_family;
 
-    if (family == AF_INET) {
-        inaddr = ((struct sockaddr_in *) sa)->sin_addr.s_addr;
+    जर (family == AF_INET) {
+        inaddr = ((संरचना sockaddr_in *) sa)->sin_addr.s_addr;
     }
 
-#if (NGX_HAVE_INET6)
-    else if (family == AF_INET6) {
-        inaddr6 = &((struct sockaddr_in6 *) sa)->sin6_addr;
+#जर (NGX_HAVE_INET6)
+    अन्यथा जर (family == AF_INET6) {
+        inaddr6 = &((संरचना sockaddr_in6 *) sa)->sin6_addr;
 
-        if (IN6_IS_ADDR_V4MAPPED(inaddr6)) {
+        जर (IN6_IS_ADDR_V4MAPPED(inaddr6)) {
             family = AF_INET;
 
             p = inaddr6->s6_addr;
@@ -517,147 +517,147 @@ ngx_cidr_match(struct sockaddr *sa, ngx_array_t *cidrs)
     }
 #endif
 
-    for (cidr = cidrs->elts, i = 0; i < cidrs->nelts; i++) {
-        if (cidr[i].family != family) {
-            goto next;
+    साठी (cidr = cidrs->elts, i = 0; i < cidrs->nelts; i++) {
+        जर (cidr[i].family != family) {
+            जा next;
         }
 
-        switch (family) {
+        निवड (family) {
 
-#if (NGX_HAVE_INET6)
-        case AF_INET6:
-            for (n = 0; n < 16; n++) {
-                if ((inaddr6->s6_addr[n] & cidr[i].u.in6.mask.s6_addr[n])
+#जर (NGX_HAVE_INET6)
+        स्थिती AF_INET6:
+            साठी (n = 0; n < 16; n++) {
+                जर ((inaddr6->s6_addr[n] & cidr[i].u.in6.mask.s6_addr[n])
                     != cidr[i].u.in6.addr.s6_addr[n])
                 {
-                    goto next;
+                    जा next;
                 }
             }
-            break;
+            थांबा;
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
-        case AF_UNIX:
-            break;
+#जर (NGX_HAVE_UNIX_DOMAIN)
+        स्थिती AF_UNIX:
+            थांबा;
 #endif
 
-        default: /* AF_INET */
-            if ((inaddr & cidr[i].u.in.mask) != cidr[i].u.in.addr) {
-                goto next;
+        पूर्वनिर्धारित: /* AF_INET */
+            जर ((inaddr & cidr[i].u.in.mask) != cidr[i].u.in.addr) {
+                जा next;
             }
-            break;
+            थांबा;
         }
 
-        return NGX_OK;
+        परत NGX_OK;
 
     next:
-        continue;
+        सुरूठेवा;
     }
 
-    return NGX_DECLINED;
+    परत NGX_DECLINED;
 }
 
 
 ngx_int_t
-ngx_parse_addr(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text, size_t len)
+ngx_parse_addr(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text, माप_प्रकार len)
 {
     in_addr_t             inaddr;
     ngx_uint_t            family;
-    struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
-    struct in6_addr       inaddr6;
-    struct sockaddr_in6  *sin6;
+    संरचना sockaddr_in   *sin;
+#जर (NGX_HAVE_INET6)
+    संरचना in6_addr       inaddr6;
+    संरचना sockaddr_in6  *sin6;
 
     /*
      * prevent MSVC8 warning:
      *    potentially uninitialized local variable 'inaddr6' used
      */
-    ngx_memzero(&inaddr6, sizeof(struct in6_addr));
+    ngx_memzero(&inaddr6, आकार(संरचना in6_addr));
 #endif
 
     inaddr = ngx_inet_addr(text, len);
 
-    if (inaddr != INADDR_NONE) {
+    जर (inaddr != INADDR_NONE) {
         family = AF_INET;
-        len = sizeof(struct sockaddr_in);
+        len = आकार(संरचना sockaddr_in);
 
-#if (NGX_HAVE_INET6)
-    } else if (ngx_inet6_addr(text, len, inaddr6.s6_addr) == NGX_OK) {
+#जर (NGX_HAVE_INET6)
+    } अन्यथा जर (ngx_inet6_addr(text, len, inaddr6.s6_addr) == NGX_OK) {
         family = AF_INET6;
-        len = sizeof(struct sockaddr_in6);
+        len = आकार(संरचना sockaddr_in6);
 
 #endif
-    } else {
-        return NGX_DECLINED;
+    } अन्यथा {
+        परत NGX_DECLINED;
     }
 
     addr->sockaddr = ngx_pcalloc(pool, len);
-    if (addr->sockaddr == NULL) {
-        return NGX_ERROR;
+    जर (addr->sockaddr == रिक्त) {
+        परत NGX_ERROR;
     }
 
     addr->sockaddr->sa_family = (u_char) family;
     addr->socklen = len;
 
-    switch (family) {
+    निवड (family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        sin6 = (struct sockaddr_in6 *) addr->sockaddr;
+#जर (NGX_HAVE_INET6)
+    स्थिती AF_INET6:
+        sin6 = (संरचना sockaddr_in6 *) addr->sockaddr;
         ngx_memcpy(sin6->sin6_addr.s6_addr, inaddr6.s6_addr, 16);
-        break;
+        थांबा;
 #endif
 
-    default: /* AF_INET */
-        sin = (struct sockaddr_in *) addr->sockaddr;
+    पूर्वनिर्धारित: /* AF_INET */
+        sin = (संरचना sockaddr_in *) addr->sockaddr;
         sin->sin_addr.s_addr = inaddr;
-        break;
+        थांबा;
     }
 
-    return NGX_OK;
+    परत NGX_OK;
 }
 
 
 ngx_int_t
 ngx_parse_addr_port(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text,
-    size_t len)
+    माप_प्रकार len)
 {
     u_char     *p, *last;
-    size_t      plen;
+    माप_प्रकार      plen;
     ngx_int_t   rc, port;
 
     rc = ngx_parse_addr(pool, addr, text, len);
 
-    if (rc != NGX_DECLINED) {
-        return rc;
+    जर (rc != NGX_DECLINED) {
+        परत rc;
     }
 
     last = text + len;
 
-#if (NGX_HAVE_INET6)
-    if (len && text[0] == '[') {
+#जर (NGX_HAVE_INET6)
+    जर (len && text[0] == '[') {
 
         p = ngx_strlchr(text, last, ']');
 
-        if (p == last - 1) {
-            return ngx_parse_addr(pool, addr, text + 1, len - 2);
+        जर (p == last - 1) {
+            परत ngx_parse_addr(pool, addr, text + 1, len - 2);
         }
 
-        if (p == NULL || *++p != ':') {
-            return NGX_DECLINED;
+        जर (p == रिक्त || *++p != ':') {
+            परत NGX_DECLINED;
         }
 
         text++;
         len -= 2;
 
-    } else
+    } अन्यथा
 #endif
 
     {
         p = ngx_strlchr(text, last, ':');
 
-        if (p == NULL) {
-            return NGX_DECLINED;
+        जर (p == रिक्त) {
+            परत NGX_DECLINED;
         }
     }
 
@@ -666,21 +666,21 @@ ngx_parse_addr_port(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text,
 
     port = ngx_atoi(p, plen);
 
-    if (port < 1 || port > 65535) {
-        return NGX_DECLINED;
+    जर (port < 1 || port > 65535) {
+        परत NGX_DECLINED;
     }
 
     len -= plen + 1;
 
     rc = ngx_parse_addr(pool, addr, text, len);
 
-    if (rc != NGX_OK) {
-        return rc;
+    जर (rc != NGX_OK) {
+        परत rc;
     }
 
     ngx_inet_set_port(addr->sockaddr, (in_port_t) port);
 
-    return NGX_OK;
+    परत NGX_OK;
 }
 
 
@@ -688,30 +688,30 @@ ngx_int_t
 ngx_parse_url(ngx_pool_t *pool, ngx_url_t *u)
 {
     u_char  *p;
-    size_t   len;
+    माप_प्रकार   len;
 
     p = u->url.data;
     len = u->url.len;
 
-    if (len >= 5 && ngx_strncasecmp(p, (u_char *) "unix:", 5) == 0) {
-        return ngx_parse_unix_domain_url(pool, u);
+    जर (len >= 5 && ngx_strncasecmp(p, (u_char *) "unix:", 5) == 0) {
+        परत ngx_parse_unix_domain_url(pool, u);
     }
 
-    if (len && p[0] == '[') {
-        return ngx_parse_inet6_url(pool, u);
+    जर (len && p[0] == '[') {
+        परत ngx_parse_inet6_url(pool, u);
     }
 
-    return ngx_parse_inet_url(pool, u);
+    परत ngx_parse_inet_url(pool, u);
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u)
 {
-#if (NGX_HAVE_UNIX_DOMAIN)
+#जर (NGX_HAVE_UNIX_DOMAIN)
     u_char              *path, *uri, *last;
-    size_t               len;
-    struct sockaddr_un  *saun;
+    माप_प्रकार               len;
+    संरचना sockaddr_un  *saun;
 
     len = u->url.len;
     path = u->url.data;
@@ -719,12 +719,12 @@ ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u)
     path += 5;
     len -= 5;
 
-    if (u->uri_part) {
+    जर (u->uri_part) {
 
         last = path + len;
         uri = ngx_strlchr(path, last, ':');
 
-        if (uri) {
+        जर (uri) {
             len = uri - path;
             uri++;
             u->uri.len = last - uri;
@@ -732,67 +732,67 @@ ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u)
         }
     }
 
-    if (len == 0) {
+    जर (len == 0) {
         u->err = "no path in the unix domain socket";
-        return NGX_ERROR;
+        परत NGX_ERROR;
     }
 
     u->host.len = len++;
     u->host.data = path;
 
-    if (len > sizeof(saun->sun_path)) {
+    जर (len > आकार(saun->sun_path)) {
         u->err = "too long path in the unix domain socket";
-        return NGX_ERROR;
+        परत NGX_ERROR;
     }
 
-    u->socklen = sizeof(struct sockaddr_un);
-    saun = (struct sockaddr_un *) &u->sockaddr;
+    u->socklen = आकार(संरचना sockaddr_un);
+    saun = (संरचना sockaddr_un *) &u->sockaddr;
     saun->sun_family = AF_UNIX;
-    (void) ngx_cpystrn((u_char *) saun->sun_path, path, len);
+    (शून्य) ngx_cpystrn((u_char *) saun->sun_path, path, len);
 
-    u->addrs = ngx_pcalloc(pool, sizeof(ngx_addr_t));
-    if (u->addrs == NULL) {
-        return NGX_ERROR;
+    u->addrs = ngx_pcalloc(pool, आकार(ngx_addr_t));
+    जर (u->addrs == रिक्त) {
+        परत NGX_ERROR;
     }
 
-    saun = ngx_pcalloc(pool, sizeof(struct sockaddr_un));
-    if (saun == NULL) {
-        return NGX_ERROR;
+    saun = ngx_pcalloc(pool, आकार(संरचना sockaddr_un));
+    जर (saun == रिक्त) {
+        परत NGX_ERROR;
     }
 
     u->family = AF_UNIX;
     u->naddrs = 1;
 
     saun->sun_family = AF_UNIX;
-    (void) ngx_cpystrn((u_char *) saun->sun_path, path, len);
+    (शून्य) ngx_cpystrn((u_char *) saun->sun_path, path, len);
 
-    u->addrs[0].sockaddr = (struct sockaddr *) saun;
-    u->addrs[0].socklen = sizeof(struct sockaddr_un);
+    u->addrs[0].sockaddr = (संरचना sockaddr *) saun;
+    u->addrs[0].socklen = आकार(संरचना sockaddr_un);
     u->addrs[0].name.len = len + 4;
     u->addrs[0].name.data = u->url.data;
 
-    return NGX_OK;
+    परत NGX_OK;
 
-#else
+#अन्यथा
 
     u->err = "the unix domain sockets are not supported on this platform";
 
-    return NGX_ERROR;
+    परत NGX_ERROR;
 
 #endif
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 {
     u_char              *host, *port, *last, *uri, *args, *dash;
-    size_t               len;
+    माप_प्रकार               len;
     ngx_int_t            n;
-    struct sockaddr_in  *sin;
+    संरचना sockaddr_in  *sin;
 
-    u->socklen = sizeof(struct sockaddr_in);
-    sin = (struct sockaddr_in *) &u->sockaddr;
+    u->socklen = आकार(संरचना sockaddr_in);
+    sin = (संरचना sockaddr_in *) &u->sockaddr;
     sin->sin_family = AF_INET;
 
     u->family = AF_INET;
@@ -807,16 +807,16 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
     args = ngx_strlchr(host, last, '?');
 
-    if (args) {
-        if (uri == NULL || args < uri) {
+    जर (args) {
+        जर (uri == रिक्त || args < uri) {
             uri = args;
         }
     }
 
-    if (uri) {
-        if (u->listen || !u->uri_part) {
+    जर (uri) {
+        जर (u->listen || !u->uri_part) {
             u->err = "invalid host";
-            return NGX_ERROR;
+            परत NGX_ERROR;
         }
 
         u->uri.len = last - uri;
@@ -824,27 +824,27 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
         last = uri;
 
-        if (uri < port) {
-            port = NULL;
+        जर (uri < port) {
+            port = रिक्त;
         }
     }
 
-    if (port) {
+    जर (port) {
         port++;
 
         len = last - port;
 
-        if (u->listen) {
+        जर (u->listen) {
             dash = ngx_strlchr(port, last, '-');
 
-            if (dash) {
+            जर (dash) {
                 dash++;
 
                 n = ngx_atoi(dash, last - dash);
 
-                if (n < 1 || n > 65535) {
+                जर (n < 1 || n > 65535) {
                     u->err = "invalid port";
-                    return NGX_ERROR;
+                    परत NGX_ERROR;
                 }
 
                 u->last_port = (in_port_t) n;
@@ -855,14 +855,14 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
         n = ngx_atoi(port, len);
 
-        if (n < 1 || n > 65535) {
+        जर (n < 1 || n > 65535) {
             u->err = "invalid port";
-            return NGX_ERROR;
+            परत NGX_ERROR;
         }
 
-        if (u->last_port && n > u->last_port) {
+        जर (u->last_port && n > u->last_port) {
             u->err = "invalid port range";
-            return NGX_ERROR;
+            परत NGX_ERROR;
         }
 
         u->port = (in_port_t) n;
@@ -873,10 +873,10 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
         last = port - 1;
 
-    } else {
-        if (uri == NULL) {
+    } अन्यथा {
+        जर (uri == रिक्त) {
 
-            if (u->listen) {
+            जर (u->listen) {
 
                 /* test value as port only */
 
@@ -884,19 +884,19 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
                 dash = ngx_strlchr(host, last, '-');
 
-                if (dash) {
+                जर (dash) {
                     dash++;
 
                     n = ngx_atoi(dash, last - dash);
 
-                    if (n == NGX_ERROR) {
-                        goto no_port;
+                    जर (n == NGX_ERROR) {
+                        जा no_port;
                     }
 
-                    if (n < 1 || n > 65535) {
+                    जर (n < 1 || n > 65535) {
                         u->err = "invalid port";
 
-                    } else {
+                    } अन्यथा {
                         u->last_port = (in_port_t) n;
                     }
 
@@ -905,20 +905,20 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
                 n = ngx_atoi(host, len);
 
-                if (n != NGX_ERROR) {
+                जर (n != NGX_ERROR) {
 
-                    if (u->err) {
-                        return NGX_ERROR;
+                    जर (u->err) {
+                        परत NGX_ERROR;
                     }
 
-                    if (n < 1 || n > 65535) {
+                    जर (n < 1 || n > 65535) {
                         u->err = "invalid port";
-                        return NGX_ERROR;
+                        परत NGX_ERROR;
                     }
 
-                    if (u->last_port && n > u->last_port) {
+                    जर (u->last_port && n > u->last_port) {
                         u->err = "invalid port range";
-                        return NGX_ERROR;
+                        परत NGX_ERROR;
                     }
 
                     u->port = (in_port_t) n;
@@ -930,7 +930,7 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
                     u->wildcard = 1;
 
-                    return ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr,
+                    परत ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr,
                                              u->socklen, 1);
                 }
             }
@@ -938,7 +938,7 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
 no_port:
 
-        u->err = NULL;
+        u->err = रिक्त;
         u->no_port = 1;
         u->port = u->default_port;
         sin->sin_port = htons(u->default_port);
@@ -947,37 +947,37 @@ no_port:
 
     len = last - host;
 
-    if (len == 0) {
+    जर (len == 0) {
         u->err = "no host";
-        return NGX_ERROR;
+        परत NGX_ERROR;
     }
 
     u->host.len = len;
     u->host.data = host;
 
-    if (u->listen && len == 1 && *host == '*') {
+    जर (u->listen && len == 1 && *host == '*') {
         sin->sin_addr.s_addr = INADDR_ANY;
         u->wildcard = 1;
-        return ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
+        परत ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
     }
 
     sin->sin_addr.s_addr = ngx_inet_addr(host, len);
 
-    if (sin->sin_addr.s_addr != INADDR_NONE) {
+    जर (sin->sin_addr.s_addr != INADDR_NONE) {
 
-        if (sin->sin_addr.s_addr == INADDR_ANY) {
+        जर (sin->sin_addr.s_addr == INADDR_ANY) {
             u->wildcard = 1;
         }
 
-        return ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
+        परत ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
     }
 
-    if (u->no_resolve) {
-        return NGX_OK;
+    जर (u->no_resolve) {
+        परत NGX_OK;
     }
 
-    if (ngx_inet_resolve_host(pool, u) != NGX_OK) {
-        return NGX_ERROR;
+    जर (ngx_inet_resolve_host(pool, u) != NGX_OK) {
+        परत NGX_ERROR;
     }
 
     u->family = u->addrs[0].sockaddr->sa_family;
@@ -985,21 +985,21 @@ no_port:
     ngx_memcpy(&u->sockaddr, u->addrs[0].sockaddr, u->addrs[0].socklen);
     u->wildcard = ngx_inet_wildcard(&u->sockaddr.sockaddr);
 
-    return NGX_OK;
+    परत NGX_OK;
 }
 
 
-static ngx_int_t
+स्थिर ngx_int_t
 ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
 {
-#if (NGX_HAVE_INET6)
+#जर (NGX_HAVE_INET6)
     u_char               *p, *host, *port, *last, *uri, *dash;
-    size_t                len;
+    माप_प्रकार                len;
     ngx_int_t             n;
-    struct sockaddr_in6  *sin6;
+    संरचना sockaddr_in6  *sin6;
 
-    u->socklen = sizeof(struct sockaddr_in6);
-    sin6 = (struct sockaddr_in6 *) &u->sockaddr;
+    u->socklen = आकार(संरचना sockaddr_in6);
+    sin6 = (संरचना sockaddr_in6 *) &u->sockaddr;
     sin6->sin6_family = AF_INET6;
 
     host = u->url.data + 1;
@@ -1008,19 +1008,19 @@ ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
 
     p = ngx_strlchr(host, last, ']');
 
-    if (p == NULL) {
+    जर (p == रिक्त) {
         u->err = "invalid host";
-        return NGX_ERROR;
+        परत NGX_ERROR;
     }
 
     port = p + 1;
 
     uri = ngx_strlchr(port, last, '/');
 
-    if (uri) {
-        if (u->listen || !u->uri_part) {
+    जर (uri) {
+        जर (u->listen || !u->uri_part) {
             u->err = "invalid host";
-            return NGX_ERROR;
+            परत NGX_ERROR;
         }
 
         u->uri.len = last - uri;
@@ -1029,27 +1029,27 @@ ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
         last = uri;
     }
 
-    if (port < last) {
-        if (*port != ':') {
+    जर (port < last) {
+        जर (*port != ':') {
             u->err = "invalid host";
-            return NGX_ERROR;
+            परत NGX_ERROR;
         }
 
         port++;
 
         len = last - port;
 
-        if (u->listen) {
+        जर (u->listen) {
             dash = ngx_strlchr(port, last, '-');
 
-            if (dash) {
+            जर (dash) {
                 dash++;
 
                 n = ngx_atoi(dash, last - dash);
 
-                if (n < 1 || n > 65535) {
+                जर (n < 1 || n > 65535) {
                     u->err = "invalid port";
-                    return NGX_ERROR;
+                    परत NGX_ERROR;
                 }
 
                 u->last_port = (in_port_t) n;
@@ -1060,14 +1060,14 @@ ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
 
         n = ngx_atoi(port, len);
 
-        if (n < 1 || n > 65535) {
+        जर (n < 1 || n > 65535) {
             u->err = "invalid port";
-            return NGX_ERROR;
+            परत NGX_ERROR;
         }
 
-        if (u->last_port && n > u->last_port) {
+        जर (u->last_port && n > u->last_port) {
             u->err = "invalid port range";
-            return NGX_ERROR;
+            परत NGX_ERROR;
         }
 
         u->port = (in_port_t) n;
@@ -1076,7 +1076,7 @@ ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
         u->port_text.len = last - port;
         u->port_text.data = port;
 
-    } else {
+    } अन्यथा {
         u->no_port = 1;
         u->port = u->default_port;
         sin6->sin6_port = htons(u->default_port);
@@ -1084,229 +1084,229 @@ ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
 
     len = p - host;
 
-    if (len == 0) {
+    जर (len == 0) {
         u->err = "no host";
-        return NGX_ERROR;
+        परत NGX_ERROR;
     }
 
     u->host.len = len + 2;
     u->host.data = host - 1;
 
-    if (ngx_inet6_addr(host, len, sin6->sin6_addr.s6_addr) != NGX_OK) {
+    जर (ngx_inet6_addr(host, len, sin6->sin6_addr.s6_addr) != NGX_OK) {
         u->err = "invalid IPv6 address";
-        return NGX_ERROR;
+        परत NGX_ERROR;
     }
 
-    if (IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr)) {
+    जर (IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr)) {
         u->wildcard = 1;
     }
 
     u->family = AF_INET6;
 
-    return ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
+    परत ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
 
-#else
+#अन्यथा
 
     u->err = "the INET6 sockets are not supported on this platform";
 
-    return NGX_ERROR;
+    परत NGX_ERROR;
 
 #endif
 }
 
 
-#if (NGX_HAVE_GETADDRINFO && NGX_HAVE_INET6)
+#जर (NGX_HAVE_GETADDRINFO && NGX_HAVE_INET6)
 
 ngx_int_t
 ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
 {
     u_char           *host;
     ngx_uint_t        n;
-    struct addrinfo   hints, *res, *rp;
+    संरचना addrinfo   hints, *res, *rp;
 
     host = ngx_alloc(u->host.len + 1, pool->log);
-    if (host == NULL) {
-        return NGX_ERROR;
+    जर (host == रिक्त) {
+        परत NGX_ERROR;
     }
 
-    (void) ngx_cpystrn(host, u->host.data, u->host.len + 1);
+    (शून्य) ngx_cpystrn(host, u->host.data, u->host.len + 1);
 
-    ngx_memzero(&hints, sizeof(struct addrinfo));
+    ngx_memzero(&hints, आकार(संरचना addrinfo));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 #ifdef AI_ADDRCONFIG
     hints.ai_flags = AI_ADDRCONFIG;
 #endif
 
-    if (getaddrinfo((char *) host, NULL, &hints, &res) != 0) {
+    जर (getaddrinfo((अक्षर *) host, रिक्त, &hints, &res) != 0) {
         u->err = "host not found";
         ngx_free(host);
-        return NGX_ERROR;
+        परत NGX_ERROR;
     }
 
     ngx_free(host);
 
-    for (n = 0, rp = res; rp != NULL; rp = rp->ai_next) {
+    साठी (n = 0, rp = res; rp != रिक्त; rp = rp->ai_next) {
 
-        switch (rp->ai_family) {
+        निवड (rp->ai_family) {
 
-        case AF_INET:
-        case AF_INET6:
-            break;
+        स्थिती AF_INET:
+        स्थिती AF_INET6:
+            थांबा;
 
-        default:
-            continue;
+        पूर्वनिर्धारित:
+            सुरूठेवा;
         }
 
         n++;
     }
 
-    if (n == 0) {
+    जर (n == 0) {
         u->err = "host not found";
-        goto failed;
+        जा failed;
     }
 
     /* MP: ngx_shared_palloc() */
 
-    for (rp = res; rp != NULL; rp = rp->ai_next) {
+    साठी (rp = res; rp != रिक्त; rp = rp->ai_next) {
 
-        switch (rp->ai_family) {
+        निवड (rp->ai_family) {
 
-        case AF_INET:
-        case AF_INET6:
-            break;
+        स्थिती AF_INET:
+        स्थिती AF_INET6:
+            थांबा;
 
-        default:
-            continue;
+        पूर्वनिर्धारित:
+            सुरूठेवा;
         }
 
-        if (ngx_inet_add_addr(pool, u, rp->ai_addr, rp->ai_addrlen, n)
+        जर (ngx_inet_add_addr(pool, u, rp->ai_addr, rp->ai_addrlen, n)
             != NGX_OK)
         {
-            goto failed;
+            जा failed;
         }
     }
 
     freeaddrinfo(res);
-    return NGX_OK;
+    परत NGX_OK;
 
 failed:
 
     freeaddrinfo(res);
-    return NGX_ERROR;
+    परत NGX_ERROR;
 }
 
-#else /* !NGX_HAVE_GETADDRINFO || !NGX_HAVE_INET6 */
+#अन्यथा /* !NGX_HAVE_GETADDRINFO || !NGX_HAVE_INET6 */
 
 ngx_int_t
 ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
 {
     u_char              *host;
     ngx_uint_t           i, n;
-    struct hostent      *h;
-    struct sockaddr_in   sin;
+    संरचना hostent      *h;
+    संरचना sockaddr_in   sin;
 
     /* AF_INET only */
 
-    ngx_memzero(&sin, sizeof(struct sockaddr_in));
+    ngx_memzero(&sin, आकार(संरचना sockaddr_in));
 
     sin.sin_family = AF_INET;
     sin.sin_addr.s_addr = ngx_inet_addr(u->host.data, u->host.len);
 
-    if (sin.sin_addr.s_addr == INADDR_NONE) {
+    जर (sin.sin_addr.s_addr == INADDR_NONE) {
         host = ngx_alloc(u->host.len + 1, pool->log);
-        if (host == NULL) {
-            return NGX_ERROR;
+        जर (host == रिक्त) {
+            परत NGX_ERROR;
         }
 
-        (void) ngx_cpystrn(host, u->host.data, u->host.len + 1);
+        (शून्य) ngx_cpystrn(host, u->host.data, u->host.len + 1);
 
-        h = gethostbyname((char *) host);
+        h = gethostbyname((अक्षर *) host);
 
         ngx_free(host);
 
-        if (h == NULL || h->h_addr_list[0] == NULL) {
+        जर (h == रिक्त || h->h_addr_list[0] == रिक्त) {
             u->err = "host not found";
-            return NGX_ERROR;
+            परत NGX_ERROR;
         }
 
-        for (n = 0; h->h_addr_list[n] != NULL; n++) { /* void */ }
+        साठी (n = 0; h->h_addr_list[n] != रिक्त; n++) { /* void */ }
 
         /* MP: ngx_shared_palloc() */
 
-        for (i = 0; i < n; i++) {
+        साठी (i = 0; i < n; i++) {
             sin.sin_addr.s_addr = *(in_addr_t *) (h->h_addr_list[i]);
 
-            if (ngx_inet_add_addr(pool, u, (struct sockaddr *) &sin,
-                                  sizeof(struct sockaddr_in), n)
+            जर (ngx_inet_add_addr(pool, u, (संरचना sockaddr *) &sin,
+                                  आकार(संरचना sockaddr_in), n)
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                परत NGX_ERROR;
             }
         }
 
-    } else {
+    } अन्यथा {
 
         /* MP: ngx_shared_palloc() */
 
-        if (ngx_inet_add_addr(pool, u, (struct sockaddr *) &sin,
-                              sizeof(struct sockaddr_in), 1)
+        जर (ngx_inet_add_addr(pool, u, (संरचना sockaddr *) &sin,
+                              आकार(संरचना sockaddr_in), 1)
             != NGX_OK)
         {
-            return NGX_ERROR;
+            परत NGX_ERROR;
         }
     }
 
-    return NGX_OK;
+    परत NGX_OK;
 }
 
 #endif /* NGX_HAVE_GETADDRINFO && NGX_HAVE_INET6 */
 
 
-static ngx_int_t
-ngx_inet_add_addr(ngx_pool_t *pool, ngx_url_t *u, struct sockaddr *sockaddr,
+स्थिर ngx_int_t
+ngx_inet_add_addr(ngx_pool_t *pool, ngx_url_t *u, संरचना sockaddr *sockaddr,
     socklen_t socklen, ngx_uint_t total)
 {
     u_char           *p;
-    size_t            len;
+    माप_प्रकार            len;
     ngx_uint_t        i, nports;
     ngx_addr_t       *addr;
-    struct sockaddr  *sa;
+    संरचना sockaddr  *sa;
 
     nports = u->last_port ? u->last_port - u->port + 1 : 1;
 
-    if (u->addrs == NULL) {
-        u->addrs = ngx_palloc(pool, total * nports * sizeof(ngx_addr_t));
-        if (u->addrs == NULL) {
-            return NGX_ERROR;
+    जर (u->addrs == रिक्त) {
+        u->addrs = ngx_palloc(pool, total * nports * आकार(ngx_addr_t));
+        जर (u->addrs == रिक्त) {
+            परत NGX_ERROR;
         }
     }
 
-    for (i = 0; i < nports; i++) {
+    साठी (i = 0; i < nports; i++) {
         sa = ngx_pcalloc(pool, socklen);
-        if (sa == NULL) {
-            return NGX_ERROR;
+        जर (sa == रिक्त) {
+            परत NGX_ERROR;
         }
 
         ngx_memcpy(sa, sockaddr, socklen);
 
         ngx_inet_set_port(sa, u->port + i);
 
-        switch (sa->sa_family) {
+        निवड (sa->sa_family) {
 
-#if (NGX_HAVE_INET6)
-        case AF_INET6:
-            len = NGX_INET6_ADDRSTRLEN + sizeof("[]:65536") - 1;
-            break;
+#जर (NGX_HAVE_INET6)
+        स्थिती AF_INET6:
+            len = NGX_INET6_ADDRSTRLEN + आकार("[]:65536") - 1;
+            थांबा;
 #endif
 
-        default: /* AF_INET */
-            len = NGX_INET_ADDRSTRLEN + sizeof(":65535") - 1;
+        पूर्वनिर्धारित: /* AF_INET */
+            len = NGX_INET_ADDRSTRLEN + आकार(":65535") - 1;
         }
 
         p = ngx_pnalloc(pool, len);
-        if (p == NULL) {
-            return NGX_ERROR;
+        जर (p == रिक्त) {
+            परत NGX_ERROR;
         }
 
         len = ngx_sock_ntop(sa, socklen, p, len, 1);
@@ -1320,180 +1320,180 @@ ngx_inet_add_addr(ngx_pool_t *pool, ngx_url_t *u, struct sockaddr *sockaddr,
         addr->name.data = p;
     }
 
-    return NGX_OK;
+    परत NGX_OK;
 }
 
 
 ngx_int_t
-ngx_cmp_sockaddr(struct sockaddr *sa1, socklen_t slen1,
-    struct sockaddr *sa2, socklen_t slen2, ngx_uint_t cmp_port)
+ngx_cmp_sockaddr(संरचना sockaddr *sa1, socklen_t slen1,
+    संरचना sockaddr *sa2, socklen_t slen2, ngx_uint_t cmp_port)
 {
-    struct sockaddr_in   *sin1, *sin2;
-#if (NGX_HAVE_INET6)
-    struct sockaddr_in6  *sin61, *sin62;
+    संरचना sockaddr_in   *sin1, *sin2;
+#जर (NGX_HAVE_INET6)
+    संरचना sockaddr_in6  *sin61, *sin62;
 #endif
-#if (NGX_HAVE_UNIX_DOMAIN)
-    size_t                len;
-    struct sockaddr_un   *saun1, *saun2;
+#जर (NGX_HAVE_UNIX_DOMAIN)
+    माप_प्रकार                len;
+    संरचना sockaddr_un   *saun1, *saun2;
 #endif
 
-    if (sa1->sa_family != sa2->sa_family) {
-        return NGX_DECLINED;
+    जर (sa1->sa_family != sa2->sa_family) {
+        परत NGX_DECLINED;
     }
 
-    switch (sa1->sa_family) {
+    निवड (sa1->sa_family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
+#जर (NGX_HAVE_INET6)
+    स्थिती AF_INET6:
 
-        sin61 = (struct sockaddr_in6 *) sa1;
-        sin62 = (struct sockaddr_in6 *) sa2;
+        sin61 = (संरचना sockaddr_in6 *) sa1;
+        sin62 = (संरचना sockaddr_in6 *) sa2;
 
-        if (cmp_port && sin61->sin6_port != sin62->sin6_port) {
-            return NGX_DECLINED;
+        जर (cmp_port && sin61->sin6_port != sin62->sin6_port) {
+            परत NGX_DECLINED;
         }
 
-        if (ngx_memcmp(&sin61->sin6_addr, &sin62->sin6_addr, 16) != 0) {
-            return NGX_DECLINED;
+        जर (ngx_memcmp(&sin61->sin6_addr, &sin62->sin6_addr, 16) != 0) {
+            परत NGX_DECLINED;
         }
 
-        break;
+        थांबा;
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
-    case AF_UNIX:
+#जर (NGX_HAVE_UNIX_DOMAIN)
+    स्थिती AF_UNIX:
 
-        saun1 = (struct sockaddr_un *) sa1;
-        saun2 = (struct sockaddr_un *) sa2;
+        saun1 = (संरचना sockaddr_un *) sa1;
+        saun2 = (संरचना sockaddr_un *) sa2;
 
-        if (slen1 < slen2) {
-            len = slen1 - offsetof(struct sockaddr_un, sun_path);
+        जर (slen1 < slen2) {
+            len = slen1 - दुरत्व(संरचना sockaddr_un, sun_path);
 
-        } else {
-            len = slen2 - offsetof(struct sockaddr_un, sun_path);
+        } अन्यथा {
+            len = slen2 - दुरत्व(संरचना sockaddr_un, sun_path);
         }
 
-        if (len > sizeof(saun1->sun_path)) {
-            len = sizeof(saun1->sun_path);
+        जर (len > आकार(saun1->sun_path)) {
+            len = आकार(saun1->sun_path);
         }
 
-        if (ngx_memcmp(&saun1->sun_path, &saun2->sun_path, len) != 0) {
-            return NGX_DECLINED;
+        जर (ngx_memcmp(&saun1->sun_path, &saun2->sun_path, len) != 0) {
+            परत NGX_DECLINED;
         }
 
-        break;
+        थांबा;
 #endif
 
-    default: /* AF_INET */
+    पूर्वनिर्धारित: /* AF_INET */
 
-        sin1 = (struct sockaddr_in *) sa1;
-        sin2 = (struct sockaddr_in *) sa2;
+        sin1 = (संरचना sockaddr_in *) sa1;
+        sin2 = (संरचना sockaddr_in *) sa2;
 
-        if (cmp_port && sin1->sin_port != sin2->sin_port) {
-            return NGX_DECLINED;
+        जर (cmp_port && sin1->sin_port != sin2->sin_port) {
+            परत NGX_DECLINED;
         }
 
-        if (sin1->sin_addr.s_addr != sin2->sin_addr.s_addr) {
-            return NGX_DECLINED;
+        जर (sin1->sin_addr.s_addr != sin2->sin_addr.s_addr) {
+            परत NGX_DECLINED;
         }
 
-        break;
+        थांबा;
     }
 
-    return NGX_OK;
+    परत NGX_OK;
 }
 
 
 in_port_t
-ngx_inet_get_port(struct sockaddr *sa)
+ngx_inet_get_port(संरचना sockaddr *sa)
 {
-    struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
-    struct sockaddr_in6  *sin6;
+    संरचना sockaddr_in   *sin;
+#जर (NGX_HAVE_INET6)
+    संरचना sockaddr_in6  *sin6;
 #endif
 
-    switch (sa->sa_family) {
+    निवड (sa->sa_family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        sin6 = (struct sockaddr_in6 *) sa;
-        return ntohs(sin6->sin6_port);
+#जर (NGX_HAVE_INET6)
+    स्थिती AF_INET6:
+        sin6 = (संरचना sockaddr_in6 *) sa;
+        परत ntohs(sin6->sin6_port);
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
-    case AF_UNIX:
-        return 0;
+#जर (NGX_HAVE_UNIX_DOMAIN)
+    स्थिती AF_UNIX:
+        परत 0;
 #endif
 
-    default: /* AF_INET */
-        sin = (struct sockaddr_in *) sa;
-        return ntohs(sin->sin_port);
+    पूर्वनिर्धारित: /* AF_INET */
+        sin = (संरचना sockaddr_in *) sa;
+        परत ntohs(sin->sin_port);
     }
 }
 
 
-void
-ngx_inet_set_port(struct sockaddr *sa, in_port_t port)
+शून्य
+ngx_inet_set_port(संरचना sockaddr *sa, in_port_t port)
 {
-    struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
-    struct sockaddr_in6  *sin6;
+    संरचना sockaddr_in   *sin;
+#जर (NGX_HAVE_INET6)
+    संरचना sockaddr_in6  *sin6;
 #endif
 
-    switch (sa->sa_family) {
+    निवड (sa->sa_family) {
 
-#if (NGX_HAVE_INET6)
-    case AF_INET6:
-        sin6 = (struct sockaddr_in6 *) sa;
+#जर (NGX_HAVE_INET6)
+    स्थिती AF_INET6:
+        sin6 = (संरचना sockaddr_in6 *) sa;
         sin6->sin6_port = htons(port);
-        break;
+        थांबा;
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
-    case AF_UNIX:
-        break;
+#जर (NGX_HAVE_UNIX_DOMAIN)
+    स्थिती AF_UNIX:
+        थांबा;
 #endif
 
-    default: /* AF_INET */
-        sin = (struct sockaddr_in *) sa;
+    पूर्वनिर्धारित: /* AF_INET */
+        sin = (संरचना sockaddr_in *) sa;
         sin->sin_port = htons(port);
-        break;
+        थांबा;
     }
 }
 
 
 ngx_uint_t
-ngx_inet_wildcard(struct sockaddr *sa)
+ngx_inet_wildcard(संरचना sockaddr *sa)
 {
-    struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
-    struct sockaddr_in6  *sin6;
+    संरचना sockaddr_in   *sin;
+#जर (NGX_HAVE_INET6)
+    संरचना sockaddr_in6  *sin6;
 #endif
 
-    switch (sa->sa_family) {
+    निवड (sa->sa_family) {
 
-    case AF_INET:
-        sin = (struct sockaddr_in *) sa;
+    स्थिती AF_INET:
+        sin = (संरचना sockaddr_in *) sa;
 
-        if (sin->sin_addr.s_addr == INADDR_ANY) {
-            return 1;
+        जर (sin->sin_addr.s_addr == INADDR_ANY) {
+            परत 1;
         }
 
-        break;
+        थांबा;
 
-#if (NGX_HAVE_INET6)
+#जर (NGX_HAVE_INET6)
 
-    case AF_INET6:
-        sin6 = (struct sockaddr_in6 *) sa;
+    स्थिती AF_INET6:
+        sin6 = (संरचना sockaddr_in6 *) sa;
 
-        if (IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr)) {
-            return 1;
+        जर (IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr)) {
+            परत 1;
         }
 
-        break;
+        थांबा;
 
 #endif
     }
 
-    return 0;
+    परत 0;
 }
