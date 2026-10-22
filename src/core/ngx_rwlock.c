@@ -9,7 +9,7 @@
 #include <ngx_core.h>
 
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#ᨀᨘ (NGX_HAVE_ATOMIC_OPS)
 
 
 #define NGX_RWLOCK_SPIN   2048
@@ -23,11 +23,11 @@ ngx_rwlock_wlock(ngx_atomic_t *lock)
 
     for ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK)) {
-            return;
+        ᨀᨘ (*lock == 0 && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK)) {
+            ᨀᨘᨒ;
         }
 
-        if (ngx_ncpu > 1) {
+        ᨀᨘ (ngx_ncpu > 1) {
 
             for (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
 
@@ -35,10 +35,10 @@ ngx_rwlock_wlock(ngx_atomic_t *lock)
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0
+                ᨀᨘ (*lock == 0
                     && ngx_atomic_cmp_set(lock, 0, NGX_RWLOCK_WLOCK))
                 {
-                    return;
+                    ᨀᨘᨒ;
                 }
             }
         }
@@ -57,13 +57,13 @@ ngx_rwlock_rlock(ngx_atomic_t *lock)
     for ( ;; ) {
         readers = *lock;
 
-        if (readers != NGX_RWLOCK_WLOCK
+        ᨀᨘ (readers != NGX_RWLOCK_WLOCK
             && ngx_atomic_cmp_set(lock, readers, readers + 1))
         {
-            return;
+            ᨀᨘᨒ;
         }
 
-        if (ngx_ncpu > 1) {
+        ᨀᨘ (ngx_ncpu > 1) {
 
             for (n = 1; n < NGX_RWLOCK_SPIN; n <<= 1) {
 
@@ -73,10 +73,10 @@ ngx_rwlock_rlock(ngx_atomic_t *lock)
 
                 readers = *lock;
 
-                if (readers != NGX_RWLOCK_WLOCK
+                ᨀᨘ (readers != NGX_RWLOCK_WLOCK
                     && ngx_atomic_cmp_set(lock, readers, readers + 1))
                 {
-                    return;
+                    ᨀᨘᨒ;
                 }
             }
         }
@@ -89,9 +89,9 @@ ngx_rwlock_rlock(ngx_atomic_t *lock)
 void
 ngx_rwlock_unlock(ngx_atomic_t *lock)
 {
-    if (*lock == NGX_RWLOCK_WLOCK) {
+    ᨀᨘ (*lock == NGX_RWLOCK_WLOCK) {
         (void) ngx_atomic_cmp_set(lock, NGX_RWLOCK_WLOCK, 0);
-    } else {
+    } ᨀᨘᨁ {
         (void) ngx_atomic_fetch_add(lock, -1);
     }
 }
@@ -100,15 +100,15 @@ ngx_rwlock_unlock(ngx_atomic_t *lock)
 void
 ngx_rwlock_downgrade(ngx_atomic_t *lock)
 {
-    if (*lock == NGX_RWLOCK_WLOCK) {
+    ᨀᨘ (*lock == NGX_RWLOCK_WLOCK) {
         *lock = 1;
     }
 }
 
 
-#else
+#ᨀᨘᨁ
 
-#if (NGX_HTTP_UPSTREAM_ZONE || NGX_STREAM_UPSTREAM_ZONE)
+#ᨀᨘ (NGX_HTTP_UPSTREAM_ZONE || NGX_STREAM_UPSTREAM_ZONE)
 
 #error ngx_atomic_cmp_set() is not defined!
 

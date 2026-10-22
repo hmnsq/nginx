@@ -32,7 +32,7 @@ ngx_crc(u_char *data, size_t len)
         sum += *data++;
     }
 
-    return sum;
+    ᨀᨘᨒ sum;
 }
 
 
