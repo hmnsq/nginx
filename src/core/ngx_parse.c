@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 ssize_t
@@ -18,40 +18,40 @@ ngx_parse_size(ngx_str_t *line)
 
     len = line->len;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    𐡄𐡍 (len == 0) {
+        أرجع NGX_ERROR;
     }
 
     unit = line->data[len - 1];
 
-    switch (unit) {
-    case 'K':
-    case 'k':
+    بدل (unit) {
+    حالة 'K':
+    حالة 'k':
         len--;
         max = NGX_MAX_SIZE_T_VALUE / 1024;
         scale = 1024;
-        break;
+        اكسر;
 
-    case 'M':
-    case 'm':
+    حالة 'M':
+    حالة 'm':
         len--;
         max = NGX_MAX_SIZE_T_VALUE / (1024 * 1024);
         scale = 1024 * 1024;
-        break;
+        اكسر;
 
-    default:
+    افتراضي:
         max = NGX_MAX_SIZE_T_VALUE;
         scale = 1;
     }
 
     size = ngx_atosz(line->data, len);
-    if (size == NGX_ERROR || size > max) {
-        return NGX_ERROR;
+    𐡄𐡍 (size == NGX_ERROR || size > max) {
+        أرجع NGX_ERROR;
     }
 
     size *= scale;
 
-    return size;
+    أرجع size;
 }
 
 
@@ -64,47 +64,47 @@ ngx_parse_offset(ngx_str_t *line)
 
     len = line->len;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    𐡄𐡍 (len == 0) {
+        أرجع NGX_ERROR;
     }
 
     unit = line->data[len - 1];
 
-    switch (unit) {
-    case 'K':
-    case 'k':
+    بدل (unit) {
+    حالة 'K':
+    حالة 'k':
         len--;
         max = NGX_MAX_OFF_T_VALUE / 1024;
         scale = 1024;
-        break;
+        اكسر;
 
-    case 'M':
-    case 'm':
+    حالة 'M':
+    حالة 'm':
         len--;
         max = NGX_MAX_OFF_T_VALUE / (1024 * 1024);
         scale = 1024 * 1024;
-        break;
+        اكسر;
 
-    case 'G':
-    case 'g':
+    حالة 'G':
+    حالة 'g':
         len--;
         max = NGX_MAX_OFF_T_VALUE / (1024 * 1024 * 1024);
         scale = 1024 * 1024 * 1024;
-        break;
+        اكسر;
 
-    default:
+    افتراضي:
         max = NGX_MAX_OFF_T_VALUE;
         scale = 1;
     }
 
     offset = ngx_atoof(line->data, len);
-    if (offset == NGX_ERROR || offset > max) {
-        return NGX_ERROR;
+    𐡄𐡍 (offset == NGX_ERROR || offset > max) {
+        أرجع NGX_ERROR;
     }
 
     offset *= scale;
 
-    return offset;
+    أرجع offset;
 }
 
 
@@ -115,7 +115,7 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
     ngx_int_t    value, total, scale;
     ngx_int_t    max, cutoff, cutlim;
     ngx_uint_t   valid;
-    enum {
+    تعداد {
         st_start = 0,
         st_year,
         st_month,
@@ -138,146 +138,146 @@ ngx_parse_time(ngx_str_t *line, ngx_uint_t is_sec)
     p = line->data;
     last = p + line->len;
 
-    while (p < last) {
+    طالما (p < last) {
 
-        if (*p >= '0' && *p <= '9') {
-            if (value >= cutoff && (value > cutoff || *p - '0' > cutlim)) {
-                return NGX_ERROR;
+        𐡄𐡍 (*p >= '0' && *p <= '9') {
+            𐡄𐡍 (value >= cutoff && (value > cutoff || *p - '0' > cutlim)) {
+                أرجع NGX_ERROR;
             }
 
             value = value * 10 + (*p++ - '0');
             valid = 1;
-            continue;
+            استمر;
         }
 
-        switch (*p++) {
+        بدل (*p++) {
 
-        case 'y':
-            if (step > st_start) {
-                return NGX_ERROR;
+        حالة 'y':
+            𐡄𐡍 (step > st_start) {
+                أرجع NGX_ERROR;
             }
             step = st_year;
             max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 365);
             scale = 60 * 60 * 24 * 365;
-            break;
+            اكسر;
 
-        case 'M':
-            if (step >= st_month) {
-                return NGX_ERROR;
+        حالة 'M':
+            𐡄𐡍 (step >= st_month) {
+                أرجع NGX_ERROR;
             }
             step = st_month;
             max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 30);
             scale = 60 * 60 * 24 * 30;
-            break;
+            اكسر;
 
-        case 'w':
-            if (step >= st_week) {
-                return NGX_ERROR;
+        حالة 'w':
+            𐡄𐡍 (step >= st_week) {
+                أرجع NGX_ERROR;
             }
             step = st_week;
             max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24 * 7);
             scale = 60 * 60 * 24 * 7;
-            break;
+            اكسر;
 
-        case 'd':
-            if (step >= st_day) {
-                return NGX_ERROR;
+        حالة 'd':
+            𐡄𐡍 (step >= st_day) {
+                أرجع NGX_ERROR;
             }
             step = st_day;
             max = NGX_MAX_INT_T_VALUE / (60 * 60 * 24);
             scale = 60 * 60 * 24;
-            break;
+            اكسر;
 
-        case 'h':
-            if (step >= st_hour) {
-                return NGX_ERROR;
+        حالة 'h':
+            𐡄𐡍 (step >= st_hour) {
+                أرجع NGX_ERROR;
             }
             step = st_hour;
             max = NGX_MAX_INT_T_VALUE / (60 * 60);
             scale = 60 * 60;
-            break;
+            اكسر;
 
-        case 'm':
-            if (p < last && *p == 's') {
-                if (is_sec || step >= st_msec) {
-                    return NGX_ERROR;
+        حالة 'm':
+            𐡄𐡍 (p < last && *p == 's') {
+                𐡄𐡍 (is_sec || step >= st_msec) {
+                    أرجع NGX_ERROR;
                 }
                 p++;
                 step = st_msec;
                 max = NGX_MAX_INT_T_VALUE;
                 scale = 1;
-                break;
+                اكسر;
             }
 
-            if (step >= st_min) {
-                return NGX_ERROR;
+            𐡄𐡍 (step >= st_min) {
+                أرجع NGX_ERROR;
             }
             step = st_min;
             max = NGX_MAX_INT_T_VALUE / 60;
             scale = 60;
-            break;
+            اكسر;
 
-        case 's':
-            if (step >= st_sec) {
-                return NGX_ERROR;
+        حالة 's':
+            𐡄𐡍 (step >= st_sec) {
+                أرجع NGX_ERROR;
             }
             step = st_sec;
             max = NGX_MAX_INT_T_VALUE;
             scale = 1;
-            break;
+            اكسر;
 
-        case ' ':
-            if (step >= st_sec) {
-                return NGX_ERROR;
+        حالة ' ':
+            𐡄𐡍 (step >= st_sec) {
+                أرجع NGX_ERROR;
             }
             step = st_last;
             max = NGX_MAX_INT_T_VALUE;
             scale = 1;
-            break;
+            اكسر;
 
-        default:
-            return NGX_ERROR;
+        افتراضي:
+            أرجع NGX_ERROR;
         }
 
-        if (step != st_msec && !is_sec) {
+        𐡄𐡍 (step != st_msec && !is_sec) {
             scale *= 1000;
             max /= 1000;
         }
 
-        if (value > max) {
-            return NGX_ERROR;
+        𐡄𐡍 (value > max) {
+            أرجع NGX_ERROR;
         }
 
         value *= scale;
 
-        if (total > NGX_MAX_INT_T_VALUE - value) {
-            return NGX_ERROR;
+        𐡄𐡍 (total > NGX_MAX_INT_T_VALUE - value) {
+            أرجع NGX_ERROR;
         }
 
         total += value;
 
         value = 0;
 
-        while (p < last && *p == ' ') {
+        طالما (p < last && *p == ' ') {
             p++;
         }
     }
 
-    if (!valid) {
-        return NGX_ERROR;
+    𐡄𐡍 (!valid) {
+        أرجع NGX_ERROR;
     }
 
-    if (!is_sec) {
-        if (value > NGX_MAX_INT_T_VALUE / 1000) {
-            return NGX_ERROR;
+    𐡄𐡍 (!is_sec) {
+        𐡄𐡍 (value > NGX_MAX_INT_T_VALUE / 1000) {
+            أرجع NGX_ERROR;
         }
 
         value *= 1000;
     }
 
-    if (total > NGX_MAX_INT_T_VALUE - value) {
-        return NGX_ERROR;
+    𐡄𐡍 (total > NGX_MAX_INT_T_VALUE - value) {
+        أرجع NGX_ERROR;
     }
 
-    return total + value;
+    أرجع total + value;
 }

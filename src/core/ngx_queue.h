@@ -5,17 +5,17 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 #ifndef _NGX_QUEUE_H_INCLUDED_
 #define _NGX_QUEUE_H_INCLUDED_
 
 
-typedef struct ngx_queue_s  ngx_queue_t;
+تعريفنوع بنية ngx_queue_s  ngx_queue_t;
 
-struct ngx_queue_s {
+بنية ngx_queue_s {
     ngx_queue_t  *prev;
     ngx_queue_t  *next;
 };
@@ -70,15 +70,15 @@ struct ngx_queue_s {
     (q)->prev
 
 
-#if (NGX_DEBUG)
+#𐡄𐡍 (NGX_DEBUG)
 
 #define ngx_queue_remove(x)                                                   \
     (x)->next->prev = (x)->prev;                                              \
     (x)->prev->next = (x)->next;                                              \
-    (x)->prev = NULL;                                                         \
-    (x)->next = NULL
+    (x)->prev = عدم;                                                         \
+    (x)->next = عدم
 
-#else
+#وإلا
 
 #define ngx_queue_remove(x)                                                   \
     (x)->next->prev = (x)->prev;                                              \
@@ -108,8 +108,8 @@ struct ngx_queue_s {
 
 
 ngx_queue_t *ngx_queue_middle(ngx_queue_t *queue);
-void ngx_queue_sort(ngx_queue_t *queue,
-    ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
+فراغ ngx_queue_sort(ngx_queue_t *queue,
+    ngx_int_t (*cmp)(ثابت ngx_queue_t *, ثابت ngx_queue_t *));
 
 
 #endif /* _NGX_QUEUE_H_INCLUDED_ */

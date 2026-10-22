@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 #ifndef _NGX_OPEN_FILE_CACHE_H_INCLUDED_
@@ -16,7 +16,7 @@
 #define NGX_OPEN_FILE_DIRECTIO_OFF  NGX_MAX_OFF_T_VALUE
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_fd_t                 fd;
     ngx_file_uniq_t          uniq;
     time_t                   mtime;
@@ -26,13 +26,13 @@ typedef struct {
     size_t                   read_ahead;
 
     ngx_err_t                err;
-    char                    *failed;
+    حرف                    *failed;
 
     time_t                   valid;
 
     ngx_uint_t               min_uses;
 
-#if (NGX_HAVE_OPENAT)
+#𐡄𐡍 (NGX_HAVE_OPENAT)
     size_t                   disable_symlinks_from;
     unsigned                 disable_symlinks:2;
 #endif
@@ -51,9 +51,9 @@ typedef struct {
 } ngx_open_file_info_t;
 
 
-typedef struct ngx_cached_open_file_s  ngx_cached_open_file_t;
+تعريفنوع بنية ngx_cached_open_file_s  ngx_cached_open_file_t;
 
-struct ngx_cached_open_file_s {
+بنية ngx_cached_open_file_s {
     ngx_rbtree_node_t        node;
     ngx_queue_t              queue;
 
@@ -69,7 +69,7 @@ struct ngx_cached_open_file_s {
 
     uint32_t                 uses;
 
-#if (NGX_HAVE_OPENAT)
+#𐡄𐡍 (NGX_HAVE_OPENAT)
     size_t                   disable_symlinks_from;
     unsigned                 disable_symlinks:2;
 #endif
@@ -88,7 +88,7 @@ struct ngx_cached_open_file_s {
 };
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_rbtree_t             rbtree;
     ngx_rbtree_node_t        sentinel;
     ngx_queue_t              expire_queue;
@@ -99,7 +99,7 @@ typedef struct {
 } ngx_open_file_cache_t;
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_open_file_cache_t   *cache;
     ngx_cached_open_file_t  *file;
     ngx_uint_t               min_uses;
@@ -107,12 +107,12 @@ typedef struct {
 } ngx_open_file_cache_cleanup_t;
 
 
-typedef struct {
+تعريفنوع بنية {
 
     /* ngx_connection_t stub to allow use c->fd as event ident */
-    void                    *data;
-    ngx_event_t             *read;
-    ngx_event_t             *write;
+    فراغ                    *data;
+    ngx_event_t             *اقرأ;
+    ngx_event_t             *اكتب;
     ngx_fd_t                 fd;
 
     ngx_cached_open_file_t  *file;

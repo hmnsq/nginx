@@ -12,9 +12,9 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_json_parse.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
+#ضمن <ngx_json_parse.h>
 
 
 #define NGX_JSON_NOT_SKIPPING  (ngx_uint_t) -1
@@ -22,24 +22,24 @@
 #define ngx_json_ws(c)  ((c) == ' ' || (c) == '\t' || (c) == CR || (c) == LF)
 
 
-static ngx_inline ngx_int_t ngx_json_end_number(ngx_json_ctx_t *ctx,
+ساكن ngx_inline ngx_int_t ngx_json_end_number(ngx_json_ctx_t *ctx,
     u_char *start, u_char *end, ngx_json_state_e *state);
-static ngx_inline ngx_int_t ngx_json_emit(ngx_json_ctx_t *ctx,
+ساكن ngx_inline ngx_int_t ngx_json_emit(ngx_json_ctx_t *ctx,
     ngx_json_event_e event, u_char *data, size_t len);
-static ngx_inline ngx_json_state_e ngx_json_after_value(ngx_json_ctx_t *ctx);
-static ngx_inline ngx_int_t ngx_json_close(ngx_json_ctx_t *ctx,
+ساكن ngx_inline ngx_json_state_e ngx_json_after_value(ngx_json_ctx_t *ctx);
+ساكن ngx_inline ngx_int_t ngx_json_close(ngx_json_ctx_t *ctx,
     ngx_json_event_e event, ngx_json_state_e *state, u_char *p);
-static ngx_int_t ngx_json_push_state(ngx_json_ctx_t *ctx,
+ساكن ngx_int_t ngx_json_push_state(ngx_json_ctx_t *ctx,
     ngx_json_container_e container);
 
 
-void
+فراغ
 ngx_json_ctx_init(ngx_json_ctx_t *ctx, ngx_pool_t *pool)
 {
     ctx->state = ngx_json_start;
     ctx->pool = pool;
-    ctx->handler = NULL;
-    ctx->data = NULL;
+    ctx->handler = عدم;
+    ctx->data = عدم;
     ctx->codepoint = 0;
     ctx->hex_left = 0;
 
@@ -49,7 +49,7 @@ ngx_json_ctx_init(ngx_json_ctx_t *ctx, ngx_pool_t *pool)
 
     /* stack is allocated lazily on first push, sized to max_depth */
 
-    ctx->stack = NULL;
+    ctx->stack = عدم;
 
     ctx->in_key = 0;
     ctx->escaped = 0;
@@ -65,28 +65,28 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
     ngx_json_event_e   event;
     ngx_json_state_e   state;
 
-    if (len == 0) {
-        return NGX_DECLINED;
+    𐡄𐡍 (len == 0) {
+        أرجع NGX_DECLINED;
     }
 
-    if (data == NULL) {
-        return NGX_ERROR;
+    𐡄𐡍 (data == عدم) {
+        أرجع NGX_ERROR;
     }
 
-    if (ctx->state == ngx_json_done) {
-        return NGX_DECLINED;
+    𐡄𐡍 (ctx->state == ngx_json_done) {
+        أرجع NGX_DECLINED;
     }
 
     last = data + len;
     state = ctx->state;
     skip_depth = ctx->skip_until_depth;
-    start = NULL;
+    start = عدم;
 
-    for (p = data; p < last; p++) {
+    لكل (p = data; p < last; p++) {
 
         /* skipping suppresses emission only; the machine still validates */
 
-        if (ngx_json_skipping(skip_depth) && ctx->depth <= skip_depth
+        𐡄𐡍 (ngx_json_skipping(skip_depth) && ctx->depth <= skip_depth
             && (state == ngx_json_object_value_separator
                 || state == ngx_json_array_value_separator
                 || state == ngx_json_done))
@@ -95,555 +95,555 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
             ctx->skip_until_depth = NGX_JSON_NOT_SKIPPING;
             p--;
 
-            continue;
+            استمر;
         }
 
-        switch (state) {
+        بدل (state) {
 
-        case ngx_json_start:
-            if (ngx_json_ws(*p)) {
-                break;
+        حالة ngx_json_start:
+            𐡄𐡍 (ngx_json_ws(*p)) {
+                اكسر;
             }
 
             p--;
             state = ngx_json_value;
-            break;
+            اكسر;
 
-        case ngx_json_object:
-            if (ngx_json_ws(*p)) {
-                break;
+        حالة ngx_json_object:
+            𐡄𐡍 (ngx_json_ws(*p)) {
+                اكسر;
             }
 
-            if (*p == '}') {
+            𐡄𐡍 (*p == '}') {
                 rc = ngx_json_close(ctx, NGX_JSON_OBJECT_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                𐡄𐡍 (rc != NGX_OK) {
+                    أرجع rc;
                 }
 
-                break;
+                اكسر;
             }
 
             /* fall through */
 
-        case ngx_json_object_next:
-            if (ngx_json_ws(*p)) {
-                break;
+        حالة ngx_json_object_next:
+            𐡄𐡍 (ngx_json_ws(*p)) {
+                اكسر;
             }
 
-            if (*p == '"') {
+            𐡄𐡍 (*p == '"') {
                 ctx->in_key = 1;
                 ctx->escaped = 0;
                 start = p + 1;
                 state = ngx_json_string;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_object_name_separator:
-            if (ngx_json_ws(*p)) {
-                break;
+        حالة ngx_json_object_name_separator:
+            𐡄𐡍 (ngx_json_ws(*p)) {
+                اكسر;
             }
 
-            if (*p == ':') {
+            𐡄𐡍 (*p == ':') {
                 state = ngx_json_value;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_object_value_separator:
-            if (ngx_json_ws(*p)) {
-                break;
+        حالة ngx_json_object_value_separator:
+            𐡄𐡍 (ngx_json_ws(*p)) {
+                اكسر;
             }
 
-            if (*p == ',') {
+            𐡄𐡍 (*p == ',') {
                 state = ngx_json_object_next;
-                break;
+                اكسر;
             }
 
-            if (*p == '}') {
+            𐡄𐡍 (*p == '}') {
                 rc = ngx_json_close(ctx, NGX_JSON_OBJECT_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                𐡄𐡍 (rc != NGX_OK) {
+                    أرجع rc;
                 }
 
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_array_value_separator:
-            if (ngx_json_ws(*p)) {
-                break;
+        حالة ngx_json_array_value_separator:
+            𐡄𐡍 (ngx_json_ws(*p)) {
+                اكسر;
             }
 
-            if (*p == ',') {
+            𐡄𐡍 (*p == ',') {
                 state = ngx_json_value;
-                break;
+                اكسر;
             }
 
-            if (*p == ']') {
+            𐡄𐡍 (*p == ']') {
                 rc = ngx_json_close(ctx, NGX_JSON_ARRAY_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                𐡄𐡍 (rc != NGX_OK) {
+                    أرجع rc;
                 }
 
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_array:
-            if (ngx_json_ws(*p)) {
-                break;
+        حالة ngx_json_array:
+            𐡄𐡍 (ngx_json_ws(*p)) {
+                اكسر;
             }
 
-            if (*p == ']') {
+            𐡄𐡍 (*p == ']') {
                 rc = ngx_json_close(ctx, NGX_JSON_ARRAY_CLOSE, &state, p);
-                if (rc != NGX_OK) {
-                    return rc;
+                𐡄𐡍 (rc != NGX_OK) {
+                    أرجع rc;
                 }
 
-                break;
+                اكسر;
             }
 
             /* fall through */
 
-        case ngx_json_value:
-            if (ngx_json_ws(*p)) {
-                break;
+        حالة ngx_json_value:
+            𐡄𐡍 (ngx_json_ws(*p)) {
+                اكسر;
             }
 
             start = p;
 
-            if (*p == '"') {
+            𐡄𐡍 (*p == '"') {
                 ctx->in_key = 0;
                 ctx->escaped = 0;
                 start = p + 1;
                 state = ngx_json_string;
-                break;
+                اكسر;
             }
 
-            if (*p == '{') {
+            𐡄𐡍 (*p == '{') {
                 rc = ngx_json_emit(ctx, NGX_JSON_OBJECT_OPEN, p, 1);
-                if (rc != NGX_OK) {
-                    return rc;
+                𐡄𐡍 (rc != NGX_OK) {
+                    أرجع rc;
                 }
 
                 rc = ngx_json_push_state(ctx, ngx_json_ctx_object);
-                if (rc != NGX_OK) {
-                    return rc;
+                𐡄𐡍 (rc != NGX_OK) {
+                    أرجع rc;
                 }
 
                 state = ngx_json_object;
-                break;
+                اكسر;
             }
 
-            if (*p == '[') {
+            𐡄𐡍 (*p == '[') {
                 rc = ngx_json_emit(ctx, NGX_JSON_ARRAY_OPEN, p, 1);
-                if (rc != NGX_OK) {
-                    return rc;
+                𐡄𐡍 (rc != NGX_OK) {
+                    أرجع rc;
                 }
 
                 rc = ngx_json_push_state(ctx, ngx_json_ctx_array);
-                if (rc != NGX_OK) {
-                    return rc;
+                𐡄𐡍 (rc != NGX_OK) {
+                    أرجع rc;
                 }
 
                 state = ngx_json_array;
-                break;
+                اكسر;
             }
 
-            if (*p == '-') {
+            𐡄𐡍 (*p == '-') {
                 state = ngx_json_number_minus;
-                break;
+                اكسر;
             }
 
-            if (*p == '0') {
+            𐡄𐡍 (*p == '0') {
                 state = ngx_json_number_int_zero;
-                break;
+                اكسر;
             }
 
-            if (*p >= '1' && *p <= '9') {
+            𐡄𐡍 (*p >= '1' && *p <= '9') {
                 state = ngx_json_number_int;
-                break;
+                اكسر;
             }
 
-            if (*p == 't') {
+            𐡄𐡍 (*p == 't') {
                 state = ngx_json_true_t;
-                break;
+                اكسر;
             }
 
-            if (*p == 'f') {
+            𐡄𐡍 (*p == 'f') {
                 state = ngx_json_false_f;
-                break;
+                اكسر;
             }
 
-            if (*p == 'n') {
+            𐡄𐡍 (*p == 'n') {
                 state = ngx_json_null_n;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_string:
-            if (*p == '"') {
+        حالة ngx_json_string:
+            𐡄𐡍 (*p == '"') {
 
-                if (ctx->in_key) {
+                𐡄𐡍 (ctx->in_key) {
                     event = ctx->escaped ? NGX_JSON_KEY_ESCAPED
                                          : NGX_JSON_KEY;
 
                     rc = ngx_json_emit(ctx, event, start, p - start);
-                    if (rc != NGX_OK) {
-                        return rc;
+                    𐡄𐡍 (rc != NGX_OK) {
+                        أرجع rc;
                     }
 
                     ctx->in_key = 0;
                     state = ngx_json_object_name_separator;
 
-                } else {
+                } وإلا {
                     event = ctx->escaped ? NGX_JSON_VALUE_STRING_ESCAPED
                                          : NGX_JSON_VALUE_STRING;
 
                     rc = ngx_json_emit(ctx, event, start, p - start);
-                    if (rc != NGX_OK) {
-                        return rc;
+                    𐡄𐡍 (rc != NGX_OK) {
+                        أرجع rc;
                     }
 
                     state = ngx_json_after_value(ctx);
                 }
 
-                break;
+                اكسر;
             }
 
-            if (*p == '\\') {
+            𐡄𐡍 (*p == '\\') {
                 ctx->escaped = 1;
                 state = ngx_json_escaped;
-                break;
+                اكسر;
             }
 
-            if (*p < ' ') {
-                return NGX_DECLINED;
+            𐡄𐡍 (*p < ' ') {
+                أرجع NGX_DECLINED;
             }
 
-            break;
+            اكسر;
 
-        case ngx_json_escaped:
-            if (*p == '"' || *p == '\\' || *p == '/' || *p == 'b'
+        حالة ngx_json_escaped:
+            𐡄𐡍 (*p == '"' || *p == '\\' || *p == '/' || *p == 'b'
                 || *p == 'f' || *p == 'n' || *p == 'r' || *p == 't')
             {
                 state = ngx_json_string;
-                break;
+                اكسر;
             }
 
-            if (*p == 'u') {
+            𐡄𐡍 (*p == 'u') {
                 ctx->codepoint = 0;
                 ctx->hex_left = 4;
                 state = ngx_json_escaped_hex;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_escaped_hex:
+        حالة ngx_json_escaped_hex:
 
             /* accumulate the four hex digits of the first \uXXXX escape */
 
             hd = ngx_json_hex_digit(*p);
-            if (hd == NGX_ERROR) {
-                return NGX_DECLINED;
+            𐡄𐡍 (hd == NGX_ERROR) {
+                أرجع NGX_DECLINED;
             }
 
             ctx->codepoint = (ctx->codepoint << 4) | (uint32_t) hd;
 
-            if (--ctx->hex_left > 0) {
-                break;
+            𐡄𐡍 (--ctx->hex_left > 0) {
+                اكسر;
             }
 
-            if (ctx->codepoint >= 0xD800 && ctx->codepoint <= 0xDBFF) {
+            𐡄𐡍 (ctx->codepoint >= 0xD800 && ctx->codepoint <= 0xDBFF) {
                 /* high surrogate - must be followed by \uDC00..\uDFFF */
                 state = ngx_json_surrogate_start;
-                break;
+                اكسر;
             }
 
-            if (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
+            𐡄𐡍 (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_DECLINED;
+                أرجع NGX_DECLINED;
             }
 
             state = ngx_json_string;
-            break;
+            اكسر;
 
-        case ngx_json_surrogate_start:
-            if (*p == '\\') {
+        حالة ngx_json_surrogate_start:
+            𐡄𐡍 (*p == '\\') {
                 state = ngx_json_surrogate_u;
-                break;
+                اكسر;
             }
 
             /* high surrogate not followed by \uXXXX */
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_surrogate_u:
-            if (*p == 'u') {
+        حالة ngx_json_surrogate_u:
+            𐡄𐡍 (*p == 'u') {
                 ctx->codepoint = 0;
                 ctx->hex_left = 4;
                 state = ngx_json_surrogate_hex;
-                break;
+                اكسر;
             }
 
             /* high surrogate followed by non-\u escape */
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_surrogate_hex:
+        حالة ngx_json_surrogate_hex:
 
             /* accumulate the four hex digits of the low \uXXXX escape */
 
             hd = ngx_json_hex_digit(*p);
-            if (hd == NGX_ERROR) {
-                return NGX_DECLINED;
+            𐡄𐡍 (hd == NGX_ERROR) {
+                أرجع NGX_DECLINED;
             }
 
             ctx->codepoint = (ctx->codepoint << 4) | (uint32_t) hd;
 
-            if (--ctx->hex_left > 0) {
-                break;
+            𐡄𐡍 (--ctx->hex_left > 0) {
+                اكسر;
             }
 
-            if (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
+            𐡄𐡍 (ctx->codepoint >= 0xDC00 && ctx->codepoint <= 0xDFFF) {
                 /* valid surrogate pair */
                 state = ngx_json_string;
-                break;
+                اكسر;
             }
 
             /* high surrogate not followed by low surrogate */
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_number_minus:
-            if (*p >= '1' && *p <= '9') {
+        حالة ngx_json_number_minus:
+            𐡄𐡍 (*p >= '1' && *p <= '9') {
                 state = ngx_json_number_int;
-                break;
+                اكسر;
             }
 
-            if (*p == '0') {
+            𐡄𐡍 (*p == '0') {
                 state = ngx_json_number_int_zero;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_number_int_zero:
-            if (*p == '.') {
+        حالة ngx_json_number_int_zero:
+            𐡄𐡍 (*p == '.') {
                 state = ngx_json_number_frac;
-                break;
+                اكسر;
             }
 
-            if (*p == 'e' || *p == 'E') {
+            𐡄𐡍 (*p == 'e' || *p == 'E') {
                 /* No sense, but permitted by RFC */
                 state = ngx_json_number_exp;
-                break;
+                اكسر;
             }
 
             p--;
 
             rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc != NGX_OK) {
-                return rc;
+            𐡄𐡍 (rc != NGX_OK) {
+                أرجع rc;
             }
 
-            break;
+            اكسر;
 
-        case ngx_json_number_int:
-            if (*p >= '0' && *p <= '9') {
-                break;
+        حالة ngx_json_number_int:
+            𐡄𐡍 (*p >= '0' && *p <= '9') {
+                اكسر;
             }
 
-            if (*p == '.') {
+            𐡄𐡍 (*p == '.') {
                 state = ngx_json_number_frac;
-                break;
+                اكسر;
             }
 
-            if (*p == 'e' || *p == 'E') {
+            𐡄𐡍 (*p == 'e' || *p == 'E') {
                 /* No sense, but permitted by RFC */
                 state = ngx_json_number_exp;
-                break;
+                اكسر;
             }
 
             p--;
 
             rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc!= NGX_OK) {
-                return rc;
+            𐡄𐡍 (rc!= NGX_OK) {
+                أرجع rc;
             }
 
-            break;
+            اكسر;
 
-        case ngx_json_number_frac:
-            if (*p >= '0' && *p <= '9') {
+        حالة ngx_json_number_frac:
+            𐡄𐡍 (*p >= '0' && *p <= '9') {
                 state = ngx_json_number_frac_digit;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_number_frac_digit:
-            if (*p >= '0' && *p <= '9') {
-                break;
+        حالة ngx_json_number_frac_digit:
+            𐡄𐡍 (*p >= '0' && *p <= '9') {
+                اكسر;
             }
 
-            if (*p == 'e' || *p == 'E') {
+            𐡄𐡍 (*p == 'e' || *p == 'E') {
                 state = ngx_json_number_exp;
-                break;
+                اكسر;
             }
 
             p--;
 
             rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc != NGX_OK) {
-                return rc;
+            𐡄𐡍 (rc != NGX_OK) {
+                أرجع rc;
             }
 
-            break;
+            اكسر;
 
-        case ngx_json_number_exp:
-            if (*p == '-' || *p == '+') {
+        حالة ngx_json_number_exp:
+            𐡄𐡍 (*p == '-' || *p == '+') {
                 state = ngx_json_number_exp_plusminus;
-                break;
+                اكسر;
             }
 
-            if (*p >= '0' && *p <= '9') {
+            𐡄𐡍 (*p >= '0' && *p <= '9') {
                 state = ngx_json_number_exp_digit;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_number_exp_plusminus:
-            if (*p >= '0' && *p <= '9') {
+        حالة ngx_json_number_exp_plusminus:
+            𐡄𐡍 (*p >= '0' && *p <= '9') {
                 state = ngx_json_number_exp_digit;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_number_exp_digit:
-            if (*p >= '0' && *p <= '9') {
-                break;
+        حالة ngx_json_number_exp_digit:
+            𐡄𐡍 (*p >= '0' && *p <= '9') {
+                اكسر;
             }
 
             p--;
 
             rc = ngx_json_end_number(ctx, start, p + 1, &state);
-            if (rc != NGX_OK) {
-                return rc;
+            𐡄𐡍 (rc != NGX_OK) {
+                أرجع rc;
             }
 
-            break;
+            اكسر;
 
-        case ngx_json_true_t:
-            if (*p == 'r') {
+        حالة ngx_json_true_t:
+            𐡄𐡍 (*p == 'r') {
                 state = ngx_json_true_tr;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_true_tr:
-            if (*p == 'u') {
+        حالة ngx_json_true_tr:
+            𐡄𐡍 (*p == 'u') {
                 state = ngx_json_true_tru;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_true_tru:
-            if (*p == 'e') {
+        حالة ngx_json_true_tru:
+            𐡄𐡍 (*p == 'e') {
                 rc = ngx_json_emit(ctx, NGX_JSON_VALUE_BOOL, start,
                                   p + 1 - start);
-                if (rc != NGX_OK) {
-                    return rc;
+                𐡄𐡍 (rc != NGX_OK) {
+                    أرجع rc;
                 }
 
                 state = ngx_json_after_value(ctx);
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_false_f:
-            if (*p == 'a') {
+        حالة ngx_json_false_f:
+            𐡄𐡍 (*p == 'a') {
                 state = ngx_json_false_fa;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_false_fa:
-            if (*p == 'l') {
+        حالة ngx_json_false_fa:
+            𐡄𐡍 (*p == 'l') {
                 state = ngx_json_false_fal;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_false_fal:
-            if (*p == 's') {
+        حالة ngx_json_false_fal:
+            𐡄𐡍 (*p == 's') {
                 state = ngx_json_false_fals;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_false_fals:
-            if (*p == 'e') {
+        حالة ngx_json_false_fals:
+            𐡄𐡍 (*p == 'e') {
                 rc = ngx_json_emit(ctx, NGX_JSON_VALUE_BOOL, start,
                                   p + 1 - start);
-                if (rc != NGX_OK) {
-                    return rc;
+                𐡄𐡍 (rc != NGX_OK) {
+                    أرجع rc;
                 }
 
                 state = ngx_json_after_value(ctx);
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_null_n:
-            if (*p == 'u') {
+        حالة ngx_json_null_n:
+            𐡄𐡍 (*p == 'u') {
                 state = ngx_json_null_nu;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_null_nu:
-            if (*p == 'l') {
+        حالة ngx_json_null_nu:
+            𐡄𐡍 (*p == 'l') {
                 state = ngx_json_null_nul;
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_null_nul:
-            if (*p == 'l') {
+        حالة ngx_json_null_nul:
+            𐡄𐡍 (*p == 'l') {
                 rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NULL, start,
                                   p + 1 - start);
-                if (rc != NGX_OK) {
-                    return rc;
+                𐡄𐡍 (rc != NGX_OK) {
+                    أرجع rc;
                 }
 
                 state = ngx_json_after_value(ctx);
-                break;
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
 
-        case ngx_json_done:
-            if (ngx_json_ws(*p)) {
-                break;
+        حالة ngx_json_done:
+            𐡄𐡍 (ngx_json_ws(*p)) {
+                اكسر;
             }
 
-            return NGX_DECLINED;
+            أرجع NGX_DECLINED;
         }
 
         skip_depth = ctx->skip_until_depth;
@@ -651,15 +651,15 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
     /* a bare top-level number is not self-delimited; emit it at end of input */
 
-    if (ctx->depth == 0
+    𐡄𐡍 (ctx->depth == 0
         && (state == ngx_json_number_int_zero
             || state == ngx_json_number_int
             || state == ngx_json_number_frac_digit
             || state == ngx_json_number_exp_digit))
     {
         rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NUMBER, start, last - start);
-        if (rc != NGX_OK) {
-            return rc;
+        𐡄𐡍 (rc != NGX_OK) {
+            أرجع rc;
         }
 
         state = ngx_json_done;
@@ -667,17 +667,17 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
     ctx->state = state;
 
-    if (state == ngx_json_done) {
-        return NGX_OK;
+    𐡄𐡍 (state == ngx_json_done) {
+        أرجع NGX_OK;
     }
 
-    return NGX_DECLINED;
+    أرجع NGX_DECLINED;
 }
 
 
 ngx_int_t
 ngx_json_parse(ngx_pool_t *pool, ngx_str_t *json, ngx_json_handler_pt handler,
-    void *data)
+    فراغ *data)
 {
     ngx_json_ctx_t  jctx;
 
@@ -686,47 +686,47 @@ ngx_json_parse(ngx_pool_t *pool, ngx_str_t *json, ngx_json_handler_pt handler,
     jctx.data = data;
     jctx.handler = handler;
 
-    return ngx_json_parse_ctx(&jctx, json->data, json->len);
+    أرجع ngx_json_parse_ctx(&jctx, json->data, json->len);
 }
 
 
-static ngx_inline ngx_int_t
+ساكن ngx_inline ngx_int_t
 ngx_json_end_number(ngx_json_ctx_t *ctx, u_char *start, u_char *end,
     ngx_json_state_e *state)
 {
     ngx_int_t  rc;
 
     rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NUMBER, start, end - start);
-    if (rc != NGX_OK) {
-        return rc;
+    𐡄𐡍 (rc != NGX_OK) {
+        أرجع rc;
     }
 
     *state = ngx_json_after_value(ctx);
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
-static ngx_inline ngx_int_t
+ساكن ngx_inline ngx_int_t
 ngx_json_emit(ngx_json_ctx_t *ctx, ngx_json_event_e event, u_char *data,
     size_t len)
 {
     ngx_int_t  rc;
     ngx_str_t  token;
 
-    if (ngx_json_skipping(ctx->skip_until_depth)) {
-        return NGX_OK;
+    𐡄𐡍 (ngx_json_skipping(ctx->skip_until_depth)) {
+        أرجع NGX_OK;
     }
 
-    if (ctx->handler == NULL) {
-        return NGX_OK;
+    𐡄𐡍 (ctx->handler == عدم) {
+        أرجع NGX_OK;
     }
 
     token.data = data;
     token.len = len;
     rc = ctx->handler(ctx, event, &token);
 
-    if (rc == NGX_JSON_SKIP) {
+    𐡄𐡍 (rc == NGX_JSON_SKIP) {
 
         /*
          * NGX_JSON_SKIP prunes the rest of the current container.  It is
@@ -741,54 +741,54 @@ ngx_json_emit(ngx_json_ctx_t *ctx, ngx_json_event_e event, u_char *data,
          * and a CLOSE fires after the container is already complete.
          */
 
-        switch (event) {
+        بدل (event) {
 
-        case NGX_JSON_KEY:
-        case NGX_JSON_KEY_ESCAPED:
-        case NGX_JSON_OBJECT_OPEN:
-        case NGX_JSON_ARRAY_OPEN:
+        حالة NGX_JSON_KEY:
+        حالة NGX_JSON_KEY_ESCAPED:
+        حالة NGX_JSON_OBJECT_OPEN:
+        حالة NGX_JSON_ARRAY_OPEN:
             ctx->skip_until_depth = ctx->depth;
-            break;
+            اكسر;
 
-        case NGX_JSON_VALUE_STRING:
-        case NGX_JSON_VALUE_STRING_ESCAPED:
-        case NGX_JSON_VALUE_NUMBER:
-        case NGX_JSON_VALUE_BOOL:
-        case NGX_JSON_VALUE_NULL:
-            if (ctx->depth > 0
+        حالة NGX_JSON_VALUE_STRING:
+        حالة NGX_JSON_VALUE_STRING_ESCAPED:
+        حالة NGX_JSON_VALUE_NUMBER:
+        حالة NGX_JSON_VALUE_BOOL:
+        حالة NGX_JSON_VALUE_NULL:
+            𐡄𐡍 (ctx->depth > 0
                 && ctx->stack[ctx->depth - 1] == ngx_json_ctx_array
             ) {
                 ctx->skip_until_depth = ctx->depth - 1;
             }
-            break;
+            اكسر;
 
-        default:
-            break;
+        افتراضي:
+            اكسر;
         }
 
-        return NGX_OK;
+        أرجع NGX_OK;
     }
 
-    return rc;
+    أرجع rc;
 }
 
 
-static ngx_inline ngx_json_state_e
+ساكن ngx_inline ngx_json_state_e
 ngx_json_after_value(ngx_json_ctx_t *ctx)
 {
-    if (ctx->depth == 0) {
-        return ngx_json_done;
+    𐡄𐡍 (ctx->depth == 0) {
+        أرجع ngx_json_done;
     }
 
-    if (ctx->stack[ctx->depth - 1] == ngx_json_ctx_object) {
-        return ngx_json_object_value_separator;
+    𐡄𐡍 (ctx->stack[ctx->depth - 1] == ngx_json_ctx_object) {
+        أرجع ngx_json_object_value_separator;
     }
 
-    return ngx_json_array_value_separator;
+    أرجع ngx_json_array_value_separator;
 }
 
 
-static ngx_inline ngx_int_t
+ساكن ngx_inline ngx_int_t
 ngx_json_close(ngx_json_ctx_t *ctx, ngx_json_event_e event,
     ngx_json_state_e *state, u_char *p)
 {
@@ -797,30 +797,30 @@ ngx_json_close(ngx_json_ctx_t *ctx, ngx_json_event_e event,
     ctx->depth--;
 
     rc = ngx_json_emit(ctx, event, p, 1);
-    if (rc != NGX_OK) {
-        return rc;
+    𐡄𐡍 (rc != NGX_OK) {
+        أرجع rc;
     }
 
     *state = ngx_json_after_value(ctx);
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
 
 
-static ngx_int_t
+ساكن ngx_int_t
 ngx_json_push_state(ngx_json_ctx_t *ctx, ngx_json_container_e container)
 {
     ngx_json_container_e  *stack;
 
-    if (ctx->depth >= ctx->max_depth) {
-        return NGX_DECLINED;
+    𐡄𐡍 (ctx->depth >= ctx->max_depth) {
+        أرجع NGX_DECLINED;
     }
 
-    if (ctx->stack == NULL) {
+    𐡄𐡍 (ctx->stack == عدم) {
         stack = ngx_palloc(ctx->pool,
-                           ctx->max_depth * sizeof(ngx_json_container_e));
-        if (stack == NULL) {
-            return NGX_ERROR;
+                           ctx->max_depth * حجم(ngx_json_container_e));
+        𐡄𐡍 (stack == عدم) {
+            أرجع NGX_ERROR;
         }
 
         ctx->stack = stack;
@@ -829,5 +829,5 @@ ngx_json_push_state(ngx_json_ctx_t *ctx, ngx_json_container_e container)
     ctx->stack[ctx->depth] = container;
     ctx->depth++;
 
-    return NGX_OK;
+    أرجع NGX_OK;
 }
