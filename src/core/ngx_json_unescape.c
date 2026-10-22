@@ -62,13 +62,13 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
      * surrounding double quotes).
      */
 
-    if (src->len == 0) {
+    ако (src->len == 0) {
         dst->len = 0;
-        return NGX_OK;
+        върни NGX_OK;
     }
 
-    if (dst->len < src->len) {
-        return NGX_ERROR;
+    ако (dst->len < src->len) {
+        върни NGX_ERROR;
     }
 
     s = src->data;
@@ -81,25 +81,25 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
     high_surrogate = 0;
     hex_left = 0;
 
-    while (size--) {
+    докато (size--) {
 
         ch = *s++;
 
         switch (state) {
         case sw_usual:
 
-            if (ch == '"') {
-                return NGX_ERROR;
+            ако (ch == '"') {
+                върни NGX_ERROR;
             }
 
-            if (ch == '\\') {
+            ако (ch == '\\') {
                 state = sw_quoted;
                 break;
             }
 
-            if (ch < 0x20) {
+            ако (ch < 0x20) {
                 /* RFC 8259: control characters must be escaped */
-                return NGX_ERROR;
+                върни NGX_ERROR;
             }
 
             *d++ = ch;
@@ -148,7 +148,7 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
                 break;
 
             default:
-                return NGX_ERROR;
+                върни NGX_ERROR;
             }
 
             break;
@@ -156,19 +156,19 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
         case sw_hex:
 
             n = ngx_json_hex_digit(ch);
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            ако (n == NGX_ERROR) {
+                върни NGX_ERROR;
             }
 
             codepoint = (codepoint << 4) | (uint32_t) n;
 
-            if (--hex_left > 0) {
+            ако (--hex_left > 0) {
                 break;
             }
 
-            if (high_surrogate) {
-                if (codepoint < 0xDC00 || codepoint > 0xDFFF) {
-                    return NGX_ERROR;
+            ако (high_surrogate) {
+                ако (codepoint < 0xDC00 || codepoint > 0xDFFF) {
+                    върни NGX_ERROR;
                 }
 
                 codepoint = 0x10000
@@ -180,16 +180,16 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
                 break;
             }
 
-            if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+            ако (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
                 /* high surrogate - wait for the low surrogate */
                 high_surrogate = codepoint;
                 state = sw_surrogate_start;
                 break;
             }
 
-            if (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
+            ако (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_ERROR;
+                върни NGX_ERROR;
             }
 
             d = ngx_json_utf8_encode(d, codepoint);
@@ -202,16 +202,16 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
              * Lone surrogates are not valid Unicode scalar values
              * (RFC 8259, Section 8.2).
              */
-            if (ch == '\\') {
+            ако (ch == '\\') {
                 state = sw_surrogate_u;
                 break;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            върни NGX_ERROR;
 
         case sw_surrogate_u:
-            if (ch == 'u') {
+            ако (ch == 'u') {
                 codepoint = 0;
                 hex_left = 4;
                 state = sw_hex;
@@ -219,59 +219,59 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
     }
 
-    if (state != sw_usual) {
+    ако (state != sw_usual) {
         /* truncated escape sequence or unpaired high surrogate */
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
     dst->len = d - dst->data;
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
 static ngx_inline u_char *
 ngx_json_utf8_encode(u_char *dst, uint32_t codepoint)
 {
-    if (codepoint <= 0x7F) {
+    ако (codepoint <= 0x7F) {
         *dst++ = (u_char) codepoint;
 
-    } else if (codepoint <= 0x7FF) {
+    } иначе ако (codepoint <= 0x7FF) {
         *dst++ = (u_char) (0xC0 | (codepoint >> 6));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else if (codepoint <= 0xFFFF) {
+    } иначе ако (codepoint <= 0xFFFF) {
         *dst++ = (u_char) (0xE0 | (codepoint >> 12));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else {
+    } иначе {
         *dst++ = (u_char) (0xF0 | (codepoint >> 18));
         *dst++ = (u_char) (0x80 | ((codepoint >> 12) & 0x3F));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
     }
 
-    return dst;
+    върни dst;
 }
 
 
 ngx_int_t
 ngx_json_hex_digit(u_char ch)
 {
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0';
+    ако (ch >= '0' && ch <= '9') {
+        върни ch - '0';
     }
 
     ch = (u_char) (ch | 0x20);
 
-    if (ch >= 'a' && ch <= 'f') {
-        return ch - 'a' + 10;
+    ако (ch >= 'a' && ch <= 'f') {
+        върни ch - 'a' + 10;
     }
 
-    return NGX_ERROR;
+    върни NGX_ERROR;
 }

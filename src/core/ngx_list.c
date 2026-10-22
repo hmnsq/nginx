@@ -15,15 +15,15 @@ ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size)
     ngx_list_t  *list;
 
     list = ngx_palloc(pool, sizeof(ngx_list_t));
-    if (list == NULL) {
-        return NULL;
+    ако (list == NULL) {
+        върни NULL;
     }
 
-    if (ngx_list_init(list, pool, n, size) != NGX_OK) {
-        return NULL;
+    ако (ngx_list_init(list, pool, n, size) != NGX_OK) {
+        върни NULL;
     }
 
-    return list;
+    върни list;
 }
 
 
@@ -35,18 +35,18 @@ ngx_list_push(ngx_list_t *l)
 
     last = l->last;
 
-    if (last->nelts == l->nalloc) {
+    ако (last->nelts == l->nalloc) {
 
         /* the last part is full, allocate a new list part */
 
         last = ngx_palloc(l->pool, sizeof(ngx_list_part_t));
-        if (last == NULL) {
-            return NULL;
+        ако (last == NULL) {
+            върни NULL;
         }
 
         last->elts = ngx_palloc(l->pool, l->nalloc * l->size);
-        if (last->elts == NULL) {
-            return NULL;
+        ако (last->elts == NULL) {
+            върни NULL;
         }
 
         last->nelts = 0;
@@ -59,5 +59,5 @@ ngx_list_push(ngx_list_t *l)
     elt = (char *) last->elts + l->size * last->nelts;
     last->nelts++;
 
-    return elt;
+    върни elt;
 }

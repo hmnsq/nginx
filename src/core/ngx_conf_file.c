@@ -72,8 +72,8 @@ ngx_conf_param(ngx_conf_t *cf)
 
     param = &cf->cycle->conf_param;
 
-    if (param->len == 0) {
-        return NGX_CONF_OK;
+    ако (param->len == 0) {
+        върни NGX_CONF_OK;
     }
 
     ngx_memzero(&conf_file, sizeof(ngx_conf_file_t));
@@ -97,7 +97,7 @@ ngx_conf_param(ngx_conf_t *cf)
 
     cf->conf_file = NULL;
 
-    return rv;
+    върни rv;
 }
 
 
@@ -115,26 +115,26 @@ ngx_conf_add_dump(ngx_conf_t *cf, ngx_str_t *filename)
 
     sn = ngx_str_rbtree_lookup(&cf->cycle->config_dump_rbtree, filename, hash);
 
-    if (sn) {
+    ако (sn) {
         cf->conf_file->dump = NULL;
-        return NGX_OK;
+        върни NGX_OK;
     }
 
     p = ngx_pstrdup(cf->cycle->pool, filename);
-    if (p == NULL) {
-        return NGX_ERROR;
+    ако (p == NULL) {
+        върни NGX_ERROR;
     }
 
     cd = ngx_array_push(&cf->cycle->config_dump);
-    if (cd == NULL) {
-        return NGX_ERROR;
+    ако (cd == NULL) {
+        върни NGX_ERROR;
     }
 
     size = ngx_file_size(&cf->conf_file->file.info);
 
     buf = ngx_create_temp_buf(cf->cycle->pool, (size_t) size);
-    if (buf == NULL) {
-        return NGX_ERROR;
+    ако (buf == NULL) {
+        върни NGX_ERROR;
     }
 
     cd->name.data = p;
@@ -144,8 +144,8 @@ ngx_conf_add_dump(ngx_conf_t *cf, ngx_str_t *filename)
     cf->conf_file->dump = buf;
 
     sn = ngx_palloc(cf->temp_pool, sizeof(ngx_str_node_t));
-    if (sn == NULL) {
-        return NGX_ERROR;
+    ако (sn == NULL) {
+        върни NGX_ERROR;
     }
 
     sn->node.key = hash;
@@ -153,7 +153,7 @@ ngx_conf_add_dump(ngx_conf_t *cf, ngx_str_t *filename)
 
     ngx_rbtree_insert(&cf->cycle->config_dump_rbtree, &sn->node);
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
@@ -171,29 +171,29 @@ ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
         parse_param
     } type;
 
-#if (NGX_SUPPRESS_WARN)
+#ако (NGX_SUPPRESS_WARN)
     fd = NGX_INVALID_FILE;
     prev = NULL;
 #endif
 
-    if (filename) {
+    ако (filename) {
 
         /* open configuration file */
 
         fd = ngx_open_file(filename->data, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0);
 
-        if (fd == NGX_INVALID_FILE) {
+        ако (fd == NGX_INVALID_FILE) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
                                ngx_open_file_n " \"%s\" failed",
                                filename->data);
-            return NGX_CONF_ERROR;
+            върни NGX_CONF_ERROR;
         }
 
         prev = cf->conf_file;
 
         cf->conf_file = &conf_file;
 
-        if (ngx_fd_info(fd, &cf->conf_file->file.info) == NGX_FILE_ERROR) {
+        ако (ngx_fd_info(fd, &cf->conf_file->file.info) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_EMERG, cf->log, ngx_errno,
                           ngx_fd_info_n " \"%s\" failed", filename->data);
         }
@@ -201,7 +201,7 @@ ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
         cf->conf_file->buffer = &buf;
 
         buf.start = ngx_alloc(NGX_CONF_BUFFER, cf->log);
-        if (buf.start == NULL) {
+        ако (buf.start == NULL) {
             goto failed;
         }
 
@@ -219,33 +219,33 @@ ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
 
         type = parse_file;
 
-        if (ngx_dump_config
-#if (NGX_CONTROL_API)
+        ако (ngx_dump_config
+#ако (NGX_CONTROL_API)
             || ngx_control_api_enabled
 #endif
-#if (NGX_DEBUG)
+#ако (NGX_DEBUG)
             || 1
 #endif
            )
         {
-            if (ngx_conf_add_dump(cf, filename) != NGX_OK) {
+            ако (ngx_conf_add_dump(cf, filename) != NGX_OK) {
                 goto failed;
             }
 
-        } else {
+        } иначе {
             cf->conf_file->dump = NULL;
         }
 
-    } else if (cf->conf_file->file.fd != NGX_INVALID_FILE) {
+    } иначе ако (cf->conf_file->file.fd != NGX_INVALID_FILE) {
 
         type = parse_block;
 
-    } else {
+    } иначе {
         type = parse_param;
     }
 
 
-    for ( ;; ) {
+    за ( ;; ) {
         rc = ngx_conf_read_token(cf);
 
         /*
@@ -258,13 +258,13 @@ ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
          *    NGX_CONF_FILE_DONE    the configuration file is done
          */
 
-        if (rc == NGX_ERROR) {
+        ако (rc == NGX_ERROR) {
             goto done;
         }
 
-        if (rc == NGX_CONF_BLOCK_DONE) {
+        ако (rc == NGX_CONF_BLOCK_DONE) {
 
-            if (type != parse_block) {
+            ако (type != parse_block) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "unexpected \"}\"");
                 goto failed;
             }
@@ -272,9 +272,9 @@ ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
             goto done;
         }
 
-        if (rc == NGX_CONF_FILE_DONE) {
+        ако (rc == NGX_CONF_FILE_DONE) {
 
-            if (type == parse_block) {
+            ако (type == parse_block) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "unexpected end of file, expecting \"}\"");
                 goto failed;
@@ -283,9 +283,9 @@ ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
             goto done;
         }
 
-        if (rc == NGX_CONF_BLOCK_START) {
+        ако (rc == NGX_CONF_BLOCK_START) {
 
-            if (type == parse_param) {
+            ако (type == parse_param) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "block directives are not supported "
                                    "in -g option");
@@ -295,24 +295,24 @@ ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
 
         /* rc == NGX_OK || rc == NGX_CONF_BLOCK_START */
 
-        if (cf->handler) {
+        ако (cf->handler) {
 
             /*
              * the custom handler, i.e., that is used in the http's
              * "types { ... }" directive
              */
 
-            if (rc == NGX_CONF_BLOCK_START) {
+            ако (rc == NGX_CONF_BLOCK_START) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "unexpected \"{\"");
                 goto failed;
             }
 
             rv = (*cf->handler)(cf, NULL, cf->handler_conf);
-            if (rv == NGX_CONF_OK) {
+            ако (rv == NGX_CONF_OK) {
                 continue;
             }
 
-            if (rv == NGX_CONF_ERROR) {
+            ако (rv == NGX_CONF_ERROR) {
                 goto failed;
             }
 
@@ -324,7 +324,7 @@ ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
 
         rc = ngx_conf_handler(cf, rc);
 
-        if (rc == NGX_ERROR) {
+        ако (rc == NGX_ERROR) {
             goto failed;
         }
     }
@@ -335,12 +335,12 @@ failed:
 
 done:
 
-    if (filename) {
-        if (cf->conf_file->buffer->start) {
+    ако (filename) {
+        ако (cf->conf_file->buffer->start) {
             ngx_free(cf->conf_file->buffer->start);
         }
 
-        if (ngx_close_file(fd) == NGX_FILE_ERROR) {
+        ако (ngx_close_file(fd) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
                           ngx_close_file_n " %s failed",
                           filename->data);
@@ -350,11 +350,11 @@ done:
         cf->conf_file = prev;
     }
 
-    if (rc == NGX_ERROR) {
-        return NGX_CONF_ERROR;
+    ако (rc == NGX_ERROR) {
+        върни NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -371,26 +371,26 @@ ngx_conf_handler(ngx_conf_t *cf, ngx_int_t last)
 
     found = 0;
 
-    for (i = 0; cf->cycle->modules[i]; i++) {
+    за (i = 0; cf->cycle->modules[i]; i++) {
 
         cmd = cf->cycle->modules[i]->commands;
-        if (cmd == NULL) {
+        ако (cmd == NULL) {
             continue;
         }
 
-        for ( /* void */ ; cmd->name.len; cmd++) {
+        за ( /* void */ ; cmd->name.len; cmd++) {
 
-            if (name->len != cmd->name.len) {
+            ако (name->len != cmd->name.len) {
                 continue;
             }
 
-            if (ngx_strcmp(name->data, cmd->name.data) != 0) {
+            ако (ngx_strcmp(name->data, cmd->name.data) != 0) {
                 continue;
             }
 
             found = 1;
 
-            if (cf->cycle->modules[i]->type != NGX_CONF_MODULE
+            ако (cf->cycle->modules[i]->type != NGX_CONF_MODULE
                 && cf->cycle->modules[i]->type != cf->module_type)
             {
                 continue;
@@ -398,51 +398,51 @@ ngx_conf_handler(ngx_conf_t *cf, ngx_int_t last)
 
             /* is the directive's location right ? */
 
-            if (!(cmd->type & cf->cmd_type)) {
+            ако (!(cmd->type & cf->cmd_type)) {
                 continue;
             }
 
-            if (!(cmd->type & NGX_CONF_BLOCK) && last != NGX_OK) {
+            ако (!(cmd->type & NGX_CONF_BLOCK) && last != NGX_OK) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                   "directive \"%s\" is not terminated by \";\"",
                                   name->data);
-                return NGX_ERROR;
+                върни NGX_ERROR;
             }
 
-            if ((cmd->type & NGX_CONF_BLOCK) && last != NGX_CONF_BLOCK_START) {
+            ако ((cmd->type & NGX_CONF_BLOCK) && last != NGX_CONF_BLOCK_START) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "directive \"%s\" has no opening \"{\"",
                                    name->data);
-                return NGX_ERROR;
+                върни NGX_ERROR;
             }
 
             /* is the directive's argument count right ? */
 
-            if (!(cmd->type & NGX_CONF_ANY)) {
+            ако (!(cmd->type & NGX_CONF_ANY)) {
 
-                if (cmd->type & NGX_CONF_FLAG) {
+                ако (cmd->type & NGX_CONF_FLAG) {
 
-                    if (cf->args->nelts != 2) {
+                    ако (cf->args->nelts != 2) {
                         goto invalid;
                     }
 
-                } else if (cmd->type & NGX_CONF_1MORE) {
+                } иначе ако (cmd->type & NGX_CONF_1MORE) {
 
-                    if (cf->args->nelts < 2) {
+                    ако (cf->args->nelts < 2) {
                         goto invalid;
                     }
 
-                } else if (cmd->type & NGX_CONF_2MORE) {
+                } иначе ако (cmd->type & NGX_CONF_2MORE) {
 
-                    if (cf->args->nelts < 3) {
+                    ако (cf->args->nelts < 3) {
                         goto invalid;
                     }
 
-                } else if (cf->args->nelts > NGX_CONF_MAX_ARGS) {
+                } иначе ако (cf->args->nelts > NGX_CONF_MAX_ARGS) {
 
                     goto invalid;
 
-                } else if (!(cmd->type & argument_number[cf->args->nelts - 1]))
+                } иначе ако (!(cmd->type & argument_number[cf->args->nelts - 1]))
                 {
                     goto invalid;
                 }
@@ -452,48 +452,48 @@ ngx_conf_handler(ngx_conf_t *cf, ngx_int_t last)
 
             conf = NULL;
 
-            if (cmd->type & NGX_DIRECT_CONF) {
+            ако (cmd->type & NGX_DIRECT_CONF) {
                 conf = ((void **) cf->ctx)[cf->cycle->modules[i]->index];
 
-            } else if (cmd->type & NGX_MAIN_CONF) {
+            } иначе ако (cmd->type & NGX_MAIN_CONF) {
                 conf = &(((void **) cf->ctx)[cf->cycle->modules[i]->index]);
 
-            } else if (cf->ctx) {
+            } иначе ако (cf->ctx) {
                 confp = *(void **) ((char *) cf->ctx + cmd->conf);
 
-                if (confp) {
+                ако (confp) {
                     conf = confp[cf->cycle->modules[i]->ctx_index];
                 }
             }
 
             rv = cmd->set(cf, cmd, conf);
 
-            if (rv == NGX_CONF_OK) {
-                return NGX_OK;
+            ако (rv == NGX_CONF_OK) {
+                върни NGX_OK;
             }
 
-            if (rv == NGX_CONF_ERROR) {
-                return NGX_ERROR;
+            ако (rv == NGX_CONF_ERROR) {
+                върни NGX_ERROR;
             }
 
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "\"%s\" directive %s", name->data, rv);
 
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
     }
 
-    if (found) {
+    ако (found) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "\"%s\" directive is not allowed here", name->data);
 
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                        "unknown directive \"%s\"", name->data);
 
-    return NGX_ERROR;
+    върни NGX_ERROR;
 
 invalid:
 
@@ -501,7 +501,7 @@ invalid:
                        "invalid number of arguments in \"%s\" directive",
                        name->data);
 
-    return NGX_ERROR;
+    върни NGX_ERROR;
 }
 
 
@@ -534,139 +534,139 @@ ngx_conf_read_token(ngx_conf_t *cf)
 
     file_size = ngx_file_size(&cf->conf_file->file.info);
 
-    for ( ;; ) {
+    за ( ;; ) {
 
-        if (b->pos >= b->last) {
+        ако (b->pos >= b->last) {
 
-            if (cf->conf_file->file.offset >= file_size) {
+            ако (cf->conf_file->file.offset >= file_size) {
 
-                if (cf->args->nelts > 0 || !last_space) {
+                ако (cf->args->nelts > 0 || !last_space) {
 
-                    if (cf->conf_file->file.fd == NGX_INVALID_FILE) {
+                    ако (cf->conf_file->file.fd == NGX_INVALID_FILE) {
                         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                            "unexpected end of parameter, "
                                            "expecting \";\"");
-                        return NGX_ERROR;
+                        върни NGX_ERROR;
                     }
 
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "unexpected end of file, "
                                        "expecting \";\" or \"}\"");
-                    return NGX_ERROR;
+                    върни NGX_ERROR;
                 }
 
-                return NGX_CONF_FILE_DONE;
+                върни NGX_CONF_FILE_DONE;
             }
 
             len = b->pos - start;
 
-            if (len == NGX_CONF_BUFFER) {
+            ако (len == NGX_CONF_BUFFER) {
                 cf->conf_file->line = start_line;
 
-                if (d_quoted) {
+                ако (d_quoted) {
                     ch = '"';
 
-                } else if (s_quoted) {
+                } иначе ако (s_quoted) {
                     ch = '\'';
 
-                } else {
+                } иначе {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "too long parameter \"%*s...\" started",
                                        (size_t) 10, start);
-                    return NGX_ERROR;
+                    върни NGX_ERROR;
                 }
 
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "too long parameter, probably "
                                    "missing terminating \"%c\" character", ch);
-                return NGX_ERROR;
+                върни NGX_ERROR;
             }
 
-            if (len) {
+            ако (len) {
                 ngx_memmove(b->start, start, len);
             }
 
             size = (ssize_t) (file_size - cf->conf_file->file.offset);
 
-            if (size > b->end - (b->start + len)) {
+            ако (size > b->end - (b->start + len)) {
                 size = b->end - (b->start + len);
             }
 
             n = ngx_read_file(&cf->conf_file->file, b->start + len, size,
                               cf->conf_file->file.offset);
 
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            ако (n == NGX_ERROR) {
+                върни NGX_ERROR;
             }
 
-            if (n != size) {
+            ако (n != size) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    ngx_read_file_n " returned "
                                    "only %z bytes instead of %z",
                                    n, size);
-                return NGX_ERROR;
+                върни NGX_ERROR;
             }
 
             b->pos = b->start + len;
             b->last = b->pos + n;
             start = b->start;
 
-            if (dump) {
+            ако (dump) {
                 dump->last = ngx_cpymem(dump->last, b->pos, size);
             }
         }
 
         ch = *b->pos++;
 
-        if (ch == LF) {
+        ако (ch == LF) {
             cf->conf_file->line++;
 
-            if (sharp_comment) {
+            ако (sharp_comment) {
                 sharp_comment = 0;
             }
         }
 
-        if (sharp_comment) {
+        ако (sharp_comment) {
             continue;
         }
 
-        if (quoted) {
+        ако (quoted) {
             quoted = 0;
             continue;
         }
 
-        if (need_space) {
-            if (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
+        ако (need_space) {
+            ако (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
                 last_space = 1;
                 need_space = 0;
                 continue;
             }
 
-            if (ch == ';') {
-                return NGX_OK;
+            ако (ch == ';') {
+                върни NGX_OK;
             }
 
-            if (ch == '{') {
-                return NGX_CONF_BLOCK_START;
+            ако (ch == '{') {
+                върни NGX_CONF_BLOCK_START;
             }
 
-            if (ch == ')') {
+            ако (ch == ')') {
                 last_space = 1;
                 need_space = 0;
 
-            } else {
+            } иначе {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "unexpected \"%c\"", ch);
-                return NGX_ERROR;
+                върни NGX_ERROR;
             }
         }
 
-        if (last_space) {
+        ако (last_space) {
 
             start = b->pos - 1;
             start_line = cf->conf_file->line;
 
-            if (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
+            ако (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
                 continue;
             }
 
@@ -674,26 +674,26 @@ ngx_conf_read_token(ngx_conf_t *cf)
 
             case ';':
             case '{':
-                if (cf->args->nelts == 0) {
+                ако (cf->args->nelts == 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "unexpected \"%c\"", ch);
-                    return NGX_ERROR;
+                    върни NGX_ERROR;
                 }
 
-                if (ch == '{') {
-                    return NGX_CONF_BLOCK_START;
+                ако (ch == '{') {
+                    върни NGX_CONF_BLOCK_START;
                 }
 
-                return NGX_OK;
+                върни NGX_OK;
 
             case '}':
-                if (cf->args->nelts != 0) {
+                ако (cf->args->nelts != 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "unexpected \"}\"");
-                    return NGX_ERROR;
+                    върни NGX_ERROR;
                 }
 
-                return NGX_CONF_BLOCK_DONE;
+                върни NGX_CONF_BLOCK_DONE;
 
             case '#':
                 sharp_comment = 1;
@@ -725,60 +725,60 @@ ngx_conf_read_token(ngx_conf_t *cf)
                 last_space = 0;
             }
 
-        } else {
-            if (ch == '{' && variable) {
+        } иначе {
+            ако (ch == '{' && variable) {
                 continue;
             }
 
             variable = 0;
 
-            if (ch == '\\') {
+            ако (ch == '\\') {
                 quoted = 1;
                 continue;
             }
 
-            if (ch == '$') {
+            ако (ch == '$') {
                 variable = 1;
                 continue;
             }
 
-            if (d_quoted) {
-                if (ch == '"') {
+            ако (d_quoted) {
+                ако (ch == '"') {
                     d_quoted = 0;
                     need_space = 1;
                     found = 1;
                 }
 
-            } else if (s_quoted) {
-                if (ch == '\'') {
+            } иначе ако (s_quoted) {
+                ако (ch == '\'') {
                     s_quoted = 0;
                     need_space = 1;
                     found = 1;
                 }
 
-            } else if (ch == ' ' || ch == '\t' || ch == CR || ch == LF
+            } иначе ако (ch == ' ' || ch == '\t' || ch == CR || ch == LF
                        || ch == ';' || ch == '{')
             {
                 last_space = 1;
                 found = 1;
             }
 
-            if (found) {
+            ако (found) {
                 word = ngx_array_push(cf->args);
-                if (word == NULL) {
-                    return NGX_ERROR;
+                ако (word == NULL) {
+                    върни NGX_ERROR;
                 }
 
                 word->data = ngx_pnalloc(cf->pool, b->pos - 1 - start + 1);
-                if (word->data == NULL) {
-                    return NGX_ERROR;
+                ако (word->data == NULL) {
+                    върни NGX_ERROR;
                 }
 
-                for (dst = word->data, src = start, len = 0;
+                за (dst = word->data, src = start, len = 0;
                      src < b->pos - 1;
                      len++)
                 {
-                    if (*src == '\\') {
+                    ако (*src == '\\') {
                         switch (src[1]) {
                         case '"':
                         case '\'':
@@ -808,12 +808,12 @@ ngx_conf_read_token(ngx_conf_t *cf)
                 *dst = '\0';
                 word->len = len;
 
-                if (ch == ';') {
-                    return NGX_OK;
+                ако (ch == ';') {
+                    върни NGX_OK;
                 }
 
-                if (ch == '{') {
-                    return NGX_CONF_BLOCK_START;
+                ако (ch == '{') {
+                    върни NGX_CONF_BLOCK_START;
                 }
 
                 found = 0;
@@ -836,15 +836,15 @@ ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.data);
 
-    if (ngx_conf_full_name(cf->cycle, &file, 1) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    ако (ngx_conf_full_name(cf->cycle, &file, 1) != NGX_OK) {
+        върни NGX_CONF_ERROR;
     }
 
-    if (strpbrk((char *) file.data, "*?[") == NULL) {
+    ако (strpbrk((char *) file.data, "*?[") == NULL) {
 
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.data);
 
-        return ngx_conf_parse(cf, &file);
+        върни ngx_conf_parse(cf, &file);
     }
 
     ngx_memzero(&gl, sizeof(ngx_glob_t));
@@ -853,39 +853,39 @@ ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     gl.log = cf->log;
     gl.test = 1;
 
-    if (ngx_open_glob(&gl) != NGX_OK) {
+    ако (ngx_open_glob(&gl) != NGX_OK) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
                            ngx_open_glob_n " \"%s\" failed", file.data);
-        return NGX_CONF_ERROR;
+        върни NGX_CONF_ERROR;
     }
 
     rv = NGX_CONF_OK;
 
-    for ( ;; ) {
+    за ( ;; ) {
         n = ngx_read_glob(&gl, &name);
 
-        if (n != NGX_OK) {
+        ако (n != NGX_OK) {
             break;
         }
 
         file.len = name.len++;
         file.data = ngx_pstrdup(cf->pool, &name);
-        if (file.data == NULL) {
-            return NGX_CONF_ERROR;
+        ако (file.data == NULL) {
+            върни NGX_CONF_ERROR;
         }
 
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.data);
 
         rv = ngx_conf_parse(cf, &file);
 
-        if (rv != NGX_CONF_OK) {
+        ако (rv != NGX_CONF_OK) {
             break;
         }
     }
 
     ngx_close_glob(&gl);
 
-    return rv;
+    върни rv;
 }
 
 
@@ -896,7 +896,7 @@ ngx_conf_full_name(ngx_cycle_t *cycle, ngx_str_t *name, ngx_uint_t conf_prefix)
 
     prefix = conf_prefix ? &cycle->conf_prefix : &cycle->prefix;
 
-    return ngx_get_full_name(cycle->pool, prefix, name);
+    върни ngx_get_full_name(cycle->pool, prefix, name);
 }
 
 
@@ -908,24 +908,24 @@ ngx_conf_open_file(ngx_cycle_t *cycle, ngx_str_t *name)
     ngx_list_part_t  *part;
     ngx_open_file_t  *file;
 
-#if (NGX_SUPPRESS_WARN)
+#ако (NGX_SUPPRESS_WARN)
     ngx_str_null(&full);
 #endif
 
-    if (name->len) {
+    ако (name->len) {
         full = *name;
 
-        if (ngx_conf_full_name(cycle, &full, 0) != NGX_OK) {
-            return NULL;
+        ако (ngx_conf_full_name(cycle, &full, 0) != NGX_OK) {
+            върни NULL;
         }
 
         part = &cycle->open_files.part;
         file = part->elts;
 
-        for (i = 0; /* void */ ; i++) {
+        за (i = 0; /* void */ ; i++) {
 
-            if (i >= part->nelts) {
-                if (part->next == NULL) {
+            ако (i >= part->nelts) {
+                ако (part->next == NULL) {
                     break;
                 }
                 part = part->next;
@@ -933,26 +933,26 @@ ngx_conf_open_file(ngx_cycle_t *cycle, ngx_str_t *name)
                 i = 0;
             }
 
-            if (full.len != file[i].name.len) {
+            ако (full.len != file[i].name.len) {
                 continue;
             }
 
-            if (ngx_strcmp(full.data, file[i].name.data) == 0) {
-                return &file[i];
+            ако (ngx_strcmp(full.data, file[i].name.data) == 0) {
+                върни &file[i];
             }
         }
     }
 
     file = ngx_list_push(&cycle->open_files);
-    if (file == NULL) {
-        return NULL;
+    ако (file == NULL) {
+        върни NULL;
     }
 
-    if (name->len) {
+    ако (name->len) {
         file->fd = NGX_INVALID_FILE;
         file->name = full;
 
-    } else {
+    } иначе {
         file->fd = ngx_stderr;
         file->name = *name;
     }
@@ -960,7 +960,7 @@ ngx_conf_open_file(ngx_cycle_t *cycle, ngx_str_t *name)
     file->flush = NULL;
     file->data = NULL;
 
-    return file;
+    върни file;
 }
 
 
@@ -976,10 +976,10 @@ ngx_conf_flush_files(ngx_cycle_t *cycle)
     part = &cycle->open_files.part;
     file = part->elts;
 
-    for (i = 0; /* void */ ; i++) {
+    за (i = 0; /* void */ ; i++) {
 
-        if (i >= part->nelts) {
-            if (part->next == NULL) {
+        ако (i >= part->nelts) {
+            ако (part->next == NULL) {
                 break;
             }
             part = part->next;
@@ -987,7 +987,7 @@ ngx_conf_flush_files(ngx_cycle_t *cycle)
             i = 0;
         }
 
-        if (file[i].flush) {
+        ако (file[i].flush) {
             file[i].flush(&file[i], cycle->log);
         }
     }
@@ -1007,19 +1007,19 @@ ngx_conf_log_error(ngx_uint_t level, ngx_conf_t *cf, ngx_err_t err,
     p = ngx_vslprintf(errstr, last, fmt, args);
     va_end(args);
 
-    if (err) {
+    ако (err) {
         p = ngx_log_errno(p, last, err);
     }
 
-    if (cf->conf_file == NULL) {
+    ако (cf->conf_file == NULL) {
         ngx_log_error(level, cf->log, 0, "%*s", p - errstr, errstr);
-        return;
+        върни;
     }
 
-    if (cf->conf_file->file.fd == NGX_INVALID_FILE) {
+    ако (cf->conf_file->file.fd == NGX_INVALID_FILE) {
         ngx_log_error(level, cf->log, 0, "%*s in command line",
                       p - errstr, errstr);
-        return;
+        върни;
     }
 
     ngx_log_error(level, cf->log, 0, "%*s in %s:%ui",
@@ -1039,32 +1039,32 @@ ngx_conf_set_flag_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     fp = (ngx_flag_t *) (p + cmd->offset);
 
-    if (*fp != NGX_CONF_UNSET) {
-        return "is duplicate";
+    ако (*fp != NGX_CONF_UNSET) {
+        върни "is duplicate";
     }
 
     value = cf->args->elts;
 
-    if (ngx_strcasecmp(value[1].data, (u_char *) "on") == 0) {
+    ако (ngx_strcasecmp(value[1].data, (u_char *) "on") == 0) {
         *fp = 1;
 
-    } else if (ngx_strcasecmp(value[1].data, (u_char *) "off") == 0) {
+    } иначе ако (ngx_strcasecmp(value[1].data, (u_char *) "off") == 0) {
         *fp = 0;
 
-    } else {
+    } иначе {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                      "invalid value \"%s\" in \"%s\" directive, "
                      "it must be \"on\" or \"off\"",
                      value[1].data, cmd->name.data);
-        return NGX_CONF_ERROR;
+        върни NGX_CONF_ERROR;
     }
 
-    if (cmd->post) {
+    ако (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, fp);
+        върни post->post_handler(cf, post, fp);
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -1078,20 +1078,20 @@ ngx_conf_set_str_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     field = (ngx_str_t *) (p + cmd->offset);
 
-    if (field->data) {
-        return "is duplicate";
+    ако (field->data) {
+        върни "is duplicate";
     }
 
     value = cf->args->elts;
 
     *field = value[1];
 
-    if (cmd->post) {
+    ако (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, field);
+        върни post->post_handler(cf, post, field);
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -1106,28 +1106,28 @@ ngx_conf_set_str_array_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     a = (ngx_array_t **) (p + cmd->offset);
 
-    if (*a == NGX_CONF_UNSET_PTR) {
+    ако (*a == NGX_CONF_UNSET_PTR) {
         *a = ngx_array_create(cf->pool, 4, sizeof(ngx_str_t));
-        if (*a == NULL) {
-            return NGX_CONF_ERROR;
+        ако (*a == NULL) {
+            върни NGX_CONF_ERROR;
         }
     }
 
     s = ngx_array_push(*a);
-    if (s == NULL) {
-        return NGX_CONF_ERROR;
+    ако (s == NULL) {
+        върни NGX_CONF_ERROR;
     }
 
     value = cf->args->elts;
 
     *s = value[1];
 
-    if (cmd->post) {
+    ако (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, s);
+        върни post->post_handler(cf, post, s);
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -1143,16 +1143,16 @@ ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     a = (ngx_array_t **) (p + cmd->offset);
 
-    if (*a == NGX_CONF_UNSET_PTR || *a == NULL) {
+    ако (*a == NGX_CONF_UNSET_PTR || *a == NULL) {
         *a = ngx_array_create(cf->pool, 4, sizeof(ngx_keyval_t));
-        if (*a == NULL) {
-            return NGX_CONF_ERROR;
+        ако (*a == NULL) {
+            върни NGX_CONF_ERROR;
         }
     }
 
     kv = ngx_array_push(*a);
-    if (kv == NULL) {
-        return NGX_CONF_ERROR;
+    ако (kv == NULL) {
+        върни NGX_CONF_ERROR;
     }
 
     value = cf->args->elts;
@@ -1160,12 +1160,12 @@ ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     kv->key = value[1];
     kv->value = value[2];
 
-    if (cmd->post) {
+    ако (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, kv);
+        върни post->post_handler(cf, post, kv);
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -1181,22 +1181,22 @@ ngx_conf_set_num_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     np = (ngx_int_t *) (p + cmd->offset);
 
-    if (*np != NGX_CONF_UNSET) {
-        return "is duplicate";
+    ако (*np != NGX_CONF_UNSET) {
+        върни "is duplicate";
     }
 
     value = cf->args->elts;
     *np = ngx_atoi(value[1].data, value[1].len);
-    if (*np == NGX_ERROR) {
-        return "invalid number";
+    ако (*np == NGX_ERROR) {
+        върни "invalid number";
     }
 
-    if (cmd->post) {
+    ако (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, np);
+        върни post->post_handler(cf, post, np);
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -1211,23 +1211,23 @@ ngx_conf_set_size_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 
     sp = (size_t *) (p + cmd->offset);
-    if (*sp != NGX_CONF_UNSET_SIZE) {
-        return "is duplicate";
+    ако (*sp != NGX_CONF_UNSET_SIZE) {
+        върни "is duplicate";
     }
 
     value = cf->args->elts;
 
     *sp = ngx_parse_size(&value[1]);
-    if (*sp == (size_t) NGX_ERROR) {
-        return "invalid value";
+    ако (*sp == (size_t) NGX_ERROR) {
+        върни "invalid value";
     }
 
-    if (cmd->post) {
+    ако (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, sp);
+        върни post->post_handler(cf, post, sp);
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -1242,23 +1242,23 @@ ngx_conf_set_off_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 
     op = (off_t *) (p + cmd->offset);
-    if (*op != NGX_CONF_UNSET) {
-        return "is duplicate";
+    ако (*op != NGX_CONF_UNSET) {
+        върни "is duplicate";
     }
 
     value = cf->args->elts;
 
     *op = ngx_parse_offset(&value[1]);
-    if (*op == (off_t) NGX_ERROR) {
-        return "invalid value";
+    ако (*op == (off_t) NGX_ERROR) {
+        върни "invalid value";
     }
 
-    if (cmd->post) {
+    ако (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, op);
+        върни post->post_handler(cf, post, op);
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -1273,23 +1273,23 @@ ngx_conf_set_msec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 
     msp = (ngx_msec_t *) (p + cmd->offset);
-    if (*msp != NGX_CONF_UNSET_MSEC) {
-        return "is duplicate";
+    ако (*msp != NGX_CONF_UNSET_MSEC) {
+        върни "is duplicate";
     }
 
     value = cf->args->elts;
 
     *msp = ngx_parse_time(&value[1], 0);
-    if (*msp == (ngx_msec_t) NGX_ERROR) {
-        return "invalid value";
+    ако (*msp == (ngx_msec_t) NGX_ERROR) {
+        върни "invalid value";
     }
 
-    if (cmd->post) {
+    ако (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, msp);
+        върни post->post_handler(cf, post, msp);
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -1304,23 +1304,23 @@ ngx_conf_set_sec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 
     sp = (time_t *) (p + cmd->offset);
-    if (*sp != NGX_CONF_UNSET) {
-        return "is duplicate";
+    ако (*sp != NGX_CONF_UNSET) {
+        върни "is duplicate";
     }
 
     value = cf->args->elts;
 
     *sp = ngx_parse_time(&value[1], 1);
-    if (*sp == (time_t) NGX_ERROR) {
-        return "invalid value";
+    ако (*sp == (time_t) NGX_ERROR) {
+        върни "invalid value";
     }
 
-    if (cmd->post) {
+    ако (cmd->post) {
         post = cmd->post;
-        return post->post_handler(cf, post, sp);
+        върни post->post_handler(cf, post, sp);
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -1334,23 +1334,23 @@ ngx_conf_set_bufs_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 
     bufs = (ngx_bufs_t *) (p + cmd->offset);
-    if (bufs->num) {
-        return "is duplicate";
+    ако (bufs->num) {
+        върни "is duplicate";
     }
 
     value = cf->args->elts;
 
     bufs->num = ngx_atoi(value[1].data, value[1].len);
-    if (bufs->num == NGX_ERROR || bufs->num == 0) {
-        return "invalid value";
+    ако (bufs->num == NGX_ERROR || bufs->num == 0) {
+        върни "invalid value";
     }
 
     bufs->size = ngx_parse_size(&value[2]);
-    if (bufs->size == (size_t) NGX_ERROR || bufs->size == 0) {
-        return "invalid value";
+    ако (bufs->size == (size_t) NGX_ERROR || bufs->size == 0) {
+        върни "invalid value";
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -1365,15 +1365,15 @@ ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     np = (ngx_uint_t *) (p + cmd->offset);
 
-    if (*np != NGX_CONF_UNSET_UINT) {
-        return "is duplicate";
+    ако (*np != NGX_CONF_UNSET_UINT) {
+        върни "is duplicate";
     }
 
     value = cf->args->elts;
     e = cmd->post;
 
-    for (i = 0; e[i].name.len != 0; i++) {
-        if (e[i].name.len != value[1].len
+    за (i = 0; e[i].name.len != 0; i++) {
+        ако (e[i].name.len != value[1].len
             || ngx_strcasecmp(e[i].name.data, value[1].data) != 0)
         {
             continue;
@@ -1381,13 +1381,13 @@ ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
         *np = e[i].value;
 
-        return NGX_CONF_OK;
+        върни NGX_CONF_OK;
     }
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                        "invalid value \"%s\"", value[1].data);
 
-    return NGX_CONF_ERROR;
+    върни NGX_CONF_ERROR;
 }
 
 
@@ -1405,44 +1405,44 @@ ngx_conf_set_bitmask_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     value = cf->args->elts;
     mask = cmd->post;
 
-    for (i = 1; i < cf->args->nelts; i++) {
-        for (m = 0; mask[m].name.len != 0; m++) {
+    за (i = 1; i < cf->args->nelts; i++) {
+        за (m = 0; mask[m].name.len != 0; m++) {
 
-            if (mask[m].name.len != value[i].len
+            ако (mask[m].name.len != value[i].len
                 || ngx_strcasecmp(mask[m].name.data, value[i].data) != 0)
             {
                 continue;
             }
 
-            if (*np & mask[m].mask) {
+            ако (*np & mask[m].mask) {
                 ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
                                    "duplicate value \"%s\"", value[i].data);
 
-            } else {
+            } иначе {
                 *np |= mask[m].mask;
             }
 
             break;
         }
 
-        if (mask[m].name.len == 0) {
+        ако (mask[m].name.len == 0) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "invalid value \"%s\"", value[i].data);
 
-            return NGX_CONF_ERROR;
+            върни NGX_CONF_ERROR;
         }
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
-#if 0
+#ако 0
 
 char *
 ngx_conf_unsupported(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
-    return "unsupported on this platform";
+    върни "unsupported on this platform";
 }
 
 #endif
@@ -1458,7 +1458,7 @@ ngx_conf_deprecated(ngx_conf_t *cf, void *post, void *data)
                        "use the \"%s\" directive instead",
                        d->old_name, d->new_name);
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }
 
 
@@ -1468,27 +1468,27 @@ ngx_conf_check_num_bounds(ngx_conf_t *cf, void *post, void *data)
     ngx_conf_num_bounds_t  *bounds = post;
     ngx_int_t  *np = data;
 
-    if (bounds->high == -1) {
-        if (*np >= bounds->low) {
-            return NGX_CONF_OK;
+    ако (bounds->high == -1) {
+        ако (*np >= bounds->low) {
+            върни NGX_CONF_OK;
         }
 
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "value must be equal to or greater than %i",
                            bounds->low);
 
-        return NGX_CONF_ERROR;
+        върни NGX_CONF_ERROR;
     }
 
-    if (*np >= bounds->low && *np <= bounds->high) {
-        return NGX_CONF_OK;
+    ако (*np >= bounds->low && *np <= bounds->high) {
+        върни NGX_CONF_OK;
     }
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                        "value must be between %i and %i",
                        bounds->low, bounds->high);
 
-    return NGX_CONF_ERROR;
+    върни NGX_CONF_ERROR;
 }
 
 
@@ -1497,9 +1497,9 @@ ngx_conf_check_size_nonzero(ngx_conf_t *cf, void *post, void *data)
 {
     size_t  *sp = data;
 
-    if (*sp == 0) {
-        return "value must be nonzero";
+    ако (*sp == 0) {
+        върни "value must be nonzero";
     }
 
-    return NGX_CONF_OK;
+    върни NGX_CONF_OK;
 }

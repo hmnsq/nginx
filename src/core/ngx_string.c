@@ -22,7 +22,7 @@ static ngx_int_t ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src,
 void
 ngx_strlow(u_char *dst, u_char *src, size_t n)
 {
-    while (n) {
+    докато (n) {
         *dst = ngx_tolower(*src);
         dst++;
         src++;
@@ -36,29 +36,29 @@ ngx_strnlen(u_char *p, size_t n)
 {
     size_t  i;
 
-    for (i = 0; i < n; i++) {
+    за (i = 0; i < n; i++) {
 
-        if (p[i] == '\0') {
-            return i;
+        ако (p[i] == '\0') {
+            върни i;
         }
     }
 
-    return n;
+    върни n;
 }
 
 
 u_char *
 ngx_cpystrn(u_char *dst, u_char *src, size_t n)
 {
-    if (n == 0) {
-        return dst;
+    ако (n == 0) {
+        върни dst;
     }
 
-    while (--n) {
+    докато (--n) {
         *dst = *src;
 
-        if (*dst == '\0') {
-            return dst;
+        ако (*dst == '\0') {
+            върни dst;
         }
 
         dst++;
@@ -67,7 +67,7 @@ ngx_cpystrn(u_char *dst, u_char *src, size_t n)
 
     *dst = '\0';
 
-    return dst;
+    върни dst;
 }
 
 
@@ -77,13 +77,13 @@ ngx_pstrdup(ngx_pool_t *pool, ngx_str_t *src)
     u_char  *dst;
 
     dst = ngx_pnalloc(pool, src->len);
-    if (dst == NULL) {
-        return NULL;
+    ако (dst == NULL) {
+        върни NULL;
     }
 
     ngx_memcpy(dst, src->data, src->len);
 
-    return dst;
+    върни dst;
 }
 
 
@@ -129,7 +129,7 @@ ngx_sprintf(u_char *buf, const char *fmt, ...)
     p = ngx_vslprintf(buf, (void *) -1, fmt, args);
     va_end(args);
 
-    return p;
+    върни p;
 }
 
 
@@ -143,7 +143,7 @@ ngx_snprintf(u_char *buf, size_t max, const char *fmt, ...)
     p = ngx_vslprintf(buf, buf + max, fmt, args);
     va_end(args);
 
-    return p;
+    върни p;
 }
 
 
@@ -157,7 +157,7 @@ ngx_slprintf(u_char *buf, u_char *last, const char *fmt, ...)
     p = ngx_vslprintf(buf, last, fmt, args);
     va_end(args);
 
-    return p;
+    върни p;
 }
 
 
@@ -165,7 +165,7 @@ u_char *
 ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
 {
     u_char                *p, zero;
-    int                    d;
+    цяло                    d;
     double                 f;
     size_t                 slen;
     int64_t                i64;
@@ -175,14 +175,14 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
     ngx_str_t             *v;
     ngx_variable_value_t  *vv;
 
-    while (*fmt && buf < last) {
+    докато (*fmt && buf < last) {
 
         /*
          * "buf < last" means that we could copy at least one character:
          * the plain character, "%%", "%c", and minus without the checking
          */
 
-        if (*fmt == '%') {
+        ако (*fmt == '%') {
 
             i64 = 0;
             ui64 = 0;
@@ -195,12 +195,12 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
             frac_width = 0;
             slen = (size_t) -1;
 
-            while (*fmt >= '0' && *fmt <= '9') {
+            докато (*fmt >= '0' && *fmt <= '9') {
                 width = width * 10 + (*fmt++ - '0');
             }
 
 
-            for ( ;; ) {
+            за ( ;; ) {
                 switch (*fmt) {
 
                 case 'u':
@@ -228,7 +228,7 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
                 case '.':
                     fmt++;
 
-                    while (*fmt >= '0' && *fmt <= '9') {
+                    докато (*fmt >= '0' && *fmt <= '9') {
                         frac_width = frac_width * 10 + (*fmt++ - '0');
                     }
 
@@ -290,76 +290,76 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
 
             case 'M':
                 ms = (ngx_msec_t) va_arg(args, ngx_msec_t);
-                if ((ngx_msec_int_t) ms == -1) {
+                ако ((ngx_msec_int_t) ms == -1) {
                     sign = 1;
                     i64 = -1;
-                } else {
+                } иначе {
                     sign = 0;
                     ui64 = (uint64_t) ms;
                 }
                 break;
 
             case 'z':
-                if (sign) {
+                ако (sign) {
                     i64 = (int64_t) va_arg(args, ssize_t);
-                } else {
+                } иначе {
                     ui64 = (uint64_t) va_arg(args, size_t);
                 }
                 break;
 
             case 'i':
-                if (sign) {
+                ако (sign) {
                     i64 = (int64_t) va_arg(args, ngx_int_t);
-                } else {
+                } иначе {
                     ui64 = (uint64_t) va_arg(args, ngx_uint_t);
                 }
 
-                if (max_width) {
+                ако (max_width) {
                     width = NGX_INT_T_LEN;
                 }
 
                 break;
 
             case 'd':
-                if (sign) {
-                    i64 = (int64_t) va_arg(args, int);
-                } else {
+                ако (sign) {
+                    i64 = (int64_t) va_arg(args, цяло);
+                } иначе {
                     ui64 = (uint64_t) va_arg(args, u_int);
                 }
                 break;
 
             case 'l':
-                if (sign) {
+                ако (sign) {
                     i64 = (int64_t) va_arg(args, long);
-                } else {
+                } иначе {
                     ui64 = (uint64_t) va_arg(args, u_long);
                 }
                 break;
 
             case 'D':
-                if (sign) {
+                ако (sign) {
                     i64 = (int64_t) va_arg(args, int32_t);
-                } else {
+                } иначе {
                     ui64 = (uint64_t) va_arg(args, uint32_t);
                 }
                 break;
 
             case 'L':
-                if (sign) {
+                ако (sign) {
                     i64 = va_arg(args, int64_t);
-                } else {
+                } иначе {
                     ui64 = va_arg(args, uint64_t);
                 }
                 break;
 
             case 'A':
-                if (sign) {
+                ако (sign) {
                     i64 = (int64_t) va_arg(args, ngx_atomic_int_t);
-                } else {
+                } иначе {
                     ui64 = (uint64_t) va_arg(args, ngx_atomic_uint_t);
                 }
 
-                if (max_width) {
+                ако (max_width) {
                     width = NGX_ATOMIC_T_LEN;
                 }
 
@@ -368,7 +368,7 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
             case 'f':
                 f = va_arg(args, double);
 
-                if (f < 0) {
+                ако (f < 0) {
                     *buf++ = '-';
                     f = -f;
                 }
@@ -376,16 +376,16 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
                 ui64 = (int64_t) f;
                 frac = 0;
 
-                if (frac_width) {
+                ако (frac_width) {
 
                     scale = 1;
-                    for (n = frac_width; n; n--) {
+                    за (n = frac_width; n; n--) {
                         scale *= 10;
                     }
 
                     frac = (uint64_t) ((f - (double) ui64) * scale + 0.5);
 
-                    if (frac == scale) {
+                    ако (frac == scale) {
                         ui64++;
                         frac = 0;
                     }
@@ -393,8 +393,8 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
 
                 buf = ngx_sprintf_num(buf, last, ui64, zero, 0, width);
 
-                if (frac_width) {
-                    if (buf < last) {
+                ако (frac_width) {
+                    ако (buf < last) {
                         *buf++ = '.';
                     }
 
@@ -405,7 +405,7 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
 
                 continue;
 
-#if !(NGX_WIN32)
+#ако !(NGX_WIN32)
             case 'r':
                 i64 = (int64_t) va_arg(args, rlim_t);
                 sign = 1;
@@ -421,7 +421,7 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
                 break;
 
             case 'c':
-                d = va_arg(args, int);
+                d = va_arg(args, цяло);
                 *buf++ = (u_char) (d & 0xff);
                 fmt++;
 
@@ -434,12 +434,12 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
                 continue;
 
             case 'N':
-#if (NGX_WIN32)
+#ако (NGX_WIN32)
                 *buf++ = CR;
-                if (buf < last) {
+                ако (buf < last) {
                     *buf++ = LF;
                 }
-#else
+#иначе
                 *buf++ = LF;
 #endif
                 fmt++;
@@ -458,12 +458,12 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
                 continue;
             }
 
-            if (sign) {
-                if (i64 < 0) {
+            ако (sign) {
+                ако (i64 < 0) {
                     *buf++ = '-';
                     ui64 = (uint64_t) -i64;
 
-                } else {
+                } иначе {
                     ui64 = (uint64_t) i64;
                 }
             }
@@ -472,12 +472,12 @@ ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args)
 
             fmt++;
 
-        } else {
+        } иначе {
             *buf++ = *fmt++;
         }
     }
 
-    return buf;
+    върни buf;
 }
 
 
@@ -497,9 +497,9 @@ ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
 
     p = temp + NGX_INT64_LEN;
 
-    if (hexadecimal == 0) {
+    ако (hexadecimal == 0) {
 
-        if (ui64 <= (uint64_t) NGX_MAX_UINT32_VALUE) {
+        ако (ui64 <= (uint64_t) NGX_MAX_UINT32_VALUE) {
 
             /*
              * To divide 64-bit numbers and to find remainders
@@ -520,38 +520,38 @@ ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
 
             do {
                 *--p = (u_char) (ui32 % 10 + '0');
-            } while (ui32 /= 10);
+            } докато (ui32 /= 10);
 
-        } else {
+        } иначе {
             do {
                 *--p = (u_char) (ui64 % 10 + '0');
-            } while (ui64 /= 10);
+            } докато (ui64 /= 10);
         }
 
-    } else if (hexadecimal == 1) {
+    } иначе ако (hexadecimal == 1) {
 
         do {
 
             /* the "(uint32_t)" cast disables the BCC's warning */
             *--p = hex[(uint32_t) (ui64 & 0xf)];
 
-        } while (ui64 >>= 4);
+        } докато (ui64 >>= 4);
 
-    } else { /* hexadecimal == 2 */
+    } иначе { /* hexadecimal == 2 */
 
         do {
 
             /* the "(uint32_t)" cast disables the BCC's warning */
             *--p = HEX[(uint32_t) (ui64 & 0xf)];
 
-        } while (ui64 >>= 4);
+        } докато (ui64 >>= 4);
     }
 
     /* zero or space padding */
 
     len = (temp + NGX_INT64_LEN) - p;
 
-    while (len++ < width && buf < last) {
+    докато (len++ < width && buf < last) {
         *buf++ = zero;
     }
 
@@ -559,11 +559,11 @@ ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero,
 
     len = (temp + NGX_INT64_LEN) - p;
 
-    if (buf + len > last) {
+    ако (buf + len > last) {
         len = last - buf;
     }
 
-    return ngx_cpymem(buf, p, len);
+    върни ngx_cpymem(buf, p, len);
 }
 
 
@@ -574,54 +574,54 @@ ngx_sprintf_str(u_char *buf, u_char *last, u_char *src, size_t len,
     static u_char   hex[] = "0123456789abcdef";
     static u_char   HEX[] = "0123456789ABCDEF";
 
-    if (hexadecimal == 0) {
+    ако (hexadecimal == 0) {
 
-        if (len == (size_t) -1) {
-            while (*src && buf < last) {
+        ако (len == (size_t) -1) {
+            докато (*src && buf < last) {
                 *buf++ = *src++;
             }
 
-        } else {
+        } иначе {
             len = ngx_min((size_t) (last - buf), len);
             buf = ngx_cpymem(buf, src, len);
         }
 
-    } else if (hexadecimal == 1) {
+    } иначе ако (hexadecimal == 1) {
 
-        if (len == (size_t) -1) {
+        ако (len == (size_t) -1) {
 
-            while (*src && buf < last - 1) {
+            докато (*src && buf < last - 1) {
                 *buf++ = hex[*src >> 4];
                 *buf++ = hex[*src++ & 0xf];
             }
 
-        } else {
+        } иначе {
 
-            while (len-- && buf < last - 1) {
+            докато (len-- && buf < last - 1) {
                 *buf++ = hex[*src >> 4];
                 *buf++ = hex[*src++ & 0xf];
             }
         }
 
-    } else { /* hexadecimal == 2 */
+    } иначе { /* hexadecimal == 2 */
 
-        if (len == (size_t) -1) {
+        ако (len == (size_t) -1) {
 
-            while (*src && buf < last - 1) {
+            докато (*src && buf < last - 1) {
                 *buf++ = HEX[*src >> 4];
                 *buf++ = HEX[*src++ & 0xf];
             }
 
-        } else {
+        } иначе {
 
-            while (len-- && buf < last - 1) {
+            докато (len-- && buf < last - 1) {
                 *buf++ = HEX[*src >> 4];
                 *buf++ = HEX[*src++ & 0xf];
             }
         }
     }
 
-    return buf;
+    върни buf;
 }
 
 
@@ -637,23 +637,23 @@ ngx_strcasecmp(u_char *s1, u_char *s2)
 {
     ngx_uint_t  c1, c2;
 
-    for ( ;; ) {
+    за ( ;; ) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        ако (c1 == c2) {
 
-            if (c1) {
+            ако (c1) {
                 continue;
             }
 
-            return 0;
+            върни 0;
         }
 
-        return c1 - c2;
+        върни c1 - c2;
     }
 }
 
@@ -663,27 +663,27 @@ ngx_strncasecmp(u_char *s1, u_char *s2, size_t n)
 {
     ngx_uint_t  c1, c2;
 
-    while (n) {
+    докато (n) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        ако (c1 == c2) {
 
-            if (c1) {
+            ако (c1) {
                 n--;
                 continue;
             }
 
-            return 0;
+            върни 0;
         }
 
-        return c1 - c2;
+        върни c1 - c2;
     }
 
-    return 0;
+    върни 0;
 }
 
 
@@ -699,25 +699,25 @@ ngx_strnstr(u_char *s1, char *s2, size_t len)
 
     do {
         do {
-            if (len-- == 0) {
-                return NULL;
+            ако (len-- == 0) {
+                върни NULL;
             }
 
             c1 = *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            ако (c1 == 0) {
+                върни NULL;
             }
 
-        } while (c1 != c2);
+        } докато (c1 != c2);
 
-        if (n > len) {
-            return NULL;
+        ако (n > len) {
+            върни NULL;
         }
 
-    } while (ngx_strncmp(s1, (u_char *) s2, n) != 0);
+    } докато (ngx_strncmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    върни --s1;
 }
 
 
@@ -738,15 +738,15 @@ ngx_strstrn(u_char *s1, char *s2, size_t n)
         do {
             c1 = *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            ако (c1 == 0) {
+                върни NULL;
             }
 
-        } while (c1 != c2);
+        } докато (c1 != c2);
 
-    } while (ngx_strncmp(s1, (u_char *) s2, n) != 0);
+    } докато (ngx_strncmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    върни --s1;
 }
 
 
@@ -762,17 +762,17 @@ ngx_strcasestrn(u_char *s1, char *s2, size_t n)
         do {
             c1 = (ngx_uint_t) *s1++;
 
-            if (c1 == 0) {
-                return NULL;
+            ако (c1 == 0) {
+                върни NULL;
             }
 
             c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
 
-        } while (c1 != c2);
+        } докато (c1 != c2);
 
-    } while (ngx_strncasecmp(s1, (u_char *) s2, n) != 0);
+    } докато (ngx_strncasecmp(s1, (u_char *) s2, n) != 0);
 
-    return --s1;
+    върни --s1;
 }
 
 
@@ -793,38 +793,38 @@ ngx_strlcasestrn(u_char *s1, u_char *last, u_char *s2, size_t n)
 
     do {
         do {
-            if (s1 >= last) {
-                return NULL;
+            ако (s1 >= last) {
+                върни NULL;
             }
 
             c1 = (ngx_uint_t) *s1++;
 
             c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
 
-        } while (c1 != c2);
+        } докато (c1 != c2);
 
-    } while (ngx_strncasecmp(s1, s2, n) != 0);
+    } докато (ngx_strncasecmp(s1, s2, n) != 0);
 
-    return --s1;
+    върни --s1;
 }
 
 
 ngx_int_t
 ngx_rstrncmp(u_char *s1, u_char *s2, size_t n)
 {
-    if (n == 0) {
-        return 0;
+    ако (n == 0) {
+        върни 0;
     }
 
     n--;
 
-    for ( ;; ) {
-        if (s1[n] != s2[n]) {
-            return s1[n] - s2[n];
+    за ( ;; ) {
+        ако (s1[n] != s2[n]) {
+            върни s1[n] - s2[n];
         }
 
-        if (n == 0) {
-            return 0;
+        ако (n == 0) {
+            върни 0;
         }
 
         n--;
@@ -837,29 +837,29 @@ ngx_rstrncasecmp(u_char *s1, u_char *s2, size_t n)
 {
     u_char  c1, c2;
 
-    if (n == 0) {
-        return 0;
+    ако (n == 0) {
+        върни 0;
     }
 
     n--;
 
-    for ( ;; ) {
+    за ( ;; ) {
         c1 = s1[n];
-        if (c1 >= 'a' && c1 <= 'z') {
+        ако (c1 >= 'a' && c1 <= 'z') {
             c1 -= 'a' - 'A';
         }
 
         c2 = s2[n];
-        if (c2 >= 'a' && c2 <= 'z') {
+        ако (c2 >= 'a' && c2 <= 'z') {
             c2 -= 'a' - 'A';
         }
 
-        if (c1 != c2) {
-            return c1 - c2;
+        ако (c1 != c2) {
+            върни c1 - c2;
         }
 
-        if (n == 0) {
-            return 0;
+        ако (n == 0) {
+            върни 0;
         }
 
         n--;
@@ -873,22 +873,22 @@ ngx_memn2cmp(u_char *s1, u_char *s2, size_t n1, size_t n2)
     size_t     n;
     ngx_int_t  m, z;
 
-    if (n1 <= n2) {
+    ако (n1 <= n2) {
         n = n1;
         z = -1;
 
-    } else {
+    } иначе {
         n = n2;
         z = 1;
     }
 
     m = ngx_memcmp(s1, s2, n);
 
-    if (m || n1 == n2) {
-        return m;
+    ако (m || n1 == n2) {
+        върни m;
     }
 
-    return z;
+    върни z;
 }
 
 
@@ -897,20 +897,20 @@ ngx_dns_strcmp(u_char *s1, u_char *s2)
 {
     ngx_uint_t  c1, c2;
 
-    for ( ;; ) {
+    за ( ;; ) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
         c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
         c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
 
-        if (c1 == c2) {
+        ако (c1 == c2) {
 
-            if (c1) {
+            ако (c1) {
                 continue;
             }
 
-            return 0;
+            върни 0;
         }
 
         /* in ASCII '.' > '-', but we need '.' to be the lowest character */
@@ -918,7 +918,7 @@ ngx_dns_strcmp(u_char *s1, u_char *s2)
         c1 = (c1 == '.') ? ' ' : c1;
         c2 = (c2 == '.') ? ' ' : c2;
 
-        return c1 - c2;
+        върни c1 - c2;
     }
 }
 
@@ -928,38 +928,38 @@ ngx_filename_cmp(u_char *s1, u_char *s2, size_t n)
 {
     ngx_uint_t  c1, c2;
 
-    while (n) {
+    докато (n) {
         c1 = (ngx_uint_t) *s1++;
         c2 = (ngx_uint_t) *s2++;
 
-#if (NGX_HAVE_CASELESS_FILESYSTEM)
+#ако (NGX_HAVE_CASELESS_FILESYSTEM)
         c1 = tolower(c1);
         c2 = tolower(c2);
 #endif
 
-        if (c1 == c2) {
+        ако (c1 == c2) {
 
-            if (c1) {
+            ако (c1) {
                 n--;
                 continue;
             }
 
-            return 0;
+            върни 0;
         }
 
         /* we need '/' to be the lowest character */
 
-        if (c1 == 0 || c2 == 0) {
-            return c1 - c2;
+        ако (c1 == 0 || c2 == 0) {
+            върни c1 - c2;
         }
 
         c1 = (c1 == '/') ? 0 : c1;
         c2 = (c2 == '/') ? 0 : c2;
 
-        return c1 - c2;
+        върни c1 - c2;
     }
 
-    return 0;
+    върни 0;
 }
 
 
@@ -968,26 +968,26 @@ ngx_atoi(u_char *line, size_t n)
 {
     ngx_int_t  value, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ако (n == 0) {
+        върни NGX_ERROR;
     }
 
     cutoff = NGX_MAX_INT_T_VALUE / 10;
     cutlim = NGX_MAX_INT_T_VALUE % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    за (value = 0; n--; line++) {
+        ако (*line < '0' || *line > '9') {
+            върни NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        ако (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
+            върни NGX_ERROR;
         }
 
         value = value * 10 + (*line - '0');
     }
 
-    return value;
+    върни value;
 }
 
 
@@ -999,8 +999,8 @@ ngx_atofp(u_char *line, size_t n, size_t point)
     ngx_int_t   value, cutoff, cutlim;
     ngx_uint_t  dot;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ако (n == 0) {
+        върни NGX_ERROR;
     }
 
     cutoff = NGX_MAX_INT_T_VALUE / 10;
@@ -1008,42 +1008,42 @@ ngx_atofp(u_char *line, size_t n, size_t point)
 
     dot = 0;
 
-    for (value = 0; n--; line++) {
+    за (value = 0; n--; line++) {
 
-        if (point == 0) {
-            return NGX_ERROR;
+        ако (point == 0) {
+            върни NGX_ERROR;
         }
 
-        if (*line == '.') {
-            if (dot) {
-                return NGX_ERROR;
+        ако (*line == '.') {
+            ако (dot) {
+                върни NGX_ERROR;
             }
 
             dot = 1;
             continue;
         }
 
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+        ако (*line < '0' || *line > '9') {
+            върни NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        ако (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
+            върни NGX_ERROR;
         }
 
         value = value * 10 + (*line - '0');
         point -= dot;
     }
 
-    while (point--) {
-        if (value > cutoff) {
-            return NGX_ERROR;
+    докато (point--) {
+        ако (value > cutoff) {
+            върни NGX_ERROR;
         }
 
         value = value * 10;
     }
 
-    return value;
+    върни value;
 }
 
 
@@ -1052,26 +1052,26 @@ ngx_atosz(u_char *line, size_t n)
 {
     ssize_t  value, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ако (n == 0) {
+        върни NGX_ERROR;
     }
 
     cutoff = NGX_MAX_SIZE_T_VALUE / 10;
     cutlim = NGX_MAX_SIZE_T_VALUE % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    за (value = 0; n--; line++) {
+        ако (*line < '0' || *line > '9') {
+            върни NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        ако (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
+            върни NGX_ERROR;
         }
 
         value = value * 10 + (*line - '0');
     }
 
-    return value;
+    върни value;
 }
 
 
@@ -1080,26 +1080,26 @@ ngx_atoof(u_char *line, size_t n)
 {
     off_t  value, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ако (n == 0) {
+        върни NGX_ERROR;
     }
 
     cutoff = NGX_MAX_OFF_T_VALUE / 10;
     cutlim = NGX_MAX_OFF_T_VALUE % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    за (value = 0; n--; line++) {
+        ако (*line < '0' || *line > '9') {
+            върни NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        ако (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
+            върни NGX_ERROR;
         }
 
         value = value * 10 + (*line - '0');
     }
 
-    return value;
+    върни value;
 }
 
 
@@ -1108,26 +1108,26 @@ ngx_atotm(u_char *line, size_t n)
 {
     time_t  value, cutoff, cutlim;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ако (n == 0) {
+        върни NGX_ERROR;
     }
 
     cutoff = NGX_MAX_TIME_T_VALUE / 10;
     cutlim = NGX_MAX_TIME_T_VALUE % 10;
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return NGX_ERROR;
+    за (value = 0; n--; line++) {
+        ако (*line < '0' || *line > '9') {
+            върни NGX_ERROR;
         }
 
-        if (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
-            return NGX_ERROR;
+        ако (value >= cutoff && (value > cutoff || *line - '0' > cutlim)) {
+            върни NGX_ERROR;
         }
 
         value = value * 10 + (*line - '0');
     }
 
-    return value;
+    върни value;
 }
 
 
@@ -1137,35 +1137,35 @@ ngx_hextoi(u_char *line, size_t n)
     u_char     c, ch;
     ngx_int_t  value, cutoff;
 
-    if (n == 0) {
-        return NGX_ERROR;
+    ако (n == 0) {
+        върни NGX_ERROR;
     }
 
     cutoff = NGX_MAX_INT_T_VALUE / 16;
 
-    for (value = 0; n--; line++) {
-        if (value > cutoff) {
-            return NGX_ERROR;
+    за (value = 0; n--; line++) {
+        ако (value > cutoff) {
+            върни NGX_ERROR;
         }
 
         ch = *line;
 
-        if (ch >= '0' && ch <= '9') {
+        ако (ch >= '0' && ch <= '9') {
             value = value * 16 + (ch - '0');
             continue;
         }
 
         c = (u_char) (ch | 0x20);
 
-        if (c >= 'a' && c <= 'f') {
+        ако (c >= 'a' && c <= 'f') {
             value = value * 16 + (c - 'a' + 10);
             continue;
         }
 
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
-    return value;
+    върни value;
 }
 
 
@@ -1174,12 +1174,12 @@ ngx_hex_dump(u_char *dst, u_char *src, size_t len)
 {
     static u_char  hex[] = "0123456789abcdef";
 
-    while (len--) {
+    докато (len--) {
         *dst++ = hex[*src >> 4];
         *dst++ = hex[*src++ & 0xf];
     }
 
-    return dst;
+    върни dst;
 }
 
 
@@ -1214,7 +1214,7 @@ ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis,
     s = src->data;
     d = dst->data;
 
-    while (len > 2) {
+    докато (len > 2) {
         *d++ = basis[(s[0] >> 2) & 0x3f];
         *d++ = basis[((s[0] & 3) << 4) | (s[1] >> 4)];
         *d++ = basis[((s[1] & 0x0f) << 2) | (s[2] >> 6)];
@@ -1224,21 +1224,21 @@ ngx_encode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis,
         len -= 3;
     }
 
-    if (len) {
+    ако (len) {
         *d++ = basis[(s[0] >> 2) & 0x3f];
 
-        if (len == 1) {
+        ако (len == 1) {
             *d++ = basis[(s[0] & 3) << 4];
-            if (padding) {
+            ако (padding) {
                 *d++ = '=';
             }
 
-        } else {
+        } иначе {
             *d++ = basis[((s[0] & 3) << 4) | (s[1] >> 4)];
             *d++ = basis[(s[1] & 0x0f) << 2];
         }
 
-        if (padding) {
+        ако (padding) {
             *d++ = '=';
         }
     }
@@ -1270,7 +1270,7 @@ ngx_decode_base64(ngx_str_t *dst, ngx_str_t *src)
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
     };
 
-    return ngx_decode_base64_internal(dst, src, basis64);
+    върни ngx_decode_base64_internal(dst, src, basis64);
 }
 
 
@@ -1297,7 +1297,7 @@ ngx_decode_base64url(ngx_str_t *dst, ngx_str_t *src)
         77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 77
     };
 
-    return ngx_decode_base64_internal(dst, src, basis64);
+    върни ngx_decode_base64_internal(dst, src, basis64);
 }
 
 
@@ -1307,24 +1307,24 @@ ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
     size_t          len;
     u_char         *d, *s;
 
-    for (len = 0; len < src->len; len++) {
-        if (src->data[len] == '=') {
+    за (len = 0; len < src->len; len++) {
+        ако (src->data[len] == '=') {
             break;
         }
 
-        if (basis[src->data[len]] == 77) {
-            return NGX_ERROR;
+        ако (basis[src->data[len]] == 77) {
+            върни NGX_ERROR;
         }
     }
 
-    if (len % 4 == 1) {
-        return NGX_ERROR;
+    ако (len % 4 == 1) {
+        върни NGX_ERROR;
     }
 
     s = src->data;
     d = dst->data;
 
-    while (len > 3) {
+    докато (len > 3) {
         *d++ = (u_char) (basis[s[0]] << 2 | basis[s[1]] >> 4);
         *d++ = (u_char) (basis[s[1]] << 4 | basis[s[2]] >> 2);
         *d++ = (u_char) (basis[s[2]] << 6 | basis[s[3]]);
@@ -1333,17 +1333,17 @@ ngx_decode_base64_internal(ngx_str_t *dst, ngx_str_t *src, const u_char *basis)
         len -= 4;
     }
 
-    if (len > 1) {
+    ако (len > 1) {
         *d++ = (u_char) (basis[s[0]] << 2 | basis[s[1]] >> 4);
     }
 
-    if (len > 2) {
+    ако (len > 2) {
         *d++ = (u_char) (basis[s[1]] << 4 | basis[s[2]] >> 2);
     }
 
     dst->len = d - dst->data;
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
@@ -1364,45 +1364,45 @@ ngx_utf8_decode(u_char **p, size_t n)
 
     u = **p;
 
-    if (u >= 0xf8) {
+    ако (u >= 0xf8) {
 
         (*p)++;
-        return 0xffffffff;
+        върни 0xffffffff;
 
-    } else if (u >= 0xf0) {
+    } иначе ако (u >= 0xf0) {
 
         u &= 0x07;
         valid = 0xffff;
         len = 3;
 
-    } else if (u >= 0xe0) {
+    } иначе ако (u >= 0xe0) {
 
         u &= 0x0f;
         valid = 0x7ff;
         len = 2;
 
-    } else if (u >= 0xc2) {
+    } иначе ако (u >= 0xc2) {
 
         u &= 0x1f;
         valid = 0x7f;
         len = 1;
 
-    } else {
+    } иначе {
         (*p)++;
-        return 0xffffffff;
+        върни 0xffffffff;
     }
 
-    if (n - 1 < len) {
-        return 0xfffffffe;
+    ако (n - 1 < len) {
+        върни 0xfffffffe;
     }
 
     (*p)++;
 
-    while (len) {
+    докато (len) {
         i = *(*p)++;
 
-        if (i < 0x80) {
-            return 0xffffffff;
+        ако (i < 0x80) {
+            върни 0xffffffff;
         }
 
         u = (u << 6) | (i & 0x3f);
@@ -1410,11 +1410,11 @@ ngx_utf8_decode(u_char **p, size_t n)
         len--;
     }
 
-    if (u > valid) {
-        return u;
+    ако (u > valid) {
+        върни u;
     }
 
-    return 0xffffffff;
+    върни 0xffffffff;
 }
 
 
@@ -1426,22 +1426,22 @@ ngx_utf8_length(u_char *p, size_t n)
 
     last = p + n;
 
-    for (len = 0; p < last; len++) {
+    за (len = 0; p < last; len++) {
 
         c = *p;
 
-        if (c < 0x80) {
+        ако (c < 0x80) {
             p++;
             continue;
         }
 
-        if (ngx_utf8_decode(&p, last - p) > 0x10ffff) {
+        ако (ngx_utf8_decode(&p, last - p) > 0x10ffff) {
             /* invalid UTF-8 */
-            return n;
+            върни n;
         }
     }
 
-    return len;
+    върни len;
 }
 
 
@@ -1450,18 +1450,18 @@ ngx_utf8_cpystrn(u_char *dst, u_char *src, size_t n, size_t len)
 {
     u_char  c, *next;
 
-    if (n == 0) {
-        return dst;
+    ако (n == 0) {
+        върни dst;
     }
 
-    while (--n) {
+    докато (--n) {
 
         c = *src;
         *dst = c;
 
-        if (c < 0x80) {
+        ако (c < 0x80) {
 
-            if (c != '\0') {
+            ако (c != '\0') {
                 dst++;
                 src++;
                 len--;
@@ -1469,17 +1469,17 @@ ngx_utf8_cpystrn(u_char *dst, u_char *src, size_t n, size_t len)
                 continue;
             }
 
-            return dst;
+            върни dst;
         }
 
         next = src;
 
-        if (ngx_utf8_decode(&next, len) > 0x10ffff) {
+        ако (ngx_utf8_decode(&next, len) > 0x10ffff) {
             /* invalid UTF-8 */
             break;
         }
 
-        while (src < next) {
+        докато (src < next) {
             *dst++ = *src++;
             len--;
         }
@@ -1487,7 +1487,7 @@ ngx_utf8_cpystrn(u_char *dst, u_char *src, size_t n, size_t len)
 
     *dst = '\0';
 
-    return dst;
+    върни dst;
 }
 
 
@@ -1665,37 +1665,37 @@ ngx_escape_uri(u_char *dst, u_char *src, size_t size, ngx_uint_t type)
     escape = map[type];
     prefix = map_char[type];
 
-    if (dst == NULL) {
+    ако (dst == NULL) {
 
         /* find the number of the characters to be escaped */
 
         n = 0;
 
-        while (size) {
-            if (escape[*src >> 5] & (1U << (*src & 0x1f))) {
+        докато (size) {
+            ако (escape[*src >> 5] & (1U << (*src & 0x1f))) {
                 n++;
             }
             src++;
             size--;
         }
 
-        return (uintptr_t) n;
+        върни (uintptr_t) n;
     }
 
-    while (size) {
-        if (escape[*src >> 5] & (1U << (*src & 0x1f))) {
+    докато (size) {
+        ако (escape[*src >> 5] & (1U << (*src & 0x1f))) {
             *dst++ = prefix;
             *dst++ = hex[*src >> 4];
             *dst++ = hex[*src & 0xf];
             src++;
 
-        } else {
+        } иначе {
             *dst++ = *src++;
         }
         size--;
     }
 
-    return (uintptr_t) dst;
+    върни (uintptr_t) dst;
 }
 
 
@@ -1715,20 +1715,20 @@ ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
     state = 0;
     decoded = 0;
 
-    while (size--) {
+    докато (size--) {
 
         ch = *s++;
 
         switch (state) {
         case sw_usual:
-            if (ch == '?'
+            ако (ch == '?'
                 && (type & (NGX_UNESCAPE_URI|NGX_UNESCAPE_REDIRECT)))
             {
                 *d++ = ch;
                 goto done;
             }
 
-            if (ch == '%') {
+            ако (ch == '%') {
                 state = sw_quoted;
                 break;
             }
@@ -1738,14 +1738,14 @@ ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
 
         case sw_quoted:
 
-            if (ch >= '0' && ch <= '9') {
+            ако (ch >= '0' && ch <= '9') {
                 decoded = (u_char) (ch - '0');
                 state = sw_quoted_second;
                 break;
             }
 
             c = (u_char) (ch | 0x20);
-            if (c >= 'a' && c <= 'f') {
+            ако (c >= 'a' && c <= 'f') {
                 decoded = (u_char) (c - 'a' + 10);
                 state = sw_quoted_second;
                 break;
@@ -1763,11 +1763,11 @@ ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
 
             state = sw_usual;
 
-            if (ch >= '0' && ch <= '9') {
+            ако (ch >= '0' && ch <= '9') {
                 ch = (u_char) ((decoded << 4) + (ch - '0'));
 
-                if (type & NGX_UNESCAPE_REDIRECT) {
-                    if (ch > '%' && ch < 0x7f) {
+                ако (type & NGX_UNESCAPE_REDIRECT) {
+                    ако (ch > '%' && ch < 0x7f) {
                         *d++ = ch;
                         break;
                     }
@@ -1783,11 +1783,11 @@ ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
             }
 
             c = (u_char) (ch | 0x20);
-            if (c >= 'a' && c <= 'f') {
+            ако (c >= 'a' && c <= 'f') {
                 ch = (u_char) ((decoded << 4) + (c - 'a') + 10);
 
-                if (type & NGX_UNESCAPE_URI) {
-                    if (ch == '?') {
+                ако (type & NGX_UNESCAPE_URI) {
+                    ако (ch == '?') {
                         *d++ = ch;
                         goto done;
                     }
@@ -1796,13 +1796,13 @@ ngx_unescape_uri(u_char **dst, u_char **src, size_t size, ngx_uint_t type)
                     break;
                 }
 
-                if (type & NGX_UNESCAPE_REDIRECT) {
-                    if (ch == '?') {
+                ако (type & NGX_UNESCAPE_REDIRECT) {
+                    ако (ch == '?') {
                         *d++ = ch;
                         goto done;
                     }
 
-                    if (ch > '%' && ch < 0x7f) {
+                    ако (ch > '%' && ch < 0x7f) {
                         *d++ = ch;
                         break;
                     }
@@ -1835,11 +1835,11 @@ ngx_escape_html(u_char *dst, u_char *src, size_t size)
     u_char      ch;
     ngx_uint_t  len;
 
-    if (dst == NULL) {
+    ако (dst == NULL) {
 
         len = 0;
 
-        while (size) {
+        докато (size) {
             switch (*src++) {
 
             case '<':
@@ -1864,10 +1864,10 @@ ngx_escape_html(u_char *dst, u_char *src, size_t size)
             size--;
         }
 
-        return (uintptr_t) len;
+        върни (uintptr_t) len;
     }
 
-    while (size) {
+    докато (size) {
         ch = *src++;
 
         switch (ch) {
@@ -1897,7 +1897,7 @@ ngx_escape_html(u_char *dst, u_char *src, size_t size)
         size--;
     }
 
-    return (uintptr_t) dst;
+    върни (uintptr_t) dst;
 }
 
 
@@ -1907,16 +1907,16 @@ ngx_escape_json(u_char *dst, u_char *src, size_t size)
     u_char      ch;
     ngx_uint_t  len;
 
-    if (dst == NULL) {
+    ако (dst == NULL) {
         len = 0;
 
-        while (size) {
+        докато (size) {
             ch = *src++;
 
-            if (ch == '\\' || ch == '"') {
+            ако (ch == '\\' || ch == '"') {
                 len++;
 
-            } else if (ch <= 0x1f) {
+            } иначе ако (ch <= 0x1f) {
 
                 switch (ch) {
                 case '\n':
@@ -1935,21 +1935,21 @@ ngx_escape_json(u_char *dst, u_char *src, size_t size)
             size--;
         }
 
-        return (uintptr_t) len;
+        върни (uintptr_t) len;
     }
 
-    while (size) {
+    докато (size) {
         ch = *src++;
 
-        if (ch > 0x1f) {
+        ако (ch > 0x1f) {
 
-            if (ch == '\\' || ch == '"') {
+            ако (ch == '\\' || ch == '"') {
                 *dst++ = '\\';
             }
 
             *dst++ = ch;
 
-        } else {
+        } иначе {
             *dst++ = '\\';
 
             switch (ch) {
@@ -1986,7 +1986,7 @@ ngx_escape_json(u_char *dst, u_char *src, size_t size)
         size--;
     }
 
-    return (uintptr_t) dst;
+    върни (uintptr_t) dst;
 }
 
 
@@ -1997,25 +1997,25 @@ ngx_str_rbtree_insert_value(ngx_rbtree_node_t *temp,
     ngx_str_node_t      *n, *t;
     ngx_rbtree_node_t  **p;
 
-    for ( ;; ) {
+    за ( ;; ) {
 
         n = (ngx_str_node_t *) node;
         t = (ngx_str_node_t *) temp;
 
-        if (node->key != temp->key) {
+        ако (node->key != temp->key) {
 
             p = (node->key < temp->key) ? &temp->left : &temp->right;
 
-        } else if (n->str.len != t->str.len) {
+        } иначе ако (n->str.len != t->str.len) {
 
             p = (n->str.len < t->str.len) ? &temp->left : &temp->right;
 
-        } else {
+        } иначе {
             p = (ngx_memcmp(n->str.data, t->str.data, n->str.len) < 0)
                  ? &temp->left : &temp->right;
         }
 
-        if (*p == sentinel) {
+        ако (*p == sentinel) {
             break;
         }
 
@@ -2040,36 +2040,36 @@ ngx_str_rbtree_lookup(ngx_rbtree_t *rbtree, ngx_str_t *val, uint32_t hash)
     node = rbtree->root;
     sentinel = rbtree->sentinel;
 
-    while (node != sentinel) {
+    докато (node != sentinel) {
 
         n = (ngx_str_node_t *) node;
 
-        if (hash != node->key) {
+        ако (hash != node->key) {
             node = (hash < node->key) ? node->left : node->right;
             continue;
         }
 
-        if (val->len != n->str.len) {
+        ако (val->len != n->str.len) {
             node = (val->len < n->str.len) ? node->left : node->right;
             continue;
         }
 
         rc = ngx_memcmp(val->data, n->str.data, val->len);
 
-        if (rc < 0) {
+        ако (rc < 0) {
             node = node->left;
             continue;
         }
 
-        if (rc > 0) {
+        ако (rc > 0) {
             node = node->right;
             continue;
         }
 
-        return n;
+        върни n;
     }
 
-    return NULL;
+    върни NULL;
 }
 
 
@@ -2082,17 +2082,17 @@ ngx_sort(void *base, size_t n, size_t size,
     u_char  *p1, *p2, *p;
 
     p = ngx_alloc(size, ngx_cycle->log);
-    if (p == NULL) {
-        return;
+    ако (p == NULL) {
+        върни;
     }
 
-    for (p1 = (u_char *) base + size;
+    за (p1 = (u_char *) base + size;
          p1 < (u_char *) base + n * size;
          p1 += size)
     {
         ngx_memcpy(p, p1, size);
 
-        for (p2 = p1;
+        за (p2 = p1;
              p2 > (u_char *) base && cmp(p2 - size, p) > 0;
              p2 -= size)
         {
@@ -2114,17 +2114,17 @@ ngx_explicit_memzero(void *buf, size_t n)
 }
 
 
-#if (NGX_MEMCPY_LIMIT)
+#ако (NGX_MEMCPY_LIMIT)
 
 void *
 ngx_memcpy(void *dst, const void *src, size_t n)
 {
-    if (n > NGX_MEMCPY_LIMIT) {
+    ако (n > NGX_MEMCPY_LIMIT) {
         ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "memcpy %uz bytes", n);
         ngx_debug_point();
     }
 
-    return memcpy(dst, src, n);
+    върни memcpy(dst, src, n);
 }
 
 #endif

@@ -27,39 +27,39 @@ ngx_inet_addr(u_char *text, size_t len)
     octet = 0;
     n = 0;
 
-    for (p = text; p < text + len; p++) {
+    за (p = text; p < text + len; p++) {
         c = *p;
 
-        if (c >= '0' && c <= '9') {
+        ако (c >= '0' && c <= '9') {
             octet = octet * 10 + (c - '0');
 
-            if (octet > 255) {
-                return INADDR_NONE;
+            ако (octet > 255) {
+                върни INADDR_NONE;
             }
 
             continue;
         }
 
-        if (c == '.') {
+        ако (c == '.') {
             addr = (addr << 8) + octet;
             octet = 0;
             n++;
             continue;
         }
 
-        return INADDR_NONE;
+        върни INADDR_NONE;
     }
 
-    if (n == 3) {
+    ако (n == 3) {
         addr = (addr << 8) + octet;
-        return htonl(addr);
+        върни htonl(addr);
     }
 
-    return INADDR_NONE;
+    върни INADDR_NONE;
 }
 
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
 
 ngx_int_t
 ngx_inet6_addr(u_char *p, size_t len, u_char *addr)
@@ -68,8 +68,8 @@ ngx_inet6_addr(u_char *p, size_t len, u_char *addr)
     size_t      len4;
     ngx_uint_t  n, nibbles, word;
 
-    if (len == 0) {
-        return NGX_ERROR;
+    ако (len == 0) {
+        върни NGX_ERROR;
     }
 
     zero = NULL;
@@ -79,29 +79,29 @@ ngx_inet6_addr(u_char *p, size_t len, u_char *addr)
     word = 0;
     n = 8;
 
-    if (p[0] == ':') {
+    ако (p[0] == ':') {
         p++;
         len--;
     }
 
-    for (/* void */; len; len--) {
+    за (/* void */; len; len--) {
         c = *p++;
 
-        if (c == ':') {
-            if (nibbles) {
+        ако (c == ':') {
+            ако (nibbles) {
                 digit = p;
                 len4 = len;
                 *addr++ = (u_char) (word >> 8);
                 *addr++ = (u_char) (word & 0xff);
 
-                if (--n) {
+                ако (--n) {
                     nibbles = 0;
                     word = 0;
                     continue;
                 }
 
-            } else {
-                if (zero == NULL) {
+            } иначе {
+                ако (zero == NULL) {
                     digit = p;
                     len4 = len;
                     zero = addr;
@@ -109,17 +109,17 @@ ngx_inet6_addr(u_char *p, size_t len, u_char *addr)
                 }
             }
 
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
 
-        if (c == '.' && nibbles) {
-            if (n < 2 || digit == NULL) {
-                return NGX_ERROR;
+        ако (c == '.' && nibbles) {
+            ако (n < 2 || digit == NULL) {
+                върни NGX_ERROR;
             }
 
             word = ngx_inet_addr(digit, len4 - 1);
-            if (word == INADDR_NONE) {
-                return NGX_ERROR;
+            ако (word == INADDR_NONE) {
+                върни NGX_ERROR;
             }
 
             word = ntohl(word);
@@ -129,51 +129,51 @@ ngx_inet6_addr(u_char *p, size_t len, u_char *addr)
             break;
         }
 
-        if (++nibbles > 4) {
-            return NGX_ERROR;
+        ако (++nibbles > 4) {
+            върни NGX_ERROR;
         }
 
-        if (c >= '0' && c <= '9') {
+        ако (c >= '0' && c <= '9') {
             word = word * 16 + (c - '0');
             continue;
         }
 
         c |= 0x20;
 
-        if (c >= 'a' && c <= 'f') {
+        ако (c >= 'a' && c <= 'f') {
             word = word * 16 + (c - 'a') + 10;
             continue;
         }
 
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
-    if (nibbles == 0 && zero == NULL) {
-        return NGX_ERROR;
+    ако (nibbles == 0 && zero == NULL) {
+        върни NGX_ERROR;
     }
 
     *addr++ = (u_char) (word >> 8);
     *addr++ = (u_char) (word & 0xff);
 
-    if (--n) {
-        if (zero) {
+    ако (--n) {
+        ако (zero) {
             n *= 2;
             s = addr - 1;
             d = s + n;
-            while (s >= zero) {
+            докато (s >= zero) {
                 *d-- = *s--;
             }
             ngx_memzero(zero, n);
-            return NGX_OK;
+            върни NGX_OK;
         }
 
-    } else {
-        if (zero == NULL) {
-            return NGX_OK;
+    } иначе {
+        ако (zero == NULL) {
+            върни NGX_OK;
         }
     }
 
-    return NGX_ERROR;
+    върни NGX_ERROR;
 }
 
 #endif
@@ -184,14 +184,14 @@ ngx_sock_ntop(struct sockaddr *sa, socklen_t socklen, u_char *text, size_t len,
     ngx_uint_t port)
 {
     u_char               *p;
-#if (NGX_HAVE_INET6 || NGX_HAVE_UNIX_DOMAIN)
+#ако (NGX_HAVE_INET6 || NGX_HAVE_UNIX_DOMAIN)
     size_t                n;
 #endif
     struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     struct sockaddr_in6  *sin6;
 #endif
-#if (NGX_HAVE_UNIX_DOMAIN)
+#ако (NGX_HAVE_UNIX_DOMAIN)
     struct sockaddr_un   *saun;
 #endif
 
@@ -202,17 +202,17 @@ ngx_sock_ntop(struct sockaddr *sa, socklen_t socklen, u_char *text, size_t len,
         sin = (struct sockaddr_in *) sa;
         p = (u_char *) &sin->sin_addr;
 
-        if (port) {
+        ако (port) {
             p = ngx_snprintf(text, len, "%ud.%ud.%ud.%ud:%d",
                              p[0], p[1], p[2], p[3], ntohs(sin->sin_port));
-        } else {
+        } иначе {
             p = ngx_snprintf(text, len, "%ud.%ud.%ud.%ud",
                              p[0], p[1], p[2], p[3]);
         }
 
-        return (p - text);
+        върни (p - text);
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
 
     case AF_INET6:
 
@@ -220,31 +220,31 @@ ngx_sock_ntop(struct sockaddr *sa, socklen_t socklen, u_char *text, size_t len,
 
         n = 0;
 
-        if (port) {
+        ако (port) {
             text[n++] = '[';
         }
 
         n = ngx_inet6_ntop(sin6->sin6_addr.s6_addr, &text[n], len);
 
-        if (port) {
+        ако (port) {
             n = ngx_sprintf(&text[1 + n], "]:%d",
                             ntohs(sin6->sin6_port)) - text;
         }
 
-        return n;
+        върни n;
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#ако (NGX_HAVE_UNIX_DOMAIN)
 
     case AF_UNIX:
         saun = (struct sockaddr_un *) sa;
 
         /* on Linux sockaddr might not include sun_path at all */
 
-        if (socklen <= (socklen_t) offsetof(struct sockaddr_un, sun_path)) {
+        ако (socklen <= (socklen_t) offsetof(struct sockaddr_un, sun_path)) {
             p = ngx_snprintf(text, len, "unix:%Z");
 
-        } else {
+        } иначе {
             n = ngx_strnlen((u_char *) saun->sun_path,
                             socklen - offsetof(struct sockaddr_un, sun_path));
             p = ngx_snprintf(text, len, "unix:%*s%Z", n, saun->sun_path);
@@ -252,18 +252,18 @@ ngx_sock_ntop(struct sockaddr *sa, socklen_t socklen, u_char *text, size_t len,
 
         /* we do not include trailing zero in address length */
 
-        return (p - text - 1);
+        върни (p - text - 1);
 
 #endif
 
     default:
-        return 0;
+        върни 0;
     }
 }
 
 
 size_t
-ngx_inet_ntop(int family, void *addr, u_char *text, size_t len)
+ngx_inet_ntop(цяло family, void *addr, u_char *text, size_t len)
 {
     u_char  *p;
 
@@ -273,24 +273,24 @@ ngx_inet_ntop(int family, void *addr, u_char *text, size_t len)
 
         p = addr;
 
-        return ngx_snprintf(text, len, "%ud.%ud.%ud.%ud",
+        върни ngx_snprintf(text, len, "%ud.%ud.%ud.%ud",
                             p[0], p[1], p[2], p[3])
                - text;
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
 
     case AF_INET6:
-        return ngx_inet6_ntop(addr, text, len);
+        върни ngx_inet6_ntop(addr, text, len);
 
 #endif
 
     default:
-        return 0;
+        върни 0;
     }
 }
 
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
 
 size_t
 ngx_inet6_ntop(u_char *p, u_char *text, size_t len)
@@ -299,8 +299,8 @@ ngx_inet6_ntop(u_char *p, u_char *text, size_t len)
     size_t       max, n;
     ngx_uint_t   i, zero, last;
 
-    if (len < NGX_INET6_ADDRSTRLEN) {
-        return 0;
+    ако (len < NGX_INET6_ADDRSTRLEN) {
+        върни 0;
     }
 
     zero = (ngx_uint_t) -1;
@@ -308,11 +308,11 @@ ngx_inet6_ntop(u_char *p, u_char *text, size_t len)
     max = 1;
     n = 0;
 
-    for (i = 0; i < 16; i += 2) {
+    за (i = 0; i < 16; i += 2) {
 
-        if (p[i] || p[i + 1]) {
+        ако (p[i] || p[i + 1]) {
 
-            if (max < n) {
+            ако (max < n) {
                 zero = last;
                 max = n;
             }
@@ -321,12 +321,12 @@ ngx_inet6_ntop(u_char *p, u_char *text, size_t len)
             continue;
         }
 
-        if (n++ == 0) {
+        ако (n++ == 0) {
             last = i;
         }
     }
 
-    if (max < n) {
+    ако (max < n) {
         zero = last;
         max = n;
     }
@@ -334,9 +334,9 @@ ngx_inet6_ntop(u_char *p, u_char *text, size_t len)
     dst = text;
     n = 16;
 
-    if (zero == 0) {
+    ако (zero == 0) {
 
-        if ((max == 5 && p[10] == 0xff && p[11] == 0xff)
+        ако ((max == 5 && p[10] == 0xff && p[11] == 0xff)
             || (max == 6)
             || (max == 7 && p[14] != 0 && p[15] != 1))
         {
@@ -346,9 +346,9 @@ ngx_inet6_ntop(u_char *p, u_char *text, size_t len)
         *dst++ = ':';
     }
 
-    for (i = 0; i < n; i += 2) {
+    за (i = 0; i < n; i += 2) {
 
-        if (i == zero) {
+        ако (i == zero) {
             *dst++ = ':';
             i += (max - 1) * 2;
             continue;
@@ -356,16 +356,16 @@ ngx_inet6_ntop(u_char *p, u_char *text, size_t len)
 
         dst = ngx_sprintf(dst, "%xd", p[i] * 256 + p[i + 1]);
 
-        if (i < 14) {
+        ако (i < 14) {
             *dst++ = ':';
         }
     }
 
-    if (n == 12) {
+    ако (n == 12) {
         dst = ngx_sprintf(dst, "%ud.%ud.%ud.%ud", p[12], p[13], p[14], p[15]);
     }
 
-    return dst - text;
+    върни dst - text;
 }
 
 #endif
@@ -377,7 +377,7 @@ ngx_ptocidr(ngx_str_t *text, ngx_cidr_t *cidr)
     u_char      *addr, *mask, *last;
     size_t       len;
     ngx_int_t    shift;
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     ngx_int_t    rc;
     ngx_uint_t   s, i;
 #endif
@@ -390,83 +390,83 @@ ngx_ptocidr(ngx_str_t *text, ngx_cidr_t *cidr)
 
     cidr->u.in.addr = ngx_inet_addr(addr, len);
 
-    if (cidr->u.in.addr != INADDR_NONE) {
+    ако (cidr->u.in.addr != INADDR_NONE) {
         cidr->family = AF_INET;
 
-        if (mask == NULL) {
+        ако (mask == NULL) {
             cidr->u.in.mask = 0xffffffff;
-            return NGX_OK;
+            върни NGX_OK;
         }
 
-#if (NGX_HAVE_INET6)
-    } else if (ngx_inet6_addr(addr, len, cidr->u.in6.addr.s6_addr) == NGX_OK) {
+#ако (NGX_HAVE_INET6)
+    } иначе ако (ngx_inet6_addr(addr, len, cidr->u.in6.addr.s6_addr) == NGX_OK) {
         cidr->family = AF_INET6;
 
-        if (mask == NULL) {
+        ако (mask == NULL) {
             ngx_memset(cidr->u.in6.mask.s6_addr, 0xff, 16);
-            return NGX_OK;
+            върни NGX_OK;
         }
 
 #endif
-    } else {
-        return NGX_ERROR;
+    } иначе {
+        върни NGX_ERROR;
     }
 
     mask++;
 
     shift = ngx_atoi(mask, last - mask);
-    if (shift == NGX_ERROR) {
-        return NGX_ERROR;
+    ако (shift == NGX_ERROR) {
+        върни NGX_ERROR;
     }
 
     switch (cidr->family) {
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     case AF_INET6:
-        if (shift > 128) {
-            return NGX_ERROR;
+        ако (shift > 128) {
+            върни NGX_ERROR;
         }
 
         addr = cidr->u.in6.addr.s6_addr;
         mask = cidr->u.in6.mask.s6_addr;
         rc = NGX_OK;
 
-        for (i = 0; i < 16; i++) {
+        за (i = 0; i < 16; i++) {
 
             s = (shift > 8) ? 8 : shift;
             shift -= s;
 
             mask[i] = (u_char) (0xffu << (8 - s));
 
-            if (addr[i] != (addr[i] & mask[i])) {
+            ако (addr[i] != (addr[i] & mask[i])) {
                 rc = NGX_DONE;
                 addr[i] &= mask[i];
             }
         }
 
-        return rc;
+        върни rc;
 #endif
 
     default: /* AF_INET */
-        if (shift > 32) {
-            return NGX_ERROR;
+        ако (shift > 32) {
+            върни NGX_ERROR;
         }
 
-        if (shift) {
+        ако (shift) {
             cidr->u.in.mask = htonl((uint32_t) (0xffffffffu << (32 - shift)));
 
-        } else {
+        } иначе {
             /* x86 compilers use a shl instruction that shifts by modulo 32 */
             cidr->u.in.mask = 0;
         }
 
-        if (cidr->u.in.addr == (cidr->u.in.addr & cidr->u.in.mask)) {
-            return NGX_OK;
+        ако (cidr->u.in.addr == (cidr->u.in.addr & cidr->u.in.mask)) {
+            върни NGX_OK;
         }
 
         cidr->u.in.addr &= cidr->u.in.mask;
 
-        return NGX_DONE;
+        върни NGX_DONE;
     }
 }
 
@@ -474,35 +474,35 @@ ngx_ptocidr(ngx_str_t *text, ngx_cidr_t *cidr)
 ngx_int_t
 ngx_cidr_match(struct sockaddr *sa, ngx_array_t *cidrs)
 {
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     u_char           *p;
 #endif
     in_addr_t         inaddr;
     ngx_cidr_t       *cidr;
     ngx_uint_t        family, i;
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     ngx_uint_t        n;
     struct in6_addr  *inaddr6;
 #endif
 
-#if (NGX_SUPPRESS_WARN)
+#ако (NGX_SUPPRESS_WARN)
     inaddr = 0;
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     inaddr6 = NULL;
 #endif
 #endif
 
     family = sa->sa_family;
 
-    if (family == AF_INET) {
+    ако (family == AF_INET) {
         inaddr = ((struct sockaddr_in *) sa)->sin_addr.s_addr;
     }
 
-#if (NGX_HAVE_INET6)
-    else if (family == AF_INET6) {
+#ако (NGX_HAVE_INET6)
+    иначе ако (family == AF_INET6) {
         inaddr6 = &((struct sockaddr_in6 *) sa)->sin6_addr;
 
-        if (IN6_IS_ADDR_V4MAPPED(inaddr6)) {
+        ако (IN6_IS_ADDR_V4MAPPED(inaddr6)) {
             family = AF_INET;
 
             p = inaddr6->s6_addr;
@@ -517,17 +517,17 @@ ngx_cidr_match(struct sockaddr *sa, ngx_array_t *cidrs)
     }
 #endif
 
-    for (cidr = cidrs->elts, i = 0; i < cidrs->nelts; i++) {
-        if (cidr[i].family != family) {
+    за (cidr = cidrs->elts, i = 0; i < cidrs->nelts; i++) {
+        ако (cidr[i].family != family) {
             goto next;
         }
 
         switch (family) {
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
         case AF_INET6:
-            for (n = 0; n < 16; n++) {
-                if ((inaddr6->s6_addr[n] & cidr[i].u.in6.mask.s6_addr[n])
+            за (n = 0; n < 16; n++) {
+                ако ((inaddr6->s6_addr[n] & cidr[i].u.in6.mask.s6_addr[n])
                     != cidr[i].u.in6.addr.s6_addr[n])
                 {
                     goto next;
@@ -536,25 +536,25 @@ ngx_cidr_match(struct sockaddr *sa, ngx_array_t *cidrs)
             break;
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#ако (NGX_HAVE_UNIX_DOMAIN)
         case AF_UNIX:
             break;
 #endif
 
         default: /* AF_INET */
-            if ((inaddr & cidr[i].u.in.mask) != cidr[i].u.in.addr) {
+            ако ((inaddr & cidr[i].u.in.mask) != cidr[i].u.in.addr) {
                 goto next;
             }
             break;
         }
 
-        return NGX_OK;
+        върни NGX_OK;
 
     next:
         continue;
     }
 
-    return NGX_DECLINED;
+    върни NGX_DECLINED;
 }
 
 
@@ -564,7 +564,7 @@ ngx_parse_addr(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text, size_t len)
     in_addr_t             inaddr;
     ngx_uint_t            family;
     struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     struct in6_addr       inaddr6;
     struct sockaddr_in6  *sin6;
 
@@ -577,23 +577,23 @@ ngx_parse_addr(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text, size_t len)
 
     inaddr = ngx_inet_addr(text, len);
 
-    if (inaddr != INADDR_NONE) {
+    ако (inaddr != INADDR_NONE) {
         family = AF_INET;
         len = sizeof(struct sockaddr_in);
 
-#if (NGX_HAVE_INET6)
-    } else if (ngx_inet6_addr(text, len, inaddr6.s6_addr) == NGX_OK) {
+#ако (NGX_HAVE_INET6)
+    } иначе ако (ngx_inet6_addr(text, len, inaddr6.s6_addr) == NGX_OK) {
         family = AF_INET6;
         len = sizeof(struct sockaddr_in6);
 
 #endif
-    } else {
-        return NGX_DECLINED;
+    } иначе {
+        върни NGX_DECLINED;
     }
 
     addr->sockaddr = ngx_pcalloc(pool, len);
-    if (addr->sockaddr == NULL) {
-        return NGX_ERROR;
+    ако (addr->sockaddr == NULL) {
+        върни NGX_ERROR;
     }
 
     addr->sockaddr->sa_family = (u_char) family;
@@ -601,7 +601,7 @@ ngx_parse_addr(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text, size_t len)
 
     switch (family) {
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     case AF_INET6:
         sin6 = (struct sockaddr_in6 *) addr->sockaddr;
         ngx_memcpy(sin6->sin6_addr.s6_addr, inaddr6.s6_addr, 16);
@@ -614,7 +614,7 @@ ngx_parse_addr(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text, size_t len)
         break;
     }
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
@@ -628,36 +628,36 @@ ngx_parse_addr_port(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text,
 
     rc = ngx_parse_addr(pool, addr, text, len);
 
-    if (rc != NGX_DECLINED) {
-        return rc;
+    ако (rc != NGX_DECLINED) {
+        върни rc;
     }
 
     last = text + len;
 
-#if (NGX_HAVE_INET6)
-    if (len && text[0] == '[') {
+#ако (NGX_HAVE_INET6)
+    ако (len && text[0] == '[') {
 
         p = ngx_strlchr(text, last, ']');
 
-        if (p == last - 1) {
-            return ngx_parse_addr(pool, addr, text + 1, len - 2);
+        ако (p == last - 1) {
+            върни ngx_parse_addr(pool, addr, text + 1, len - 2);
         }
 
-        if (p == NULL || *++p != ':') {
-            return NGX_DECLINED;
+        ако (p == NULL || *++p != ':') {
+            върни NGX_DECLINED;
         }
 
         text++;
         len -= 2;
 
-    } else
+    } иначе
 #endif
 
     {
         p = ngx_strlchr(text, last, ':');
 
-        if (p == NULL) {
-            return NGX_DECLINED;
+        ако (p == NULL) {
+            върни NGX_DECLINED;
         }
     }
 
@@ -666,21 +666,21 @@ ngx_parse_addr_port(ngx_pool_t *pool, ngx_addr_t *addr, u_char *text,
 
     port = ngx_atoi(p, plen);
 
-    if (port < 1 || port > 65535) {
-        return NGX_DECLINED;
+    ако (port < 1 || port > 65535) {
+        върни NGX_DECLINED;
     }
 
     len -= plen + 1;
 
     rc = ngx_parse_addr(pool, addr, text, len);
 
-    if (rc != NGX_OK) {
-        return rc;
+    ако (rc != NGX_OK) {
+        върни rc;
     }
 
     ngx_inet_set_port(addr->sockaddr, (in_port_t) port);
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
@@ -693,22 +693,22 @@ ngx_parse_url(ngx_pool_t *pool, ngx_url_t *u)
     p = u->url.data;
     len = u->url.len;
 
-    if (len >= 5 && ngx_strncasecmp(p, (u_char *) "unix:", 5) == 0) {
-        return ngx_parse_unix_domain_url(pool, u);
+    ако (len >= 5 && ngx_strncasecmp(p, (u_char *) "unix:", 5) == 0) {
+        върни ngx_parse_unix_domain_url(pool, u);
     }
 
-    if (len && p[0] == '[') {
-        return ngx_parse_inet6_url(pool, u);
+    ако (len && p[0] == '[') {
+        върни ngx_parse_inet6_url(pool, u);
     }
 
-    return ngx_parse_inet_url(pool, u);
+    върни ngx_parse_inet_url(pool, u);
 }
 
 
 static ngx_int_t
 ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u)
 {
-#if (NGX_HAVE_UNIX_DOMAIN)
+#ако (NGX_HAVE_UNIX_DOMAIN)
     u_char              *path, *uri, *last;
     size_t               len;
     struct sockaddr_un  *saun;
@@ -719,12 +719,12 @@ ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u)
     path += 5;
     len -= 5;
 
-    if (u->uri_part) {
+    ако (u->uri_part) {
 
         last = path + len;
         uri = ngx_strlchr(path, last, ':');
 
-        if (uri) {
+        ако (uri) {
             len = uri - path;
             uri++;
             u->uri.len = last - uri;
@@ -732,17 +732,17 @@ ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u)
         }
     }
 
-    if (len == 0) {
+    ако (len == 0) {
         u->err = "no path in the unix domain socket";
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
     u->host.len = len++;
     u->host.data = path;
 
-    if (len > sizeof(saun->sun_path)) {
+    ако (len > sizeof(saun->sun_path)) {
         u->err = "too long path in the unix domain socket";
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
     u->socklen = sizeof(struct sockaddr_un);
@@ -751,13 +751,13 @@ ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u)
     (void) ngx_cpystrn((u_char *) saun->sun_path, path, len);
 
     u->addrs = ngx_pcalloc(pool, sizeof(ngx_addr_t));
-    if (u->addrs == NULL) {
-        return NGX_ERROR;
+    ако (u->addrs == NULL) {
+        върни NGX_ERROR;
     }
 
     saun = ngx_pcalloc(pool, sizeof(struct sockaddr_un));
-    if (saun == NULL) {
-        return NGX_ERROR;
+    ако (saun == NULL) {
+        върни NGX_ERROR;
     }
 
     u->family = AF_UNIX;
@@ -771,13 +771,13 @@ ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u)
     u->addrs[0].name.len = len + 4;
     u->addrs[0].name.data = u->url.data;
 
-    return NGX_OK;
+    върни NGX_OK;
 
-#else
+#иначе
 
     u->err = "the unix domain sockets are not supported on this platform";
 
-    return NGX_ERROR;
+    върни NGX_ERROR;
 
 #endif
 }
@@ -807,16 +807,16 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
     args = ngx_strlchr(host, last, '?');
 
-    if (args) {
-        if (uri == NULL || args < uri) {
+    ако (args) {
+        ако (uri == NULL || args < uri) {
             uri = args;
         }
     }
 
-    if (uri) {
-        if (u->listen || !u->uri_part) {
+    ако (uri) {
+        ако (u->listen || !u->uri_part) {
             u->err = "invalid host";
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
 
         u->uri.len = last - uri;
@@ -824,27 +824,27 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
         last = uri;
 
-        if (uri < port) {
+        ако (uri < port) {
             port = NULL;
         }
     }
 
-    if (port) {
+    ако (port) {
         port++;
 
         len = last - port;
 
-        if (u->listen) {
+        ако (u->listen) {
             dash = ngx_strlchr(port, last, '-');
 
-            if (dash) {
+            ако (dash) {
                 dash++;
 
                 n = ngx_atoi(dash, last - dash);
 
-                if (n < 1 || n > 65535) {
+                ако (n < 1 || n > 65535) {
                     u->err = "invalid port";
-                    return NGX_ERROR;
+                    върни NGX_ERROR;
                 }
 
                 u->last_port = (in_port_t) n;
@@ -855,14 +855,14 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
         n = ngx_atoi(port, len);
 
-        if (n < 1 || n > 65535) {
+        ако (n < 1 || n > 65535) {
             u->err = "invalid port";
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
 
-        if (u->last_port && n > u->last_port) {
+        ако (u->last_port && n > u->last_port) {
             u->err = "invalid port range";
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
 
         u->port = (in_port_t) n;
@@ -873,10 +873,10 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
         last = port - 1;
 
-    } else {
-        if (uri == NULL) {
+    } иначе {
+        ако (uri == NULL) {
 
-            if (u->listen) {
+            ако (u->listen) {
 
                 /* test value as port only */
 
@@ -884,19 +884,19 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
                 dash = ngx_strlchr(host, last, '-');
 
-                if (dash) {
+                ако (dash) {
                     dash++;
 
                     n = ngx_atoi(dash, last - dash);
 
-                    if (n == NGX_ERROR) {
+                    ако (n == NGX_ERROR) {
                         goto no_port;
                     }
 
-                    if (n < 1 || n > 65535) {
+                    ако (n < 1 || n > 65535) {
                         u->err = "invalid port";
 
-                    } else {
+                    } иначе {
                         u->last_port = (in_port_t) n;
                     }
 
@@ -905,20 +905,20 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
                 n = ngx_atoi(host, len);
 
-                if (n != NGX_ERROR) {
+                ако (n != NGX_ERROR) {
 
-                    if (u->err) {
-                        return NGX_ERROR;
+                    ако (u->err) {
+                        върни NGX_ERROR;
                     }
 
-                    if (n < 1 || n > 65535) {
+                    ако (n < 1 || n > 65535) {
                         u->err = "invalid port";
-                        return NGX_ERROR;
+                        върни NGX_ERROR;
                     }
 
-                    if (u->last_port && n > u->last_port) {
+                    ако (u->last_port && n > u->last_port) {
                         u->err = "invalid port range";
-                        return NGX_ERROR;
+                        върни NGX_ERROR;
                     }
 
                     u->port = (in_port_t) n;
@@ -930,7 +930,7 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
                     u->wildcard = 1;
 
-                    return ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr,
+                    върни ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr,
                                              u->socklen, 1);
                 }
             }
@@ -947,37 +947,37 @@ no_port:
 
     len = last - host;
 
-    if (len == 0) {
+    ако (len == 0) {
         u->err = "no host";
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
     u->host.len = len;
     u->host.data = host;
 
-    if (u->listen && len == 1 && *host == '*') {
+    ако (u->listen && len == 1 && *host == '*') {
         sin->sin_addr.s_addr = INADDR_ANY;
         u->wildcard = 1;
-        return ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
+        върни ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
     }
 
     sin->sin_addr.s_addr = ngx_inet_addr(host, len);
 
-    if (sin->sin_addr.s_addr != INADDR_NONE) {
+    ако (sin->sin_addr.s_addr != INADDR_NONE) {
 
-        if (sin->sin_addr.s_addr == INADDR_ANY) {
+        ако (sin->sin_addr.s_addr == INADDR_ANY) {
             u->wildcard = 1;
         }
 
-        return ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
+        върни ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
     }
 
-    if (u->no_resolve) {
-        return NGX_OK;
+    ако (u->no_resolve) {
+        върни NGX_OK;
     }
 
-    if (ngx_inet_resolve_host(pool, u) != NGX_OK) {
-        return NGX_ERROR;
+    ако (ngx_inet_resolve_host(pool, u) != NGX_OK) {
+        върни NGX_ERROR;
     }
 
     u->family = u->addrs[0].sockaddr->sa_family;
@@ -985,14 +985,14 @@ no_port:
     ngx_memcpy(&u->sockaddr, u->addrs[0].sockaddr, u->addrs[0].socklen);
     u->wildcard = ngx_inet_wildcard(&u->sockaddr.sockaddr);
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
 static ngx_int_t
 ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
 {
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     u_char               *p, *host, *port, *last, *uri, *dash;
     size_t                len;
     ngx_int_t             n;
@@ -1008,19 +1008,19 @@ ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
 
     p = ngx_strlchr(host, last, ']');
 
-    if (p == NULL) {
+    ако (p == NULL) {
         u->err = "invalid host";
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
     port = p + 1;
 
     uri = ngx_strlchr(port, last, '/');
 
-    if (uri) {
-        if (u->listen || !u->uri_part) {
+    ако (uri) {
+        ако (u->listen || !u->uri_part) {
             u->err = "invalid host";
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
 
         u->uri.len = last - uri;
@@ -1029,27 +1029,27 @@ ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
         last = uri;
     }
 
-    if (port < last) {
-        if (*port != ':') {
+    ако (port < last) {
+        ако (*port != ':') {
             u->err = "invalid host";
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
 
         port++;
 
         len = last - port;
 
-        if (u->listen) {
+        ако (u->listen) {
             dash = ngx_strlchr(port, last, '-');
 
-            if (dash) {
+            ако (dash) {
                 dash++;
 
                 n = ngx_atoi(dash, last - dash);
 
-                if (n < 1 || n > 65535) {
+                ако (n < 1 || n > 65535) {
                     u->err = "invalid port";
-                    return NGX_ERROR;
+                    върни NGX_ERROR;
                 }
 
                 u->last_port = (in_port_t) n;
@@ -1060,14 +1060,14 @@ ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
 
         n = ngx_atoi(port, len);
 
-        if (n < 1 || n > 65535) {
+        ако (n < 1 || n > 65535) {
             u->err = "invalid port";
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
 
-        if (u->last_port && n > u->last_port) {
+        ако (u->last_port && n > u->last_port) {
             u->err = "invalid port range";
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
 
         u->port = (in_port_t) n;
@@ -1076,7 +1076,7 @@ ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
         u->port_text.len = last - port;
         u->port_text.data = port;
 
-    } else {
+    } иначе {
         u->no_port = 1;
         u->port = u->default_port;
         sin6->sin6_port = htons(u->default_port);
@@ -1084,38 +1084,38 @@ ngx_parse_inet6_url(ngx_pool_t *pool, ngx_url_t *u)
 
     len = p - host;
 
-    if (len == 0) {
+    ако (len == 0) {
         u->err = "no host";
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
     u->host.len = len + 2;
     u->host.data = host - 1;
 
-    if (ngx_inet6_addr(host, len, sin6->sin6_addr.s6_addr) != NGX_OK) {
+    ако (ngx_inet6_addr(host, len, sin6->sin6_addr.s6_addr) != NGX_OK) {
         u->err = "invalid IPv6 address";
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
-    if (IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr)) {
+    ако (IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr)) {
         u->wildcard = 1;
     }
 
     u->family = AF_INET6;
 
-    return ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
+    върни ngx_inet_add_addr(pool, u, &u->sockaddr.sockaddr, u->socklen, 1);
 
-#else
+#иначе
 
     u->err = "the INET6 sockets are not supported on this platform";
 
-    return NGX_ERROR;
+    върни NGX_ERROR;
 
 #endif
 }
 
 
-#if (NGX_HAVE_GETADDRINFO && NGX_HAVE_INET6)
+#ако (NGX_HAVE_GETADDRINFO && NGX_HAVE_INET6)
 
 ngx_int_t
 ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
@@ -1125,8 +1125,8 @@ ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
     struct addrinfo   hints, *res, *rp;
 
     host = ngx_alloc(u->host.len + 1, pool->log);
-    if (host == NULL) {
-        return NGX_ERROR;
+    ако (host == NULL) {
+        върни NGX_ERROR;
     }
 
     (void) ngx_cpystrn(host, u->host.data, u->host.len + 1);
@@ -1138,15 +1138,15 @@ ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
     hints.ai_flags = AI_ADDRCONFIG;
 #endif
 
-    if (getaddrinfo((char *) host, NULL, &hints, &res) != 0) {
+    ако (getaddrinfo((char *) host, NULL, &hints, &res) != 0) {
         u->err = "host not found";
         ngx_free(host);
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
     ngx_free(host);
 
-    for (n = 0, rp = res; rp != NULL; rp = rp->ai_next) {
+    за (n = 0, rp = res; rp != NULL; rp = rp->ai_next) {
 
         switch (rp->ai_family) {
 
@@ -1161,14 +1161,14 @@ ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
         n++;
     }
 
-    if (n == 0) {
+    ако (n == 0) {
         u->err = "host not found";
         goto failed;
     }
 
     /* MP: ngx_shared_palloc() */
 
-    for (rp = res; rp != NULL; rp = rp->ai_next) {
+    за (rp = res; rp != NULL; rp = rp->ai_next) {
 
         switch (rp->ai_family) {
 
@@ -1180,7 +1180,7 @@ ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
             continue;
         }
 
-        if (ngx_inet_add_addr(pool, u, rp->ai_addr, rp->ai_addrlen, n)
+        ако (ngx_inet_add_addr(pool, u, rp->ai_addr, rp->ai_addrlen, n)
             != NGX_OK)
         {
             goto failed;
@@ -1188,15 +1188,15 @@ ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
     }
 
     freeaddrinfo(res);
-    return NGX_OK;
+    върни NGX_OK;
 
 failed:
 
     freeaddrinfo(res);
-    return NGX_ERROR;
+    върни NGX_ERROR;
 }
 
-#else /* !NGX_HAVE_GETADDRINFO || !NGX_HAVE_INET6 */
+#иначе /* !NGX_HAVE_GETADDRINFO || !NGX_HAVE_INET6 */
 
 ngx_int_t
 ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
@@ -1213,10 +1213,10 @@ ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
     sin.sin_family = AF_INET;
     sin.sin_addr.s_addr = ngx_inet_addr(u->host.data, u->host.len);
 
-    if (sin.sin_addr.s_addr == INADDR_NONE) {
+    ако (sin.sin_addr.s_addr == INADDR_NONE) {
         host = ngx_alloc(u->host.len + 1, pool->log);
-        if (host == NULL) {
-            return NGX_ERROR;
+        ако (host == NULL) {
+            върни NGX_ERROR;
         }
 
         (void) ngx_cpystrn(host, u->host.data, u->host.len + 1);
@@ -1225,39 +1225,39 @@ ngx_inet_resolve_host(ngx_pool_t *pool, ngx_url_t *u)
 
         ngx_free(host);
 
-        if (h == NULL || h->h_addr_list[0] == NULL) {
+        ако (h == NULL || h->h_addr_list[0] == NULL) {
             u->err = "host not found";
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
 
-        for (n = 0; h->h_addr_list[n] != NULL; n++) { /* void */ }
+        за (n = 0; h->h_addr_list[n] != NULL; n++) { /* void */ }
 
         /* MP: ngx_shared_palloc() */
 
-        for (i = 0; i < n; i++) {
+        за (i = 0; i < n; i++) {
             sin.sin_addr.s_addr = *(in_addr_t *) (h->h_addr_list[i]);
 
-            if (ngx_inet_add_addr(pool, u, (struct sockaddr *) &sin,
+            ако (ngx_inet_add_addr(pool, u, (struct sockaddr *) &sin,
                                   sizeof(struct sockaddr_in), n)
                 != NGX_OK)
             {
-                return NGX_ERROR;
+                върни NGX_ERROR;
             }
         }
 
-    } else {
+    } иначе {
 
         /* MP: ngx_shared_palloc() */
 
-        if (ngx_inet_add_addr(pool, u, (struct sockaddr *) &sin,
+        ако (ngx_inet_add_addr(pool, u, (struct sockaddr *) &sin,
                               sizeof(struct sockaddr_in), 1)
             != NGX_OK)
         {
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
     }
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 #endif /* NGX_HAVE_GETADDRINFO && NGX_HAVE_INET6 */
@@ -1275,17 +1275,17 @@ ngx_inet_add_addr(ngx_pool_t *pool, ngx_url_t *u, struct sockaddr *sockaddr,
 
     nports = u->last_port ? u->last_port - u->port + 1 : 1;
 
-    if (u->addrs == NULL) {
+    ако (u->addrs == NULL) {
         u->addrs = ngx_palloc(pool, total * nports * sizeof(ngx_addr_t));
-        if (u->addrs == NULL) {
-            return NGX_ERROR;
+        ако (u->addrs == NULL) {
+            върни NGX_ERROR;
         }
     }
 
-    for (i = 0; i < nports; i++) {
+    за (i = 0; i < nports; i++) {
         sa = ngx_pcalloc(pool, socklen);
-        if (sa == NULL) {
-            return NGX_ERROR;
+        ако (sa == NULL) {
+            върни NGX_ERROR;
         }
 
         ngx_memcpy(sa, sockaddr, socklen);
@@ -1294,7 +1294,7 @@ ngx_inet_add_addr(ngx_pool_t *pool, ngx_url_t *u, struct sockaddr *sockaddr,
 
         switch (sa->sa_family) {
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
         case AF_INET6:
             len = NGX_INET6_ADDRSTRLEN + sizeof("[]:65536") - 1;
             break;
@@ -1305,8 +1305,8 @@ ngx_inet_add_addr(ngx_pool_t *pool, ngx_url_t *u, struct sockaddr *sockaddr,
         }
 
         p = ngx_pnalloc(pool, len);
-        if (p == NULL) {
-            return NGX_ERROR;
+        ако (p == NULL) {
+            върни NGX_ERROR;
         }
 
         len = ngx_sock_ntop(sa, socklen, p, len, 1);
@@ -1320,7 +1320,7 @@ ngx_inet_add_addr(ngx_pool_t *pool, ngx_url_t *u, struct sockaddr *sockaddr,
         addr->name.data = p;
     }
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
@@ -1329,56 +1329,56 @@ ngx_cmp_sockaddr(struct sockaddr *sa1, socklen_t slen1,
     struct sockaddr *sa2, socklen_t slen2, ngx_uint_t cmp_port)
 {
     struct sockaddr_in   *sin1, *sin2;
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     struct sockaddr_in6  *sin61, *sin62;
 #endif
-#if (NGX_HAVE_UNIX_DOMAIN)
+#ако (NGX_HAVE_UNIX_DOMAIN)
     size_t                len;
     struct sockaddr_un   *saun1, *saun2;
 #endif
 
-    if (sa1->sa_family != sa2->sa_family) {
-        return NGX_DECLINED;
+    ако (sa1->sa_family != sa2->sa_family) {
+        върни NGX_DECLINED;
     }
 
     switch (sa1->sa_family) {
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     case AF_INET6:
 
         sin61 = (struct sockaddr_in6 *) sa1;
         sin62 = (struct sockaddr_in6 *) sa2;
 
-        if (cmp_port && sin61->sin6_port != sin62->sin6_port) {
-            return NGX_DECLINED;
+        ако (cmp_port && sin61->sin6_port != sin62->sin6_port) {
+            върни NGX_DECLINED;
         }
 
-        if (ngx_memcmp(&sin61->sin6_addr, &sin62->sin6_addr, 16) != 0) {
-            return NGX_DECLINED;
+        ако (ngx_memcmp(&sin61->sin6_addr, &sin62->sin6_addr, 16) != 0) {
+            върни NGX_DECLINED;
         }
 
         break;
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#ако (NGX_HAVE_UNIX_DOMAIN)
     case AF_UNIX:
 
         saun1 = (struct sockaddr_un *) sa1;
         saun2 = (struct sockaddr_un *) sa2;
 
-        if (slen1 < slen2) {
+        ако (slen1 < slen2) {
             len = slen1 - offsetof(struct sockaddr_un, sun_path);
 
-        } else {
+        } иначе {
             len = slen2 - offsetof(struct sockaddr_un, sun_path);
         }
 
-        if (len > sizeof(saun1->sun_path)) {
+        ако (len > sizeof(saun1->sun_path)) {
             len = sizeof(saun1->sun_path);
         }
 
-        if (ngx_memcmp(&saun1->sun_path, &saun2->sun_path, len) != 0) {
-            return NGX_DECLINED;
+        ако (ngx_memcmp(&saun1->sun_path, &saun2->sun_path, len) != 0) {
+            върни NGX_DECLINED;
         }
 
         break;
@@ -1389,18 +1389,18 @@ ngx_cmp_sockaddr(struct sockaddr *sa1, socklen_t slen1,
         sin1 = (struct sockaddr_in *) sa1;
         sin2 = (struct sockaddr_in *) sa2;
 
-        if (cmp_port && sin1->sin_port != sin2->sin_port) {
-            return NGX_DECLINED;
+        ако (cmp_port && sin1->sin_port != sin2->sin_port) {
+            върни NGX_DECLINED;
         }
 
-        if (sin1->sin_addr.s_addr != sin2->sin_addr.s_addr) {
-            return NGX_DECLINED;
+        ако (sin1->sin_addr.s_addr != sin2->sin_addr.s_addr) {
+            върни NGX_DECLINED;
         }
 
         break;
     }
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
@@ -1408,26 +1408,26 @@ in_port_t
 ngx_inet_get_port(struct sockaddr *sa)
 {
     struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     struct sockaddr_in6  *sin6;
 #endif
 
     switch (sa->sa_family) {
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     case AF_INET6:
         sin6 = (struct sockaddr_in6 *) sa;
-        return ntohs(sin6->sin6_port);
+        върни ntohs(sin6->sin6_port);
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#ако (NGX_HAVE_UNIX_DOMAIN)
     case AF_UNIX:
-        return 0;
+        върни 0;
 #endif
 
     default: /* AF_INET */
         sin = (struct sockaddr_in *) sa;
-        return ntohs(sin->sin_port);
+        върни ntohs(sin->sin_port);
     }
 }
 
@@ -1436,20 +1436,20 @@ void
 ngx_inet_set_port(struct sockaddr *sa, in_port_t port)
 {
     struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     struct sockaddr_in6  *sin6;
 #endif
 
     switch (sa->sa_family) {
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     case AF_INET6:
         sin6 = (struct sockaddr_in6 *) sa;
         sin6->sin6_port = htons(port);
         break;
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#ако (NGX_HAVE_UNIX_DOMAIN)
     case AF_UNIX:
         break;
 #endif
@@ -1466,7 +1466,7 @@ ngx_uint_t
 ngx_inet_wildcard(struct sockaddr *sa)
 {
     struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
     struct sockaddr_in6  *sin6;
 #endif
 
@@ -1475,19 +1475,19 @@ ngx_inet_wildcard(struct sockaddr *sa)
     case AF_INET:
         sin = (struct sockaddr_in *) sa;
 
-        if (sin->sin_addr.s_addr == INADDR_ANY) {
-            return 1;
+        ако (sin->sin_addr.s_addr == INADDR_ANY) {
+            върни 1;
         }
 
         break;
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
 
     case AF_INET6:
         sin6 = (struct sockaddr_in6 *) sa;
 
-        if (IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr)) {
-            return 1;
+        ако (IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr)) {
+            върни 1;
         }
 
         break;
@@ -1495,5 +1495,5 @@ ngx_inet_wildcard(struct sockaddr *sa)
 #endif
     }
 
-    return 0;
+    върни 0;
 }

@@ -19,8 +19,8 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     ngx_radix_tree_t  *tree;
 
     tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
-        return NULL;
+    ако (tree == NULL) {
+        върни NULL;
     }
 
     tree->pool = pool;
@@ -29,8 +29,8 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     tree->size = 0;
 
     tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
-        return NULL;
+    ако (tree->root == NULL) {
+        върни NULL;
     }
 
     tree->root->right = NULL;
@@ -38,8 +38,8 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     tree->root->parent = NULL;
     tree->root->value = NGX_RADIX_NO_VALUE;
 
-    if (preallocate == 0) {
-        return tree;
+    ако (preallocate == 0) {
+        върни tree;
     }
 
     /*
@@ -59,7 +59,7 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      *     8 bits on sparc64 in 32-bit mode (8K pages)
      */
 
-    if (preallocate == -1) {
+    ако (preallocate == -1) {
         switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
 
         /* amd64 */
@@ -81,27 +81,27 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     mask = 0;
     inc = 0x80000000;
 
-    while (preallocate--) {
+    докато (preallocate--) {
 
         key = 0;
         mask >>= 1;
         mask |= 0x80000000;
 
         do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+            ако (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
                 != NGX_OK)
             {
-                return NULL;
+                върни NULL;
             }
 
             key += inc;
 
-        } while (key);
+        } докато (key);
 
         inc >>= 1;
     }
 
-    return tree;
+    върни tree;
 }
 
 
@@ -117,15 +117,15 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
     node = tree->root;
     next = tree->root;
 
-    while (bit & mask) {
-        if (key & bit) {
+    докато (bit & mask) {
+        ако (key & bit) {
             next = node->right;
 
-        } else {
+        } иначе {
             next = node->left;
         }
 
-        if (next == NULL) {
+        ако (next == NULL) {
             break;
         }
 
@@ -133,19 +133,19 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
         node = next;
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    ако (next) {
+        ако (node->value != NGX_RADIX_NO_VALUE) {
+            върни NGX_BUSY;
         }
 
         node->value = value;
-        return NGX_OK;
+        върни NGX_OK;
     }
 
-    while (bit & mask) {
+    докато (bit & mask) {
         next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+        ако (next == NULL) {
+            върни NGX_ERROR;
         }
 
         next->right = NULL;
@@ -153,10 +153,10 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
         next->parent = node;
         next->value = NGX_RADIX_NO_VALUE;
 
-        if (key & bit) {
+        ако (key & bit) {
             node->right = next;
 
-        } else {
+        } иначе {
             node->left = next;
         }
 
@@ -166,7 +166,7 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
 
     node->value = value;
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
@@ -179,35 +179,35 @@ ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
     bit = 0x80000000;
     node = tree->root;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
+    докато (node && (bit & mask)) {
+        ако (key & bit) {
             node = node->right;
 
-        } else {
+        } иначе {
             node = node->left;
         }
 
         bit >>= 1;
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    ако (node == NULL) {
+        върни NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    ако (node->right || node->left) {
+        ако (node->value != NGX_RADIX_NO_VALUE) {
             node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+            върни NGX_OK;
         }
 
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
+    за ( ;; ) {
+        ако (node->parent->right == node) {
             node->parent->right = NULL;
 
-        } else {
+        } иначе {
             node->parent->left = NULL;
         }
 
@@ -216,20 +216,20 @@ ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
 
         node = node->parent;
 
-        if (node->right || node->left) {
+        ако (node->right || node->left) {
             break;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
+        ако (node->value != NGX_RADIX_NO_VALUE) {
             break;
         }
 
-        if (node->parent == NULL) {
+        ако (node->parent == NULL) {
             break;
         }
     }
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
@@ -244,26 +244,26 @@ ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
     value = NGX_RADIX_NO_VALUE;
     node = tree->root;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    докато (node) {
+        ако (node->value != NGX_RADIX_NO_VALUE) {
             value = node->value;
         }
 
-        if (key & bit) {
+        ако (key & bit) {
             node = node->right;
 
-        } else {
+        } иначе {
             node = node->left;
         }
 
         bit >>= 1;
     }
 
-    return value;
+    върни value;
 }
 
 
-#if (NGX_HAVE_INET6)
+#ако (NGX_HAVE_INET6)
 
 ngx_int_t
 ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
@@ -279,23 +279,23 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
     node = tree->root;
     next = tree->root;
 
-    while (bit & mask[i]) {
-        if (key[i] & bit) {
+    докато (bit & mask[i]) {
+        ако (key[i] & bit) {
             next = node->right;
 
-        } else {
+        } иначе {
             next = node->left;
         }
 
-        if (next == NULL) {
+        ако (next == NULL) {
             break;
         }
 
         bit >>= 1;
         node = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
+        ако (bit == 0) {
+            ако (++i == 16) {
                 break;
             }
 
@@ -303,19 +303,19 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
         }
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    ако (next) {
+        ако (node->value != NGX_RADIX_NO_VALUE) {
+            върни NGX_BUSY;
         }
 
         node->value = value;
-        return NGX_OK;
+        върни NGX_OK;
     }
 
-    while (bit & mask[i]) {
+    докато (bit & mask[i]) {
         next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+        ако (next == NULL) {
+            върни NGX_ERROR;
         }
 
         next->right = NULL;
@@ -323,18 +323,18 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
         next->parent = node;
         next->value = NGX_RADIX_NO_VALUE;
 
-        if (key[i] & bit) {
+        ако (key[i] & bit) {
             node->right = next;
 
-        } else {
+        } иначе {
             node->left = next;
         }
 
         bit >>= 1;
         node = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
+        ако (bit == 0) {
+            ако (++i == 16) {
                 break;
             }
 
@@ -344,7 +344,7 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
 
     node->value = value;
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
@@ -359,18 +359,18 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
     bit = 0x80;
     node = tree->root;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
+    докато (node && (bit & mask[i])) {
+        ако (key[i] & bit) {
             node = node->right;
 
-        } else {
+        } иначе {
             node = node->left;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
-            if (++i == 16) {
+        ако (bit == 0) {
+            ако (++i == 16) {
                 break;
             }
 
@@ -378,24 +378,24 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
         }
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    ако (node == NULL) {
+        върни NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    ако (node->right || node->left) {
+        ако (node->value != NGX_RADIX_NO_VALUE) {
             node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+            върни NGX_OK;
         }
 
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
+    за ( ;; ) {
+        ако (node->parent->right == node) {
             node->parent->right = NULL;
 
-        } else {
+        } иначе {
             node->parent->left = NULL;
         }
 
@@ -404,20 +404,20 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
 
         node = node->parent;
 
-        if (node->right || node->left) {
+        ако (node->right || node->left) {
             break;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
+        ако (node->value != NGX_RADIX_NO_VALUE) {
             break;
         }
 
-        if (node->parent == NULL) {
+        ако (node->parent == NULL) {
             break;
         }
     }
 
-    return NGX_OK;
+    върни NGX_OK;
 }
 
 
@@ -434,27 +434,27 @@ ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
     value = NGX_RADIX_NO_VALUE;
     node = tree->root;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    докато (node) {
+        ако (node->value != NGX_RADIX_NO_VALUE) {
             value = node->value;
         }
 
-        if (key[i] & bit) {
+        ако (key[i] & bit) {
             node = node->right;
 
-        } else {
+        } иначе {
             node = node->left;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
+        ако (bit == 0) {
             i++;
             bit = 0x80;
         }
     }
 
-    return value;
+    върни value;
 }
 
 #endif
@@ -465,16 +465,16 @@ ngx_radix_alloc(ngx_radix_tree_t *tree)
 {
     ngx_radix_node_t  *p;
 
-    if (tree->free) {
+    ако (tree->free) {
         p = tree->free;
         tree->free = tree->free->right;
-        return p;
+        върни p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
+    ако (tree->size < sizeof(ngx_radix_node_t)) {
         tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
-            return NULL;
+        ако (tree->start == NULL) {
+            върни NULL;
         }
 
         tree->size = ngx_pagesize;
@@ -484,5 +484,5 @@ ngx_radix_alloc(ngx_radix_tree_t *tree)
     tree->start += sizeof(ngx_radix_node_t);
     tree->size -= sizeof(ngx_radix_node_t);
 
-    return p;
+    върни p;
 }

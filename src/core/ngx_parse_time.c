@@ -28,51 +28,51 @@ ngx_parse_http_time(u_char *value, size_t len)
     fmt = 0;
     end = value + len;
 
-#if (NGX_SUPPRESS_WARN)
+#ако (NGX_SUPPRESS_WARN)
     day = 32;
     year = 2038;
 #endif
 
-    for (p = value; p < end; p++) {
-        if (*p == ',') {
+    за (p = value; p < end; p++) {
+        ако (*p == ',') {
             break;
         }
 
-        if (*p == ' ') {
+        ако (*p == ' ') {
             fmt = isoc;
             break;
         }
     }
 
-    for (p++; p < end; p++) {
-        if (*p != ' ') {
+    за (p++; p < end; p++) {
+        ако (*p != ' ') {
             break;
         }
     }
 
-    if (end - p < 18) {
-        return NGX_ERROR;
+    ако (end - p < 18) {
+        върни NGX_ERROR;
     }
 
-    if (fmt != isoc) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    ако (fmt != isoc) {
+        ако (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            върни NGX_ERROR;
         }
 
         day = (*p - '0') * 10 + (*(p + 1) - '0');
         p += 2;
 
-        if (*p == ' ') {
-            if (end - p < 18) {
-                return NGX_ERROR;
+        ако (*p == ' ') {
+            ако (end - p < 18) {
+                върни NGX_ERROR;
             }
             fmt = rfc822;
 
-        } else if (*p == '-') {
+        } иначе ако (*p == '-') {
             fmt = rfc850;
 
-        } else {
-            return NGX_ERROR;
+        } иначе {
+            върни NGX_ERROR;
         }
 
         p++;
@@ -113,32 +113,32 @@ ngx_parse_http_time(u_char *value, size_t len)
         break;
 
     default:
-        return NGX_ERROR;
+        върни NGX_ERROR;
     }
 
     p += 3;
 
-    if ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
-        return NGX_ERROR;
+    ако ((fmt == rfc822 && *p != ' ') || (fmt == rfc850 && *p != '-')) {
+        върни NGX_ERROR;
     }
 
     p++;
 
-    if (fmt == rfc822) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+    ако (fmt == rfc822) {
+        ако (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
         p += 4;
 
-    } else if (fmt == rfc850) {
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-            return NGX_ERROR;
+    } иначе ако (fmt == rfc850) {
+        ако (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+            върни NGX_ERROR;
         }
 
         year = (*p - '0') * 10 + (*(p + 1) - '0');
@@ -146,91 +146,91 @@ ngx_parse_http_time(u_char *value, size_t len)
         p += 2;
     }
 
-    if (fmt == isoc) {
-        if (*p == ' ') {
+    ако (fmt == isoc) {
+        ако (*p == ' ') {
             p++;
         }
 
-        if (*p < '0' || *p > '9') {
-            return NGX_ERROR;
+        ако (*p < '0' || *p > '9') {
+            върни NGX_ERROR;
         }
 
         day = *p++ - '0';
 
-        if (*p != ' ') {
-            if (*p < '0' || *p > '9') {
-                return NGX_ERROR;
+        ако (*p != ' ') {
+            ако (*p < '0' || *p > '9') {
+                върни NGX_ERROR;
             }
 
             day = day * 10 + (*p++ - '0');
         }
 
-        if (end - p < 14) {
-            return NGX_ERROR;
+        ако (end - p < 14) {
+            върни NGX_ERROR;
         }
     }
 
-    if (*p++ != ' ') {
-        return NGX_ERROR;
+    ако (*p++ != ' ') {
+        върни NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ако (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        върни NGX_ERROR;
     }
 
     hour = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    ако (*p++ != ':') {
+        върни NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ако (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        върни NGX_ERROR;
     }
 
     min = (*p - '0') * 10 + (*(p + 1) - '0');
     p += 2;
 
-    if (*p++ != ':') {
-        return NGX_ERROR;
+    ако (*p++ != ':') {
+        върни NGX_ERROR;
     }
 
-    if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
-        return NGX_ERROR;
+    ако (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9') {
+        върни NGX_ERROR;
     }
 
     sec = (*p - '0') * 10 + (*(p + 1) - '0');
 
-    if (fmt == isoc) {
+    ако (fmt == isoc) {
         p += 2;
 
-        if (*p++ != ' ') {
-            return NGX_ERROR;
+        ако (*p++ != ' ') {
+            върни NGX_ERROR;
         }
 
-        if (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
+        ако (*p < '0' || *p > '9' || *(p + 1) < '0' || *(p + 1) > '9'
             || *(p + 2) < '0' || *(p + 2) > '9'
             || *(p + 3) < '0' || *(p + 3) > '9')
         {
-            return NGX_ERROR;
+            върни NGX_ERROR;
         }
 
         year = (*p - '0') * 1000 + (*(p + 1) - '0') * 100
                + (*(p + 2) - '0') * 10 + (*(p + 3) - '0');
     }
 
-    if (hour > 23 || min > 59 || sec > 59) {
-        return NGX_ERROR;
+    ако (hour > 23 || min > 59 || sec > 59) {
+        върни NGX_ERROR;
     }
 
-    if (day == 29 && month == 1) {
-        if ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
-            return NGX_ERROR;
+    ако (day == 29 && month == 1) {
+        ако ((year & 3) || ((year % 100 == 0) && (year % 400) != 0)) {
+            върни NGX_ERROR;
         }
 
-    } else if (day > mday[month]) {
-        return NGX_ERROR;
+    } иначе ако (day > mday[month]) {
+        върни NGX_ERROR;
     }
 
     /*
@@ -238,7 +238,7 @@ ngx_parse_http_time(u_char *value, size_t len)
      * it is needed for Gauss' formula
      */
 
-    if (--month <= 0) {
+    ако (--month <= 0) {
         month += 12;
         year -= 1;
     }
@@ -265,13 +265,13 @@ ngx_parse_http_time(u_char *value, size_t len)
 
             - 719527 + 31 + 28) * 86400 + hour * 3600 + min * 60 + sec;
 
-#if (NGX_TIME_T_SIZE <= 4)
+#ако (NGX_TIME_T_SIZE <= 4)
 
-    if (time > 0x7fffffff) {
-        return NGX_ERROR;
+    ако (time > 0x7fffffff) {
+        върни NGX_ERROR;
     }
 
 #endif
 
-    return (time_t) time;
+    върни (time_t) time;
 }
