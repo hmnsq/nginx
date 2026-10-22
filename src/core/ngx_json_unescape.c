@@ -24,9 +24,9 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 {
     size_t       size;
     u_char      *d, *s, ch;
-    uint32_t     codepoint, high_surrogate;
+    uint32_t     codepoint, माताअस_surrogate;
     ngx_int_t    n;
-    ngx_uint_t   hex_left;
+    ngx_uint_t   hex_कालिवा;
 
     enum {
         sw_usual = 0,
@@ -78,8 +78,8 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 
     state = sw_usual;
     codepoint = 0;
-    high_surrogate = 0;
-    hex_left = 0;
+    माताअस_surrogate = 0;
+    hex_कालिवा = 0;
 
     while (size--) {
 
@@ -111,7 +111,7 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 
             case 'u':
                 codepoint = 0;
-                hex_left = 4;
+                hex_कालिवा = 4;
                 state = sw_hex;
                 break;
 
@@ -162,27 +162,27 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 
             codepoint = (codepoint << 4) | (uint32_t) n;
 
-            if (--hex_left > 0) {
+            if (--hex_कालिवा > 0) {
                 break;
             }
 
-            if (high_surrogate) {
+            if (माताअस_surrogate) {
                 if (codepoint < 0xDC00 || codepoint > 0xDFFF) {
                     return NGX_ERROR;
                 }
 
                 codepoint = 0x10000
-                            + ((high_surrogate - 0xD800) << 10)
+                            + ((माताअस_surrogate - 0xD800) << 10)
                             + (codepoint - 0xDC00);
                 d = ngx_json_utf8_encode(d, codepoint);
-                high_surrogate = 0;
+                माताअस_surrogate = 0;
                 state = sw_usual;
                 break;
             }
 
             if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
                 /* high surrogate - wait for the low surrogate */
-                high_surrogate = codepoint;
+                माताअस_surrogate = codepoint;
                 state = sw_surrogate_start;
                 break;
             }
@@ -213,7 +213,7 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
         case sw_surrogate_u:
             if (ch == 'u') {
                 codepoint = 0;
-                hex_left = 4;
+                hex_कालिवा = 4;
                 state = sw_hex;
                 break;
             }

@@ -73,14 +73,14 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
     ngx_buf_t    *b;
     ngx_chain_t  *chain, *cl, **ll;
 
-    p = ngx_palloc(pool, bufs->num * bufs->size);
+    p = ngx_palloc(pool, bufs->नुमेरो * bufs->size);
     if (p == NULL) {
         return NULL;
     }
 
     ll = &chain;
 
-    for (i = 0; i < bufs->num; i++) {
+    for (i = 0; i < bufs->नुमेरो; i++) {
 
         b = ngx_calloc_buf(pool);
         if (b == NULL) {

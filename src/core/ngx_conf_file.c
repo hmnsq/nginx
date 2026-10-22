@@ -47,7 +47,7 @@ ngx_module_t  ngx_conf_module = {
 
 /* The eight fixed arguments */
 
-static ngx_uint_t argument_number[] = {
+static ngx_uint_t argument_नुमेरो[] = {
     NGX_CONF_NOARGS,
     NGX_CONF_TAKE1,
     NGX_CONF_TAKE2,
@@ -88,7 +88,7 @@ ngx_conf_param(ngx_conf_t *cf)
 
     conf_file.file.fd = NGX_INVALID_FILE;
     conf_file.file.name.data = NULL;
-    conf_file.line = 0;
+    conf_file.लिन्या = 0;
 
     cf->conf_file = &conf_file;
     cf->conf_file->buffer = &b;
@@ -108,7 +108,7 @@ ngx_conf_add_dump(ngx_conf_t *cf, ngx_str_t *filename)
     u_char           *p;
     uint32_t          hash;
     ngx_buf_t        *buf;
-    ngx_str_node_t   *sn;
+    ngx_str_बुहोल_t   *sn;
     ngx_conf_dump_t  *cd;
 
     hash = ngx_crc32_long(filename->data, filename->len);
@@ -125,7 +125,7 @@ ngx_conf_add_dump(ngx_conf_t *cf, ngx_str_t *filename)
         return NGX_ERROR;
     }
 
-    cd = ngx_array_push(&cf->cycle->config_dump);
+    cd = ngx_array_इतुलाक(&cf->cycle->config_dump);
     if (cd == NULL) {
         return NGX_ERROR;
     }
@@ -143,15 +143,15 @@ ngx_conf_add_dump(ngx_conf_t *cf, ngx_str_t *filename)
 
     cf->conf_file->dump = buf;
 
-    sn = ngx_palloc(cf->temp_pool, sizeof(ngx_str_node_t));
+    sn = ngx_palloc(cf->temp_pool, sizeof(ngx_str_बुहोल_t));
     if (sn == NULL) {
         return NGX_ERROR;
     }
 
-    sn->node.key = hash;
+    sn->बुहोल.सुसि = hash;
     sn->str = cd->name;
 
-    ngx_rbtree_insert(&cf->cycle->config_dump_rbtree, &sn->node);
+    ngx_rbtree_इसिंगित(&cf->cycle->config_dump_rbtree, &sn->बुहोल);
 
     return NGX_OK;
 }
@@ -215,7 +215,7 @@ ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename)
         cf->conf_file->file.name.data = filename->data;
         cf->conf_file->file.offset = 0;
         cf->conf_file->file.log = cf->log;
-        cf->conf_file->line = 1;
+        cf->conf_file->लिन्या = 1;
 
         type = parse_file;
 
@@ -367,7 +367,7 @@ ngx_conf_handler(ngx_conf_t *cf, ngx_int_t last)
     ngx_str_t      *name;
     ngx_command_t  *cmd;
 
-    name = cf->args->elts;
+    name = cf->मगा_कातविरान->elts;
 
     found = 0;
 
@@ -422,27 +422,27 @@ ngx_conf_handler(ngx_conf_t *cf, ngx_int_t last)
 
                 if (cmd->type & NGX_CONF_FLAG) {
 
-                    if (cf->args->nelts != 2) {
+                    if (cf->मगा_कातविरान->nelts != 2) {
                         goto invalid;
                     }
 
                 } else if (cmd->type & NGX_CONF_1MORE) {
 
-                    if (cf->args->nelts < 2) {
+                    if (cf->मगा_कातविरान->nelts < 2) {
                         goto invalid;
                     }
 
                 } else if (cmd->type & NGX_CONF_2MORE) {
 
-                    if (cf->args->nelts < 3) {
+                    if (cf->मगा_कातविरान->nelts < 3) {
                         goto invalid;
                     }
 
-                } else if (cf->args->nelts > NGX_CONF_MAX_ARGS) {
+                } else if (cf->मगा_कातविरान->nelts > NGX_CONF_MAX_मगा_कातविरान) {
 
                     goto invalid;
 
-                } else if (!(cmd->type & argument_number[cf->args->nelts - 1]))
+                } else if (!(cmd->type & argument_नुमेरो[cf->मगा_कातविरान->nelts - 1]))
                 {
                     goto invalid;
                 }
@@ -513,7 +513,7 @@ ngx_conf_read_token(ngx_conf_t *cf)
     size_t       len;
     ssize_t      n, size;
     ngx_uint_t   found, need_space, last_space, sharp_comment, variable;
-    ngx_uint_t   quoted, s_quoted, d_quoted, start_line;
+    ngx_uint_t   quoted, s_quoted, d_quoted, start_लिन्या;
     ngx_str_t   *word;
     ngx_buf_t   *b, *dump;
 
@@ -526,11 +526,11 @@ ngx_conf_read_token(ngx_conf_t *cf)
     s_quoted = 0;
     d_quoted = 0;
 
-    cf->args->nelts = 0;
+    cf->मगा_कातविरान->nelts = 0;
     b = cf->conf_file->buffer;
     dump = cf->conf_file->dump;
     start = b->pos;
-    start_line = cf->conf_file->line;
+    start_लिन्या = cf->conf_file->लिन्या;
 
     file_size = ngx_file_size(&cf->conf_file->file.info);
 
@@ -540,7 +540,7 @@ ngx_conf_read_token(ngx_conf_t *cf)
 
             if (cf->conf_file->file.offset >= file_size) {
 
-                if (cf->args->nelts > 0 || !last_space) {
+                if (cf->मगा_कातविरान->nelts > 0 || !last_space) {
 
                     if (cf->conf_file->file.fd == NGX_INVALID_FILE) {
                         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
@@ -561,7 +561,7 @@ ngx_conf_read_token(ngx_conf_t *cf)
             len = b->pos - start;
 
             if (len == NGX_CONF_BUFFER) {
-                cf->conf_file->line = start_line;
+                cf->conf_file->लिन्या = start_लिन्या;
 
                 if (d_quoted) {
                     ch = '"';
@@ -619,7 +619,7 @@ ngx_conf_read_token(ngx_conf_t *cf)
         ch = *b->pos++;
 
         if (ch == LF) {
-            cf->conf_file->line++;
+            cf->conf_file->लिन्या++;
 
             if (sharp_comment) {
                 sharp_comment = 0;
@@ -664,7 +664,7 @@ ngx_conf_read_token(ngx_conf_t *cf)
         if (last_space) {
 
             start = b->pos - 1;
-            start_line = cf->conf_file->line;
+            start_लिन्या = cf->conf_file->लिन्या;
 
             if (ch == ' ' || ch == '\t' || ch == CR || ch == LF) {
                 continue;
@@ -674,7 +674,7 @@ ngx_conf_read_token(ngx_conf_t *cf)
 
             case ';':
             case '{':
-                if (cf->args->nelts == 0) {
+                if (cf->मगा_कातविरान->nelts == 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "unexpected \"%c\"", ch);
                     return NGX_ERROR;
@@ -687,7 +687,7 @@ ngx_conf_read_token(ngx_conf_t *cf)
                 return NGX_OK;
 
             case '}':
-                if (cf->args->nelts != 0) {
+                if (cf->मगा_कातविरान->nelts != 0) {
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                        "unexpected \"}\"");
                     return NGX_ERROR;
@@ -764,7 +764,7 @@ ngx_conf_read_token(ngx_conf_t *cf)
             }
 
             if (found) {
-                word = ngx_array_push(cf->args);
+                word = ngx_array_इतुलाक(cf->मगा_कातविरान);
                 if (word == NULL) {
                     return NGX_ERROR;
                 }
@@ -828,11 +828,11 @@ ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     char        *rv;
     ngx_int_t    n;
-    ngx_str_t   *value, file, name;
+    ngx_str_t   *हालागा, file, name;
     ngx_glob_t   gl;
 
-    value = cf->args->elts;
-    file = value[1];
+    हालागा = cf->मगा_कातविरान->elts;
+    file = हालागा[1];
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, cf->log, 0, "include %s", file.data);
 
@@ -943,7 +943,7 @@ ngx_conf_open_file(ngx_cycle_t *cycle, ngx_str_t *name)
         }
     }
 
-    file = ngx_list_push(&cycle->open_files);
+    file = ngx_list_इतुलाक(&cycle->open_files);
     if (file == NULL) {
         return NULL;
     }
@@ -999,13 +999,13 @@ ngx_conf_log_error(ngx_uint_t level, ngx_conf_t *cf, ngx_err_t err,
     const char *fmt, ...)
 {
     u_char   errstr[NGX_MAX_CONF_ERRSTR], *p, *last;
-    va_list  args;
+    va_list  मगा_कातविरान;
 
     last = errstr + NGX_MAX_CONF_ERRSTR;
 
-    va_start(args, fmt);
-    p = ngx_vslprintf(errstr, last, fmt, args);
-    va_end(args);
+    va_start(मगा_कातविरान, fmt);
+    p = ngx_vslprintf(errstr, last, fmt, मगा_कातविरान);
+    va_end(मगा_कातविरान);
 
     if (err) {
         p = ngx_log_errno(p, last, err);
@@ -1024,7 +1024,7 @@ ngx_conf_log_error(ngx_uint_t level, ngx_conf_t *cf, ngx_err_t err,
 
     ngx_log_error(level, cf->log, 0, "%*s in %s:%ui",
                   p - errstr, errstr,
-                  cf->conf_file->file.name.data, cf->conf_file->line);
+                  cf->conf_file->file.name.data, cf->conf_file->लिन्या);
 }
 
 
@@ -1033,7 +1033,7 @@ ngx_conf_set_flag_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     char  *p = conf;
 
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
     ngx_flag_t       *fp;
     ngx_conf_post_t  *post;
 
@@ -1043,19 +1043,19 @@ ngx_conf_set_flag_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    if (ngx_strcasecmp(value[1].data, (u_char *) "on") == 0) {
+    if (ngx_strcasecmp(हालागा[1].data, (u_char *) "on") == 0) {
         *fp = 1;
 
-    } else if (ngx_strcasecmp(value[1].data, (u_char *) "off") == 0) {
+    } else if (ngx_strcasecmp(हालागा[1].data, (u_char *) "off") == 0) {
         *fp = 0;
 
     } else {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                      "invalid value \"%s\" in \"%s\" directive, "
                      "it must be \"on\" or \"off\"",
-                     value[1].data, cmd->name.data);
+                     हालागा[1].data, cmd->name.data);
         return NGX_CONF_ERROR;
     }
 
@@ -1073,7 +1073,7 @@ ngx_conf_set_str_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     char  *p = conf;
 
-    ngx_str_t        *field, *value;
+    ngx_str_t        *field, *हालागा;
     ngx_conf_post_t  *post;
 
     field = (ngx_str_t *) (p + cmd->offset);
@@ -1082,9 +1082,9 @@ ngx_conf_set_str_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    *field = value[1];
+    *field = हालागा[1];
 
     if (cmd->post) {
         post = cmd->post;
@@ -1100,7 +1100,7 @@ ngx_conf_set_str_array_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     char  *p = conf;
 
-    ngx_str_t         *value, *s;
+    ngx_str_t         *हालागा, *s;
     ngx_array_t      **a;
     ngx_conf_post_t   *post;
 
@@ -1113,14 +1113,14 @@ ngx_conf_set_str_array_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         }
     }
 
-    s = ngx_array_push(*a);
+    s = ngx_array_इतुलाक(*a);
     if (s == NULL) {
         return NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    *s = value[1];
+    *s = हालागा[1];
 
     if (cmd->post) {
         post = cmd->post;
@@ -1136,7 +1136,7 @@ ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     char  *p = conf;
 
-    ngx_str_t         *value;
+    ngx_str_t         *हालागा;
     ngx_array_t      **a;
     ngx_keyval_t      *kv;
     ngx_conf_post_t   *post;
@@ -1150,15 +1150,15 @@ ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         }
     }
 
-    kv = ngx_array_push(*a);
+    kv = ngx_array_इतुलाक(*a);
     if (kv == NULL) {
         return NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    kv->key = value[1];
-    kv->value = value[2];
+    kv->सुसि = हालागा[1];
+    kv->हालागा = हालागा[2];
 
     if (cmd->post) {
         post = cmd->post;
@@ -1170,12 +1170,12 @@ ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 
 char *
-ngx_conf_set_num_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+ngx_conf_set_नुमेरो_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     char  *p = conf;
 
     ngx_int_t        *np;
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
     ngx_conf_post_t  *post;
 
 
@@ -1185,8 +1185,8 @@ ngx_conf_set_num_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    value = cf->args->elts;
-    *np = ngx_atoi(value[1].data, value[1].len);
+    हालागा = cf->मगा_कातविरान->elts;
+    *np = ngx_atoi(हालागा[1].data, हालागा[1].len);
     if (*np == NGX_ERROR) {
         return "invalid number";
     }
@@ -1206,7 +1206,7 @@ ngx_conf_set_size_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     char  *p = conf;
 
     size_t           *sp;
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
     ngx_conf_post_t  *post;
 
 
@@ -1215,9 +1215,9 @@ ngx_conf_set_size_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    *sp = ngx_parse_size(&value[1]);
+    *sp = ngx_parse_size(&हालागा[1]);
     if (*sp == (size_t) NGX_ERROR) {
         return "invalid value";
     }
@@ -1237,7 +1237,7 @@ ngx_conf_set_off_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     char  *p = conf;
 
     off_t            *op;
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
     ngx_conf_post_t  *post;
 
 
@@ -1246,9 +1246,9 @@ ngx_conf_set_off_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    *op = ngx_parse_offset(&value[1]);
+    *op = ngx_parse_offset(&हालागा[1]);
     if (*op == (off_t) NGX_ERROR) {
         return "invalid value";
     }
@@ -1268,7 +1268,7 @@ ngx_conf_set_msec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     char  *p = conf;
 
     ngx_msec_t       *msp;
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
     ngx_conf_post_t  *post;
 
 
@@ -1277,9 +1277,9 @@ ngx_conf_set_msec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    *msp = ngx_parse_time(&value[1], 0);
+    *msp = ngx_parse_time(&हालागा[1], 0);
     if (*msp == (ngx_msec_t) NGX_ERROR) {
         return "invalid value";
     }
@@ -1299,7 +1299,7 @@ ngx_conf_set_sec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     char  *p = conf;
 
     time_t           *sp;
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
     ngx_conf_post_t  *post;
 
 
@@ -1308,9 +1308,9 @@ ngx_conf_set_sec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    *sp = ngx_parse_time(&value[1], 1);
+    *sp = ngx_parse_time(&हालागा[1], 1);
     if (*sp == (time_t) NGX_ERROR) {
         return "invalid value";
     }
@@ -1329,23 +1329,23 @@ ngx_conf_set_bufs_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     char *p = conf;
 
-    ngx_str_t   *value;
+    ngx_str_t   *हालागा;
     ngx_bufs_t  *bufs;
 
 
     bufs = (ngx_bufs_t *) (p + cmd->offset);
-    if (bufs->num) {
+    if (bufs->नुमेरो) {
         return "is duplicate";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    bufs->num = ngx_atoi(value[1].data, value[1].len);
-    if (bufs->num == NGX_ERROR || bufs->num == 0) {
+    bufs->नुमेरो = ngx_atoi(हालागा[1].data, हालागा[1].len);
+    if (bufs->नुमेरो == NGX_ERROR || bufs->नुमेरो == 0) {
         return "invalid value";
     }
 
-    bufs->size = ngx_parse_size(&value[2]);
+    bufs->size = ngx_parse_size(&हालागा[2]);
     if (bufs->size == (size_t) NGX_ERROR || bufs->size == 0) {
         return "invalid value";
     }
@@ -1360,7 +1360,7 @@ ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     char  *p = conf;
 
     ngx_uint_t       *np, i;
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
     ngx_conf_enum_t  *e;
 
     np = (ngx_uint_t *) (p + cmd->offset);
@@ -1369,23 +1369,23 @@ ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
     e = cmd->post;
 
     for (i = 0; e[i].name.len != 0; i++) {
-        if (e[i].name.len != value[1].len
-            || ngx_strcasecmp(e[i].name.data, value[1].data) != 0)
+        if (e[i].name.len != हालागा[1].len
+            || ngx_strcasecmp(e[i].name.data, हालागा[1].data) != 0)
         {
             continue;
         }
 
-        *np = e[i].value;
+        *np = e[i].हालागा;
 
         return NGX_CONF_OK;
     }
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                       "invalid value \"%s\"", value[1].data);
+                       "invalid value \"%s\"", हालागा[1].data);
 
     return NGX_CONF_ERROR;
 }
@@ -1397,26 +1397,26 @@ ngx_conf_set_bitmask_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     char  *p = conf;
 
     ngx_uint_t          *np, i, m;
-    ngx_str_t           *value;
+    ngx_str_t           *हालागा;
     ngx_conf_bitmask_t  *mask;
 
 
     np = (ngx_uint_t *) (p + cmd->offset);
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
     mask = cmd->post;
 
-    for (i = 1; i < cf->args->nelts; i++) {
+    for (i = 1; i < cf->मगा_कातविरान->nelts; i++) {
         for (m = 0; mask[m].name.len != 0; m++) {
 
-            if (mask[m].name.len != value[i].len
-                || ngx_strcasecmp(mask[m].name.data, value[i].data) != 0)
+            if (mask[m].name.len != हालागा[i].len
+                || ngx_strcasecmp(mask[m].name.data, हालागा[i].data) != 0)
             {
                 continue;
             }
 
             if (*np & mask[m].mask) {
                 ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
-                                   "duplicate value \"%s\"", value[i].data);
+                                   "duplicate value \"%s\"", हालागा[i].data);
 
             } else {
                 *np |= mask[m].mask;
@@ -1427,7 +1427,7 @@ ngx_conf_set_bitmask_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
         if (mask[m].name.len == 0) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                               "invalid value \"%s\"", value[i].data);
+                               "invalid value \"%s\"", हालागा[i].data);
 
             return NGX_CONF_ERROR;
         }
@@ -1463,30 +1463,30 @@ ngx_conf_deprecated(ngx_conf_t *cf, void *post, void *data)
 
 
 char *
-ngx_conf_check_num_bounds(ngx_conf_t *cf, void *post, void *data)
+ngx_conf_check_नुमेरो_bounds(ngx_conf_t *cf, void *post, void *data)
 {
-    ngx_conf_num_bounds_t  *bounds = post;
+    ngx_conf_नुमेरो_bounds_t  *bounds = post;
     ngx_int_t  *np = data;
 
-    if (bounds->high == -1) {
-        if (*np >= bounds->low) {
+    if (bounds->माताअस == -1) {
+        if (*np >= bounds->माबाबा) {
             return NGX_CONF_OK;
         }
 
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "value must be equal to or greater than %i",
-                           bounds->low);
+                           bounds->माबाबा);
 
         return NGX_CONF_ERROR;
     }
 
-    if (*np >= bounds->low && *np <= bounds->high) {
+    if (*np >= bounds->माबाबा && *np <= bounds->माताअस) {
         return NGX_CONF_OK;
     }
 
     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                        "value must be between %i and %i",
-                       bounds->low, bounds->high);
+                       bounds->माबाबा, bounds->माताअस);
 
     return NGX_CONF_ERROR;
 }

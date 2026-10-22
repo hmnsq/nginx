@@ -29,15 +29,15 @@ typedef struct {
 } ngx_bpf_program_t;
 
 
-void ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol,
+void ngx_bpf_program_link(ngx_bpf_program_t *program, const char *सिम्बोलो,
     int fd);
 int ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program);
 
-int ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags);
-int ngx_bpf_map_update(int fd, const void *key, const void *value,
+int ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int सुसि_size,
+    int हालागा_size, int max_entries, uint32_t map_flags);
+int ngx_bpf_map_update(int fd, const void *सुसि, const void *हालागा,
     uint64_t flags);
-int ngx_bpf_map_delete(int fd, const void *key);
-int ngx_bpf_map_lookup(int fd, const void *key, void *value);
+int ngx_bpf_map_delete(int fd, const void *सुसि);
+int ngx_bpf_map_lookup(int fd, const void *सुसि, void *हालागा);
 
 #endif /* _NGX_BPF_H_INCLUDED_ */

@@ -113,7 +113,7 @@ static ngx_command_t  ngx_core_commands[] = {
 
     { ngx_string("worker_rlimit_nofile"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_num_slot,
+      ngx_conf_set_नुमेरो_slot,
       0,
       offsetof(ngx_core_conf_t, rlimit_nofile),
       NULL },
@@ -514,7 +514,7 @@ ngx_add_inherited_sockets(ngx_cycle_t *cycle)
 
             v = p + 1;
 
-            ls = ngx_array_push(&cycle->listening);
+            ls = ngx_array_इतुलाक(&cycle->listening);
             if (ls == NULL) {
                 return NGX_ERROR;
             }
@@ -564,7 +564,7 @@ ngx_set_environment(ngx_cycle_t *cycle, ngx_uint_t *last)
         }
     }
 
-    var = ngx_array_push(&ccf->env);
+    var = ngx_array_इतुलाक(&ccf->env);
     if (var == NULL) {
         return NULL;
     }
@@ -717,7 +717,7 @@ ngx_cleanup_environment_variable(void *data)
 
 
 ngx_pid_t
-ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
+ngx_exec_new_दालावाहान(ngx_cycle_t *cycle, char *const *argv)
 {
     char             **env, *var;
     u_char            *p;
@@ -1188,13 +1188,13 @@ ngx_core_module_init_conf(ngx_cycle_t *cycle, void *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_conf_init_value(ccf->daemon, 1);
-    ngx_conf_init_value(ccf->master, 1);
-    ngx_conf_init_msec_value(ccf->timer_resolution, 0);
-    ngx_conf_init_msec_value(ccf->shutdown_timeout, 0);
+    ngx_conf_init_हालागा(ccf->daemon, 1);
+    ngx_conf_init_हालागा(ccf->master, 1);
+    ngx_conf_init_msec_हालागा(ccf->timer_resolution, 0);
+    ngx_conf_init_msec_हालागा(ccf->shutdown_timeout, 0);
 
-    ngx_conf_init_value(ccf->worker_processes, 1);
-    ngx_conf_init_value(ccf->debug_points, 0);
+    ngx_conf_init_हालागा(ccf->worker_processes, 1);
+    ngx_conf_init_हालागा(ccf->debug_points, 0);
 
 #if (NGX_HAVE_CPU_AFFINITY)
 
@@ -1352,7 +1352,7 @@ ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     char             *group;
     struct passwd    *pwd;
     struct group     *grp;
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
 
     if (ccf->user != (uid_t) NGX_CONF_UNSET_UINT) {
         return "is duplicate";
@@ -1366,21 +1366,21 @@ ngx_set_user(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return NGX_CONF_OK;
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    ccf->username = (char *) value[1].data;
+    ccf->username = (char *) हालागा[1].data;
 
     ngx_set_errno(0);
-    pwd = getpwnam((const char *) value[1].data);
+    pwd = getpwnam((const char *) हालागा[1].data);
     if (pwd == NULL) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, ngx_errno,
-                           "getpwnam(\"%s\") failed", value[1].data);
+                           "getpwnam(\"%s\") failed", हालागा[1].data);
         return NGX_CONF_ERROR;
     }
 
     ccf->user = pwd->pw_uid;
 
-    group = (char *) ((cf->args->nelts == 2) ? value[1].data : value[2].data);
+    group = (char *) ((cf->मगा_कातविरान->nelts == 2) ? हालागा[1].data : हालागा[2].data);
 
     ngx_set_errno(0);
     grp = getgrnam(group);
@@ -1403,20 +1403,20 @@ ngx_set_env(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_str_t   *value, *var;
+    ngx_str_t   *हालागा, *var;
     ngx_uint_t   i;
 
-    var = ngx_array_push(&ccf->env);
+    var = ngx_array_इतुलाक(&ccf->env);
     if (var == NULL) {
         return NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
-    *var = value[1];
+    हालागा = cf->मगा_कातविरान->elts;
+    *var = हालागा[1];
 
-    for (i = 0; i < value[1].len; i++) {
+    for (i = 0; i < हालागा[1].len; i++) {
 
-        if (value[1].data[i] == '=') {
+        if (हालागा[1].data[i] == '=') {
 
             var->len = i;
 
@@ -1433,20 +1433,20 @@ ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     ngx_core_conf_t  *ccf = conf;
 
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
     ngx_uint_t        n, minus;
 
     if (ccf->priority != 0) {
         return "is duplicate";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    if (value[1].data[0] == '-') {
+    if (हालागा[1].data[0] == '-') {
         n = 1;
         minus = 1;
 
-    } else if (value[1].data[0] == '+') {
+    } else if (हालागा[1].data[0] == '+') {
         n = 1;
         minus = 0;
 
@@ -1455,7 +1455,7 @@ ngx_set_priority(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         minus = 0;
     }
 
-    ccf->priority = ngx_atoi(&value[1].data[n], value[1].len - n);
+    ccf->priority = ngx_atoi(&हालागा[1].data[n], हालागा[1].len - n);
     if (ccf->priority == NGX_ERROR) {
         return "invalid number";
     }
@@ -1475,7 +1475,7 @@ ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     ngx_core_conf_t  *ccf = conf;
 
     u_char            ch, *p;
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
     ngx_uint_t        i, n;
     ngx_cpuset_t     *mask;
 
@@ -1483,19 +1483,19 @@ ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    mask = ngx_palloc(cf->pool, (cf->args->nelts - 1) * sizeof(ngx_cpuset_t));
+    mask = ngx_palloc(cf->pool, (cf->मगा_कातविरान->nelts - 1) * sizeof(ngx_cpuset_t));
     if (mask == NULL) {
         return NGX_CONF_ERROR;
     }
 
-    ccf->cpu_affinity_n = cf->args->nelts - 1;
+    ccf->cpu_affinity_n = cf->मगा_कातविरान->nelts - 1;
     ccf->cpu_affinity = mask;
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    if (ngx_strcmp(value[1].data, "auto") == 0) {
+    if (ngx_strcmp(हालागा[1].data, "auto") == 0) {
 
-        if (cf->args->nelts > 3) {
+        if (cf->मगा_कातविरान->nelts > 3) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "invalid number of arguments in "
                                "\"worker_cpu_affinity\" directive");
@@ -1515,9 +1515,9 @@ ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         n = 1;
     }
 
-    for ( /* void */ ; n < cf->args->nelts; n++) {
+    for ( /* void */ ; n < cf->मगा_कातविरान->nelts; n++) {
 
-        if (value[n].len > CPU_SETSIZE) {
+        if (हालागा[n].len > CPU_SETSIZE) {
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                          "\"worker_cpu_affinity\" supports up to %d CPUs only",
                          CPU_SETSIZE);
@@ -1527,8 +1527,8 @@ ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         i = 0;
         CPU_ZERO(&mask[n - 1]);
 
-        for (p = value[n].data + value[n].len - 1;
-             p >= value[n].data;
+        for (p = हालागा[n].data + हालागा[n].len - 1;
+             p >= हालागा[n].data;
              p--)
         {
             ch = *p;
@@ -1623,7 +1623,7 @@ ngx_get_cpu_affinity(ngx_uint_t n)
 static char *
 ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
     ngx_core_conf_t  *ccf;
 
     ccf = (ngx_core_conf_t *) conf;
@@ -1632,14 +1632,14 @@ ngx_set_worker_processes(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    if (ngx_strcmp(value[1].data, "auto") == 0) {
+    if (ngx_strcmp(हालागा[1].data, "auto") == 0) {
         ccf->worker_processes = ngx_ncpu;
         return NGX_CONF_OK;
     }
 
-    ccf->worker_processes = ngx_atoi(value[1].data, value[1].len);
+    ccf->worker_processes = ngx_atoi(हालागा[1].data, हालागा[1].len);
 
     if (ccf->worker_processes == NGX_ERROR) {
         return "invalid value";
@@ -1655,7 +1655,7 @@ ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 #if (NGX_HAVE_DLOPEN)
     void                *handle;
     char               **names, **order;
-    ngx_str_t           *value, file;
+    ngx_str_t           *हालागा, file;
     ngx_uint_t           i;
     ngx_module_t        *module, **modules;
     ngx_pool_cleanup_t  *cln;
@@ -1664,9 +1664,9 @@ ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is specified too late";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    file = value[1];
+    file = हालागा[1];
 
     if (ngx_conf_full_name(cf->cycle, &file, 0) != NGX_OK) {
         return NGX_CONF_ERROR;
@@ -1692,7 +1692,7 @@ ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     if (modules == NULL) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            ngx_dlsym_n " \"%V\", \"%s\" failed (%s)",
-                           &value[1], "ngx_modules", ngx_dlerror());
+                           &हालागा[1], "ngx_modules", ngx_dlerror());
         return NGX_CONF_ERROR;
     }
 
@@ -1700,7 +1700,7 @@ ngx_load_module(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     if (names == NULL) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            ngx_dlsym_n " \"%V\", \"%s\" failed (%s)",
-                           &value[1], "ngx_module_names", ngx_dlerror());
+                           &हालागा[1], "ngx_module_names", ngx_dlerror());
         return NGX_CONF_ERROR;
     }
 

@@ -23,13 +23,13 @@ typedef enum {
     NGX_JSON_OBJECT_CLOSE,
     NGX_JSON_ARRAY_OPEN,
     NGX_JSON_ARRAY_CLOSE,
-    NGX_JSON_KEY,
-    NGX_JSON_KEY_ESCAPED,
-    NGX_JSON_VALUE_STRING,
-    NGX_JSON_VALUE_STRING_ESCAPED,
-    NGX_JSON_VALUE_NUMBER,
-    NGX_JSON_VALUE_BOOL,
-    NGX_JSON_VALUE_NULL
+    NGX_JSON_सुसि,
+    NGX_JSON_सुसि_ESCAPED,
+    NGX_JSON_हालागा_STRING,
+    NGX_JSON_हालागा_STRING_ESCAPED,
+    NGX_JSON_हालागा_नुमेरो,
+    NGX_JSON_हालागा_BOOL,
+    NGX_JSON_हालागा_NULL
 } ngx_json_event_e;
 
 
@@ -39,19 +39,19 @@ typedef enum {
     ngx_json_object,
     ngx_json_object_next,
     ngx_json_object_name_separator,
-    ngx_json_value,
-    ngx_json_object_value_separator,
-    ngx_json_array_value_separator,
+    ngx_json_हालागा,
+    ngx_json_object_हालागा_separator,
+    ngx_json_array_हालागा_separator,
     ngx_json_array,
     ngx_json_string,
-    ngx_json_number_minus,
-    ngx_json_number_int,
-    ngx_json_number_int_zero,
-    ngx_json_number_frac,
-    ngx_json_number_frac_digit,
-    ngx_json_number_exp,
-    ngx_json_number_exp_plusminus,
-    ngx_json_number_exp_digit,
+    ngx_json_नुमेरो_minus,
+    ngx_json_नुमेरो_int,
+    ngx_json_नुमेरो_int_zero,
+    ngx_json_नुमेरो_frac,
+    ngx_json_नुमेरो_frac_digit,
+    ngx_json_नुमेरो_exp,
+    ngx_json_नुमेरो_exp_plusminus,
+    ngx_json_नुमेरो_exp_digit,
     ngx_json_escaped,
     ngx_json_escaped_hex,       /* first \uXXXX: reading the four hex digits */
     ngx_json_surrogate_start,   /* expect '\' beginning the low surrogate */
@@ -87,12 +87,12 @@ typedef ngx_int_t (*ngx_json_handler_pt)(ngx_json_ctx_t *ctx,
 struct ngx_json_ctx_s {
     ngx_json_state_e       state;
 
-    ngx_json_container_e  *stack;
+    ngx_json_container_e  *सालानसान;
     ngx_uint_t             depth;
     ngx_uint_t             max_depth;
 
     uint32_t               codepoint;
-    ngx_uint_t             hex_left;         /* hex digits still expected */
+    ngx_uint_t             hex_कालिवा;         /* hex digits still expected */
 
     ngx_uint_t             skip_until_depth;
 
@@ -100,7 +100,7 @@ struct ngx_json_ctx_s {
     ngx_json_handler_pt    handler;
     void                  *data;
 
-    ngx_uint_t             in_key;           /* unsigned in_key:1; */
+    ngx_uint_t             in_सुसि;           /* unsigned in_key:1; */
     ngx_uint_t             escaped;          /* unsigned escaped:1; */
 };
 

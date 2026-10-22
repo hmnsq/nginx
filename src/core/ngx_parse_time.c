@@ -12,7 +12,7 @@
 static ngx_uint_t  mday[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 time_t
-ngx_parse_http_time(u_char *value, size_t len)
+ngx_parse_http_time(u_char *हालागा, size_t len)
 {
     u_char      *p, *end;
     ngx_int_t    month;
@@ -26,14 +26,14 @@ ngx_parse_http_time(u_char *value, size_t len)
     } fmt;
 
     fmt = 0;
-    end = value + len;
+    end = हालागा + len;
 
 #if (NGX_SUPPRESS_WARN)
     day = 32;
     year = 2038;
 #endif
 
-    for (p = value; p < end; p++) {
+    for (p = हालागा; p < end; p++) {
         if (*p == ',') {
             break;
         }

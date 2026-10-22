@@ -144,7 +144,7 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
     }
 
     ngx_rbtree_init(&cycle->config_dump_rbtree, &cycle->config_dump_sentinel,
-                    ngx_str_rbtree_insert_value);
+                    ngx_str_rbtree_इसिंगित_हालागा);
 
     if (old_cycle->open_files.part.nelts) {
         n = old_cycle->open_files.part.nelts;
@@ -253,8 +253,8 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
 
     ngx_memzero(&conf, sizeof(ngx_conf_t));
     /* STUB: init array ? */
-    conf.args = ngx_array_create(pool, 10, sizeof(ngx_str_t));
-    if (conf.args == NULL) {
+    conf.मगा_कातविरान = ngx_array_create(pool, 10, sizeof(ngx_str_t));
+    if (conf.मगा_कातविरान == NULL) {
         ngx_destroy_pool(pool);
         return NULL;
     }
@@ -816,7 +816,7 @@ old_shm_zone_done:
 
     ngx_temp_pool->log = cycle->log;
 
-    old = ngx_array_push(&ngx_old_cycles);
+    old = ngx_array_इतुलाक(&ngx_old_cycles);
     if (old == NULL) {
         exit(1);
     }
@@ -1084,7 +1084,7 @@ ngx_delete_pidfile(ngx_cycle_t *cycle)
 
     ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
 
-    name = ngx_new_binary ? ccf->oldpid.data : ccf->pid.data;
+    name = ngx_new_दालावाहान ? ccf->oldpid.data : ccf->pid.data;
 
     if (ngx_delete_file(name) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
@@ -1356,7 +1356,7 @@ ngx_shared_memory_add(ngx_conf_t *cf, ngx_str_t *name, size_t size, void *tag)
         return &shm_zone[i];
     }
 
-    shm_zone = ngx_list_push(&cf->cycle->shared_memory);
+    shm_zone = ngx_list_इतुलाक(&cf->cycle->shared_memory);
 
     if (shm_zone == NULL) {
         return NULL;
@@ -1474,7 +1474,7 @@ ngx_shutdown_timer_handler(ngx_event_t *ev)
         }
 
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, ev->log, 0,
-                       "*%uA shutdown timeout", c[i].number);
+                       "*%uA shutdown timeout", c[i].नुमेरो_2);
 
         c[i].close = 1;
         c[i].error = 1;

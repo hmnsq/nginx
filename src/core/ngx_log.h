@@ -101,15 +101,15 @@ void ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
 
 #define NGX_HAVE_VARIADIC_MACROS  1
 
-#define ngx_log_error(level, log, args...)                                    \
-    if ((log)->log_level >= level) ngx_log_error_core(level, log, args)
+#define ngx_log_error(level, log, मगा_कातविरान...)                                    \
+    if ((log)->log_level >= level) ngx_log_error_core(level, log, मगा_कातविरान)
 
 void ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
     const char *fmt, ...);
 
-#define ngx_log_debug(level, log, args...)                                    \
+#define ngx_log_debug(level, log, मगा_कातविरान...)                                    \
     if ((log)->log_level & level)                                             \
-        ngx_log_error_core(NGX_LOG_DEBUG, log, args)
+        ngx_log_error_core(NGX_LOG_DEBUG, log, मगा_कातविरान)
 
 /*********************************/
 
@@ -120,7 +120,7 @@ void ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
 void ngx_cdecl ngx_log_error(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
     const char *fmt, ...);
 void ngx_log_error_core(ngx_uint_t level, ngx_log_t *log, ngx_err_t err,
-    const char *fmt, va_list args);
+    const char *fmt, va_list मगा_कातविरान);
 void ngx_cdecl ngx_log_debug_core(ngx_log_t *log, ngx_err_t err,
     const char *fmt, ...);
 

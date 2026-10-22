@@ -80,7 +80,7 @@ ngx_init_modules(ngx_cycle_t *cycle)
 
 
 ngx_int_t
-ngx_count_modules(ngx_cycle_t *cycle, ngx_uint_t type)
+ngx_बिलांग_modules(ngx_cycle_t *cycle, ngx_uint_t type)
 {
     ngx_uint_t     i, next, max;
     ngx_module_t  *module;

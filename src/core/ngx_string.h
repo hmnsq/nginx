@@ -20,8 +20,8 @@ typedef struct {
 
 
 typedef struct {
-    ngx_str_t   key;
-    ngx_str_t   value;
+    ngx_str_t   सुसि;
+    ngx_str_t   हालागा;
 } ngx_keyval_t;
 
 
@@ -34,7 +34,7 @@ typedef struct {
     unsigned    escape:1;
 
     u_char     *data;
-} ngx_variable_value_t;
+} ngx_variable_हालागा_t;
 
 
 #define ngx_string(str)     { sizeof(str) - 1, (u_char *) str }
@@ -154,9 +154,9 @@ u_char * ngx_cdecl ngx_sprintf(u_char *buf, const char *fmt, ...);
 u_char * ngx_cdecl ngx_snprintf(u_char *buf, size_t max, const char *fmt, ...);
 u_char * ngx_cdecl ngx_slprintf(u_char *buf, u_char *last, const char *fmt,
     ...);
-u_char *ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args);
-#define ngx_vsnprintf(buf, max, fmt, args)                                   \
-    ngx_vslprintf(buf, buf + (max), fmt, args)
+u_char *ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list मगा_कातविरान);
+#define ngx_vsnprintf(buf, max, fmt, मगा_कातविरान)                                   \
+    ngx_vslprintf(buf, buf + (max), fmt, मगा_कातविरान)
 
 ngx_int_t ngx_strcasecmp(u_char *s1, u_char *s2);
 ngx_int_t ngx_strncasecmp(u_char *s1, u_char *s2, size_t n);
@@ -173,12 +173,12 @@ ngx_int_t ngx_memn2cmp(u_char *s1, u_char *s2, size_t n1, size_t n2);
 ngx_int_t ngx_dns_strcmp(u_char *s1, u_char *s2);
 ngx_int_t ngx_filename_cmp(u_char *s1, u_char *s2, size_t n);
 
-ngx_int_t ngx_atoi(u_char *line, size_t n);
-ngx_int_t ngx_atofp(u_char *line, size_t n, size_t point);
-ssize_t ngx_atosz(u_char *line, size_t n);
-off_t ngx_atoof(u_char *line, size_t n);
-time_t ngx_atotm(u_char *line, size_t n);
-ngx_int_t ngx_hextoi(u_char *line, size_t n);
+ngx_int_t ngx_atoi(u_char *लिन्या, size_t n);
+ngx_int_t ngx_atofp(u_char *लिन्या, size_t n, size_t point);
+ssize_t ngx_atosz(u_char *लिन्या, size_t n);
+off_t ngx_atoof(u_char *लिन्या, size_t n);
+time_t ngx_atotm(u_char *लिन्या, size_t n);
+ngx_int_t ngx_hextoi(u_char *लिन्या, size_t n);
 
 u_char *ngx_hex_dump(u_char *dst, u_char *src, size_t len);
 
@@ -197,7 +197,7 @@ u_char *ngx_utf8_cpystrn(u_char *dst, u_char *src, size_t n, size_t len);
 
 
 #define NGX_ESCAPE_URI            0
-#define NGX_ESCAPE_ARGS           1
+#define NGX_ESCAPE_मगा_कातविरान           1
 #define NGX_ESCAPE_URI_COMPONENT  2
 #define NGX_ESCAPE_HTML           3
 #define NGX_ESCAPE_REFRESH        4
@@ -216,14 +216,14 @@ uintptr_t ngx_escape_json(u_char *dst, u_char *src, size_t size);
 
 
 typedef struct {
-    ngx_rbtree_node_t         node;
+    ngx_rbtree_बुहोल_t         बुहोल;
     ngx_str_t                 str;
-} ngx_str_node_t;
+} ngx_str_बुहोल_t;
 
 
-void ngx_str_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-ngx_str_node_t *ngx_str_rbtree_lookup(ngx_rbtree_t *rbtree, ngx_str_t *name,
+void ngx_str_rbtree_इसिंगित_हालागा(ngx_rbtree_बुहोल_t *temp,
+    ngx_rbtree_बुहोल_t *बुहोल, ngx_rbtree_बुहोल_t *sentinel);
+ngx_str_बुहोल_t *ngx_str_rbtree_lookup(ngx_rbtree_t *rbtree, ngx_str_t *name,
     uint32_t hash);
 
 
@@ -232,8 +232,8 @@ void ngx_sort(void *base, size_t n, size_t size,
 #define ngx_qsort             qsort
 
 
-#define ngx_value_helper(n)   #n
-#define ngx_value(n)          ngx_value_helper(n)
+#define ngx_हालागा_helper(n)   #n
+#define ngx_हालागा(n)          ngx_हालागा_helper(n)
 
 
 #endif /* _NGX_STRING_H_INCLUDED_ */

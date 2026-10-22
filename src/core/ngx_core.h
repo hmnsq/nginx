@@ -112,7 +112,7 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 #define CRLF   "\r\n"
 
 
-#define ngx_abs(value)       (((value) >= 0) ? (value) : - (value))
+#define ngx_abs(हालागा)       (((हालागा) >= 0) ? (हालागा) : - (हालागा))
 #define ngx_max(val1, val2)  ((val1 < val2) ? (val2) : (val1))
 #define ngx_min(val1, val2)  ((val1 > val2) ? (val2) : (val1))
 

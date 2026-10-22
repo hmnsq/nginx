@@ -203,7 +203,7 @@ ngx_regex_compile(ngx_regex_compile_t *rc)
     /* do not study at runtime */
 
     if (ngx_regex_studies != NULL) {
-        elt = ngx_list_push(ngx_regex_studies);
+        elt = ngx_list_इतुलाक(ngx_regex_studies);
         if (elt == NULL) {
             goto nomem;
         }
@@ -326,7 +326,7 @@ ngx_regex_compile(ngx_regex_compile_t *rc)
     /* do not study at runtime */
 
     if (ngx_regex_studies != NULL) {
-        elt = ngx_list_push(ngx_regex_studies);
+        elt = ngx_list_इतुलाक(ngx_regex_studies);
         if (elt == NULL) {
             goto nomem;
         }
@@ -431,7 +431,7 @@ ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures, ngx_uint_t size)
         goto failed;
     }
 
-    n = pcre2_get_ovector_count(ngx_regex_match_data);
+    n = pcre2_get_ovector_बिलांग(ngx_regex_match_data);
     ov = pcre2_get_ovector_pointer(ngx_regex_match_data);
 
     if (n > size / 3) {
@@ -752,7 +752,7 @@ ngx_regex_init_conf(ngx_cycle_t *cycle, void *conf)
 {
     ngx_regex_conf_t *rcf = conf;
 
-    ngx_conf_init_value(rcf->pcre_jit, 0);
+    ngx_conf_init_हालागा(rcf->pcre_jit, 0);
 
     return NGX_CONF_OK;
 }

@@ -52,7 +52,7 @@
 #if !(NGX_WIN32)
 
 #define ngx_signal_helper(n)     SIG##n
-#define ngx_signal_value(n)      ngx_signal_helper(n)
+#define ngx_signal_हालागा(n)      ngx_signal_helper(n)
 
 #define ngx_random               random
 
@@ -85,11 +85,11 @@ typedef intptr_t        ngx_flag_t;
 
 #if (NGX_PTR_SIZE == 4)
 #define NGX_INT_T_LEN   NGX_INT32_LEN
-#define NGX_MAX_INT_T_VALUE  2147483647
+#define NGX_MAX_INT_T_हालागा  2147483647
 
 #else
 #define NGX_INT_T_LEN   NGX_INT64_LEN
-#define NGX_MAX_INT_T_VALUE  9223372036854775807
+#define NGX_MAX_INT_T_हालागा  9223372036854775807
 #endif
 
 
@@ -125,8 +125,8 @@ typedef intptr_t        ngx_flag_t;
 #endif
 
 
-#define NGX_MAX_UINT32_VALUE  (uint32_t) 0xffffffff
-#define NGX_MAX_INT32_VALUE   (uint32_t) 0x7fffffff
+#define NGX_MAX_UINT32_हालागा  (uint32_t) 0xffffffff
+#define NGX_MAX_INT32_हालागा   (uint32_t) 0x7fffffff
 
 
 #if (NGX_COMPAT)

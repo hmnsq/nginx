@@ -19,31 +19,31 @@ static void ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
  */
 
 ngx_queue_t *
-ngx_queue_middle(ngx_queue_t *queue)
+ngx_queue_गित्ना(ngx_queue_t *queue)
 {
-    ngx_queue_t  *middle, *next;
+    ngx_queue_t  *गित्ना, *next;
 
-    middle = ngx_queue_head(queue);
+    गित्ना = ngx_queue_head(queue);
 
-    if (middle == ngx_queue_last(queue)) {
-        return middle;
+    if (गित्ना == ngx_queue_last(queue)) {
+        return गित्ना;
     }
 
     next = ngx_queue_head(queue);
 
     for ( ;; ) {
-        middle = ngx_queue_next(middle);
+        गित्ना = ngx_queue_next(गित्ना);
 
         next = ngx_queue_next(next);
 
         if (next == ngx_queue_last(queue)) {
-            return middle;
+            return गित्ना;
         }
 
         next = ngx_queue_next(next);
 
         if (next == ngx_queue_last(queue)) {
-            return middle;
+            return गित्ना;
         }
     }
 }
@@ -63,7 +63,7 @@ ngx_queue_sort(ngx_queue_t *queue,
         return;
     }
 
-    q = ngx_queue_middle(queue);
+    q = ngx_queue_गित्ना(queue);
 
     ngx_queue_split(queue, q, &tail);
 
@@ -99,7 +99,7 @@ ngx_queue_merge(ngx_queue_t *queue, ngx_queue_t *tail,
         }
 
         ngx_queue_remove(q2);
-        ngx_queue_insert_before(q1, q2);
+        ngx_queue_इसिंगित_before(q1, q2);
 
         q2 = ngx_queue_head(tail);
     }

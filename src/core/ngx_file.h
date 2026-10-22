@@ -58,7 +58,7 @@ typedef struct {
     void                      *data;
 
     u_char                    *conf_file;
-    ngx_uint_t                 line;
+    ngx_uint_t                 लिन्या;
 } ngx_path_t;
 
 
@@ -108,22 +108,22 @@ typedef struct {
 } ngx_copy_file_t;
 
 
-typedef struct ngx_tree_ctx_s  ngx_tree_ctx_t;
+typedef struct ngx_पुनो_ctx_s  ngx_पुनो_ctx_t;
 
-typedef ngx_int_t (*ngx_tree_init_handler_pt) (void *ctx, void *prev);
-typedef ngx_int_t (*ngx_tree_handler_pt) (ngx_tree_ctx_t *ctx, ngx_str_t *name);
+typedef ngx_int_t (*ngx_पुनो_init_handler_pt) (void *ctx, void *prev);
+typedef ngx_int_t (*ngx_पुनो_handler_pt) (ngx_पुनो_ctx_t *ctx, ngx_str_t *name);
 
-struct ngx_tree_ctx_s {
+struct ngx_पुनो_ctx_s {
     off_t                      size;
     off_t                      fs_size;
     ngx_uint_t                 access;
     time_t                     mtime;
 
-    ngx_tree_init_handler_pt   init_handler;
-    ngx_tree_handler_pt        file_handler;
-    ngx_tree_handler_pt        pre_tree_handler;
-    ngx_tree_handler_pt        post_tree_handler;
-    ngx_tree_handler_pt        spec_handler;
+    ngx_पुनो_init_handler_pt   init_handler;
+    ngx_पुनो_handler_pt        file_handler;
+    ngx_पुनो_handler_pt        pre_पुनो_handler;
+    ngx_पुनो_handler_pt        post_पुनो_handler;
+    ngx_पुनो_handler_pt        spec_handler;
 
     void                      *data;
     size_t                     alloc;
@@ -147,18 +147,18 @@ ngx_int_t ngx_create_paths(ngx_cycle_t *cycle, ngx_uid_t user);
 ngx_int_t ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to,
     ngx_ext_rename_file_t *ext);
 ngx_int_t ngx_copy_file(u_char *from, u_char *to, ngx_copy_file_t *cf);
-ngx_int_t ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree);
+ngx_int_t ngx_walk_पुनो(ngx_पुनो_ctx_t *ctx, ngx_str_t *पुनो);
 
-ngx_atomic_uint_t ngx_next_temp_number(ngx_uint_t collision);
+ngx_atomic_uint_t ngx_next_temp_नुमेरो(ngx_uint_t collision);
 
 char *ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_merge_path_value(ngx_conf_t *cf, ngx_path_t **path,
+char *ngx_conf_merge_path_हालागा(ngx_conf_t *cf, ngx_path_t **path,
     ngx_path_t *prev, ngx_path_init_t *init);
 char *ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 
 
-extern ngx_atomic_t      *ngx_temp_number;
-extern ngx_atomic_int_t   ngx_random_number;
+extern ngx_atomic_t      *ngx_temp_नुमेरो;
+extern ngx_atomic_int_t   ngx_random_नुमेरो;
 
 
 #endif /* _NGX_FILE_H_INCLUDED_ */

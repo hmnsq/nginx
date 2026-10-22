@@ -94,7 +94,7 @@ ngx_data_item_t *
 ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
     ngx_array_t *fields)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *हालागा;
     ngx_uint_t        i;
     ngx_data_item_t  *obj, *item;
     ngx_data_decl_t  *decl;
@@ -109,13 +109,13 @@ ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
     while (decl->name.len) {
 
         if (fields) {
-            value = fields->elts;
+            हालागा = fields->elts;
 
             for (i = 0; i < fields->nelts; i++) {
 
-                if (decl->name.len == value[i].len
-                    && ngx_strncmp(decl->name.data, value[i].data,
-                                   value[i].len)
+                if (decl->name.len == हालागा[i].len
+                    && ngx_strncmp(decl->name.data, हालागा[i].data,
+                                   हालागा[i].len)
                     == 0)
                 {
                     goto found;
@@ -145,7 +145,7 @@ found:
 
 
 ngx_data_item_t *
-ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_data_नुमेरो_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
 {
     ngx_data_item_t  *item;
 
@@ -163,7 +163,7 @@ ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
 ngx_data_item_t *
 ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
 {
-    ngx_str_t        *value, *src;
+    ngx_str_t        *हालागा, *src;
     ngx_data_item_t  *item;
 
     item = ngx_data_new_string(pool);
@@ -171,14 +171,14 @@ ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
         return NULL;
     }
 
-    value = &item->data.string;
+    हालागा = &item->data.string;
 
     src = (ngx_str_t *) data;
 
-    value->len = src->len;
+    हालागा->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
+    हालागा->data = ngx_pstrdup(pool, src);
+    if (हालागा->data == NULL) {
         return NULL;
     }
 
@@ -251,11 +251,11 @@ ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
 ngx_data_item_t *
 ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
 {
-    ngx_int_t  value;
+    ngx_int_t  हालागा;
 
-    value = *(ngx_int_t *) ((u_char *) ctx + data);
+    हालागा = *(ngx_int_t *) ((u_char *) ctx + data);
 
-    return ngx_data_number_handler(value, pool, NULL);
+    return ngx_data_नुमेरो_handler(हालागा, pool, NULL);
 }
 
 
@@ -278,7 +278,7 @@ ngx_data_struct_atomic_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
 ngx_data_item_t *
 ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
 {
-    ngx_str_t        *value, *src;
+    ngx_str_t        *हालागा, *src;
     ngx_data_item_t  *item;
 
     item = ngx_data_new_string(pool);
@@ -286,14 +286,14 @@ ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
         return NULL;
     }
 
-    value = &item->data.string;
+    हालागा = &item->data.string;
 
     src = (ngx_str_t *) ((u_char *) ctx + data);
 
-    value->len = src->len;
+    हालागा->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
+    हालागा->data = ngx_pstrdup(pool, src);
+    if (हालागा->data == NULL) {
         return NULL;
     }
 
@@ -304,9 +304,9 @@ ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
 ngx_data_item_t *
 ngx_data_struct_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
 {
-    ngx_uint_t  value;
+    ngx_uint_t  हालागा;
 
-    value = *(ngx_uint_t *) ((u_char *) ctx + data);
+    हालागा = *(ngx_uint_t *) ((u_char *) ctx + data);
 
-    return ngx_data_boolean_handler(value, pool, NULL);
+    return ngx_data_boolean_handler(हालागा, pool, NULL);
 }

@@ -49,7 +49,7 @@ struct ngx_listening_s {
     ngx_connection_t   *connection;
 
     ngx_rbtree_t        rbtree;
-    ngx_rbtree_node_t   sentinel;
+    ngx_rbtree_बुहोल_t   sentinel;
 
     ngx_uint_t          worker;
 
@@ -167,7 +167,7 @@ struct ngx_connection_s {
 
     ngx_queue_t         queue;
 
-    ngx_atomic_uint_t   number;
+    ngx_atomic_uint_t   नुमेरो_2;
 
     ngx_msec_t          start_time;
     ngx_uint_t          requests;
@@ -195,7 +195,7 @@ struct ngx_connection_s {
     unsigned            need_flush_buf:1;
 
 #if (NGX_HAVE_SENDFILE_NODISKIO || NGX_COMPAT)
-    unsigned            busy_count:2;
+    unsigned            busy_बिलांग:2;
 #endif
 
     unsigned            ktls_recv:1;

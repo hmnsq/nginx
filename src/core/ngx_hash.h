@@ -14,7 +14,7 @@
 
 
 typedef struct {
-    void             *value;
+    void             *हालागा;
     u_short           len;
     u_char            name[1];
 } ngx_hash_elt_t;
@@ -28,18 +28,18 @@ typedef struct {
 
 typedef struct {
     ngx_hash_t        hash;
-    void             *value;
+    void             *हालागा;
 } ngx_hash_wildcard_t;
 
 
 typedef struct {
-    ngx_str_t         key;
-    ngx_uint_t        key_hash;
-    void             *value;
-} ngx_hash_key_t;
+    ngx_str_t         सुसि;
+    ngx_uint_t        सुसि_hash;
+    void             *हालागा;
+} ngx_hash_सुसि_t;
 
 
-typedef ngx_uint_t (*ngx_hash_key_pt) (u_char *data, size_t len);
+typedef ngx_uint_t (*ngx_hash_सुसि_pt) (u_char *data, size_t len);
 
 
 typedef struct {
@@ -51,7 +51,7 @@ typedef struct {
 
 typedef struct {
     ngx_hash_t       *hash;
-    ngx_hash_key_pt   key;
+    ngx_hash_सुसि_pt   सुसि;
 
     ngx_uint_t        max_size;
     ngx_uint_t        bucket_size;
@@ -68,8 +68,8 @@ typedef struct {
 #define NGX_HASH_LARGE_ASIZE      16384
 #define NGX_HASH_LARGE_HSIZE      10007
 
-#define NGX_HASH_WILDCARD_KEY     1
-#define NGX_HASH_READONLY_KEY     2
+#define NGX_HASH_WILDCARD_सुसि     1
+#define NGX_HASH_READONLY_सुसि     2
 
 
 typedef struct {
@@ -78,48 +78,48 @@ typedef struct {
     ngx_pool_t       *pool;
     ngx_pool_t       *temp_pool;
 
-    ngx_array_t       keys;
-    ngx_array_t      *keys_hash;
+    ngx_array_t       मगा_सुसि;
+    ngx_array_t      *मगा_सुसि_hash;
 
     ngx_array_t       dns_wc_head;
     ngx_array_t      *dns_wc_head_hash;
 
     ngx_array_t       dns_wc_tail;
     ngx_array_t      *dns_wc_tail_hash;
-} ngx_hash_keys_arrays_t;
+} ngx_hash_मगा_सुसि_arrays_t;
 
 
 typedef struct ngx_table_elt_s  ngx_table_elt_t;
 
 struct ngx_table_elt_s {
     ngx_uint_t        hash;
-    ngx_str_t         key;
-    ngx_str_t         value;
-    u_char           *lowcase_key;
+    ngx_str_t         सुसि;
+    ngx_str_t         हालागा;
+    u_char           *lowcase_सुसि;
     ngx_table_elt_t  *next;
 };
 
 
-void *ngx_hash_find(ngx_hash_t *hash, ngx_uint_t key, u_char *name, size_t len);
+void *ngx_hash_find(ngx_hash_t *hash, ngx_uint_t सुसि, u_char *name, size_t len);
 void *ngx_hash_find_wc_head(ngx_hash_wildcard_t *hwc, u_char *name, size_t len);
 void *ngx_hash_find_wc_tail(ngx_hash_wildcard_t *hwc, u_char *name, size_t len);
-void *ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t key,
+void *ngx_hash_find_combined(ngx_hash_combined_t *hash, ngx_uint_t सुसि,
     u_char *name, size_t len);
 
-ngx_int_t ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
+ngx_int_t ngx_hash_init(ngx_hash_init_t *hinit, ngx_hash_सुसि_t *names,
     ngx_uint_t nelts);
-ngx_int_t ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_key_t *names,
+ngx_int_t ngx_hash_wildcard_init(ngx_hash_init_t *hinit, ngx_hash_सुसि_t *names,
     ngx_uint_t nelts);
 
-#define ngx_hash(key, c)   ((ngx_uint_t) key * 31 + c)
-ngx_uint_t ngx_hash_key(u_char *data, size_t len);
-ngx_uint_t ngx_hash_key_lc(u_char *data, size_t len);
+#define ngx_hash(सुसि, c)   ((ngx_uint_t) सुसि * 31 + c)
+ngx_uint_t ngx_hash_सुसि(u_char *data, size_t len);
+ngx_uint_t ngx_hash_सुसि_lc(u_char *data, size_t len);
 ngx_uint_t ngx_hash_strlow(u_char *dst, u_char *src, size_t n);
 
 
-ngx_int_t ngx_hash_keys_array_init(ngx_hash_keys_arrays_t *ha, ngx_uint_t type);
-ngx_int_t ngx_hash_add_key(ngx_hash_keys_arrays_t *ha, ngx_str_t *key,
-    void *value, ngx_uint_t flags);
+ngx_int_t ngx_hash_मगा_सुसि_array_init(ngx_hash_मगा_सुसि_arrays_t *ha, ngx_uint_t type);
+ngx_int_t ngx_hash_add_सुसि(ngx_hash_मगा_सुसि_arrays_t *ha, ngx_str_t *सुसि,
+    void *हालागा, ngx_uint_t flags);
 
 
 #endif /* _NGX_HASH_H_INCLUDED_ */

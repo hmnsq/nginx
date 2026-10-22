@@ -19,9 +19,9 @@
 
 
 #define NGX_MODULE_SIGNATURE_0                                                \
-    ngx_value(NGX_PTR_SIZE) ","                                               \
-    ngx_value(NGX_SIG_ATOMIC_T_SIZE) ","                                      \
-    ngx_value(NGX_TIME_T_SIZE) ","
+    ngx_हालागा(NGX_PTR_SIZE) ","                                               \
+    ngx_हालागा(NGX_SIG_ATOMIC_T_SIZE) ","                                      \
+    ngx_हालागा(NGX_TIME_T_SIZE) ","
 
 #if (NGX_HAVE_KQUEUE)
 #define NGX_MODULE_SIGNATURE_1   "1"
@@ -268,7 +268,7 @@ typedef struct {
 ngx_int_t ngx_preinit_modules(void);
 ngx_int_t ngx_cycle_modules(ngx_cycle_t *cycle);
 ngx_int_t ngx_init_modules(ngx_cycle_t *cycle);
-ngx_int_t ngx_count_modules(ngx_cycle_t *cycle, ngx_uint_t type);
+ngx_int_t ngx_बिलांग_modules(ngx_cycle_t *cycle, ngx_uint_t type);
 
 
 ngx_int_t ngx_add_module(ngx_conf_t *cf, ngx_str_t *file,

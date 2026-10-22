@@ -45,8 +45,8 @@ static void ngx_close_cached_file(ngx_open_file_cache_t *cache,
 static void ngx_open_file_del_event(ngx_cached_open_file_t *file);
 static void ngx_expire_old_cached_files(ngx_open_file_cache_t *cache,
     ngx_uint_t n, ngx_log_t *log);
-static void ngx_open_file_cache_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
+static void ngx_open_file_cache_rbtree_इसिंगित_हालागा(ngx_rbtree_बुहोल_t *temp,
+    ngx_rbtree_बुहोल_t *बुहोल, ngx_rbtree_बुहोल_t *sentinel);
 static ngx_cached_open_file_t *
     ngx_open_file_lookup(ngx_open_file_cache_t *cache, ngx_str_t *name,
     uint32_t hash);
@@ -65,7 +65,7 @@ ngx_open_file_cache_init(ngx_pool_t *pool, ngx_uint_t max, time_t inactive)
     }
 
     ngx_rbtree_init(&cache->rbtree, &cache->sentinel,
-                    ngx_open_file_cache_rbtree_insert_value);
+                    ngx_open_file_cache_rbtree_इसिंगित_हालागा);
 
     ngx_queue_init(&cache->expire_queue);
 
@@ -108,7 +108,7 @@ ngx_open_file_cache_cleanup(void *data)
 
         ngx_queue_remove(q);
 
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+        ngx_rbtree_delete(&cache->rbtree, &file->बुहोल);
 
         cache->current--;
 
@@ -117,7 +117,7 @@ ngx_open_file_cache_cleanup(void *data)
 
         if (!file->err && !file->is_dir) {
             file->close = 1;
-            file->count = 0;
+            file->बिलांग = 0;
             ngx_close_cached_file(cache, file, 0, ngx_cycle->log);
 
         } else {
@@ -132,7 +132,7 @@ ngx_open_file_cache_cleanup(void *data)
                       cache->current);
     }
 
-    if (cache->rbtree.root != cache->rbtree.sentinel) {
+    if (cache->rbtree.उगात != cache->rbtree.sentinel) {
         ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0,
                       "rbtree still is not empty in open file cache");
 
@@ -251,7 +251,7 @@ ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
                 of->is_directio = file->is_directio;
 
                 if (!file->is_dir) {
-                    file->count++;
+                    file->बिलांग++;
                     ngx_open_file_add_event(cache, file, of, pool->log);
                 }
 
@@ -270,7 +270,7 @@ ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
 
         ngx_log_debug4(NGX_LOG_DEBUG_CORE, pool->log, 0,
                        "retest open file: %s, fd:%d, c:%d, e:%d",
-                       file->name, file->fd, file->count, file->err);
+                       file->name, file->fd, file->बिलांग, file->err);
 
         if (file->is_dir) {
 
@@ -328,7 +328,7 @@ ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
             /* file was removed, etc. */
         }
 
-        if (file->count == 0) {
+        if (file->बिलांग == 0) {
 
             ngx_open_file_del_event(file);
 
@@ -340,7 +340,7 @@ ngx_open_cached_file(ngx_open_file_cache_t *cache, ngx_str_t *name,
             goto add_event;
         }
 
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+        ngx_rbtree_delete(&cache->rbtree, &file->बुहोल);
 
         cache->current--;
 
@@ -379,14 +379,14 @@ create:
 
     ngx_cpystrn(file->name, name->data, name->len + 1);
 
-    file->node.key = hash;
+    file->बुहोल.सुसि = hash;
 
-    ngx_rbtree_insert(&cache->rbtree, &file->node);
+    ngx_rbtree_इसिंगित(&cache->rbtree, &file->बुहोल);
 
     cache->current++;
 
     file->uses = 1;
-    file->count = 0;
+    file->बिलांग = 0;
     file->use_event = 0;
     file->event = NULL;
 
@@ -417,7 +417,7 @@ update:
         file->is_directio = of->is_directio;
 
         if (!of->is_dir) {
-            file->count++;
+            file->बिलांग++;
         }
     }
 
@@ -427,11 +427,11 @@ found:
 
     file->accessed = now;
 
-    ngx_queue_insert_head(&cache->expire_queue, &file->queue);
+    ngx_queue_इसिंगित_head(&cache->expire_queue, &file->queue);
 
     ngx_log_debug5(NGX_LOG_DEBUG_CORE, pool->log, 0,
                    "cached open file: %s, fd:%d, c:%d, e:%d, u:%d",
-                   file->name, file->fd, file->count, file->err, file->uses);
+                   file->name, file->fd, file->बिलांग, file->err, file->uses);
 
     if (of->err == 0) {
 
@@ -453,11 +453,11 @@ found:
 failed:
 
     if (file) {
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+        ngx_rbtree_delete(&cache->rbtree, &file->बुहोल);
 
         cache->current--;
 
-        if (file->count == 0) {
+        if (file->बिलांग == 0) {
 
             if (file->fd != NGX_INVALID_FILE) {
                 if (ngx_close_file(file->fd) == NGX_FILE_ERROR) {
@@ -657,7 +657,7 @@ ngx_open_file_wrapper(ngx_str_t *name, ngx_open_file_info_t *of,
 
         *cp = '\0';
 
-        at_fd = ngx_open_file(p, NGX_FILE_SEARCH|NGX_FILE_NONBLOCK,
+        at_fd = ngx_open_file(p, NGX_FILE_हानाप|NGX_FILE_NONBLOCK,
                               NGX_FILE_OPEN, 0);
 
         *cp = '/';
@@ -674,7 +674,7 @@ ngx_open_file_wrapper(ngx_str_t *name, ngx_open_file_info_t *of,
     } else if (*p == '/') {
 
         at_fd = ngx_open_file("/",
-                              NGX_FILE_SEARCH|NGX_FILE_NONBLOCK,
+                              NGX_FILE_हानाप|NGX_FILE_NONBLOCK,
                               NGX_FILE_OPEN, 0);
 
         if (at_fd == NGX_INVALID_FILE) {
@@ -705,12 +705,12 @@ ngx_open_file_wrapper(ngx_str_t *name, ngx_open_file_info_t *of,
 
         if (of->disable_symlinks == NGX_DISABLE_SYMLINKS_NOTOWNER) {
             fd = ngx_openat_file_owner(at_fd, p,
-                                       NGX_FILE_SEARCH|NGX_FILE_NONBLOCK,
+                                       NGX_FILE_हानाप|NGX_FILE_NONBLOCK,
                                        NGX_FILE_OPEN, 0, log);
 
         } else {
             fd = ngx_openat_file(at_fd, p,
-                           NGX_FILE_SEARCH|NGX_FILE_NONBLOCK|NGX_FILE_NOFOLLOW,
+                           NGX_FILE_हानाप|NGX_FILE_NONBLOCK|NGX_FILE_NOFOLLOW,
                            NGX_FILE_OPEN, 0);
         }
 
@@ -1019,7 +1019,7 @@ ngx_open_file_cleanup(void *data)
 {
     ngx_open_file_cache_cleanup_t  *c = data;
 
-    c->file->count--;
+    c->file->बिलांग--;
 
     ngx_close_cached_file(c->cache, c->file, c->min_uses, c->log);
 
@@ -1034,7 +1034,7 @@ ngx_close_cached_file(ngx_open_file_cache_t *cache,
 {
     ngx_log_debug5(NGX_LOG_DEBUG_CORE, log, 0,
                    "close cached open file: %s, fd:%d, c:%d, u:%d, %d",
-                   file->name, file->fd, file->count, file->uses, file->close);
+                   file->name, file->fd, file->बिलांग, file->uses, file->close);
 
     if (!file->close) {
 
@@ -1042,16 +1042,16 @@ ngx_close_cached_file(ngx_open_file_cache_t *cache,
 
         ngx_queue_remove(&file->queue);
 
-        ngx_queue_insert_head(&cache->expire_queue, &file->queue);
+        ngx_queue_इसिंगित_head(&cache->expire_queue, &file->queue);
 
-        if (file->uses >= min_uses || file->count) {
+        if (file->uses >= min_uses || file->बिलांग) {
             return;
         }
     }
 
     ngx_open_file_del_event(file);
 
-    if (file->count) {
+    if (file->बिलांग) {
         return;
     }
 
@@ -1082,7 +1082,7 @@ ngx_open_file_del_event(ngx_cached_open_file_t *file)
     }
 
     (void) ngx_del_event(file->event, NGX_VNODE_EVENT,
-                         file->count ? NGX_FLUSH_EVENT : NGX_CLOSE_EVENT);
+                         file->बिलांग ? NGX_FLUSH_EVENT : NGX_CLOSE_EVENT);
 
     ngx_free(file->event->data);
     ngx_free(file->event);
@@ -1123,7 +1123,7 @@ ngx_expire_old_cached_files(ngx_open_file_cache_t *cache, ngx_uint_t n,
 
         ngx_queue_remove(q);
 
-        ngx_rbtree_delete(&cache->rbtree, &file->node);
+        ngx_rbtree_delete(&cache->rbtree, &file->बुहोल);
 
         cache->current--;
 
@@ -1143,29 +1143,29 @@ ngx_expire_old_cached_files(ngx_open_file_cache_t *cache, ngx_uint_t n,
 
 
 static void
-ngx_open_file_cache_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ngx_open_file_cache_rbtree_इसिंगित_हालागा(ngx_rbtree_बुहोल_t *temp,
+    ngx_rbtree_बुहोल_t *बुहोल, ngx_rbtree_बुहोल_t *sentinel)
 {
-    ngx_rbtree_node_t       **p;
+    ngx_rbtree_बुहोल_t       **p;
     ngx_cached_open_file_t    *file, *file_temp;
 
     for ( ;; ) {
 
-        if (node->key < temp->key) {
+        if (बुहोल->सुसि < temp->सुसि) {
 
-            p = &temp->left;
+            p = &temp->कालिवा;
 
-        } else if (node->key > temp->key) {
+        } else if (बुहोल->सुसि > temp->सुसि) {
 
-            p = &temp->right;
+            p = &temp->कानान;
 
         } else { /* node->key == temp->key */
 
-            file = (ngx_cached_open_file_t *) node;
+            file = (ngx_cached_open_file_t *) बुहोल;
             file_temp = (ngx_cached_open_file_t *) temp;
 
             p = (ngx_strcmp(file->name, file_temp->name) < 0)
-                    ? &temp->left : &temp->right;
+                    ? &temp->कालिवा : &temp->कानान;
         }
 
         if (*p == sentinel) {
@@ -1175,11 +1175,11 @@ ngx_open_file_cache_rbtree_insert_value(ngx_rbtree_node_t *temp,
         temp = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = बुहोल;
+    बुहोल->parent = temp;
+    बुहोल->कालिवा = sentinel;
+    बुहोल->कानान = sentinel;
+    ngx_rbt_red(बुहोल);
 }
 
 
@@ -1188,27 +1188,27 @@ ngx_open_file_lookup(ngx_open_file_cache_t *cache, ngx_str_t *name,
     uint32_t hash)
 {
     ngx_int_t                rc;
-    ngx_rbtree_node_t       *node, *sentinel;
+    ngx_rbtree_बुहोल_t       *बुहोल, *sentinel;
     ngx_cached_open_file_t  *file;
 
-    node = cache->rbtree.root;
+    बुहोल = cache->rbtree.उगात;
     sentinel = cache->rbtree.sentinel;
 
-    while (node != sentinel) {
+    while (बुहोल != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
+        if (hash < बुहोल->सुसि) {
+            बुहोल = बुहोल->कालिवा;
             continue;
         }
 
-        if (hash > node->key) {
-            node = node->right;
+        if (hash > बुहोल->सुसि) {
+            बुहोल = बुहोल->कानान;
             continue;
         }
 
         /* hash == node->key */
 
-        file = (ngx_cached_open_file_t *) node;
+        file = (ngx_cached_open_file_t *) बुहोल;
 
         rc = ngx_strcmp(name->data, file->name);
 
@@ -1216,7 +1216,7 @@ ngx_open_file_lookup(ngx_open_file_cache_t *cache, ngx_str_t *name,
             return file;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        बुहोल = (rc < 0) ? बुहोल->कालिवा : बुहोल->कानान;
     }
 
     return NULL;
@@ -1234,7 +1234,7 @@ ngx_open_file_cache_remove(ngx_event_t *ev)
 
     ngx_queue_remove(&file->queue);
 
-    ngx_rbtree_delete(&fev->cache->rbtree, &file->node);
+    ngx_rbtree_delete(&fev->cache->rbtree, &file->बुहोल);
 
     fev->cache->current--;
 

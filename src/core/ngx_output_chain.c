@@ -179,7 +179,7 @@ ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *in)
 
                         ngx_free_chain(ctx->pool, cl);
 
-                    } else if (out || ctx->allocated == ctx->bufs.num) {
+                    } else if (out || ctx->allocated == ctx->bufs.नुमेरो) {
 
                         break;
 
@@ -449,7 +449,7 @@ ngx_output_chain_get_buf(ngx_output_chain_ctx_t *ctx, off_t bsize)
             recycled = 0;
 
         } else if (!ctx->directio
-                   && ctx->bufs.num == 1
+                   && ctx->bufs.नुमेरो == 1
                    && (bsize < (off_t) (size + size / 4)))
         {
             /*

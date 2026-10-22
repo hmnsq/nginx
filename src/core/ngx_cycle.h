@@ -62,7 +62,7 @@ struct ngx_cycle_s {
 
     ngx_array_t               config_dump;
     ngx_rbtree_t              config_dump_rbtree;
-    ngx_rbtree_node_t         config_dump_sentinel;
+    ngx_rbtree_बुहोल_t         config_dump_sentinel;
 
     ngx_list_t                open_files;
     ngx_list_t                shared_memory;
@@ -131,7 +131,7 @@ void ngx_delete_pidfile(ngx_cycle_t *cycle);
 ngx_int_t ngx_signal_process(ngx_cycle_t *cycle, char *sig);
 void ngx_reopen_files(ngx_cycle_t *cycle, ngx_uid_t user);
 char **ngx_set_environment(ngx_cycle_t *cycle, ngx_uint_t *last);
-ngx_pid_t ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv);
+ngx_pid_t ngx_exec_new_दालावाहान(ngx_cycle_t *cycle, char *const *argv);
 ngx_cpuset_t *ngx_get_cpu_affinity(ngx_uint_t n);
 ngx_shm_zone_t *ngx_shared_memory_add(ngx_conf_t *cf, ngx_str_t *name,
     size_t size, void *tag);

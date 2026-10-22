@@ -10,7 +10,7 @@
 
 
 void
-ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
+ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t हालागा, ngx_uint_t spin)
 {
 
 #if (NGX_HAVE_ATOMIC_OPS)
@@ -19,7 +19,7 @@ ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
 
     for ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
+        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, हालागा)) {
             return;
         }
 
@@ -31,7 +31,7 @@ ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
+                if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, हालागा)) {
                     return;
                 }
             }

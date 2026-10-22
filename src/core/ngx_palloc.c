@@ -417,10 +417,10 @@ ngx_get_cached_block(size_t size)
 
     slot->tries++;
 
-    if (slot->number) {
+    if (slot->नुमेरो_2) {
         p = slot->block;
         slot->block = slot->block->next;
-        slot->number--;
+        slot->नुमेरो_2--;
         return p;
     }
 

@@ -13,7 +13,7 @@
 #define _NGX_OPEN_FILE_CACHE_H_INCLUDED_
 
 
-#define NGX_OPEN_FILE_DIRECTIO_OFF  NGX_MAX_OFF_T_VALUE
+#define NGX_OPEN_FILE_DIRECTIO_OFF  NGX_MAX_OFF_T_हालागा
 
 
 typedef struct {
@@ -54,7 +54,7 @@ typedef struct {
 typedef struct ngx_cached_open_file_s  ngx_cached_open_file_t;
 
 struct ngx_cached_open_file_s {
-    ngx_rbtree_node_t        node;
+    ngx_rbtree_बुहोल_t        बुहोल;
     ngx_queue_t              queue;
 
     u_char                  *name;
@@ -74,7 +74,7 @@ struct ngx_cached_open_file_s {
     unsigned                 disable_symlinks:2;
 #endif
 
-    unsigned                 count:24;
+    unsigned                 बिलांग:24;
     unsigned                 close:1;
     unsigned                 use_event:1;
 
@@ -90,7 +90,7 @@ struct ngx_cached_open_file_s {
 
 typedef struct {
     ngx_rbtree_t             rbtree;
-    ngx_rbtree_node_t        sentinel;
+    ngx_rbtree_बुहोल_t        sentinel;
     ngx_queue_t              expire_queue;
 
     ngx_uint_t               current;

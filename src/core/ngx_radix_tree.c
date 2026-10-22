@@ -9,37 +9,37 @@
 #include <ngx_core.h>
 
 
-static ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
+static ngx_radix_बुहोल_t *ngx_radix_alloc(ngx_radix_पुनो_t *पुनो);
 
 
-ngx_radix_tree_t *
-ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
+ngx_radix_पुनो_t *
+ngx_radix_पुनो_create(ngx_pool_t *pool, ngx_int_t preallocate)
 {
-    uint32_t           key, mask, inc;
-    ngx_radix_tree_t  *tree;
+    uint32_t           सुसि, mask, inc;
+    ngx_radix_पुनो_t  *पुनो;
 
-    tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
+    पुनो = ngx_palloc(pool, sizeof(ngx_radix_पुनो_t));
+    if (पुनो == NULL) {
         return NULL;
     }
 
-    tree->pool = pool;
-    tree->free = NULL;
-    tree->start = NULL;
-    tree->size = 0;
+    पुनो->pool = pool;
+    पुनो->free = NULL;
+    पुनो->start = NULL;
+    पुनो->size = 0;
 
-    tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
+    पुनो->उगात = ngx_radix_alloc(पुनो);
+    if (पुनो->उगात == NULL) {
         return NULL;
     }
 
-    tree->root->right = NULL;
-    tree->root->left = NULL;
-    tree->root->parent = NULL;
-    tree->root->value = NGX_RADIX_NO_VALUE;
+    पुनो->उगात->कानान = NULL;
+    पुनो->उगात->कालिवा = NULL;
+    पुनो->उगात->parent = NULL;
+    पुनो->उगात->हालागा = NGX_RADIX_NO_हालागा;
 
     if (preallocate == 0) {
-        return tree;
+        return पुनो;
     }
 
     /*
@@ -60,7 +60,7 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      */
 
     if (preallocate == -1) {
-        switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
+        switch (ngx_pagesize / sizeof(ngx_radix_बुहोल_t)) {
 
         /* amd64 */
         case 128:
@@ -83,46 +83,46 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
 
     while (preallocate--) {
 
-        key = 0;
+        सुसि = 0;
         mask >>= 1;
         mask |= 0x80000000;
 
         do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+            if (ngx_radix32tree_इसिंगित(पुनो, सुसि, mask, NGX_RADIX_NO_हालागा)
                 != NGX_OK)
             {
                 return NULL;
             }
 
-            key += inc;
+            सुसि += inc;
 
-        } while (key);
+        } while (सुसि);
 
         inc >>= 1;
     }
 
-    return tree;
+    return पुनो;
 }
 
 
 ngx_int_t
-ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
-    uintptr_t value)
+ngx_radix32tree_इसिंगित(ngx_radix_पुनो_t *पुनो, uint32_t सुसि, uint32_t mask,
+    uintptr_t हालागा)
 {
     uint32_t           bit;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_बुहोल_t  *बुहोल, *next;
 
     bit = 0x80000000;
 
-    node = tree->root;
-    next = tree->root;
+    बुहोल = पुनो->उगात;
+    next = पुनो->उगात;
 
     while (bit & mask) {
-        if (key & bit) {
-            next = node->right;
+        if (सुसि & bit) {
+            next = बुहोल->कानान;
 
         } else {
-            next = node->left;
+            next = बुहोल->कालिवा;
         }
 
         if (next == NULL) {
@@ -130,73 +130,73 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
         }
 
         bit >>= 1;
-        node = next;
+        बुहोल = next;
     }
 
     if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+        if (बुहोल->हालागा != NGX_RADIX_NO_हालागा) {
             return NGX_BUSY;
         }
 
-        node->value = value;
+        बुहोल->हालागा = हालागा;
         return NGX_OK;
     }
 
     while (bit & mask) {
-        next = ngx_radix_alloc(tree);
+        next = ngx_radix_alloc(पुनो);
         if (next == NULL) {
             return NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
+        next->कानान = NULL;
+        next->कालिवा = NULL;
+        next->parent = बुहोल;
+        next->हालागा = NGX_RADIX_NO_हालागा;
 
-        if (key & bit) {
-            node->right = next;
+        if (सुसि & bit) {
+            बुहोल->कानान = next;
 
         } else {
-            node->left = next;
+            बुहोल->कालिवा = next;
         }
 
         bit >>= 1;
-        node = next;
+        बुहोल = next;
     }
 
-    node->value = value;
+    बुहोल->हालागा = हालागा;
 
     return NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
+ngx_radix32tree_delete(ngx_radix_पुनो_t *पुनो, uint32_t सुसि, uint32_t mask)
 {
     uint32_t           bit;
-    ngx_radix_node_t  *node;
+    ngx_radix_बुहोल_t  *बुहोल;
 
     bit = 0x80000000;
-    node = tree->root;
+    बुहोल = पुनो->उगात;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
-            node = node->right;
+    while (बुहोल && (bit & mask)) {
+        if (सुसि & bit) {
+            बुहोल = बुहोल->कानान;
 
         } else {
-            node = node->left;
+            बुहोल = बुहोल->कालिवा;
         }
 
         bit >>= 1;
     }
 
-    if (node == NULL) {
+    if (बुहोल == NULL) {
         return NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
+    if (बुहोल->कानान || बुहोल->कालिवा) {
+        if (बुहोल->हालागा != NGX_RADIX_NO_हालागा) {
+            बुहोल->हालागा = NGX_RADIX_NO_हालागा;
             return NGX_OK;
         }
 
@@ -204,27 +204,27 @@ ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
     }
 
     for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+        if (बुहोल->parent->कानान == बुहोल) {
+            बुहोल->parent->कानान = NULL;
 
         } else {
-            node->parent->left = NULL;
+            बुहोल->parent->कालिवा = NULL;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        बुहोल->कानान = पुनो->free;
+        पुनो->free = बुहोल;
 
-        node = node->parent;
+        बुहोल = बुहोल->parent;
 
-        if (node->right || node->left) {
+        if (बुहोल->कानान || बुहोल->कालिवा) {
             break;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
+        if (बुहोल->हालागा != NGX_RADIX_NO_हालागा) {
             break;
         }
 
-        if (node->parent == NULL) {
+        if (बुहोल->parent == NULL) {
             break;
         }
     }
@@ -234,57 +234,57 @@ ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
 
 
 uintptr_t
-ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
+ngx_radix32tree_find(ngx_radix_पुनो_t *पुनो, uint32_t सुसि)
 {
     uint32_t           bit;
-    uintptr_t          value;
-    ngx_radix_node_t  *node;
+    uintptr_t          हालागा;
+    ngx_radix_बुहोल_t  *बुहोल;
 
     bit = 0x80000000;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    हालागा = NGX_RADIX_NO_हालागा;
+    बुहोल = पुनो->उगात;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    while (बुहोल) {
+        if (बुहोल->हालागा != NGX_RADIX_NO_हालागा) {
+            हालागा = बुहोल->हालागा;
         }
 
-        if (key & bit) {
-            node = node->right;
+        if (सुसि & bit) {
+            बुहोल = बुहोल->कानान;
 
         } else {
-            node = node->left;
+            बुहोल = बुहोल->कालिवा;
         }
 
         bit >>= 1;
     }
 
-    return value;
+    return हालागा;
 }
 
 
 #if (NGX_HAVE_INET6)
 
 ngx_int_t
-ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
-    uintptr_t value)
+ngx_radix128tree_इसिंगित(ngx_radix_पुनो_t *पुनो, u_char *सुसि, u_char *mask,
+    uintptr_t हालागा)
 {
     u_char             bit;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node, *next;
+    ngx_radix_बुहोल_t  *बुहोल, *next;
 
     i = 0;
     bit = 0x80;
 
-    node = tree->root;
-    next = tree->root;
+    बुहोल = पुनो->उगात;
+    next = पुनो->उगात;
 
     while (bit & mask[i]) {
-        if (key[i] & bit) {
-            next = node->right;
+        if (सुसि[i] & bit) {
+            next = बुहोल->कानान;
 
         } else {
-            next = node->left;
+            next = बुहोल->कालिवा;
         }
 
         if (next == NULL) {
@@ -292,7 +292,7 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
         }
 
         bit >>= 1;
-        node = next;
+        बुहोल = next;
 
         if (bit == 0) {
             if (++i == 16) {
@@ -304,34 +304,34 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
     }
 
     if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+        if (बुहोल->हालागा != NGX_RADIX_NO_हालागा) {
             return NGX_BUSY;
         }
 
-        node->value = value;
+        बुहोल->हालागा = हालागा;
         return NGX_OK;
     }
 
     while (bit & mask[i]) {
-        next = ngx_radix_alloc(tree);
+        next = ngx_radix_alloc(पुनो);
         if (next == NULL) {
             return NGX_ERROR;
         }
 
-        next->right = NULL;
-        next->left = NULL;
-        next->parent = node;
-        next->value = NGX_RADIX_NO_VALUE;
+        next->कानान = NULL;
+        next->कालिवा = NULL;
+        next->parent = बुहोल;
+        next->हालागा = NGX_RADIX_NO_हालागा;
 
-        if (key[i] & bit) {
-            node->right = next;
+        if (सुसि[i] & bit) {
+            बुहोल->कानान = next;
 
         } else {
-            node->left = next;
+            बुहोल->कालिवा = next;
         }
 
         bit >>= 1;
-        node = next;
+        बुहोल = next;
 
         if (bit == 0) {
             if (++i == 16) {
@@ -342,29 +342,29 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
         }
     }
 
-    node->value = value;
+    बुहोल->हालागा = हालागा;
 
     return NGX_OK;
 }
 
 
 ngx_int_t
-ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
+ngx_radix128tree_delete(ngx_radix_पुनो_t *पुनो, u_char *सुसि, u_char *mask)
 {
     u_char             bit;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_बुहोल_t  *बुहोल;
 
     i = 0;
     bit = 0x80;
-    node = tree->root;
+    बुहोल = पुनो->उगात;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
-            node = node->right;
+    while (बुहोल && (bit & mask[i])) {
+        if (सुसि[i] & bit) {
+            बुहोल = बुहोल->कानान;
 
         } else {
-            node = node->left;
+            बुहोल = बुहोल->कालिवा;
         }
 
         bit >>= 1;
@@ -378,13 +378,13 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
         }
     }
 
-    if (node == NULL) {
+    if (बुहोल == NULL) {
         return NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            node->value = NGX_RADIX_NO_VALUE;
+    if (बुहोल->कानान || बुहोल->कालिवा) {
+        if (बुहोल->हालागा != NGX_RADIX_NO_हालागा) {
+            बुहोल->हालागा = NGX_RADIX_NO_हालागा;
             return NGX_OK;
         }
 
@@ -392,27 +392,27 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
     }
 
     for ( ;; ) {
-        if (node->parent->right == node) {
-            node->parent->right = NULL;
+        if (बुहोल->parent->कानान == बुहोल) {
+            बुहोल->parent->कानान = NULL;
 
         } else {
-            node->parent->left = NULL;
+            बुहोल->parent->कालिवा = NULL;
         }
 
-        node->right = tree->free;
-        tree->free = node;
+        बुहोल->कानान = पुनो->free;
+        पुनो->free = बुहोल;
 
-        node = node->parent;
+        बुहोल = बुहोल->parent;
 
-        if (node->right || node->left) {
+        if (बुहोल->कानान || बुहोल->कालिवा) {
             break;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
+        if (बुहोल->हालागा != NGX_RADIX_NO_हालागा) {
             break;
         }
 
-        if (node->parent == NULL) {
+        if (बुहोल->parent == NULL) {
             break;
         }
     }
@@ -422,28 +422,28 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
 
 
 uintptr_t
-ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
+ngx_radix128tree_find(ngx_radix_पुनो_t *पुनो, u_char *सुसि)
 {
     u_char             bit;
-    uintptr_t          value;
+    uintptr_t          हालागा;
     ngx_uint_t         i;
-    ngx_radix_node_t  *node;
+    ngx_radix_बुहोल_t  *बुहोल;
 
     i = 0;
     bit = 0x80;
-    value = NGX_RADIX_NO_VALUE;
-    node = tree->root;
+    हालागा = NGX_RADIX_NO_हालागा;
+    बुहोल = पुनो->उगात;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            value = node->value;
+    while (बुहोल) {
+        if (बुहोल->हालागा != NGX_RADIX_NO_हालागा) {
+            हालागा = बुहोल->हालागा;
         }
 
-        if (key[i] & bit) {
-            node = node->right;
+        if (सुसि[i] & bit) {
+            बुहोल = बुहोल->कानान;
 
         } else {
-            node = node->left;
+            बुहोल = बुहोल->कालिवा;
         }
 
         bit >>= 1;
@@ -454,35 +454,35 @@ ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
         }
     }
 
-    return value;
+    return हालागा;
 }
 
 #endif
 
 
-static ngx_radix_node_t *
-ngx_radix_alloc(ngx_radix_tree_t *tree)
+static ngx_radix_बुहोल_t *
+ngx_radix_alloc(ngx_radix_पुनो_t *पुनो)
 {
-    ngx_radix_node_t  *p;
+    ngx_radix_बुहोल_t  *p;
 
-    if (tree->free) {
-        p = tree->free;
-        tree->free = tree->free->right;
+    if (पुनो->free) {
+        p = पुनो->free;
+        पुनो->free = पुनो->free->कानान;
         return p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
-        tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
+    if (पुनो->size < sizeof(ngx_radix_बुहोल_t)) {
+        पुनो->start = ngx_pmemalign(पुनो->pool, ngx_pagesize, ngx_pagesize);
+        if (पुनो->start == NULL) {
             return NULL;
         }
 
-        tree->size = ngx_pagesize;
+        पुनो->size = ngx_pagesize;
     }
 
-    p = (ngx_radix_node_t *) tree->start;
-    tree->start += sizeof(ngx_radix_node_t);
-    tree->size -= sizeof(ngx_radix_node_t);
+    p = (ngx_radix_बुहोल_t *) पुनो->start;
+    पुनो->start += sizeof(ngx_radix_बुहोल_t);
+    पुनो->size -= sizeof(ngx_radix_बुहोल_t);
 
     return p;
 }

@@ -786,7 +786,7 @@ ngx_parse_unix_domain_url(ngx_pool_t *pool, ngx_url_t *u)
 static ngx_int_t
 ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 {
-    u_char              *host, *port, *last, *uri, *args, *dash;
+    u_char              *host, *port, *last, *uri, *मगा_कातविरान, *dash;
     size_t               len;
     ngx_int_t            n;
     struct sockaddr_in  *sin;
@@ -805,11 +805,11 @@ ngx_parse_inet_url(ngx_pool_t *pool, ngx_url_t *u)
 
     uri = ngx_strlchr(host, last, '/');
 
-    args = ngx_strlchr(host, last, '?');
+    मगा_कातविरान = ngx_strlchr(host, last, '?');
 
-    if (args) {
-        if (uri == NULL || args < uri) {
-            uri = args;
+    if (मगा_कातविरान) {
+        if (uri == NULL || मगा_कातविरान < uri) {
+            uri = मगा_कातविरान;
         }
     }
 

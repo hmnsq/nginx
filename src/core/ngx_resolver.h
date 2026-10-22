@@ -90,7 +90,7 @@ typedef struct {
 
 
 typedef struct {
-    ngx_rbtree_node_t         node;
+    ngx_rbtree_बुहोल_t         बुहोल;
     ngx_queue_t               queue;
 
     /* PTR: resolved name, A: name to resolve */
@@ -142,7 +142,7 @@ typedef struct {
     ngx_uint_t                last_connection;
 
     ngx_resolver_ctx_t       *waiting;
-} ngx_resolver_node_t;
+} ngx_resolver_बुहोल_t;
 
 
 struct ngx_resolver_s {
@@ -159,13 +159,13 @@ struct ngx_resolver_s {
     ngx_uint_t                last_connection;
 
     ngx_rbtree_t              name_rbtree;
-    ngx_rbtree_node_t         name_sentinel;
+    ngx_rbtree_बुहोल_t         name_sentinel;
 
     ngx_rbtree_t              srv_rbtree;
-    ngx_rbtree_node_t         srv_sentinel;
+    ngx_rbtree_बुहोल_t         srv_sentinel;
 
     ngx_rbtree_t              addr_rbtree;
-    ngx_rbtree_node_t         addr_sentinel;
+    ngx_rbtree_बुहोल_t         addr_sentinel;
 
     ngx_queue_t               name_resend_queue;
     ngx_queue_t               srv_resend_queue;
@@ -180,7 +180,7 @@ struct ngx_resolver_s {
 #if (NGX_HAVE_INET6)
     unsigned                  ipv6:1;
     ngx_rbtree_t              addr6_rbtree;
-    ngx_rbtree_node_t         addr6_sentinel;
+    ngx_rbtree_बुहोल_t         addr6_sentinel;
     ngx_queue_t               addr6_resend_queue;
     ngx_queue_t               addr6_expire_queue;
 #endif
@@ -197,7 +197,7 @@ struct ngx_resolver_s {
 struct ngx_resolver_ctx_s {
     ngx_resolver_ctx_t       *next;
     ngx_resolver_t           *resolver;
-    ngx_resolver_node_t      *node;
+    ngx_resolver_बुहोल_t      *बुहोल;
 
     /* event ident must be after 3 pointers as in ngx_connection_t */
     ngx_int_t                 ident;
@@ -212,7 +212,7 @@ struct ngx_resolver_ctx_s {
     ngx_resolver_addr_t       addr;
     struct sockaddr_in        sin;
 
-    ngx_uint_t                count;
+    ngx_uint_t                बिलांग;
     ngx_uint_t                nsrvs;
     ngx_resolver_srv_name_t  *srvs;
 

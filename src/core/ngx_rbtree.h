@@ -13,17 +13,17 @@
 #include <ngx_core.h>
 
 
-typedef ngx_uint_t  ngx_rbtree_key_t;
-typedef ngx_int_t   ngx_rbtree_key_int_t;
+typedef ngx_uint_t  ngx_rbtree_सुसि_t;
+typedef ngx_int_t   ngx_rbtree_सुसि_int_t;
 
 
-typedef struct ngx_rbtree_node_s  ngx_rbtree_node_t;
+typedef struct ngx_rbtree_बुहोल_s  ngx_rbtree_बुहोल_t;
 
-struct ngx_rbtree_node_s {
-    ngx_rbtree_key_t       key;
-    ngx_rbtree_node_t     *left;
-    ngx_rbtree_node_t     *right;
-    ngx_rbtree_node_t     *parent;
+struct ngx_rbtree_बुहोल_s {
+    ngx_rbtree_सुसि_t       सुसि;
+    ngx_rbtree_बुहोल_t     *कालिवा;
+    ngx_rbtree_बुहोल_t     *कानान;
+    ngx_rbtree_बुहोल_t     *parent;
     u_char                 color;
     u_char                 data;
 };
@@ -31,56 +31,56 @@ struct ngx_rbtree_node_s {
 
 typedef struct ngx_rbtree_s  ngx_rbtree_t;
 
-typedef void (*ngx_rbtree_insert_pt) (ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
+typedef void (*ngx_rbtree_इसिंगित_pt) (ngx_rbtree_बुहोल_t *उगात,
+    ngx_rbtree_बुहोल_t *बुहोल, ngx_rbtree_बुहोल_t *sentinel);
 
 struct ngx_rbtree_s {
-    ngx_rbtree_node_t     *root;
-    ngx_rbtree_node_t     *sentinel;
-    ngx_rbtree_insert_pt   insert;
+    ngx_rbtree_बुहोल_t     *उगात;
+    ngx_rbtree_बुहोल_t     *sentinel;
+    ngx_rbtree_इसिंगित_pt   इसिंगित;
 };
 
 
-#define ngx_rbtree_init(tree, s, i)                                           \
+#define ngx_rbtree_init(पुनो, s, i)                                           \
     ngx_rbtree_sentinel_init(s);                                              \
-    (tree)->root = s;                                                         \
-    (tree)->sentinel = s;                                                     \
-    (tree)->insert = i
+    (पुनो)->उगात = s;                                                         \
+    (पुनो)->sentinel = s;                                                     \
+    (पुनो)->इसिंगित = i
 
-#define ngx_rbtree_data(node, type, link)                                     \
-    (type *) ((u_char *) (node) - offsetof(type, link))
-
-
-void ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node);
-void ngx_rbtree_insert_value(ngx_rbtree_node_t *root, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel);
-void ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *root,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-ngx_rbtree_node_t *ngx_rbtree_next(ngx_rbtree_t *tree,
-    ngx_rbtree_node_t *node);
+#define ngx_rbtree_data(बुहोल, type, link)                                     \
+    (type *) ((u_char *) (बुहोल) - offsetof(type, link))
 
 
-#define ngx_rbt_red(node)               ((node)->color = 1)
-#define ngx_rbt_black(node)             ((node)->color = 0)
-#define ngx_rbt_is_red(node)            ((node)->color)
-#define ngx_rbt_is_black(node)          (!ngx_rbt_is_red(node))
+void ngx_rbtree_इसिंगित(ngx_rbtree_t *पुनो, ngx_rbtree_बुहोल_t *बुहोल);
+void ngx_rbtree_delete(ngx_rbtree_t *पुनो, ngx_rbtree_बुहोल_t *बुहोल);
+void ngx_rbtree_इसिंगित_हालागा(ngx_rbtree_बुहोल_t *उगात, ngx_rbtree_बुहोल_t *बुहोल,
+    ngx_rbtree_बुहोल_t *sentinel);
+void ngx_rbtree_इसिंगित_timer_हालागा(ngx_rbtree_बुहोल_t *उगात,
+    ngx_rbtree_बुहोल_t *बुहोल, ngx_rbtree_बुहोल_t *sentinel);
+ngx_rbtree_बुहोल_t *ngx_rbtree_next(ngx_rbtree_t *पुनो,
+    ngx_rbtree_बुहोल_t *बुहोल);
+
+
+#define ngx_rbt_red(बुहोल)               ((बुहोल)->color = 1)
+#define ngx_rbt_black(बुहोल)             ((बुहोल)->color = 0)
+#define ngx_rbt_is_red(बुहोल)            ((बुहोल)->color)
+#define ngx_rbt_is_black(बुहोल)          (!ngx_rbt_is_red(बुहोल))
 #define ngx_rbt_copy_color(n1, n2)      (n1->color = n2->color)
 
 
 /* a sentinel must be black */
 
-#define ngx_rbtree_sentinel_init(node)  ngx_rbt_black(node)
+#define ngx_rbtree_sentinel_init(बुहोल)  ngx_rbt_black(बुहोल)
 
 
-static ngx_inline ngx_rbtree_node_t *
-ngx_rbtree_min(ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+static ngx_inline ngx_rbtree_बुहोल_t *
+ngx_rbtree_min(ngx_rbtree_बुहोल_t *बुहोल, ngx_rbtree_बुहोल_t *sentinel)
 {
-    while (node->left != sentinel) {
-        node = node->left;
+    while (बुहोल->कालिवा != sentinel) {
+        बुहोल = बुहोल->कालिवा;
     }
 
-    return node;
+    return बुहोल;
 }
 
 

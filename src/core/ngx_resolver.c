@@ -51,7 +51,7 @@ typedef struct {
 } ngx_resolver_an_t;
 
 
-#define ngx_resolver_node(n)  ngx_rbtree_data(n, ngx_resolver_node_t, node)
+#define ngx_resolver_बुहोल(n)  ngx_rbtree_data(n, ngx_resolver_बुहोल_t, बुहोल)
 
 
 static ngx_int_t ngx_udp_connect(ngx_resolver_connection_t *rec);
@@ -59,25 +59,25 @@ static ngx_int_t ngx_tcp_connect(ngx_resolver_connection_t *rec);
 
 
 static void ngx_resolver_cleanup(void *data);
-static void ngx_resolver_cleanup_tree(ngx_resolver_t *r, ngx_rbtree_t *tree);
+static void ngx_resolver_cleanup_पुनो(ngx_resolver_t *r, ngx_rbtree_t *पुनो);
 static ngx_int_t ngx_resolve_name_locked(ngx_resolver_t *r,
     ngx_resolver_ctx_t *ctx, ngx_str_t *name);
-static void ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *tree,
+static void ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *पुनो,
     ngx_queue_t *queue);
 static ngx_int_t ngx_resolver_send_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn);
+    ngx_resolver_बुहोल_t *rn);
 static ngx_int_t ngx_resolver_send_udp_query(ngx_resolver_t *r,
     ngx_resolver_connection_t *rec, u_char *query, u_short qlen);
 static ngx_int_t ngx_resolver_send_tcp_query(ngx_resolver_t *r,
     ngx_resolver_connection_t *rec, u_char *query, u_short qlen);
 static ngx_int_t ngx_resolver_create_name_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_str_t *name);
+    ngx_resolver_बुहोल_t *rn, ngx_str_t *name);
 static ngx_int_t ngx_resolver_create_srv_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_str_t *name);
+    ngx_resolver_बुहोल_t *rn, ngx_str_t *name);
 static ngx_int_t ngx_resolver_create_addr_query(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_resolver_addr_t *addr);
+    ngx_resolver_बुहोल_t *rn, ngx_resolver_addr_t *addr);
 static void ngx_resolver_resend_handler(ngx_event_t *ev);
-static time_t ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *tree,
+static time_t ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *पुनो,
     ngx_queue_t *queue);
 static ngx_uint_t ngx_resolver_resend_empty(ngx_resolver_t *r);
 static void ngx_resolver_udp_read(ngx_event_t *rev);
@@ -93,38 +93,38 @@ static void ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
     ngx_uint_t trunc, ngx_uint_t ans);
 static void ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, size_t n,
     ngx_uint_t ident, ngx_uint_t code, ngx_uint_t nan);
-static ngx_resolver_node_t *ngx_resolver_lookup_name(ngx_resolver_t *r,
+static ngx_resolver_बुहोल_t *ngx_resolver_lookup_name(ngx_resolver_t *r,
     ngx_str_t *name, uint32_t hash);
-static ngx_resolver_node_t *ngx_resolver_lookup_srv(ngx_resolver_t *r,
+static ngx_resolver_बुहोल_t *ngx_resolver_lookup_srv(ngx_resolver_t *r,
     ngx_str_t *name, uint32_t hash);
-static ngx_resolver_node_t *ngx_resolver_lookup_addr(ngx_resolver_t *r,
+static ngx_resolver_बुहोल_t *ngx_resolver_lookup_addr(ngx_resolver_t *r,
     in_addr_t addr);
-static void ngx_resolver_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
+static void ngx_resolver_rbtree_इसिंगित_हालागा(ngx_rbtree_बुहोल_t *temp,
+    ngx_rbtree_बुहोल_t *बुहोल, ngx_rbtree_बुहोल_t *sentinel);
 static ngx_int_t ngx_resolver_copy(ngx_resolver_t *r, ngx_str_t *name,
     u_char *buf, u_char *src, u_char *last);
 static ngx_int_t ngx_resolver_set_timeout(ngx_resolver_t *r,
     ngx_resolver_ctx_t *ctx);
 static void ngx_resolver_timeout_handler(ngx_event_t *ev);
-static void ngx_resolver_free_node(ngx_resolver_t *r, ngx_resolver_node_t *rn);
+static void ngx_resolver_free_बुहोल(ngx_resolver_t *r, ngx_resolver_बुहोल_t *rn);
 static void *ngx_resolver_alloc(ngx_resolver_t *r, size_t size);
 static void *ngx_resolver_calloc(ngx_resolver_t *r, size_t size);
 static void ngx_resolver_free(ngx_resolver_t *r, void *p);
 static void ngx_resolver_free_locked(ngx_resolver_t *r, void *p);
 static void *ngx_resolver_dup(ngx_resolver_t *r, void *src, size_t size);
 static ngx_resolver_addr_t *ngx_resolver_export(ngx_resolver_t *r,
-    ngx_resolver_node_t *rn, ngx_uint_t rotate);
+    ngx_resolver_बुहोल_t *rn, ngx_uint_t rotate);
 static void ngx_resolver_report_srv(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx);
 static u_char *ngx_resolver_log_error(ngx_log_t *log, u_char *buf, size_t len);
 static void ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx,
-    ngx_resolver_node_t *rn);
+    ngx_resolver_बुहोल_t *rn);
 static void ngx_resolver_srv_names_handler(ngx_resolver_ctx_t *ctx);
 static ngx_int_t ngx_resolver_cmp_srvs(const void *one, const void *two);
 
 #if (NGX_HAVE_INET6)
-static void ngx_resolver_rbtree_insert_addr6_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel);
-static ngx_resolver_node_t *ngx_resolver_lookup_addr6(ngx_resolver_t *r,
+static void ngx_resolver_rbtree_इसिंगित_addr6_हालागा(ngx_rbtree_बुहोल_t *temp,
+    ngx_rbtree_बुहोल_t *बुहोल, ngx_rbtree_बुहोल_t *sentinel);
+static ngx_resolver_बुहोल_t *ngx_resolver_lookup_addr6(ngx_resolver_t *r,
     struct in6_addr *addr, uint32_t hash);
 #endif
 
@@ -160,13 +160,13 @@ ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
     r->ipv4 = 1;
 
     ngx_rbtree_init(&r->name_rbtree, &r->name_sentinel,
-                    ngx_resolver_rbtree_insert_value);
+                    ngx_resolver_rbtree_इसिंगित_हालागा);
 
     ngx_rbtree_init(&r->srv_rbtree, &r->srv_sentinel,
-                    ngx_resolver_rbtree_insert_value);
+                    ngx_resolver_rbtree_इसिंगित_हालागा);
 
     ngx_rbtree_init(&r->addr_rbtree, &r->addr_sentinel,
-                    ngx_rbtree_insert_value);
+                    ngx_rbtree_इसिंगित_हालागा);
 
     ngx_queue_init(&r->name_resend_queue);
     ngx_queue_init(&r->srv_resend_queue);
@@ -180,7 +180,7 @@ ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
     r->ipv6 = 1;
 
     ngx_rbtree_init(&r->addr6_rbtree, &r->addr6_sentinel,
-                    ngx_resolver_rbtree_insert_addr6_value);
+                    ngx_resolver_rbtree_इसिंगित_addr6_हालागा);
 
     ngx_queue_init(&r->addr6_resend_queue);
 
@@ -277,7 +277,7 @@ ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names, ngx_uint_t n)
             return NULL;
         }
 
-        rec = ngx_array_push_n(&r->connections, u.naddrs);
+        rec = ngx_array_इतुलाक_n(&r->connections, u.naddrs);
         if (rec == NULL) {
             return NULL;
         }
@@ -319,14 +319,14 @@ ngx_resolver_cleanup(void *data)
 
     ngx_log_debug0(NGX_LOG_DEBUG_CORE, ngx_cycle->log, 0, "cleanup resolver");
 
-    ngx_resolver_cleanup_tree(r, &r->name_rbtree);
+    ngx_resolver_cleanup_पुनो(r, &r->name_rbtree);
 
-    ngx_resolver_cleanup_tree(r, &r->srv_rbtree);
+    ngx_resolver_cleanup_पुनो(r, &r->srv_rbtree);
 
-    ngx_resolver_cleanup_tree(r, &r->addr_rbtree);
+    ngx_resolver_cleanup_पुनो(r, &r->addr_rbtree);
 
 #if (NGX_HAVE_INET6)
-    ngx_resolver_cleanup_tree(r, &r->addr6_rbtree);
+    ngx_resolver_cleanup_पुनो(r, &r->addr6_rbtree);
 #endif
 
     if (r->event->timer_set) {
@@ -358,14 +358,14 @@ ngx_resolver_cleanup(void *data)
 
 
 static void
-ngx_resolver_cleanup_tree(ngx_resolver_t *r, ngx_rbtree_t *tree)
+ngx_resolver_cleanup_पुनो(ngx_resolver_t *r, ngx_rbtree_t *पुनो)
 {
     ngx_resolver_ctx_t   *ctx, *next;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_बुहोल_t  *rn;
 
-    while (tree->root != tree->sentinel) {
+    while (पुनो->उगात != पुनो->sentinel) {
 
-        rn = ngx_resolver_node(ngx_rbtree_min(tree->root, tree->sentinel));
+        rn = ngx_resolver_बुहोल(ngx_rbtree_min(पुनो->उगात, पुनो->sentinel));
 
         ngx_queue_remove(&rn->queue);
 
@@ -383,9 +383,9 @@ ngx_resolver_cleanup_tree(ngx_resolver_t *r, ngx_rbtree_t *tree)
             ngx_resolver_free(r, ctx);
         }
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(पुनो, &rn->बुहोल);
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_बुहोल(r, rn);
     }
 }
 
@@ -517,7 +517,7 @@ ngx_resolve_name_done(ngx_resolver_ctx_t *ctx)
     ngx_uint_t            i;
     ngx_resolver_t       *r;
     ngx_resolver_ctx_t   *w, **p;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_बुहोल_t  *rn;
 
     r = ctx->resolver;
 
@@ -553,7 +553,7 @@ ngx_resolve_name_done(ngx_resolver_ctx_t *ctx)
 
     if (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
 
-        rn = ctx->node;
+        rn = ctx->बुहोल;
 
         if (rn) {
             p = &rn->waiting;
@@ -611,10 +611,10 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
     ngx_str_t             cname;
     ngx_uint_t            i, naddrs;
     ngx_queue_t          *resend_queue, *expire_queue;
-    ngx_rbtree_t         *tree;
+    ngx_rbtree_t         *पुनो;
     ngx_resolver_ctx_t   *next, *last;
     ngx_resolver_addr_t  *addrs;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_बुहोल_t  *rn;
 
     ngx_strlow(name->data, name->data, name->len);
 
@@ -623,14 +623,14 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
     if (ctx->service.len) {
         rn = ngx_resolver_lookup_srv(r, name, hash);
 
-        tree = &r->srv_rbtree;
+        पुनो = &r->srv_rbtree;
         resend_queue = &r->srv_resend_queue;
         expire_queue = &r->srv_expire_queue;
 
     } else {
         rn = ngx_resolver_lookup_name(r, name, hash);
 
-        tree = &r->name_rbtree;
+        पुनो = &r->name_rbtree;
         resend_queue = &r->name_resend_queue;
         expire_queue = &r->name_expire_queue;
     }
@@ -648,7 +648,7 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
 
             rn->expire = ngx_time() + r->expire;
 
-            ngx_queue_insert_head(expire_queue, &rn->queue);
+            ngx_queue_इसिंगित_head(expire_queue, &rn->queue);
 
             naddrs = (rn->naddrs == (u_short) -1) ? 0 : rn->naddrs;
 #if (NGX_HAVE_INET6)
@@ -760,7 +760,7 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
             ctx->async = 1;
 
             do {
-                ctx->node = rn;
+                ctx->बुहोल = rn;
                 ctx = ctx->next;
             } while (ctx);
 
@@ -807,7 +807,7 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
 
     } else {
 
-        rn = ngx_resolver_alloc(r, sizeof(ngx_resolver_node_t));
+        rn = ngx_resolver_alloc(r, sizeof(ngx_resolver_बुहोल_t));
         if (rn == NULL) {
             return NGX_ERROR;
         }
@@ -818,14 +818,14 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
             return NGX_ERROR;
         }
 
-        rn->node.key = hash;
+        rn->बुहोल.सुसि = hash;
         rn->nlen = (u_short) name->len;
         rn->query = NULL;
 #if (NGX_HAVE_INET6)
         rn->query6 = NULL;
 #endif
 
-        ngx_rbtree_insert(tree, &rn->node);
+        ngx_rbtree_इसिंगित(पुनो, &rn->बुहोल);
     }
 
     if (ctx->service.len) {
@@ -840,7 +840,7 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
     }
 
     if (rc == NGX_DECLINED) {
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(पुनो, &rn->बुहोल);
 
         ngx_resolver_free(r, rn->query);
         ngx_resolver_free(r, rn->name);
@@ -893,19 +893,19 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
 
     rn->expire = ngx_time() + r->resend_timeout;
 
-    ngx_queue_insert_head(resend_queue, &rn->queue);
+    ngx_queue_इसिंगित_head(resend_queue, &rn->queue);
 
     rn->code = 0;
     rn->cnlen = 0;
     rn->valid = 0;
-    rn->ttl = NGX_MAX_UINT32_VALUE;
+    rn->ttl = NGX_MAX_UINT32_हालागा;
     rn->waiting = ctx;
 
     ctx->state = NGX_AGAIN;
     ctx->async = 1;
 
     do {
-        ctx->node = rn;
+        ctx->बुहोल = rn;
         ctx = ctx->next;
     } while (ctx);
 
@@ -913,7 +913,7 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx,
 
 failed:
 
-    ngx_rbtree_delete(tree, &rn->node);
+    ngx_rbtree_delete(पुनो, &rn->बुहोल);
 
     if (rn->query) {
         ngx_resolver_free(r, rn->query);
@@ -933,10 +933,10 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
     u_char               *name;
     in_addr_t             addr;
     ngx_queue_t          *resend_queue, *expire_queue;
-    ngx_rbtree_t         *tree;
+    ngx_rbtree_t         *पुनो;
     ngx_resolver_t       *r;
     struct sockaddr_in   *sin;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_बुहोल_t  *rn;
 #if (NGX_HAVE_INET6)
     uint32_t              hash;
     struct sockaddr_in6  *sin6;
@@ -963,7 +963,7 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
 
         rn = ngx_resolver_lookup_addr6(r, &sin6->sin6_addr, hash);
 
-        tree = &r->addr6_rbtree;
+        पुनो = &r->addr6_rbtree;
         resend_queue = &r->addr6_resend_queue;
         expire_queue = &r->addr6_expire_queue;
 
@@ -978,7 +978,7 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
 
         rn = ngx_resolver_lookup_addr(r, addr);
 
-        tree = &r->addr_rbtree;
+        पुनो = &r->addr_rbtree;
         resend_queue = &r->addr_resend_queue;
         expire_queue = &r->addr_expire_queue;
     }
@@ -993,7 +993,7 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
 
             rn->expire = ngx_time() + r->expire;
 
-            ngx_queue_insert_head(expire_queue, &rn->queue);
+            ngx_queue_इसिंगित_head(expire_queue, &rn->queue);
 
             name = ngx_resolver_dup(r, rn->name, rn->nlen);
             if (name == NULL) {
@@ -1025,7 +1025,7 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
             rn->waiting = ctx;
             ctx->state = NGX_AGAIN;
             ctx->async = 1;
-            ctx->node = rn;
+            ctx->बुहोल = rn;
 
             /* unlock addr mutex */
 
@@ -1041,7 +1041,7 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
 #endif
 
     } else {
-        rn = ngx_resolver_alloc(r, sizeof(ngx_resolver_node_t));
+        rn = ngx_resolver_alloc(r, sizeof(ngx_resolver_बुहोल_t));
         if (rn == NULL) {
             goto failed;
         }
@@ -1051,12 +1051,12 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
 #if (NGX_HAVE_INET6)
         case AF_INET6:
             rn->addr6 = sin6->sin6_addr;
-            rn->node.key = hash;
+            rn->बुहोल.सुसि = hash;
             break;
 #endif
 
         default: /* AF_INET */
-            rn->node.key = addr;
+            rn->बुहोल.सुसि = addr;
         }
 
         rn->query = NULL;
@@ -1064,7 +1064,7 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
         rn->query6 = NULL;
 #endif
 
-        ngx_rbtree_insert(tree, &rn->node);
+        ngx_rbtree_इसिंगित(पुनो, &rn->बुहोल);
     }
 
     if (ngx_resolver_create_addr_query(r, rn, &ctx->addr) != NGX_OK) {
@@ -1106,28 +1106,28 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
 
     rn->expire = ngx_time() + r->resend_timeout;
 
-    ngx_queue_insert_head(resend_queue, &rn->queue);
+    ngx_queue_इसिंगित_head(resend_queue, &rn->queue);
 
     rn->code = 0;
     rn->cnlen = 0;
     rn->name = NULL;
     rn->nlen = 0;
     rn->valid = 0;
-    rn->ttl = NGX_MAX_UINT32_VALUE;
+    rn->ttl = NGX_MAX_UINT32_हालागा;
     rn->waiting = ctx;
 
     /* unlock addr mutex */
 
     ctx->state = NGX_AGAIN;
     ctx->async = 1;
-    ctx->node = rn;
+    ctx->बुहोल = rn;
 
     return NGX_OK;
 
 failed:
 
     if (rn) {
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(पुनो, &rn->बुहोल);
 
         if (rn->query) {
             ngx_resolver_free(r, rn->query);
@@ -1152,10 +1152,10 @@ void
 ngx_resolve_addr_done(ngx_resolver_ctx_t *ctx)
 {
     ngx_queue_t          *expire_queue;
-    ngx_rbtree_t         *tree;
+    ngx_rbtree_t         *पुनो;
     ngx_resolver_t       *r;
     ngx_resolver_ctx_t   *w, **p;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_बुहोल_t  *rn;
 
     r = ctx->resolver;
 
@@ -1163,13 +1163,13 @@ ngx_resolve_addr_done(ngx_resolver_ctx_t *ctx)
 
 #if (NGX_HAVE_INET6)
     case AF_INET6:
-        tree = &r->addr6_rbtree;
+        पुनो = &r->addr6_rbtree;
         expire_queue = &r->addr6_expire_queue;
         break;
 #endif
 
     default: /* AF_INET */
-        tree = &r->addr_rbtree;
+        पुनो = &r->addr_rbtree;
         expire_queue = &r->addr_expire_queue;
     }
 
@@ -1184,7 +1184,7 @@ ngx_resolve_addr_done(ngx_resolver_ctx_t *ctx)
 
     if (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
 
-        rn = ctx->node;
+        rn = ctx->बुहोल;
 
         if (rn) {
             p = &rn->waiting;
@@ -1217,7 +1217,7 @@ ngx_resolve_addr_done(ngx_resolver_ctx_t *ctx)
 
 done:
 
-    ngx_resolver_expire(r, tree, expire_queue);
+    ngx_resolver_expire(r, पुनो, expire_queue);
 
     /* unlock addr mutex */
 
@@ -1238,12 +1238,12 @@ done:
 
 
 static void
-ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *tree, ngx_queue_t *queue)
+ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *पुनो, ngx_queue_t *queue)
 {
     time_t                now;
     ngx_uint_t            i;
     ngx_queue_t          *q;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_बुहोल_t  *rn;
 
     ngx_log_debug0(NGX_LOG_DEBUG_CORE, r->log, 0, "resolver expire");
 
@@ -1256,7 +1256,7 @@ ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *tree, ngx_queue_t *queue)
 
         q = ngx_queue_last(queue);
 
-        rn = ngx_queue_data(q, ngx_resolver_node_t, queue);
+        rn = ngx_queue_data(q, ngx_resolver_बुहोल_t, queue);
 
         if (now <= rn->expire) {
             return;
@@ -1267,15 +1267,15 @@ ngx_resolver_expire(ngx_resolver_t *r, ngx_rbtree_t *tree, ngx_queue_t *queue)
 
         ngx_queue_remove(q);
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(पुनो, &rn->बुहोल);
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_बुहोल(r, rn);
     }
 }
 
 
 static ngx_int_t
-ngx_resolver_send_query(ngx_resolver_t *r, ngx_resolver_node_t *rn)
+ngx_resolver_send_query(ngx_resolver_t *r, ngx_resolver_बुहोल_t *rn)
 {
     ngx_int_t                   rc;
     ngx_resolver_connection_t  *rec;
@@ -1514,11 +1514,11 @@ ngx_resolver_resend_handler(ngx_event_t *ev)
 
 
 static time_t
-ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *tree, ngx_queue_t *queue)
+ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *पुनो, ngx_queue_t *queue)
 {
     time_t                now;
     ngx_queue_t          *q;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_बुहोल_t  *rn;
 
     now = ngx_time();
 
@@ -1529,7 +1529,7 @@ ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *tree, ngx_queue_t *queue)
 
         q = ngx_queue_last(queue);
 
-        rn = ngx_queue_data(q, ngx_resolver_node_t, queue);
+        rn = ngx_queue_data(q, ngx_resolver_बुहोल_t, queue);
 
         if (now < rn->expire) {
             return rn->expire - now;
@@ -1551,14 +1551,14 @@ ngx_resolver_resend(ngx_resolver_t *r, ngx_rbtree_t *tree, ngx_queue_t *queue)
 
             rn->expire = now + r->resend_timeout;
 
-            ngx_queue_insert_head(queue, q);
+            ngx_queue_इसिंगित_head(queue, q);
 
             continue;
         }
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(पुनो, &rn->बुहोल);
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_बुहोल(r, rn);
     }
 }
 
@@ -1753,7 +1753,7 @@ ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf, size_t n,
     ngx_queue_t          *q;
     ngx_resolver_qs_t    *qs;
     ngx_resolver_hdr_t   *response;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_बुहोल_t  *rn;
 
     if (n < sizeof(ngx_resolver_hdr_t)) {
         goto short_response;
@@ -1791,7 +1791,7 @@ ngx_resolver_process_response(ngx_resolver_t *r, u_char *buf, size_t n,
              q != ngx_queue_sentinel(&r->name_resend_queue) && times++ < 100;
              q = ngx_queue_next(q))
         {
-            rn = ngx_queue_data(q, ngx_resolver_node_t, queue);
+            rn = ngx_queue_data(q, ngx_resolver_बुहोल_t, queue);
 
             if (rn->query) {
                 qident = (rn->query[0] << 8) + rn->query[1];
@@ -1947,7 +1947,7 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
 #endif
     ngx_resolver_an_t          *an;
     ngx_resolver_ctx_t         *ctx, *next;
-    ngx_resolver_node_t        *rn;
+    ngx_resolver_बुहोल_t        *rn;
     ngx_resolver_addr_t        *addrs;
     ngx_resolver_connection_t  *rec;
 
@@ -2027,8 +2027,8 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
         ngx_queue_remove(&rn->queue);
 
         if (rn->waiting == NULL) {
-            ngx_rbtree_delete(&r->name_rbtree, &rn->node);
-            ngx_resolver_free_node(r, rn);
+            ngx_rbtree_delete(&r->name_rbtree, &rn->बुहोल);
+            ngx_resolver_free_बुहोल(r, rn);
             goto next;
         }
 
@@ -2056,7 +2056,7 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
 
         rn->expire = ngx_time() + r->resend_timeout;
 
-        ngx_queue_insert_head(&r->name_resend_queue, &rn->queue);
+        ngx_queue_इसिंगित_head(&r->name_resend_queue, &rn->queue);
 
         goto next;
     }
@@ -2133,7 +2133,7 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
 
         ngx_queue_remove(&rn->queue);
 
-        ngx_rbtree_delete(&r->name_rbtree, &rn->node);
+        ngx_rbtree_delete(&r->name_rbtree, &rn->बुहोल);
 
         /* unlock name mutex */
 
@@ -2146,7 +2146,7 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
             ctx->handler(ctx);
         }
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_बुहोल(r, rn);
 
         return;
     }
@@ -2445,7 +2445,7 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
         rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
         rn->expire = ngx_time() + r->expire;
 
-        ngx_queue_insert_head(&r->name_expire_queue, &rn->queue);
+        ngx_queue_इसिंगित_head(&r->name_expire_queue, &rn->queue);
 
         next = rn->waiting;
         rn->waiting = NULL;
@@ -2517,7 +2517,7 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
         rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
         rn->expire = ngx_time() + r->expire;
 
-        ngx_queue_insert_head(&r->name_expire_queue, &rn->queue);
+        ngx_queue_इसिंगित_head(&r->name_expire_queue, &rn->queue);
 
         ngx_resolver_free(r, rn->query);
         rn->query = NULL;
@@ -2547,7 +2547,7 @@ ngx_resolver_process_a(ngx_resolver_t *r, u_char *buf, size_t n,
             }
 
             for (next = ctx; next; next = next->next) {
-                next->node = NULL;
+                next->बुहोल = NULL;
             }
 
             (void) ngx_resolve_name_locked(r, ctx, &name);
@@ -2599,7 +2599,7 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
     ngx_resolver_an_t          *an;
     ngx_resolver_ctx_t         *ctx, *next;
     ngx_resolver_srv_t         *srvs;
-    ngx_resolver_node_t        *rn;
+    ngx_resolver_बुहोल_t        *rn;
     ngx_resolver_connection_t  *rec;
 
     if (ngx_resolver_copy(r, &name, buf,
@@ -2644,8 +2644,8 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
         ngx_queue_remove(&rn->queue);
 
         if (rn->waiting == NULL) {
-            ngx_rbtree_delete(&r->srv_rbtree, &rn->node);
-            ngx_resolver_free_node(r, rn);
+            ngx_rbtree_delete(&r->srv_rbtree, &rn->बुहोल);
+            ngx_resolver_free_बुहोल(r, rn);
             return;
         }
 
@@ -2658,7 +2658,7 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
 
         rn->expire = ngx_time() + r->resend_timeout;
 
-        ngx_queue_insert_head(&r->srv_resend_queue, &rn->queue);
+        ngx_queue_इसिंगित_head(&r->srv_resend_queue, &rn->queue);
 
         return;
     }
@@ -2677,7 +2677,7 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
 
         ngx_queue_remove(&rn->queue);
 
-        ngx_rbtree_delete(&r->srv_rbtree, &rn->node);
+        ngx_rbtree_delete(&r->srv_rbtree, &rn->बुहोल);
 
         while (next) {
             ctx = next;
@@ -2688,7 +2688,7 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
             ctx->handler(ctx);
         }
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_बुहोल(r, rn);
 
         return;
     }
@@ -2866,7 +2866,7 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
         rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
         rn->expire = ngx_time() + r->expire;
 
-        ngx_queue_insert_head(&r->srv_expire_queue, &rn->queue);
+        ngx_queue_इसिंगित_head(&r->srv_expire_queue, &rn->queue);
 
         next = rn->waiting;
         rn->waiting = NULL;
@@ -2902,7 +2902,7 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
         rn->valid = ngx_time() + (r->valid ? r->valid : (time_t) rn->ttl);
         rn->expire = ngx_time() + r->expire;
 
-        ngx_queue_insert_head(&r->srv_expire_queue, &rn->queue);
+        ngx_queue_इसिंगित_head(&r->srv_expire_queue, &rn->queue);
 
         ngx_resolver_free(r, rn->query);
         rn->query = NULL;
@@ -2932,7 +2932,7 @@ ngx_resolver_process_srv(ngx_resolver_t *r, u_char *buf, size_t n,
             }
 
             for (next = ctx; next; next = next->next) {
-                next->node = NULL;
+                next->बुहोल = NULL;
             }
 
             (void) ngx_resolve_name_locked(r, ctx, &name);
@@ -2968,7 +2968,7 @@ failed:
 
 
 static void
-ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx, ngx_resolver_node_t *rn)
+ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx, ngx_resolver_बुहोल_t *rn)
 {
     ngx_uint_t                i;
     ngx_resolver_t           *r;
@@ -2977,10 +2977,10 @@ ngx_resolver_resolve_srv_names(ngx_resolver_ctx_t *ctx, ngx_resolver_node_t *rn)
 
     r = ctx->resolver;
 
-    ctx->node = NULL;
+    ctx->बुहोल = NULL;
     ctx->state = NGX_OK;
     ctx->valid = rn->valid;
-    ctx->count = rn->nsrvs;
+    ctx->बिलांग = rn->nsrvs;
 
     srvs = ngx_resolver_calloc(r, rn->nsrvs * sizeof(ngx_resolver_srv_name_t));
     if (srvs == NULL) {
@@ -3051,7 +3051,7 @@ ngx_resolver_srv_names_handler(ngx_resolver_ctx_t *cctx)
     ctx = cctx->data;
     srv = cctx->srvs;
 
-    ctx->count--;
+    ctx->बिलांग--;
     ctx->async |= cctx->async;
 
     srv->ctx = NULL;
@@ -3092,7 +3092,7 @@ done:
 
     ngx_resolve_name_done(cctx);
 
-    if (ctx->count == 0) {
+    if (ctx->बिलांग == 0) {
         ngx_resolver_report_srv(r, ctx);
     }
 }
@@ -3110,10 +3110,10 @@ ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, size_t n,
     ngx_str_t             name;
     ngx_uint_t            mask, type, class, qident, a, i, start;
     ngx_queue_t          *expire_queue;
-    ngx_rbtree_t         *tree;
+    ngx_rbtree_t         *पुनो;
     ngx_resolver_an_t    *an;
     ngx_resolver_ctx_t   *ctx, *next;
-    ngx_resolver_node_t  *rn;
+    ngx_resolver_बुहोल_t  *rn;
 #if (NGX_HAVE_INET6)
     uint32_t              hash;
     ngx_int_t             digit;
@@ -3153,7 +3153,7 @@ ngx_resolver_process_ptr(ngx_resolver_t *r, u_char *buf, size_t n,
 
         rn = ngx_resolver_lookup_addr(r, addr);
 
-        tree = &r->addr_rbtree;
+        पुनो = &r->addr_rbtree;
         expire_queue = &r->addr_expire_queue;
 
         goto valid;
@@ -3197,7 +3197,7 @@ invalid_in_addr_arpa:
         hash = ngx_crc32_short(addr6.s6_addr, 16);
         rn = ngx_resolver_lookup_addr6(r, &addr6, hash);
 
-        tree = &r->addr6_rbtree;
+        पुनो = &r->addr6_rbtree;
         expire_queue = &r->addr6_expire_queue;
 
         goto valid;
@@ -3242,7 +3242,7 @@ valid:
 
         ngx_queue_remove(&rn->queue);
 
-        ngx_rbtree_delete(tree, &rn->node);
+        ngx_rbtree_delete(पुनो, &rn->बुहोल);
 
         /* unlock addr mutex */
 
@@ -3255,7 +3255,7 @@ valid:
             ctx->handler(ctx);
         }
 
-        ngx_resolver_free_node(r, rn);
+        ngx_resolver_free_बुहोल(r, rn);
 
         return;
     }
@@ -3374,7 +3374,7 @@ ptr:
     rn->valid = ngx_time() + (r->valid ? r->valid : ttl);
     rn->expire = ngx_time() + r->expire;
 
-    ngx_queue_insert_head(expire_queue, &rn->queue);
+    ngx_queue_इसिंगित_head(expire_queue, &rn->queue);
 
     next = rn->waiting;
     rn->waiting = NULL;
@@ -3415,31 +3415,31 @@ failed:
 }
 
 
-static ngx_resolver_node_t *
+static ngx_resolver_बुहोल_t *
 ngx_resolver_lookup_name(ngx_resolver_t *r, ngx_str_t *name, uint32_t hash)
 {
     ngx_int_t             rc;
-    ngx_rbtree_node_t    *node, *sentinel;
-    ngx_resolver_node_t  *rn;
+    ngx_rbtree_बुहोल_t    *बुहोल, *sentinel;
+    ngx_resolver_बुहोल_t  *rn;
 
-    node = r->name_rbtree.root;
+    बुहोल = r->name_rbtree.उगात;
     sentinel = r->name_rbtree.sentinel;
 
-    while (node != sentinel) {
+    while (बुहोल != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
+        if (hash < बुहोल->सुसि) {
+            बुहोल = बुहोल->कालिवा;
             continue;
         }
 
-        if (hash > node->key) {
-            node = node->right;
+        if (hash > बुहोल->सुसि) {
+            बुहोल = बुहोल->कानान;
             continue;
         }
 
         /* hash == node->key */
 
-        rn = ngx_resolver_node(node);
+        rn = ngx_resolver_बुहोल(बुहोल);
 
         rc = ngx_memn2cmp(name->data, rn->name, name->len, rn->nlen);
 
@@ -3447,7 +3447,7 @@ ngx_resolver_lookup_name(ngx_resolver_t *r, ngx_str_t *name, uint32_t hash)
             return rn;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        बुहोल = (rc < 0) ? बुहोल->कालिवा : बुहोल->कानान;
     }
 
     /* not found */
@@ -3456,31 +3456,31 @@ ngx_resolver_lookup_name(ngx_resolver_t *r, ngx_str_t *name, uint32_t hash)
 }
 
 
-static ngx_resolver_node_t *
+static ngx_resolver_बुहोल_t *
 ngx_resolver_lookup_srv(ngx_resolver_t *r, ngx_str_t *name, uint32_t hash)
 {
     ngx_int_t             rc;
-    ngx_rbtree_node_t    *node, *sentinel;
-    ngx_resolver_node_t  *rn;
+    ngx_rbtree_बुहोल_t    *बुहोल, *sentinel;
+    ngx_resolver_बुहोल_t  *rn;
 
-    node = r->srv_rbtree.root;
+    बुहोल = r->srv_rbtree.उगात;
     sentinel = r->srv_rbtree.sentinel;
 
-    while (node != sentinel) {
+    while (बुहोल != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
+        if (hash < बुहोल->सुसि) {
+            बुहोल = बुहोल->कालिवा;
             continue;
         }
 
-        if (hash > node->key) {
-            node = node->right;
+        if (hash > बुहोल->सुसि) {
+            बुहोल = बुहोल->कानान;
             continue;
         }
 
         /* hash == node->key */
 
-        rn = ngx_resolver_node(node);
+        rn = ngx_resolver_बुहोल(बुहोल);
 
         rc = ngx_memn2cmp(name->data, rn->name, name->len, rn->nlen);
 
@@ -3488,7 +3488,7 @@ ngx_resolver_lookup_srv(ngx_resolver_t *r, ngx_str_t *name, uint32_t hash)
             return rn;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        बुहोल = (rc < 0) ? बुहोल->कालिवा : बुहोल->कानान;
     }
 
     /* not found */
@@ -3497,29 +3497,29 @@ ngx_resolver_lookup_srv(ngx_resolver_t *r, ngx_str_t *name, uint32_t hash)
 }
 
 
-static ngx_resolver_node_t *
+static ngx_resolver_बुहोल_t *
 ngx_resolver_lookup_addr(ngx_resolver_t *r, in_addr_t addr)
 {
-    ngx_rbtree_node_t  *node, *sentinel;
+    ngx_rbtree_बुहोल_t  *बुहोल, *sentinel;
 
-    node = r->addr_rbtree.root;
+    बुहोल = r->addr_rbtree.उगात;
     sentinel = r->addr_rbtree.sentinel;
 
-    while (node != sentinel) {
+    while (बुहोल != sentinel) {
 
-        if (addr < node->key) {
-            node = node->left;
+        if (addr < बुहोल->सुसि) {
+            बुहोल = बुहोल->कालिवा;
             continue;
         }
 
-        if (addr > node->key) {
-            node = node->right;
+        if (addr > बुहोल->सुसि) {
+            बुहोल = बुहोल->कानान;
             continue;
         }
 
         /* addr == node->key */
 
-        return ngx_resolver_node(node);
+        return ngx_resolver_बुहोल(बुहोल);
     }
 
     /* not found */
@@ -3530,32 +3530,32 @@ ngx_resolver_lookup_addr(ngx_resolver_t *r, in_addr_t addr)
 
 #if (NGX_HAVE_INET6)
 
-static ngx_resolver_node_t *
+static ngx_resolver_बुहोल_t *
 ngx_resolver_lookup_addr6(ngx_resolver_t *r, struct in6_addr *addr,
     uint32_t hash)
 {
     ngx_int_t             rc;
-    ngx_rbtree_node_t    *node, *sentinel;
-    ngx_resolver_node_t  *rn;
+    ngx_rbtree_बुहोल_t    *बुहोल, *sentinel;
+    ngx_resolver_बुहोल_t  *rn;
 
-    node = r->addr6_rbtree.root;
+    बुहोल = r->addr6_rbtree.उगात;
     sentinel = r->addr6_rbtree.sentinel;
 
-    while (node != sentinel) {
+    while (बुहोल != sentinel) {
 
-        if (hash < node->key) {
-            node = node->left;
+        if (hash < बुहोल->सुसि) {
+            बुहोल = बुहोल->कालिवा;
             continue;
         }
 
-        if (hash > node->key) {
-            node = node->right;
+        if (hash > बुहोल->सुसि) {
+            बुहोल = बुहोल->कानान;
             continue;
         }
 
         /* hash == node->key */
 
-        rn = ngx_resolver_node(node);
+        rn = ngx_resolver_बुहोल(बुहोल);
 
         rc = ngx_memcmp(addr, &rn->addr6, 16);
 
@@ -3563,7 +3563,7 @@ ngx_resolver_lookup_addr6(ngx_resolver_t *r, struct in6_addr *addr,
             return rn;
         }
 
-        node = (rc < 0) ? node->left : node->right;
+        बुहोल = (rc < 0) ? बुहोल->कालिवा : बुहोल->कानान;
     }
 
     /* not found */
@@ -3575,29 +3575,29 @@ ngx_resolver_lookup_addr6(ngx_resolver_t *r, struct in6_addr *addr,
 
 
 static void
-ngx_resolver_rbtree_insert_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ngx_resolver_rbtree_इसिंगित_हालागा(ngx_rbtree_बुहोल_t *temp,
+    ngx_rbtree_बुहोल_t *बुहोल, ngx_rbtree_बुहोल_t *sentinel)
 {
-    ngx_rbtree_node_t    **p;
-    ngx_resolver_node_t   *rn, *rn_temp;
+    ngx_rbtree_बुहोल_t    **p;
+    ngx_resolver_बुहोल_t   *rn, *rn_temp;
 
     for ( ;; ) {
 
-        if (node->key < temp->key) {
+        if (बुहोल->सुसि < temp->सुसि) {
 
-            p = &temp->left;
+            p = &temp->कालिवा;
 
-        } else if (node->key > temp->key) {
+        } else if (बुहोल->सुसि > temp->सुसि) {
 
-            p = &temp->right;
+            p = &temp->कानान;
 
         } else { /* node->key == temp->key */
 
-            rn = ngx_resolver_node(node);
-            rn_temp = ngx_resolver_node(temp);
+            rn = ngx_resolver_बुहोल(बुहोल);
+            rn_temp = ngx_resolver_बुहोल(temp);
 
             p = (ngx_memn2cmp(rn->name, rn_temp->name, rn->nlen, rn_temp->nlen)
-                 < 0) ? &temp->left : &temp->right;
+                 < 0) ? &temp->कालिवा : &temp->कानान;
         }
 
         if (*p == sentinel) {
@@ -3607,40 +3607,40 @@ ngx_resolver_rbtree_insert_value(ngx_rbtree_node_t *temp,
         temp = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = बुहोल;
+    बुहोल->parent = temp;
+    बुहोल->कालिवा = sentinel;
+    बुहोल->कानान = sentinel;
+    ngx_rbt_red(बुहोल);
 }
 
 
 #if (NGX_HAVE_INET6)
 
 static void
-ngx_resolver_rbtree_insert_addr6_value(ngx_rbtree_node_t *temp,
-    ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
+ngx_resolver_rbtree_इसिंगित_addr6_हालागा(ngx_rbtree_बुहोल_t *temp,
+    ngx_rbtree_बुहोल_t *बुहोल, ngx_rbtree_बुहोल_t *sentinel)
 {
-    ngx_rbtree_node_t    **p;
-    ngx_resolver_node_t   *rn, *rn_temp;
+    ngx_rbtree_बुहोल_t    **p;
+    ngx_resolver_बुहोल_t   *rn, *rn_temp;
 
     for ( ;; ) {
 
-        if (node->key < temp->key) {
+        if (बुहोल->सुसि < temp->सुसि) {
 
-            p = &temp->left;
+            p = &temp->कालिवा;
 
-        } else if (node->key > temp->key) {
+        } else if (बुहोल->सुसि > temp->सुसि) {
 
-            p = &temp->right;
+            p = &temp->कानान;
 
         } else { /* node->key == temp->key */
 
-            rn = ngx_resolver_node(node);
-            rn_temp = ngx_resolver_node(temp);
+            rn = ngx_resolver_बुहोल(बुहोल);
+            rn_temp = ngx_resolver_बुहोल(temp);
 
             p = (ngx_memcmp(&rn->addr6, &rn_temp->addr6, 16)
-                 < 0) ? &temp->left : &temp->right;
+                 < 0) ? &temp->कालिवा : &temp->कानान;
         }
 
         if (*p == sentinel) {
@@ -3650,18 +3650,18 @@ ngx_resolver_rbtree_insert_addr6_value(ngx_rbtree_node_t *temp,
         temp = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = बुहोल;
+    बुहोल->parent = temp;
+    बुहोल->कालिवा = sentinel;
+    बुहोल->कानान = sentinel;
+    ngx_rbt_red(बुहोल);
 }
 
 #endif
 
 
 static ngx_int_t
-ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_बुहोल_t *rn,
     ngx_str_t *name)
 {
     u_char              *p, *s;
@@ -3789,7 +3789,7 @@ ngx_resolver_create_name_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
 
 
 static ngx_int_t
-ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_बुहोल_t *rn,
     ngx_str_t *name)
 {
     u_char              *p, *s;
@@ -3877,7 +3877,7 @@ ngx_resolver_create_srv_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
 
 
 static ngx_int_t
-ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+ngx_resolver_create_addr_query(ngx_resolver_t *r, ngx_resolver_बुहोल_t *rn,
     ngx_resolver_addr_t *addr)
 {
     u_char               *p, *d;
@@ -4107,7 +4107,7 @@ ngx_resolver_timeout_handler(ngx_event_t *ev)
 
 
 static void
-ngx_resolver_free_node(ngx_resolver_t *r, ngx_resolver_node_t *rn)
+ngx_resolver_free_बुहोल(ngx_resolver_t *r, ngx_resolver_बुहोल_t *rn)
 {
     ngx_uint_t  i;
 
@@ -4217,7 +4217,7 @@ ngx_resolver_dup(ngx_resolver_t *r, void *src, size_t size)
 
 
 static ngx_resolver_addr_t *
-ngx_resolver_export(ngx_resolver_t *r, ngx_resolver_node_t *rn,
+ngx_resolver_export(ngx_resolver_t *r, ngx_resolver_बुहोल_t *rn,
     ngx_uint_t rotate)
 {
     ngx_uint_t            d, i, j, n;
@@ -4499,12 +4499,12 @@ ngx_udp_connect(ngx_resolver_connection_t *rec)
 
     rec->udp = c;
 
-    c->number = ngx_atomic_fetch_add(ngx_connection_counter, 1);
+    c->नुमेरो_2 = ngx_atomic_fetch_add(ngx_connection_counter, 1);
 
     c->start_time = ngx_current_msec;
 
     ngx_log_debug3(NGX_LOG_DEBUG_EVENT, &rec->log, 0,
-                   "connect to %V, fd:%d #%uA", &rec->server, s, c->number);
+                   "connect to %V, fd:%d #%uA", &rec->server, s, c->नुमेरो_2);
 
     rc = connect(s, rec->sockaddr, rec->socklen);
 
@@ -4585,7 +4585,7 @@ ngx_tcp_connect(ngx_resolver_connection_t *rec)
 
     rec->tcp = c;
 
-    c->number = ngx_atomic_fetch_add(ngx_connection_counter, 1);
+    c->नुमेरो_2 = ngx_atomic_fetch_add(ngx_connection_counter, 1);
 
     c->start_time = ngx_current_msec;
 
@@ -4596,7 +4596,7 @@ ngx_tcp_connect(ngx_resolver_connection_t *rec)
     }
 
     ngx_log_debug3(NGX_LOG_DEBUG_EVENT, &rec->log, 0,
-                   "connect to %V, fd:%d #%uA", &rec->server, s, c->number);
+                   "connect to %V, fd:%d #%uA", &rec->server, s, c->नुमेरो_2);
 
     rc = connect(s, rec->sockaddr, rec->socklen);
 

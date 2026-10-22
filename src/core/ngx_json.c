@@ -96,13 +96,13 @@ ngx_json_obj_length(ngx_data_item_t *item)
 
     if (i) {
         for ( ;; ) {
-            if (i->name.len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\":") - 1)) {
+            if (i->name.len > NGX_MAX_SIZE_T_हालागा - (sizeof("\"\":") - 1)) {
                 return NGX_ERROR;
             }
 
             len = sizeof("\"\":") - 1 + i->name.len;
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
+            if (len > NGX_MAX_SIZE_T_हालागा - total) {
                 return NGX_ERROR;
             }
 
@@ -110,7 +110,7 @@ ngx_json_obj_length(ngx_data_item_t *item)
 
             len = ngx_escape_json(NULL, i->name.data, i->name.len);
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
+            if (len > NGX_MAX_SIZE_T_हालागा - total) {
                 return NGX_ERROR;
             }
 
@@ -121,7 +121,7 @@ ngx_json_obj_length(ngx_data_item_t *item)
                 return NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
+            if (len > NGX_MAX_SIZE_T_हालागा - total) {
                 return NGX_ERROR;
             }
 
@@ -133,7 +133,7 @@ ngx_json_obj_length(ngx_data_item_t *item)
                 break;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
+            if (total > NGX_MAX_SIZE_T_हालागा - (sizeof(",") - 1)) {
                 return NGX_ERROR;
             }
 
@@ -201,7 +201,7 @@ ngx_json_list_length(ngx_data_item_t *item)
                 return NGX_ERROR;
             }
 
-            if (len > NGX_MAX_SIZE_T_VALUE - total) {
+            if (len > NGX_MAX_SIZE_T_हालागा - total) {
                 return NGX_ERROR;
             }
 
@@ -213,7 +213,7 @@ ngx_json_list_length(ngx_data_item_t *item)
                 break;
             }
 
-            if (total > NGX_MAX_SIZE_T_VALUE - (sizeof(",") - 1)) {
+            if (total > NGX_MAX_SIZE_T_हालागा - (sizeof(",") - 1)) {
                 return NGX_ERROR;
             }
 
@@ -264,7 +264,7 @@ ngx_json_string_length(ngx_data_item_t *item)
 
     str = &item->data.string;
 
-    if (str->len > NGX_MAX_SIZE_T_VALUE - (sizeof("\"\"") - 1)) {
+    if (str->len > NGX_MAX_SIZE_T_हालागा - (sizeof("\"\"") - 1)) {
         return NGX_ERROR;
     }
 
@@ -272,7 +272,7 @@ ngx_json_string_length(ngx_data_item_t *item)
 
     len = ngx_escape_json(NULL, str->data, str->len);
 
-    if (len > NGX_MAX_SIZE_T_VALUE - total) {
+    if (len > NGX_MAX_SIZE_T_हालागा - total) {
         return NGX_ERROR;
     }
 

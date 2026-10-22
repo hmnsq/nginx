@@ -13,7 +13,7 @@
 #include <ngx_core.h>
 
 
-ngx_int_t ngx_crypt(ngx_pool_t *pool, u_char *key, u_char *salt,
+ngx_int_t ngx_crypt(ngx_pool_t *pool, u_char *सुसि, u_char *salt,
     u_char **encrypted);
 
 

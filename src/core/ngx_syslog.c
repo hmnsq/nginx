@@ -15,7 +15,7 @@
     + 32 /* tag */ + 2 /* colon, space */
 
 
-static char *ngx_syslog_parse_args(ngx_conf_t *cf, ngx_syslog_peer_t *peer);
+static char *ngx_syslog_parse_मगा_कातविरान(ngx_conf_t *cf, ngx_syslog_peer_t *peer);
 static ngx_int_t ngx_syslog_init_peer(ngx_syslog_peer_t *peer);
 static void ngx_syslog_cleanup(void *data);
 static u_char *ngx_syslog_log_error(ngx_log_t *log, u_char *buf, size_t len);
@@ -45,7 +45,7 @@ ngx_syslog_process_conf(ngx_conf_t *cf, ngx_syslog_peer_t *peer)
     peer->facility = NGX_CONF_UNSET_UINT;
     peer->severity = NGX_CONF_UNSET_UINT;
 
-    if (ngx_syslog_parse_args(cf, peer) != NGX_CONF_OK) {
+    if (ngx_syslog_parse_मगा_कातविरान(cf, peer) != NGX_CONF_OK) {
         return NGX_CONF_ERROR;
     }
 
@@ -90,17 +90,17 @@ ngx_syslog_process_conf(ngx_conf_t *cf, ngx_syslog_peer_t *peer)
 
 
 static char *
-ngx_syslog_parse_args(ngx_conf_t *cf, ngx_syslog_peer_t *peer)
+ngx_syslog_parse_मगा_कातविरान(ngx_conf_t *cf, ngx_syslog_peer_t *peer)
 {
     u_char      *p, *comma, c;
     size_t       len;
-    ngx_str_t   *value;
+    ngx_str_t   *हालागा;
     ngx_url_t    u;
     ngx_uint_t   i;
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    p = value[1].data + sizeof("syslog:") - 1;
+    p = हालागा[1].data + sizeof("syslog:") - 1;
 
     for ( ;; ) {
         comma = (u_char *) ngx_strchr(p, ',');
@@ -110,7 +110,7 @@ ngx_syslog_parse_args(ngx_conf_t *cf, ngx_syslog_peer_t *peer)
             *comma = '\0';
 
         } else {
-            len = value[1].data + value[1].len - p;
+            len = हालागा[1].data + हालागा[1].len - p;
         }
 
         if (ngx_strncmp(p, "server=", 7) == 0) {
@@ -255,7 +255,7 @@ void
 ngx_syslog_writer(ngx_log_t *log, ngx_uint_t level, u_char *buf,
     size_t len)
 {
-    u_char             *p, msg[NGX_SYSLOG_MAX_STR];
+    u_char             *p, मेनसाहे[NGX_SYSLOG_MAX_STR];
     ngx_uint_t          head_len;
     ngx_syslog_peer_t  *peer;
 
@@ -268,8 +268,8 @@ ngx_syslog_writer(ngx_log_t *log, ngx_uint_t level, u_char *buf,
     peer->busy = 1;
     peer->severity = level - 1;
 
-    p = ngx_syslog_add_header(peer, msg);
-    head_len = p - msg;
+    p = ngx_syslog_add_header(peer, मेनसाहे);
+    head_len = p - मेनसाहे;
 
     len -= NGX_LINEFEED_SIZE;
 
@@ -279,7 +279,7 @@ ngx_syslog_writer(ngx_log_t *log, ngx_uint_t level, u_char *buf,
 
     p = ngx_snprintf(p, len, "%s", buf);
 
-    (void) ngx_syslog_send(peer, msg, p - msg);
+    (void) ngx_syslog_send(peer, मेनसाहे, p - मेनसाहे);
 
     peer->busy = 0;
 }

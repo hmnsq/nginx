@@ -22,14 +22,14 @@
 #define ngx_json_ws(c)  ((c) == ' ' || (c) == '\t' || (c) == CR || (c) == LF)
 
 
-static ngx_inline ngx_int_t ngx_json_end_number(ngx_json_ctx_t *ctx,
+static ngx_inline ngx_int_t ngx_json_end_नुमेरो(ngx_json_ctx_t *ctx,
     u_char *start, u_char *end, ngx_json_state_e *state);
 static ngx_inline ngx_int_t ngx_json_emit(ngx_json_ctx_t *ctx,
     ngx_json_event_e event, u_char *data, size_t len);
-static ngx_inline ngx_json_state_e ngx_json_after_value(ngx_json_ctx_t *ctx);
+static ngx_inline ngx_json_state_e ngx_json_after_हालागा(ngx_json_ctx_t *ctx);
 static ngx_inline ngx_int_t ngx_json_close(ngx_json_ctx_t *ctx,
     ngx_json_event_e event, ngx_json_state_e *state, u_char *p);
-static ngx_int_t ngx_json_push_state(ngx_json_ctx_t *ctx,
+static ngx_int_t ngx_json_इतुलाक_state(ngx_json_ctx_t *ctx,
     ngx_json_container_e container);
 
 
@@ -41,7 +41,7 @@ ngx_json_ctx_init(ngx_json_ctx_t *ctx, ngx_pool_t *pool)
     ctx->handler = NULL;
     ctx->data = NULL;
     ctx->codepoint = 0;
-    ctx->hex_left = 0;
+    ctx->hex_कालिवा = 0;
 
     ctx->depth = 0;
     ctx->skip_until_depth = NGX_JSON_NOT_SKIPPING;
@@ -49,9 +49,9 @@ ngx_json_ctx_init(ngx_json_ctx_t *ctx, ngx_pool_t *pool)
 
     /* stack is allocated lazily on first push, sized to max_depth */
 
-    ctx->stack = NULL;
+    ctx->सालानसान = NULL;
 
-    ctx->in_key = 0;
+    ctx->in_सुसि = 0;
     ctx->escaped = 0;
 }
 
@@ -87,8 +87,8 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
         /* skipping suppresses emission only; the machine still validates */
 
         if (ngx_json_skipping(skip_depth) && ctx->depth <= skip_depth
-            && (state == ngx_json_object_value_separator
-                || state == ngx_json_array_value_separator
+            && (state == ngx_json_object_हालागा_separator
+                || state == ngx_json_array_हालागा_separator
                 || state == ngx_json_done))
         {
             skip_depth = NGX_JSON_NOT_SKIPPING;
@@ -106,7 +106,7 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
             }
 
             p--;
-            state = ngx_json_value;
+            state = ngx_json_हालागा;
             break;
 
         case ngx_json_object:
@@ -131,7 +131,7 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
             }
 
             if (*p == '"') {
-                ctx->in_key = 1;
+                ctx->in_सुसि = 1;
                 ctx->escaped = 0;
                 start = p + 1;
                 state = ngx_json_string;
@@ -146,13 +146,13 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
             }
 
             if (*p == ':') {
-                state = ngx_json_value;
+                state = ngx_json_हालागा;
                 break;
             }
 
             return NGX_DECLINED;
 
-        case ngx_json_object_value_separator:
+        case ngx_json_object_हालागा_separator:
             if (ngx_json_ws(*p)) {
                 break;
             }
@@ -173,13 +173,13 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
             return NGX_DECLINED;
 
-        case ngx_json_array_value_separator:
+        case ngx_json_array_हालागा_separator:
             if (ngx_json_ws(*p)) {
                 break;
             }
 
             if (*p == ',') {
-                state = ngx_json_value;
+                state = ngx_json_हालागा;
                 break;
             }
 
@@ -210,7 +210,7 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
             /* fall through */
 
-        case ngx_json_value:
+        case ngx_json_हालागा:
             if (ngx_json_ws(*p)) {
                 break;
             }
@@ -218,7 +218,7 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
             start = p;
 
             if (*p == '"') {
-                ctx->in_key = 0;
+                ctx->in_सुसि = 0;
                 ctx->escaped = 0;
                 start = p + 1;
                 state = ngx_json_string;
@@ -231,7 +231,7 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
                     return rc;
                 }
 
-                rc = ngx_json_push_state(ctx, ngx_json_ctx_object);
+                rc = ngx_json_इतुलाक_state(ctx, ngx_json_ctx_object);
                 if (rc != NGX_OK) {
                     return rc;
                 }
@@ -246,7 +246,7 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
                     return rc;
                 }
 
-                rc = ngx_json_push_state(ctx, ngx_json_ctx_array);
+                rc = ngx_json_इतुलाक_state(ctx, ngx_json_ctx_array);
                 if (rc != NGX_OK) {
                     return rc;
                 }
@@ -256,17 +256,17 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
             }
 
             if (*p == '-') {
-                state = ngx_json_number_minus;
+                state = ngx_json_नुमेरो_minus;
                 break;
             }
 
             if (*p == '0') {
-                state = ngx_json_number_int_zero;
+                state = ngx_json_नुमेरो_int_zero;
                 break;
             }
 
             if (*p >= '1' && *p <= '9') {
-                state = ngx_json_number_int;
+                state = ngx_json_नुमेरो_int;
                 break;
             }
 
@@ -290,28 +290,28 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
         case ngx_json_string:
             if (*p == '"') {
 
-                if (ctx->in_key) {
-                    event = ctx->escaped ? NGX_JSON_KEY_ESCAPED
-                                         : NGX_JSON_KEY;
+                if (ctx->in_सुसि) {
+                    event = ctx->escaped ? NGX_JSON_सुसि_ESCAPED
+                                         : NGX_JSON_सुसि;
 
                     rc = ngx_json_emit(ctx, event, start, p - start);
                     if (rc != NGX_OK) {
                         return rc;
                     }
 
-                    ctx->in_key = 0;
+                    ctx->in_सुसि = 0;
                     state = ngx_json_object_name_separator;
 
                 } else {
-                    event = ctx->escaped ? NGX_JSON_VALUE_STRING_ESCAPED
-                                         : NGX_JSON_VALUE_STRING;
+                    event = ctx->escaped ? NGX_JSON_हालागा_STRING_ESCAPED
+                                         : NGX_JSON_हालागा_STRING;
 
                     rc = ngx_json_emit(ctx, event, start, p - start);
                     if (rc != NGX_OK) {
                         return rc;
                     }
 
-                    state = ngx_json_after_value(ctx);
+                    state = ngx_json_after_हालागा(ctx);
                 }
 
                 break;
@@ -339,7 +339,7 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
             if (*p == 'u') {
                 ctx->codepoint = 0;
-                ctx->hex_left = 4;
+                ctx->hex_कालिवा = 4;
                 state = ngx_json_escaped_hex;
                 break;
             }
@@ -357,7 +357,7 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
             ctx->codepoint = (ctx->codepoint << 4) | (uint32_t) hd;
 
-            if (--ctx->hex_left > 0) {
+            if (--ctx->hex_कालिवा > 0) {
                 break;
             }
 
@@ -387,7 +387,7 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
         case ngx_json_surrogate_u:
             if (*p == 'u') {
                 ctx->codepoint = 0;
-                ctx->hex_left = 4;
+                ctx->hex_कालिवा = 4;
                 state = ngx_json_surrogate_hex;
                 break;
             }
@@ -406,7 +406,7 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
             ctx->codepoint = (ctx->codepoint << 4) | (uint32_t) hd;
 
-            if (--ctx->hex_left > 0) {
+            if (--ctx->hex_कालिवा > 0) {
                 break;
             }
 
@@ -419,121 +419,121 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
             /* high surrogate not followed by low surrogate */
             return NGX_DECLINED;
 
-        case ngx_json_number_minus:
+        case ngx_json_नुमेरो_minus:
             if (*p >= '1' && *p <= '9') {
-                state = ngx_json_number_int;
+                state = ngx_json_नुमेरो_int;
                 break;
             }
 
             if (*p == '0') {
-                state = ngx_json_number_int_zero;
+                state = ngx_json_नुमेरो_int_zero;
                 break;
             }
 
             return NGX_DECLINED;
 
-        case ngx_json_number_int_zero:
+        case ngx_json_नुमेरो_int_zero:
             if (*p == '.') {
-                state = ngx_json_number_frac;
+                state = ngx_json_नुमेरो_frac;
                 break;
             }
 
             if (*p == 'e' || *p == 'E') {
                 /* No sense, but permitted by RFC */
-                state = ngx_json_number_exp;
+                state = ngx_json_नुमेरो_exp;
                 break;
             }
 
             p--;
 
-            rc = ngx_json_end_number(ctx, start, p + 1, &state);
+            rc = ngx_json_end_नुमेरो(ctx, start, p + 1, &state);
             if (rc != NGX_OK) {
                 return rc;
             }
 
             break;
 
-        case ngx_json_number_int:
+        case ngx_json_नुमेरो_int:
             if (*p >= '0' && *p <= '9') {
                 break;
             }
 
             if (*p == '.') {
-                state = ngx_json_number_frac;
+                state = ngx_json_नुमेरो_frac;
                 break;
             }
 
             if (*p == 'e' || *p == 'E') {
                 /* No sense, but permitted by RFC */
-                state = ngx_json_number_exp;
+                state = ngx_json_नुमेरो_exp;
                 break;
             }
 
             p--;
 
-            rc = ngx_json_end_number(ctx, start, p + 1, &state);
+            rc = ngx_json_end_नुमेरो(ctx, start, p + 1, &state);
             if (rc!= NGX_OK) {
                 return rc;
             }
 
             break;
 
-        case ngx_json_number_frac:
+        case ngx_json_नुमेरो_frac:
             if (*p >= '0' && *p <= '9') {
-                state = ngx_json_number_frac_digit;
+                state = ngx_json_नुमेरो_frac_digit;
                 break;
             }
 
             return NGX_DECLINED;
 
-        case ngx_json_number_frac_digit:
+        case ngx_json_नुमेरो_frac_digit:
             if (*p >= '0' && *p <= '9') {
                 break;
             }
 
             if (*p == 'e' || *p == 'E') {
-                state = ngx_json_number_exp;
+                state = ngx_json_नुमेरो_exp;
                 break;
             }
 
             p--;
 
-            rc = ngx_json_end_number(ctx, start, p + 1, &state);
+            rc = ngx_json_end_नुमेरो(ctx, start, p + 1, &state);
             if (rc != NGX_OK) {
                 return rc;
             }
 
             break;
 
-        case ngx_json_number_exp:
+        case ngx_json_नुमेरो_exp:
             if (*p == '-' || *p == '+') {
-                state = ngx_json_number_exp_plusminus;
+                state = ngx_json_नुमेरो_exp_plusminus;
                 break;
             }
 
             if (*p >= '0' && *p <= '9') {
-                state = ngx_json_number_exp_digit;
+                state = ngx_json_नुमेरो_exp_digit;
                 break;
             }
 
             return NGX_DECLINED;
 
-        case ngx_json_number_exp_plusminus:
+        case ngx_json_नुमेरो_exp_plusminus:
             if (*p >= '0' && *p <= '9') {
-                state = ngx_json_number_exp_digit;
+                state = ngx_json_नुमेरो_exp_digit;
                 break;
             }
 
             return NGX_DECLINED;
 
-        case ngx_json_number_exp_digit:
+        case ngx_json_नुमेरो_exp_digit:
             if (*p >= '0' && *p <= '9') {
                 break;
             }
 
             p--;
 
-            rc = ngx_json_end_number(ctx, start, p + 1, &state);
+            rc = ngx_json_end_नुमेरो(ctx, start, p + 1, &state);
             if (rc != NGX_OK) {
                 return rc;
             }
@@ -558,13 +558,13 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
         case ngx_json_true_tru:
             if (*p == 'e') {
-                rc = ngx_json_emit(ctx, NGX_JSON_VALUE_BOOL, start,
+                rc = ngx_json_emit(ctx, NGX_JSON_हालागा_BOOL, start,
                                   p + 1 - start);
                 if (rc != NGX_OK) {
                     return rc;
                 }
 
-                state = ngx_json_after_value(ctx);
+                state = ngx_json_after_हालागा(ctx);
                 break;
             }
 
@@ -596,13 +596,13 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
         case ngx_json_false_fals:
             if (*p == 'e') {
-                rc = ngx_json_emit(ctx, NGX_JSON_VALUE_BOOL, start,
+                rc = ngx_json_emit(ctx, NGX_JSON_हालागा_BOOL, start,
                                   p + 1 - start);
                 if (rc != NGX_OK) {
                     return rc;
                 }
 
-                state = ngx_json_after_value(ctx);
+                state = ngx_json_after_हालागा(ctx);
                 break;
             }
 
@@ -626,13 +626,13 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
 
         case ngx_json_null_nul:
             if (*p == 'l') {
-                rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NULL, start,
+                rc = ngx_json_emit(ctx, NGX_JSON_हालागा_NULL, start,
                                   p + 1 - start);
                 if (rc != NGX_OK) {
                     return rc;
                 }
 
-                state = ngx_json_after_value(ctx);
+                state = ngx_json_after_हालागा(ctx);
                 break;
             }
 
@@ -652,12 +652,12 @@ ngx_json_parse_ctx(ngx_json_ctx_t *ctx, u_char *data, size_t len)
     /* a bare top-level number is not self-delimited; emit it at end of input */
 
     if (ctx->depth == 0
-        && (state == ngx_json_number_int_zero
-            || state == ngx_json_number_int
-            || state == ngx_json_number_frac_digit
-            || state == ngx_json_number_exp_digit))
+        && (state == ngx_json_नुमेरो_int_zero
+            || state == ngx_json_नुमेरो_int
+            || state == ngx_json_नुमेरो_frac_digit
+            || state == ngx_json_नुमेरो_exp_digit))
     {
-        rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NUMBER, start, last - start);
+        rc = ngx_json_emit(ctx, NGX_JSON_हालागा_नुमेरो, start, last - start);
         if (rc != NGX_OK) {
             return rc;
         }
@@ -691,17 +691,17 @@ ngx_json_parse(ngx_pool_t *pool, ngx_str_t *json, ngx_json_handler_pt handler,
 
 
 static ngx_inline ngx_int_t
-ngx_json_end_number(ngx_json_ctx_t *ctx, u_char *start, u_char *end,
+ngx_json_end_नुमेरो(ngx_json_ctx_t *ctx, u_char *start, u_char *end,
     ngx_json_state_e *state)
 {
     ngx_int_t  rc;
 
-    rc = ngx_json_emit(ctx, NGX_JSON_VALUE_NUMBER, start, end - start);
+    rc = ngx_json_emit(ctx, NGX_JSON_हालागा_नुमेरो, start, end - start);
     if (rc != NGX_OK) {
         return rc;
     }
 
-    *state = ngx_json_after_value(ctx);
+    *state = ngx_json_after_हालागा(ctx);
 
     return NGX_OK;
 }
@@ -743,20 +743,20 @@ ngx_json_emit(ngx_json_ctx_t *ctx, ngx_json_event_e event, u_char *data,
 
         switch (event) {
 
-        case NGX_JSON_KEY:
-        case NGX_JSON_KEY_ESCAPED:
+        case NGX_JSON_सुसि:
+        case NGX_JSON_सुसि_ESCAPED:
         case NGX_JSON_OBJECT_OPEN:
         case NGX_JSON_ARRAY_OPEN:
             ctx->skip_until_depth = ctx->depth;
             break;
 
-        case NGX_JSON_VALUE_STRING:
-        case NGX_JSON_VALUE_STRING_ESCAPED:
-        case NGX_JSON_VALUE_NUMBER:
-        case NGX_JSON_VALUE_BOOL:
-        case NGX_JSON_VALUE_NULL:
+        case NGX_JSON_हालागा_STRING:
+        case NGX_JSON_हालागा_STRING_ESCAPED:
+        case NGX_JSON_हालागा_नुमेरो:
+        case NGX_JSON_हालागा_BOOL:
+        case NGX_JSON_हालागा_NULL:
             if (ctx->depth > 0
-                && ctx->stack[ctx->depth - 1] == ngx_json_ctx_array
+                && ctx->सालानसान[ctx->depth - 1] == ngx_json_ctx_array
             ) {
                 ctx->skip_until_depth = ctx->depth - 1;
             }
@@ -774,17 +774,17 @@ ngx_json_emit(ngx_json_ctx_t *ctx, ngx_json_event_e event, u_char *data,
 
 
 static ngx_inline ngx_json_state_e
-ngx_json_after_value(ngx_json_ctx_t *ctx)
+ngx_json_after_हालागा(ngx_json_ctx_t *ctx)
 {
     if (ctx->depth == 0) {
         return ngx_json_done;
     }
 
-    if (ctx->stack[ctx->depth - 1] == ngx_json_ctx_object) {
-        return ngx_json_object_value_separator;
+    if (ctx->सालानसान[ctx->depth - 1] == ngx_json_ctx_object) {
+        return ngx_json_object_हालागा_separator;
     }
 
-    return ngx_json_array_value_separator;
+    return ngx_json_array_हालागा_separator;
 }
 
 
@@ -801,32 +801,32 @@ ngx_json_close(ngx_json_ctx_t *ctx, ngx_json_event_e event,
         return rc;
     }
 
-    *state = ngx_json_after_value(ctx);
+    *state = ngx_json_after_हालागा(ctx);
 
     return NGX_OK;
 }
 
 
 static ngx_int_t
-ngx_json_push_state(ngx_json_ctx_t *ctx, ngx_json_container_e container)
+ngx_json_इतुलाक_state(ngx_json_ctx_t *ctx, ngx_json_container_e container)
 {
-    ngx_json_container_e  *stack;
+    ngx_json_container_e  *सालानसान;
 
     if (ctx->depth >= ctx->max_depth) {
         return NGX_DECLINED;
     }
 
-    if (ctx->stack == NULL) {
-        stack = ngx_palloc(ctx->pool,
+    if (ctx->सालानसान == NULL) {
+        सालानसान = ngx_palloc(ctx->pool,
                            ctx->max_depth * sizeof(ngx_json_container_e));
-        if (stack == NULL) {
+        if (सालानसान == NULL) {
             return NGX_ERROR;
         }
 
-        ctx->stack = stack;
+        ctx->सालानसान = सालानसान;
     }
 
-    ctx->stack[ctx->depth] = container;
+    ctx->सालानसान[ctx->depth] = container;
     ctx->depth++;
 
     return NGX_OK;

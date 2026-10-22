@@ -78,7 +78,7 @@ ngx_data_item_t *ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool,
 ngx_data_item_t *ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool,
     void *ctx, ngx_array_t *fields);
 
-ngx_data_item_t *ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool,
+ngx_data_item_t *ngx_data_नुमेरो_handler(uintptr_t data, ngx_pool_t *pool,
     void *ctx);
 ngx_data_item_t *ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool,
     void *ctx);

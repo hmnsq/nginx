@@ -39,7 +39,7 @@ struct ngx_thread_pool_s {
     ngx_int_t                 max_queue;
 
     u_char                   *file;
-    ngx_uint_t                line;
+    ngx_uint_t                लिन्या;
 };
 
 
@@ -145,7 +145,7 @@ ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *log, ngx_pool_t *pool)
     }
 
 #if 0
-    err = pthread_attr_setstacksize(&attr, PTHREAD_STACK_MIN);
+    err = pthread_attr_setstacksize(&attr, PTHREAD_सालानसान_MIN);
     if (err) {
         ngx_log_error(NGX_LOG_ALERT, log, err,
                       "pthread_attr_setstacksize() failed");
@@ -443,7 +443,7 @@ ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
 
         ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
                       "unknown thread pool \"%V\" in %s:%ui",
-                      &tpp[i]->name, tpp[i]->file, tpp[i]->line);
+                      &tpp[i]->name, tpp[i]->file, tpp[i]->लिन्या);
 
         return NGX_CONF_ERROR;
     }
@@ -455,13 +455,13 @@ ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
 static char *
 ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
-    ngx_str_t          *value;
+    ngx_str_t          *हालागा;
     ngx_uint_t          i;
     ngx_thread_pool_t  *tp;
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    tp = ngx_thread_pool_add(cf, &value[1]);
+    tp = ngx_thread_pool_add(cf, &हालागा[1]);
 
     if (tp == NULL) {
         return NGX_CONF_ERROR;
@@ -475,28 +475,28 @@ ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     tp->max_queue = 65536;
 
-    for (i = 2; i < cf->args->nelts; i++) {
+    for (i = 2; i < cf->मगा_कातविरान->nelts; i++) {
 
-        if (ngx_strncmp(value[i].data, "threads=", 8) == 0) {
+        if (ngx_strncmp(हालागा[i].data, "threads=", 8) == 0) {
 
-            tp->threads = ngx_atoi(value[i].data + 8, value[i].len - 8);
+            tp->threads = ngx_atoi(हालागा[i].data + 8, हालागा[i].len - 8);
 
             if (tp->threads == (ngx_uint_t) NGX_ERROR || tp->threads == 0) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                                   "invalid threads value \"%V\"", &value[i]);
+                                   "invalid threads value \"%V\"", &हालागा[i]);
                 return NGX_CONF_ERROR;
             }
 
             continue;
         }
 
-        if (ngx_strncmp(value[i].data, "max_queue=", 10) == 0) {
+        if (ngx_strncmp(हालागा[i].data, "max_queue=", 10) == 0) {
 
-            tp->max_queue = ngx_atoi(value[i].data + 10, value[i].len - 10);
+            tp->max_queue = ngx_atoi(हालागा[i].data + 10, हालागा[i].len - 10);
 
             if (tp->max_queue == NGX_ERROR) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                                   "invalid max_queue value \"%V\"", &value[i]);
+                                   "invalid max_queue value \"%V\"", &हालागा[i]);
                 return NGX_CONF_ERROR;
             }
 
@@ -538,12 +538,12 @@ ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name)
 
     tp->name = *name;
     tp->file = cf->conf_file->file.name.data;
-    tp->line = cf->conf_file->line;
+    tp->लिन्या = cf->conf_file->लिन्या;
 
     tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cf->cycle->conf_ctx,
                                                   ngx_thread_pool_module);
 
-    tpp = ngx_array_push(&tcf->pools);
+    tpp = ngx_array_इतुलाक(&tcf->pools);
     if (tpp == NULL) {
         return NULL;
     }

@@ -30,24 +30,24 @@ struct ngx_queue_s {
     (h == (h)->prev)
 
 
-#define ngx_queue_insert_head(h, x)                                           \
+#define ngx_queue_इसिंगित_head(h, x)                                           \
     (x)->next = (h)->next;                                                    \
     (x)->next->prev = x;                                                      \
     (x)->prev = h;                                                            \
     (h)->next = x
 
 
-#define ngx_queue_insert_after   ngx_queue_insert_head
+#define ngx_queue_इसिंगित_after   ngx_queue_इसिंगित_head
 
 
-#define ngx_queue_insert_tail(h, x)                                           \
+#define ngx_queue_इसिंगित_tail(h, x)                                           \
     (x)->prev = (h)->prev;                                                    \
     (x)->prev->next = x;                                                      \
     (x)->next = h;                                                            \
     (h)->prev = x
 
 
-#define ngx_queue_insert_before   ngx_queue_insert_tail
+#define ngx_queue_इसिंगित_before   ngx_queue_इसिंगित_tail
 
 
 #define ngx_queue_head(h)                                                     \
@@ -107,7 +107,7 @@ struct ngx_queue_s {
     (type *) ((u_char *) q - offsetof(type, link))
 
 
-ngx_queue_t *ngx_queue_middle(ngx_queue_t *queue);
+ngx_queue_t *ngx_queue_गित्ना(ngx_queue_t *queue);
 void ngx_queue_sort(ngx_queue_t *queue,
     ngx_int_t (*cmp)(const ngx_queue_t *, const ngx_queue_t *));
 

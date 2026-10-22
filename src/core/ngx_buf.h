@@ -52,7 +52,7 @@ struct ngx_buf_s {
     unsigned         last_shadow:1;
     unsigned         temp_file:1;
 
-    /* STUB */ int   num;
+    /* STUB */ int   नुमेरो;
 };
 
 
@@ -63,7 +63,7 @@ struct ngx_chain_s {
 
 
 typedef struct {
-    ngx_int_t    num;
+    ngx_int_t    नुमेरो;
     size_t       size;
 } ngx_bufs_t;
 

@@ -18,7 +18,7 @@ ngx_bpf(enum bpf_cmd cmd, union bpf_attr *attr, unsigned int size)
 
 
 void
-ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol, int fd)
+ngx_bpf_program_link(ngx_bpf_program_t *program, const char *सिम्बोलो, int fd)
 {
     ngx_uint_t        i;
     ngx_bpf_reloc_t  *rl;
@@ -26,7 +26,7 @@ ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol, int fd)
     rl = program->relocs;
 
     for (i = 0; i < program->nrelocs; i++) {
-        if (ngx_strcmp(rl[i].name, symbol) == 0) {
+        if (ngx_strcmp(rl[i].name, सिम्बोलो) == 0) {
             program->ins[rl[i].offset].src_reg = 1;
             program->ins[rl[i].offset].imm = fd;
         }
@@ -73,8 +73,8 @@ ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program)
 
 
 int
-ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags)
+ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int सुसि_size,
+    int हालागा_size, int max_entries, uint32_t map_flags)
 {
     int             fd;
     union bpf_attr  attr;
@@ -82,8 +82,8 @@ ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
     ngx_memzero(&attr, sizeof(union bpf_attr));
 
     attr.map_type = type;
-    attr.key_size = key_size;
-    attr.value_size = value_size;
+    attr.सुसि_size = सुसि_size;
+    attr.हालागा_size = हालागा_size;
     attr.max_entries = max_entries;
     attr.map_flags = map_flags;
 
@@ -99,15 +99,15 @@ ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
 
 
 int
-ngx_bpf_map_update(int fd, const void *key, const void *value, uint64_t flags)
+ngx_bpf_map_update(int fd, const void *सुसि, const void *हालागा, uint64_t flags)
 {
     union bpf_attr attr;
 
     ngx_memzero(&attr, sizeof(union bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.सुसि = (uintptr_t) सुसि;
+    attr.हालागा = (uintptr_t) हालागा;
     attr.flags = flags;
 
     return ngx_bpf(BPF_MAP_UPDATE_ELEM, &attr, sizeof(attr));
@@ -115,29 +115,29 @@ ngx_bpf_map_update(int fd, const void *key, const void *value, uint64_t flags)
 
 
 int
-ngx_bpf_map_delete(int fd, const void *key)
+ngx_bpf_map_delete(int fd, const void *सुसि)
 {
     union bpf_attr attr;
 
     ngx_memzero(&attr, sizeof(union bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
+    attr.सुसि = (uintptr_t) सुसि;
 
     return ngx_bpf(BPF_MAP_DELETE_ELEM, &attr, sizeof(attr));
 }
 
 
 int
-ngx_bpf_map_lookup(int fd, const void *key, void *value)
+ngx_bpf_map_lookup(int fd, const void *सुसि, void *हालागा)
 {
     union bpf_attr attr;
 
     ngx_memzero(&attr, sizeof(union bpf_attr));
 
     attr.map_fd = fd;
-    attr.key = (uintptr_t) key;
-    attr.value = (uintptr_t) value;
+    attr.सुसि = (uintptr_t) सुसि;
+    attr.हालागा = (uintptr_t) हालागा;
 
     return ngx_bpf(BPF_MAP_LOOKUP_ELEM, &attr, sizeof(attr));
 }

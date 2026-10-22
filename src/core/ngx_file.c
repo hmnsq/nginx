@@ -12,9 +12,9 @@
 static ngx_int_t ngx_test_full_name(ngx_str_t *name);
 
 
-static ngx_atomic_t   temp_number = 0;
-ngx_atomic_t         *ngx_temp_number = &temp_number;
-ngx_atomic_int_t      ngx_random_number = 123456;
+static ngx_atomic_t   temp_नुमेरो = 0;
+ngx_atomic_t         *ngx_temp_नुमेरो = &temp_नुमेरो;
+ngx_atomic_int_t      ngx_random_नुमेरो = 123456;
 
 
 ngx_int_t
@@ -182,7 +182,7 @@ ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
 
     p += 1 + levels;
 
-    n = (uint32_t) ngx_next_temp_number(0);
+    n = (uint32_t) ngx_next_temp_नुमेरो(0);
 
     cln = ngx_pool_cleanup_add(pool, sizeof(ngx_pool_cleanup_file_t));
     if (cln == NULL) {
@@ -219,7 +219,7 @@ ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
         err = ngx_errno;
 
         if (err == NGX_EEXIST_FILE) {
-            n = (uint32_t) ngx_next_temp_number(1);
+            n = (uint32_t) ngx_next_temp_नुमेरो(1);
             continue;
         }
 
@@ -345,13 +345,13 @@ ngx_create_full_path(u_char *dir, ngx_uint_t access)
 
 
 ngx_atomic_uint_t
-ngx_next_temp_number(ngx_uint_t collision)
+ngx_next_temp_नुमेरो(ngx_uint_t collision)
 {
     ngx_atomic_uint_t  n, add;
 
-    add = collision ? ngx_random_number : 1;
+    add = collision ? ngx_random_नुमेरो : 1;
 
-    n = ngx_atomic_fetch_add(ngx_temp_number, add);
+    n = ngx_atomic_fetch_add(ngx_temp_नुमेरो, add);
 
     return n + add;
 }
@@ -363,7 +363,7 @@ ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     char  *p = conf;
 
     ssize_t      level;
-    ngx_str_t   *value;
+    ngx_str_t   *हालागा;
     ngx_uint_t   i, n;
     ngx_path_t  *path, **slot;
 
@@ -378,9 +378,9 @@ ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
-    path->name = value[1];
+    path->name = हालागा[1];
 
     if (path->name.data[path->name.len - 1] == '/') {
         path->name.len--;
@@ -391,10 +391,10 @@ ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     }
 
     path->conf_file = cf->conf_file->file.name.data;
-    path->line = cf->conf_file->line;
+    path->लिन्या = cf->conf_file->लिन्या;
 
-    for (i = 0, n = 2; n < cf->args->nelts; i++, n++) {
-        level = ngx_atoi(value[n].data, value[n].len);
+    for (i = 0, n = 2; n < cf->मगा_कातविरान->nelts; i++, n++) {
+        level = ngx_atoi(हालागा[n].data, हालागा[n].len);
         if (level == NGX_ERROR || level == 0) {
             return "invalid value";
         }
@@ -418,7 +418,7 @@ ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 
 char *
-ngx_conf_merge_path_value(ngx_conf_t *cf, ngx_path_t **path, ngx_path_t *prev,
+ngx_conf_merge_path_हालागा(ngx_conf_t *cf, ngx_path_t **path, ngx_path_t *prev,
     ngx_path_init_t *init)
 {
     ngx_uint_t  i;
@@ -462,8 +462,8 @@ ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     char  *confp = conf;
 
     u_char      *p;
-    ngx_str_t   *value;
-    ngx_uint_t   i, right, shift, *access, user;
+    ngx_str_t   *हालागा;
+    ngx_uint_t   i, कानान, shift, *access, user;
 
     access = (ngx_uint_t *) (confp + cmd->offset);
 
@@ -471,14 +471,14 @@ ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return "is duplicate";
     }
 
-    value = cf->args->elts;
+    हालागा = cf->मगा_कातविरान->elts;
 
     *access = 0;
     user = 0600;
 
-    for (i = 1; i < cf->args->nelts; i++) {
+    for (i = 1; i < cf->मगा_कातविरान->nelts; i++) {
 
-        p = value[i].data;
+        p = हालागा[i].data;
 
         if (ngx_strncmp(p, "user:", sizeof("user:") - 1) == 0) {
             shift = 6;
@@ -498,16 +498,16 @@ ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         }
 
         if (ngx_strcmp(p, "rw") == 0) {
-            right = 6;
+            कानान = 6;
 
         } else if (ngx_strcmp(p, "r") == 0) {
-            right = 4;
+            कानान = 4;
 
         } else {
             goto invalid;
         }
 
-        *access |= right << shift;
+        *access |= कानान << shift;
     }
 
     *access |= user;
@@ -516,7 +516,7 @@ ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 invalid:
 
-    ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "invalid value \"%V\"", &value[i]);
+    ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "invalid value \"%V\"", &हालागा[i]);
 
     return NGX_CONF_ERROR;
 }
@@ -539,7 +539,7 @@ ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot)
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "the same path name \"%V\" "
                                    "used in %s:%ui and",
-                                   &p[i]->name, p[i]->conf_file, p[i]->line);
+                                   &p[i]->name, p[i]->conf_file, p[i]->लिन्या);
                 return NGX_ERROR;
             }
 
@@ -561,14 +561,14 @@ ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot)
                                       "the same name as default path, but "
                                       "the different levels, you need to "
                                       "define default path in http section",
-                                      &p[i]->name, p[i]->conf_file, p[i]->line);
+                                      &p[i]->name, p[i]->conf_file, p[i]->लिन्या);
                         return NGX_ERROR;
                     }
 
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                       "the same path name \"%V\" in %s:%ui "
                                       "has the different levels than",
-                                      &p[i]->name, p[i]->conf_file, p[i]->line);
+                                      &p[i]->name, p[i]->conf_file, p[i]->लिन्या);
                     return NGX_ERROR;
                 }
 
@@ -583,7 +583,7 @@ ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot)
         }
     }
 
-    p = ngx_array_push(&cf->cycle->paths);
+    p = ngx_array_इतुलाक(&cf->cycle->paths);
     if (p == NULL) {
         return NGX_ERROR;
     }
@@ -739,7 +739,7 @@ ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to, ngx_ext_rename_file_t *ext)
         }
 
         (void) ngx_sprintf(name, "%*s.%010uD%Z", to->len, to->data,
-                           (uint32_t) ngx_next_temp_number(0));
+                           (uint32_t) ngx_next_temp_नुमेरो(0));
 
         if (ngx_copy_file(src->data, name, &cf) == NGX_OK) {
 
@@ -943,7 +943,7 @@ failed:
  */
 
 ngx_int_t
-ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
+ngx_walk_पुनो(ngx_पुनो_ctx_t *ctx, ngx_str_t *पुनो)
 {
     void       *data, *prev;
     u_char     *p, *name;
@@ -956,11 +956,11 @@ ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
     ngx_str_null(&buf);
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                   "walk tree \"%V\"", tree);
+                   "walk tree \"%V\"", पुनो);
 
-    if (ngx_open_dir(tree, &dir) == NGX_ERROR) {
+    if (ngx_open_dir(पुनो, &dir) == NGX_ERROR) {
         ngx_log_error(NGX_LOG_CRIT, ctx->log, ngx_errno,
-                      ngx_open_dir_n " \"%s\" failed", tree->data);
+                      ngx_open_dir_n " \"%s\" failed", पुनो->data);
         return NGX_ERROR;
     }
 
@@ -994,7 +994,7 @@ ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
 
             } else {
                 ngx_log_error(NGX_LOG_CRIT, ctx->log, err,
-                              ngx_read_dir_n " \"%s\" failed", tree->data);
+                              ngx_read_dir_n " \"%s\" failed", पुनो->data);
                 rc = NGX_ERROR;
             }
 
@@ -1015,7 +1015,7 @@ ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
             continue;
         }
 
-        file.len = tree->len + 1 + len;
+        file.len = पुनो->len + 1 + len;
 
         if (file.len > buf.len) {
 
@@ -1023,7 +1023,7 @@ ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
                 ngx_free(buf.data);
             }
 
-            buf.len = tree->len + 1 + len;
+            buf.len = पुनो->len + 1 + len;
 
             buf.data = ngx_alloc(buf.len + 1, ctx->log);
             if (buf.data == NULL) {
@@ -1031,7 +1031,7 @@ ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
             }
         }
 
-        p = ngx_cpymem(buf.data, tree->data, tree->len);
+        p = ngx_cpymem(buf.data, पुनो->data, पुनो->len);
         *p++ = '/';
         ngx_memcpy(p, name, len + 1);
 
@@ -1070,7 +1070,7 @@ ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
             ctx->access = ngx_de_access(&dir);
             ctx->mtime = ngx_de_mtime(&dir);
 
-            rc = ctx->pre_tree_handler(ctx, &file);
+            rc = ctx->pre_पुनो_handler(ctx, &file);
 
             if (rc == NGX_ABORT) {
                 goto failed;
@@ -1082,14 +1082,14 @@ ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
                 continue;
             }
 
-            if (ngx_walk_tree(ctx, &file) == NGX_ABORT) {
+            if (ngx_walk_पुनो(ctx, &file) == NGX_ABORT) {
                 goto failed;
             }
 
             ctx->access = ngx_de_access(&dir);
             ctx->mtime = ngx_de_mtime(&dir);
 
-            if (ctx->post_tree_handler(ctx, &file) == NGX_ABORT) {
+            if (ctx->post_पुनो_handler(ctx, &file) == NGX_ABORT) {
                 goto failed;
             }
 
@@ -1121,7 +1121,7 @@ done:
 
     if (ngx_close_dir(&dir) == NGX_ERROR) {
         ngx_log_error(NGX_LOG_CRIT, ctx->log, ngx_errno,
-                      ngx_close_dir_n " \"%s\" failed", tree->data);
+                      ngx_close_dir_n " \"%s\" failed", पुनो->data);
     }
 
     return rc;
