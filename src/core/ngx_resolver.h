@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
 #ifndef _NGX_RESOLVER_H_INCLUDED_
@@ -18,7 +18,7 @@
 #define NGX_RESOLVE_PTR       12
 #define NGX_RESOLVE_MX        15
 #define NGX_RESOLVE_TXT       16
-#if (NGX_HAVE_INET6)
+#যদি (NGX_HAVE_INET6)
 #define NGX_RESOLVE_AAAA      28
 #endif
 #define NGX_RESOLVE_SRV       33
@@ -32,18 +32,18 @@
 #define NGX_RESOLVE_TIMEDOUT  NGX_ETIMEDOUT
 
 
-#define NGX_NO_RESOLVER       (void *) -1
+#define NGX_NO_RESOLVER       (শূন্য *) -1
 
 #define NGX_RESOLVER_MAX_RECURSION    50
 
 
-typedef struct ngx_resolver_s  ngx_resolver_t;
+প্রকারলেখ কাঠামো ngx_resolver_s  ngx_resolver_t;
 
 
-typedef struct {
+প্রকারলেখ কাঠামো {
     ngx_connection_t         *udp;
     ngx_connection_t         *tcp;
-    struct sockaddr          *sockaddr;
+    কাঠামো sockaddr          *sockaddr;
     socklen_t                 socklen;
     ngx_str_t                 server;
     ngx_log_t                 log;
@@ -53,13 +53,13 @@ typedef struct {
 } ngx_resolver_connection_t;
 
 
-typedef struct ngx_resolver_ctx_s  ngx_resolver_ctx_t;
+প্রকারলেখ কাঠামো ngx_resolver_ctx_s  ngx_resolver_ctx_t;
 
-typedef void (*ngx_resolver_handler_pt)(ngx_resolver_ctx_t *ctx);
+প্রকারলেখ শূন্য (*ngx_resolver_handler_pt)(ngx_resolver_ctx_t *ctx);
 
 
-typedef struct {
-    struct sockaddr          *sockaddr;
+প্রকারলেখ কাঠামো {
+    কাঠামো sockaddr          *sockaddr;
     socklen_t                 socklen;
     ngx_str_t                 name;
     u_short                   priority;
@@ -67,7 +67,7 @@ typedef struct {
 } ngx_resolver_addr_t;
 
 
-typedef struct {
+প্রকারলেখ কাঠামো {
     ngx_str_t                 name;
     u_short                   priority;
     u_short                   weight;
@@ -75,7 +75,7 @@ typedef struct {
 } ngx_resolver_srv_t;
 
 
-typedef struct {
+প্রকারলেখ কাঠামো {
     ngx_str_t                 name;
     u_short                   priority;
     u_short                   weight;
@@ -89,27 +89,27 @@ typedef struct {
 } ngx_resolver_srv_name_t;
 
 
-typedef struct {
-    ngx_rbtree_node_t         node;
+প্রকারলেখ কাঠামো {
+    ngx_rbtree_গ্রন্থি_t         গ্রন্থি;
     ngx_queue_t               queue;
 
     /* PTR: resolved name, A: name to resolve */
     u_char                   *name;
 
-#if (NGX_HAVE_INET6)
+#যদি (NGX_HAVE_INET6)
     /* PTR: IPv6 address to resolve (IPv4 address is in rbtree node key) */
-    struct in6_addr           addr6;
+    কাঠামো in6_addr           addr6;
 #endif
 
     u_short                   nlen;
     u_short                   qlen;
 
     u_char                   *query;
-#if (NGX_HAVE_INET6)
+#যদি (NGX_HAVE_INET6)
     u_char                   *query6;
 #endif
 
-    union {
+    সংঘ {
         in_addr_t             addr;
         in_addr_t            *addrs;
         u_char               *cname;
@@ -121,10 +121,10 @@ typedef struct {
     u_short                   nsrvs;
     u_short                   cnlen;
 
-#if (NGX_HAVE_INET6)
-    union {
-        struct in6_addr       addr6;
-        struct in6_addr      *addrs6;
+#যদি (NGX_HAVE_INET6)
+    সংঘ {
+        কাঠামো in6_addr       addr6;
+        কাঠামো in6_addr      *addrs6;
     } u6;
 
     u_short                   naddrs6;
@@ -135,20 +135,20 @@ typedef struct {
     uint32_t                  ttl;
 
     unsigned                  tcp:1;
-#if (NGX_HAVE_INET6)
+#যদি (NGX_HAVE_INET6)
     unsigned                  tcp6:1;
 #endif
 
     ngx_uint_t                last_connection;
 
     ngx_resolver_ctx_t       *waiting;
-} ngx_resolver_node_t;
+} ngx_resolver_গ্রন্থি_t;
 
 
-struct ngx_resolver_s {
+কাঠামো ngx_resolver_s {
     /* has to be pointer because of "incomplete type" */
     ngx_event_t              *event;
-    void                     *dummy;
+    শূন্য                     *dummy;
     ngx_log_t                *log;
 
     /* event ident must be after 3 pointers as in ngx_connection_t */
@@ -159,13 +159,13 @@ struct ngx_resolver_s {
     ngx_uint_t                last_connection;
 
     ngx_rbtree_t              name_rbtree;
-    ngx_rbtree_node_t         name_sentinel;
+    ngx_rbtree_গ্রন্থি_t         name_sentinel;
 
     ngx_rbtree_t              srv_rbtree;
-    ngx_rbtree_node_t         srv_sentinel;
+    ngx_rbtree_গ্রন্থি_t         srv_sentinel;
 
     ngx_rbtree_t              addr_rbtree;
-    ngx_rbtree_node_t         addr_sentinel;
+    ngx_rbtree_গ্রন্থি_t         addr_sentinel;
 
     ngx_queue_t               name_resend_queue;
     ngx_queue_t               srv_resend_queue;
@@ -177,10 +177,10 @@ struct ngx_resolver_s {
 
     unsigned                  ipv4:1;
 
-#if (NGX_HAVE_INET6)
+#যদি (NGX_HAVE_INET6)
     unsigned                  ipv6:1;
     ngx_rbtree_t              addr6_rbtree;
-    ngx_rbtree_node_t         addr6_sentinel;
+    ngx_rbtree_গ্রন্থি_t         addr6_sentinel;
     ngx_queue_t               addr6_resend_queue;
     ngx_queue_t               addr6_expire_queue;
 #endif
@@ -194,10 +194,10 @@ struct ngx_resolver_s {
 };
 
 
-struct ngx_resolver_ctx_s {
-    ngx_resolver_ctx_t       *next;
+কাঠামো ngx_resolver_ctx_s {
+    ngx_resolver_ctx_t       *পরবর্তী;
     ngx_resolver_t           *resolver;
-    ngx_resolver_node_t      *node;
+    ngx_resolver_গ্রন্থি_t      *গ্রন্থি;
 
     /* event ident must be after 3 pointers as in ngx_connection_t */
     ngx_int_t                 ident;
@@ -210,14 +210,14 @@ struct ngx_resolver_ctx_s {
     ngx_uint_t                naddrs;
     ngx_resolver_addr_t      *addrs;
     ngx_resolver_addr_t       addr;
-    struct sockaddr_in        sin;
+    কাঠামো sockaddr_in        sin;
 
-    ngx_uint_t                count;
+    ngx_uint_t                গুনতি;
     ngx_uint_t                nsrvs;
     ngx_resolver_srv_name_t  *srvs;
 
     ngx_resolver_handler_pt   handler;
-    void                     *data;
+    শূন্য                     *তথ্য;
     ngx_msec_t                timeout;
 
     unsigned                  quick:1;
@@ -231,12 +231,12 @@ struct ngx_resolver_ctx_s {
 ngx_resolver_t *ngx_resolver_create(ngx_conf_t *cf, ngx_str_t *names,
     ngx_uint_t n);
 ngx_resolver_ctx_t *ngx_resolve_start(ngx_resolver_t *r,
-    ngx_resolver_ctx_t *temp);
+    ngx_resolver_ctx_t *অস্থায়ী);
 ngx_int_t ngx_resolve_name(ngx_resolver_ctx_t *ctx);
-void ngx_resolve_name_done(ngx_resolver_ctx_t *ctx);
+শূন্য ngx_resolve_name_done(ngx_resolver_ctx_t *ctx);
 ngx_int_t ngx_resolve_addr(ngx_resolver_ctx_t *ctx);
-void ngx_resolve_addr_done(ngx_resolver_ctx_t *ctx);
-char *ngx_resolver_strerror(ngx_int_t err);
+শূন্য ngx_resolve_addr_done(ngx_resolver_ctx_t *ctx);
+অক্ষর *ngx_resolver_strerror(ngx_int_t err);
 
 
 #endif /* _NGX_RESOLVER_H_INCLUDED_ */

@@ -8,36 +8,36 @@
 #define _NGX_BPF_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
-#include <linux/bpf.h>
+#অন্তর্ভাব <linux/bpf.h>
 
 
-typedef struct {
-    char                *name;
-    int                  offset;
+প্রকারলেখ কাঠামো {
+    অক্ষর                *name;
+    পূর্ণসংখ্যা                  offset;
 } ngx_bpf_reloc_t;
 
-typedef struct {
-    char                *license;
-    enum bpf_prog_type   type;
-    struct bpf_insn     *ins;
-    size_t               nins;
+প্রকারলেখ কাঠামো {
+    অক্ষর                *license;
+    গণনা bpf_prog_type   type;
+    কাঠামো bpf_insn     *ins;
+    আকার_t               nins;
     ngx_bpf_reloc_t     *relocs;
-    size_t               nrelocs;
+    আকার_t               nrelocs;
 } ngx_bpf_program_t;
 
 
-void ngx_bpf_program_link(ngx_bpf_program_t *program, const char *symbol,
-    int fd);
-int ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program);
+শূন্য ngx_bpf_program_link(ngx_bpf_program_t *program, ধ্রুবক অক্ষর *প্রতীক,
+    পূর্ণসংখ্যা fd);
+পূর্ণসংখ্যা ngx_bpf_load_program(ngx_log_t *log, ngx_bpf_program_t *program);
 
-int ngx_bpf_map_create(ngx_log_t *log, enum bpf_map_type type, int key_size,
-    int value_size, int max_entries, uint32_t map_flags);
-int ngx_bpf_map_update(int fd, const void *key, const void *value,
+পূর্ণসংখ্যা ngx_bpf_map_create(ngx_log_t *log, গণনা bpf_map_type type, পূর্ণসংখ্যা চাবি_আকার,
+    পূর্ণসংখ্যা মান_আকার, পূর্ণসংখ্যা max_entries, uint32_t map_flags);
+পূর্ণসংখ্যা ngx_bpf_map_update(পূর্ণসংখ্যা fd, ধ্রুবক শূন্য *চাবি, ধ্রুবক শূন্য *মান,
     uint64_t flags);
-int ngx_bpf_map_delete(int fd, const void *key);
-int ngx_bpf_map_lookup(int fd, const void *key, void *value);
+পূর্ণসংখ্যা ngx_bpf_map_delete(পূর্ণসংখ্যা fd, ধ্রুবক শূন্য *চাবি);
+পূর্ণসংখ্যা ngx_bpf_map_lookup(পূর্ণসংখ্যা fd, ধ্রুবক শূন্য *চাবি, শূন্য *মান);
 
 #endif /* _NGX_BPF_H_INCLUDED_ */

@@ -5,59 +5,59 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
 ngx_list_t *
-ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size)
+ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, আকার_t আকার_2)
 {
     ngx_list_t  *list;
 
-    list = ngx_palloc(pool, sizeof(ngx_list_t));
-    if (list == NULL) {
-        return NULL;
+    list = ngx_palloc(pool, আকার(ngx_list_t));
+    যদি (list == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    if (ngx_list_init(list, pool, n, size) != NGX_OK) {
-        return NULL;
+    যদি (ngx_list_init(list, pool, n, আকার_2) != NGX_OK) {
+        ফেরত ফাঁকা;
     }
 
-    return list;
+    ফেরত list;
 }
 
 
-void *
-ngx_list_push(ngx_list_t *l)
+শূন্য *
+ngx_list_ঠেলো(ngx_list_t *l)
 {
-    void             *elt;
+    শূন্য             *elt;
     ngx_list_part_t  *last;
 
     last = l->last;
 
-    if (last->nelts == l->nalloc) {
+    যদি (last->nelts == l->nalloc) {
 
         /* the last part is full, allocate a new list part */
 
-        last = ngx_palloc(l->pool, sizeof(ngx_list_part_t));
-        if (last == NULL) {
-            return NULL;
+        last = ngx_palloc(l->pool, আকার(ngx_list_part_t));
+        যদি (last == ফাঁকা) {
+            ফেরত ফাঁকা;
         }
 
-        last->elts = ngx_palloc(l->pool, l->nalloc * l->size);
-        if (last->elts == NULL) {
-            return NULL;
+        last->elts = ngx_palloc(l->pool, l->nalloc * l->আকার_2);
+        যদি (last->elts == ফাঁকা) {
+            ফেরত ফাঁকা;
         }
 
         last->nelts = 0;
-        last->next = NULL;
+        last->পরবর্তী = ফাঁকা;
 
-        l->last->next = last;
+        l->last->পরবর্তী = last;
         l->last = last;
     }
 
-    elt = (char *) last->elts + l->size * last->nelts;
+    elt = (অক্ষর *) last->elts + l->আকার_2 * last->nelts;
     last->nelts++;
 
-    return elt;
+    ফেরত elt;
 }

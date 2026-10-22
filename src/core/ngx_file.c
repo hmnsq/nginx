@@ -5,143 +5,143 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
-static ngx_int_t ngx_test_full_name(ngx_str_t *name);
+স্থির ngx_int_t ngx_test_full_name(ngx_str_t *name);
 
 
-static ngx_atomic_t   temp_number = 0;
-ngx_atomic_t         *ngx_temp_number = &temp_number;
-ngx_atomic_int_t      ngx_random_number = 123456;
+স্থির ngx_atomic_t   অস্থায়ী_সংখ্যা = 0;
+ngx_atomic_t         *ngx_অস্থায়ী_সংখ্যা = &অস্থায়ী_সংখ্যা;
+ngx_atomic_int_t      ngx_random_সংখ্যা = 123456;
 
 
 ngx_int_t
 ngx_get_full_name(ngx_pool_t *pool, ngx_str_t *prefix, ngx_str_t *name)
 {
-    size_t      len;
+    আকার_t      len;
     u_char     *p, *n;
     ngx_int_t   rc;
 
     rc = ngx_test_full_name(name);
 
-    if (rc == NGX_OK) {
-        return rc;
+    যদি (rc == NGX_OK) {
+        ফেরত rc;
     }
 
     len = prefix->len;
 
-#if (NGX_WIN32)
+#যদি (NGX_WIN32)
 
-    if (rc == 2) {
+    যদি (rc == 2) {
         len = rc;
     }
 
 #endif
 
     n = ngx_pnalloc(pool, len + name->len + 1);
-    if (n == NULL) {
-        return NGX_ERROR;
+    যদি (n == ফাঁকা) {
+        ফেরত NGX_ERROR;
     }
 
-    p = ngx_cpymem(n, prefix->data, len);
-    ngx_cpystrn(p, name->data, name->len + 1);
+    p = ngx_cpymem(n, prefix->তথ্য, len);
+    ngx_cpystrn(p, name->তথ্য, name->len + 1);
 
     name->len += len;
-    name->data = n;
+    name->তথ্য = n;
 
-    return NGX_OK;
+    ফেরত NGX_OK;
 }
 
 
-static ngx_int_t
+স্থির ngx_int_t
 ngx_test_full_name(ngx_str_t *name)
 {
-#if (NGX_WIN32)
+#যদি (NGX_WIN32)
     u_char  c0, c1;
 
-    c0 = name->data[0];
+    c0 = name->তথ্য[0];
 
-    if (name->len < 2) {
-        if (c0 == '/') {
-            return 2;
+    যদি (name->len < 2) {
+        যদি (c0 == '/') {
+            ফেরত 2;
         }
 
-        return NGX_DECLINED;
+        ফেরত NGX_DECLINED;
     }
 
-    c1 = name->data[1];
+    c1 = name->তথ্য[1];
 
-    if (c1 == ':') {
+    যদি (c1 == ':') {
         c0 |= 0x20;
 
-        if ((c0 >= 'a' && c0 <= 'z')) {
-            return NGX_OK;
+        যদি ((c0 >= 'a' && c0 <= 'z')) {
+            ফেরত NGX_OK;
         }
 
-        return NGX_DECLINED;
+        ফেরত NGX_DECLINED;
     }
 
-    if (c1 == '/') {
-        return NGX_OK;
+    যদি (c1 == '/') {
+        ফেরত NGX_OK;
     }
 
-    if (c0 == '/') {
-        return 2;
+    যদি (c0 == '/') {
+        ফেরত 2;
     }
 
-    return NGX_DECLINED;
+    ফেরত NGX_DECLINED;
 
-#else
+#অন্যথা
 
-    if (name->data[0] == '/') {
-        return NGX_OK;
+    যদি (name->তথ্য[0] == '/') {
+        ফেরত NGX_OK;
     }
 
-    return NGX_DECLINED;
+    ফেরত NGX_DECLINED;
 
 #endif
 }
 
 
 ssize_t
-ngx_write_chain_to_temp_file(ngx_temp_file_t *tf, ngx_chain_t *chain)
+ngx_write_chain_to_অস্থায়ী_file(ngx_অস্থায়ী_file_t *tf, ngx_chain_t *chain)
 {
     ngx_int_t  rc;
 
-    if (tf->file.fd == NGX_INVALID_FILE) {
-        rc = ngx_create_temp_file(&tf->file, tf->path, tf->pool,
+    যদি (tf->file.fd == NGX_INVALID_FILE) {
+        rc = ngx_create_অস্থায়ী_file(&tf->file, tf->path, tf->pool,
                                   tf->persistent, tf->clean, tf->access);
 
-        if (rc != NGX_OK) {
-            return rc;
+        যদি (rc != NGX_OK) {
+            ফেরত rc;
         }
 
-        if (tf->log_level) {
+        যদি (tf->log_level) {
             ngx_log_error(tf->log_level, tf->file.log, 0, "%s %V",
                           tf->warn, &tf->file.name);
         }
     }
 
-#if (NGX_THREADS && NGX_HAVE_PWRITEV)
+#যদি (NGX_THREADS && NGX_HAVE_PWRITEV)
 
-    if (tf->thread_write) {
-        return ngx_thread_write_chain_to_file(&tf->file, chain, tf->offset,
+    যদি (tf->thread_write) {
+        ফেরত ngx_thread_write_chain_to_file(&tf->file, chain, tf->offset,
                                               tf->pool);
     }
 
 #endif
 
-    return ngx_write_chain_to_file(&tf->file, chain, tf->offset, tf->pool);
+    ফেরত ngx_write_chain_to_file(&tf->file, chain, tf->offset, tf->pool);
 }
 
 
 ngx_int_t
-ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
+ngx_create_অস্থায়ী_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
     ngx_uint_t persistent, ngx_uint_t clean, ngx_uint_t access)
 {
-    size_t                    levels;
+    আকার_t                    levels;
     u_char                   *p;
     uint32_t                  n;
     ngx_err_t                 err;
@@ -150,12 +150,12 @@ ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
     ngx_pool_cleanup_t       *cln;
     ngx_pool_cleanup_file_t  *clnf;
 
-    if (file->name.len) {
+    যদি (file->name.len) {
         name = file->name;
         levels = 0;
         prefix = 1;
 
-    } else {
+    } অন্যথা {
         name = path->name;
         levels = path->len;
         prefix = 0;
@@ -163,95 +163,95 @@ ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path, ngx_pool_t *pool,
 
     file->name.len = name.len + 1 + levels + 10;
 
-    file->name.data = ngx_pnalloc(pool, file->name.len + 1);
-    if (file->name.data == NULL) {
-        return NGX_ERROR;
+    file->name.তথ্য = ngx_pnalloc(pool, file->name.len + 1);
+    যদি (file->name.তথ্য == ফাঁকা) {
+        ফেরত NGX_ERROR;
     }
 
-#if 0
-    for (i = 0; i < file->name.len; i++) {
-        file->name.data[i] = 'X';
+#যদি 0
+    জন্য (i = 0; i < file->name.len; i++) {
+        file->name.তথ্য[i] = 'X';
     }
 #endif
 
-    p = ngx_cpymem(file->name.data, name.data, name.len);
+    p = ngx_cpymem(file->name.তথ্য, name.তথ্য, name.len);
 
-    if (prefix) {
+    যদি (prefix) {
         *p = '.';
     }
 
     p += 1 + levels;
 
-    n = (uint32_t) ngx_next_temp_number(0);
+    n = (uint32_t) ngx_পরবর্তী_অস্থায়ী_সংখ্যা(0);
 
-    cln = ngx_pool_cleanup_add(pool, sizeof(ngx_pool_cleanup_file_t));
-    if (cln == NULL) {
-        return NGX_ERROR;
+    cln = ngx_pool_cleanup_add(pool, আকার(ngx_pool_cleanup_file_t));
+    যদি (cln == ফাঁকা) {
+        ফেরত NGX_ERROR;
     }
 
-    for ( ;; ) {
-        (void) ngx_sprintf(p, "%010uD%Z", n);
+    জন্য ( ;; ) {
+        (শূন্য) ngx_sprintf(p, "%010uD%Z", n);
 
-        if (!prefix) {
-            ngx_create_hashed_filename(path, file->name.data, file->name.len);
+        যদি (!prefix) {
+            ngx_create_hashed_filename(path, file->name.তথ্য, file->name.len);
         }
 
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, file->log, 0,
-                       "hashed path: %s", file->name.data);
+                       "hashed path: %s", file->name.তথ্য);
 
-        file->fd = ngx_open_tempfile(file->name.data, persistent, access);
+        file->fd = ngx_open_tempfile(file->name.তথ্য, persistent, access);
 
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, file->log, 0,
                        "temp fd:%d", file->fd);
 
-        if (file->fd != NGX_INVALID_FILE) {
+        যদি (file->fd != NGX_INVALID_FILE) {
 
             cln->handler = clean ? ngx_pool_delete_file : ngx_pool_cleanup_file;
-            clnf = cln->data;
+            clnf = cln->তথ্য;
 
             clnf->fd = file->fd;
-            clnf->name = file->name.data;
+            clnf->name = file->name.তথ্য;
             clnf->log = pool->log;
 
-            return NGX_OK;
+            ফেরত NGX_OK;
         }
 
         err = ngx_errno;
 
-        if (err == NGX_EEXIST_FILE) {
-            n = (uint32_t) ngx_next_temp_number(1);
-            continue;
+        যদি (err == NGX_EEXIST_FILE) {
+            n = (uint32_t) ngx_পরবর্তী_অস্থায়ী_সংখ্যা(1);
+            চালু;
         }
 
-        if ((path->level[0] == 0) || (err != NGX_ENOPATH)) {
+        যদি ((path->level[0] == 0) || (err != NGX_ENOPATH)) {
             ngx_log_error(NGX_LOG_CRIT, file->log, err,
                           ngx_open_tempfile_n " \"%s\" failed",
-                          file->name.data);
-            return NGX_ERROR;
+                          file->name.তথ্য);
+            ফেরত NGX_ERROR;
         }
 
-        if (ngx_create_path(file, path) == NGX_ERROR) {
-            return NGX_ERROR;
+        যদি (ngx_create_path(file, path) == NGX_ERROR) {
+            ফেরত NGX_ERROR;
         }
     }
 }
 
 
-void
-ngx_create_hashed_filename(ngx_path_t *path, u_char *file, size_t len)
+শূন্য
+ngx_create_hashed_filename(ngx_path_t *path, u_char *file, আকার_t len)
 {
-    size_t      i, level;
+    আকার_t      i, level;
     ngx_uint_t  n;
 
     i = path->name.len + 1;
 
     file[path->name.len + path->len]  = '/';
 
-    for (n = 0; n < NGX_MAX_PATH_LEVEL; n++) {
+    জন্য (n = 0; n < NGX_MAX_PATH_LEVEL; n++) {
         level = path->level[n];
 
-        if (level == 0) {
-            break;
+        যদি (level == 0) {
+            বিরতি;
         }
 
         len -= level;
@@ -265,38 +265,38 @@ ngx_create_hashed_filename(ngx_path_t *path, u_char *file, size_t len)
 ngx_int_t
 ngx_create_path(ngx_file_t *file, ngx_path_t *path)
 {
-    size_t      pos;
+    আকার_t      pos;
     ngx_err_t   err;
     ngx_uint_t  i;
 
     pos = path->name.len;
 
-    for (i = 0; i < NGX_MAX_PATH_LEVEL; i++) {
-        if (path->level[i] == 0) {
-            break;
+    জন্য (i = 0; i < NGX_MAX_PATH_LEVEL; i++) {
+        যদি (path->level[i] == 0) {
+            বিরতি;
         }
 
         pos += path->level[i] + 1;
 
-        file->name.data[pos] = '\0';
+        file->name.তথ্য[pos] = '\0';
 
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, file->log, 0,
-                       "temp file: \"%s\"", file->name.data);
+                       "temp file: \"%s\"", file->name.তথ্য);
 
-        if (ngx_create_dir(file->name.data, 0700) == NGX_FILE_ERROR) {
+        যদি (ngx_create_dir(file->name.তথ্য, 0700) == NGX_FILE_ERROR) {
             err = ngx_errno;
-            if (err != NGX_EEXIST) {
+            যদি (err != NGX_EEXIST) {
                 ngx_log_error(NGX_LOG_CRIT, file->log, err,
                               ngx_create_dir_n " \"%s\" failed",
-                              file->name.data);
-                return NGX_ERROR;
+                              file->name.তথ্য);
+                ফেরত NGX_ERROR;
             }
         }
 
-        file->name.data[pos] = '/';
+        file->name.তথ্য[pos] = '/';
     }
 
-    return NGX_OK;
+    ফেরত NGX_OK;
 }
 
 
@@ -308,217 +308,217 @@ ngx_create_full_path(u_char *dir, ngx_uint_t access)
 
     err = 0;
 
-#if (NGX_WIN32)
+#যদি (NGX_WIN32)
     p = dir + 3;
-#else
+#অন্যথা
     p = dir + 1;
 #endif
 
-    for ( /* void */ ; *p; p++) {
+    জন্য ( /* void */ ; *p; p++) {
         ch = *p;
 
-        if (ch != '/') {
-            continue;
+        যদি (ch != '/') {
+            চালু;
         }
 
         *p = '\0';
 
-        if (ngx_create_dir(dir, access) == NGX_FILE_ERROR) {
+        যদি (ngx_create_dir(dir, access) == NGX_FILE_ERROR) {
             err = ngx_errno;
 
-            switch (err) {
-            case NGX_EEXIST:
+            নির্বাচন (err) {
+            ক্ষেত্র NGX_EEXIST:
                 err = 0;
-            case NGX_EACCES:
-                break;
+            ক্ষেত্র NGX_EACCES:
+                বিরতি;
 
-            default:
-                return err;
+            পূর্বনির্ধারিত:
+                ফেরত err;
             }
         }
 
         *p = '/';
     }
 
-    return err;
+    ফেরত err;
 }
 
 
 ngx_atomic_uint_t
-ngx_next_temp_number(ngx_uint_t collision)
+ngx_পরবর্তী_অস্থায়ী_সংখ্যা(ngx_uint_t collision)
 {
     ngx_atomic_uint_t  n, add;
 
-    add = collision ? ngx_random_number : 1;
+    add = collision ? ngx_random_সংখ্যা : 1;
 
-    n = ngx_atomic_fetch_add(ngx_temp_number, add);
+    n = ngx_atomic_fetch_add(ngx_অস্থায়ী_সংখ্যা, add);
 
-    return n + add;
+    ফেরত n + add;
 }
 
 
-char *
-ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+অক্ষর *
+ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, শূন্য *conf)
 {
-    char  *p = conf;
+    অক্ষর  *p = conf;
 
     ssize_t      level;
-    ngx_str_t   *value;
+    ngx_str_t   *মান;
     ngx_uint_t   i, n;
     ngx_path_t  *path, **slot;
 
     slot = (ngx_path_t **) (p + cmd->offset);
 
-    if (*slot) {
-        return "is duplicate";
+    যদি (*slot) {
+        ফেরত "is duplicate";
     }
 
-    path = ngx_pcalloc(cf->pool, sizeof(ngx_path_t));
-    if (path == NULL) {
-        return NGX_CONF_ERROR;
+    path = ngx_pcalloc(cf->pool, আকার(ngx_path_t));
+    যদি (path == ফাঁকা) {
+        ফেরত NGX_CONF_ERROR;
     }
 
-    value = cf->args->elts;
+    মান = cf->args->elts;
 
-    path->name = value[1];
+    path->name = মান[1];
 
-    if (path->name.data[path->name.len - 1] == '/') {
+    যদি (path->name.তথ্য[path->name.len - 1] == '/') {
         path->name.len--;
     }
 
-    if (ngx_conf_full_name(cf->cycle, &path->name, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    যদি (ngx_conf_full_name(cf->cycle, &path->name, 0) != NGX_OK) {
+        ফেরত NGX_CONF_ERROR;
     }
 
-    path->conf_file = cf->conf_file->file.name.data;
-    path->line = cf->conf_file->line;
+    path->conf_file = cf->conf_file->file.name.তথ্য;
+    path->সারি = cf->conf_file->সারি;
 
-    for (i = 0, n = 2; n < cf->args->nelts; i++, n++) {
-        level = ngx_atoi(value[n].data, value[n].len);
-        if (level == NGX_ERROR || level == 0) {
-            return "invalid value";
+    জন্য (i = 0, n = 2; n < cf->args->nelts; i++, n++) {
+        level = ngx_atoi(মান[n].তথ্য, মান[n].len);
+        যদি (level == NGX_ERROR || level == 0) {
+            ফেরত "invalid value";
         }
 
         path->level[i] = level;
         path->len += level + 1;
     }
 
-    if (path->len > 10 + i) {
-        return "invalid value";
+    যদি (path->len > 10 + i) {
+        ফেরত "invalid value";
     }
 
     *slot = path;
 
-    if (ngx_add_path(cf, slot) == NGX_ERROR) {
-        return NGX_CONF_ERROR;
+    যদি (ngx_add_path(cf, slot) == NGX_ERROR) {
+        ফেরত NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    ফেরত NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_merge_path_value(ngx_conf_t *cf, ngx_path_t **path, ngx_path_t *prev,
+অক্ষর *
+ngx_conf_merge_path_মান(ngx_conf_t *cf, ngx_path_t **path, ngx_path_t *পূর্ব,
     ngx_path_init_t *init)
 {
     ngx_uint_t  i;
 
-    if (*path) {
-        return NGX_CONF_OK;
+    যদি (*path) {
+        ফেরত NGX_CONF_OK;
     }
 
-    if (prev) {
-        *path = prev;
-        return NGX_CONF_OK;
+    যদি (পূর্ব) {
+        *path = পূর্ব;
+        ফেরত NGX_CONF_OK;
     }
 
-    *path = ngx_pcalloc(cf->pool, sizeof(ngx_path_t));
-    if (*path == NULL) {
-        return NGX_CONF_ERROR;
+    *path = ngx_pcalloc(cf->pool, আকার(ngx_path_t));
+    যদি (*path == ফাঁকা) {
+        ফেরত NGX_CONF_ERROR;
     }
 
     (*path)->name = init->name;
 
-    if (ngx_conf_full_name(cf->cycle, &(*path)->name, 0) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    যদি (ngx_conf_full_name(cf->cycle, &(*path)->name, 0) != NGX_OK) {
+        ফেরত NGX_CONF_ERROR;
     }
 
-    for (i = 0; i < NGX_MAX_PATH_LEVEL; i++) {
+    জন্য (i = 0; i < NGX_MAX_PATH_LEVEL; i++) {
         (*path)->level[i] = init->level[i];
         (*path)->len += init->level[i] + (init->level[i] ? 1 : 0);
     }
 
-    if (ngx_add_path(cf, path) != NGX_OK) {
-        return NGX_CONF_ERROR;
+    যদি (ngx_add_path(cf, path) != NGX_OK) {
+        ফেরত NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    ফেরত NGX_CONF_OK;
 }
 
 
-char *
-ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+অক্ষর *
+ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, শূন্য *conf)
 {
-    char  *confp = conf;
+    অক্ষর  *confp = conf;
 
     u_char      *p;
-    ngx_str_t   *value;
-    ngx_uint_t   i, right, shift, *access, user;
+    ngx_str_t   *মান;
+    ngx_uint_t   i, ডান, shift, *access, user;
 
     access = (ngx_uint_t *) (confp + cmd->offset);
 
-    if (*access != NGX_CONF_UNSET_UINT) {
-        return "is duplicate";
+    যদি (*access != NGX_CONF_UNSET_UINT) {
+        ফেরত "is duplicate";
     }
 
-    value = cf->args->elts;
+    মান = cf->args->elts;
 
     *access = 0;
     user = 0600;
 
-    for (i = 1; i < cf->args->nelts; i++) {
+    জন্য (i = 1; i < cf->args->nelts; i++) {
 
-        p = value[i].data;
+        p = মান[i].তথ্য;
 
-        if (ngx_strncmp(p, "user:", sizeof("user:") - 1) == 0) {
+        যদি (ngx_strncmp(p, "user:", আকার("user:") - 1) == 0) {
             shift = 6;
-            p += sizeof("user:") - 1;
+            p += আকার("user:") - 1;
             user = 0;
 
-        } else if (ngx_strncmp(p, "group:", sizeof("group:") - 1) == 0) {
+        } অন্যথা যদি (ngx_strncmp(p, "group:", আকার("group:") - 1) == 0) {
             shift = 3;
-            p += sizeof("group:") - 1;
+            p += আকার("group:") - 1;
 
-        } else if (ngx_strncmp(p, "all:", sizeof("all:") - 1) == 0) {
+        } অন্যথা যদি (ngx_strncmp(p, "all:", আকার("all:") - 1) == 0) {
             shift = 0;
-            p += sizeof("all:") - 1;
+            p += আকার("all:") - 1;
 
-        } else {
-            goto invalid;
+        } অন্যথা {
+            যাও invalid;
         }
 
-        if (ngx_strcmp(p, "rw") == 0) {
-            right = 6;
+        যদি (ngx_strcmp(p, "rw") == 0) {
+            ডান = 6;
 
-        } else if (ngx_strcmp(p, "r") == 0) {
-            right = 4;
+        } অন্যথা যদি (ngx_strcmp(p, "r") == 0) {
+            ডান = 4;
 
-        } else {
-            goto invalid;
+        } অন্যথা {
+            যাও invalid;
         }
 
-        *access |= right << shift;
+        *access |= ডান << shift;
     }
 
     *access |= user;
 
-    return NGX_CONF_OK;
+    ফেরত NGX_CONF_OK;
 
 invalid:
 
-    ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "invalid value \"%V\"", &value[i]);
+    ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "invalid value \"%V\"", &মান[i]);
 
-    return NGX_CONF_ERROR;
+    ফেরত NGX_CONF_ERROR;
 }
 
 
@@ -531,29 +531,29 @@ ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot)
     path = *slot;
 
     p = cf->cycle->paths.elts;
-    for (i = 0; i < cf->cycle->paths.nelts; i++) {
-        if (p[i]->name.len == path->name.len
-            && ngx_strcmp(p[i]->name.data, path->name.data) == 0)
+    জন্য (i = 0; i < cf->cycle->paths.nelts; i++) {
+        যদি (p[i]->name.len == path->name.len
+            && ngx_strcmp(p[i]->name.তথ্য, path->name.তথ্য) == 0)
         {
-            if (p[i]->data != path->data) {
+            যদি (p[i]->তথ্য != path->তথ্য) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "the same path name \"%V\" "
                                    "used in %s:%ui and",
-                                   &p[i]->name, p[i]->conf_file, p[i]->line);
-                return NGX_ERROR;
+                                   &p[i]->name, p[i]->conf_file, p[i]->সারি);
+                ফেরত NGX_ERROR;
             }
 
-            for (n = 0; n < NGX_MAX_PATH_LEVEL; n++) {
-                if (p[i]->level[n] != path->level[n]) {
-                    if (path->conf_file == NULL) {
-                        if (p[i]->conf_file == NULL) {
+            জন্য (n = 0; n < NGX_MAX_PATH_LEVEL; n++) {
+                যদি (p[i]->level[n] != path->level[n]) {
+                    যদি (path->conf_file == ফাঁকা) {
+                        যদি (p[i]->conf_file == ফাঁকা) {
                             ngx_log_error(NGX_LOG_EMERG, cf->log, 0,
                                       "the default path name \"%V\" has "
                                       "the same name as another default path, "
                                       "but the different levels, you need to "
                                       "redefine one of them in http section",
                                       &p[i]->name);
-                            return NGX_ERROR;
+                            ফেরত NGX_ERROR;
                         }
 
                         ngx_log_error(NGX_LOG_EMERG, cf->log, 0,
@@ -561,36 +561,36 @@ ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot)
                                       "the same name as default path, but "
                                       "the different levels, you need to "
                                       "define default path in http section",
-                                      &p[i]->name, p[i]->conf_file, p[i]->line);
-                        return NGX_ERROR;
+                                      &p[i]->name, p[i]->conf_file, p[i]->সারি);
+                        ফেরত NGX_ERROR;
                     }
 
                     ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                       "the same path name \"%V\" in %s:%ui "
                                       "has the different levels than",
-                                      &p[i]->name, p[i]->conf_file, p[i]->line);
-                    return NGX_ERROR;
+                                      &p[i]->name, p[i]->conf_file, p[i]->সারি);
+                    ফেরত NGX_ERROR;
                 }
 
-                if (p[i]->level[n] == 0) {
-                    break;
+                যদি (p[i]->level[n] == 0) {
+                    বিরতি;
                 }
             }
 
             *slot = p[i];
 
-            return NGX_OK;
+            ফেরত NGX_OK;
         }
     }
 
-    p = ngx_array_push(&cf->cycle->paths);
-    if (p == NULL) {
-        return NGX_ERROR;
+    p = ngx_array_ঠেলো(&cf->cycle->paths);
+    যদি (p == ফাঁকা) {
+        ফেরত NGX_ERROR;
     }
 
     *p = path;
 
-    return NGX_OK;
+    ফেরত NGX_OK;
 }
 
 
@@ -602,57 +602,57 @@ ngx_create_paths(ngx_cycle_t *cycle, ngx_uid_t user)
     ngx_path_t      **path;
 
     path = cycle->paths.elts;
-    for (i = 0; i < cycle->paths.nelts; i++) {
+    জন্য (i = 0; i < cycle->paths.nelts; i++) {
 
-        if (ngx_create_dir(path[i]->name.data, 0700) == NGX_FILE_ERROR) {
+        যদি (ngx_create_dir(path[i]->name.তথ্য, 0700) == NGX_FILE_ERROR) {
             err = ngx_errno;
-            if (err != NGX_EEXIST) {
+            যদি (err != NGX_EEXIST) {
                 ngx_log_error(NGX_LOG_EMERG, cycle->log, err,
                               ngx_create_dir_n " \"%s\" failed",
-                              path[i]->name.data);
-                return NGX_ERROR;
+                              path[i]->name.তথ্য);
+                ফেরত NGX_ERROR;
             }
         }
 
-        if (user == (ngx_uid_t) NGX_CONF_UNSET_UINT) {
-            continue;
+        যদি (user == (ngx_uid_t) NGX_CONF_UNSET_UINT) {
+            চালু;
         }
 
-#if !(NGX_WIN32)
+#যদি !(NGX_WIN32)
         {
         ngx_file_info_t   fi;
 
-        if (ngx_file_info(path[i]->name.data, &fi) == NGX_FILE_ERROR) {
+        যদি (ngx_file_info(path[i]->name.তথ্য, &fi) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
-                          ngx_file_info_n " \"%s\" failed", path[i]->name.data);
-            return NGX_ERROR;
+                          ngx_file_info_n " \"%s\" failed", path[i]->name.তথ্য);
+            ফেরত NGX_ERROR;
         }
 
-        if (fi.st_uid != user) {
-            if (chown((const char *) path[i]->name.data, user, -1) == -1) {
+        যদি (fi.st_uid != user) {
+            যদি (chown((ধ্রুবক অক্ষর *) path[i]->name.তথ্য, user, -1) == -1) {
                 ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
                               "chown(\"%s\", %d) failed",
-                              path[i]->name.data, user);
-                return NGX_ERROR;
+                              path[i]->name.তথ্য, user);
+                ফেরত NGX_ERROR;
             }
         }
 
-        if ((fi.st_mode & (S_IRUSR|S_IWUSR|S_IXUSR))
+        যদি ((fi.st_mode & (S_IRUSR|S_IWUSR|S_IXUSR))
                                                   != (S_IRUSR|S_IWUSR|S_IXUSR))
         {
             fi.st_mode |= (S_IRUSR|S_IWUSR|S_IXUSR);
 
-            if (chmod((const char *) path[i]->name.data, fi.st_mode) == -1) {
+            যদি (chmod((ধ্রুবক অক্ষর *) path[i]->name.তথ্য, fi.st_mode) == -1) {
                 ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
-                              "chmod() \"%s\" failed", path[i]->name.data);
-                return NGX_ERROR;
+                              "chmod() \"%s\" failed", path[i]->name.তথ্য);
+                ফেরত NGX_ERROR;
             }
         }
         }
 #endif
     }
 
-    return NGX_OK;
+    ফেরত NGX_OK;
 }
 
 
@@ -663,104 +663,104 @@ ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to, ngx_ext_rename_file_t *ext)
     ngx_err_t         err;
     ngx_copy_file_t   cf;
 
-#if !(NGX_WIN32)
+#যদি !(NGX_WIN32)
 
-    if (ext->access) {
-        if (ngx_change_file_access(src->data, ext->access) == NGX_FILE_ERROR) {
+    যদি (ext->access) {
+        যদি (ngx_change_file_access(src->তথ্য, ext->access) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
-                          ngx_change_file_access_n " \"%s\" failed", src->data);
+                          ngx_change_file_access_n " \"%s\" failed", src->তথ্য);
             err = 0;
-            goto failed;
+            যাও failed;
         }
     }
 
 #endif
 
-    if (ext->time != -1) {
-        if (ngx_set_file_time(src->data, ext->fd, ext->time) != NGX_OK) {
+    যদি (ext->time != -1) {
+        যদি (ngx_set_file_time(src->তথ্য, ext->fd, ext->time) != NGX_OK) {
             ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
-                          ngx_set_file_time_n " \"%s\" failed", src->data);
+                          ngx_set_file_time_n " \"%s\" failed", src->তথ্য);
             err = 0;
-            goto failed;
+            যাও failed;
         }
     }
 
-    if (ngx_rename_file(src->data, to->data) != NGX_FILE_ERROR) {
-        return NGX_OK;
+    যদি (ngx_rename_file(src->তথ্য, to->তথ্য) != NGX_FILE_ERROR) {
+        ফেরত NGX_OK;
     }
 
     err = ngx_errno;
 
-    if (err == NGX_ENOPATH) {
+    যদি (err == NGX_ENOPATH) {
 
-        if (!ext->create_path) {
-            goto failed;
+        যদি (!ext->create_path) {
+            যাও failed;
         }
 
-        err = ngx_create_full_path(to->data, ngx_dir_access(ext->path_access));
+        err = ngx_create_full_path(to->তথ্য, ngx_dir_access(ext->path_access));
 
-        if (err) {
+        যদি (err) {
             ngx_log_error(NGX_LOG_CRIT, ext->log, err,
-                          ngx_create_dir_n " \"%s\" failed", to->data);
+                          ngx_create_dir_n " \"%s\" failed", to->তথ্য);
             err = 0;
-            goto failed;
+            যাও failed;
         }
 
-        if (ngx_rename_file(src->data, to->data) != NGX_FILE_ERROR) {
-            return NGX_OK;
+        যদি (ngx_rename_file(src->তথ্য, to->তথ্য) != NGX_FILE_ERROR) {
+            ফেরত NGX_OK;
         }
 
         err = ngx_errno;
     }
 
-#if (NGX_WIN32)
+#যদি (NGX_WIN32)
 
-    if (err == NGX_EEXIST || err == NGX_EEXIST_FILE) {
+    যদি (err == NGX_EEXIST || err == NGX_EEXIST_FILE) {
         err = ngx_win32_rename_file(src, to, ext->log);
 
-        if (err == 0) {
-            return NGX_OK;
+        যদি (err == 0) {
+            ফেরত NGX_OK;
         }
     }
 
 #endif
 
-    if (err == NGX_EXDEV) {
+    যদি (err == NGX_EXDEV) {
 
-        cf.size = -1;
-        cf.buf_size = 0;
+        cf.আকার_2 = -1;
+        cf.buf_আকার = 0;
         cf.access = ext->access;
         cf.time = ext->time;
         cf.log = ext->log;
 
         name = ngx_alloc(to->len + 1 + 10 + 1, ext->log);
-        if (name == NULL) {
-            return NGX_ERROR;
+        যদি (name == ফাঁকা) {
+            ফেরত NGX_ERROR;
         }
 
-        (void) ngx_sprintf(name, "%*s.%010uD%Z", to->len, to->data,
-                           (uint32_t) ngx_next_temp_number(0));
+        (শূন্য) ngx_sprintf(name, "%*s.%010uD%Z", to->len, to->তথ্য,
+                           (uint32_t) ngx_পরবর্তী_অস্থায়ী_সংখ্যা(0));
 
-        if (ngx_copy_file(src->data, name, &cf) == NGX_OK) {
+        যদি (ngx_copy_file(src->তথ্য, name, &cf) == NGX_OK) {
 
-            if (ngx_rename_file(name, to->data) != NGX_FILE_ERROR) {
+            যদি (ngx_rename_file(name, to->তথ্য) != NGX_FILE_ERROR) {
                 ngx_free(name);
 
-                if (ngx_delete_file(src->data) == NGX_FILE_ERROR) {
+                যদি (ngx_delete_file(src->তথ্য) == NGX_FILE_ERROR) {
                     ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
                                   ngx_delete_file_n " \"%s\" failed",
-                                  src->data);
-                    return NGX_ERROR;
+                                  src->তথ্য);
+                    ফেরত NGX_ERROR;
                 }
 
-                return NGX_OK;
+                ফেরত NGX_OK;
             }
 
             ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
                           ngx_rename_file_n " \"%s\" to \"%s\" failed",
-                          name, to->data);
+                          name, to->তথ্য);
 
-            if (ngx_delete_file(name) == NGX_FILE_ERROR) {
+            যদি (ngx_delete_file(name) == NGX_FILE_ERROR) {
                 ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
                               ngx_delete_file_n " \"%s\" failed", name);
 
@@ -774,30 +774,30 @@ ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to, ngx_ext_rename_file_t *ext)
 
 failed:
 
-    if (ext->delete_file) {
-        if (ngx_delete_file(src->data) == NGX_FILE_ERROR) {
+    যদি (ext->delete_file) {
+        যদি (ngx_delete_file(src->তথ্য) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_CRIT, ext->log, ngx_errno,
-                          ngx_delete_file_n " \"%s\" failed", src->data);
+                          ngx_delete_file_n " \"%s\" failed", src->তথ্য);
         }
     }
 
-    if (err) {
+    যদি (err) {
         ngx_log_error(NGX_LOG_CRIT, ext->log, err,
                       ngx_rename_file_n " \"%s\" to \"%s\" failed",
-                      src->data, to->data);
+                      src->তথ্য, to->তথ্য);
     }
 
-    return NGX_ERROR;
+    ফেরত NGX_ERROR;
 }
 
 
 ngx_int_t
 ngx_copy_file(u_char *from, u_char *to, ngx_copy_file_t *cf)
 {
-    char             *buf;
-    off_t             size;
+    অক্ষর             *buf;
+    off_t             আকার_2;
     time_t            time;
-    size_t            len;
+    আকার_t            len;
     ssize_t           n;
     ngx_fd_t          fd, nfd;
     ngx_int_t         rc;
@@ -805,122 +805,122 @@ ngx_copy_file(u_char *from, u_char *to, ngx_copy_file_t *cf)
     ngx_file_info_t   fi;
 
     rc = NGX_ERROR;
-    buf = NULL;
+    buf = ফাঁকা;
     nfd = NGX_INVALID_FILE;
 
     fd = ngx_open_file(from, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0);
 
-    if (fd == NGX_INVALID_FILE) {
+    যদি (fd == NGX_INVALID_FILE) {
         ngx_log_error(NGX_LOG_CRIT, cf->log, ngx_errno,
                       ngx_open_file_n " \"%s\" failed", from);
-        goto failed;
+        যাও failed;
     }
 
-    if (cf->size != -1 && cf->access != 0 && cf->time != -1) {
-        size = cf->size;
+    যদি (cf->আকার_2 != -1 && cf->access != 0 && cf->time != -1) {
+        আকার_2 = cf->আকার_2;
         access = cf->access;
         time = cf->time;
 
-    } else {
-        if (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
+    } অন্যথা {
+        যদি (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
                           ngx_fd_info_n " \"%s\" failed", from);
 
-            goto failed;
+            যাও failed;
         }
 
-        size = (cf->size != -1) ? cf->size : ngx_file_size(&fi);
+        আকার_2 = (cf->আকার_2 != -1) ? cf->আকার_2 : ngx_file_আকার(&fi);
         access = cf->access ? cf->access : ngx_file_access(&fi);
         time = (cf->time != -1) ? cf->time : ngx_file_mtime(&fi);
     }
 
-    len = cf->buf_size ? cf->buf_size : 65536;
+    len = cf->buf_আকার ? cf->buf_আকার : 65536;
 
-    if ((off_t) len > size) {
-        len = (size_t) size;
+    যদি ((off_t) len > আকার_2) {
+        len = (আকার_t) আকার_2;
     }
 
     buf = ngx_alloc(len, cf->log);
-    if (buf == NULL) {
-        goto failed;
+    যদি (buf == ফাঁকা) {
+        যাও failed;
     }
 
     nfd = ngx_open_file(to, NGX_FILE_WRONLY, NGX_FILE_TRUNCATE, access);
 
-    if (nfd == NGX_INVALID_FILE) {
+    যদি (nfd == NGX_INVALID_FILE) {
         ngx_log_error(NGX_LOG_CRIT, cf->log, ngx_errno,
                       ngx_open_file_n " \"%s\" failed", to);
-        goto failed;
+        যাও failed;
     }
 
-    while (size > 0) {
+    যখন (আকার_2 > 0) {
 
-        if ((off_t) len > size) {
-            len = (size_t) size;
+        যদি ((off_t) len > আকার_2) {
+            len = (আকার_t) আকার_2;
         }
 
         n = ngx_read_fd(fd, buf, len);
 
-        if (n == -1) {
+        যদি (n == -1) {
             ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
                           ngx_read_fd_n " \"%s\" failed", from);
-            goto failed;
+            যাও failed;
         }
 
-        if ((size_t) n != len) {
+        যদি ((আকার_t) n != len) {
             ngx_log_error(NGX_LOG_ALERT, cf->log, 0,
                           ngx_read_fd_n " has read only %z of %O from %s",
-                          n, size, from);
-            goto failed;
+                          n, আকার_2, from);
+            যাও failed;
         }
 
         n = ngx_write_fd(nfd, buf, len);
 
-        if (n == -1) {
+        যদি (n == -1) {
             ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
                           ngx_write_fd_n " \"%s\" failed", to);
-            goto failed;
+            যাও failed;
         }
 
-        if ((size_t) n != len) {
+        যদি ((আকার_t) n != len) {
             ngx_log_error(NGX_LOG_ALERT, cf->log, 0,
                           ngx_write_fd_n " has written only %z of %O to %s",
-                          n, size, to);
-            goto failed;
+                          n, আকার_2, to);
+            যাও failed;
         }
 
-        size -= n;
+        আকার_2 -= n;
     }
 
-    if (ngx_set_file_time(to, nfd, time) != NGX_OK) {
+    যদি (ngx_set_file_time(to, nfd, time) != NGX_OK) {
         ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
                       ngx_set_file_time_n " \"%s\" failed", to);
-        goto failed;
+        যাও failed;
     }
 
     rc = NGX_OK;
 
 failed:
 
-    if (nfd != NGX_INVALID_FILE) {
-        if (ngx_close_file(nfd) == NGX_FILE_ERROR) {
+    যদি (nfd != NGX_INVALID_FILE) {
+        যদি (ngx_close_file(nfd) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
                           ngx_close_file_n " \"%s\" failed", to);
         }
     }
 
-    if (fd != NGX_INVALID_FILE) {
-        if (ngx_close_file(fd) == NGX_FILE_ERROR) {
+    যদি (fd != NGX_INVALID_FILE) {
+        যদি (ngx_close_file(fd) == NGX_FILE_ERROR) {
             ngx_log_error(NGX_LOG_ALERT, cf->log, ngx_errno,
                           ngx_close_file_n " \"%s\" failed", from);
         }
     }
 
-    if (buf) {
+    যদি (buf) {
         ngx_free(buf);
     }
 
-    return rc;
+    ফেরত rc;
 }
 
 
@@ -943,11 +943,11 @@ failed:
  */
 
 ngx_int_t
-ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
+ngx_walk_বৃক্ষ(ngx_বৃক্ষ_ctx_t *ctx, ngx_str_t *বৃক্ষ)
 {
-    void       *data, *prev;
+    শূন্য       *তথ্য, *পূর্ব;
     u_char     *p, *name;
-    size_t      len;
+    আকার_t      len;
     ngx_int_t   rc;
     ngx_err_t   err;
     ngx_str_t   file, buf;
@@ -956,49 +956,49 @@ ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
     ngx_str_null(&buf);
 
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                   "walk tree \"%V\"", tree);
+                   "walk tree \"%V\"", বৃক্ষ);
 
-    if (ngx_open_dir(tree, &dir) == NGX_ERROR) {
+    যদি (ngx_open_dir(বৃক্ষ, &dir) == NGX_ERROR) {
         ngx_log_error(NGX_LOG_CRIT, ctx->log, ngx_errno,
-                      ngx_open_dir_n " \"%s\" failed", tree->data);
-        return NGX_ERROR;
+                      ngx_open_dir_n " \"%s\" failed", বৃক্ষ->তথ্য);
+        ফেরত NGX_ERROR;
     }
 
-    prev = ctx->data;
+    পূর্ব = ctx->তথ্য;
 
-    if (ctx->alloc) {
-        data = ngx_alloc(ctx->alloc, ctx->log);
-        if (data == NULL) {
-            goto failed;
+    যদি (ctx->alloc) {
+        তথ্য = ngx_alloc(ctx->alloc, ctx->log);
+        যদি (তথ্য == ফাঁকা) {
+            যাও failed;
         }
 
-        if (ctx->init_handler(data, prev) == NGX_ABORT) {
-            goto failed;
+        যদি (ctx->init_handler(তথ্য, পূর্ব) == NGX_ABORT) {
+            যাও failed;
         }
 
-        ctx->data = data;
+        ctx->তথ্য = তথ্য;
 
-    } else {
-        data = NULL;
+    } অন্যথা {
+        তথ্য = ফাঁকা;
     }
 
-    for ( ;; ) {
+    জন্য ( ;; ) {
 
         ngx_set_errno(0);
 
-        if (ngx_read_dir(&dir) == NGX_ERROR) {
+        যদি (ngx_read_dir(&dir) == NGX_ERROR) {
             err = ngx_errno;
 
-            if (err == NGX_ENOMOREFILES) {
+            যদি (err == NGX_ENOMOREFILES) {
                 rc = NGX_OK;
 
-            } else {
+            } অন্যথা {
                 ngx_log_error(NGX_LOG_CRIT, ctx->log, err,
-                              ngx_read_dir_n " \"%s\" failed", tree->data);
+                              ngx_read_dir_n " \"%s\" failed", বৃক্ষ->তথ্য);
                 rc = NGX_ERROR;
             }
 
-            goto done;
+            যাও done;
         }
 
         len = ngx_de_namelen(&dir);
@@ -1007,99 +1007,99 @@ ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree)
         ngx_log_debug2(NGX_LOG_DEBUG_CORE, ctx->log, 0,
                       "tree name %uz:\"%s\"", len, name);
 
-        if (len == 1 && name[0] == '.') {
-            continue;
+        যদি (len == 1 && name[0] == '.') {
+            চালু;
         }
 
-        if (len == 2 && name[0] == '.' && name[1] == '.') {
-            continue;
+        যদি (len == 2 && name[0] == '.' && name[1] == '.') {
+            চালু;
         }
 
-        file.len = tree->len + 1 + len;
+        file.len = বৃক্ষ->len + 1 + len;
 
-        if (file.len > buf.len) {
+        যদি (file.len > buf.len) {
 
-            if (buf.len) {
-                ngx_free(buf.data);
+            যদি (buf.len) {
+                ngx_free(buf.তথ্য);
             }
 
-            buf.len = tree->len + 1 + len;
+            buf.len = বৃক্ষ->len + 1 + len;
 
-            buf.data = ngx_alloc(buf.len + 1, ctx->log);
-            if (buf.data == NULL) {
-                goto failed;
+            buf.তথ্য = ngx_alloc(buf.len + 1, ctx->log);
+            যদি (buf.তথ্য == ফাঁকা) {
+                যাও failed;
             }
         }
 
-        p = ngx_cpymem(buf.data, tree->data, tree->len);
+        p = ngx_cpymem(buf.তথ্য, বৃক্ষ->তথ্য, বৃক্ষ->len);
         *p++ = '/';
         ngx_memcpy(p, name, len + 1);
 
-        file.data = buf.data;
+        file.তথ্য = buf.তথ্য;
 
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                       "tree path \"%s\"", file.data);
+                       "tree path \"%s\"", file.তথ্য);
 
-        if (!dir.valid_info) {
-            if (ngx_de_info(file.data, &dir) == NGX_FILE_ERROR) {
+        যদি (!dir.valid_info) {
+            যদি (ngx_de_info(file.তথ্য, &dir) == NGX_FILE_ERROR) {
                 ngx_log_error(NGX_LOG_CRIT, ctx->log, ngx_errno,
-                              ngx_de_info_n " \"%s\" failed", file.data);
-                continue;
+                              ngx_de_info_n " \"%s\" failed", file.তথ্য);
+                চালু;
             }
         }
 
-        if (ngx_de_is_file(&dir)) {
+        যদি (ngx_de_is_file(&dir)) {
 
             ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                           "tree file \"%s\"", file.data);
+                           "tree file \"%s\"", file.তথ্য);
 
-            ctx->size = ngx_de_size(&dir);
-            ctx->fs_size = ngx_de_fs_size(&dir);
+            ctx->আকার_2 = ngx_de_আকার(&dir);
+            ctx->fs_আকার = ngx_de_fs_আকার(&dir);
             ctx->access = ngx_de_access(&dir);
             ctx->mtime = ngx_de_mtime(&dir);
 
-            if (ctx->file_handler(ctx, &file) == NGX_ABORT) {
-                goto failed;
+            যদি (ctx->file_handler(ctx, &file) == NGX_ABORT) {
+                যাও failed;
             }
 
-        } else if (ngx_de_is_dir(&dir)) {
+        } অন্যথা যদি (ngx_de_is_dir(&dir)) {
 
             ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                           "tree enter dir \"%s\"", file.data);
+                           "tree enter dir \"%s\"", file.তথ্য);
 
             ctx->access = ngx_de_access(&dir);
             ctx->mtime = ngx_de_mtime(&dir);
 
-            rc = ctx->pre_tree_handler(ctx, &file);
+            rc = ctx->pre_বৃক্ষ_handler(ctx, &file);
 
-            if (rc == NGX_ABORT) {
-                goto failed;
+            যদি (rc == NGX_ABORT) {
+                যাও failed;
             }
 
-            if (rc == NGX_DECLINED) {
+            যদি (rc == NGX_DECLINED) {
                 ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                               "tree skip dir \"%s\"", file.data);
-                continue;
+                               "tree skip dir \"%s\"", file.তথ্য);
+                চালু;
             }
 
-            if (ngx_walk_tree(ctx, &file) == NGX_ABORT) {
-                goto failed;
+            যদি (ngx_walk_বৃক্ষ(ctx, &file) == NGX_ABORT) {
+                যাও failed;
             }
 
             ctx->access = ngx_de_access(&dir);
             ctx->mtime = ngx_de_mtime(&dir);
 
-            if (ctx->post_tree_handler(ctx, &file) == NGX_ABORT) {
-                goto failed;
+            যদি (ctx->post_বৃক্ষ_handler(ctx, &file) == NGX_ABORT) {
+                যাও failed;
             }
 
-        } else {
+        } অন্যথা {
 
             ngx_log_debug1(NGX_LOG_DEBUG_CORE, ctx->log, 0,
-                           "tree special \"%s\"", file.data);
+                           "tree special \"%s\"", file.তথ্য);
 
-            if (ctx->spec_handler(ctx, &file) == NGX_ABORT) {
-                goto failed;
+            যদি (ctx->spec_handler(ctx, &file) == NGX_ABORT) {
+                যাও failed;
             }
         }
     }
@@ -1110,19 +1110,19 @@ failed:
 
 done:
 
-    if (buf.len) {
-        ngx_free(buf.data);
+    যদি (buf.len) {
+        ngx_free(buf.তথ্য);
     }
 
-    if (data) {
-        ngx_free(data);
-        ctx->data = prev;
+    যদি (তথ্য) {
+        ngx_free(তথ্য);
+        ctx->তথ্য = পূর্ব;
     }
 
-    if (ngx_close_dir(&dir) == NGX_ERROR) {
+    যদি (ngx_close_dir(&dir) == NGX_ERROR) {
         ngx_log_error(NGX_LOG_CRIT, ctx->log, ngx_errno,
-                      ngx_close_dir_n " \"%s\" failed", tree->data);
+                      ngx_close_dir_n " \"%s\" failed", বৃক্ষ->তথ্য);
     }
 
-    return rc;
+    ফেরত rc;
 }

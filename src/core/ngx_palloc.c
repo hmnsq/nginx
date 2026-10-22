@@ -5,426 +5,426 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
-static ngx_inline void *ngx_palloc_small(ngx_pool_t *pool, size_t size,
+স্থির ngx_inline শূন্য *ngx_palloc_small(ngx_pool_t *pool, আকার_t আকার_2,
     ngx_uint_t align);
-static void *ngx_palloc_block(ngx_pool_t *pool, size_t size);
-static void *ngx_palloc_large(ngx_pool_t *pool, size_t size);
+স্থির শূন্য *ngx_palloc_block(ngx_pool_t *pool, আকার_t আকার_2);
+স্থির শূন্য *ngx_palloc_large(ngx_pool_t *pool, আকার_t আকার_2);
 
 
 ngx_pool_t *
-ngx_create_pool(size_t size, ngx_log_t *log)
+ngx_create_pool(আকার_t আকার_2, ngx_log_t *log)
 {
     ngx_pool_t  *p;
 
-    p = ngx_memalign(NGX_POOL_ALIGNMENT, size, log);
-    if (p == NULL) {
-        return NULL;
+    p = ngx_memalign(NGX_POOL_ALIGNMENT, আকার_2, log);
+    যদি (p == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    p->d.last = (u_char *) p + sizeof(ngx_pool_t);
-    p->d.end = (u_char *) p + size;
-    p->d.next = NULL;
+    p->d.last = (u_char *) p + আকার(ngx_pool_t);
+    p->d.end = (u_char *) p + আকার_2;
+    p->d.পরবর্তী = ফাঁকা;
     p->d.failed = 0;
 
-    size = size - sizeof(ngx_pool_t);
-    p->max = (size < NGX_MAX_ALLOC_FROM_POOL) ? size : NGX_MAX_ALLOC_FROM_POOL;
+    আকার_2 = আকার_2 - আকার(ngx_pool_t);
+    p->max = (আকার_2 < NGX_MAX_ALLOC_FROM_POOL) ? আকার_2 : NGX_MAX_ALLOC_FROM_POOL;
 
     p->current = p;
-    p->chain = NULL;
-    p->large = NULL;
-    p->cleanup = NULL;
+    p->chain = ফাঁকা;
+    p->large = ফাঁকা;
+    p->cleanup = ফাঁকা;
     p->log = log;
 
-    return p;
+    ফেরত p;
 }
 
 
-void
+শূন্য
 ngx_destroy_pool(ngx_pool_t *pool)
 {
     ngx_pool_t          *p, *n;
     ngx_pool_large_t    *l;
     ngx_pool_cleanup_t  *c;
 
-    for (c = pool->cleanup; c; c = c->next) {
-        if (c->handler) {
+    জন্য (c = pool->cleanup; c; c = c->পরবর্তী) {
+        যদি (c->handler) {
             ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
                            "run cleanup: %p", c);
-            c->handler(c->data);
+            c->handler(c->তথ্য);
         }
     }
 
-#if (NGX_DEBUG)
+#যদি (NGX_DEBUG)
 
     /*
      * we could allocate the pool->log from this pool
      * so we cannot use this log while free()ing the pool
      */
 
-    for (l = pool->large; l; l = l->next) {
+    জন্য (l = pool->large; l; l = l->পরবর্তী) {
         ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0, "free: %p", l->alloc);
     }
 
-    for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
+    জন্য (p = pool, n = pool->d.পরবর্তী; /* void */; p = n, n = n->d.পরবর্তী) {
         ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
                        "free: %p, unused: %uz", p, p->d.end - p->d.last);
 
-        if (n == NULL) {
-            break;
+        যদি (n == ফাঁকা) {
+            বিরতি;
         }
     }
 
 #endif
 
-    for (l = pool->large; l; l = l->next) {
-        if (l->alloc) {
+    জন্য (l = pool->large; l; l = l->পরবর্তী) {
+        যদি (l->alloc) {
             ngx_free(l->alloc);
         }
     }
 
-    for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
+    জন্য (p = pool, n = pool->d.পরবর্তী; /* void */; p = n, n = n->d.পরবর্তী) {
         ngx_free(p);
 
-        if (n == NULL) {
-            break;
+        যদি (n == ফাঁকা) {
+            বিরতি;
         }
     }
 }
 
 
-void
+শূন্য
 ngx_reset_pool(ngx_pool_t *pool)
 {
     ngx_pool_t        *p;
     ngx_pool_large_t  *l;
 
-    for (l = pool->large; l; l = l->next) {
-        if (l->alloc) {
+    জন্য (l = pool->large; l; l = l->পরবর্তী) {
+        যদি (l->alloc) {
             ngx_free(l->alloc);
         }
     }
 
-    for (p = pool; p; p = p->d.next) {
-        p->d.last = (u_char *) p + sizeof(ngx_pool_t);
+    জন্য (p = pool; p; p = p->d.পরবর্তী) {
+        p->d.last = (u_char *) p + আকার(ngx_pool_t);
         p->d.failed = 0;
     }
 
     pool->current = pool;
-    pool->chain = NULL;
-    pool->large = NULL;
+    pool->chain = ফাঁকা;
+    pool->large = ফাঁকা;
 }
 
 
-void *
-ngx_palloc(ngx_pool_t *pool, size_t size)
+শূন্য *
+ngx_palloc(ngx_pool_t *pool, আকার_t আকার_2)
 {
-#if !(NGX_DEBUG_PALLOC)
-    if (size <= pool->max) {
-        return ngx_palloc_small(pool, size, 1);
+#যদি !(NGX_DEBUG_PALLOC)
+    যদি (আকার_2 <= pool->max) {
+        ফেরত ngx_palloc_small(pool, আকার_2, 1);
     }
 #endif
 
-    return ngx_palloc_large(pool, size);
+    ফেরত ngx_palloc_large(pool, আকার_2);
 }
 
 
-void *
-ngx_pnalloc(ngx_pool_t *pool, size_t size)
+শূন্য *
+ngx_pnalloc(ngx_pool_t *pool, আকার_t আকার_2)
 {
-#if !(NGX_DEBUG_PALLOC)
-    if (size <= pool->max) {
-        return ngx_palloc_small(pool, size, 0);
+#যদি !(NGX_DEBUG_PALLOC)
+    যদি (আকার_2 <= pool->max) {
+        ফেরত ngx_palloc_small(pool, আকার_2, 0);
     }
 #endif
 
-    return ngx_palloc_large(pool, size);
+    ফেরত ngx_palloc_large(pool, আকার_2);
 }
 
 
-static ngx_inline void *
-ngx_palloc_small(ngx_pool_t *pool, size_t size, ngx_uint_t align)
+স্থির ngx_inline শূন্য *
+ngx_palloc_small(ngx_pool_t *pool, আকার_t আকার_2, ngx_uint_t align)
 {
     u_char      *m;
     ngx_pool_t  *p;
 
     p = pool->current;
 
-    do {
+    করো {
         m = p->d.last;
 
-        if (align) {
+        যদি (align) {
             m = ngx_align_ptr(m, NGX_ALIGNMENT);
         }
 
-        if ((size_t) (p->d.end - m) >= size) {
-            p->d.last = m + size;
+        যদি ((আকার_t) (p->d.end - m) >= আকার_2) {
+            p->d.last = m + আকার_2;
 
-            return m;
+            ফেরত m;
         }
 
-        p = p->d.next;
+        p = p->d.পরবর্তী;
 
-    } while (p);
+    } যখন (p);
 
-    return ngx_palloc_block(pool, size);
+    ফেরত ngx_palloc_block(pool, আকার_2);
 }
 
 
-static void *
-ngx_palloc_block(ngx_pool_t *pool, size_t size)
+স্থির শূন্য *
+ngx_palloc_block(ngx_pool_t *pool, আকার_t আকার_2)
 {
     u_char      *m;
-    size_t       psize;
+    আকার_t       psize;
     ngx_pool_t  *p, *new;
 
-    psize = (size_t) (pool->d.end - (u_char *) pool);
+    psize = (আকার_t) (pool->d.end - (u_char *) pool);
 
     m = ngx_memalign(NGX_POOL_ALIGNMENT, psize, pool->log);
-    if (m == NULL) {
-        return NULL;
+    যদি (m == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
     new = (ngx_pool_t *) m;
 
     new->d.end = m + psize;
-    new->d.next = NULL;
+    new->d.পরবর্তী = ফাঁকা;
     new->d.failed = 0;
 
-    m += sizeof(ngx_pool_data_t);
+    m += আকার(ngx_pool_তথ্য_t);
     m = ngx_align_ptr(m, NGX_ALIGNMENT);
-    new->d.last = m + size;
+    new->d.last = m + আকার_2;
 
-    for (p = pool->current; p->d.next; p = p->d.next) {
-        if (p->d.failed++ > 4) {
-            pool->current = p->d.next;
+    জন্য (p = pool->current; p->d.পরবর্তী; p = p->d.পরবর্তী) {
+        যদি (p->d.failed++ > 4) {
+            pool->current = p->d.পরবর্তী;
         }
     }
 
-    p->d.next = new;
+    p->d.পরবর্তী = new;
 
-    return m;
+    ফেরত m;
 }
 
 
-static void *
-ngx_palloc_large(ngx_pool_t *pool, size_t size)
+স্থির শূন্য *
+ngx_palloc_large(ngx_pool_t *pool, আকার_t আকার_2)
 {
-    void              *p;
+    শূন্য              *p;
     ngx_uint_t         n;
     ngx_pool_large_t  *large;
 
-    p = ngx_alloc(size, pool->log);
-    if (p == NULL) {
-        return NULL;
+    p = ngx_alloc(আকার_2, pool->log);
+    যদি (p == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
     n = 0;
 
-    for (large = pool->large; large; large = large->next) {
-        if (large->alloc == NULL) {
+    জন্য (large = pool->large; large; large = large->পরবর্তী) {
+        যদি (large->alloc == ফাঁকা) {
             large->alloc = p;
-            return p;
+            ফেরত p;
         }
 
-        if (n++ > 3) {
-            break;
+        যদি (n++ > 3) {
+            বিরতি;
         }
     }
 
-    large = ngx_palloc_small(pool, sizeof(ngx_pool_large_t), 1);
-    if (large == NULL) {
+    large = ngx_palloc_small(pool, আকার(ngx_pool_large_t), 1);
+    যদি (large == ফাঁকা) {
         ngx_free(p);
-        return NULL;
+        ফেরত ফাঁকা;
     }
 
     large->alloc = p;
-    large->next = pool->large;
+    large->পরবর্তী = pool->large;
     pool->large = large;
 
-    return p;
+    ফেরত p;
 }
 
 
-void *
-ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment)
+শূন্য *
+ngx_pmemalign(ngx_pool_t *pool, আকার_t আকার_2, আকার_t alignment)
 {
-    void              *p;
+    শূন্য              *p;
     ngx_pool_large_t  *large;
 
-    p = ngx_memalign(alignment, size, pool->log);
-    if (p == NULL) {
-        return NULL;
+    p = ngx_memalign(alignment, আকার_2, pool->log);
+    যদি (p == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    large = ngx_palloc_small(pool, sizeof(ngx_pool_large_t), 1);
-    if (large == NULL) {
+    large = ngx_palloc_small(pool, আকার(ngx_pool_large_t), 1);
+    যদি (large == ফাঁকা) {
         ngx_free(p);
-        return NULL;
+        ফেরত ফাঁকা;
     }
 
     large->alloc = p;
-    large->next = pool->large;
+    large->পরবর্তী = pool->large;
     pool->large = large;
 
-    return p;
+    ফেরত p;
 }
 
 
 ngx_int_t
-ngx_pfree(ngx_pool_t *pool, void *p)
+ngx_pfree(ngx_pool_t *pool, শূন্য *p)
 {
     ngx_pool_large_t  *l;
 
-    for (l = pool->large; l; l = l->next) {
-        if (p == l->alloc) {
+    জন্য (l = pool->large; l; l = l->পরবর্তী) {
+        যদি (p == l->alloc) {
             ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
                            "free: %p", l->alloc);
             ngx_free(l->alloc);
-            l->alloc = NULL;
+            l->alloc = ফাঁকা;
 
-            return NGX_OK;
+            ফেরত NGX_OK;
         }
     }
 
-    return NGX_DECLINED;
+    ফেরত NGX_DECLINED;
 }
 
 
-void *
-ngx_pcalloc(ngx_pool_t *pool, size_t size)
+শূন্য *
+ngx_pcalloc(ngx_pool_t *pool, আকার_t আকার_2)
 {
-    void *p;
+    শূন্য *p;
 
-    p = ngx_palloc(pool, size);
-    if (p) {
-        ngx_memzero(p, size);
+    p = ngx_palloc(pool, আকার_2);
+    যদি (p) {
+        ngx_memzero(p, আকার_2);
     }
 
-    return p;
+    ফেরত p;
 }
 
 
 ngx_pool_cleanup_t *
-ngx_pool_cleanup_add(ngx_pool_t *p, size_t size)
+ngx_pool_cleanup_add(ngx_pool_t *p, আকার_t আকার_2)
 {
     ngx_pool_cleanup_t  *c;
 
-    c = ngx_palloc(p, sizeof(ngx_pool_cleanup_t));
-    if (c == NULL) {
-        return NULL;
+    c = ngx_palloc(p, আকার(ngx_pool_cleanup_t));
+    যদি (c == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    if (size) {
-        c->data = ngx_palloc(p, size);
-        if (c->data == NULL) {
-            return NULL;
+    যদি (আকার_2) {
+        c->তথ্য = ngx_palloc(p, আকার_2);
+        যদি (c->তথ্য == ফাঁকা) {
+            ফেরত ফাঁকা;
         }
 
-    } else {
-        c->data = NULL;
+    } অন্যথা {
+        c->তথ্য = ফাঁকা;
     }
 
-    c->handler = NULL;
-    c->next = p->cleanup;
+    c->handler = ফাঁকা;
+    c->পরবর্তী = p->cleanup;
 
     p->cleanup = c;
 
     ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, p->log, 0, "add cleanup: %p", c);
 
-    return c;
+    ফেরত c;
 }
 
 
-void
+শূন্য
 ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd)
 {
     ngx_pool_cleanup_t       *c;
     ngx_pool_cleanup_file_t  *cf;
 
-    for (c = p->cleanup; c; c = c->next) {
-        if (c->handler == ngx_pool_cleanup_file) {
+    জন্য (c = p->cleanup; c; c = c->পরবর্তী) {
+        যদি (c->handler == ngx_pool_cleanup_file) {
 
-            cf = c->data;
+            cf = c->তথ্য;
 
-            if (cf->fd == fd) {
+            যদি (cf->fd == fd) {
                 c->handler(cf);
-                c->handler = NULL;
-                return;
+                c->handler = ফাঁকা;
+                ফেরত;
             }
         }
     }
 }
 
 
-void
-ngx_pool_cleanup_file(void *data)
+শূন্য
+ngx_pool_cleanup_file(শূন্য *তথ্য)
 {
-    ngx_pool_cleanup_file_t  *c = data;
+    ngx_pool_cleanup_file_t  *c = তথ্য;
 
     ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, c->log, 0, "file cleanup: fd:%d",
                    c->fd);
 
-    if (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
+    যদি (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ALERT, c->log, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", c->name);
     }
 }
 
 
-void
-ngx_pool_delete_file(void *data)
+শূন্য
+ngx_pool_delete_file(শূন্য *তথ্য)
 {
-    ngx_pool_cleanup_file_t  *c = data;
+    ngx_pool_cleanup_file_t  *c = তথ্য;
 
     ngx_err_t  err;
 
     ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, c->log, 0, "file cleanup: fd:%d %s",
                    c->fd, c->name);
 
-    if (ngx_delete_file(c->name) == NGX_FILE_ERROR) {
+    যদি (ngx_delete_file(c->name) == NGX_FILE_ERROR) {
         err = ngx_errno;
 
-        if (err != NGX_ENOENT) {
+        যদি (err != NGX_ENOENT) {
             ngx_log_error(NGX_LOG_CRIT, c->log, err,
                           ngx_delete_file_n " \"%s\" failed", c->name);
         }
     }
 
-    if (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
+    যদি (ngx_close_file(c->fd) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ALERT, c->log, ngx_errno,
                       ngx_close_file_n " \"%s\" failed", c->name);
     }
 }
 
 
-#if 0
+#যদি 0
 
-static void *
-ngx_get_cached_block(size_t size)
+স্থির শূন্য *
+ngx_get_cached_block(আকার_t আকার_2)
 {
-    void                     *p;
+    শূন্য                     *p;
     ngx_cached_block_slot_t  *slot;
 
-    if (ngx_cycle->cache == NULL) {
-        return NULL;
+    যদি (ngx_cycle->cache == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    slot = &ngx_cycle->cache[(size + ngx_pagesize - 1) / ngx_pagesize];
+    slot = &ngx_cycle->cache[(আকার_2 + ngx_pagesize - 1) / ngx_pagesize];
 
     slot->tries++;
 
-    if (slot->number) {
+    যদি (slot->সংখ্যা) {
         p = slot->block;
-        slot->block = slot->block->next;
-        slot->number--;
-        return p;
+        slot->block = slot->block->পরবর্তী;
+        slot->সংখ্যা--;
+        ফেরত p;
     }
 
-    return NULL;
+    ফেরত ফাঁকা;
 }
 
 #endif

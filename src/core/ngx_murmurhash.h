@@ -9,11 +9,11 @@
 #define _NGX_MURMURHASH_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
-uint32_t ngx_murmur_hash2(u_char *data, size_t len);
+uint32_t ngx_murmur_hash2(u_char *তথ্য, আকার_t len);
 
 
 #endif /* _NGX_MURMURHASH_H_INCLUDED_ */

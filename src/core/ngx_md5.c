@@ -6,16 +6,16 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_md5.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
+#অন্তর্ভাব <ngx_md5.h>
 
 
-static const u_char *ngx_md5_body(ngx_md5_t *ctx, const u_char *data,
-    size_t size);
+স্থির ধ্রুবক u_char *ngx_md5_body(ngx_md5_t *ctx, ধ্রুবক u_char *তথ্য,
+    আকার_t আকার_2);
 
 
-void
+শূন্য
 ngx_md5_init(ngx_md5_t *ctx)
 {
     ctx->a = 0x67452301;
@@ -27,87 +27,87 @@ ngx_md5_init(ngx_md5_t *ctx)
 }
 
 
-void
-ngx_md5_update(ngx_md5_t *ctx, const void *data, size_t size)
+শূন্য
+ngx_md5_update(ngx_md5_t *ctx, ধ্রুবক শূন্য *তথ্য, আকার_t আকার_2)
 {
-    size_t  used, free;
+    আকার_t  used, মুক্ত;
 
-    used = (size_t) (ctx->bytes & 0x3f);
-    ctx->bytes += size;
+    used = (আকার_t) (ctx->bytes & 0x3f);
+    ctx->bytes += আকার_2;
 
-    if (used) {
-        free = 64 - used;
+    যদি (used) {
+        মুক্ত = 64 - used;
 
-        if (size < free) {
-            ngx_memcpy(&ctx->buffer[used], data, size);
-            return;
+        যদি (আকার_2 < মুক্ত) {
+            ngx_memcpy(&ctx->বাফার[used], তথ্য, আকার_2);
+            ফেরত;
         }
 
-        ngx_memcpy(&ctx->buffer[used], data, free);
-        data = (u_char *) data + free;
-        size -= free;
-        (void) ngx_md5_body(ctx, ctx->buffer, 64);
+        ngx_memcpy(&ctx->বাফার[used], তথ্য, মুক্ত);
+        তথ্য = (u_char *) তথ্য + মুক্ত;
+        আকার_2 -= মুক্ত;
+        (শূন্য) ngx_md5_body(ctx, ctx->বাফার, 64);
     }
 
-    if (size >= 64) {
-        data = ngx_md5_body(ctx, data, size & ~(size_t) 0x3f);
-        size &= 0x3f;
+    যদি (আকার_2 >= 64) {
+        তথ্য = ngx_md5_body(ctx, তথ্য, আকার_2 & ~(আকার_t) 0x3f);
+        আকার_2 &= 0x3f;
     }
 
-    ngx_memcpy(ctx->buffer, data, size);
+    ngx_memcpy(ctx->বাফার, তথ্য, আকার_2);
 }
 
 
-void
-ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
+শূন্য
+ngx_md5_final(u_char ফলাফল[16], ngx_md5_t *ctx)
 {
-    size_t  used, free;
+    আকার_t  used, মুক্ত;
 
-    used = (size_t) (ctx->bytes & 0x3f);
+    used = (আকার_t) (ctx->bytes & 0x3f);
 
-    ctx->buffer[used++] = 0x80;
+    ctx->বাফার[used++] = 0x80;
 
-    free = 64 - used;
+    মুক্ত = 64 - used;
 
-    if (free < 8) {
-        ngx_memzero(&ctx->buffer[used], free);
-        (void) ngx_md5_body(ctx, ctx->buffer, 64);
+    যদি (মুক্ত < 8) {
+        ngx_memzero(&ctx->বাফার[used], মুক্ত);
+        (শূন্য) ngx_md5_body(ctx, ctx->বাফার, 64);
         used = 0;
-        free = 64;
+        মুক্ত = 64;
     }
 
-    ngx_memzero(&ctx->buffer[used], free - 8);
+    ngx_memzero(&ctx->বাফার[used], মুক্ত - 8);
 
     ctx->bytes <<= 3;
-    ctx->buffer[56] = (u_char) ctx->bytes;
-    ctx->buffer[57] = (u_char) (ctx->bytes >> 8);
-    ctx->buffer[58] = (u_char) (ctx->bytes >> 16);
-    ctx->buffer[59] = (u_char) (ctx->bytes >> 24);
-    ctx->buffer[60] = (u_char) (ctx->bytes >> 32);
-    ctx->buffer[61] = (u_char) (ctx->bytes >> 40);
-    ctx->buffer[62] = (u_char) (ctx->bytes >> 48);
-    ctx->buffer[63] = (u_char) (ctx->bytes >> 56);
+    ctx->বাফার[56] = (u_char) ctx->bytes;
+    ctx->বাফার[57] = (u_char) (ctx->bytes >> 8);
+    ctx->বাফার[58] = (u_char) (ctx->bytes >> 16);
+    ctx->বাফার[59] = (u_char) (ctx->bytes >> 24);
+    ctx->বাফার[60] = (u_char) (ctx->bytes >> 32);
+    ctx->বাফার[61] = (u_char) (ctx->bytes >> 40);
+    ctx->বাফার[62] = (u_char) (ctx->bytes >> 48);
+    ctx->বাফার[63] = (u_char) (ctx->bytes >> 56);
 
-    (void) ngx_md5_body(ctx, ctx->buffer, 64);
+    (শূন্য) ngx_md5_body(ctx, ctx->বাফার, 64);
 
-    result[0] = (u_char) ctx->a;
-    result[1] = (u_char) (ctx->a >> 8);
-    result[2] = (u_char) (ctx->a >> 16);
-    result[3] = (u_char) (ctx->a >> 24);
-    result[4] = (u_char) ctx->b;
-    result[5] = (u_char) (ctx->b >> 8);
-    result[6] = (u_char) (ctx->b >> 16);
-    result[7] = (u_char) (ctx->b >> 24);
-    result[8] = (u_char) ctx->c;
-    result[9] = (u_char) (ctx->c >> 8);
-    result[10] = (u_char) (ctx->c >> 16);
-    result[11] = (u_char) (ctx->c >> 24);
-    result[12] = (u_char) ctx->d;
-    result[13] = (u_char) (ctx->d >> 8);
-    result[14] = (u_char) (ctx->d >> 16);
-    result[15] = (u_char) (ctx->d >> 24);
+    ফলাফল[0] = (u_char) ctx->a;
+    ফলাফল[1] = (u_char) (ctx->a >> 8);
+    ফলাফল[2] = (u_char) (ctx->a >> 16);
+    ফলাফল[3] = (u_char) (ctx->a >> 24);
+    ফলাফল[4] = (u_char) ctx->b;
+    ফলাফল[5] = (u_char) (ctx->b >> 8);
+    ফলাফল[6] = (u_char) (ctx->b >> 16);
+    ফলাফল[7] = (u_char) (ctx->b >> 24);
+    ফলাফল[8] = (u_char) ctx->c;
+    ফলাফল[9] = (u_char) (ctx->c >> 8);
+    ফলাফল[10] = (u_char) (ctx->c >> 16);
+    ফলাফল[11] = (u_char) (ctx->c >> 24);
+    ফলাফল[12] = (u_char) ctx->d;
+    ফলাফল[13] = (u_char) (ctx->d >> 8);
+    ফলাফল[14] = (u_char) (ctx->d >> 16);
+    ফলাফল[15] = (u_char) (ctx->d >> 24);
 
-    ngx_memzero(ctx, sizeof(*ctx));
+    ngx_memzero(ctx, আকার(*ctx));
 }
 
 
@@ -142,12 +142,12 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
  * does not work.
  */
 
-#if (NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
+#যদি (NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
 
 #define SET(n)      (*(uint32_t *) &p[n * 4])
 #define GET(n)      (*(uint32_t *) &p[n * 4])
 
-#else
+#অন্যথা
 
 #define SET(n)                                                                \
     (block[n] =                                                               \
@@ -166,24 +166,24 @@ ngx_md5_final(u_char result[16], ngx_md5_t *ctx)
  * the bit counters.  There are no alignment requirements.
  */
 
-static const u_char *
-ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
+স্থির ধ্রুবক u_char *
+ngx_md5_body(ngx_md5_t *ctx, ধ্রুবক u_char *তথ্য, আকার_t আকার_2)
 {
     uint32_t       a, b, c, d;
     uint32_t       saved_a, saved_b, saved_c, saved_d;
-    const u_char  *p;
-#if !(NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
+    ধ্রুবক u_char  *p;
+#যদি !(NGX_HAVE_LITTLE_ENDIAN && NGX_HAVE_NONALIGNED)
     uint32_t       block[16];
 #endif
 
-    p = data;
+    p = তথ্য;
 
     a = ctx->a;
     b = ctx->b;
     c = ctx->c;
     d = ctx->d;
 
-    do {
+    করো {
         saved_a = a;
         saved_b = b;
         saved_c = c;
@@ -272,12 +272,12 @@ ngx_md5_body(ngx_md5_t *ctx, const u_char *data, size_t size)
 
         p += 64;
 
-    } while (size -= 64);
+    } যখন (আকার_2 -= 64);
 
     ctx->a = a;
     ctx->b = b;
     ctx->c = c;
     ctx->d = d;
 
-    return p;
+    ফেরত p;
 }

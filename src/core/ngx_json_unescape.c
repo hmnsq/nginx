@@ -10,25 +10,25 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_json_unescape.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
+#অন্তর্ভাব <ngx_json_unescape.h>
 
 
-static ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
+স্থির ngx_inline u_char *ngx_json_utf8_encode(u_char *dst,
     uint32_t codepoint);
 
 
 ngx_int_t
 ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
 {
-    size_t       size;
+    আকার_t       আকার_2;
     u_char      *d, *s, ch;
-    uint32_t     codepoint, high_surrogate;
+    uint32_t     codepoint, উপরের_surrogate;
     ngx_int_t    n;
-    ngx_uint_t   hex_left;
+    ngx_uint_t   hex_বাম;
 
-    enum {
+    গণনা {
         sw_usual = 0,
         sw_quoted,
         sw_hex,
@@ -62,216 +62,216 @@ ngx_json_unescape_string(ngx_str_t *dst, ngx_str_t *src)
      * surrounding double quotes).
      */
 
-    if (src->len == 0) {
+    যদি (src->len == 0) {
         dst->len = 0;
-        return NGX_OK;
+        ফেরত NGX_OK;
     }
 
-    if (dst->len < src->len) {
-        return NGX_ERROR;
+    যদি (dst->len < src->len) {
+        ফেরত NGX_ERROR;
     }
 
-    s = src->data;
-    d = dst->data;
-    size = src->len;
+    s = src->তথ্য;
+    d = dst->তথ্য;
+    আকার_2 = src->len;
 
 
     state = sw_usual;
     codepoint = 0;
-    high_surrogate = 0;
-    hex_left = 0;
+    উপরের_surrogate = 0;
+    hex_বাম = 0;
 
-    while (size--) {
+    যখন (আকার_2--) {
 
         ch = *s++;
 
-        switch (state) {
-        case sw_usual:
+        নির্বাচন (state) {
+        ক্ষেত্র sw_usual:
 
-            if (ch == '"') {
-                return NGX_ERROR;
+            যদি (ch == '"') {
+                ফেরত NGX_ERROR;
             }
 
-            if (ch == '\\') {
+            যদি (ch == '\\') {
                 state = sw_quoted;
-                break;
+                বিরতি;
             }
 
-            if (ch < 0x20) {
+            যদি (ch < 0x20) {
                 /* RFC 8259: control characters must be escaped */
-                return NGX_ERROR;
+                ফেরত NGX_ERROR;
             }
 
             *d++ = ch;
-            break;
+            বিরতি;
 
-        case sw_quoted:
+        ক্ষেত্র sw_quoted:
 
-            switch (ch) {
+            নির্বাচন (ch) {
 
-            case 'u':
+            ক্ষেত্র 'u':
                 codepoint = 0;
-                hex_left = 4;
+                hex_বাম = 4;
                 state = sw_hex;
-                break;
+                বিরতি;
 
-            case '"':
-            case '/':
-            case '\\':
+            ক্ষেত্র '"':
+            ক্ষেত্র '/':
+            ক্ষেত্র '\\':
                 *d++ = ch;
                 state = sw_usual;
-                break;
+                বিরতি;
 
-            case 'b':
+            ক্ষেত্র 'b':
                 *d++ = '\b';
                 state = sw_usual;
-                break;
+                বিরতি;
 
-            case 'f':
+            ক্ষেত্র 'f':
                 *d++ = '\f';
                 state = sw_usual;
-                break;
+                বিরতি;
 
-            case 'n':
+            ক্ষেত্র 'n':
                 *d++ = '\n';
                 state = sw_usual;
-                break;
+                বিরতি;
 
-            case 'r':
+            ক্ষেত্র 'r':
                 *d++ = '\r';
                 state = sw_usual;
-                break;
+                বিরতি;
 
-            case 't':
+            ক্ষেত্র 't':
                 *d++ = '\t';
                 state = sw_usual;
-                break;
+                বিরতি;
 
-            default:
-                return NGX_ERROR;
+            পূর্বনির্ধারিত:
+                ফেরত NGX_ERROR;
             }
 
-            break;
+            বিরতি;
 
-        case sw_hex:
+        ক্ষেত্র sw_hex:
 
             n = ngx_json_hex_digit(ch);
-            if (n == NGX_ERROR) {
-                return NGX_ERROR;
+            যদি (n == NGX_ERROR) {
+                ফেরত NGX_ERROR;
             }
 
             codepoint = (codepoint << 4) | (uint32_t) n;
 
-            if (--hex_left > 0) {
-                break;
+            যদি (--hex_বাম > 0) {
+                বিরতি;
             }
 
-            if (high_surrogate) {
-                if (codepoint < 0xDC00 || codepoint > 0xDFFF) {
-                    return NGX_ERROR;
+            যদি (উপরের_surrogate) {
+                যদি (codepoint < 0xDC00 || codepoint > 0xDFFF) {
+                    ফেরত NGX_ERROR;
                 }
 
                 codepoint = 0x10000
-                            + ((high_surrogate - 0xD800) << 10)
+                            + ((উপরের_surrogate - 0xD800) << 10)
                             + (codepoint - 0xDC00);
                 d = ngx_json_utf8_encode(d, codepoint);
-                high_surrogate = 0;
+                উপরের_surrogate = 0;
                 state = sw_usual;
-                break;
+                বিরতি;
             }
 
-            if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+            যদি (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
                 /* high surrogate - wait for the low surrogate */
-                high_surrogate = codepoint;
+                উপরের_surrogate = codepoint;
                 state = sw_surrogate_start;
-                break;
+                বিরতি;
             }
 
-            if (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
+            যদি (codepoint >= 0xDC00 && codepoint <= 0xDFFF) {
                 /* lone low surrogate */
-                return NGX_ERROR;
+                ফেরত NGX_ERROR;
             }
 
             d = ngx_json_utf8_encode(d, codepoint);
             state = sw_usual;
-            break;
+            বিরতি;
 
-        case sw_surrogate_start:
+        ক্ষেত্র sw_surrogate_start:
             /*
              * Expect '\' to begin the low-surrogate escape.
              * Lone surrogates are not valid Unicode scalar values
              * (RFC 8259, Section 8.2).
              */
-            if (ch == '\\') {
+            যদি (ch == '\\') {
                 state = sw_surrogate_u;
-                break;
+                বিরতি;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            ফেরত NGX_ERROR;
 
-        case sw_surrogate_u:
-            if (ch == 'u') {
+        ক্ষেত্র sw_surrogate_u:
+            যদি (ch == 'u') {
                 codepoint = 0;
-                hex_left = 4;
+                hex_বাম = 4;
                 state = sw_hex;
-                break;
+                বিরতি;
             }
 
             /* lone high surrogate */
-            return NGX_ERROR;
+            ফেরত NGX_ERROR;
         }
     }
 
-    if (state != sw_usual) {
+    যদি (state != sw_usual) {
         /* truncated escape sequence or unpaired high surrogate */
-        return NGX_ERROR;
+        ফেরত NGX_ERROR;
     }
 
-    dst->len = d - dst->data;
+    dst->len = d - dst->তথ্য;
 
-    return NGX_OK;
+    ফেরত NGX_OK;
 }
 
 
-static ngx_inline u_char *
+স্থির ngx_inline u_char *
 ngx_json_utf8_encode(u_char *dst, uint32_t codepoint)
 {
-    if (codepoint <= 0x7F) {
+    যদি (codepoint <= 0x7F) {
         *dst++ = (u_char) codepoint;
 
-    } else if (codepoint <= 0x7FF) {
+    } অন্যথা যদি (codepoint <= 0x7FF) {
         *dst++ = (u_char) (0xC0 | (codepoint >> 6));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else if (codepoint <= 0xFFFF) {
+    } অন্যথা যদি (codepoint <= 0xFFFF) {
         *dst++ = (u_char) (0xE0 | (codepoint >> 12));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
 
-    } else {
+    } অন্যথা {
         *dst++ = (u_char) (0xF0 | (codepoint >> 18));
         *dst++ = (u_char) (0x80 | ((codepoint >> 12) & 0x3F));
         *dst++ = (u_char) (0x80 | ((codepoint >> 6) & 0x3F));
         *dst++ = (u_char) (0x80 | (codepoint & 0x3F));
     }
 
-    return dst;
+    ফেরত dst;
 }
 
 
 ngx_int_t
 ngx_json_hex_digit(u_char ch)
 {
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0';
+    যদি (ch >= '0' && ch <= '9') {
+        ফেরত ch - '0';
     }
 
     ch = (u_char) (ch | 0x20);
 
-    if (ch >= 'a' && ch <= 'f') {
-        return ch - 'a' + 10;
+    যদি (ch >= 'a' && ch <= 'f') {
+        ফেরত ch - 'a' + 10;
     }
 
-    return NGX_ERROR;
+    ফেরত NGX_ERROR;
 }

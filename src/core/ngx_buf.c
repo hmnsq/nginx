@@ -5,23 +5,23 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
 ngx_buf_t *
-ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
+ngx_create_অস্থায়ী_buf(ngx_pool_t *pool, আকার_t আকার_2)
 {
     ngx_buf_t *b;
 
     b = ngx_calloc_buf(pool);
-    if (b == NULL) {
-        return NULL;
+    যদি (b == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    b->start = ngx_palloc(pool, size);
-    if (b->start == NULL) {
-        return NULL;
+    b->start = ngx_palloc(pool, আকার_2);
+    যদি (b->start == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
     /*
@@ -37,10 +37,10 @@ ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
 
     b->pos = b->start;
     b->last = b->start;
-    b->end = b->last + size;
+    b->end = b->last + আকার_2;
     b->temporary = 1;
 
-    return b;
+    ফেরত b;
 }
 
 
@@ -51,17 +51,17 @@ ngx_alloc_chain_link(ngx_pool_t *pool)
 
     cl = pool->chain;
 
-    if (cl) {
-        pool->chain = cl->next;
-        return cl;
+    যদি (cl) {
+        pool->chain = cl->পরবর্তী;
+        ফেরত cl;
     }
 
-    cl = ngx_palloc(pool, sizeof(ngx_chain_t));
-    if (cl == NULL) {
-        return NULL;
+    cl = ngx_palloc(pool, আকার(ngx_chain_t));
+    যদি (cl == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    return cl;
+    ফেরত cl;
 }
 
 
@@ -73,18 +73,18 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
     ngx_buf_t    *b;
     ngx_chain_t  *chain, *cl, **ll;
 
-    p = ngx_palloc(pool, bufs->num * bufs->size);
-    if (p == NULL) {
-        return NULL;
+    p = ngx_palloc(pool, bufs->অঙ্ক * bufs->আকার_2);
+    যদি (p == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
     ll = &chain;
 
-    for (i = 0; i < bufs->num; i++) {
+    জন্য (i = 0; i < bufs->অঙ্ক; i++) {
 
         b = ngx_calloc_buf(pool);
-        if (b == NULL) {
-            return NULL;
+        যদি (b == ফাঁকা) {
+            ফেরত ফাঁকা;
         }
 
         /*
@@ -104,22 +104,22 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
         b->temporary = 1;
 
         b->start = p;
-        p += bufs->size;
+        p += bufs->আকার_2;
         b->end = p;
 
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            return NULL;
+        যদি (cl == ফাঁকা) {
+            ফেরত ফাঁকা;
         }
 
         cl->buf = b;
         *ll = cl;
-        ll = &cl->next;
+        ll = &cl->পরবর্তী;
     }
 
-    *ll = NULL;
+    *ll = ফাঁকা;
 
-    return chain;
+    ফেরত chain;
 }
 
 
@@ -130,95 +130,95 @@ ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *in)
 
     ll = chain;
 
-    for (cl = *chain; cl; cl = cl->next) {
-        ll = &cl->next;
+    জন্য (cl = *chain; cl; cl = cl->পরবর্তী) {
+        ll = &cl->পরবর্তী;
     }
 
-    while (in) {
+    যখন (in) {
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            *ll = NULL;
-            return NGX_ERROR;
+        যদি (cl == ফাঁকা) {
+            *ll = ফাঁকা;
+            ফেরত NGX_ERROR;
         }
 
         cl->buf = in->buf;
         *ll = cl;
-        ll = &cl->next;
-        in = in->next;
+        ll = &cl->পরবর্তী;
+        in = in->পরবর্তী;
     }
 
-    *ll = NULL;
+    *ll = ফাঁকা;
 
-    return NGX_OK;
+    ফেরত NGX_OK;
 }
 
 
 ngx_chain_t *
-ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **free)
+ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **মুক্ত)
 {
     ngx_chain_t  *cl;
 
-    if (*free) {
-        cl = *free;
-        *free = cl->next;
-        cl->next = NULL;
-        return cl;
+    যদি (*মুক্ত) {
+        cl = *মুক্ত;
+        *মুক্ত = cl->পরবর্তী;
+        cl->পরবর্তী = ফাঁকা;
+        ফেরত cl;
     }
 
     cl = ngx_alloc_chain_link(p);
-    if (cl == NULL) {
-        return NULL;
+    যদি (cl == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
     cl->buf = ngx_calloc_buf(p);
-    if (cl->buf == NULL) {
-        return NULL;
+    যদি (cl->buf == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    cl->next = NULL;
+    cl->পরবর্তী = ফাঁকা;
 
-    return cl;
+    ফেরত cl;
 }
 
 
-void
-ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free, ngx_chain_t **busy,
+শূন্য
+ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **মুক্ত, ngx_chain_t **busy,
     ngx_chain_t **out, ngx_buf_tag_t tag)
 {
     ngx_chain_t  *cl;
 
-    if (*out) {
-        if (*busy == NULL) {
+    যদি (*out) {
+        যদি (*busy == ফাঁকা) {
             *busy = *out;
 
-        } else {
-            for (cl = *busy; cl->next; cl = cl->next) { /* void */ }
+        } অন্যথা {
+            জন্য (cl = *busy; cl->পরবর্তী; cl = cl->পরবর্তী) { /* void */ }
 
-            cl->next = *out;
+            cl->পরবর্তী = *out;
         }
 
-        *out = NULL;
+        *out = ফাঁকা;
     }
 
-    while (*busy) {
+    যখন (*busy) {
         cl = *busy;
 
-        if (cl->buf->tag != tag) {
-            *busy = cl->next;
+        যদি (cl->buf->tag != tag) {
+            *busy = cl->পরবর্তী;
             ngx_free_chain(p, cl);
-            continue;
+            চালু;
         }
 
-        if (ngx_buf_size(cl->buf) != 0) {
-            break;
+        যদি (ngx_buf_আকার(cl->buf) != 0) {
+            বিরতি;
         }
 
         cl->buf->pos = cl->buf->start;
         cl->buf->last = cl->buf->start;
 
-        *busy = cl->next;
-        cl->next = *free;
-        *free = cl;
+        *busy = cl->পরবর্তী;
+        cl->পরবর্তী = *মুক্ত;
+        *মুক্ত = cl;
     }
 }
 
@@ -226,89 +226,89 @@ ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free, ngx_chain_t **busy,
 off_t
 ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit)
 {
-    off_t         total, size, aligned, fprev;
+    off_t         যোগ, আকার_2, aligned, fprev;
     ngx_fd_t      fd;
     ngx_chain_t  *cl;
 
-    total = 0;
+    যোগ = 0;
 
     cl = *in;
     fd = cl->buf->file->fd;
 
-    do {
-        size = cl->buf->file_last - cl->buf->file_pos;
+    করো {
+        আকার_2 = cl->buf->file_last - cl->buf->file_pos;
 
-        if (size > limit - total) {
-            size = limit - total;
+        যদি (আকার_2 > limit - যোগ) {
+            আকার_2 = limit - যোগ;
 
-            aligned = (cl->buf->file_pos + size + ngx_pagesize - 1)
+            aligned = (cl->buf->file_pos + আকার_2 + ngx_pagesize - 1)
                        & ~((off_t) ngx_pagesize - 1);
 
-            if (aligned <= cl->buf->file_last) {
-                size = aligned - cl->buf->file_pos;
+            যদি (aligned <= cl->buf->file_last) {
+                আকার_2 = aligned - cl->buf->file_pos;
             }
 
-            total += size;
-            break;
+            যোগ += আকার_2;
+            বিরতি;
         }
 
-        total += size;
-        fprev = cl->buf->file_pos + size;
-        cl = cl->next;
+        যোগ += আকার_2;
+        fprev = cl->buf->file_pos + আকার_2;
+        cl = cl->পরবর্তী;
 
-    } while (cl
+    } যখন (cl
              && cl->buf->in_file
-             && total < limit
+             && যোগ < limit
              && fd == cl->buf->file->fd
              && fprev == cl->buf->file_pos);
 
     *in = cl;
 
-    return total;
+    ফেরত যোগ;
 }
 
 
 ngx_chain_t *
 ngx_chain_update_sent(ngx_chain_t *in, off_t sent)
 {
-    off_t  size;
+    off_t  আকার_2;
 
-    for ( /* void */ ; in; in = in->next) {
+    জন্য ( /* void */ ; in; in = in->পরবর্তী) {
 
-        if (ngx_buf_special(in->buf)) {
-            continue;
+        যদি (ngx_buf_special(in->buf)) {
+            চালু;
         }
 
-        if (sent == 0) {
-            break;
+        যদি (sent == 0) {
+            বিরতি;
         }
 
-        size = ngx_buf_size(in->buf);
+        আকার_2 = ngx_buf_আকার(in->buf);
 
-        if (sent >= size) {
-            sent -= size;
+        যদি (sent >= আকার_2) {
+            sent -= আকার_2;
 
-            if (ngx_buf_in_memory(in->buf)) {
+            যদি (ngx_buf_in_memory(in->buf)) {
                 in->buf->pos = in->buf->last;
             }
 
-            if (in->buf->in_file) {
+            যদি (in->buf->in_file) {
                 in->buf->file_pos = in->buf->file_last;
             }
 
-            continue;
+            চালু;
         }
 
-        if (ngx_buf_in_memory(in->buf)) {
-            in->buf->pos += (size_t) sent;
+        যদি (ngx_buf_in_memory(in->buf)) {
+            in->buf->pos += (আকার_t) sent;
         }
 
-        if (in->buf->in_file) {
+        যদি (in->buf->in_file) {
             in->buf->file_pos += sent;
         }
 
-        break;
+        বিরতি;
     }
 
-    return in;
+    ফেরত in;
 }

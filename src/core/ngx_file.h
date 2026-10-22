@@ -9,11 +9,11 @@
 #define _NGX_FILE_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
-struct ngx_file_s {
+কাঠামো ngx_file_s {
     ngx_fd_t                   fd;
     ngx_str_t                  name;
     ngx_file_info_t            info;
@@ -23,14 +23,14 @@ struct ngx_file_s {
 
     ngx_log_t                 *log;
 
-#if (NGX_THREADS || NGX_COMPAT)
+#যদি (NGX_THREADS || NGX_COMPAT)
     ngx_int_t                (*thread_handler)(ngx_thread_task_t *task,
                                                ngx_file_t *file);
-    void                      *thread_ctx;
+    শূন্য                      *thread_ctx;
     ngx_thread_task_t         *thread_task;
 #endif
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#যদি (NGX_HAVE_FILE_AIO || NGX_COMPAT)
     ngx_event_aio_t           *aio;
 #endif
 
@@ -42,38 +42,38 @@ struct ngx_file_s {
 #define NGX_MAX_PATH_LEVEL  3
 
 
-typedef ngx_msec_t (*ngx_path_manager_pt) (void *data);
-typedef ngx_msec_t (*ngx_path_purger_pt) (void *data);
-typedef void (*ngx_path_loader_pt) (void *data);
+প্রকারলেখ ngx_msec_t (*ngx_path_manager_pt) (শূন্য *তথ্য);
+প্রকারলেখ ngx_msec_t (*ngx_path_purger_pt) (শূন্য *তথ্য);
+প্রকারলেখ শূন্য (*ngx_path_loader_pt) (শূন্য *তথ্য);
 
 
-typedef struct {
+প্রকারলেখ কাঠামো {
     ngx_str_t                  name;
-    size_t                     len;
-    size_t                     level[NGX_MAX_PATH_LEVEL];
+    আকার_t                     len;
+    আকার_t                     level[NGX_MAX_PATH_LEVEL];
 
     ngx_path_manager_pt        manager;
     ngx_path_purger_pt         purger;
     ngx_path_loader_pt         loader;
-    void                      *data;
+    শূন্য                      *তথ্য;
 
     u_char                    *conf_file;
-    ngx_uint_t                 line;
+    ngx_uint_t                 সারি;
 } ngx_path_t;
 
 
-typedef struct {
+প্রকারলেখ কাঠামো {
     ngx_str_t                  name;
-    size_t                     level[NGX_MAX_PATH_LEVEL];
+    আকার_t                     level[NGX_MAX_PATH_LEVEL];
 } ngx_path_init_t;
 
 
-typedef struct {
+প্রকারলেখ কাঠামো {
     ngx_file_t                 file;
     off_t                      offset;
     ngx_path_t                *path;
     ngx_pool_t                *pool;
-    char                      *warn;
+    অক্ষর                      *warn;
 
     ngx_uint_t                 access;
 
@@ -81,10 +81,10 @@ typedef struct {
     unsigned                   persistent:1;
     unsigned                   clean:1;
     unsigned                   thread_write:1;
-} ngx_temp_file_t;
+} ngx_অস্থায়ী_file_t;
 
 
-typedef struct {
+প্রকারলেখ কাঠামো {
     ngx_uint_t                 access;
     ngx_uint_t                 path_access;
     time_t                     time;
@@ -97,9 +97,9 @@ typedef struct {
 } ngx_ext_rename_file_t;
 
 
-typedef struct {
-    off_t                      size;
-    size_t                     buf_size;
+প্রকারলেখ কাঠামো {
+    off_t                      আকার_2;
+    আকার_t                     buf_আকার;
 
     ngx_uint_t                 access;
     time_t                     time;
@@ -108,25 +108,25 @@ typedef struct {
 } ngx_copy_file_t;
 
 
-typedef struct ngx_tree_ctx_s  ngx_tree_ctx_t;
+প্রকারলেখ কাঠামো ngx_বৃক্ষ_ctx_s  ngx_বৃক্ষ_ctx_t;
 
-typedef ngx_int_t (*ngx_tree_init_handler_pt) (void *ctx, void *prev);
-typedef ngx_int_t (*ngx_tree_handler_pt) (ngx_tree_ctx_t *ctx, ngx_str_t *name);
+প্রকারলেখ ngx_int_t (*ngx_বৃক্ষ_init_handler_pt) (শূন্য *ctx, শূন্য *পূর্ব);
+প্রকারলেখ ngx_int_t (*ngx_বৃক্ষ_handler_pt) (ngx_বৃক্ষ_ctx_t *ctx, ngx_str_t *name);
 
-struct ngx_tree_ctx_s {
-    off_t                      size;
-    off_t                      fs_size;
+কাঠামো ngx_বৃক্ষ_ctx_s {
+    off_t                      আকার_2;
+    off_t                      fs_আকার;
     ngx_uint_t                 access;
     time_t                     mtime;
 
-    ngx_tree_init_handler_pt   init_handler;
-    ngx_tree_handler_pt        file_handler;
-    ngx_tree_handler_pt        pre_tree_handler;
-    ngx_tree_handler_pt        post_tree_handler;
-    ngx_tree_handler_pt        spec_handler;
+    ngx_বৃক্ষ_init_handler_pt   init_handler;
+    ngx_বৃক্ষ_handler_pt        file_handler;
+    ngx_বৃক্ষ_handler_pt        pre_বৃক্ষ_handler;
+    ngx_বৃক্ষ_handler_pt        post_বৃক্ষ_handler;
+    ngx_বৃক্ষ_handler_pt        spec_handler;
 
-    void                      *data;
-    size_t                     alloc;
+    শূন্য                      *তথ্য;
+    আকার_t                     alloc;
 
     ngx_log_t                 *log;
 };
@@ -135,11 +135,11 @@ struct ngx_tree_ctx_s {
 ngx_int_t ngx_get_full_name(ngx_pool_t *pool, ngx_str_t *prefix,
     ngx_str_t *name);
 
-ssize_t ngx_write_chain_to_temp_file(ngx_temp_file_t *tf, ngx_chain_t *chain);
-ngx_int_t ngx_create_temp_file(ngx_file_t *file, ngx_path_t *path,
+ssize_t ngx_write_chain_to_অস্থায়ী_file(ngx_অস্থায়ী_file_t *tf, ngx_chain_t *chain);
+ngx_int_t ngx_create_অস্থায়ী_file(ngx_file_t *file, ngx_path_t *path,
     ngx_pool_t *pool, ngx_uint_t persistent, ngx_uint_t clean,
     ngx_uint_t access);
-void ngx_create_hashed_filename(ngx_path_t *path, u_char *file, size_t len);
+শূন্য ngx_create_hashed_filename(ngx_path_t *path, u_char *file, আকার_t len);
 ngx_int_t ngx_create_path(ngx_file_t *file, ngx_path_t *path);
 ngx_err_t ngx_create_full_path(u_char *dir, ngx_uint_t access);
 ngx_int_t ngx_add_path(ngx_conf_t *cf, ngx_path_t **slot);
@@ -147,18 +147,18 @@ ngx_int_t ngx_create_paths(ngx_cycle_t *cycle, ngx_uid_t user);
 ngx_int_t ngx_ext_rename_file(ngx_str_t *src, ngx_str_t *to,
     ngx_ext_rename_file_t *ext);
 ngx_int_t ngx_copy_file(u_char *from, u_char *to, ngx_copy_file_t *cf);
-ngx_int_t ngx_walk_tree(ngx_tree_ctx_t *ctx, ngx_str_t *tree);
+ngx_int_t ngx_walk_বৃক্ষ(ngx_বৃক্ষ_ctx_t *ctx, ngx_str_t *বৃক্ষ);
 
-ngx_atomic_uint_t ngx_next_temp_number(ngx_uint_t collision);
+ngx_atomic_uint_t ngx_পরবর্তী_অস্থায়ী_সংখ্যা(ngx_uint_t collision);
 
-char *ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-char *ngx_conf_merge_path_value(ngx_conf_t *cf, ngx_path_t **path,
-    ngx_path_t *prev, ngx_path_init_t *init);
-char *ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+অক্ষর *ngx_conf_set_path_slot(ngx_conf_t *cf, ngx_command_t *cmd, শূন্য *conf);
+অক্ষর *ngx_conf_merge_path_মান(ngx_conf_t *cf, ngx_path_t **path,
+    ngx_path_t *পূর্ব, ngx_path_init_t *init);
+অক্ষর *ngx_conf_set_access_slot(ngx_conf_t *cf, ngx_command_t *cmd, শূন্য *conf);
 
 
-extern ngx_atomic_t      *ngx_temp_number;
-extern ngx_atomic_int_t   ngx_random_number;
+বাহ্যিক ngx_atomic_t      *ngx_অস্থায়ী_সংখ্যা;
+বাহ্যিক ngx_atomic_int_t   ngx_random_সংখ্যা;
 
 
 #endif /* _NGX_FILE_H_INCLUDED_ */

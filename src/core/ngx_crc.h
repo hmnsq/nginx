@@ -9,30 +9,30 @@
 #define _NGX_CRC_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
 /* 32-bit crc16 */
 
-static ngx_inline uint32_t
-ngx_crc(u_char *data, size_t len)
+স্থির ngx_inline uint32_t
+ngx_crc(u_char *তথ্য, আকার_t len)
 {
-    uint32_t  sum;
+    uint32_t  যোগ_2;
 
-    for (sum = 0; len; len--) {
+    জন্য (যোগ_2 = 0; len; len--) {
 
         /*
          * gcc 2.95.2 x86 and icc 7.1.006 compile
          * that operator into the single "rol" opcode,
          * msvc 6.0sp2 compiles it into four opcodes.
          */
-        sum = sum >> 1 | sum << 31;
+        যোগ_2 = যোগ_2 >> 1 | যোগ_2 << 31;
 
-        sum += *data++;
+        যোগ_2 += *তথ্য++;
     }
 
-    return sum;
+    ফেরত যোগ_2;
 }
 
 

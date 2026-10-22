@@ -9,46 +9,46 @@
 #define _NGX_LIST_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
-typedef struct ngx_list_part_s  ngx_list_part_t;
+প্রকারলেখ কাঠামো ngx_list_part_s  ngx_list_part_t;
 
-struct ngx_list_part_s {
-    void             *elts;
+কাঠামো ngx_list_part_s {
+    শূন্য             *elts;
     ngx_uint_t        nelts;
-    ngx_list_part_t  *next;
+    ngx_list_part_t  *পরবর্তী;
 };
 
 
-typedef struct {
+প্রকারলেখ কাঠামো {
     ngx_list_part_t  *last;
     ngx_list_part_t   part;
-    size_t            size;
+    আকার_t            আকার_2;
     ngx_uint_t        nalloc;
     ngx_pool_t       *pool;
 } ngx_list_t;
 
 
-ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, size_t size);
+ngx_list_t *ngx_list_create(ngx_pool_t *pool, ngx_uint_t n, আকার_t আকার_2);
 
-static ngx_inline ngx_int_t
-ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
+স্থির ngx_inline ngx_int_t
+ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, আকার_t আকার_2)
 {
-    list->part.elts = ngx_palloc(pool, n * size);
-    if (list->part.elts == NULL) {
-        return NGX_ERROR;
+    list->part.elts = ngx_palloc(pool, n * আকার_2);
+    যদি (list->part.elts == ফাঁকা) {
+        ফেরত NGX_ERROR;
     }
 
     list->part.nelts = 0;
-    list->part.next = NULL;
+    list->part.পরবর্তী = ফাঁকা;
     list->last = &list->part;
-    list->size = size;
+    list->আকার_2 = আকার_2;
     list->nalloc = n;
     list->pool = pool;
 
-    return NGX_OK;
+    ফেরত NGX_OK;
 }
 
 
@@ -77,7 +77,7 @@ ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
  */
 
 
-void *ngx_list_push(ngx_list_t *list);
+শূন্য *ngx_list_ঠেলো(ngx_list_t *list);
 
 
 #endif /* _NGX_LIST_H_INCLUDED_ */

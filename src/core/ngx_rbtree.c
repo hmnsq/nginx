@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
 /*
@@ -15,116 +15,116 @@
  */
 
 
-static ngx_inline void ngx_rbtree_left_rotate(ngx_rbtree_node_t **root,
-    ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
-static ngx_inline void ngx_rbtree_right_rotate(ngx_rbtree_node_t **root,
-    ngx_rbtree_node_t *sentinel, ngx_rbtree_node_t *node);
+স্থির ngx_inline শূন্য ngx_rbtree_বাম_rotate(ngx_rbtree_গ্রন্থি_t **মূল,
+    ngx_rbtree_গ্রন্থি_t *sentinel, ngx_rbtree_গ্রন্থি_t *গ্রন্থি);
+স্থির ngx_inline শূন্য ngx_rbtree_ডান_rotate(ngx_rbtree_গ্রন্থি_t **মূল,
+    ngx_rbtree_গ্রন্থি_t *sentinel, ngx_rbtree_গ্রন্থি_t *গ্রন্থি);
 
 
-void
-ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+শূন্য
+ngx_rbtree_ঢোকাও(ngx_rbtree_t *বৃক্ষ, ngx_rbtree_গ্রন্থি_t *গ্রন্থি)
 {
-    ngx_rbtree_node_t  **root, *temp, *sentinel;
+    ngx_rbtree_গ্রন্থি_t  **মূল, *অস্থায়ী, *sentinel;
 
     /* a binary tree insert */
 
-    root = &tree->root;
-    sentinel = tree->sentinel;
+    মূল = &বৃক্ষ->মূল;
+    sentinel = বৃক্ষ->sentinel;
 
-    if (*root == sentinel) {
-        node->parent = NULL;
-        node->left = sentinel;
-        node->right = sentinel;
-        ngx_rbt_black(node);
-        *root = node;
+    যদি (*মূল == sentinel) {
+        গ্রন্থি->parent = ফাঁকা;
+        গ্রন্থি->বাম = sentinel;
+        গ্রন্থি->ডান = sentinel;
+        ngx_rbt_black(গ্রন্থি);
+        *মূল = গ্রন্থি;
 
-        return;
+        ফেরত;
     }
 
-    tree->insert(*root, node, sentinel);
+    বৃক্ষ->ঢোকাও(*মূল, গ্রন্থি, sentinel);
 
     /* re-balance tree */
 
-    while (node != *root && ngx_rbt_is_red(node->parent)) {
+    যখন (গ্রন্থি != *মূল && ngx_rbt_is_red(গ্রন্থি->parent)) {
 
-        if (node->parent == node->parent->parent->left) {
-            temp = node->parent->parent->right;
+        যদি (গ্রন্থি->parent == গ্রন্থি->parent->parent->বাম) {
+            অস্থায়ী = গ্রন্থি->parent->parent->ডান;
 
-            if (ngx_rbt_is_red(temp)) {
-                ngx_rbt_black(node->parent);
-                ngx_rbt_black(temp);
-                ngx_rbt_red(node->parent->parent);
-                node = node->parent->parent;
+            যদি (ngx_rbt_is_red(অস্থায়ী)) {
+                ngx_rbt_black(গ্রন্থি->parent);
+                ngx_rbt_black(অস্থায়ী);
+                ngx_rbt_red(গ্রন্থি->parent->parent);
+                গ্রন্থি = গ্রন্থি->parent->parent;
 
-            } else {
-                if (node == node->parent->right) {
-                    node = node->parent;
-                    ngx_rbtree_left_rotate(root, sentinel, node);
+            } অন্যথা {
+                যদি (গ্রন্থি == গ্রন্থি->parent->ডান) {
+                    গ্রন্থি = গ্রন্থি->parent;
+                    ngx_rbtree_বাম_rotate(মূল, sentinel, গ্রন্থি);
                 }
 
-                ngx_rbt_black(node->parent);
-                ngx_rbt_red(node->parent->parent);
-                ngx_rbtree_right_rotate(root, sentinel, node->parent->parent);
+                ngx_rbt_black(গ্রন্থি->parent);
+                ngx_rbt_red(গ্রন্থি->parent->parent);
+                ngx_rbtree_ডান_rotate(মূল, sentinel, গ্রন্থি->parent->parent);
             }
 
-        } else {
-            temp = node->parent->parent->left;
+        } অন্যথা {
+            অস্থায়ী = গ্রন্থি->parent->parent->বাম;
 
-            if (ngx_rbt_is_red(temp)) {
-                ngx_rbt_black(node->parent);
-                ngx_rbt_black(temp);
-                ngx_rbt_red(node->parent->parent);
-                node = node->parent->parent;
+            যদি (ngx_rbt_is_red(অস্থায়ী)) {
+                ngx_rbt_black(গ্রন্থি->parent);
+                ngx_rbt_black(অস্থায়ী);
+                ngx_rbt_red(গ্রন্থি->parent->parent);
+                গ্রন্থি = গ্রন্থি->parent->parent;
 
-            } else {
-                if (node == node->parent->left) {
-                    node = node->parent;
-                    ngx_rbtree_right_rotate(root, sentinel, node);
+            } অন্যথা {
+                যদি (গ্রন্থি == গ্রন্থি->parent->বাম) {
+                    গ্রন্থি = গ্রন্থি->parent;
+                    ngx_rbtree_ডান_rotate(মূল, sentinel, গ্রন্থি);
                 }
 
-                ngx_rbt_black(node->parent);
-                ngx_rbt_red(node->parent->parent);
-                ngx_rbtree_left_rotate(root, sentinel, node->parent->parent);
+                ngx_rbt_black(গ্রন্থি->parent);
+                ngx_rbt_red(গ্রন্থি->parent->parent);
+                ngx_rbtree_বাম_rotate(মূল, sentinel, গ্রন্থি->parent->parent);
             }
         }
     }
 
-    ngx_rbt_black(*root);
+    ngx_rbt_black(*মূল);
 }
 
 
-void
-ngx_rbtree_insert_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel)
+শূন্য
+ngx_rbtree_ঢোকাও_মান(ngx_rbtree_গ্রন্থি_t *অস্থায়ী, ngx_rbtree_গ্রন্থি_t *গ্রন্থি,
+    ngx_rbtree_গ্রন্থি_t *sentinel)
 {
-    ngx_rbtree_node_t  **p;
+    ngx_rbtree_গ্রন্থি_t  **p;
 
-    for ( ;; ) {
+    জন্য ( ;; ) {
 
-        p = (node->key < temp->key) ? &temp->left : &temp->right;
+        p = (গ্রন্থি->চাবি < অস্থায়ী->চাবি) ? &অস্থায়ী->বাম : &অস্থায়ী->ডান;
 
-        if (*p == sentinel) {
-            break;
+        যদি (*p == sentinel) {
+            বিরতি;
         }
 
-        temp = *p;
+        অস্থায়ী = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = গ্রন্থি;
+    গ্রন্থি->parent = অস্থায়ী;
+    গ্রন্থি->বাম = sentinel;
+    গ্রন্থি->ডান = sentinel;
+    ngx_rbt_red(গ্রন্থি);
 }
 
 
-void
-ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
-    ngx_rbtree_node_t *sentinel)
+শূন্য
+ngx_rbtree_ঢোকাও_timer_মান(ngx_rbtree_গ্রন্থি_t *অস্থায়ী, ngx_rbtree_গ্রন্থি_t *গ্রন্থি,
+    ngx_rbtree_গ্রন্থি_t *sentinel)
 {
-    ngx_rbtree_node_t  **p;
+    ngx_rbtree_গ্রন্থি_t  **p;
 
-    for ( ;; ) {
+    জন্য ( ;; ) {
 
         /*
          * Timer values
@@ -135,270 +135,270 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 
         /*  node->key < temp->key */
 
-        p = ((ngx_rbtree_key_int_t) (node->key - temp->key) < 0)
-            ? &temp->left : &temp->right;
+        p = ((ngx_rbtree_চাবি_int_t) (গ্রন্থি->চাবি - অস্থায়ী->চাবি) < 0)
+            ? &অস্থায়ী->বাম : &অস্থায়ী->ডান;
 
-        if (*p == sentinel) {
-            break;
+        যদি (*p == sentinel) {
+            বিরতি;
         }
 
-        temp = *p;
+        অস্থায়ী = *p;
     }
 
-    *p = node;
-    node->parent = temp;
-    node->left = sentinel;
-    node->right = sentinel;
-    ngx_rbt_red(node);
+    *p = গ্রন্থি;
+    গ্রন্থি->parent = অস্থায়ী;
+    গ্রন্থি->বাম = sentinel;
+    গ্রন্থি->ডান = sentinel;
+    ngx_rbt_red(গ্রন্থি);
 }
 
 
-void
-ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+শূন্য
+ngx_rbtree_delete(ngx_rbtree_t *বৃক্ষ, ngx_rbtree_গ্রন্থি_t *গ্রন্থি)
 {
     ngx_uint_t           red;
-    ngx_rbtree_node_t  **root, *sentinel, *subst, *temp, *w;
+    ngx_rbtree_গ্রন্থি_t  **মূল, *sentinel, *subst, *অস্থায়ী, *w;
 
     /* a binary tree delete */
 
-    root = &tree->root;
-    sentinel = tree->sentinel;
+    মূল = &বৃক্ষ->মূল;
+    sentinel = বৃক্ষ->sentinel;
 
-    if (node->left == sentinel) {
-        temp = node->right;
-        subst = node;
+    যদি (গ্রন্থি->বাম == sentinel) {
+        অস্থায়ী = গ্রন্থি->ডান;
+        subst = গ্রন্থি;
 
-    } else if (node->right == sentinel) {
-        temp = node->left;
-        subst = node;
+    } অন্যথা যদি (গ্রন্থি->ডান == sentinel) {
+        অস্থায়ী = গ্রন্থি->বাম;
+        subst = গ্রন্থি;
 
-    } else {
-        subst = ngx_rbtree_min(node->right, sentinel);
-        temp = subst->right;
+    } অন্যথা {
+        subst = ngx_rbtree_min(গ্রন্থি->ডান, sentinel);
+        অস্থায়ী = subst->ডান;
     }
 
-    if (subst == *root) {
-        *root = temp;
-        ngx_rbt_black(temp);
+    যদি (subst == *মূল) {
+        *মূল = অস্থায়ী;
+        ngx_rbt_black(অস্থায়ী);
 
         /* DEBUG stuff */
-        node->left = NULL;
-        node->right = NULL;
-        node->parent = NULL;
-        node->key = 0;
+        গ্রন্থি->বাম = ফাঁকা;
+        গ্রন্থি->ডান = ফাঁকা;
+        গ্রন্থি->parent = ফাঁকা;
+        গ্রন্থি->চাবি = 0;
 
-        return;
+        ফেরত;
     }
 
     red = ngx_rbt_is_red(subst);
 
-    if (subst == subst->parent->left) {
-        subst->parent->left = temp;
+    যদি (subst == subst->parent->বাম) {
+        subst->parent->বাম = অস্থায়ী;
 
-    } else {
-        subst->parent->right = temp;
+    } অন্যথা {
+        subst->parent->ডান = অস্থায়ী;
     }
 
-    if (subst == node) {
+    যদি (subst == গ্রন্থি) {
 
-        temp->parent = subst->parent;
+        অস্থায়ী->parent = subst->parent;
 
-    } else {
+    } অন্যথা {
 
-        if (subst->parent == node) {
-            temp->parent = subst;
+        যদি (subst->parent == গ্রন্থি) {
+            অস্থায়ী->parent = subst;
 
-        } else {
-            temp->parent = subst->parent;
+        } অন্যথা {
+            অস্থায়ী->parent = subst->parent;
         }
 
-        subst->left = node->left;
-        subst->right = node->right;
-        subst->parent = node->parent;
-        ngx_rbt_copy_color(subst, node);
+        subst->বাম = গ্রন্থি->বাম;
+        subst->ডান = গ্রন্থি->ডান;
+        subst->parent = গ্রন্থি->parent;
+        ngx_rbt_copy_color(subst, গ্রন্থি);
 
-        if (node == *root) {
-            *root = subst;
+        যদি (গ্রন্থি == *মূল) {
+            *মূল = subst;
 
-        } else {
-            if (node == node->parent->left) {
-                node->parent->left = subst;
-            } else {
-                node->parent->right = subst;
+        } অন্যথা {
+            যদি (গ্রন্থি == গ্রন্থি->parent->বাম) {
+                গ্রন্থি->parent->বাম = subst;
+            } অন্যথা {
+                গ্রন্থি->parent->ডান = subst;
             }
         }
 
-        if (subst->left != sentinel) {
-            subst->left->parent = subst;
+        যদি (subst->বাম != sentinel) {
+            subst->বাম->parent = subst;
         }
 
-        if (subst->right != sentinel) {
-            subst->right->parent = subst;
+        যদি (subst->ডান != sentinel) {
+            subst->ডান->parent = subst;
         }
     }
 
     /* DEBUG stuff */
-    node->left = NULL;
-    node->right = NULL;
-    node->parent = NULL;
-    node->key = 0;
+    গ্রন্থি->বাম = ফাঁকা;
+    গ্রন্থি->ডান = ফাঁকা;
+    গ্রন্থি->parent = ফাঁকা;
+    গ্রন্থি->চাবি = 0;
 
-    if (red) {
-        return;
+    যদি (red) {
+        ফেরত;
     }
 
     /* a delete fixup */
 
-    while (temp != *root && ngx_rbt_is_black(temp)) {
+    যখন (অস্থায়ী != *মূল && ngx_rbt_is_black(অস্থায়ী)) {
 
-        if (temp == temp->parent->left) {
-            w = temp->parent->right;
+        যদি (অস্থায়ী == অস্থায়ী->parent->বাম) {
+            w = অস্থায়ী->parent->ডান;
 
-            if (ngx_rbt_is_red(w)) {
+            যদি (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
-                ngx_rbt_red(temp->parent);
-                ngx_rbtree_left_rotate(root, sentinel, temp->parent);
-                w = temp->parent->right;
+                ngx_rbt_red(অস্থায়ী->parent);
+                ngx_rbtree_বাম_rotate(মূল, sentinel, অস্থায়ী->parent);
+                w = অস্থায়ী->parent->ডান;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            যদি (ngx_rbt_is_black(w->বাম) && ngx_rbt_is_black(w->ডান)) {
                 ngx_rbt_red(w);
-                temp = temp->parent;
+                অস্থায়ী = অস্থায়ী->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->right)) {
-                    ngx_rbt_black(w->left);
+            } অন্যথা {
+                যদি (ngx_rbt_is_black(w->ডান)) {
+                    ngx_rbt_black(w->বাম);
                     ngx_rbt_red(w);
-                    ngx_rbtree_right_rotate(root, sentinel, w);
-                    w = temp->parent->right;
+                    ngx_rbtree_ডান_rotate(মূল, sentinel, w);
+                    w = অস্থায়ী->parent->ডান;
                 }
 
-                ngx_rbt_copy_color(w, temp->parent);
-                ngx_rbt_black(temp->parent);
-                ngx_rbt_black(w->right);
-                ngx_rbtree_left_rotate(root, sentinel, temp->parent);
-                temp = *root;
+                ngx_rbt_copy_color(w, অস্থায়ী->parent);
+                ngx_rbt_black(অস্থায়ী->parent);
+                ngx_rbt_black(w->ডান);
+                ngx_rbtree_বাম_rotate(মূল, sentinel, অস্থায়ী->parent);
+                অস্থায়ী = *মূল;
             }
 
-        } else {
-            w = temp->parent->left;
+        } অন্যথা {
+            w = অস্থায়ী->parent->বাম;
 
-            if (ngx_rbt_is_red(w)) {
+            যদি (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
-                ngx_rbt_red(temp->parent);
-                ngx_rbtree_right_rotate(root, sentinel, temp->parent);
-                w = temp->parent->left;
+                ngx_rbt_red(অস্থায়ী->parent);
+                ngx_rbtree_ডান_rotate(মূল, sentinel, অস্থায়ী->parent);
+                w = অস্থায়ী->parent->বাম;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            যদি (ngx_rbt_is_black(w->বাম) && ngx_rbt_is_black(w->ডান)) {
                 ngx_rbt_red(w);
-                temp = temp->parent;
+                অস্থায়ী = অস্থায়ী->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->left)) {
-                    ngx_rbt_black(w->right);
+            } অন্যথা {
+                যদি (ngx_rbt_is_black(w->বাম)) {
+                    ngx_rbt_black(w->ডান);
                     ngx_rbt_red(w);
-                    ngx_rbtree_left_rotate(root, sentinel, w);
-                    w = temp->parent->left;
+                    ngx_rbtree_বাম_rotate(মূল, sentinel, w);
+                    w = অস্থায়ী->parent->বাম;
                 }
 
-                ngx_rbt_copy_color(w, temp->parent);
-                ngx_rbt_black(temp->parent);
-                ngx_rbt_black(w->left);
-                ngx_rbtree_right_rotate(root, sentinel, temp->parent);
-                temp = *root;
+                ngx_rbt_copy_color(w, অস্থায়ী->parent);
+                ngx_rbt_black(অস্থায়ী->parent);
+                ngx_rbt_black(w->বাম);
+                ngx_rbtree_ডান_rotate(মূল, sentinel, অস্থায়ী->parent);
+                অস্থায়ী = *মূল;
             }
         }
     }
 
-    ngx_rbt_black(temp);
+    ngx_rbt_black(অস্থায়ী);
 }
 
 
-static ngx_inline void
-ngx_rbtree_left_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
-    ngx_rbtree_node_t *node)
+স্থির ngx_inline শূন্য
+ngx_rbtree_বাম_rotate(ngx_rbtree_গ্রন্থি_t **মূল, ngx_rbtree_গ্রন্থি_t *sentinel,
+    ngx_rbtree_গ্রন্থি_t *গ্রন্থি)
 {
-    ngx_rbtree_node_t  *temp;
+    ngx_rbtree_গ্রন্থি_t  *অস্থায়ী;
 
-    temp = node->right;
-    node->right = temp->left;
+    অস্থায়ী = গ্রন্থি->ডান;
+    গ্রন্থি->ডান = অস্থায়ী->বাম;
 
-    if (temp->left != sentinel) {
-        temp->left->parent = node;
+    যদি (অস্থায়ী->বাম != sentinel) {
+        অস্থায়ী->বাম->parent = গ্রন্থি;
     }
 
-    temp->parent = node->parent;
+    অস্থায়ী->parent = গ্রন্থি->parent;
 
-    if (node == *root) {
-        *root = temp;
+    যদি (গ্রন্থি == *মূল) {
+        *মূল = অস্থায়ী;
 
-    } else if (node == node->parent->left) {
-        node->parent->left = temp;
+    } অন্যথা যদি (গ্রন্থি == গ্রন্থি->parent->বাম) {
+        গ্রন্থি->parent->বাম = অস্থায়ী;
 
-    } else {
-        node->parent->right = temp;
+    } অন্যথা {
+        গ্রন্থি->parent->ডান = অস্থায়ী;
     }
 
-    temp->left = node;
-    node->parent = temp;
+    অস্থায়ী->বাম = গ্রন্থি;
+    গ্রন্থি->parent = অস্থায়ী;
 }
 
 
-static ngx_inline void
-ngx_rbtree_right_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
-    ngx_rbtree_node_t *node)
+স্থির ngx_inline শূন্য
+ngx_rbtree_ডান_rotate(ngx_rbtree_গ্রন্থি_t **মূল, ngx_rbtree_গ্রন্থি_t *sentinel,
+    ngx_rbtree_গ্রন্থি_t *গ্রন্থি)
 {
-    ngx_rbtree_node_t  *temp;
+    ngx_rbtree_গ্রন্থি_t  *অস্থায়ী;
 
-    temp = node->left;
-    node->left = temp->right;
+    অস্থায়ী = গ্রন্থি->বাম;
+    গ্রন্থি->বাম = অস্থায়ী->ডান;
 
-    if (temp->right != sentinel) {
-        temp->right->parent = node;
+    যদি (অস্থায়ী->ডান != sentinel) {
+        অস্থায়ী->ডান->parent = গ্রন্থি;
     }
 
-    temp->parent = node->parent;
+    অস্থায়ী->parent = গ্রন্থি->parent;
 
-    if (node == *root) {
-        *root = temp;
+    যদি (গ্রন্থি == *মূল) {
+        *মূল = অস্থায়ী;
 
-    } else if (node == node->parent->right) {
-        node->parent->right = temp;
+    } অন্যথা যদি (গ্রন্থি == গ্রন্থি->parent->ডান) {
+        গ্রন্থি->parent->ডান = অস্থায়ী;
 
-    } else {
-        node->parent->left = temp;
+    } অন্যথা {
+        গ্রন্থি->parent->বাম = অস্থায়ী;
     }
 
-    temp->right = node;
-    node->parent = temp;
+    অস্থায়ী->ডান = গ্রন্থি;
+    গ্রন্থি->parent = অস্থায়ী;
 }
 
 
-ngx_rbtree_node_t *
-ngx_rbtree_next(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
+ngx_rbtree_গ্রন্থি_t *
+ngx_rbtree_পরবর্তী(ngx_rbtree_t *বৃক্ষ, ngx_rbtree_গ্রন্থি_t *গ্রন্থি)
 {
-    ngx_rbtree_node_t  *root, *sentinel, *parent;
+    ngx_rbtree_গ্রন্থি_t  *মূল, *sentinel, *parent;
 
-    sentinel = tree->sentinel;
+    sentinel = বৃক্ষ->sentinel;
 
-    if (node->right != sentinel) {
-        return ngx_rbtree_min(node->right, sentinel);
+    যদি (গ্রন্থি->ডান != sentinel) {
+        ফেরত ngx_rbtree_min(গ্রন্থি->ডান, sentinel);
     }
 
-    root = tree->root;
+    মূল = বৃক্ষ->মূল;
 
-    for ( ;; ) {
-        parent = node->parent;
+    জন্য ( ;; ) {
+        parent = গ্রন্থি->parent;
 
-        if (node == root) {
-            return NULL;
+        যদি (গ্রন্থি == মূল) {
+            ফেরত ফাঁকা;
         }
 
-        if (node == parent->left) {
-            return parent;
+        যদি (গ্রন্থি == parent->বাম) {
+            ফেরত parent;
         }
 
-        node = parent;
+        গ্রন্থি = parent;
     }
 }

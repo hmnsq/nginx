@@ -4,214 +4,214 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাব <ngx_config.h>
+#অন্তর্ভাব <ngx_core.h>
 
 
-static size_t  ngx_data_sizes[] = {
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_OBJECT_TYPE */
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_LIST_TYPE */
-    sizeof(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
-    sizeof(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
-    sizeof(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
+স্থির আকার_t  ngx_তথ্য_sizes[] = {
+    আকার(ngx_তথ্য_obj_t),            /* NGX_DATA_OBJECT_TYPE */
+    আকার(ngx_তথ্য_obj_t),            /* NGX_DATA_LIST_TYPE */
+    আকার(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
+    আকার(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
+    আকার(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
     0,                                 /* NGX_DATA_NULL_TYPE */
 };
 
 
-ngx_data_item_t *
-ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type)
+ngx_তথ্য_item_t *
+ngx_তথ্য_new_item(ngx_pool_t *pool, ngx_uint_t type)
 {
-    ngx_data_item_t  *item;
+    ngx_তথ্য_item_t  *item;
 
-    item = ngx_pcalloc(pool, offsetof(ngx_data_item_t, data)
-                             + ngx_data_sizes[type]);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_pcalloc(pool, offsetof(ngx_তথ্য_item_t, তথ্য)
+                             + ngx_তথ্য_sizes[type]);
+    যদি (item == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
     item->type = type;
 
-    return item;
+    ফেরত item;
 }
 
 
-void
-ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name, ngx_data_item_t *item)
+শূন্য
+ngx_তথ্য_add_item(ngx_তথ্য_item_t *obj, ngx_str_t *name, ngx_তথ্য_item_t *item)
 {
-    ngx_data_obj_t  *object;
+    ngx_তথ্য_obj_t  *object;
 
-    if (obj->type != NGX_DATA_OBJECT_TYPE && obj->type != NGX_DATA_LIST_TYPE) {
-        return;
+    যদি (obj->type != NGX_তথ্য_OBJECT_TYPE && obj->type != NGX_তথ্য_LIST_TYPE) {
+        ফেরত;
     }
 
-    object = &obj->data.object;
+    object = &obj->তথ্য.object;
 
-    if (name) {
+    যদি (name) {
         item->name = *name;
     }
 
-    if (object->next == NULL) {
-        object->next = &object->item;
+    যদি (object->পরবর্তী == ফাঁকা) {
+        object->পরবর্তী = &object->item;
     }
 
-    *object->next = item;
-    object->next = &item->next;
+    *object->পরবর্তী = item;
+    object->পরবর্তী = &item->পরবর্তী;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_তথ্য_item_t *
+ngx_তথ্য_obj_handler(uintptr_t তথ্য, ngx_pool_t *pool, শূন্য *ctx)
 {
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_তথ্য_item_t  *obj, *item;
+    ngx_তথ্য_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_তথ্য_new_object(pool);
+    যদি (obj == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_তথ্য_decl_t *) তথ্য;
 
-    while (decl->name.len) {
+    যখন (decl->name.len) {
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        item = decl->handler(decl->তথ্য, pool, ctx);
+        যদি (item == ফাঁকা) {
+            ফেরত ফাঁকা;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        যদি (item != NGX_তথ্য_DECLINE) {
+            ngx_তথ্য_add_item(obj, &decl->name, item);
         }
 
         decl++;
     }
 
-    return obj;
+    ফেরত obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
+ngx_তথ্য_item_t *
+ngx_তথ্য_obj_fields_handler(uintptr_t তথ্য, ngx_pool_t *pool, শূন্য *ctx,
     ngx_array_t *fields)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *মান;
     ngx_uint_t        i;
-    ngx_data_item_t  *obj, *item;
-    ngx_data_decl_t  *decl;
+    ngx_তথ্য_item_t  *obj, *item;
+    ngx_তথ্য_decl_t  *decl;
 
-    obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    obj = ngx_তথ্য_new_object(pool);
+    যদি (obj == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    decl = (ngx_data_decl_t *) data;
+    decl = (ngx_তথ্য_decl_t *) তথ্য;
 
-    while (decl->name.len) {
+    যখন (decl->name.len) {
 
-        if (fields) {
-            value = fields->elts;
+        যদি (fields) {
+            মান = fields->elts;
 
-            for (i = 0; i < fields->nelts; i++) {
+            জন্য (i = 0; i < fields->nelts; i++) {
 
-                if (decl->name.len == value[i].len
-                    && ngx_strncmp(decl->name.data, value[i].data,
-                                   value[i].len)
+                যদি (decl->name.len == মান[i].len
+                    && ngx_strncmp(decl->name.তথ্য, মান[i].তথ্য,
+                                   মান[i].len)
                     == 0)
                 {
-                    goto found;
+                    যাও found;
                 }
             }
 
             decl++;
-            continue;
+            চালু;
         }
 
 found:
 
-        item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        item = decl->handler(decl->তথ্য, pool, ctx);
+        যদি (item == ফাঁকা) {
+            ফেরত ফাঁকা;
         }
 
-        if (item != NGX_DATA_DECLINE) {
-            ngx_data_add_item(obj, &decl->name, item);
+        যদি (item != NGX_তথ্য_DECLINE) {
+            ngx_তথ্য_add_item(obj, &decl->name, item);
         }
 
         decl++;
     }
 
-    return obj;
+    ফেরত obj;
 }
 
 
-ngx_data_item_t *
-ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_তথ্য_item_t *
+ngx_তথ্য_সংখ্যা_handler(uintptr_t তথ্য, ngx_pool_t *pool, শূন্য *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_তথ্য_item_t  *item;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_তথ্য_new_integer(pool);
+    যদি (item == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    item->data.integer = data;
+    item->তথ্য.integer = তথ্য;
 
-    return item;
+    ফেরত item;
 }
 
 
-ngx_data_item_t *
-ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_তথ্য_item_t *
+ngx_তথ্য_string_handler(uintptr_t তথ্য, ngx_pool_t *pool, শূন্য *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *মান, *src;
+    ngx_তথ্য_item_t  *item;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_তথ্য_new_string(pool);
+    যদি (item == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    value = &item->data.string;
+    মান = &item->তথ্য.string;
 
-    src = (ngx_str_t *) data;
+    src = (ngx_str_t *) তথ্য;
 
-    value->len = src->len;
+    মান->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    মান->তথ্য = ngx_pstrdup(pool, src);
+    যদি (মান->তথ্য == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    return item;
+    ফেরত item;
 }
 
 
-ngx_data_item_t *
-ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_তথ্য_item_t *
+ngx_তথ্য_boolean_handler(uintptr_t তথ্য, ngx_pool_t *pool, শূন্য *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_তথ্য_item_t  *item;
 
-    item = ngx_data_new_boolean(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_তথ্য_new_boolean(pool);
+    যদি (item == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    item->data.boolean = data;
+    item->তথ্য.boolean = তথ্য;
 
-    return item;
+    ফেরত item;
 }
 
 
-ngx_data_item_t *
-ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_তথ্য_item_t *
+ngx_তথ্য_time_handler(uintptr_t তথ্য, ngx_pool_t *pool, শূন্য *ctx)
 {
     u_char      *p;
     ngx_tm_t     tm;
     ngx_str_t    src;
     ngx_time_t  *tp;
-    u_char       iso8601[sizeof("1974-01-19T13:00:00.000Z") - 1];
+    u_char       iso8601[আকার("1974-01-19T13:00:00.000Z") - 1];
 
-    tp = (ngx_time_t *) data;
+    tp = (ngx_time_t *) তথ্য;
 
     ngx_gmtime(tp->sec, &tm);
 
@@ -219,94 +219,94 @@ ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
                     tm.ngx_tm_year, tm.ngx_tm_mon, tm.ngx_tm_mday,
                     tm.ngx_tm_hour, tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    if (tp->msec) {
+    যদি (tp->msec) {
         p = ngx_sprintf(p, ".%03ui", tp->msec);
     }
 
     *p++ = 'Z';
 
-    src.data = iso8601;
+    src.তথ্য = iso8601;
     src.len = p - iso8601;
 
-    return ngx_data_string_handler((uintptr_t) &src, pool, NULL);
+    ফেরত ngx_তথ্য_string_handler((uintptr_t) &src, pool, ফাঁকা);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_তথ্য_item_t *
+ngx_তথ্য_struct_int64_handler(uintptr_t তথ্য, ngx_pool_t *pool, শূন্য *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_তথ্য_item_t  *item;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_তথ্য_new_integer(pool);
+    যদি (item == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    item->data.integer = *(int64_t *) ((u_char *) ctx + data);
+    item->তথ্য.integer = *(int64_t *) ((u_char *) ctx + তথ্য);
 
-    return item;
+    ফেরত item;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_তথ্য_item_t *
+ngx_তথ্য_struct_int_handler(uintptr_t তথ্য, ngx_pool_t *pool, শূন্য *ctx)
 {
-    ngx_int_t  value;
+    ngx_int_t  মান;
 
-    value = *(ngx_int_t *) ((u_char *) ctx + data);
+    মান = *(ngx_int_t *) ((u_char *) ctx + তথ্য);
 
-    return ngx_data_number_handler(value, pool, NULL);
+    ফেরত ngx_তথ্য_সংখ্যা_handler(মান, pool, ফাঁকা);
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_atomic_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_তথ্য_item_t *
+ngx_তথ্য_struct_atomic_handler(uintptr_t তথ্য, ngx_pool_t *pool, শূন্য *ctx)
 {
-    ngx_data_item_t  *item;
+    ngx_তথ্য_item_t  *item;
 
-    item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_তথ্য_new_integer(pool);
+    যদি (item == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    item->data.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + data);
+    item->তথ্য.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + তথ্য);
 
-    return item;
+    ফেরত item;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_তথ্য_item_t *
+ngx_তথ্য_struct_str_handler(uintptr_t তথ্য, ngx_pool_t *pool, শূন্য *ctx)
 {
-    ngx_str_t        *value, *src;
-    ngx_data_item_t  *item;
+    ngx_str_t        *মান, *src;
+    ngx_তথ্য_item_t  *item;
 
-    item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    item = ngx_তথ্য_new_string(pool);
+    যদি (item == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    value = &item->data.string;
+    মান = &item->তথ্য.string;
 
-    src = (ngx_str_t *) ((u_char *) ctx + data);
+    src = (ngx_str_t *) ((u_char *) ctx + তথ্য);
 
-    value->len = src->len;
+    মান->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    মান->তথ্য = ngx_pstrdup(pool, src);
+    যদি (মান->তথ্য == ফাঁকা) {
+        ফেরত ফাঁকা;
     }
 
-    return item;
+    ফেরত item;
 }
 
 
-ngx_data_item_t *
-ngx_data_struct_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_তথ্য_item_t *
+ngx_তথ্য_struct_boolean_handler(uintptr_t তথ্য, ngx_pool_t *pool, শূন্য *ctx)
 {
-    ngx_uint_t  value;
+    ngx_uint_t  মান;
 
-    value = *(ngx_uint_t *) ((u_char *) ctx + data);
+    মান = *(ngx_uint_t *) ((u_char *) ctx + তথ্য);
 
-    return ngx_data_boolean_handler(value, pool, NULL);
+    ফেরত ngx_তথ্য_boolean_handler(মান, pool, ফাঁকা);
 }
