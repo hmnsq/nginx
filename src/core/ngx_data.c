@@ -4,16 +4,16 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
-static size_t  ngx_data_sizes[] = {
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_OBJECT_TYPE */
-    sizeof(ngx_data_obj_t),            /* NGX_DATA_LIST_TYPE */
-    sizeof(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
-    sizeof(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
-    sizeof(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
+ساكن size_t  ngx_data_sizes[] = {
+    حجم(ngx_data_obj_t),            /* NGX_DATA_OBJECT_TYPE */
+    حجم(ngx_data_obj_t),            /* NGX_DATA_LIST_TYPE */
+    حجم(ngx_str_t),                 /* NGX_DATA_STRING_TYPE */
+    حجم(int64_t),                   /* NGX_DATA_INTEGER_TYPE */
+    حجم(ngx_uint_t),                /* NGX_DATA_BOOLEAN_TYPE */
     0,                                 /* NGX_DATA_NULL_TYPE */
 };
 
@@ -25,32 +25,32 @@ ngx_data_new_item(ngx_pool_t *pool, ngx_uint_t type)
 
     item = ngx_pcalloc(pool, offsetof(ngx_data_item_t, data)
                              + ngx_data_sizes[type]);
-    if (item == NULL) {
-        return NULL;
+    إذا (item == عدم) {
+        أرجع عدم;
     }
 
     item->type = type;
 
-    return item;
+    أرجع item;
 }
 
 
-void
+فراغ
 ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name, ngx_data_item_t *item)
 {
     ngx_data_obj_t  *object;
 
-    if (obj->type != NGX_DATA_OBJECT_TYPE && obj->type != NGX_DATA_LIST_TYPE) {
-        return;
+    إذا (obj->type != NGX_DATA_OBJECT_TYPE && obj->type != NGX_DATA_LIST_TYPE) {
+        أرجع;
     }
 
     object = &obj->data.object;
 
-    if (name) {
+    إذا (name) {
         item->name = *name;
     }
 
-    if (object->next == NULL) {
+    إذا (object->next == عدم) {
         object->next = &object->item;
     }
 
@@ -60,156 +60,156 @@ ngx_data_add_item(ngx_data_item_t *obj, ngx_str_t *name, ngx_data_item_t *item)
 
 
 ngx_data_item_t *
-ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_data_obj_handler(uintptr_t data, ngx_pool_t *pool, فراغ *ctx)
 {
     ngx_data_item_t  *obj, *item;
     ngx_data_decl_t  *decl;
 
     obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    إذا (obj == عدم) {
+        أرجع عدم;
     }
 
     decl = (ngx_data_decl_t *) data;
 
-    while (decl->name.len) {
+    طالما (decl->name.len) {
 
         item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        إذا (item == عدم) {
+            أرجع عدم;
         }
 
-        if (item != NGX_DATA_DECLINE) {
+        إذا (item != NGX_DATA_DECLINE) {
             ngx_data_add_item(obj, &decl->name, item);
         }
 
         decl++;
     }
 
-    return obj;
+    أرجع obj;
 }
 
 
 ngx_data_item_t *
-ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, void *ctx,
+ngx_data_obj_fields_handler(uintptr_t data, ngx_pool_t *pool, فراغ *ctx,
     ngx_array_t *fields)
 {
-    ngx_str_t        *value;
+    ngx_str_t        *قيمة;
     ngx_uint_t        i;
     ngx_data_item_t  *obj, *item;
     ngx_data_decl_t  *decl;
 
     obj = ngx_data_new_object(pool);
-    if (obj == NULL) {
-        return NULL;
+    إذا (obj == عدم) {
+        أرجع عدم;
     }
 
     decl = (ngx_data_decl_t *) data;
 
-    while (decl->name.len) {
+    طالما (decl->name.len) {
 
-        if (fields) {
-            value = fields->elts;
+        إذا (fields) {
+            قيمة = fields->elts;
 
-            for (i = 0; i < fields->nelts; i++) {
+            لكل (i = 0; i < fields->nelts; i++) {
 
-                if (decl->name.len == value[i].len
-                    && ngx_strncmp(decl->name.data, value[i].data,
-                                   value[i].len)
+                إذا (decl->name.len == قيمة[i].len
+                    && ngx_strncmp(decl->name.data, قيمة[i].data,
+                                   قيمة[i].len)
                     == 0)
                 {
-                    goto found;
+                    اذهب found;
                 }
             }
 
             decl++;
-            continue;
+            استمر;
         }
 
 found:
 
         item = decl->handler(decl->data, pool, ctx);
-        if (item == NULL) {
-            return NULL;
+        إذا (item == عدم) {
+            أرجع عدم;
         }
 
-        if (item != NGX_DATA_DECLINE) {
+        إذا (item != NGX_DATA_DECLINE) {
             ngx_data_add_item(obj, &decl->name, item);
         }
 
         decl++;
     }
 
-    return obj;
+    أرجع obj;
 }
 
 
 ngx_data_item_t *
-ngx_data_number_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_data_رقم_handler(uintptr_t data, ngx_pool_t *pool, فراغ *ctx)
 {
     ngx_data_item_t  *item;
 
     item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    إذا (item == عدم) {
+        أرجع عدم;
     }
 
     item->data.integer = data;
 
-    return item;
+    أرجع item;
 }
 
 
 ngx_data_item_t *
-ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_data_string_handler(uintptr_t data, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_str_t        *value, *src;
+    ngx_str_t        *قيمة, *src;
     ngx_data_item_t  *item;
 
     item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    إذا (item == عدم) {
+        أرجع عدم;
     }
 
-    value = &item->data.string;
+    قيمة = &item->data.string;
 
     src = (ngx_str_t *) data;
 
-    value->len = src->len;
+    قيمة->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    قيمة->data = ngx_pstrdup(pool, src);
+    إذا (قيمة->data == عدم) {
+        أرجع عدم;
     }
 
-    return item;
+    أرجع item;
 }
 
 
 ngx_data_item_t *
-ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_data_boolean_handler(uintptr_t data, ngx_pool_t *pool, فراغ *ctx)
 {
     ngx_data_item_t  *item;
 
     item = ngx_data_new_boolean(pool);
-    if (item == NULL) {
-        return NULL;
+    إذا (item == عدم) {
+        أرجع عدم;
     }
 
     item->data.boolean = data;
 
-    return item;
+    أرجع item;
 }
 
 
 ngx_data_item_t *
-ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, فراغ *ctx)
 {
     u_char      *p;
     ngx_tm_t     tm;
     ngx_str_t    src;
     ngx_time_t  *tp;
-    u_char       iso8601[sizeof("1974-01-19T13:00:00.000Z") - 1];
+    u_char       iso8601[حجم("1974-01-19T13:00:00.000Z") - 1];
 
     tp = (ngx_time_t *) data;
 
@@ -219,7 +219,7 @@ ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
                     tm.ngx_tm_year, tm.ngx_tm_mon, tm.ngx_tm_mday,
                     tm.ngx_tm_hour, tm.ngx_tm_min, tm.ngx_tm_sec);
 
-    if (tp->msec) {
+    إذا (tp->msec) {
         p = ngx_sprintf(p, ".%03ui", tp->msec);
     }
 
@@ -228,85 +228,85 @@ ngx_data_time_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
     src.data = iso8601;
     src.len = p - iso8601;
 
-    return ngx_data_string_handler((uintptr_t) &src, pool, NULL);
+    أرجع ngx_data_string_handler((uintptr_t) &src, pool, عدم);
 }
 
 
 ngx_data_item_t *
-ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_data_struct_int64_handler(uintptr_t data, ngx_pool_t *pool, فراغ *ctx)
 {
     ngx_data_item_t  *item;
 
     item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    إذا (item == عدم) {
+        أرجع عدم;
     }
 
     item->data.integer = *(int64_t *) ((u_char *) ctx + data);
 
-    return item;
+    أرجع item;
 }
 
 
 ngx_data_item_t *
-ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_data_struct_int_handler(uintptr_t data, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_int_t  value;
+    ngx_int_t  قيمة;
 
-    value = *(ngx_int_t *) ((u_char *) ctx + data);
+    قيمة = *(ngx_int_t *) ((u_char *) ctx + data);
 
-    return ngx_data_number_handler(value, pool, NULL);
+    أرجع ngx_data_رقم_handler(قيمة, pool, عدم);
 }
 
 
 ngx_data_item_t *
-ngx_data_struct_atomic_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_data_struct_atomic_handler(uintptr_t data, ngx_pool_t *pool, فراغ *ctx)
 {
     ngx_data_item_t  *item;
 
     item = ngx_data_new_integer(pool);
-    if (item == NULL) {
-        return NULL;
+    إذا (item == عدم) {
+        أرجع عدم;
     }
 
     item->data.integer = *(ngx_atomic_uint_t *) ((u_char *) ctx + data);
 
-    return item;
+    أرجع item;
 }
 
 
 ngx_data_item_t *
-ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_data_struct_str_handler(uintptr_t data, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_str_t        *value, *src;
+    ngx_str_t        *قيمة, *src;
     ngx_data_item_t  *item;
 
     item = ngx_data_new_string(pool);
-    if (item == NULL) {
-        return NULL;
+    إذا (item == عدم) {
+        أرجع عدم;
     }
 
-    value = &item->data.string;
+    قيمة = &item->data.string;
 
     src = (ngx_str_t *) ((u_char *) ctx + data);
 
-    value->len = src->len;
+    قيمة->len = src->len;
 
-    value->data = ngx_pstrdup(pool, src);
-    if (value->data == NULL) {
-        return NULL;
+    قيمة->data = ngx_pstrdup(pool, src);
+    إذا (قيمة->data == عدم) {
+        أرجع عدم;
     }
 
-    return item;
+    أرجع item;
 }
 
 
 ngx_data_item_t *
-ngx_data_struct_boolean_handler(uintptr_t data, ngx_pool_t *pool, void *ctx)
+ngx_data_struct_boolean_handler(uintptr_t data, ngx_pool_t *pool, فراغ *ctx)
 {
-    ngx_uint_t  value;
+    ngx_uint_t  قيمة;
 
-    value = *(ngx_uint_t *) ((u_char *) ctx + data);
+    قيمة = *(ngx_uint_t *) ((u_char *) ctx + data);
 
-    return ngx_data_boolean_handler(value, pool, NULL);
+    أرجع ngx_data_boolean_handler(قيمة, pool, عدم);
 }

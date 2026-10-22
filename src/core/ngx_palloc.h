@@ -9,8 +9,8 @@
 #define _NGX_PALLOC_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 /*
@@ -23,30 +23,30 @@
 
 #define NGX_POOL_ALIGNMENT       16
 #define NGX_MIN_POOL_SIZE                                                     \
-    ngx_align((sizeof(ngx_pool_t) + 2 * sizeof(ngx_pool_large_t)),            \
+    ngx_align((حجم(ngx_pool_t) + 2 * حجم(ngx_pool_large_t)),            \
               NGX_POOL_ALIGNMENT)
 
 
-typedef void (*ngx_pool_cleanup_pt)(void *data);
+تعريفنوع فراغ (*ngx_pool_cleanup_pt)(فراغ *data);
 
-typedef struct ngx_pool_cleanup_s  ngx_pool_cleanup_t;
+تعريفنوع بنية ngx_pool_cleanup_s  ngx_pool_cleanup_t;
 
-struct ngx_pool_cleanup_s {
+بنية ngx_pool_cleanup_s {
     ngx_pool_cleanup_pt   handler;
-    void                 *data;
+    فراغ                 *data;
     ngx_pool_cleanup_t   *next;
 };
 
 
-typedef struct ngx_pool_large_s  ngx_pool_large_t;
+تعريفنوع بنية ngx_pool_large_s  ngx_pool_large_t;
 
-struct ngx_pool_large_s {
+بنية ngx_pool_large_s {
     ngx_pool_large_t     *next;
-    void                 *alloc;
+    فراغ                 *alloc;
 };
 
 
-typedef struct {
+تعريفنوع بنية {
     u_char               *last;
     u_char               *end;
     ngx_pool_t           *next;
@@ -54,7 +54,7 @@ typedef struct {
 } ngx_pool_data_t;
 
 
-struct ngx_pool_s {
+بنية ngx_pool_s {
     ngx_pool_data_t       d;
     size_t                max;
     ngx_pool_t           *current;
@@ -65,7 +65,7 @@ struct ngx_pool_s {
 };
 
 
-typedef struct {
+تعريفنوع بنية {
     ngx_fd_t              fd;
     u_char               *name;
     ngx_log_t            *log;
@@ -73,20 +73,20 @@ typedef struct {
 
 
 ngx_pool_t *ngx_create_pool(size_t size, ngx_log_t *log);
-void ngx_destroy_pool(ngx_pool_t *pool);
-void ngx_reset_pool(ngx_pool_t *pool);
+فراغ ngx_destroy_pool(ngx_pool_t *pool);
+فراغ ngx_reset_pool(ngx_pool_t *pool);
 
-void *ngx_palloc(ngx_pool_t *pool, size_t size);
-void *ngx_pnalloc(ngx_pool_t *pool, size_t size);
-void *ngx_pcalloc(ngx_pool_t *pool, size_t size);
-void *ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment);
-ngx_int_t ngx_pfree(ngx_pool_t *pool, void *p);
+فراغ *ngx_palloc(ngx_pool_t *pool, size_t size);
+فراغ *ngx_pnalloc(ngx_pool_t *pool, size_t size);
+فراغ *ngx_pcalloc(ngx_pool_t *pool, size_t size);
+فراغ *ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment);
+ngx_int_t ngx_pfree(ngx_pool_t *pool, فراغ *p);
 
 
 ngx_pool_cleanup_t *ngx_pool_cleanup_add(ngx_pool_t *p, size_t size);
-void ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd);
-void ngx_pool_cleanup_file(void *data);
-void ngx_pool_delete_file(void *data);
+فراغ ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd);
+فراغ ngx_pool_cleanup_file(فراغ *data);
+فراغ ngx_pool_delete_file(فراغ *data);
 
 
 #endif /* _NGX_PALLOC_H_INCLUDED_ */
