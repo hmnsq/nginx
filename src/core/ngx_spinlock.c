@@ -13,26 +13,26 @@ void
 ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
 {
 
-#if (NGX_HAVE_ATOMIC_OPS)
+#如果 (NGX_HAVE_ATOMIC_OPS)
 
     ngx_uint_t  i, n;
 
-    for ( ;; ) {
+    为 ( ;; ) {
 
-        if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-            return;
+        如果 (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
+            返回;
         }
 
-        if (ngx_ncpu > 1) {
+        如果 (ngx_ncpu > 1) {
 
-            for (n = 1; n < spin; n <<= 1) {
+            为 (n = 1; n < spin; n <<= 1) {
 
-                for (i = 0; i < n; i++) {
+                为 (i = 0; i < n; i++) {
                     ngx_cpu_pause();
                 }
 
-                if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
-                    return;
+                如果 (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
+                    返回;
                 }
             }
         }
@@ -40,9 +40,9 @@ ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
         ngx_sched_yield();
     }
 
-#else
+#否则
 
-#if (NGX_THREADS)
+#如果 (NGX_THREADS)
 
 #error ngx_spinlock() or ngx_atomic_cmp_set() are not defined !
 

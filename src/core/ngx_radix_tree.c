@@ -19,8 +19,8 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     ngx_radix_tree_t  *tree;
 
     tree = ngx_palloc(pool, sizeof(ngx_radix_tree_t));
-    if (tree == NULL) {
-        return NULL;
+    如果 (tree == NULL) {
+        返回 NULL;
     }
 
     tree->pool = pool;
@@ -29,8 +29,8 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     tree->size = 0;
 
     tree->root = ngx_radix_alloc(tree);
-    if (tree->root == NULL) {
-        return NULL;
+    如果 (tree->root == NULL) {
+        返回 NULL;
     }
 
     tree->root->right = NULL;
@@ -38,8 +38,8 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     tree->root->parent = NULL;
     tree->root->value = NGX_RADIX_NO_VALUE;
 
-    if (preallocate == 0) {
-        return tree;
+    如果 (preallocate == 0) {
+        返回 tree;
     }
 
     /*
@@ -59,7 +59,7 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
      *     8 bits on sparc64 in 32-bit mode (8K pages)
      */
 
-    if (preallocate == -1) {
+    如果 (preallocate == -1) {
         switch (ngx_pagesize / sizeof(ngx_radix_node_t)) {
 
         /* amd64 */
@@ -81,27 +81,27 @@ ngx_radix_tree_create(ngx_pool_t *pool, ngx_int_t preallocate)
     mask = 0;
     inc = 0x80000000;
 
-    while (preallocate--) {
+    当 (preallocate--) {
 
         key = 0;
         mask >>= 1;
         mask |= 0x80000000;
 
         do {
-            if (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+            如果 (ngx_radix32tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
                 != NGX_OK)
             {
-                return NULL;
+                返回 NULL;
             }
 
             key += inc;
 
-        } while (key);
+        } 当 (key);
 
         inc >>= 1;
     }
 
-    return tree;
+    返回 tree;
 }
 
 
@@ -117,15 +117,15 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
     node = tree->root;
     next = tree->root;
 
-    while (bit & mask) {
-        if (key & bit) {
+    当 (bit & mask) {
+        如果 (key & bit) {
             next = node->right;
 
-        } else {
+        } 否则 {
             next = node->left;
         }
 
-        if (next == NULL) {
+        如果 (next == NULL) {
             break;
         }
 
@@ -133,19 +133,19 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
         node = next;
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    如果 (next) {
+        如果 (node->value != NGX_RADIX_NO_VALUE) {
+            返回 NGX_BUSY;
         }
 
         node->value = value;
-        return NGX_OK;
+        返回 NGX_OK;
     }
 
-    while (bit & mask) {
+    当 (bit & mask) {
         next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+        如果 (next == NULL) {
+            返回 NGX_ERROR;
         }
 
         next->right = NULL;
@@ -153,10 +153,10 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
         next->parent = node;
         next->value = NGX_RADIX_NO_VALUE;
 
-        if (key & bit) {
+        如果 (key & bit) {
             node->right = next;
 
-        } else {
+        } 否则 {
             node->left = next;
         }
 
@@ -166,7 +166,7 @@ ngx_radix32tree_insert(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask,
 
     node->value = value;
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
@@ -179,35 +179,35 @@ ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
     bit = 0x80000000;
     node = tree->root;
 
-    while (node && (bit & mask)) {
-        if (key & bit) {
+    当 (node && (bit & mask)) {
+        如果 (key & bit) {
             node = node->right;
 
-        } else {
+        } 否则 {
             node = node->left;
         }
 
         bit >>= 1;
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    如果 (node == NULL) {
+        返回 NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    如果 (node->right || node->left) {
+        如果 (node->value != NGX_RADIX_NO_VALUE) {
             node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+            返回 NGX_OK;
         }
 
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
+    为 ( ;; ) {
+        如果 (node->parent->right == node) {
             node->parent->right = NULL;
 
-        } else {
+        } 否则 {
             node->parent->left = NULL;
         }
 
@@ -216,20 +216,20 @@ ngx_radix32tree_delete(ngx_radix_tree_t *tree, uint32_t key, uint32_t mask)
 
         node = node->parent;
 
-        if (node->right || node->left) {
+        如果 (node->right || node->left) {
             break;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
+        如果 (node->value != NGX_RADIX_NO_VALUE) {
             break;
         }
 
-        if (node->parent == NULL) {
+        如果 (node->parent == NULL) {
             break;
         }
     }
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
@@ -244,26 +244,26 @@ ngx_radix32tree_find(ngx_radix_tree_t *tree, uint32_t key)
     value = NGX_RADIX_NO_VALUE;
     node = tree->root;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    当 (node) {
+        如果 (node->value != NGX_RADIX_NO_VALUE) {
             value = node->value;
         }
 
-        if (key & bit) {
+        如果 (key & bit) {
             node = node->right;
 
-        } else {
+        } 否则 {
             node = node->left;
         }
 
         bit >>= 1;
     }
 
-    return value;
+    返回 value;
 }
 
 
-#if (NGX_HAVE_INET6)
+#如果 (NGX_HAVE_INET6)
 
 ngx_int_t
 ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
@@ -279,23 +279,23 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
     node = tree->root;
     next = tree->root;
 
-    while (bit & mask[i]) {
-        if (key[i] & bit) {
+    当 (bit & mask[i]) {
+        如果 (key[i] & bit) {
             next = node->right;
 
-        } else {
+        } 否则 {
             next = node->left;
         }
 
-        if (next == NULL) {
+        如果 (next == NULL) {
             break;
         }
 
         bit >>= 1;
         node = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
+        如果 (bit == 0) {
+            如果 (++i == 16) {
                 break;
             }
 
@@ -303,19 +303,19 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
         }
     }
 
-    if (next) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
-            return NGX_BUSY;
+    如果 (next) {
+        如果 (node->value != NGX_RADIX_NO_VALUE) {
+            返回 NGX_BUSY;
         }
 
         node->value = value;
-        return NGX_OK;
+        返回 NGX_OK;
     }
 
-    while (bit & mask[i]) {
+    当 (bit & mask[i]) {
         next = ngx_radix_alloc(tree);
-        if (next == NULL) {
-            return NGX_ERROR;
+        如果 (next == NULL) {
+            返回 NGX_ERROR;
         }
 
         next->right = NULL;
@@ -323,18 +323,18 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
         next->parent = node;
         next->value = NGX_RADIX_NO_VALUE;
 
-        if (key[i] & bit) {
+        如果 (key[i] & bit) {
             node->right = next;
 
-        } else {
+        } 否则 {
             node->left = next;
         }
 
         bit >>= 1;
         node = next;
 
-        if (bit == 0) {
-            if (++i == 16) {
+        如果 (bit == 0) {
+            如果 (++i == 16) {
                 break;
             }
 
@@ -344,7 +344,7 @@ ngx_radix128tree_insert(ngx_radix_tree_t *tree, u_char *key, u_char *mask,
 
     node->value = value;
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
@@ -359,18 +359,18 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
     bit = 0x80;
     node = tree->root;
 
-    while (node && (bit & mask[i])) {
-        if (key[i] & bit) {
+    当 (node && (bit & mask[i])) {
+        如果 (key[i] & bit) {
             node = node->right;
 
-        } else {
+        } 否则 {
             node = node->left;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
-            if (++i == 16) {
+        如果 (bit == 0) {
+            如果 (++i == 16) {
                 break;
             }
 
@@ -378,24 +378,24 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
         }
     }
 
-    if (node == NULL) {
-        return NGX_ERROR;
+    如果 (node == NULL) {
+        返回 NGX_ERROR;
     }
 
-    if (node->right || node->left) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    如果 (node->right || node->left) {
+        如果 (node->value != NGX_RADIX_NO_VALUE) {
             node->value = NGX_RADIX_NO_VALUE;
-            return NGX_OK;
+            返回 NGX_OK;
         }
 
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 
-    for ( ;; ) {
-        if (node->parent->right == node) {
+    为 ( ;; ) {
+        如果 (node->parent->right == node) {
             node->parent->right = NULL;
 
-        } else {
+        } 否则 {
             node->parent->left = NULL;
         }
 
@@ -404,20 +404,20 @@ ngx_radix128tree_delete(ngx_radix_tree_t *tree, u_char *key, u_char *mask)
 
         node = node->parent;
 
-        if (node->right || node->left) {
+        如果 (node->right || node->left) {
             break;
         }
 
-        if (node->value != NGX_RADIX_NO_VALUE) {
+        如果 (node->value != NGX_RADIX_NO_VALUE) {
             break;
         }
 
-        if (node->parent == NULL) {
+        如果 (node->parent == NULL) {
             break;
         }
     }
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
@@ -434,27 +434,27 @@ ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
     value = NGX_RADIX_NO_VALUE;
     node = tree->root;
 
-    while (node) {
-        if (node->value != NGX_RADIX_NO_VALUE) {
+    当 (node) {
+        如果 (node->value != NGX_RADIX_NO_VALUE) {
             value = node->value;
         }
 
-        if (key[i] & bit) {
+        如果 (key[i] & bit) {
             node = node->right;
 
-        } else {
+        } 否则 {
             node = node->left;
         }
 
         bit >>= 1;
 
-        if (bit == 0) {
+        如果 (bit == 0) {
             i++;
             bit = 0x80;
         }
     }
 
-    return value;
+    返回 value;
 }
 
 #endif
@@ -465,16 +465,16 @@ ngx_radix_alloc(ngx_radix_tree_t *tree)
 {
     ngx_radix_node_t  *p;
 
-    if (tree->free) {
+    如果 (tree->free) {
         p = tree->free;
         tree->free = tree->free->right;
-        return p;
+        返回 p;
     }
 
-    if (tree->size < sizeof(ngx_radix_node_t)) {
+    如果 (tree->size < sizeof(ngx_radix_node_t)) {
         tree->start = ngx_pmemalign(tree->pool, ngx_pagesize, ngx_pagesize);
-        if (tree->start == NULL) {
-            return NULL;
+        如果 (tree->start == NULL) {
+            返回 NULL;
         }
 
         tree->size = ngx_pagesize;
@@ -484,5 +484,5 @@ ngx_radix_alloc(ngx_radix_tree_t *tree)
     tree->start += sizeof(ngx_radix_node_t);
     tree->size -= sizeof(ngx_radix_node_t);
 
-    return p;
+    返回 p;
 }

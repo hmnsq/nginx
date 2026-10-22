@@ -99,7 +99,7 @@ typedef struct {
     ngx_int_t                 rlimit_nofile;
     off_t                     rlimit_core;
 
-    int                       priority;
+    整数                       priority;
 
     ngx_uint_t                cpu_affinity_auto;
     ngx_uint_t                cpu_affinity_n;

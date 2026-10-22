@@ -31,33 +31,33 @@ ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
     root = &tree->root;
     sentinel = tree->sentinel;
 
-    if (*root == sentinel) {
+    如果 (*root == sentinel) {
         node->parent = NULL;
         node->left = sentinel;
         node->right = sentinel;
         ngx_rbt_black(node);
         *root = node;
 
-        return;
+        返回;
     }
 
     tree->insert(*root, node, sentinel);
 
     /* re-balance tree */
 
-    while (node != *root && ngx_rbt_is_red(node->parent)) {
+    当 (node != *root && ngx_rbt_is_red(node->parent)) {
 
-        if (node->parent == node->parent->parent->left) {
+        如果 (node->parent == node->parent->parent->left) {
             temp = node->parent->parent->right;
 
-            if (ngx_rbt_is_red(temp)) {
+            如果 (ngx_rbt_is_red(temp)) {
                 ngx_rbt_black(node->parent);
                 ngx_rbt_black(temp);
                 ngx_rbt_red(node->parent->parent);
                 node = node->parent->parent;
 
-            } else {
-                if (node == node->parent->right) {
+            } 否则 {
+                如果 (node == node->parent->right) {
                     node = node->parent;
                     ngx_rbtree_left_rotate(root, sentinel, node);
                 }
@@ -67,17 +67,17 @@ ngx_rbtree_insert(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
                 ngx_rbtree_right_rotate(root, sentinel, node->parent->parent);
             }
 
-        } else {
+        } 否则 {
             temp = node->parent->parent->left;
 
-            if (ngx_rbt_is_red(temp)) {
+            如果 (ngx_rbt_is_red(temp)) {
                 ngx_rbt_black(node->parent);
                 ngx_rbt_black(temp);
                 ngx_rbt_red(node->parent->parent);
                 node = node->parent->parent;
 
-            } else {
-                if (node == node->parent->left) {
+            } 否则 {
+                如果 (node == node->parent->left) {
                     node = node->parent;
                     ngx_rbtree_right_rotate(root, sentinel, node);
                 }
@@ -99,11 +99,11 @@ ngx_rbtree_insert_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 {
     ngx_rbtree_node_t  **p;
 
-    for ( ;; ) {
+    为 ( ;; ) {
 
         p = (node->key < temp->key) ? &temp->left : &temp->right;
 
-        if (*p == sentinel) {
+        如果 (*p == sentinel) {
             break;
         }
 
@@ -124,7 +124,7 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
 {
     ngx_rbtree_node_t  **p;
 
-    for ( ;; ) {
+    为 ( ;; ) {
 
         /*
          * Timer values
@@ -138,7 +138,7 @@ ngx_rbtree_insert_timer_value(ngx_rbtree_node_t *temp, ngx_rbtree_node_t *node,
         p = ((ngx_rbtree_key_int_t) (node->key - temp->key) < 0)
             ? &temp->left : &temp->right;
 
-        if (*p == sentinel) {
+        如果 (*p == sentinel) {
             break;
         }
 
@@ -164,20 +164,20 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
     root = &tree->root;
     sentinel = tree->sentinel;
 
-    if (node->left == sentinel) {
+    如果 (node->left == sentinel) {
         temp = node->right;
         subst = node;
 
-    } else if (node->right == sentinel) {
+    } 否则 如果 (node->right == sentinel) {
         temp = node->left;
         subst = node;
 
-    } else {
+    } 否则 {
         subst = ngx_rbtree_min(node->right, sentinel);
         temp = subst->right;
     }
 
-    if (subst == *root) {
+    如果 (subst == *root) {
         *root = temp;
         ngx_rbt_black(temp);
 
@@ -187,28 +187,28 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
         node->parent = NULL;
         node->key = 0;
 
-        return;
+        返回;
     }
 
     red = ngx_rbt_is_red(subst);
 
-    if (subst == subst->parent->left) {
+    如果 (subst == subst->parent->left) {
         subst->parent->left = temp;
 
-    } else {
+    } 否则 {
         subst->parent->right = temp;
     }
 
-    if (subst == node) {
+    如果 (subst == node) {
 
         temp->parent = subst->parent;
 
-    } else {
+    } 否则 {
 
-        if (subst->parent == node) {
+        如果 (subst->parent == node) {
             temp->parent = subst;
 
-        } else {
+        } 否则 {
             temp->parent = subst->parent;
         }
 
@@ -217,22 +217,22 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
         subst->parent = node->parent;
         ngx_rbt_copy_color(subst, node);
 
-        if (node == *root) {
+        如果 (node == *root) {
             *root = subst;
 
-        } else {
-            if (node == node->parent->left) {
+        } 否则 {
+            如果 (node == node->parent->left) {
                 node->parent->left = subst;
-            } else {
+            } 否则 {
                 node->parent->right = subst;
             }
         }
 
-        if (subst->left != sentinel) {
+        如果 (subst->left != sentinel) {
             subst->left->parent = subst;
         }
 
-        if (subst->right != sentinel) {
+        如果 (subst->right != sentinel) {
             subst->right->parent = subst;
         }
     }
@@ -243,30 +243,30 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
     node->parent = NULL;
     node->key = 0;
 
-    if (red) {
-        return;
+    如果 (red) {
+        返回;
     }
 
     /* a delete fixup */
 
-    while (temp != *root && ngx_rbt_is_black(temp)) {
+    当 (temp != *root && ngx_rbt_is_black(temp)) {
 
-        if (temp == temp->parent->left) {
+        如果 (temp == temp->parent->left) {
             w = temp->parent->right;
 
-            if (ngx_rbt_is_red(w)) {
+            如果 (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
                 ngx_rbtree_left_rotate(root, sentinel, temp->parent);
                 w = temp->parent->right;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            如果 (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->right)) {
+            } 否则 {
+                如果 (ngx_rbt_is_black(w->right)) {
                     ngx_rbt_black(w->left);
                     ngx_rbt_red(w);
                     ngx_rbtree_right_rotate(root, sentinel, w);
@@ -280,22 +280,22 @@ ngx_rbtree_delete(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
                 temp = *root;
             }
 
-        } else {
+        } 否则 {
             w = temp->parent->left;
 
-            if (ngx_rbt_is_red(w)) {
+            如果 (ngx_rbt_is_red(w)) {
                 ngx_rbt_black(w);
                 ngx_rbt_red(temp->parent);
                 ngx_rbtree_right_rotate(root, sentinel, temp->parent);
                 w = temp->parent->left;
             }
 
-            if (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
+            如果 (ngx_rbt_is_black(w->left) && ngx_rbt_is_black(w->right)) {
                 ngx_rbt_red(w);
                 temp = temp->parent;
 
-            } else {
-                if (ngx_rbt_is_black(w->left)) {
+            } 否则 {
+                如果 (ngx_rbt_is_black(w->left)) {
                     ngx_rbt_black(w->right);
                     ngx_rbt_red(w);
                     ngx_rbtree_left_rotate(root, sentinel, w);
@@ -324,19 +324,19 @@ ngx_rbtree_left_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
     temp = node->right;
     node->right = temp->left;
 
-    if (temp->left != sentinel) {
+    如果 (temp->left != sentinel) {
         temp->left->parent = node;
     }
 
     temp->parent = node->parent;
 
-    if (node == *root) {
+    如果 (node == *root) {
         *root = temp;
 
-    } else if (node == node->parent->left) {
+    } 否则 如果 (node == node->parent->left) {
         node->parent->left = temp;
 
-    } else {
+    } 否则 {
         node->parent->right = temp;
     }
 
@@ -354,19 +354,19 @@ ngx_rbtree_right_rotate(ngx_rbtree_node_t **root, ngx_rbtree_node_t *sentinel,
     temp = node->left;
     node->left = temp->right;
 
-    if (temp->right != sentinel) {
+    如果 (temp->right != sentinel) {
         temp->right->parent = node;
     }
 
     temp->parent = node->parent;
 
-    if (node == *root) {
+    如果 (node == *root) {
         *root = temp;
 
-    } else if (node == node->parent->right) {
+    } 否则 如果 (node == node->parent->right) {
         node->parent->right = temp;
 
-    } else {
+    } 否则 {
         node->parent->left = temp;
     }
 
@@ -382,21 +382,21 @@ ngx_rbtree_next(ngx_rbtree_t *tree, ngx_rbtree_node_t *node)
 
     sentinel = tree->sentinel;
 
-    if (node->right != sentinel) {
-        return ngx_rbtree_min(node->right, sentinel);
+    如果 (node->right != sentinel) {
+        返回 ngx_rbtree_min(node->right, sentinel);
     }
 
     root = tree->root;
 
-    for ( ;; ) {
+    为 ( ;; ) {
         parent = node->parent;
 
-        if (node == root) {
-            return NULL;
+        如果 (node == root) {
+            返回 NULL;
         }
 
-        if (node == parent->left) {
-            return parent;
+        如果 (node == parent->left) {
+            返回 parent;
         }
 
         node = parent;

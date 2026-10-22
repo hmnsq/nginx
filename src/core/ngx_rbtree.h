@@ -76,11 +76,11 @@ ngx_rbtree_node_t *ngx_rbtree_next(ngx_rbtree_t *tree,
 static ngx_inline ngx_rbtree_node_t *
 ngx_rbtree_min(ngx_rbtree_node_t *node, ngx_rbtree_node_t *sentinel)
 {
-    while (node->left != sentinel) {
+    当 (node->left != sentinel) {
         node = node->left;
     }
 
-    return node;
+    返回 node;
 }
 
 

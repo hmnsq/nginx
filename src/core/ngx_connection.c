@@ -26,15 +26,15 @@ ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
     u_char            text[NGX_SOCKADDR_STRLEN];
 
     ls = ngx_array_push(&cf->cycle->listening);
-    if (ls == NULL) {
-        return NULL;
+    如果 (ls == NULL) {
+        返回 NULL;
     }
 
     ngx_memzero(ls, sizeof(ngx_listening_t));
 
     sa = ngx_palloc(cf->pool, socklen);
-    if (sa == NULL) {
-        return NULL;
+    如果 (sa == NULL) {
+        返回 NULL;
     }
 
     ngx_memcpy(sa, sockaddr, socklen);
@@ -46,12 +46,12 @@ ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
     ls->addr_text.len = len;
 
     switch (ls->sockaddr->sa_family) {
-#if (NGX_HAVE_INET6)
+#如果 (NGX_HAVE_INET6)
     case AF_INET6:
         ls->addr_text_max_len = NGX_INET6_ADDRSTRLEN;
         break;
 #endif
-#if (NGX_HAVE_UNIX_DOMAIN)
+#如果 (NGX_HAVE_UNIX_DOMAIN)
     case AF_UNIX:
         ls->addr_text_max_len = NGX_UNIX_ADDRSTRLEN;
         len++;
@@ -66,13 +66,13 @@ ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
     }
 
     ls->addr_text.data = ngx_pnalloc(cf->pool, len);
-    if (ls->addr_text.data == NULL) {
-        return NULL;
+    如果 (ls->addr_text.data == NULL) {
+        返回 NULL;
     }
 
     ngx_memcpy(ls->addr_text.data, text, len);
 
-#if !(NGX_WIN32)
+#如果 !(NGX_WIN32)
     ngx_rbtree_init(&ls->rbtree, &ls->sentinel, ngx_udp_rbtree_insert_value);
 #endif
 
@@ -83,42 +83,42 @@ ngx_create_listening(ngx_conf_t *cf, struct sockaddr *sockaddr,
     ls->rcvbuf = -1;
     ls->sndbuf = -1;
 
-#if (NGX_HAVE_SETFIB)
+#如果 (NGX_HAVE_SETFIB)
     ls->setfib = -1;
 #endif
 
-#if (NGX_HAVE_TCP_FASTOPEN)
+#如果 (NGX_HAVE_TCP_FASTOPEN)
     ls->fastopen = -1;
 #endif
 
-    return ls;
+    返回 ls;
 }
 
 
 ngx_int_t
 ngx_clone_listening(ngx_cycle_t *cycle, ngx_listening_t *ls)
 {
-#if (NGX_HAVE_REUSEPORT)
+#如果 (NGX_HAVE_REUSEPORT)
 
     ngx_int_t         n;
     ngx_core_conf_t  *ccf;
     ngx_listening_t   ols;
 
-    if (!ls->reuseport || ls->worker != 0) {
-        return NGX_OK;
+    如果 (!ls->reuseport || ls->worker != 0) {
+        返回 NGX_OK;
     }
 
     ols = *ls;
 
     ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
 
-    for (n = 1; n < ccf->worker_processes; n++) {
+    为 (n = 1; n < ccf->worker_processes; n++) {
 
         /* create a socket for each worker process */
 
         ls = ngx_array_push(&cycle->listening);
-        if (ls == NULL) {
-            return NGX_ERROR;
+        如果 (ls == NULL) {
+            返回 NGX_ERROR;
         }
 
         *ls = ols;
@@ -127,7 +127,7 @@ ngx_clone_listening(ngx_cycle_t *cycle, ngx_listening_t *ls)
 
 #endif
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
@@ -138,29 +138,29 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
     ngx_uint_t                 i;
     ngx_listening_t           *ls;
     socklen_t                  olen;
-#if (NGX_HAVE_DEFERRED_ACCEPT || NGX_HAVE_TCP_FASTOPEN)
+#如果 (NGX_HAVE_DEFERRED_ACCEPT || NGX_HAVE_TCP_FASTOPEN)
     ngx_err_t                  err;
 #endif
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+#如果 (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
     struct accept_filter_arg   af;
 #endif
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
-    int                        timeout;
+#如果 (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
+    整数                        timeout;
 #endif
-#if (NGX_HAVE_REUSEPORT)
-    int                        reuseport;
+#如果 (NGX_HAVE_REUSEPORT)
+    整数                        reuseport;
 #endif
 
     ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
+    为 (i = 0; i < cycle->listening.nelts; i++) {
 
         ls[i].sockaddr = ngx_palloc(cycle->pool, sizeof(ngx_sockaddr_t));
-        if (ls[i].sockaddr == NULL) {
-            return NGX_ERROR;
+        如果 (ls[i].sockaddr == NULL) {
+            返回 NGX_ERROR;
         }
 
         ls[i].socklen = sizeof(ngx_sockaddr_t);
-        if (getsockname(ls[i].fd, ls[i].sockaddr, &ls[i].socklen) == -1) {
+        如果 (getsockname(ls[i].fd, ls[i].sockaddr, &ls[i].socklen) == -1) {
             ngx_log_error(NGX_LOG_CRIT, cycle->log, ngx_socket_errno,
                           "getsockname() of the inherited "
                           "socket #%d failed", ls[i].fd);
@@ -168,20 +168,20 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
             continue;
         }
 
-        if (ls[i].socklen > (socklen_t) sizeof(ngx_sockaddr_t)) {
+        如果 (ls[i].socklen > (socklen_t) sizeof(ngx_sockaddr_t)) {
             ls[i].socklen = sizeof(ngx_sockaddr_t);
         }
 
         switch (ls[i].sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
+#如果 (NGX_HAVE_INET6)
         case AF_INET6:
             ls[i].addr_text_max_len = NGX_INET6_ADDRSTRLEN;
             len = NGX_INET6_ADDRSTRLEN + sizeof("[]:65535") - 1;
             break;
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#如果 (NGX_HAVE_UNIX_DOMAIN)
         case AF_UNIX:
             ls[i].addr_text_max_len = NGX_UNIX_ADDRSTRLEN;
             len = NGX_UNIX_ADDRSTRLEN;
@@ -202,23 +202,23 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
         }
 
         ls[i].addr_text.data = ngx_pnalloc(cycle->pool, len);
-        if (ls[i].addr_text.data == NULL) {
-            return NGX_ERROR;
+        如果 (ls[i].addr_text.data == NULL) {
+            返回 NGX_ERROR;
         }
 
         len = ngx_sock_ntop(ls[i].sockaddr, ls[i].socklen,
                             ls[i].addr_text.data, len, 1);
-        if (len == 0) {
-            return NGX_ERROR;
+        如果 (len == 0) {
+            返回 NGX_ERROR;
         }
 
         ls[i].addr_text.len = len;
 
         ls[i].backlog = NGX_LISTEN_BACKLOG;
 
-        olen = sizeof(int);
+        olen = sizeof(整数);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_TYPE, (void *) &ls[i].type,
+        如果 (getsockopt(ls[i].fd, SOL_SOCKET, SO_TYPE, (void *) &ls[i].type,
                        &olen)
             == -1)
         {
@@ -228,9 +228,9 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
             continue;
         }
 
-        olen = sizeof(int);
+        olen = sizeof(整数);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF, (void *) &ls[i].rcvbuf,
+        如果 (getsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF, (void *) &ls[i].rcvbuf,
                        &olen)
             == -1)
         {
@@ -241,9 +241,9 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
             ls[i].rcvbuf = -1;
         }
 
-        olen = sizeof(int);
+        olen = sizeof(整数);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF, (void *) &ls[i].sndbuf,
+        如果 (getsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF, (void *) &ls[i].sndbuf,
                        &olen)
             == -1)
         {
@@ -254,14 +254,14 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
             ls[i].sndbuf = -1;
         }
 
-#if 0
+#如果 0
         /* SO_SETFIB is currently a set only option */
 
-#if (NGX_HAVE_SETFIB)
+#如果 (NGX_HAVE_SETFIB)
 
-        olen = sizeof(int);
+        olen = sizeof(整数);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
+        如果 (getsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
                        (void *) &ls[i].setfib, &olen)
             == -1)
         {
@@ -275,14 +275,14 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
 #endif
 #endif
 
-#if (NGX_HAVE_REUSEPORT)
+#如果 (NGX_HAVE_REUSEPORT)
 
         reuseport = 0;
-        olen = sizeof(int);
+        olen = sizeof(整数);
 
 #ifdef SO_REUSEPORT_LB
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
+        如果 (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
                        (void *) &reuseport, &olen)
             == -1)
         {
@@ -290,13 +290,13 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
                           "getsockopt(SO_REUSEPORT_LB) %V failed, ignored",
                           &ls[i].addr_text);
 
-        } else {
+        } 否则 {
             ls[i].reuseport = reuseport ? 1 : 0;
         }
 
-#else
+#否则
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
+        如果 (getsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
                        (void *) &reuseport, &olen)
             == -1)
         {
@@ -304,22 +304,22 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
                           "getsockopt(SO_REUSEPORT) %V failed, ignored",
                           &ls[i].addr_text);
 
-        } else {
+        } 否则 {
             ls[i].reuseport = reuseport ? 1 : 0;
         }
 #endif
 
 #endif
 
-        if (ls[i].type != SOCK_STREAM) {
+        如果 (ls[i].type != SOCK_STREAM) {
             continue;
         }
 
 #ifdef SO_PROTOCOL
 
-        olen = sizeof(int);
+        olen = sizeof(整数);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_PROTOCOL,
+        如果 (getsockopt(ls[i].fd, SOL_SOCKET, SO_PROTOCOL,
                        (void *) &ls[i].protocol, &olen)
             == -1)
         {
@@ -328,23 +328,23 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
                           &ls[i].addr_text);
             ls[i].protocol = 0;
 
-        } else if (ls[i].protocol == IPPROTO_TCP) {
+        } 否则 如果 (ls[i].protocol == IPPROTO_TCP) {
             ls[i].protocol = 0;
         }
 
 #endif
 
-#if (NGX_HAVE_TCP_FASTOPEN)
+#如果 (NGX_HAVE_TCP_FASTOPEN)
 
-        olen = sizeof(int);
+        olen = sizeof(整数);
 
-        if (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
+        如果 (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
                        (void *) &ls[i].fastopen, &olen)
             == -1)
         {
             err = ngx_socket_errno;
 
-            if (err != NGX_EOPNOTSUPP && err != NGX_ENOPROTOOPT
+            如果 (err != NGX_EOPNOTSUPP && err != NGX_ENOPROTOOPT
                 && err != NGX_EINVAL)
             {
                 ngx_log_error(NGX_LOG_NOTICE, cycle->log, err,
@@ -357,17 +357,17 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
 
 #endif
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+#如果 (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
 
         ngx_memzero(&af, sizeof(struct accept_filter_arg));
         olen = sizeof(struct accept_filter_arg);
 
-        if (getsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, &af, &olen)
+        如果 (getsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, &af, &olen)
             == -1)
         {
             err = ngx_socket_errno;
 
-            if (err == NGX_EINVAL) {
+            如果 (err == NGX_EINVAL) {
                 continue;
             }
 
@@ -377,30 +377,30 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
             continue;
         }
 
-        if (olen < sizeof(struct accept_filter_arg) || af.af_name[0] == '\0') {
+        如果 (olen < sizeof(struct accept_filter_arg) || af.af_name[0] == '\0') {
             continue;
         }
 
         ls[i].accept_filter = ngx_palloc(cycle->pool, 16);
-        if (ls[i].accept_filter == NULL) {
-            return NGX_ERROR;
+        如果 (ls[i].accept_filter == NULL) {
+            返回 NGX_ERROR;
         }
 
         (void) ngx_cpystrn((u_char *) ls[i].accept_filter,
                            (u_char *) af.af_name, 16);
 #endif
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
+#如果 (NGX_HAVE_DEFERRED_ACCEPT && defined TCP_DEFER_ACCEPT)
 
         timeout = 0;
-        olen = sizeof(int);
+        olen = sizeof(整数);
 
-        if (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT, &timeout, &olen)
+        如果 (getsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT, &timeout, &olen)
             == -1)
         {
             err = ngx_socket_errno;
 
-            if (err == NGX_EOPNOTSUPP) {
+            如果 (err == NGX_EOPNOTSUPP) {
                 continue;
             }
 
@@ -410,7 +410,7 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
             continue;
         }
 
-        if (olen < sizeof(int) || timeout == 0) {
+        如果 (olen < sizeof(整数) || timeout == 0) {
             continue;
         }
 
@@ -418,14 +418,14 @@ ngx_set_inherited_sockets(ngx_cycle_t *cycle)
 #endif
     }
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
 ngx_int_t
 ngx_open_listening_sockets(ngx_cycle_t *cycle)
 {
-    int               reuseaddr;
+    整数               reuseaddr;
     ngx_uint_t        i, tries, failed;
     ngx_err_t         err;
     ngx_log_t        *log;
@@ -433,7 +433,7 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
     ngx_listening_t  *ls;
 
     reuseaddr = 1;
-#if (NGX_SUPPRESS_WARN)
+#如果 (NGX_SUPPRESS_WARN)
     failed = 0;
 #endif
 
@@ -441,21 +441,21 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
 
     /* TODO: configurable try number */
 
-    for (tries = 5; tries; tries--) {
+    为 (tries = 5; tries; tries--) {
         failed = 0;
 
         /* for each listening socket */
 
         ls = cycle->listening.elts;
-        for (i = 0; i < cycle->listening.nelts; i++) {
+        为 (i = 0; i < cycle->listening.nelts; i++) {
 
-            if (ls[i].ignore) {
+            如果 (ls[i].ignore) {
                 continue;
             }
 
-#if (NGX_HAVE_REUSEPORT)
+#如果 (NGX_HAVE_REUSEPORT)
 
-            if (ls[i].add_reuseport || ls[i].change_protocol) {
+            如果 (ls[i].add_reuseport || ls[i].change_protocol) {
 
                 /*
                  * to allow transition from a socket without SO_REUSEPORT
@@ -467,12 +467,12 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
                  * and new sockets
                  */
 
-                int  reuseport = 1;
+                整数  reuseport = 1;
 
 #ifdef SO_REUSEPORT_LB
 
-                if (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
-                               (const void *) &reuseport, sizeof(int))
+                如果 (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT_LB,
+                               (const void *) &reuseport, sizeof(整数))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -481,10 +481,10 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
                                   &ls[i].addr_text);
                 }
 
-#else
+#否则
 
-                if (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
-                               (const void *) &reuseport, sizeof(int))
+                如果 (setsockopt(ls[i].fd, SOL_SOCKET, SO_REUSEPORT,
+                               (const void *) &reuseport, sizeof(整数))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -497,11 +497,11 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
             }
 #endif
 
-            if (ls[i].fd != (ngx_socket_t) -1 && !ls[i].change_protocol) {
+            如果 (ls[i].fd != (ngx_socket_t) -1 && !ls[i].change_protocol) {
                 continue;
             }
 
-            if (ls[i].inherited) {
+            如果 (ls[i].inherited) {
 
                 /* TODO: close on exit */
                 /* TODO: nonblocking */
@@ -513,91 +513,91 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
             s = ngx_socket(ls[i].sockaddr->sa_family, ls[i].type,
                            ls[i].protocol);
 
-            if (s == (ngx_socket_t) -1) {
+            如果 (s == (ngx_socket_t) -1) {
                 ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                               ngx_socket_n " %V failed", &ls[i].addr_text);
-                return NGX_ERROR;
+                返回 NGX_ERROR;
             }
 
-            if (ls[i].type != SOCK_DGRAM || !ngx_test_config) {
+            如果 (ls[i].type != SOCK_DGRAM || !ngx_test_config) {
 
-                if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
-                               (const void *) &reuseaddr, sizeof(int))
+                如果 (setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
+                               (const void *) &reuseaddr, sizeof(整数))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   "setsockopt(SO_REUSEADDR) %V failed",
                                   &ls[i].addr_text);
 
-                    if (ngx_close_socket(s) == -1) {
+                    如果 (ngx_close_socket(s) == -1) {
                         ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                       ngx_close_socket_n " %V failed",
                                       &ls[i].addr_text);
                     }
 
-                    return NGX_ERROR;
+                    返回 NGX_ERROR;
                 }
             }
 
-#if (NGX_HAVE_REUSEPORT)
+#如果 (NGX_HAVE_REUSEPORT)
 
-            if ((ls[i].reuseport || ls[i].change_protocol)
+            如果 ((ls[i].reuseport || ls[i].change_protocol)
                 && !ngx_test_config)
             {
-                int  reuseport;
+                整数  reuseport;
 
                 reuseport = 1;
 
 #ifdef SO_REUSEPORT_LB
 
-                if (setsockopt(s, SOL_SOCKET, SO_REUSEPORT_LB,
-                               (const void *) &reuseport, sizeof(int))
+                如果 (setsockopt(s, SOL_SOCKET, SO_REUSEPORT_LB,
+                               (const void *) &reuseport, sizeof(整数))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   "setsockopt(SO_REUSEPORT_LB) %V failed",
                                   &ls[i].addr_text);
 
-                    if (ngx_close_socket(s) == -1) {
+                    如果 (ngx_close_socket(s) == -1) {
                         ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                       ngx_close_socket_n " %V failed",
                                       &ls[i].addr_text);
                     }
 
-                    return NGX_ERROR;
+                    返回 NGX_ERROR;
                 }
 
-#else
+#否则
 
-                if (setsockopt(s, SOL_SOCKET, SO_REUSEPORT,
-                               (const void *) &reuseport, sizeof(int))
+                如果 (setsockopt(s, SOL_SOCKET, SO_REUSEPORT,
+                               (const void *) &reuseport, sizeof(整数))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   "setsockopt(SO_REUSEPORT) %V failed",
                                   &ls[i].addr_text);
 
-                    if (ngx_close_socket(s) == -1) {
+                    如果 (ngx_close_socket(s) == -1) {
                         ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                       ngx_close_socket_n " %V failed",
                                       &ls[i].addr_text);
                     }
 
-                    return NGX_ERROR;
+                    返回 NGX_ERROR;
                 }
 #endif
             }
 #endif
 
-#if (NGX_HAVE_INET6 && defined IPV6_V6ONLY)
+#如果 (NGX_HAVE_INET6 && defined IPV6_V6ONLY)
 
-            if (ls[i].sockaddr->sa_family == AF_INET6) {
-                int  ipv6only;
+            如果 (ls[i].sockaddr->sa_family == AF_INET6) {
+                整数  ipv6only;
 
                 ipv6only = ls[i].ipv6only;
 
-                if (setsockopt(s, IPPROTO_IPV6, IPV6_V6ONLY,
-                               (const void *) &ipv6only, sizeof(int))
+                如果 (setsockopt(s, IPPROTO_IPV6, IPV6_V6ONLY,
+                               (const void *) &ipv6only, sizeof(整数))
                     == -1)
                 {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
@@ -608,64 +608,64 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
 #endif
             /* TODO: close on exit */
 
-            if (ngx_nonblocking(s) == -1) {
+            如果 (ngx_nonblocking(s) == -1) {
                 ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                               ngx_nonblocking_n " %V failed",
                               &ls[i].addr_text);
 
-                if (ngx_close_socket(s) == -1) {
+                如果 (ngx_close_socket(s) == -1) {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   ngx_close_socket_n " %V failed",
                                   &ls[i].addr_text);
                 }
 
-                return NGX_ERROR;
+                返回 NGX_ERROR;
             }
 
             ngx_log_debug2(NGX_LOG_DEBUG_CORE, log, 0,
                            "bind() %V #%d ", &ls[i].addr_text, s);
 
-            if (bind(s, ls[i].sockaddr, ls[i].socklen) == -1) {
+            如果 (bind(s, ls[i].sockaddr, ls[i].socklen) == -1) {
                 err = ngx_socket_errno;
 
-                if (err != NGX_EADDRINUSE || !ngx_test_config) {
+                如果 (err != NGX_EADDRINUSE || !ngx_test_config) {
                     ngx_log_error(NGX_LOG_EMERG, log, err,
                                   "bind() to %V failed", &ls[i].addr_text);
                 }
 
-                if (ngx_close_socket(s) == -1) {
+                如果 (ngx_close_socket(s) == -1) {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   ngx_close_socket_n " %V failed",
                                   &ls[i].addr_text);
                 }
 
-                if (err != NGX_EADDRINUSE) {
-                    return NGX_ERROR;
+                如果 (err != NGX_EADDRINUSE) {
+                    返回 NGX_ERROR;
                 }
 
-                if (!ngx_test_config) {
+                如果 (!ngx_test_config) {
                     failed = 1;
                 }
 
                 continue;
             }
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#如果 (NGX_HAVE_UNIX_DOMAIN)
 
-            if (ls[i].sockaddr->sa_family == AF_UNIX) {
+            如果 (ls[i].sockaddr->sa_family == AF_UNIX) {
                 mode_t   mode;
                 u_char  *name;
 
                 name = ls[i].addr_text.data + sizeof("unix:") - 1;
                 mode = (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
 
-                if (chmod((char *) name, mode) == -1) {
+                如果 (chmod((char *) name, mode) == -1) {
                     ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
                                   "chmod() \"%s\" failed", name);
                 }
 
-                if (ngx_test_config) {
-                    if (ngx_delete_file(name) == NGX_FILE_ERROR) {
+                如果 (ngx_test_config) {
+                    如果 (ngx_delete_file(name) == NGX_FILE_ERROR) {
                         ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
                                       ngx_delete_file_n " %s failed", name);
                     }
@@ -673,13 +673,13 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
             }
 #endif
 
-            if (ls[i].type != SOCK_STREAM) {
+            如果 (ls[i].type != SOCK_STREAM) {
                 ls[i].fd = s;
                 ls[i].open = 1;
                 continue;
             }
 
-            if (listen(s, ls[i].backlog) == -1) {
+            如果 (listen(s, ls[i].backlog) == -1) {
                 err = ngx_socket_errno;
 
                 /*
@@ -688,23 +688,23 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
                  * https://bugs.openvz.org/browse/OVZ-5587
                  */
 
-                if (err != NGX_EADDRINUSE || !ngx_test_config) {
+                如果 (err != NGX_EADDRINUSE || !ngx_test_config) {
                     ngx_log_error(NGX_LOG_EMERG, log, err,
                                   "listen() to %V, backlog %d failed",
                                   &ls[i].addr_text, ls[i].backlog);
                 }
 
-                if (ngx_close_socket(s) == -1) {
+                如果 (ngx_close_socket(s) == -1) {
                     ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
                                   ngx_close_socket_n " %V failed",
                                   &ls[i].addr_text);
                 }
 
-                if (err != NGX_EADDRINUSE) {
-                    return NGX_ERROR;
+                如果 (err != NGX_EADDRINUSE) {
+                    返回 NGX_ERROR;
                 }
 
-                if (!ngx_test_config) {
+                如果 (!ngx_test_config) {
                     failed = 1;
                 }
 
@@ -717,7 +717,7 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
             ls[i].open = 1;
         }
 
-        if (!failed) {
+        如果 (!failed) {
             break;
         }
 
@@ -729,34 +729,34 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
         ngx_msleep(500);
     }
 
-    if (failed) {
+    如果 (failed) {
         ngx_log_error(NGX_LOG_EMERG, log, 0, "still could not bind()");
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
 void
 ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 {
-    int                        value;
+    整数                        value;
     ngx_uint_t                 i;
     ngx_listening_t           *ls;
 
-#if (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
+#如果 (NGX_HAVE_DEFERRED_ACCEPT && defined SO_ACCEPTFILTER)
     struct accept_filter_arg   af;
 #endif
 
     ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
+    为 (i = 0; i < cycle->listening.nelts; i++) {
 
         ls[i].log = *ls[i].logp;
 
-        if (ls[i].rcvbuf != -1) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF,
-                           (const void *) &ls[i].rcvbuf, sizeof(int))
+        如果 (ls[i].rcvbuf != -1) {
+            如果 (setsockopt(ls[i].fd, SOL_SOCKET, SO_RCVBUF,
+                           (const void *) &ls[i].rcvbuf, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -765,9 +765,9 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-        if (ls[i].sndbuf != -1) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF,
-                           (const void *) &ls[i].sndbuf, sizeof(int))
+        如果 (ls[i].sndbuf != -1) {
+            如果 (setsockopt(ls[i].fd, SOL_SOCKET, SO_SNDBUF,
+                           (const void *) &ls[i].sndbuf, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -776,11 +776,11 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-        if (ls[i].keepalive) {
+        如果 (ls[i].keepalive) {
             value = (ls[i].keepalive == 1) ? 1 : 0;
 
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_KEEPALIVE,
-                           (const void *) &value, sizeof(int))
+            如果 (setsockopt(ls[i].fd, SOL_SOCKET, SO_KEEPALIVE,
+                           (const void *) &value, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -789,19 +789,19 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-#if (NGX_HAVE_KEEPALIVE_TUNABLE)
+#如果 (NGX_HAVE_KEEPALIVE_TUNABLE)
 
-#if !(NGX_DARWIN)
+#如果 !(NGX_DARWIN)
 
-        if (ls[i].keepidle) {
+        如果 (ls[i].keepidle) {
             value = ls[i].keepidle;
 
-#if (NGX_KEEPALIVE_FACTOR)
+#如果 (NGX_KEEPALIVE_FACTOR)
             value *= NGX_KEEPALIVE_FACTOR;
 #endif
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPIDLE,
-                           (const void *) &value, sizeof(int))
+            如果 (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPIDLE,
+                           (const void *) &value, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -812,15 +812,15 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 
 #endif
 
-        if (ls[i].keepintvl) {
+        如果 (ls[i].keepintvl) {
             value = ls[i].keepintvl;
 
-#if (NGX_KEEPALIVE_FACTOR)
+#如果 (NGX_KEEPALIVE_FACTOR)
             value *= NGX_KEEPALIVE_FACTOR;
 #endif
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPINTVL,
-                           (const void *) &value, sizeof(int))
+            如果 (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPINTVL,
+                           (const void *) &value, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -829,9 +829,9 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-        if (ls[i].keepcnt) {
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPCNT,
-                           (const void *) &ls[i].keepcnt, sizeof(int))
+        如果 (ls[i].keepcnt) {
+            如果 (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_KEEPCNT,
+                           (const void *) &ls[i].keepcnt, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -842,10 +842,10 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 
 #endif
 
-#if (NGX_HAVE_SETFIB)
-        if (ls[i].setfib != -1) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
-                           (const void *) &ls[i].setfib, sizeof(int))
+#如果 (NGX_HAVE_SETFIB)
+        如果 (ls[i].setfib != -1) {
+            如果 (setsockopt(ls[i].fd, SOL_SOCKET, SO_SETFIB,
+                           (const void *) &ls[i].setfib, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -855,10 +855,10 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
         }
 #endif
 
-#if (NGX_HAVE_TCP_FASTOPEN)
-        if (ls[i].fastopen != -1) {
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
-                           (const void *) &ls[i].fastopen, sizeof(int))
+#如果 (NGX_HAVE_TCP_FASTOPEN)
+        如果 (ls[i].fastopen != -1) {
+            如果 (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_FASTOPEN,
+                           (const void *) &ls[i].fastopen, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -868,12 +868,12 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
         }
 #endif
 
-#if 0
-        if (1) {
-            int tcp_nodelay = 1;
+#如果 0
+        如果 (1) {
+            整数 tcp_nodelay = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_NODELAY,
-                       (const void *) &tcp_nodelay, sizeof(int))
+            如果 (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_NODELAY,
+                       (const void *) &tcp_nodelay, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -883,11 +883,11 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
         }
 #endif
 
-        if (ls[i].listen) {
+        如果 (ls[i].listen) {
 
             /* change backlog via listen() */
 
-            if (listen(ls[i].fd, ls[i].backlog) == -1) {
+            如果 (listen(ls[i].fd, ls[i].backlog) == -1) {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
                               "listen() to %V, backlog %d failed, ignored",
                               &ls[i].addr_text, ls[i].backlog);
@@ -899,12 +899,12 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
          * because code may prematurely continue cycle on failure
          */
 
-#if (NGX_HAVE_DEFERRED_ACCEPT)
+#如果 (NGX_HAVE_DEFERRED_ACCEPT)
 
 #ifdef SO_ACCEPTFILTER
 
-        if (ls[i].delete_deferred) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, NULL, 0)
+        如果 (ls[i].delete_deferred) {
+            如果 (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, NULL, 0)
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -912,7 +912,7 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
                               "for %V failed, ignored",
                               &ls[i].addr_text);
 
-                if (ls[i].accept_filter) {
+                如果 (ls[i].accept_filter) {
                     ngx_log_error(NGX_LOG_ALERT, cycle->log, 0,
                                   "could not change the accept filter "
                                   "to \"%s\" for %V, ignored",
@@ -925,12 +925,12 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             ls[i].deferred_accept = 0;
         }
 
-        if (ls[i].add_deferred) {
+        如果 (ls[i].add_deferred) {
             ngx_memzero(&af, sizeof(struct accept_filter_arg));
             (void) ngx_cpystrn((u_char *) af.af_name,
                                (u_char *) ls[i].accept_filter, 16);
 
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER,
+            如果 (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER,
                            &af, sizeof(struct accept_filter_arg))
                 == -1)
             {
@@ -948,9 +948,9 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 
 #ifdef TCP_DEFER_ACCEPT
 
-        if (ls[i].add_deferred || ls[i].delete_deferred) {
+        如果 (ls[i].add_deferred || ls[i].delete_deferred) {
 
-            if (ls[i].add_deferred) {
+            如果 (ls[i].add_deferred) {
                 /*
                  * There is no way to find out how long a connection was
                  * in queue (and a connection may bypass deferred queue at all
@@ -959,12 +959,12 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
                  */
                 value = 1;
 
-            } else {
+            } 否则 {
                 value = 0;
             }
 
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT,
-                           &value, sizeof(int))
+            如果 (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT,
+                           &value, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -976,7 +976,7 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
             }
         }
 
-        if (ls[i].add_deferred) {
+        如果 (ls[i].add_deferred) {
             ls[i].deferred_accept = 1;
         }
 
@@ -984,16 +984,16 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 
 #endif /* NGX_HAVE_DEFERRED_ACCEPT */
 
-#if (NGX_HAVE_IP_RECVDSTADDR)
+#如果 (NGX_HAVE_IP_RECVDSTADDR)
 
-        if (ls[i].wildcard
+        如果 (ls[i].wildcard
             && ls[i].type == SOCK_DGRAM
             && ls[i].sockaddr->sa_family == AF_INET)
         {
             value = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_RECVDSTADDR,
-                           (const void *) &value, sizeof(int))
+            如果 (setsockopt(ls[i].fd, IPPROTO_IP, IP_RECVDSTADDR,
+                           (const void *) &value, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1005,14 +1005,14 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 
 #elif (NGX_HAVE_IP_PKTINFO)
 
-        if (ls[i].wildcard
+        如果 (ls[i].wildcard
             && ls[i].type == SOCK_DGRAM
             && ls[i].sockaddr->sa_family == AF_INET)
         {
             value = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_PKTINFO,
-                           (const void *) &value, sizeof(int))
+            如果 (setsockopt(ls[i].fd, IPPROTO_IP, IP_PKTINFO,
+                           (const void *) &value, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1024,16 +1024,16 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 
 #endif
 
-#if (NGX_HAVE_INET6 && NGX_HAVE_IPV6_RECVPKTINFO)
+#如果 (NGX_HAVE_INET6 && NGX_HAVE_IPV6_RECVPKTINFO)
 
-        if (ls[i].wildcard
+        如果 (ls[i].wildcard
             && ls[i].type == SOCK_DGRAM
             && ls[i].sockaddr->sa_family == AF_INET6)
         {
             value = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_RECVPKTINFO,
-                           (const void *) &value, sizeof(int))
+            如果 (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_RECVPKTINFO,
+                           (const void *) &value, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1045,13 +1045,13 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 
 #endif
 
-#if (NGX_HAVE_IP_MTU_DISCOVER)
+#如果 (NGX_HAVE_IP_MTU_DISCOVER)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
+        如果 (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
             value = IP_PMTUDISC_DO;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_MTU_DISCOVER,
-                           (const void *) &value, sizeof(int))
+            如果 (setsockopt(ls[i].fd, IPPROTO_IP, IP_MTU_DISCOVER,
+                           (const void *) &value, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1063,11 +1063,11 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 
 #elif (NGX_HAVE_IP_DONTFRAG)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
+        如果 (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET) {
             value = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_DONTFRAG,
-                           (const void *) &value, sizeof(int))
+            如果 (setsockopt(ls[i].fd, IPPROTO_IP, IP_DONTFRAG,
+                           (const void *) &value, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1079,15 +1079,15 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 
 #endif
 
-#if (NGX_HAVE_INET6)
+#如果 (NGX_HAVE_INET6)
 
-#if (NGX_HAVE_IPV6_MTU_DISCOVER)
+#如果 (NGX_HAVE_IPV6_MTU_DISCOVER)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
+        如果 (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
             value = IPV6_PMTUDISC_DO;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_MTU_DISCOVER,
-                           (const void *) &value, sizeof(int))
+            如果 (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_MTU_DISCOVER,
+                           (const void *) &value, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1099,11 +1099,11 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 
 #elif (NGX_HAVE_IPV6_DONTFRAG)
 
-        if (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
+        如果 (ls[i].quic && ls[i].sockaddr->sa_family == AF_INET6) {
             value = 1;
 
-            if (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_DONTFRAG,
-                           (const void *) &value, sizeof(int))
+            如果 (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_DONTFRAG,
+                           (const void *) &value, sizeof(整数))
                 == -1)
             {
                 ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
@@ -1118,7 +1118,7 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
 #endif
     }
 
-    return;
+    返回;
 }
 
 
@@ -1133,10 +1133,10 @@ ngx_close_listening_sockets(ngx_cycle_t *cycle)
     ngx_use_accept_mutex = 0;
 
     ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
+    为 (i = 0; i < cycle->listening.nelts; i++) {
 
-#if (NGX_QUIC)
-        if (ls[i].quic
+#如果 (NGX_QUIC)
+        如果 (ls[i].quic
             && (!ls[i].reuseport || !ngx_quic_bpf_enabled(cycle)))
         {
             continue;
@@ -1145,9 +1145,9 @@ ngx_close_listening_sockets(ngx_cycle_t *cycle)
 
         c = ls[i].connection;
 
-        if (c) {
-            if (c->read->active) {
-                if (ngx_event_flags & NGX_USE_EPOLL_EVENT) {
+        如果 (c) {
+            如果 (c->read->active) {
+                如果 (ngx_event_flags & NGX_USE_EPOLL_EVENT) {
 
                     /*
                      * it seems that Linux-2.6.x OpenVZ sends events
@@ -1157,12 +1157,12 @@ ngx_close_listening_sockets(ngx_cycle_t *cycle)
 
                     ngx_del_event(c->read, NGX_READ_EVENT, 0);
 
-                } else {
+                } 否则 {
                     ngx_del_event(c->read, NGX_READ_EVENT, NGX_CLOSE_EVENT);
                 }
             }
 
-            if (c->read->timer_set) {
+            如果 (c->read->timer_set) {
                 ngx_del_timer(c->read);
             }
 
@@ -1174,21 +1174,21 @@ ngx_close_listening_sockets(ngx_cycle_t *cycle)
         ngx_log_debug2(NGX_LOG_DEBUG_CORE, cycle->log, 0,
                        "close listening %V #%d ", &ls[i].addr_text, ls[i].fd);
 
-        if (ngx_close_socket(ls[i].fd) == -1) {
+        如果 (ngx_close_socket(ls[i].fd) == -1) {
             ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_socket_errno,
                           ngx_close_socket_n " %V failed", &ls[i].addr_text);
         }
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#如果 (NGX_HAVE_UNIX_DOMAIN)
 
-        if (ls[i].sockaddr->sa_family == AF_UNIX
+        如果 (ls[i].sockaddr->sa_family == AF_UNIX
             && ngx_process <= NGX_PROCESS_MASTER
             && ngx_new_binary == 0
             && (!ls[i].inherited || ngx_getppid() != ngx_parent))
         {
             u_char *name = ls[i].addr_text.data + sizeof("unix:") - 1;
 
-            if (ngx_delete_file(name) == NGX_FILE_ERROR) {
+            如果 (ngx_delete_file(name) == NGX_FILE_ERROR) {
                 ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_socket_errno,
                               ngx_delete_file_n " %s failed", name);
             }
@@ -1212,30 +1212,30 @@ ngx_get_connection(ngx_socket_t s, ngx_log_t *log)
 
     /* disable warning: Win32 SOCKET is u_int while UNIX socket is int */
 
-    if (ngx_cycle->files && (ngx_uint_t) s >= ngx_cycle->files_n) {
+    如果 (ngx_cycle->files && (ngx_uint_t) s >= ngx_cycle->files_n) {
         ngx_log_error(NGX_LOG_ALERT, log, 0,
                       "the new socket has number %d, "
                       "but only %ui files are available",
                       s, ngx_cycle->files_n);
-        return NULL;
+        返回 NULL;
     }
 
     ngx_drain_connections((ngx_cycle_t *) ngx_cycle);
 
     c = ngx_cycle->free_connections;
 
-    if (c == NULL) {
+    如果 (c == NULL) {
         ngx_log_error(NGX_LOG_ALERT, log, 0,
                       "%ui worker_connections are not enough",
                       ngx_cycle->connection_n);
 
-        return NULL;
+        返回 NULL;
     }
 
     ngx_cycle->free_connections = c->data;
     ngx_cycle->free_connection_n--;
 
-    if (ngx_cycle->files && ngx_cycle->files[s] == NULL) {
+    如果 (ngx_cycle->files && ngx_cycle->files[s] == NULL) {
         ngx_cycle->files[s] = c;
     }
 
@@ -1265,7 +1265,7 @@ ngx_get_connection(ngx_socket_t s, ngx_log_t *log)
 
     wev->write = 1;
 
-    return c;
+    返回 c;
 }
 
 
@@ -1276,7 +1276,7 @@ ngx_free_connection(ngx_connection_t *c)
     ngx_cycle->free_connections = c;
     ngx_cycle->free_connection_n++;
 
-    if (ngx_cycle->files && ngx_cycle->files[c->fd] == c) {
+    如果 (ngx_cycle->files && ngx_cycle->files[c->fd] == c) {
         ngx_cycle->files[c->fd] = NULL;
     }
 }
@@ -1289,39 +1289,39 @@ ngx_close_connection(ngx_connection_t *c)
     ngx_uint_t    log_error, level;
     ngx_socket_t  fd;
 
-    if (c->fd == (ngx_socket_t) -1) {
+    如果 (c->fd == (ngx_socket_t) -1) {
         ngx_log_error(NGX_LOG_ALERT, c->log, 0, "connection already closed");
-        return;
+        返回;
     }
 
-    if (c->read->timer_set) {
+    如果 (c->read->timer_set) {
         ngx_del_timer(c->read);
     }
 
-    if (c->write->timer_set) {
+    如果 (c->write->timer_set) {
         ngx_del_timer(c->write);
     }
 
-    if (!c->shared) {
-        if (ngx_del_conn) {
+    如果 (!c->shared) {
+        如果 (ngx_del_conn) {
             ngx_del_conn(c, NGX_CLOSE_EVENT);
 
-        } else {
-            if (c->read->active || c->read->disabled) {
+        } 否则 {
+            如果 (c->read->active || c->read->disabled) {
                 ngx_del_event(c->read, NGX_READ_EVENT, NGX_CLOSE_EVENT);
             }
 
-            if (c->write->active || c->write->disabled) {
+            如果 (c->write->active || c->write->disabled) {
                 ngx_del_event(c->write, NGX_WRITE_EVENT, NGX_CLOSE_EVENT);
             }
         }
     }
 
-    if (c->read->posted) {
+    如果 (c->read->posted) {
         ngx_delete_posted_event(c->read);
     }
 
-    if (c->write->posted) {
+    如果 (c->write->posted) {
         ngx_delete_posted_event(c->write);
     }
 
@@ -1337,15 +1337,15 @@ ngx_close_connection(ngx_connection_t *c)
     fd = c->fd;
     c->fd = (ngx_socket_t) -1;
 
-    if (c->shared) {
-        return;
+    如果 (c->shared) {
+        返回;
     }
 
-    if (ngx_close_socket(fd) == -1) {
+    如果 (ngx_close_socket(fd) == -1) {
 
         err = ngx_socket_errno;
 
-        if (err == NGX_ECONNRESET || err == NGX_ENOTCONN) {
+        如果 (err == NGX_ECONNRESET || err == NGX_ENOTCONN) {
 
             switch (log_error) {
 
@@ -1361,7 +1361,7 @@ ngx_close_connection(ngx_connection_t *c)
                 level = NGX_LOG_CRIT;
             }
 
-        } else {
+        } 否则 {
             level = NGX_LOG_CRIT;
         }
 
@@ -1376,25 +1376,25 @@ ngx_reusable_connection(ngx_connection_t *c, ngx_uint_t reusable)
     ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
                    "reusable connection: %ui", reusable);
 
-    if (c->reusable) {
+    如果 (c->reusable) {
         ngx_queue_remove(&c->queue);
         ngx_cycle->reusable_connections_n--;
 
-#if (NGX_STAT_STUB)
+#如果 (NGX_STAT_STUB)
         (void) ngx_atomic_fetch_add(ngx_stat_waiting, -1);
 #endif
     }
 
     c->reusable = reusable;
 
-    if (reusable) {
+    如果 (reusable) {
         /* need cast as ngx_cycle is volatile */
 
         ngx_queue_insert_head(
             (ngx_queue_t *) &ngx_cycle->reusable_connections_queue, &c->queue);
         ngx_cycle->reusable_connections_n++;
 
-#if (NGX_STAT_STUB)
+#如果 (NGX_STAT_STUB)
         (void) ngx_atomic_fetch_add(ngx_stat_waiting, 1);
 #endif
     }
@@ -1408,13 +1408,13 @@ ngx_drain_connections(ngx_cycle_t *cycle)
     ngx_queue_t       *q;
     ngx_connection_t  *c;
 
-    if (cycle->free_connection_n > cycle->connection_n / 16
+    如果 (cycle->free_connection_n > cycle->connection_n / 16
         || cycle->reusable_connections_n == 0)
     {
-        return;
+        返回;
     }
 
-    if (cycle->connections_reuse_time != ngx_time()) {
+    如果 (cycle->connections_reuse_time != ngx_time()) {
         cycle->connections_reuse_time = ngx_time();
 
         ngx_log_error(NGX_LOG_WARN, cycle->log, 0,
@@ -1426,8 +1426,8 @@ ngx_drain_connections(ngx_cycle_t *cycle)
     c = NULL;
     n = ngx_max(ngx_min(32, cycle->reusable_connections_n / 8), 1);
 
-    for (i = 0; i < n; i++) {
-        if (ngx_queue_empty(&cycle->reusable_connections_queue)) {
+    为 (i = 0; i < n; i++) {
+        如果 (ngx_queue_empty(&cycle->reusable_connections_queue)) {
             break;
         }
 
@@ -1441,7 +1441,7 @@ ngx_drain_connections(ngx_cycle_t *cycle)
         c->read->handler(c->read);
     }
 
-    if (cycle->free_connection_n == 0 && c && c->reusable) {
+    如果 (cycle->free_connection_n == 0 && c && c->reusable) {
 
         /*
          * if no connections were freed, try to reuse the last
@@ -1466,11 +1466,11 @@ ngx_close_idle_connections(ngx_cycle_t *cycle)
 
     c = cycle->connections;
 
-    for (i = 0; i < cycle->connection_n; i++) {
+    为 (i = 0; i < cycle->connection_n; i++) {
 
         /* THREAD: lock */
 
-        if (c[i].fd != (ngx_socket_t) -1 && c[i].idle) {
+        如果 (c[i].fd != (ngx_socket_t) -1 && c[i].idle) {
             c[i].close = 1;
             c[i].read->handler(c[i].read);
         }
@@ -1486,28 +1486,28 @@ ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
     ngx_uint_t            addr;
     ngx_sockaddr_t        sa;
     struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
+#如果 (NGX_HAVE_INET6)
     ngx_uint_t            i;
     struct sockaddr_in6  *sin6;
 #endif
 
     addr = 0;
 
-    if (c->local_socklen) {
+    如果 (c->local_socklen) {
         switch (c->local_sockaddr->sa_family) {
 
-#if (NGX_HAVE_INET6)
+#如果 (NGX_HAVE_INET6)
         case AF_INET6:
             sin6 = (struct sockaddr_in6 *) c->local_sockaddr;
 
-            for (i = 0; addr == 0 && i < 16; i++) {
+            为 (i = 0; addr == 0 && i < 16; i++) {
                 addr |= sin6->sin6_addr.s6_addr[i];
             }
 
             break;
 #endif
 
-#if (NGX_HAVE_UNIX_DOMAIN)
+#如果 (NGX_HAVE_UNIX_DOMAIN)
         case AF_UNIX:
             addr = 1;
             break;
@@ -1520,18 +1520,18 @@ ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
         }
     }
 
-    if (addr == 0) {
+    如果 (addr == 0) {
 
         len = sizeof(ngx_sockaddr_t);
 
-        if (getsockname(c->fd, &sa.sockaddr, &len) == -1) {
+        如果 (getsockname(c->fd, &sa.sockaddr, &len) == -1) {
             ngx_connection_error(c, ngx_socket_errno, "getsockname() failed");
-            return NGX_ERROR;
+            返回 NGX_ERROR;
         }
 
         c->local_sockaddr = ngx_palloc(c->pool, len);
-        if (c->local_sockaddr == NULL) {
-            return NGX_ERROR;
+        如果 (c->local_sockaddr == NULL) {
+            返回 NGX_ERROR;
         }
 
         ngx_memcpy(c->local_sockaddr, &sa, len);
@@ -1539,36 +1539,36 @@ ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
         c->local_socklen = len;
     }
 
-    if (s == NULL) {
-        return NGX_OK;
+    如果 (s == NULL) {
+        返回 NGX_OK;
     }
 
     s->len = ngx_sock_ntop(c->local_sockaddr, c->local_socklen,
                            s->data, s->len, port);
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
 ngx_int_t
 ngx_tcp_nodelay(ngx_connection_t *c)
 {
-    int  tcp_nodelay;
+    整数  tcp_nodelay;
 
-    if (c->tcp_nodelay != NGX_TCP_NODELAY_UNSET) {
-        return NGX_OK;
+    如果 (c->tcp_nodelay != NGX_TCP_NODELAY_UNSET) {
+        返回 NGX_OK;
     }
 
     ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->log, 0, "tcp_nodelay");
 
     tcp_nodelay = 1;
 
-    if (setsockopt(c->fd, IPPROTO_TCP, TCP_NODELAY,
-                   (const void *) &tcp_nodelay, sizeof(int))
+    如果 (setsockopt(c->fd, IPPROTO_TCP, TCP_NODELAY,
+                   (const void *) &tcp_nodelay, sizeof(整数))
         == -1)
     {
-#if (NGX_SOLARIS)
-        if (c->log_error == NGX_ERROR_INFO) {
+#如果 (NGX_SOLARIS)
+        如果 (c->log_error == NGX_ERROR_INFO) {
 
             /* Solaris returns EINVAL if a socket has been shut down */
             c->log_error = NGX_ERROR_IGNORE_EINVAL;
@@ -1578,18 +1578,18 @@ ngx_tcp_nodelay(ngx_connection_t *c)
 
             c->log_error = NGX_ERROR_INFO;
 
-            return NGX_ERROR;
+            返回 NGX_ERROR;
         }
 #endif
 
         ngx_connection_error(c, ngx_socket_errno,
                              "setsockopt(TCP_NODELAY) failed");
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 
     c->tcp_nodelay = NGX_TCP_NODELAY_SET;
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
@@ -1600,36 +1600,36 @@ ngx_connection_error(ngx_connection_t *c, ngx_err_t err, char *text)
 
     /* Winsock may return NGX_ECONNABORTED instead of NGX_ECONNRESET */
 
-    if ((err == NGX_ECONNRESET
-#if (NGX_WIN32)
+    如果 ((err == NGX_ECONNRESET
+#如果 (NGX_WIN32)
          || err == NGX_ECONNABORTED
 #endif
         ) && c->log_error == NGX_ERROR_IGNORE_ECONNRESET)
     {
-        return 0;
+        返回 0;
     }
 
-#if (NGX_SOLARIS)
-    if (err == NGX_EINVAL && c->log_error == NGX_ERROR_IGNORE_EINVAL) {
-        return 0;
-    }
-#endif
-
-    if (err == NGX_EMSGSIZE && c->log_error == NGX_ERROR_IGNORE_EMSGSIZE) {
-        return 0;
-    }
-
-#if (NGX_LINUX)
-    if (err == NGX_EIO && c->ktls_recv) {
-        return 0;
+#如果 (NGX_SOLARIS)
+    如果 (err == NGX_EINVAL && c->log_error == NGX_ERROR_IGNORE_EINVAL) {
+        返回 0;
     }
 #endif
 
-    if (err == 0
+    如果 (err == NGX_EMSGSIZE && c->log_error == NGX_ERROR_IGNORE_EMSGSIZE) {
+        返回 0;
+    }
+
+#如果 (NGX_LINUX)
+    如果 (err == NGX_EIO && c->ktls_recv) {
+        返回 0;
+    }
+#endif
+
+    如果 (err == 0
         || err == NGX_ECONNRESET
-#if (NGX_WIN32)
+#如果 (NGX_WIN32)
         || err == NGX_ECONNABORTED
-#else
+#否则
         || err == NGX_EPIPE
 #endif
         || err == NGX_ENOTCONN
@@ -1653,11 +1653,11 @@ ngx_connection_error(ngx_connection_t *c, ngx_err_t err, char *text)
             level = NGX_LOG_ERR;
         }
 
-    } else {
+    } 否则 {
         level = NGX_LOG_ALERT;
     }
 
     ngx_log_error(level, c->log, err, text);
 
-    return NGX_ERROR;
+    返回 NGX_ERROR;
 }

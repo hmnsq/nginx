@@ -34,7 +34,7 @@ volatile ngx_str_t       ngx_cached_http_log_time;
 volatile ngx_str_t       ngx_cached_http_log_iso8601;
 volatile ngx_str_t       ngx_cached_syslog_time;
 
-#if !(NGX_WIN32)
+#如果 !(NGX_WIN32)
 
 /*
  * localtime() and localtime_r() are not Async-Signal-Safe functions, therefore,
@@ -87,8 +87,8 @@ ngx_time_update(void)
     ngx_time_t      *tp;
     struct timeval   tv;
 
-    if (!ngx_trylock(&ngx_time_lock)) {
-        return;
+    如果 (!ngx_trylock(&ngx_time_lock)) {
+        返回;
     }
 
     ngx_gettimeofday(&tv);
@@ -100,15 +100,15 @@ ngx_time_update(void)
 
     tp = &cached_time[slot];
 
-    if (tp->sec == sec) {
+    如果 (tp->sec == sec) {
         tp->msec = msec;
         ngx_unlock(&ngx_time_lock);
-        return;
+        返回;
     }
 
-    if (slot == NGX_TIME_SLOTS - 1) {
+    如果 (slot == NGX_TIME_SLOTS - 1) {
         slot = 0;
-    } else {
+    } 否则 {
         slot++;
     }
 
@@ -127,7 +127,7 @@ ngx_time_update(void)
                        months[gmt.ngx_tm_mon - 1], gmt.ngx_tm_year,
                        gmt.ngx_tm_hour, gmt.ngx_tm_min, gmt.ngx_tm_sec);
 
-#if (NGX_HAVE_GETTIMEZONE)
+#如果 (NGX_HAVE_GETTIMEZONE)
 
     tp->gmtoff = ngx_gettimezone();
     ngx_gmtime(sec + tp->gmtoff * 60, &tm);
@@ -138,7 +138,7 @@ ngx_time_update(void)
     cached_gmtoff = (ngx_int_t) (tm.ngx_tm_gmtoff / 60);
     tp->gmtoff = cached_gmtoff;
 
-#else
+#否则
 
     ngx_localtime(sec, &tm);
     cached_gmtoff = ngx_timezone(tm.ngx_tm_isdst);
@@ -195,7 +195,7 @@ ngx_time_update(void)
 static ngx_msec_t
 ngx_monotonic_time(time_t sec, ngx_uint_t msec)
 {
-#if (NGX_HAVE_CLOCK_MONOTONIC)
+#如果 (NGX_HAVE_CLOCK_MONOTONIC)
     struct timespec  ts;
 
     clock_gettime(CLOCK_MONOTONIC, &ts);
@@ -205,11 +205,11 @@ ngx_monotonic_time(time_t sec, ngx_uint_t msec)
 
 #endif
 
-    return (ngx_msec_t) sec * 1000 + msec;
+    返回 (ngx_msec_t) sec * 1000 + msec;
 }
 
 
-#if !(NGX_WIN32)
+#如果 !(NGX_WIN32)
 
 void
 ngx_time_sigsafe_update(void)
@@ -220,8 +220,8 @@ ngx_time_sigsafe_update(void)
     ngx_time_t      *tp;
     struct timeval   tv;
 
-    if (!ngx_trylock(&ngx_time_lock)) {
-        return;
+    如果 (!ngx_trylock(&ngx_time_lock)) {
+        返回;
     }
 
     ngx_gettimeofday(&tv);
@@ -230,14 +230,14 @@ ngx_time_sigsafe_update(void)
 
     tp = &cached_time[slot];
 
-    if (tp->sec == sec) {
+    如果 (tp->sec == sec) {
         ngx_unlock(&ngx_time_lock);
-        return;
+        返回;
     }
 
-    if (slot == NGX_TIME_SLOTS - 1) {
+    如果 (slot == NGX_TIME_SLOTS - 1) {
         slot = 0;
-    } else {
+    } 否则 {
         slot++;
     }
 
@@ -278,7 +278,7 @@ ngx_http_time(u_char *buf, time_t t)
 
     ngx_gmtime(t, &tm);
 
-    return ngx_sprintf(buf, "%s, %02d %s %4d %02d:%02d:%02d GMT",
+    返回 ngx_sprintf(buf, "%s, %02d %s %4d %02d:%02d:%02d GMT",
                        week[tm.ngx_tm_wday],
                        tm.ngx_tm_mday,
                        months[tm.ngx_tm_mon - 1],
@@ -301,7 +301,7 @@ ngx_http_cookie_time(u_char *buf, time_t t)
      * 2-digit years more than "37"
      */
 
-    return ngx_sprintf(buf,
+    返回 ngx_sprintf(buf,
                        (tm.ngx_tm_year > 2037) ?
                                          "%s, %02d-%s-%d %02d:%02d:%02d GMT":
                                          "%s, %02d-%s-%02d %02d:%02d:%02d GMT",
@@ -324,7 +324,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
 
     /* the calculation is valid for positive time_t only */
 
-    if (t < 0) {
+    如果 (t < 0) {
         t = 0;
     }
 
@@ -336,7 +336,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
      * truncate to December 31, 9999, 23:59:59
      */
 
-    if (days > 2932896) {
+    如果 (days > 2932896) {
         days = 2932896;
         sec = 86399;
     }
@@ -369,7 +369,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
 
     yday = days - (365 * year + year / 4 - year / 100 + year / 400);
 
-    if (yday < 0) {
+    如果 (yday < 0) {
         leap = (year % 4 == 0) && (year % 100 || (year % 400 == 0));
         yday = 365 + leap + yday;
         year--;
@@ -389,7 +389,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
 
     mday = yday - (367 * mon / 12 - 30) + 1;
 
-    if (yday >= 306) {
+    如果 (yday >= 306) {
 
         year++;
         mon -= 10;
@@ -400,7 +400,7 @@ ngx_gmtime(time_t t, ngx_tm_t *tp)
          * yday -= 306;
          */
 
-    } else {
+    } 否则 {
 
         mon += 2;
 
@@ -431,19 +431,19 @@ ngx_next_time(time_t when)
 
     ngx_libc_localtime(now, &tm);
 
-    tm.tm_hour = (int) (when / 3600);
+    tm.tm_hour = (整数) (when / 3600);
     when %= 3600;
-    tm.tm_min = (int) (when / 60);
-    tm.tm_sec = (int) (when % 60);
+    tm.tm_min = (整数) (when / 60);
+    tm.tm_sec = (整数) (when % 60);
 
     next = mktime(&tm);
 
-    if (next == -1) {
-        return -1;
+    如果 (next == -1) {
+        返回 -1;
     }
 
-    if (next - now > 0) {
-        return next;
+    如果 (next - now > 0) {
+        返回 next;
     }
 
     tm.tm_mday++;
@@ -452,9 +452,9 @@ ngx_next_time(time_t when)
 
     next = mktime(&tm);
 
-    if (next != -1) {
-        return next;
+    如果 (next != -1) {
+        返回 next;
     }
 
-    return -1;
+    返回 -1;
 }

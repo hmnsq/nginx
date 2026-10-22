@@ -180,16 +180,16 @@ ngx_crc32_table_init(void)
 {
     void  *p;
 
-    if (((uintptr_t) ngx_crc32_table_short
+    如果 (((uintptr_t) ngx_crc32_table_short
           & ~((uintptr_t) ngx_cacheline_size - 1))
         == (uintptr_t) ngx_crc32_table_short)
     {
-        return NGX_OK;
+        返回 NGX_OK;
     }
 
     p = ngx_alloc(16 * sizeof(uint32_t) + ngx_cacheline_size, ngx_cycle->log);
-    if (p == NULL) {
-        return NGX_ERROR;
+    如果 (p == NULL) {
+        返回 NGX_ERROR;
     }
 
     p = ngx_align_ptr(p, ngx_cacheline_size);
@@ -198,5 +198,5 @@ ngx_crc32_table_init(void)
 
     ngx_crc32_table_short = p;
 
-    return NGX_OK;
+    返回 NGX_OK;
 }

@@ -106,65 +106,65 @@ static ngx_thread_pool_queue_t  ngx_thread_pool_done;
 static ngx_int_t
 ngx_thread_pool_init(ngx_thread_pool_t *tp, ngx_log_t *log, ngx_pool_t *pool)
 {
-    int             err;
+    整数             err;
     pthread_t       tid;
     ngx_uint_t      n;
     pthread_attr_t  attr;
 
-    if (ngx_notify == NULL) {
+    如果 (ngx_notify == NULL) {
         ngx_log_error(NGX_LOG_ALERT, log, 0,
                "the configured event method cannot be used with thread pools");
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 
     ngx_thread_pool_queue_init(&tp->queue);
 
-    if (ngx_thread_mutex_create(&tp->mtx, log) != NGX_OK) {
-        return NGX_ERROR;
+    如果 (ngx_thread_mutex_create(&tp->mtx, log) != NGX_OK) {
+        返回 NGX_ERROR;
     }
 
-    if (ngx_thread_cond_create(&tp->cond, log) != NGX_OK) {
+    如果 (ngx_thread_cond_create(&tp->cond, log) != NGX_OK) {
         (void) ngx_thread_mutex_destroy(&tp->mtx, log);
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 
     tp->log = log;
 
     err = pthread_attr_init(&attr);
-    if (err) {
+    如果 (err) {
         ngx_log_error(NGX_LOG_ALERT, log, err,
                       "pthread_attr_init() failed");
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 
     err = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    if (err) {
+    如果 (err) {
         ngx_log_error(NGX_LOG_ALERT, log, err,
                       "pthread_attr_setdetachstate() failed");
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 
-#if 0
+#如果 0
     err = pthread_attr_setstacksize(&attr, PTHREAD_STACK_MIN);
-    if (err) {
+    如果 (err) {
         ngx_log_error(NGX_LOG_ALERT, log, err,
                       "pthread_attr_setstacksize() failed");
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 #endif
 
-    for (n = 0; n < tp->threads; n++) {
+    为 (n = 0; n < tp->threads; n++) {
         err = pthread_create(&tid, &attr, ngx_thread_pool_cycle, tp);
-        if (err) {
+        如果 (err) {
             ngx_log_error(NGX_LOG_ALERT, log, err,
                           "pthread_create() failed");
-            return NGX_ERROR;
+            返回 NGX_ERROR;
         }
     }
 
     (void) pthread_attr_destroy(&attr);
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
@@ -180,14 +180,14 @@ ngx_thread_pool_destroy(ngx_thread_pool_t *tp)
     task.handler = ngx_thread_pool_exit_handler;
     task.ctx = (void *) &lock;
 
-    for (n = 0; n < tp->threads; n++) {
+    为 (n = 0; n < tp->threads; n++) {
         lock = 1;
 
-        if (ngx_thread_task_post(tp, &task) != NGX_OK) {
-            return;
+        如果 (ngx_thread_task_post(tp, &task) != NGX_OK) {
+            返回;
         }
 
-        while (lock) {
+        当 (lock) {
             ngx_sched_yield();
         }
 
@@ -217,36 +217,36 @@ ngx_thread_task_alloc(ngx_pool_t *pool, size_t size)
     ngx_thread_task_t  *task;
 
     task = ngx_pcalloc(pool, sizeof(ngx_thread_task_t) + size);
-    if (task == NULL) {
-        return NULL;
+    如果 (task == NULL) {
+        返回 NULL;
     }
 
     task->ctx = task + 1;
 
-    return task;
+    返回 task;
 }
 
 
 ngx_int_t
 ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
 {
-    if (task->event.active) {
+    如果 (task->event.active) {
         ngx_log_error(NGX_LOG_ALERT, tp->log, 0,
                       "task #%ui already active", task->id);
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 
-    if (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
-        return NGX_ERROR;
+    如果 (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
+        返回 NGX_ERROR;
     }
 
-    if (tp->waiting >= tp->max_queue) {
+    如果 (tp->waiting >= tp->max_queue) {
         (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
 
         ngx_log_error(NGX_LOG_ERR, tp->log, 0,
                       "thread pool \"%V\" queue overflow: %i tasks waiting",
                       &tp->name, tp->waiting);
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 
     task->event.active = 1;
@@ -254,9 +254,9 @@ ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
     task->id = ngx_thread_pool_task_id++;
     task->next = NULL;
 
-    if (ngx_thread_cond_signal(&tp->cond, tp->log) != NGX_OK) {
+    如果 (ngx_thread_cond_signal(&tp->cond, tp->log) != NGX_OK) {
         (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
-        return NGX_ERROR;
+        返回 NGX_ERROR;
     }
 
     *tp->queue.last = task;
@@ -270,7 +270,7 @@ ngx_thread_task_post(ngx_thread_pool_t *tp, ngx_thread_task_t *task)
                    "task #%ui added to thread pool \"%V\"",
                    task->id, &tp->name);
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
@@ -279,11 +279,11 @@ ngx_thread_pool_cycle(void *data)
 {
     ngx_thread_pool_t *tp = data;
 
-    int                 err;
+    整数                 err;
     sigset_t            set;
     ngx_thread_task_t  *task;
 
-#if 0
+#如果 0
     ngx_time_update();
 #endif
 
@@ -298,40 +298,40 @@ ngx_thread_pool_cycle(void *data)
     sigdelset(&set, SIGBUS);
 
     err = pthread_sigmask(SIG_BLOCK, &set, NULL);
-    if (err) {
+    如果 (err) {
         ngx_log_error(NGX_LOG_ALERT, tp->log, err, "pthread_sigmask() failed");
-        return NULL;
+        返回 NULL;
     }
 
-    for ( ;; ) {
-        if (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
-            return NULL;
+    为 ( ;; ) {
+        如果 (ngx_thread_mutex_lock(&tp->mtx, tp->log) != NGX_OK) {
+            返回 NULL;
         }
 
         /* the number may become negative */
         tp->waiting--;
 
-        while (tp->queue.first == NULL) {
-            if (ngx_thread_cond_wait(&tp->cond, &tp->mtx, tp->log)
+        当 (tp->queue.first == NULL) {
+            如果 (ngx_thread_cond_wait(&tp->cond, &tp->mtx, tp->log)
                 != NGX_OK)
             {
                 (void) ngx_thread_mutex_unlock(&tp->mtx, tp->log);
-                return NULL;
+                返回 NULL;
             }
         }
 
         task = tp->queue.first;
         tp->queue.first = task->next;
 
-        if (tp->queue.first == NULL) {
+        如果 (tp->queue.first == NULL) {
             tp->queue.last = &tp->queue.first;
         }
 
-        if (ngx_thread_mutex_unlock(&tp->mtx, tp->log) != NGX_OK) {
-            return NULL;
+        如果 (ngx_thread_mutex_unlock(&tp->mtx, tp->log) != NGX_OK) {
+            返回 NULL;
         }
 
-#if 0
+#如果 0
         ngx_time_update();
 #endif
 
@@ -379,7 +379,7 @@ ngx_thread_pool_handler(ngx_event_t *ev)
 
     ngx_unlock(&ngx_thread_pool_done_lock);
 
-    while (task) {
+    当 (task) {
         ngx_log_debug1(NGX_LOG_DEBUG_CORE, ev->log, 0,
                        "run completion handler for task #%ui", task->id);
 
@@ -400,18 +400,18 @@ ngx_thread_pool_create_conf(ngx_cycle_t *cycle)
     ngx_thread_pool_conf_t  *tcf;
 
     tcf = ngx_pcalloc(cycle->pool, sizeof(ngx_thread_pool_conf_t));
-    if (tcf == NULL) {
-        return NULL;
+    如果 (tcf == NULL) {
+        返回 NULL;
     }
 
-    if (ngx_array_init(&tcf->pools, cycle->pool, 4,
+    如果 (ngx_array_init(&tcf->pools, cycle->pool, 4,
                        sizeof(ngx_thread_pool_t *))
         != NGX_OK)
     {
-        return NULL;
+        返回 NULL;
     }
 
-    return tcf;
+    返回 tcf;
 }
 
 
@@ -425,13 +425,13 @@ ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    为 (i = 0; i < tcf->pools.nelts; i++) {
 
-        if (tpp[i]->threads) {
+        如果 (tpp[i]->threads) {
             continue;
         }
 
-        if (tpp[i]->name.len == ngx_thread_pool_default.len
+        如果 (tpp[i]->name.len == ngx_thread_pool_default.len
             && ngx_strncmp(tpp[i]->name.data, ngx_thread_pool_default.data,
                            ngx_thread_pool_default.len)
                == 0)
@@ -445,10 +445,10 @@ ngx_thread_pool_init_conf(ngx_cycle_t *cycle, void *conf)
                       "unknown thread pool \"%V\" in %s:%ui",
                       &tpp[i]->name, tpp[i]->file, tpp[i]->line);
 
-        return NGX_CONF_ERROR;
+        返回 NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    返回 NGX_CONF_OK;
 }
 
 
@@ -463,55 +463,55 @@ ngx_thread_pool(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     tp = ngx_thread_pool_add(cf, &value[1]);
 
-    if (tp == NULL) {
-        return NGX_CONF_ERROR;
+    如果 (tp == NULL) {
+        返回 NGX_CONF_ERROR;
     }
 
-    if (tp->threads) {
+    如果 (tp->threads) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "duplicate thread pool \"%V\"", &tp->name);
-        return NGX_CONF_ERROR;
+        返回 NGX_CONF_ERROR;
     }
 
     tp->max_queue = 65536;
 
-    for (i = 2; i < cf->args->nelts; i++) {
+    为 (i = 2; i < cf->args->nelts; i++) {
 
-        if (ngx_strncmp(value[i].data, "threads=", 8) == 0) {
+        如果 (ngx_strncmp(value[i].data, "threads=", 8) == 0) {
 
             tp->threads = ngx_atoi(value[i].data + 8, value[i].len - 8);
 
-            if (tp->threads == (ngx_uint_t) NGX_ERROR || tp->threads == 0) {
+            如果 (tp->threads == (ngx_uint_t) NGX_ERROR || tp->threads == 0) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "invalid threads value \"%V\"", &value[i]);
-                return NGX_CONF_ERROR;
+                返回 NGX_CONF_ERROR;
             }
 
             continue;
         }
 
-        if (ngx_strncmp(value[i].data, "max_queue=", 10) == 0) {
+        如果 (ngx_strncmp(value[i].data, "max_queue=", 10) == 0) {
 
             tp->max_queue = ngx_atoi(value[i].data + 10, value[i].len - 10);
 
-            if (tp->max_queue == NGX_ERROR) {
+            如果 (tp->max_queue == NGX_ERROR) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "invalid max_queue value \"%V\"", &value[i]);
-                return NGX_CONF_ERROR;
+                返回 NGX_CONF_ERROR;
             }
 
             continue;
         }
     }
 
-    if (tp->threads == 0) {
+    如果 (tp->threads == 0) {
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "\"%V\" must have \"threads\" parameter",
                            &cmd->name);
-        return NGX_CONF_ERROR;
+        返回 NGX_CONF_ERROR;
     }
 
-    return NGX_CONF_OK;
+    返回 NGX_CONF_OK;
 }
 
 
@@ -521,19 +521,19 @@ ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name)
     ngx_thread_pool_t       *tp, **tpp;
     ngx_thread_pool_conf_t  *tcf;
 
-    if (name == NULL) {
+    如果 (name == NULL) {
         name = &ngx_thread_pool_default;
     }
 
     tp = ngx_thread_pool_get(cf->cycle, name);
 
-    if (tp) {
-        return tp;
+    如果 (tp) {
+        返回 tp;
     }
 
     tp = ngx_pcalloc(cf->pool, sizeof(ngx_thread_pool_t));
-    if (tp == NULL) {
-        return NULL;
+    如果 (tp == NULL) {
+        返回 NULL;
     }
 
     tp->name = *name;
@@ -544,13 +544,13 @@ ngx_thread_pool_add(ngx_conf_t *cf, ngx_str_t *name)
                                                   ngx_thread_pool_module);
 
     tpp = ngx_array_push(&tcf->pools);
-    if (tpp == NULL) {
-        return NULL;
+    如果 (tpp == NULL) {
+        返回 NULL;
     }
 
     *tpp = tp;
 
-    return tp;
+    返回 tp;
 }
 
 
@@ -566,16 +566,16 @@ ngx_thread_pool_get(ngx_cycle_t *cycle, ngx_str_t *name)
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    为 (i = 0; i < tcf->pools.nelts; i++) {
 
-        if (tpp[i]->name.len == name->len
+        如果 (tpp[i]->name.len == name->len
             && ngx_strncmp(tpp[i]->name.data, name->data, name->len) == 0)
         {
-            return tpp[i];
+            返回 tpp[i];
         }
     }
 
-    return NULL;
+    返回 NULL;
 }
 
 
@@ -586,30 +586,30 @@ ngx_thread_pool_init_worker(ngx_cycle_t *cycle)
     ngx_thread_pool_t       **tpp;
     ngx_thread_pool_conf_t   *tcf;
 
-    if (ngx_process != NGX_PROCESS_WORKER
+    如果 (ngx_process != NGX_PROCESS_WORKER
         && ngx_process != NGX_PROCESS_SINGLE)
     {
-        return NGX_OK;
+        返回 NGX_OK;
     }
 
     tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cycle->conf_ctx,
                                                   ngx_thread_pool_module);
 
-    if (tcf == NULL) {
-        return NGX_OK;
+    如果 (tcf == NULL) {
+        返回 NGX_OK;
     }
 
     ngx_thread_pool_queue_init(&ngx_thread_pool_done);
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
-        if (ngx_thread_pool_init(tpp[i], cycle->log, cycle->pool) != NGX_OK) {
-            return NGX_ERROR;
+    为 (i = 0; i < tcf->pools.nelts; i++) {
+        如果 (ngx_thread_pool_init(tpp[i], cycle->log, cycle->pool) != NGX_OK) {
+            返回 NGX_ERROR;
         }
     }
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 
@@ -620,22 +620,22 @@ ngx_thread_pool_exit_worker(ngx_cycle_t *cycle)
     ngx_thread_pool_t       **tpp;
     ngx_thread_pool_conf_t   *tcf;
 
-    if (ngx_process != NGX_PROCESS_WORKER
+    如果 (ngx_process != NGX_PROCESS_WORKER
         && ngx_process != NGX_PROCESS_SINGLE)
     {
-        return;
+        返回;
     }
 
     tcf = (ngx_thread_pool_conf_t *) ngx_get_conf(cycle->conf_ctx,
                                                   ngx_thread_pool_module);
 
-    if (tcf == NULL) {
-        return;
+    如果 (tcf == NULL) {
+        返回;
     }
 
     tpp = tcf->pools.elts;
 
-    for (i = 0; i < tcf->pools.nelts; i++) {
+    为 (i = 0; i < tcf->pools.nelts; i++) {
         ngx_thread_pool_destroy(tpp[i]);
     }
 }

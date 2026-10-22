@@ -52,7 +52,7 @@ struct ngx_buf_s {
     unsigned         last_shadow:1;
     unsigned         temp_file:1;
 
-    /* STUB */ int   num;
+    /* STUB */ 整数   num;
 };
 
 
@@ -88,11 +88,11 @@ struct ngx_output_chain_ctx_s {
     unsigned                     need_in_temp:1;
     unsigned                     aio:1;
 
-#if (NGX_HAVE_FILE_AIO || NGX_COMPAT)
+#如果 (NGX_HAVE_FILE_AIO || NGX_COMPAT)
     ngx_output_chain_aio_pt      aio_handler;
 #endif
 
-#if (NGX_THREADS || NGX_COMPAT)
+#如果 (NGX_THREADS || NGX_COMPAT)
     ngx_int_t                  (*thread_handler)(ngx_thread_task_t *task,
                                                  ngx_file_t *file);
     ngx_thread_task_t           *thread_task;

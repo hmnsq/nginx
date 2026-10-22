@@ -37,8 +37,8 @@ static ngx_inline ngx_int_t
 ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
 {
     list->part.elts = ngx_palloc(pool, n * size);
-    if (list->part.elts == NULL) {
-        return NGX_ERROR;
+    如果 (list->part.elts == NULL) {
+        返回 NGX_ERROR;
     }
 
     list->part.nelts = 0;
@@ -48,7 +48,7 @@ ngx_list_init(ngx_list_t *list, ngx_pool_t *pool, ngx_uint_t n, size_t size)
     list->nalloc = n;
     list->pool = pool;
 
-    return NGX_OK;
+    返回 NGX_OK;
 }
 
 

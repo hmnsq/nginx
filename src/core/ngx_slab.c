@@ -14,7 +14,7 @@
 #define NGX_SLAB_EXACT       2
 #define NGX_SLAB_SMALL       3
 
-#if (NGX_PTR_SIZE == 4)
+#如果 (NGX_PTR_SIZE == 4)
 
 #define NGX_SLAB_PAGE_FREE   0
 #define NGX_SLAB_PAGE_BUSY   0xffffffff
@@ -26,7 +26,7 @@
 
 #define NGX_SLAB_BUSY        0xffffffff
 
-#else /* (NGX_PTR_SIZE == 8) */
+#否则 /* (NGX_PTR_SIZE == 8) */
 
 #define NGX_SLAB_PAGE_FREE   0
 #define NGX_SLAB_PAGE_BUSY   0xffffffffffffffff
@@ -54,16 +54,16 @@
      + (uintptr_t) (pool)->start)
 
 
-#if (NGX_DEBUG_MALLOC)
+#如果 (NGX_DEBUG_MALLOC)
 
 #define ngx_slab_junk(p, size)     ngx_memset(p, 0xA5, size)
 
 #elif (NGX_HAVE_DEBUG_MALLOC)
 
 #define ngx_slab_junk(p, size)                                                \
-    if (ngx_debug_malloc)          ngx_memset(p, 0xA5, size)
+    如果 (ngx_debug_malloc)          ngx_memset(p, 0xA5, size)
 
-#else
+#否则
 
 #define ngx_slab_junk(p, size)
 
@@ -89,7 +89,7 @@ ngx_slab_sizes_init(void)
 
     ngx_slab_max_size = ngx_pagesize / 2;
     ngx_slab_exact_size = ngx_pagesize / (8 * sizeof(uintptr_t));
-    for (n = ngx_slab_exact_size; n >>= 1; ngx_slab_exact_shift++) {
+    为 (n = ngx_slab_exact_size; n >>= 1; ngx_slab_exact_shift++) {
         /* void */
     }
 }
@@ -115,7 +115,7 @@ ngx_slab_init(ngx_slab_pool_t *pool)
 
     n = ngx_pagesize_shift - pool->min_shift;
 
-    for (i = 0; i < n; i++) {
+    为 (i = 0; i < n; i++) {
         /* only "next" is used in list head */
         slots[i].slab = 0;
         slots[i].next = &slots[i];
@@ -151,7 +151,7 @@ ngx_slab_init(ngx_slab_pool_t *pool)
                                 ngx_pagesize);
 
     m = pages - (pool->end - pool->start) / ngx_pagesize;
-    if (m > 0) {
+    如果 (m > 0) {
         pages -= m;
         page->slab = pages;
     }
@@ -176,7 +176,7 @@ ngx_slab_alloc(ngx_slab_pool_t *pool, size_t size)
 
     ngx_shmtx_unlock(&pool->mutex);
 
-    return p;
+    返回 p;
 }
 
 
@@ -188,29 +188,29 @@ ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
     ngx_uint_t        i, n, slot, shift, map;
     ngx_slab_page_t  *page, *prev, *slots;
 
-    if (size > ngx_slab_max_size) {
+    如果 (size > ngx_slab_max_size) {
 
         ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0,
                        "slab alloc: %uz", size);
 
         page = ngx_slab_alloc_pages(pool, (size >> ngx_pagesize_shift)
                                           + ((size % ngx_pagesize) ? 1 : 0));
-        if (page) {
+        如果 (page) {
             p = ngx_slab_page_addr(pool, page);
 
-        } else {
+        } 否则 {
             p = 0;
         }
 
         goto done;
     }
 
-    if (size > pool->min_size) {
+    如果 (size > pool->min_size) {
         shift = 1;
-        for (s = size - 1; s >>= 1; shift++) { /* void */ }
+        为 (s = size - 1; s >>= 1; shift++) { /* void */ }
         slot = shift - pool->min_shift;
 
-    } else {
+    } 否则 {
         shift = pool->min_shift;
         slot = 0;
     }
@@ -223,20 +223,20 @@ ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
     slots = ngx_slab_slots(pool);
     page = slots[slot].next;
 
-    if (page->next != page) {
+    如果 (page->next != page) {
 
-        if (shift < ngx_slab_exact_shift) {
+        如果 (shift < ngx_slab_exact_shift) {
 
             bitmap = (uintptr_t *) ngx_slab_page_addr(pool, page);
 
             map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
 
-            for (n = 0; n < map; n++) {
+            为 (n = 0; n < map; n++) {
 
-                if (bitmap[n] != NGX_SLAB_BUSY) {
+                如果 (bitmap[n] != NGX_SLAB_BUSY) {
 
-                    for (m = 1, i = 0; m; m <<= 1, i++) {
-                        if (bitmap[n] & m) {
+                    为 (m = 1, i = 0; m; m <<= 1, i++) {
+                        如果 (bitmap[n] & m) {
                             continue;
                         }
 
@@ -248,9 +248,9 @@ ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
 
                         pool->stats[slot].used++;
 
-                        if (bitmap[n] == NGX_SLAB_BUSY) {
-                            for (n = n + 1; n < map; n++) {
-                                if (bitmap[n] != NGX_SLAB_BUSY) {
+                        如果 (bitmap[n] == NGX_SLAB_BUSY) {
+                            为 (n = n + 1; n < map; n++) {
+                                如果 (bitmap[n] != NGX_SLAB_BUSY) {
                                     goto done;
                                 }
                             }
@@ -268,16 +268,16 @@ ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
                 }
             }
 
-        } else if (shift == ngx_slab_exact_shift) {
+        } 否则 如果 (shift == ngx_slab_exact_shift) {
 
-            for (m = 1, i = 0; m; m <<= 1, i++) {
-                if (page->slab & m) {
+            为 (m = 1, i = 0; m; m <<= 1, i++) {
+                如果 (page->slab & m) {
                     continue;
                 }
 
                 page->slab |= m;
 
-                if (page->slab == NGX_SLAB_BUSY) {
+                如果 (page->slab == NGX_SLAB_BUSY) {
                     prev = ngx_slab_page_prev(page);
                     prev->next = page->next;
                     page->next->prev = page->prev;
@@ -293,22 +293,22 @@ ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
                 goto done;
             }
 
-        } else { /* shift > ngx_slab_exact_shift */
+        } 否则 { /* shift > ngx_slab_exact_shift */
 
             mask = ((uintptr_t) 1 << (ngx_pagesize >> shift)) - 1;
             mask <<= NGX_SLAB_MAP_SHIFT;
 
-            for (m = (uintptr_t) 1 << NGX_SLAB_MAP_SHIFT, i = 0;
+            为 (m = (uintptr_t) 1 << NGX_SLAB_MAP_SHIFT, i = 0;
                  m & mask;
                  m <<= 1, i++)
             {
-                if (page->slab & m) {
+                如果 (page->slab & m) {
                     continue;
                 }
 
                 page->slab |= m;
 
-                if ((page->slab & NGX_SLAB_MAP_MASK) == mask) {
+                如果 ((page->slab & NGX_SLAB_MAP_MASK) == mask) {
                     prev = ngx_slab_page_prev(page);
                     prev->next = page->next;
                     page->next->prev = page->prev;
@@ -331,19 +331,19 @@ ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
 
     page = ngx_slab_alloc_pages(pool, 1);
 
-    if (page) {
-        if (shift < ngx_slab_exact_shift) {
+    如果 (page) {
+        如果 (shift < ngx_slab_exact_shift) {
             bitmap = (uintptr_t *) ngx_slab_page_addr(pool, page);
 
             n = (ngx_pagesize >> shift) / ((1 << shift) * 8);
 
-            if (n == 0) {
+            如果 (n == 0) {
                 n = 1;
             }
 
             /* "n" elements for bitmap, plus one requested */
 
-            for (i = 0; i < (n + 1) / (8 * sizeof(uintptr_t)); i++) {
+            为 (i = 0; i < (n + 1) / (8 * sizeof(uintptr_t)); i++) {
                 bitmap[i] = NGX_SLAB_BUSY;
             }
 
@@ -352,7 +352,7 @@ ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
 
             map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
 
-            for (i = i + 1; i < map; i++) {
+            为 (i = i + 1; i < map; i++) {
                 bitmap[i] = 0;
             }
 
@@ -370,7 +370,7 @@ ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
 
             goto done;
 
-        } else if (shift == ngx_slab_exact_shift) {
+        } 否则 如果 (shift == ngx_slab_exact_shift) {
 
             page->slab = 1;
             page->next = &slots[slot];
@@ -386,7 +386,7 @@ ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size)
 
             goto done;
 
-        } else { /* shift > ngx_slab_exact_shift */
+        } 否则 { /* shift > ngx_slab_exact_shift */
 
             page->slab = ((uintptr_t) 1 << NGX_SLAB_MAP_SHIFT) | shift;
             page->next = &slots[slot];
@@ -413,7 +413,7 @@ done:
     ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0,
                    "slab alloc: %p", (void *) p);
 
-    return (void *) p;
+    返回 (void *) p;
 }
 
 
@@ -428,7 +428,7 @@ ngx_slab_calloc(ngx_slab_pool_t *pool, size_t size)
 
     ngx_shmtx_unlock(&pool->mutex);
 
-    return p;
+    返回 p;
 }
 
 
@@ -438,11 +438,11 @@ ngx_slab_calloc_locked(ngx_slab_pool_t *pool, size_t size)
     void  *p;
 
     p = ngx_slab_alloc_locked(pool, size);
-    if (p) {
+    如果 (p) {
         ngx_memzero(p, size);
     }
 
-    return p;
+    返回 p;
 }
 
 
@@ -467,7 +467,7 @@ ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
 
     ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, ngx_cycle->log, 0, "slab free: %p", p);
 
-    if ((u_char *) p < pool->start || (u_char *) p > pool->end) {
+    如果 ((u_char *) p < pool->start || (u_char *) p > pool->end) {
         ngx_slab_error(pool, NGX_LOG_ALERT, "ngx_slab_free(): outside of pool");
         goto fail;
     }
@@ -484,7 +484,7 @@ ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
         shift = slab & NGX_SLAB_SHIFT_MASK;
         size = (size_t) 1 << shift;
 
-        if ((uintptr_t) p & (size - 1)) {
+        如果 ((uintptr_t) p & (size - 1)) {
             goto wrong_chunk;
         }
 
@@ -494,10 +494,10 @@ ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
         bitmap = (uintptr_t *)
                              ((uintptr_t) p & ~((uintptr_t) ngx_pagesize - 1));
 
-        if (bitmap[n] & m) {
+        如果 (bitmap[n] & m) {
             slot = shift - pool->min_shift;
 
-            if (page->next == NULL) {
+            如果 (page->next == NULL) {
                 slots = ngx_slab_slots(pool);
 
                 page->next = slots[slot].next;
@@ -511,21 +511,21 @@ ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
 
             n = (ngx_pagesize >> shift) / ((1 << shift) * 8);
 
-            if (n == 0) {
+            如果 (n == 0) {
                 n = 1;
             }
 
             i = n / (8 * sizeof(uintptr_t));
             m = ((uintptr_t) 1 << (n % (8 * sizeof(uintptr_t)))) - 1;
 
-            if (bitmap[i] & ~m) {
+            如果 (bitmap[i] & ~m) {
                 goto done;
             }
 
             map = (ngx_pagesize >> shift) / (8 * sizeof(uintptr_t));
 
-            for (i = i + 1; i < map; i++) {
-                if (bitmap[i]) {
+            为 (i = i + 1; i < map; i++) {
+                如果 (bitmap[i]) {
                     goto done;
                 }
             }
@@ -545,14 +545,14 @@ ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
                 (((uintptr_t) p & (ngx_pagesize - 1)) >> ngx_slab_exact_shift);
         size = ngx_slab_exact_size;
 
-        if ((uintptr_t) p & (size - 1)) {
+        如果 ((uintptr_t) p & (size - 1)) {
             goto wrong_chunk;
         }
 
-        if (slab & m) {
+        如果 (slab & m) {
             slot = ngx_slab_exact_shift - pool->min_shift;
 
-            if (slab == NGX_SLAB_BUSY) {
+            如果 (slab == NGX_SLAB_BUSY) {
                 slots = ngx_slab_slots(pool);
 
                 page->next = slots[slot].next;
@@ -564,7 +564,7 @@ ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
 
             page->slab &= ~m;
 
-            if (page->slab) {
+            如果 (page->slab) {
                 goto done;
             }
 
@@ -582,17 +582,17 @@ ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
         shift = slab & NGX_SLAB_SHIFT_MASK;
         size = (size_t) 1 << shift;
 
-        if ((uintptr_t) p & (size - 1)) {
+        如果 ((uintptr_t) p & (size - 1)) {
             goto wrong_chunk;
         }
 
         m = (uintptr_t) 1 << ((((uintptr_t) p & (ngx_pagesize - 1)) >> shift)
                               + NGX_SLAB_MAP_SHIFT);
 
-        if (slab & m) {
+        如果 (slab & m) {
             slot = shift - pool->min_shift;
 
-            if (page->next == NULL) {
+            如果 (page->next == NULL) {
                 slots = ngx_slab_slots(pool);
 
                 page->next = slots[slot].next;
@@ -604,7 +604,7 @@ ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
 
             page->slab &= ~m;
 
-            if (page->slab & NGX_SLAB_MAP_MASK) {
+            如果 (page->slab & NGX_SLAB_MAP_MASK) {
                 goto done;
             }
 
@@ -619,17 +619,17 @@ ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
 
     case NGX_SLAB_PAGE:
 
-        if ((uintptr_t) p & (ngx_pagesize - 1)) {
+        如果 ((uintptr_t) p & (ngx_pagesize - 1)) {
             goto wrong_chunk;
         }
 
-        if (!(slab & NGX_SLAB_PAGE_START)) {
+        如果 (!(slab & NGX_SLAB_PAGE_START)) {
             ngx_slab_error(pool, NGX_LOG_ALERT,
                            "ngx_slab_free(): page is already free");
             goto fail;
         }
 
-        if (slab == NGX_SLAB_PAGE_BUSY) {
+        如果 (slab == NGX_SLAB_PAGE_BUSY) {
             ngx_slab_error(pool, NGX_LOG_ALERT,
                            "ngx_slab_free(): pointer to wrong page");
             goto fail;
@@ -641,12 +641,12 @@ ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p)
 
         ngx_slab_junk(p, size << ngx_pagesize_shift);
 
-        return;
+        返回;
     }
 
     /* not reached */
 
-    return;
+    返回;
 
 done:
 
@@ -654,7 +654,7 @@ done:
 
     ngx_slab_junk(p, size);
 
-    return;
+    返回;
 
 wrong_chunk:
 
@@ -670,7 +670,7 @@ chunk_already_free:
 
 fail:
 
-    return;
+    返回;
 }
 
 
@@ -679,11 +679,11 @@ ngx_slab_alloc_pages(ngx_slab_pool_t *pool, ngx_uint_t pages)
 {
     ngx_slab_page_t  *page, *p;
 
-    for (page = pool->free.next; page != &pool->free; page = page->next) {
+    为 (page = pool->free.next; page != &pool->free; page = page->next) {
 
-        if (page->slab >= pages) {
+        如果 (page->slab >= pages) {
 
-            if (page->slab > pages) {
+            如果 (page->slab > pages) {
                 page[page->slab - 1].prev = (uintptr_t) &page[pages];
 
                 page[pages].slab = page->slab - pages;
@@ -694,7 +694,7 @@ ngx_slab_alloc_pages(ngx_slab_pool_t *pool, ngx_uint_t pages)
                 p->next = &page[pages];
                 page->next->prev = (uintptr_t) &page[pages];
 
-            } else {
+            } 否则 {
                 p = (ngx_slab_page_t *) page->prev;
                 p->next = page->next;
                 page->next->prev = page->prev;
@@ -706,27 +706,27 @@ ngx_slab_alloc_pages(ngx_slab_pool_t *pool, ngx_uint_t pages)
 
             pool->pfree -= pages;
 
-            if (--pages == 0) {
-                return page;
+            如果 (--pages == 0) {
+                返回 page;
             }
 
-            for (p = page + 1; pages; pages--) {
+            为 (p = page + 1; pages; pages--) {
                 p->slab = NGX_SLAB_PAGE_BUSY;
                 p->next = NULL;
                 p->prev = NGX_SLAB_PAGE;
                 p++;
             }
 
-            return page;
+            返回 page;
         }
     }
 
-    if (pool->log_nomem) {
+    如果 (pool->log_nomem) {
         ngx_slab_error(pool, NGX_LOG_CRIT,
                        "ngx_slab_alloc() failed: no memory");
     }
 
-    return NULL;
+    返回 NULL;
 }
 
 
@@ -740,11 +740,11 @@ ngx_slab_free_pages(ngx_slab_pool_t *pool, ngx_slab_page_t *page,
 
     page->slab = pages--;
 
-    if (pages) {
+    如果 (pages) {
         ngx_memzero(&page[1], pages * sizeof(ngx_slab_page_t));
     }
 
-    if (page->next) {
+    如果 (page->next) {
         prev = ngx_slab_page_prev(page);
         prev->next = page->next;
         page->next->prev = page->prev;
@@ -752,11 +752,11 @@ ngx_slab_free_pages(ngx_slab_pool_t *pool, ngx_slab_page_t *page,
 
     join = page + page->slab;
 
-    if (join < pool->last) {
+    如果 (join < pool->last) {
 
-        if (ngx_slab_page_type(join) == NGX_SLAB_PAGE) {
+        如果 (ngx_slab_page_type(join) == NGX_SLAB_PAGE) {
 
-            if (join->next != NULL) {
+            如果 (join->next != NULL) {
                 pages += join->slab;
                 page->slab += join->slab;
 
@@ -771,16 +771,16 @@ ngx_slab_free_pages(ngx_slab_pool_t *pool, ngx_slab_page_t *page,
         }
     }
 
-    if (page > pool->pages) {
+    如果 (page > pool->pages) {
         join = page - 1;
 
-        if (ngx_slab_page_type(join) == NGX_SLAB_PAGE) {
+        如果 (ngx_slab_page_type(join) == NGX_SLAB_PAGE) {
 
-            if (join->slab == NGX_SLAB_PAGE_FREE) {
+            如果 (join->slab == NGX_SLAB_PAGE_FREE) {
                 join = ngx_slab_page_prev(join);
             }
 
-            if (join->next != NULL) {
+            如果 (join->next != NULL) {
                 pages += join->slab;
                 join->slab += page->slab;
 
@@ -797,7 +797,7 @@ ngx_slab_free_pages(ngx_slab_pool_t *pool, ngx_slab_page_t *page,
         }
     }
 
-    if (pages) {
+    如果 (pages) {
         page[pages].prev = (uintptr_t) page;
     }
 
