@@ -5,19 +5,19 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাৱ <ngx_config.h>
+#অন্তর্ভাৱ <ngx_core.h>
 
 
-#if (( __i386__ || __amd64__ ) && ( __GNUC__ || __INTEL_COMPILER ))
+#যদি (( __i386__ || __amd64__ ) && ( __GNUC__ || __INTEL_COMPILER ))
 
 
-static ngx_inline void ngx_cpuid(uint32_t i, uint32_t *buf);
+স্থির ngx_inline শূন্য ngx_cpuid(uint32_t i, uint32_t *buf);
 
 
-#if ( __i386__ )
+#যদি ( __i386__ )
 
-static ngx_inline void
+স্থির ngx_inline শূন্য
 ngx_cpuid(uint32_t i, uint32_t *buf)
 {
 
@@ -43,10 +43,10 @@ ngx_cpuid(uint32_t i, uint32_t *buf)
 }
 
 
-#else /* __amd64__ */
+#অন্যথা /* __amd64__ */
 
 
-static ngx_inline void
+স্থির ngx_inline শূন্য
 ngx_cpuid(uint32_t i, uint32_t *buf)
 {
     uint32_t  eax, ebx, ecx, edx;
@@ -69,8 +69,8 @@ ngx_cpuid(uint32_t i, uint32_t *buf)
 
 /* auto detect the L2 cache line size of modern and widespread CPUs */
 
-void
-ngx_cpuinfo(void)
+শূন্য
+ngx_cpuinfo(শূন্য)
 {
     u_char    *vendor;
     uint32_t   vbuf[5], cpu[4], model;
@@ -85,53 +85,53 @@ ngx_cpuinfo(void)
 
     vendor = (u_char *) &vbuf[1];
 
-    if (vbuf[0] == 0) {
-        return;
+    যদি (vbuf[0] == 0) {
+        ঘূৰাই;
     }
 
     ngx_cpuid(1, cpu);
 
-    if (ngx_strcmp(vendor, "GenuineIntel") == 0) {
+    যদি (ngx_strcmp(vendor, "GenuineIntel") == 0) {
 
-        switch ((cpu[0] & 0xf00) >> 8) {
+        ৱিকল্প ((cpu[0] & 0xf00) >> 8) {
 
         /* Pentium */
-        case 5:
+        পক্ষ 5:
             ngx_cacheline_size = 32;
-            break;
+            ভঙ্গ;
 
         /* Pentium Pro, II, III */
-        case 6:
+        পক্ষ 6:
             ngx_cacheline_size = 32;
 
             model = ((cpu[0] & 0xf0000) >> 8) | (cpu[0] & 0xf0);
 
-            if (model >= 0xd0) {
+            যদি (model >= 0xd0) {
                 /* Intel Core, Core 2, Atom */
                 ngx_cacheline_size = 64;
             }
 
-            break;
+            ভঙ্গ;
 
         /*
          * Pentium 4, although its cache line size is 64 bytes,
          * it prefetches up to two cache lines during memory read
          */
-        case 15:
+        পক্ষ 15:
             ngx_cacheline_size = 128;
-            break;
+            ভঙ্গ;
         }
 
-    } else if (ngx_strcmp(vendor, "AuthenticAMD") == 0) {
+    } অন্যথা যদি (ngx_strcmp(vendor, "AuthenticAMD") == 0) {
         ngx_cacheline_size = 64;
     }
 }
 
-#else
+#অন্যথা
 
 
-void
-ngx_cpuinfo(void)
+শূন্য
+ngx_cpuinfo(শূন্য)
 {
 }
 

@@ -9,26 +9,26 @@
 #define _NGX_REGEX_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাৱ <ngx_config.h>
+#অন্তর্ভাৱ <ngx_core.h>
 
 
-#if (NGX_PCRE2)
+#যদি (NGX_PCRE2)
 
 #define PCRE2_CODE_UNIT_WIDTH  8
-#include <pcre2.h>
+#অন্তর্ভাৱ <pcre2.h>
 
 #define NGX_REGEX_NO_MATCHED   PCRE2_ERROR_NOMATCH   /* -1 */
 
-typedef pcre2_code  ngx_regex_t;
+প্রকারনির্দেশ pcre2_code  ngx_regex_t;
 
-#else
+#অন্যথা
 
-#include <pcre.h>
+#অন্তর্ভাৱ <pcre.h>
 
 #define NGX_REGEX_NO_MATCHED   PCRE_ERROR_NOMATCH    /* -1 */
 
-typedef struct {
+প্রকারনির্দেশ সংরচনা {
     pcre        *code;
     pcre_extra  *extra;
 } ngx_regex_t;
@@ -40,35 +40,35 @@ typedef struct {
 #define NGX_REGEX_MULTILINE    0x00000002
 
 
-typedef struct {
+প্রকারনির্দেশ সংরচনা {
     ngx_str_t     pattern;
     ngx_pool_t   *pool;
     ngx_uint_t    options;
 
     ngx_regex_t  *regex;
-    int           captures;
-    int           named_captures;
-    int           name_size;
+    পূর্ণাঙ্ক           captures;
+    পূর্ণাঙ্ক           named_captures;
+    পূর্ণাঙ্ক           name_size;
     u_char       *names;
     ngx_str_t     err;
 } ngx_regex_compile_t;
 
 
-typedef struct {
+প্রকারনির্দেশ সংরচনা {
     ngx_regex_t  *regex;
     u_char       *name;
 } ngx_regex_elt_t;
 
 
-void ngx_regex_init(void);
+শূন্য ngx_regex_init(শূন্য);
 ngx_int_t ngx_regex_compile(ngx_regex_compile_t *rc);
 
-ngx_int_t ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, int *captures,
+ngx_int_t ngx_regex_exec(ngx_regex_t *re, ngx_str_t *s, পূর্ণাঙ্ক *captures,
     ngx_uint_t size);
 
-#if (NGX_PCRE2)
+#যদি (NGX_PCRE2)
 #define ngx_regex_exec_n       "pcre2_match()"
-#else
+#অন্যথা
 #define ngx_regex_exec_n       "pcre_exec()"
 #endif
 

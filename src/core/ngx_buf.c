@@ -5,8 +5,8 @@
  */
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাৱ <ngx_config.h>
+#অন্তর্ভাৱ <ngx_core.h>
 
 
 ngx_buf_t *
@@ -15,13 +15,13 @@ ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
     ngx_buf_t *b;
 
     b = ngx_calloc_buf(pool);
-    if (b == NULL) {
-        return NULL;
+    যদি (b == রিক্ত) {
+        ঘূৰাই রিক্ত;
     }
 
     b->start = ngx_palloc(pool, size);
-    if (b->start == NULL) {
-        return NULL;
+    যদি (b->start == রিক্ত) {
+        ঘূৰাই রিক্ত;
     }
 
     /*
@@ -40,7 +40,7 @@ ngx_create_temp_buf(ngx_pool_t *pool, size_t size)
     b->end = b->last + size;
     b->temporary = 1;
 
-    return b;
+    ঘূৰাই b;
 }
 
 
@@ -51,17 +51,17 @@ ngx_alloc_chain_link(ngx_pool_t *pool)
 
     cl = pool->chain;
 
-    if (cl) {
+    যদি (cl) {
         pool->chain = cl->next;
-        return cl;
+        ঘূৰাই cl;
     }
 
-    cl = ngx_palloc(pool, sizeof(ngx_chain_t));
-    if (cl == NULL) {
-        return NULL;
+    cl = ngx_palloc(pool, পরিমাণ(ngx_chain_t));
+    যদি (cl == রিক্ত) {
+        ঘূৰাই রিক্ত;
     }
 
-    return cl;
+    ঘূৰাই cl;
 }
 
 
@@ -73,18 +73,18 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
     ngx_buf_t    *b;
     ngx_chain_t  *chain, *cl, **ll;
 
-    p = ngx_palloc(pool, bufs->num * bufs->size);
-    if (p == NULL) {
-        return NULL;
+    p = ngx_palloc(pool, bufs->অঙ্ক * bufs->size);
+    যদি (p == রিক্ত) {
+        ঘূৰাই রিক্ত;
     }
 
     ll = &chain;
 
-    for (i = 0; i < bufs->num; i++) {
+    বাবে (i = 0; i < bufs->অঙ্ক; i++) {
 
         b = ngx_calloc_buf(pool);
-        if (b == NULL) {
-            return NULL;
+        যদি (b == রিক্ত) {
+            ঘূৰাই রিক্ত;
         }
 
         /*
@@ -108,8 +108,8 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
         b->end = p;
 
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            return NULL;
+        যদি (cl == রিক্ত) {
+            ঘূৰাই রিক্ত;
         }
 
         cl->buf = b;
@@ -117,9 +117,9 @@ ngx_create_chain_of_bufs(ngx_pool_t *pool, ngx_bufs_t *bufs)
         ll = &cl->next;
     }
 
-    *ll = NULL;
+    *ll = রিক্ত;
 
-    return chain;
+    ঘূৰাই chain;
 }
 
 
@@ -130,15 +130,15 @@ ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *in)
 
     ll = chain;
 
-    for (cl = *chain; cl; cl = cl->next) {
+    বাবে (cl = *chain; cl; cl = cl->next) {
         ll = &cl->next;
     }
 
-    while (in) {
+    যেতিয়ালৈ (in) {
         cl = ngx_alloc_chain_link(pool);
-        if (cl == NULL) {
-            *ll = NULL;
-            return NGX_ERROR;
+        যদি (cl == রিক্ত) {
+            *ll = রিক্ত;
+            ঘূৰাই NGX_ERROR;
         }
 
         cl->buf = in->buf;
@@ -147,78 +147,78 @@ ngx_chain_add_copy(ngx_pool_t *pool, ngx_chain_t **chain, ngx_chain_t *in)
         in = in->next;
     }
 
-    *ll = NULL;
+    *ll = রিক্ত;
 
-    return NGX_OK;
+    ঘূৰাই NGX_OK;
 }
 
 
 ngx_chain_t *
-ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **free)
+ngx_chain_get_free_buf(ngx_pool_t *p, ngx_chain_t **মুক্ত)
 {
     ngx_chain_t  *cl;
 
-    if (*free) {
-        cl = *free;
-        *free = cl->next;
-        cl->next = NULL;
-        return cl;
+    যদি (*মুক্ত) {
+        cl = *মুক্ত;
+        *মুক্ত = cl->next;
+        cl->next = রিক্ত;
+        ঘূৰাই cl;
     }
 
     cl = ngx_alloc_chain_link(p);
-    if (cl == NULL) {
-        return NULL;
+    যদি (cl == রিক্ত) {
+        ঘূৰাই রিক্ত;
     }
 
     cl->buf = ngx_calloc_buf(p);
-    if (cl->buf == NULL) {
-        return NULL;
+    যদি (cl->buf == রিক্ত) {
+        ঘূৰাই রিক্ত;
     }
 
-    cl->next = NULL;
+    cl->next = রিক্ত;
 
-    return cl;
+    ঘূৰাই cl;
 }
 
 
-void
-ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **free, ngx_chain_t **busy,
+শূন্য
+ngx_chain_update_chains(ngx_pool_t *p, ngx_chain_t **মুক্ত, ngx_chain_t **busy,
     ngx_chain_t **out, ngx_buf_tag_t tag)
 {
     ngx_chain_t  *cl;
 
-    if (*out) {
-        if (*busy == NULL) {
+    যদি (*out) {
+        যদি (*busy == রিক্ত) {
             *busy = *out;
 
-        } else {
-            for (cl = *busy; cl->next; cl = cl->next) { /* void */ }
+        } অন্যথা {
+            বাবে (cl = *busy; cl->next; cl = cl->next) { /* void */ }
 
             cl->next = *out;
         }
 
-        *out = NULL;
+        *out = রিক্ত;
     }
 
-    while (*busy) {
+    যেতিয়ালৈ (*busy) {
         cl = *busy;
 
-        if (cl->buf->tag != tag) {
+        যদি (cl->buf->tag != tag) {
             *busy = cl->next;
             ngx_free_chain(p, cl);
-            continue;
+            অনুৱর্ত;
         }
 
-        if (ngx_buf_size(cl->buf) != 0) {
-            break;
+        যদি (ngx_buf_size(cl->buf) != 0) {
+            ভঙ্গ;
         }
 
         cl->buf->pos = cl->buf->start;
         cl->buf->last = cl->buf->start;
 
         *busy = cl->next;
-        cl->next = *free;
-        *free = cl;
+        cl->next = *মুক্ত;
+        *মুক্ত = cl;
     }
 }
 
@@ -235,28 +235,28 @@ ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit)
     cl = *in;
     fd = cl->buf->file->fd;
 
-    do {
+    কৰা {
         size = cl->buf->file_last - cl->buf->file_pos;
 
-        if (size > limit - total) {
+        যদি (size > limit - total) {
             size = limit - total;
 
             aligned = (cl->buf->file_pos + size + ngx_pagesize - 1)
                        & ~((off_t) ngx_pagesize - 1);
 
-            if (aligned <= cl->buf->file_last) {
+            যদি (aligned <= cl->buf->file_last) {
                 size = aligned - cl->buf->file_pos;
             }
 
             total += size;
-            break;
+            ভঙ্গ;
         }
 
         total += size;
         fprev = cl->buf->file_pos + size;
         cl = cl->next;
 
-    } while (cl
+    } যেতিয়ালৈ (cl
              && cl->buf->in_file
              && total < limit
              && fd == cl->buf->file->fd
@@ -264,7 +264,7 @@ ngx_chain_coalesce_file(ngx_chain_t **in, off_t limit)
 
     *in = cl;
 
-    return total;
+    ঘূৰাই total;
 }
 
 
@@ -273,42 +273,42 @@ ngx_chain_update_sent(ngx_chain_t *in, off_t sent)
 {
     off_t  size;
 
-    for ( /* void */ ; in; in = in->next) {
+    বাবে ( /* void */ ; in; in = in->next) {
 
-        if (ngx_buf_special(in->buf)) {
-            continue;
+        যদি (ngx_buf_special(in->buf)) {
+            অনুৱর্ত;
         }
 
-        if (sent == 0) {
-            break;
+        যদি (sent == 0) {
+            ভঙ্গ;
         }
 
         size = ngx_buf_size(in->buf);
 
-        if (sent >= size) {
+        যদি (sent >= size) {
             sent -= size;
 
-            if (ngx_buf_in_memory(in->buf)) {
+            যদি (ngx_buf_in_memory(in->buf)) {
                 in->buf->pos = in->buf->last;
             }
 
-            if (in->buf->in_file) {
+            যদি (in->buf->in_file) {
                 in->buf->file_pos = in->buf->file_last;
             }
 
-            continue;
+            অনুৱর্ত;
         }
 
-        if (ngx_buf_in_memory(in->buf)) {
+        যদি (ngx_buf_in_memory(in->buf)) {
             in->buf->pos += (size_t) sent;
         }
 
-        if (in->buf->in_file) {
+        যদি (in->buf->in_file) {
             in->buf->file_pos += sent;
         }
 
-        break;
+        ভঙ্গ;
     }
 
-    return in;
+    ঘূৰাই in;
 }

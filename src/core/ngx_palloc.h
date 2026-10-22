@@ -9,8 +9,8 @@
 #define _NGX_PALLOC_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#অন্তর্ভাৱ <ngx_config.h>
+#অন্তর্ভাৱ <ngx_core.h>
 
 
 /*
@@ -23,30 +23,30 @@
 
 #define NGX_POOL_ALIGNMENT       16
 #define NGX_MIN_POOL_SIZE                                                     \
-    ngx_align((sizeof(ngx_pool_t) + 2 * sizeof(ngx_pool_large_t)),            \
+    ngx_align((পরিমাণ(ngx_pool_t) + 2 * পরিমাণ(ngx_pool_large_t)),            \
               NGX_POOL_ALIGNMENT)
 
 
-typedef void (*ngx_pool_cleanup_pt)(void *data);
+প্রকারনির্দেশ শূন্য (*ngx_pool_cleanup_pt)(শূন্য *data);
 
-typedef struct ngx_pool_cleanup_s  ngx_pool_cleanup_t;
+প্রকারনির্দেশ সংরচনা ngx_pool_cleanup_s  ngx_pool_cleanup_t;
 
-struct ngx_pool_cleanup_s {
+সংরচনা ngx_pool_cleanup_s {
     ngx_pool_cleanup_pt   handler;
-    void                 *data;
+    শূন্য                 *data;
     ngx_pool_cleanup_t   *next;
 };
 
 
-typedef struct ngx_pool_large_s  ngx_pool_large_t;
+প্রকারনির্দেশ সংরচনা ngx_pool_large_s  ngx_pool_large_t;
 
-struct ngx_pool_large_s {
+সংরচনা ngx_pool_large_s {
     ngx_pool_large_t     *next;
-    void                 *alloc;
+    শূন্য                 *alloc;
 };
 
 
-typedef struct {
+প্রকারনির্দেশ সংরচনা {
     u_char               *last;
     u_char               *end;
     ngx_pool_t           *next;
@@ -54,7 +54,7 @@ typedef struct {
 } ngx_pool_data_t;
 
 
-struct ngx_pool_s {
+সংরচনা ngx_pool_s {
     ngx_pool_data_t       d;
     size_t                max;
     ngx_pool_t           *current;
@@ -65,7 +65,7 @@ struct ngx_pool_s {
 };
 
 
-typedef struct {
+প্রকারনির্দেশ সংরচনা {
     ngx_fd_t              fd;
     u_char               *name;
     ngx_log_t            *log;
@@ -73,20 +73,20 @@ typedef struct {
 
 
 ngx_pool_t *ngx_create_pool(size_t size, ngx_log_t *log);
-void ngx_destroy_pool(ngx_pool_t *pool);
-void ngx_reset_pool(ngx_pool_t *pool);
+শূন্য ngx_destroy_pool(ngx_pool_t *pool);
+শূন্য ngx_reset_pool(ngx_pool_t *pool);
 
-void *ngx_palloc(ngx_pool_t *pool, size_t size);
-void *ngx_pnalloc(ngx_pool_t *pool, size_t size);
-void *ngx_pcalloc(ngx_pool_t *pool, size_t size);
-void *ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment);
-ngx_int_t ngx_pfree(ngx_pool_t *pool, void *p);
+শূন্য *ngx_palloc(ngx_pool_t *pool, size_t size);
+শূন্য *ngx_pnalloc(ngx_pool_t *pool, size_t size);
+শূন্য *ngx_pcalloc(ngx_pool_t *pool, size_t size);
+শূন্য *ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment);
+ngx_int_t ngx_pfree(ngx_pool_t *pool, শূন্য *p);
 
 
 ngx_pool_cleanup_t *ngx_pool_cleanup_add(ngx_pool_t *p, size_t size);
-void ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd);
-void ngx_pool_cleanup_file(void *data);
-void ngx_pool_delete_file(void *data);
+শূন্য ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd);
+শূন্য ngx_pool_cleanup_file(শূন্য *data);
+শূন্য ngx_pool_delete_file(শূন্য *data);
 
 
 #endif /* _NGX_PALLOC_H_INCLUDED_ */
