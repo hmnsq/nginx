@@ -9,18 +9,18 @@
 #define _NGX_CRC_H_INCLUDED_
 
 
-#include <ngx_config.h>
-#include <ngx_core.h>
+#ضمن <ngx_config.h>
+#ضمن <ngx_core.h>
 
 
 /* 32-bit crc16 */
 
-static ngx_inline uint32_t
+ساكن ngx_inline uint32_t
 ngx_crc(u_char *data, size_t len)
 {
     uint32_t  sum;
 
-    for (sum = 0; len; len--) {
+    لكل (sum = 0; len; len--) {
 
         /*
          * gcc 2.95.2 x86 and icc 7.1.006 compile
@@ -32,7 +32,7 @@ ngx_crc(u_char *data, size_t len)
         sum += *data++;
     }
 
-    return sum;
+    أرجع sum;
 }
 
 
